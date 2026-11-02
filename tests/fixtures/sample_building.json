@@ -1,0 +1,63 @@
+{
+  "schema": "campus-recorder/building/1",
+  "id": "sample",
+  "name": "見本棟（架空）",
+  "campus": "test",
+  "crs": {"epsg": 6675, "origin_lat": 35.1355, "origin_lon": 136.9755},
+  "footprint": {
+    "status": "measured",
+    "evidence": ["aerial:test"],
+    "method": "航空写真の屋上外形を北へ高さ×0.32 戻した",
+    "polygon": [[0, 0], [30, 0], [30, 12], [0, 12]]
+  },
+  "ground_z": {"value": 45.0, "unit": "m", "tol": 0.5, "status": "estimated", "evidence": [], "method": "5m標高", "note": ""},
+  "floor_count": {"value": 4, "unit": "階", "tol": null, "status": "measured", "evidence": ["T001"], "method": "写真で数えた", "note": ""},
+  "floor_pitch": {"value": 3.6, "unit": "m", "tol": 0.2, "status": "measured", "evidence": ["T001"], "method": "正面化", "note": ""},
+  "parapet_top": {"value": 15.0, "unit": "m", "tol": 0.3, "status": "measured", "evidence": ["T001"], "method": "正面化", "note": ""},
+  "levels": [
+    {"id": "canopy", "name": "庇の下端", "z": {"value": 3.2, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T002"], "method": "", "note": ""}}
+  ],
+  "faces": [
+    {
+      "id": "S", "name": "南面", "from": [0, 0], "to": [30, 0],
+      "length": {"value": 30.0, "unit": "m", "tol": 0.5, "status": "measured", "evidence": ["aerial:test"], "method": "", "note": ""},
+      "bays": {
+        "count": {"value": 6, "unit": "個", "tol": null, "status": "measured", "evidence": ["T001"], "method": "", "note": ""},
+        "pitch": {"value": 4.8, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T001"], "method": "", "note": ""},
+        "pier_width": {"value": 0.6, "unit": "m", "tol": 0.05, "status": "measured", "evidence": ["T003"], "method": "", "note": ""},
+        "end_margin": {"value": 0.6, "unit": "m", "tol": null, "status": "estimated", "evidence": [], "method": "柱型半分", "note": ""}
+      },
+      "windows": [
+        {"name": "2階窓", "floors": [2], "per_bay": 1,
+         "z_bottom": {"value": 4.5, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T001"], "method": "", "note": ""},
+         "z_top": {"value": 6.6, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T001"], "method": "", "note": ""},
+         "width": {"value": null, "unit": "m", "tol": null, "status": "unknown", "evidence": [], "method": "", "note": ""}},
+        {"name": "4階窓", "floors": [4], "per_bay": 2,
+         "z_bottom": {"value": null, "unit": "m", "tol": null, "status": "unknown", "evidence": [], "method": "", "note": ""},
+         "z_top": {"value": 13.8, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T001"], "method": "", "note": ""},
+         "width": {"value": 1.5, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T001"], "method": "", "note": ""}}
+      ],
+      "bands": [
+        {"name": "1階帯",
+         "z_bottom": {"value": 3.4, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T002"], "method": "", "note": ""},
+         "z_top": {"value": 3.9, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T002"], "method": "", "note": ""}}
+      ],
+      "openings": [
+        {"name": "ピロティ", "bays": [3, 4],
+         "z_top": {"value": 3.2, "unit": "m", "tol": 0.1, "status": "measured", "evidence": ["T002"], "method": "", "note": ""}}
+      ],
+      "materials": []
+    },
+    {"id": "E", "name": "東面", "from": [30, 0], "to": [30, 12], "bays": {}, "windows": [], "bands": [], "openings": [], "materials": []}
+  ],
+  "photos": [
+    {"id": "T001", "file": "T001.jpg", "face": "S", "role": "全体"},
+    {"id": "T002", "file": "T002.jpg", "face": "S", "role": "細部"},
+    {"id": "T003", "file": "T003.jpg", "face": "S", "role": "細部"}
+  ],
+  "requests": [
+    {"face": "E", "what": "両端が入る1枚", "where": "道路の反対側から", "why": "東面の寸法がまだ何も無い", "status": "open"},
+    {"face": "S", "what": "4階の窓を真横に近い角度で1枚", "where": "", "why": "窓の下端が見えていない", "status": "open"}
+  ],
+  "history": []
+}

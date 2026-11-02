@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+out/
+data/photos/**
+!data/photos/.gitkeep
+!data/photos/index.json
+*.blend
+*.blend1
+*.glb
+*.ktx2
+*.zip
+.env
+node_modules/
+.DS_Store
+Thumbs.db
+*.egg-info/
