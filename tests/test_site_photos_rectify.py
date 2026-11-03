@@ -222,3 +222,31 @@ def test_rectify_refuses_blank_image():
     img = np.full((800, 1000, 3), 128, np.uint8)
     out, res = rectify.rectify(img, focal_35mm=26.0)
     assert out is None and not res.ok and res.reason
+
+
+# --- rectify: roi / measure ---------------------------------------------------------
+
+def test_rectify_roi_restricts_segments():
+    img, _ = rectify.synthetic_facade(yaw_deg=30, pitch_deg=12)
+    out, res = rectify.rectify(img, focal_35mm=26.0, roi=(0.1, 0.1, 0.9, 0.9))
+    assert res.ok and res.roi == [160.0, 120.0, 1440.0, 1080.0]
+    assert res.wall_box and res.wall_box[2] > res.wall_box[0]
+    _, res2 = rectify.rectify(img, focal_35mm=26.0, roi=(0.0, 0.0, 0.05, 0.05))  # 壁の無い所
+    assert not res2.ok and res2.reason
+
+
+def test_measure_recovers_bay_floor_ratio():
+    from recorder import measure
+
+    img, _ = rectify.synthetic_facade(yaw_deg=25, pitch_deg=10)
+    out, res = rectify.rectify(img, focal_35mm=26.0)
+    assert res.ok
+    m = measure.measure(out, res.wall_box)
+    assert m.ok and m.bays.period_px and m.floors.period_px
+    # 人工の壁は 7 列 × 4 段、窓の列の間隔 128 px・段の間隔 168 px（正面化前の画素）。比は縮尺に依らない
+    assert abs(m.ratio_bay_over_floor - 128 / 168) / (128 / 168) < 0.03
+    assert m.bays.count >= 4 and m.floors.count >= 3  # 区間の数は候補。端は落ちることがある
+    m2 = measure.measure(out, res.wall_box, known=("floor_pitch", 3.6), known_status="measured")
+    assert m2.floors.period_m == 3.6 and m2.floors.status == "measured"
+    assert abs(m2.bays.period_m - 3.6 * 128 / 168) < 0.1
+    assert m2.scale["what"] == "floor_pitch"

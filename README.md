@@ -32,7 +32,8 @@ python -I -X utf8 -m recorder draw data/buildings/honbu.json   # out/honbu/ に�
 python -I -X utf8 -m recorder site build                        # 公開データから敷地の土台（OSM・航空写真・標高・PLATEAU・確認用の図）
 python -I -X utf8 -m recorder site confirm honbu confirmed --by 職員A   # 職員の確認を敷地 JSON に記録
 python -I -X utf8 -m recorder photos import data/photos/20261103  # 写真の EXIF を読んで索引に足す（棟は候補だけ、確定しない）
-python -I -X utf8 -m recorder photos rectify data/photos/20261103/IMG_0001.jpg   # 壁を正面に向け直す（根拠 JSON 付き）
+python -I -X utf8 -m recorder photos rectify data/photos/20261103/IMG_0001.jpg --roi 0,0,0.9,0.85   # 壁を正面に向け直す（根拠 JSON 付き）
+python -I -X utf8 -m recorder photos measure out/rectified/IMG_0001_front.jpg --known floor_pitch=3.99  # 柱間隔・階高を数えて m に換算
 python -I -X utf8 -m pytest
 ```
 
@@ -44,7 +45,8 @@ python -I -X utf8 -m pytest
 | `recorder/geo.py` | 座標変換（緯度経度 ⇔ 原点からの m、国土地理院タイル） |
 | `recorder/site.py` | 敷地の土台：OSM の境界と建物名、国土地理院の航空写真と 5m 標高、PLATEAU の足元と高さ、職員の確認状態 |
 | `recorder/photos.py` | 写真の取り込み：EXIF（GPS・方位・焦点距離）、使えるかの材料、写っていそうな棟の候補 |
-| `recorder/rectify.py` | 写真の正面化：線分 → 消失点 → 射影変換。変換行列と検算値を JSON に残す |
+| `recorder/rectify.py` | 写真の正面化：線分 → 消失点 → 射影変換。変換行列と検算値を JSON に残す。1枚に複数の面があるときは判断役が注目範囲（ROI）を指定 |
+| `recorder/measure.py` | 正面化画像から柱間隔・階高の繰り返しを数える。既知の長さが1つあれば m に換算し、出どころを残す |
 | `data/site/` | 敷地 JSON（建物の名前と確認状態）と PLATEAU の抜き出し |
 | `data/buildings/` | 棟ごとの JSON（唯一の元データ） |
 | `docs/撮影ガイド.md` | 職員向けの撮り方 |

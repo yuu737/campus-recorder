@@ -8,6 +8,8 @@
                                                  公開データから敷地の土台を作る（OSM・航空写真・標高・PLATEAU・確認用の図）
   python -m recorder photos import <folder>     写真の EXIF を読んで索引 data/photos/index.json に足す
   python -m recorder photos rectify <写真> [--f35 26]  壁を正面に向け直し out/rectified/ に画像と根拠 JSON を出す
+  python -m recorder photos measure <front.jpg> [--known floor_pitch=3.99]
+                                                 正面化画像から柱間隔・階高の候補を数える（既知の長さがあれば m に換算）
   python -m recorder site confirm <id> <status> --by 名前 [--name 新しい名前] [--note ...]
                                                  職員の確認を敷地 JSON に書く
 """
@@ -64,6 +66,11 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("file")
     q.add_argument("--f35", type=float, default=None, help="35mm 換算の焦点距離。省略すると EXIF、無ければ消失点から推定")
     q.add_argument("--out", default="out/rectified")
+    q.add_argument("--roi", default=None, help="注目する壁の範囲 x0,y0,x1,y1（画素か 0〜1 の割合）。1枚に複数の面があるときに判断役が指定")
+    q = psub.add_parser("measure")
+    q.add_argument("front_jpg", help="rectify が出した *_front.jpg")
+    q.add_argument("--known", default=None, help="既知の長さ 例: floor_pitch=3.99 / bay_pitch=5.3 / wall_width=47.7")
+    q.add_argument("--known-status", default="measured", choices=["measured", "estimated"])
 
     a = ap.parse_args(argv)
 
@@ -137,13 +144,30 @@ def _photos(a) -> int:
         f35 = a.f35
         if f35 is None:
             f35 = photos.read_exif(src).get("focal_35mm")
-        res = rectify.rectify_file(src, Path(a.out), f35)
+        roi = tuple(float(v) for v in a.roi.split(",")) if a.roi else None
+        res = rectify.rectify_file(src, Path(a.out), f35, roi=roi)
         if res.ok:
             print(f"正面化: {Path(a.out) / (src.stem + '_front.jpg')}  焦点距離 {res.focal_px}px（{res.focal_source}）"
                   f"  検算の傾き 横 {res.residual_deg_h}° 縦 {res.residual_deg_v}°  線分 横 {res.inliers_h} 縦 {res.inliers_v}")
         else:
             print(f"正面化できません: {res.reason}（線分 {res.segments} 本）")
         return 0 if res.ok else 1
+    if a.photos_cmd == "measure":
+        from . import measure
+
+        known = None
+        if a.known:
+            k, v = a.known.split("=")
+            known = (k, float(v))
+        res = measure.measure_file(Path(a.front_jpg), known=known, known_status=a.known_status)
+        if not res.ok:
+            print(f"数えられません: {res.reason}")
+            return 1
+        for name, per in (("柱間隔", res.bays), ("階高", res.floors)):
+            m = f"  ≈ {per.period_m} m（{per.status}）" if per.period_m else ""
+            print(f"{name}: 周期 {per.period_px} px（強さ {per.strength}）  区間 {per.count}  エッジ {len(per.peaks_px)} 本{m}")
+        print(f"比（柱間隔÷階高）: {res.ratio_bay_over_floor}   結果 JSON: {Path(a.front_jpg).with_name(Path(a.front_jpg).stem + '_measure.json')}")
+        return 0
     if a.photos_cmd == "list":
         for r in photos.load_index()["photos"]:
             print(photos.summary_line(r))

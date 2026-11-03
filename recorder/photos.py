@@ -125,11 +125,9 @@ def quick_checks(path: Path, info: dict) -> dict:
     try:
         import cv2
 
-        im = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
-        if im is None:
-            from PIL import Image
+        from PIL import Image, ImageOps
 
-            im = np.asarray(Image.open(path).convert("L"))
+        im = np.asarray(ImageOps.exif_transpose(Image.open(path)).convert("L"))
         h, w = im.shape[:2]
         s = 1200.0 / max(h, w)
         small = cv2.resize(im, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA) if s < 1 else im

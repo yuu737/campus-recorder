@@ -40,6 +40,8 @@ class RectifyResult:
     out_size: list[int] = field(default_factory=list)
     residual_deg_h: float | None = None   # 正面化後の横線の傾きの中央値（0 に近いほどよい）
     residual_deg_v: float | None = None
+    roi: list[float] | None = None        # 使った注目範囲（画素）
+    wall_box: list[float] | None = None   # 正面化画像の中で、壁の線分がある範囲（x0,y0,x1,y1）
 
     def to_json(self) -> dict:
         return asdict(self)
@@ -143,14 +145,28 @@ def focal_from_vps(vp_h: np.ndarray, vp_v: np.ndarray, cx: float, cy: float) -> 
     return math.sqrt(f2) if f2 > 0 else None
 
 
-def rectify(img: np.ndarray, focal_35mm: float | None = None, max_scale: float = 3.0) -> tuple[np.ndarray | None, RectifyResult]:
-    """壁を正面に向け直す。戻り値は (正面化した画像 | None, 結果)。"""
+def rectify(img: np.ndarray, focal_35mm: float | None = None, max_scale: float = 3.0,
+            roi: tuple[float, float, float, float] | None = None) -> tuple[np.ndarray | None, RectifyResult]:
+    """壁を正面に向け直す。戻り値は (正面化した画像 | None, 結果)。
+
+    roi: 注目する壁の範囲 (x0, y0, x1, y1)。画素でも 0〜1 の割合でもよい。
+         1枚に複数の面（正面の壁と横の塀など）があるとき、どの壁かを判断役（Claude か人）が指定する。
+         コードは範囲内の線分だけで消失点を求める。"""
     import cv2
 
     h, w = img.shape[:2]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) if img.ndim == 3 else img
     segs = detect_segments(gray, min_len=max(20.0, min(w, h) / 60))
     res = RectifyResult(ok=False, width=w, height=h, segments=int(len(segs)))
+    if roi is not None:
+        x0, y0, x1, y1 = roi
+        if max(roi) <= 1.0:
+            x0, x1, y0, y1 = x0 * w, x1 * w, y0 * h, y1 * h
+        mx = (segs[:, 0] + segs[:, 2]) / 2
+        my = (segs[:, 1] + segs[:, 3]) / 2
+        segs = segs[(mx >= x0) & (mx <= x1) & (my >= y0) & (my <= y1)]
+        res.roi = [float(x0), float(y0), float(x1), float(y1)]
+        res.segments = int(len(segs))
     if len(segs) < 10:
         res.reason = "線分が少なすぎます（壁が小さいか、ぶれています）"
         return None, res
@@ -200,24 +216,28 @@ def rectify(img: np.ndarray, focal_35mm: float | None = None, max_scale: float =
         return None, res
     R = np.c_[x_new, y_new, z_new]
     Hm = K @ R.T @ Kinv
-    # 出力範囲：元画像の四隅を写して囲う（大きくなりすぎる時は縮める）
-    corners = np.array([[0, 0, 1], [w, 0, 1], [w, h, 1], [0, h, 1]], dtype=float).T
-    pc = Hm @ corners
-    if np.any(np.abs(pc[2]) < 1e-6) or np.any(pc[2] * pc[2][0] <= 0):
-        res.reason = "正面化すると画像が裏返ります（壁に対して斜めすぎます）"
-        return None, res
-    pc = pc[:2] / pc[2]
-    # 出力は「縦横の線がある範囲」（＝壁）に 10% の余白を足した所まで。元画像の枠より外には出さない
+    # 出力範囲は「縦横の線がある範囲」（＝壁）に 10% の余白。写真の四隅は使わない
+    # （急な見上げでは四隅が地平線の向こうに行き、壁は写っていても裏返り扱いになるため）
     inl_h = seg_h[_vp_score(vp_h, seg_h, 1.5)]
     inl_v = seg_v[_vp_score(vp_v, seg_v, 1.5)]
     pts = np.vstack([inl_h[:, :2], inl_h[:, 2:], inl_v[:, :2], inl_v[:, 2:]])
     pp = Hm @ np.c_[pts, np.ones(len(pts))].T
+    if np.any(np.abs(pp[2]) < 1e-6) or np.any(pp[2] * pp[2][0] <= 0):
+        res.reason = "壁の線分の一部が正面化で裏返ります（別の面の線が混ざっているか、斜めすぎます）"
+        return None, res
     pp = pp[:2] / pp[2]
     mx, my = 0.1 * (pp[0].max() - pp[0].min()), 0.1 * (pp[1].max() - pp[1].min())
-    x0, y0 = max(pc[0].min(), pp[0].min() - mx), max(pc[1].min(), pp[1].min() - my)
-    x1, y1 = min(pc[0].max(), pp[0].max() + mx), min(pc[1].max(), pp[1].max() + my)
+    x0, y0, x1, y1 = pp[0].min() - mx, pp[1].min() - my, pp[0].max() + mx, pp[1].max() + my
+    # 壁の範囲が写真の外にはみ出す（真っ黒の帯になる）のを避けるため、写真の枠の像で切る
+    corners = np.array([[0, 0, 1], [w, 0, 1], [w, h, 1], [0, h, 1]], dtype=float).T
+    pc = Hm @ corners
+    front = pc[2] * (Hm @ np.r_[pts[0], 1.0])[2] > 0
+    if front.all():
+        pcx = pc[:2] / pc[2]
+        x0, y0 = max(x0, pcx[0].min()), max(y0, pcx[1].min())
+        x1, y1 = min(x1, pcx[0].max()), min(y1, pcx[1].max())
     ow, oh = x1 - x0, y1 - y0
-    s = min(1.0, max_scale * w / ow, max_scale * h / oh)
+    s = min(1.0, max_scale * w / ow, max_scale * h / oh, math.sqrt(1.5 * w * h / (ow * oh)))
     T = np.array([[s, 0, -x0 * s], [0, s, -y0 * s], [0, 0, 1]])
     Hm = T @ Hm
     out_w, out_h = int(ow * s), int(oh * s)
@@ -227,6 +247,8 @@ def rectify(img: np.ndarray, focal_35mm: float | None = None, max_scale: float =
     out = cv2.warpPerspective(img, Hm, (out_w, out_h), flags=cv2.INTER_LINEAR, borderValue=(0, 0, 0))
     res.H = [[float(v) for v in row] for row in Hm]
     res.out_size = [out_w, out_h]
+    wb = T @ np.r_[pp, np.ones((1, pp.shape[1]))]
+    res.wall_box = [round(float(wb[0].min()), 1), round(float(wb[1].min()), 1), round(float(wb[0].max()), 1), round(float(wb[1].max()), 1)]
     res.vp_h = [float(v) for v in (vp_h / (vp_h[2] if abs(vp_h[2]) > 1e-9 else 1))]
     res.vp_v = [float(v) for v in (vp_v / (vp_v[2] if abs(vp_v[2]) > 1e-9 else 1))]
 
@@ -248,20 +270,28 @@ def rectify(img: np.ndarray, focal_35mm: float | None = None, max_scale: float =
     return out, res
 
 
-def rectify_file(src: Path, out_dir: Path, focal_35mm: float | None = None) -> RectifyResult:
+def read_image(src: Path) -> np.ndarray:
+    """日本語パスでも読める画像読み込み（BGR）。EXIF の向きも反映する。"""
+    import cv2
+    from PIL import Image, ImageOps
+
+    im = Image.open(src)
+    im = ImageOps.exif_transpose(im).convert("RGB")
+    return cv2.cvtColor(np.asarray(im), cv2.COLOR_RGB2BGR)
+
+
+def rectify_file(src: Path, out_dir: Path, focal_35mm: float | None = None,
+                 roi: tuple[float, float, float, float] | None = None) -> RectifyResult:
     """ファイルを正面化し、画像と根拠 JSON を out_dir に書く。"""
     import cv2
 
-    img = cv2.imread(str(src), cv2.IMREAD_COLOR)
-    if img is None:
-        from PIL import Image
-
-        img = cv2.cvtColor(np.asarray(Image.open(src).convert("RGB")), cv2.COLOR_RGB2BGR)
-    out, res = rectify(img, focal_35mm)
+    img = read_image(src)
+    out, res = rectify(img, focal_35mm, roi=roi)
     out_dir.mkdir(parents=True, exist_ok=True)
     stem = src.stem
     if out is not None:
-        cv2.imwrite(str(out_dir / f"{stem}_front.jpg"), out, [cv2.IMWRITE_JPEG_QUALITY, 92])
+        _, buf = cv2.imencode(".jpg", out, [cv2.IMWRITE_JPEG_QUALITY, 92])
+        (out_dir / f"{stem}_front.jpg").write_bytes(buf.tobytes())
     d = res.to_json()
     d["source"] = str(src)
     (out_dir / f"{stem}_front.json").write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
