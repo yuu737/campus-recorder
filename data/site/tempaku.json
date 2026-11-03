@@ -1,0 +1,5160 @@
+{
+ "schema": "campus-recorder/site/1",
+ "campus": "tempaku",
+ "crs": {
+  "epsg": 6675,
+  "origin_lat": 35.1355,
+  "origin_lon": 136.9755,
+  "note": "原点からの m。x=東, y=北。z は標高 m"
+ },
+ "boundary_osm": [
+  [
+   [
+    -37.92,
+    527.27
+   ],
+   [
+    -39.03,
+    520.83
+   ],
+   [
+    -45.03,
+    513.17
+   ],
+   [
+    -45.18,
+    504.41
+   ],
+   [
+    -60.47,
+    490.82
+   ],
+   [
+    -120.93,
+    446.28
+   ],
+   [
+    -130.09,
+    448.12
+   ],
+   [
+    -201.99,
+    547.71
+   ],
+   [
+    -227.72,
+    583.36
+   ],
+   [
+    -210.88,
+    594.52
+   ],
+   [
+    -194.8,
+    605.19
+   ],
+   [
+    -215.49,
+    646.47
+   ],
+   [
+    -242.34,
+    669.27
+   ],
+   [
+    -240.61,
+    678.87
+   ],
+   [
+    -217.16,
+    670.32
+   ],
+   [
+    -152.6,
+    627.36
+   ],
+   [
+    -108.92,
+    595.16
+   ],
+   [
+    -37.92,
+    527.27
+   ]
+  ],
+  [
+   [
+    -287.06,
+    858.9
+   ],
+   [
+    -246.13,
+    858.33
+   ],
+   [
+    -153.45,
+    821.53
+   ],
+   [
+    -154.08,
+    808.28
+   ],
+   [
+    -163.23,
+    753.18
+   ],
+   [
+    -156.55,
+    668.01
+   ],
+   [
+    -159.64,
+    655.0
+   ],
+   [
+    -163.43,
+    651.23
+   ],
+   [
+    -218.84,
+    684.92
+   ],
+   [
+    -238.39,
+    692.14
+   ],
+   [
+    -256.68,
+    705.31
+   ],
+   [
+    -274.95,
+    739.78
+   ],
+   [
+    -287.06,
+    858.9
+   ]
+  ],
+  [
+   [
+    125.49,
+    194.47
+   ],
+   [
+    143.9,
+    175.19
+   ],
+   [
+    161.1,
+    145.11
+   ],
+   [
+    174.91,
+    122.45
+   ],
+   [
+    175.53,
+    116.51
+   ],
+   [
+    173.76,
+    110.55
+   ],
+   [
+    161.5,
+    87.23
+   ],
+   [
+    160.06,
+    83.14
+   ],
+   [
+    160.87,
+    62.5
+   ],
+   [
+    162.47,
+    60.05
+   ],
+   [
+    177.62,
+    47.02
+   ],
+   [
+    208.85,
+    7.67
+   ],
+   [
+    221.03,
+    -3.99
+   ],
+   [
+    226.44,
+    -2.81
+   ],
+   [
+    222.23,
+    9.49
+   ],
+   [
+    261.77,
+    18.9
+   ],
+   [
+    302.61,
+    27.19
+   ],
+   [
+    304.46,
+    -0.71
+   ],
+   [
+    305.18,
+    -22.77
+   ],
+   [
+    303.3,
+    -38.44
+   ],
+   [
+    298.33,
+    -55.29
+   ],
+   [
+    273.78,
+    -93.13
+   ],
+   [
+    264.47,
+    -106.97
+   ],
+   [
+    258.93,
+    -129.52
+   ],
+   [
+    250.46,
+    -123.55
+   ],
+   [
+    237.5,
+    -118.05
+   ],
+   [
+    220.53,
+    -115.54
+   ],
+   [
+    215.5,
+    -138.88
+   ],
+   [
+    228.95,
+    -142.26
+   ],
+   [
+    206.98,
+    -234.42
+   ],
+   [
+    203.33,
+    -236.23
+   ],
+   [
+    120.03,
+    -215.21
+   ],
+   [
+    118.05,
+    -210.73
+   ],
+   [
+    128.61,
+    -167.03
+   ],
+   [
+    123.63,
+    -165.03
+   ],
+   [
+    95.19,
+    -158.02
+   ],
+   [
+    106.25,
+    -116.8
+   ],
+   [
+    81.31,
+    -112.79
+   ],
+   [
+    31.92,
+    -103.25
+   ],
+   [
+    -13.47,
+    -90.25
+   ],
+   [
+    -45.88,
+    -76.28
+   ],
+   [
+    -60.07,
+    -110.01
+   ],
+   [
+    -68.55,
+    -135.96
+   ],
+   [
+    -88.55,
+    -197.61
+   ],
+   [
+    -98.09,
+    -194.38
+   ],
+   [
+    -123.29,
+    -187.37
+   ],
+   [
+    -107.71,
+    -133.0
+   ],
+   [
+    -105.94,
+    -120.34
+   ],
+   [
+    -118.52,
+    -117.68
+   ],
+   [
+    -113.97,
+    -94.53
+   ],
+   [
+    -112.25,
+    -86.61
+   ],
+   [
+    -132.97,
+    -83.22
+   ],
+   [
+    -162.6,
+    -81.59
+   ],
+   [
+    -191.34,
+    -79.28
+   ],
+   [
+    -198.77,
+    -77.5
+   ],
+   [
+    -193.62,
+    -47.04
+   ],
+   [
+    -190.84,
+    -28.41
+   ],
+   [
+    -188.29,
+    -1.83
+   ],
+   [
+    -191.91,
+    23.91
+   ],
+   [
+    -166.25,
+    33.35
+   ],
+   [
+    -143.68,
+    41.36
+   ],
+   [
+    -112.9,
+    51.72
+   ],
+   [
+    -83.31,
+    63.54
+   ],
+   [
+    -52.26,
+    79.26
+   ],
+   [
+    -27.15,
+    93.96
+   ],
+   [
+    2.98,
+    151.27
+   ],
+   [
+    14.19,
+    161.53
+   ],
+   [
+    84.04,
+    205.72
+   ],
+   [
+    91.7,
+    208.8
+   ],
+   [
+    101.18,
+    209.28
+   ],
+   [
+    109.59,
+    206.98
+   ],
+   [
+    114.96,
+    203.52
+   ],
+   [
+    125.49,
+    194.47
+   ]
+  ]
+ ],
+ "sources": {
+  "osm": {
+   "relation": 18057087,
+   "license": "ODbL",
+   "fetched_at": "2026-11-03T09:54:43"
+  },
+  "plateau": "PLATEAU 名古屋市 2022（国土交通省）、建物 LOD0/LOD1 のみ",
+  "gsi": "国土地理院 航空写真・DEM5A"
+ },
+ "confirmation_statuses": [
+  "unconfirmed",
+  "confirmed",
+  "renamed",
+  "removed",
+  "new"
+ ],
+ "buildings": [
+  {
+   "id": "osm-way-163518234",
+   "name": null,
+   "name_source": null,
+   "osm": "way/163518234",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "5",
+    "plateau_height_m": 27.1,
+    "plateau_base_z": 36.88,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      62.17,
+      -81.92
+     ],
+     [
+      52.47,
+      -80.69
+     ],
+     [
+      52.96,
+      -76.82
+     ],
+     [
+      -2.52,
+      -69.79
+     ],
+     [
+      -4.16,
+      -82.66
+     ],
+     [
+      -1.58,
+      -82.99
+     ],
+     [
+      -1.91,
+      -85.6
+     ],
+     [
+      0.43,
+      -85.9
+     ],
+     [
+      0.52,
+      -85.19
+     ],
+     [
+      2.0,
+      -85.38
+     ],
+     [
+      1.78,
+      -87.12
+     ],
+     [
+      50.41,
+      -93.04
+     ],
+     [
+      50.07,
+      -95.78
+     ],
+     [
+      60.25,
+      -97.06
+     ],
+     [
+      62.17,
+      -81.92
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_326ebceb-417f-45a5-9633-710933a76db7"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    29.0,
+    -82.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "kyotsu-minami",
+   "name": "共通講義棟南",
+   "name_source": "osm",
+   "osm": "way/163518235",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "5",
+    "plateau_height_m": 25.9,
+    "plateau_base_z": 47.13,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      34.2,
+      116.88
+     ],
+     [
+      24.79,
+      121.9
+     ],
+     [
+      4.16,
+      132.93
+     ],
+     [
+      -5.37,
+      115.09
+     ],
+     [
+      15.18,
+      104.1
+     ],
+     [
+      10.92,
+      96.14
+     ],
+     [
+      -9.55,
+      107.09
+     ],
+     [
+      -19.02,
+      89.37
+     ],
+     [
+      1.6,
+      78.35
+     ],
+     [
+      0.52,
+      76.32
+     ],
+     [
+      -2.57,
+      77.97
+     ],
+     [
+      -4.28,
+      74.77
+     ],
+     [
+      -1.33,
+      73.18
+     ],
+     [
+      -2.41,
+      71.17
+     ],
+     [
+      -25.6,
+      83.57
+     ],
+     [
+      -36.8,
+      62.66
+     ],
+     [
+      -3.79,
+      45.0
+     ],
+     [
+      -2.8,
+      46.83
+     ],
+     [
+      5.07,
+      42.61
+     ],
+     [
+      7.01,
+      46.28
+     ],
+     [
+      8.74,
+      45.35
+     ],
+     [
+      9.14,
+      46.09
+     ],
+     [
+      11.97,
+      51.39
+     ],
+     [
+      42.67,
+      108.79
+     ],
+     [
+      40.94,
+      109.7
+     ],
+     [
+      41.52,
+      110.8
+     ],
+     [
+      33.3,
+      115.18
+     ],
+     [
+      34.2,
+      116.88
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_f8e12e3c-913b-4ee1-926c-bec978e8ef65"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    5.1,
+    85.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "gym",
+   "name": "新体育館",
+   "name_source": "osm",
+   "osm": "way/163518238",
+   "building_tag": "sports_hall",
+   "reference": {
+    "levels_osm": "4",
+    "plateau_height_m": 23.9,
+    "plateau_base_z": 47.08,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -64.07,
+      65.13
+     ],
+     [
+      -65.09,
+      63.53
+     ],
+     [
+      -67.0,
+      64.18
+     ],
+     [
+      -88.25,
+      23.72
+     ],
+     [
+      -55.94,
+      6.16
+     ],
+     [
+      -33.37,
+      48.03
+     ],
+     [
+      -64.07,
+      65.13
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_82614c62-1045-4fd8-a831-8a4d0032da10"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -60.9,
+    36.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b11",
+   "name": "11号館",
+   "name_source": "osm",
+   "osm": "way/163518240",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 12.0,
+    "plateau_base_z": 39.05,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      42.79,
+      -74.96
+     ],
+     [
+      47.83,
+      -65.52
+     ],
+     [
+      -2.46,
+      -38.67
+     ],
+     [
+      -9.44,
+      -51.73
+     ],
+     [
+      30.9,
+      -73.27
+     ],
+     [
+      42.79,
+      -74.96
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    18.7,
+    -58.1
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-163518242",
+   "name": null,
+   "name_source": null,
+   "osm": "way/163518242",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "8",
+    "plateau_height_m": 30.6,
+    "plateau_base_z": 34.43,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      142.73,
+      11.69
+     ],
+     [
+      142.14,
+      10.52
+     ],
+     [
+      142.81,
+      10.19
+     ],
+     [
+      128.74,
+      -17.41
+     ],
+     [
+      132.61,
+      -19.39
+     ],
+     [
+      131.56,
+      -21.45
+     ],
+     [
+      139.69,
+      -25.6
+     ],
+     [
+      155.76,
+      5.25
+     ],
+     [
+      142.73,
+      11.69
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_9fc0fc38-c6b1-428b-a531-b748606c255b"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    141.9,
+    -6.8
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b09",
+   "name": "9号館",
+   "name_source": "osm",
+   "osm": "way/163518244",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "4",
+    "plateau_height_m": 24.7,
+    "plateau_base_z": 41.29,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      115.05,
+      37.67
+     ],
+     [
+      110.17,
+      40.28
+     ],
+     [
+      108.58,
+      37.31
+     ],
+     [
+      111.2,
+      35.91
+     ],
+     [
+      110.57,
+      34.72
+     ],
+     [
+      102.92,
+      38.81
+     ],
+     [
+      88.45,
+      11.7
+     ],
+     [
+      86.1,
+      12.96
+     ],
+     [
+      79.53,
+      0.67
+     ],
+     [
+      100.04,
+      -10.29
+     ],
+     [
+      103.42,
+      -3.96
+     ],
+     [
+      105.03,
+      -4.8
+     ],
+     [
+      122.71,
+      28.32
+     ],
+     [
+      117.81,
+      30.94
+     ],
+     [
+      118.22,
+      31.7
+     ],
+     [
+      113.27,
+      34.34
+     ],
+     [
+      115.05,
+      37.67
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_e2f95334-f4c5-44a0-b4d3-551d7c000713"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    101.9,
+    14.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b13",
+   "name": "13号館",
+   "name_source": "osm",
+   "osm": "way/163518246",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "3",
+    "plateau_height_m": 14.8,
+    "plateau_base_z": 29.17,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      208.2,
+      -0.04
+     ],
+     [
+      206.78,
+      -2.15
+     ],
+     [
+      206.4,
+      -1.89
+     ],
+     [
+      195.13,
+      -18.61
+     ],
+     [
+      196.76,
+      -19.71
+     ],
+     [
+      194.58,
+      -22.95
+     ],
+     [
+      195.0,
+      -23.22
+     ],
+     [
+      194.24,
+      -24.34
+     ],
+     [
+      192.3,
+      -23.04
+     ],
+     [
+      180.92,
+      -39.92
+     ],
+     [
+      190.97,
+      -46.7
+     ],
+     [
+      203.14,
+      -28.65
+     ],
+     [
+      204.19,
+      -29.35
+     ],
+     [
+      206.58,
+      -25.83
+     ],
+     [
+      205.31,
+      -24.99
+     ],
+     [
+      216.46,
+      -8.46
+     ],
+     [
+      212.47,
+      -5.77
+     ],
+     [
+      213.79,
+      -3.81
+     ],
+     [
+      208.2,
+      -0.04
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_0bf259e3-1e64-4f41-8019-c9f3eed486a2"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    199.2,
+    -23.7
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b10",
+   "name": "10号館",
+   "name_source": "osm",
+   "osm": "way/163518248",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "8",
+    "plateau_height_m": 39.5,
+    "plateau_base_z": 45.5,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      62.33,
+      37.48
+     ],
+     [
+      75.57,
+      30.62
+     ],
+     [
+      92.57,
+      61.99
+     ],
+     [
+      91.6,
+      62.49
+     ],
+     [
+      93.13,
+      65.39
+     ],
+     [
+      81.71,
+      71.36
+     ],
+     [
+      80.15,
+      68.38
+     ],
+     [
+      78.84,
+      69.07
+     ],
+     [
+      62.33,
+      37.48
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_d23b29f0-0bef-413e-96ef-4ab3b9cf198b"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    78.1,
+    51.1
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b14",
+   "name": "14号館",
+   "name_source": "osm",
+   "osm": "way/163518249",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 16.1,
+    "plateau_base_z": 44.93,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -121.29,
+      16.03
+     ],
+     [
+      -104.61,
+      7.32
+     ],
+     [
+      -96.86,
+      22.17
+     ],
+     [
+      -103.81,
+      25.79
+     ],
+     [
+      -103.15,
+      27.08
+     ],
+     [
+      -106.46,
+      28.79
+     ],
+     [
+      -107.1,
+      27.56
+     ],
+     [
+      -113.53,
+      30.91
+     ],
+     [
+      -121.29,
+      16.03
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_da872fa0-1c0f-4999-bbb7-4ea2150c8805"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -109.0,
+    19.2
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "lab1",
+   "name": "研究実験棟Ⅰ",
+   "name_source": "osm",
+   "osm": "way/163518251",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "5",
+    "plateau_height_m": 26.6,
+    "plateau_base_z": 43.39,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      122.97,
+      85.85
+     ],
+     [
+      145.73,
+      73.79
+     ],
+     [
+      151.97,
+      85.59
+     ],
+     [
+      154.15,
+      84.45
+     ],
+     [
+      160.38,
+      96.24
+     ],
+     [
+      158.93,
+      97.0
+     ],
+     [
+      165.27,
+      108.95
+     ],
+     [
+      153.74,
+      115.05
+     ],
+     [
+      157.37,
+      121.89
+     ],
+     [
+      145.4,
+      128.23
+     ],
+     [
+      122.97,
+      85.85
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_58c6c84c-a3b7-4155-8c1c-9d522065ab2a"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    144.8,
+    99.6
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b06",
+   "name": "6号館",
+   "name_source": "osm",
+   "osm": "way/163518253",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "4",
+    "plateau_height_m": 22.6,
+    "plateau_base_z": 33.43,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      196.22,
+      -1.79
+     ],
+     [
+      193.04,
+      -0.09
+     ],
+     [
+      202.55,
+      17.51
+     ],
+     [
+      177.98,
+      30.68
+     ],
+     [
+      167.11,
+      10.61
+     ],
+     [
+      165.3,
+      7.26
+     ],
+     [
+      168.32,
+      5.64
+     ],
+     [
+      163.19,
+      -3.84
+     ],
+     [
+      160.64,
+      -2.47
+     ],
+     [
+      153.81,
+      -15.1
+     ],
+     [
+      179.8,
+      -29.03
+     ],
+     [
+      193.18,
+      -4.3
+     ],
+     [
+      194.49,
+      -4.99
+     ],
+     [
+      196.22,
+      -1.79
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_ca80d3c9-eceb-442a-8f27-3f793ccb8bb8"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    178.9,
+    0.6
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "b12",
+   "name": "12号館",
+   "name_source": "osm",
+   "osm": "way/163518258",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "4",
+    "plateau_height_m": 23.0,
+    "plateau_base_z": 44.05,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -55.94,
+      -4.74
+     ],
+     [
+      -58.15,
+      -3.56
+     ],
+     [
+      -54.01,
+      4.11
+     ],
+     [
+      -90.12,
+      23.58
+     ],
+     [
+      -89.0,
+      25.63
+     ],
+     [
+      -92.41,
+      27.47
+     ],
+     [
+      -100.34,
+      12.73
+     ],
+     [
+      -97.15,
+      11.0
+     ],
+     [
+      -97.74,
+      9.92
+     ],
+     [
+      -72.78,
+      -3.54
+     ],
+     [
+      -77.02,
+      -11.38
+     ],
+     [
+      -75.52,
+      -12.18
+     ],
+     [
+      -76.21,
+      -13.45
+     ],
+     [
+      -73.74,
+      -14.79
+     ],
+     [
+      -73.09,
+      -13.59
+     ],
+     [
+      -63.52,
+      -18.77
+     ],
+     [
+      -55.94,
+      -4.74
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_314af06d-9a10-4188-ae8f-a5b694a0d276"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -75.6,
+    4.6
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "library",
+   "name": "名城大学付属図書館",
+   "name_source": "osm",
+   "osm": "way/163518269",
+   "building_tag": "library",
+   "reference": {
+    "levels_osm": "5",
+    "plateau_height_m": 33.7,
+    "plateau_base_z": 40.29,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -1.48,
+      -34.55
+     ],
+     [
+      42.15,
+      -57.78
+     ],
+     [
+      60.68,
+      -22.95
+     ],
+     [
+      24.01,
+      -3.44
+     ],
+     [
+      17.05,
+      0.27
+     ],
+     [
+      6.69,
+      -19.2
+     ],
+     [
+      -1.48,
+      -34.55
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_feae3e15-dd53-4b4a-8f30-bb05525d15e3"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    29.6,
+    -28.8
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "honbu",
+   "name": "本部棟",
+   "name_source": "osm",
+   "osm": "way/163518271",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "5",
+    "plateau_height_m": 32.1,
+    "plateau_base_z": 41.94,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -0.36,
+      -22.51
+     ],
+     [
+      -20.06,
+      -12.12
+     ],
+     [
+      -32.93,
+      -5.33
+     ],
+     [
+      -18.56,
+      21.9
+     ],
+     [
+      -26.11,
+      25.89
+     ],
+     [
+      -27.38,
+      23.48
+     ],
+     [
+      -30.67,
+      25.23
+     ],
+     [
+      -40.82,
+      5.98
+     ],
+     [
+      -41.4,
+      6.28
+     ],
+     [
+      -51.72,
+      -13.29
+     ],
+     [
+      -28.14,
+      -25.73
+     ],
+     [
+      -7.74,
+      -36.48
+     ],
+     [
+      -0.36,
+      -22.51
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -27.8,
+    -8.7
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "kyotsu-higashi",
+   "name": "共通講義棟東",
+   "name_source": "osm",
+   "osm": "way/163518277",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "7",
+    "plateau_height_m": 37.6,
+    "plateau_base_z": 37.4,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      102.38,
+      -31.66
+     ],
+     [
+      103.09,
+      -27.92
+     ],
+     [
+      103.33,
+      -24.79
+     ],
+     [
+      103.31,
+      -22.22
+     ],
+     [
+      102.76,
+      -17.78
+     ],
+     [
+      81.97,
+      -15.52
+     ],
+     [
+      73.35,
+      -14.5
+     ],
+     [
+      72.68,
+      -19.91
+     ],
+     [
+      72.74,
+      -21.62
+     ],
+     [
+      73.29,
+      -24.05
+     ],
+     [
+      73.74,
+      -26.42
+     ],
+     [
+      73.2,
+      -31.71
+     ],
+     [
+      69.73,
+      -31.35
+     ],
+     [
+      65.16,
+      -79.86
+     ],
+     [
+      94.44,
+      -82.89
+     ],
+     [
+      99.35,
+      -35.41
+     ],
+     [
+      100.53,
+      -35.54
+     ],
+     [
+      101.49,
+      -34.04
+     ],
+     [
+      102.38,
+      -31.66
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_d2bd8168-1a2d-45f2-9d95-baf45ac4ba5d"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    83.7,
+    -48.6
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "koyu-kaikan",
+   "name": "名城大学 校友会館",
+   "name_source": "osm",
+   "osm": "way/1247283198",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": "4",
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -125.54,
+      -151.3
+     ],
+     [
+      -127.02,
+      -155.01
+     ],
+     [
+      -129.77,
+      -153.91
+     ],
+     [
+      -133.02,
+      -162.05
+     ],
+     [
+      -132.23,
+      -162.36
+     ],
+     [
+      -133.85,
+      -166.44
+     ],
+     [
+      -132.22,
+      -167.1
+     ],
+     [
+      -133.19,
+      -169.54
+     ],
+     [
+      -132.18,
+      -169.94
+     ],
+     [
+      -138.92,
+      -186.82
+     ],
+     [
+      -139.84,
+      -186.45
+     ],
+     [
+      -142.57,
+      -193.28
+     ],
+     [
+      -134.58,
+      -196.48
+     ],
+     [
+      -134.85,
+      -197.17
+     ],
+     [
+      -131.24,
+      -198.62
+     ],
+     [
+      -114.16,
+      -155.84
+     ],
+     [
+      -125.54,
+      -151.3
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    -128.3,
+    -173.8
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065166",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065166",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": null,
+    "plateau_base_z": 47.05,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -127.78,
+      21.82
+     ],
+     [
+      -123.2,
+      19.67
+     ],
+     [
+      -121.57,
+      23.15
+     ],
+     [
+      -126.14,
+      25.31
+     ],
+     [
+      -127.78,
+      21.82
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_83d243fc-aab2-4766-aa8b-5e6d94831cb5"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -124.7,
+    22.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065177",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065177",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "2",
+    "plateau_height_m": 7.5,
+    "plateau_base_z": 33.45,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -204.43,
+      626.11
+     ],
+     [
+      -196.7,
+      615.5
+     ],
+     [
+      -180.22,
+      627.84
+     ],
+     [
+      -187.93,
+      638.26
+     ],
+     [
+      -204.43,
+      626.11
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_724c577d-c401-49bd-96f5-e0127fe522d2"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -192.3,
+    626.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065209",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065209",
+   "building_tag": "house",
+   "reference": {
+    "levels_osm": "2",
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -114.96,
+      -104.83
+     ],
+     [
+      -127.15,
+      -101.98
+     ],
+     [
+      -129.87,
+      -113.13
+     ],
+     [
+      -117.83,
+      -116.23
+     ],
+     [
+      -114.96,
+      -104.83
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    -122.4,
+    -109.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065262",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065262",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 10.4,
+    "plateau_base_z": 35.63,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -179.93,
+      666.7
+     ],
+     [
+      -181.45,
+      664.52
+     ],
+     [
+      -172.7,
+      658.45
+     ],
+     [
+      -171.17,
+      660.63
+     ],
+     [
+      -179.93,
+      666.7
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_626dd7c2-8dc1-4d74-b1dd-3e1dbed7476d"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -176.3,
+    662.6
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065308",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065308",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.7,
+    "plateau_base_z": 34.26,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -221.49,
+      658.4
+     ],
+     [
+      -219.97,
+      656.2
+     ],
+     [
+      -211.33,
+      662.23
+     ],
+     [
+      -212.86,
+      664.43
+     ],
+     [
+      -221.49,
+      658.4
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_04753592-e6b1-4c4e-9b9f-dc8a9bcd008a"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -216.4,
+    660.3
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065457",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065457",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": 33.69,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -207.51,
+      590.02
+     ],
+     [
+      -206.47,
+      588.31
+     ],
+     [
+      -204.12,
+      589.74
+     ],
+     [
+      -205.18,
+      591.46
+     ],
+     [
+      -207.51,
+      590.02
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_60225eb4-afd6-4de2-8c1c-d7e4735a6503"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -205.8,
+    589.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065500",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065500",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 3.5,
+    "plateau_base_z": 33.5,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -161.81,
+      628.87
+     ],
+     [
+      -165.9,
+      629.26
+     ],
+     [
+      -166.32,
+      624.93
+     ],
+     [
+      -162.24,
+      624.53
+     ],
+     [
+      -161.81,
+      628.87
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_696e218a-352a-4b2b-9dda-42cf519ca0e1"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -164.1,
+    626.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065520",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065520",
+   "building_tag": "house",
+   "reference": {
+    "levels_osm": "2",
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -122.12,
+      -92.47
+     ],
+     [
+      -122.27,
+      -93.47
+     ],
+     [
+      -124.17,
+      -93.19
+     ],
+     [
+      -124.98,
+      -98.89
+     ],
+     [
+      -123.4,
+      -99.12
+     ],
+     [
+      -123.77,
+      -101.73
+     ],
+     [
+      -115.55,
+      -102.91
+     ],
+     [
+      -115.06,
+      -99.48
+     ],
+     [
+      -114.22,
+      -99.61
+     ],
+     [
+      -113.37,
+      -93.73
+     ],
+     [
+      -122.12,
+      -92.47
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    -119.2,
+    -97.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065595",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065595",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 6.4,
+    "plateau_base_z": 51.59,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -108.25,
+      36.24
+     ],
+     [
+      -97.4,
+      31.36
+     ],
+     [
+      -93.85,
+      39.24
+     ],
+     [
+      -104.69,
+      44.12
+     ],
+     [
+      -108.25,
+      36.24
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_228df0f3-a9c1-4118-914e-0a78822954a0"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -101.0,
+    37.7
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065600",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065600",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 23.1,
+    "plateau_base_z": 33.95,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -153.57,
+      490.63
+     ],
+     [
+      -156.39,
+      488.57
+     ],
+     [
+      -128.45,
+      450.19
+     ],
+     [
+      -125.63,
+      452.24
+     ],
+     [
+      -153.57,
+      490.63
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_893fba9c-4c5d-47dc-919f-ccd29b6de5b3"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -141.0,
+    470.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065617",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065617",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 5.8,
+    "plateau_base_z": 37.24,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -171.65,
+      661.26
+     ],
+     [
+      -159.22,
+      662.3
+     ],
+     [
+      -159.6,
+      666.72
+     ],
+     [
+      -172.03,
+      665.67
+     ],
+     [
+      -171.65,
+      661.26
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_6db0df7d-5141-4332-a8d5-8523fe94f0d2"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -165.6,
+    664.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065619",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065619",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": 33.52,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -157.72,
+      627.88
+     ],
+     [
+      -160.94,
+      628.5
+     ],
+     [
+      -161.56,
+      625.25
+     ],
+     [
+      -158.35,
+      624.63
+     ],
+     [
+      -157.72,
+      627.88
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_e23210ec-903a-412d-af69-a7619dca9076"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -159.6,
+    626.6
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065716",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065716",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 11.5,
+    "plateau_base_z": 37.48,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -184.59,
+      -2.07
+     ],
+     [
+      -188.8,
+      23.08
+     ],
+     [
+      -190.87,
+      22.73
+     ],
+     [
+      -186.7,
+      -2.09
+     ],
+     [
+      -187.14,
+      -2.07
+     ],
+     [
+      -188.77,
+      -27.11
+     ],
+     [
+      -197.57,
+      -78.7
+     ],
+     [
+      -195.52,
+      -79.06
+     ],
+     [
+      -186.2,
+      -22.53
+     ],
+     [
+      -184.59,
+      -2.07
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_b70639cf-f9a1-42ef-9785-82c7fea6af00"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -189.6,
+    -26.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065826",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065826",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": 33.5,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -198.35,
+      593.67
+     ],
+     [
+      -200.11,
+      596.29
+     ],
+     [
+      -201.54,
+      595.34
+     ],
+     [
+      -199.78,
+      592.72
+     ],
+     [
+      -198.35,
+      593.67
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_c497c1b5-11ba-4a4c-85cb-ee479dcfe9fc"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -199.9,
+    594.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304065860",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304065860",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": null,
+    "plateau_base_z": 33.33,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -68.74,
+      554.64
+     ],
+     [
+      -70.11,
+      553.77
+     ],
+     [
+      -70.09,
+      551.95
+     ],
+     [
+      -68.34,
+      551.2
+     ],
+     [
+      -68.2,
+      549.29
+     ],
+     [
+      -66.71,
+      548.79
+     ],
+     [
+      -66.58,
+      547.07
+     ],
+     [
+      -64.86,
+      546.29
+     ],
+     [
+      -63.46,
+      547.46
+     ],
+     [
+      -63.53,
+      549.45
+     ],
+     [
+      -65.34,
+      549.86
+     ],
+     [
+      -65.35,
+      551.78
+     ],
+     [
+      -67.14,
+      552.46
+     ],
+     [
+      -67.14,
+      554.16
+     ],
+     [
+      -68.74,
+      554.64
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_312393a1-7304-4d2e-9bd4-93cb46389b04"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -66.8,
+    550.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304066138",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304066138",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": 33.27,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -101.67,
+      585.47
+     ],
+     [
+      -103.45,
+      586.05
+     ],
+     [
+      -104.6,
+      584.95
+     ],
+     [
+      -104.55,
+      583.17
+     ],
+     [
+      -102.55,
+      582.6
+     ],
+     [
+      -101.27,
+      583.84
+     ],
+     [
+      -101.67,
+      585.47
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_ee912f6e-750a-4e42-aa3d-a87b720c24a9"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -103.0,
+    584.3
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304066190",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304066190",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 4.3,
+    "plateau_base_z": 33.69,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -197.24,
+      643.22
+     ],
+     [
+      -204.61,
+      638.15
+     ],
+     [
+      -203.73,
+      636.88
+     ],
+     [
+      -205.27,
+      635.82
+     ],
+     [
+      -201.86,
+      630.86
+     ],
+     [
+      -192.31,
+      637.42
+     ],
+     [
+      -195.93,
+      642.68
+     ],
+     [
+      -196.57,
+      642.25
+     ],
+     [
+      -197.24,
+      643.22
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_c38169cf-13cb-42f5-8b34-784cbe272670"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -199.1,
+    637.2
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304066224",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304066224",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": 33.3,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -98.68,
+      581.38
+     ],
+     [
+      -100.56,
+      581.98
+     ],
+     [
+      -101.8,
+      580.97
+     ],
+     [
+      -101.63,
+      579.15
+     ],
+     [
+      -100.01,
+      578.33
+     ],
+     [
+      -98.47,
+      579.49
+     ],
+     [
+      -98.68,
+      581.38
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_f32e481a-3011-4ce2-a795-865d87cfdb73"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -100.1,
+    580.2
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304071078",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304071078",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 23.4,
+    "plateau_base_z": 38.64,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -70.21,
+      -93.81
+     ],
+     [
+      -79.86,
+      -88.63
+     ],
+     [
+      -81.12,
+      -90.95
+     ],
+     [
+      -71.47,
+      -96.14
+     ],
+     [
+      -70.21,
+      -93.81
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_27242e3d-dc68-4d28-a6c1-0181b0dbd921"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -75.7,
+    -92.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077322",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077322",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 28.8,
+    "plateau_base_z": 40.21,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      82.29,
+      -11.89
+     ],
+     [
+      76.04,
+      -11.35
+     ],
+     [
+      76.23,
+      -6.98
+     ],
+     [
+      66.36,
+      -2.38
+     ],
+     [
+      64.77,
+      -5.4
+     ],
+     [
+      73.2,
+      -9.53
+     ],
+     [
+      73.76,
+      -10.86
+     ],
+     [
+      73.35,
+      -14.5
+     ],
+     [
+      81.97,
+      -15.52
+     ],
+     [
+      82.29,
+      -11.89
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_ae5a3afb-fa13-4cc6-8e04-eb0c159c8d4b"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    73.9,
+    -9.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077323",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077323",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 69.5,
+    "plateau_base_z": 43.53,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      28.24,
+      42.54
+     ],
+     [
+      11.97,
+      51.39
+     ],
+     [
+      9.14,
+      46.09
+     ],
+     [
+      22.02,
+      39.06
+     ],
+     [
+      35.82,
+      31.54
+     ],
+     [
+      38.62,
+      36.89
+     ],
+     [
+      28.24,
+      42.54
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    23.9,
+    41.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077324",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077324",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 27.7,
+    "plateau_base_z": 42.26,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      53.74,
+      123.13
+     ],
+     [
+      49.67,
+      125.23
+     ],
+     [
+      45.41,
+      116.98
+     ],
+     [
+      30.28,
+      124.81
+     ],
+     [
+      25.44,
+      123.15
+     ],
+     [
+      24.79,
+      121.9
+     ],
+     [
+      34.2,
+      116.88
+     ],
+     [
+      42.45,
+      112.77
+     ],
+     [
+      41.8,
+      111.52
+     ],
+     [
+      46.48,
+      109.09
+     ],
+     [
+      53.74,
+      123.13
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_1a08c81c-5c3f-43f9-b614-16089991b861"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    40.8,
+    118.2
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077325",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077325",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 74.2,
+    "plateau_base_z": 41.81,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      46.81,
+      38.73
+     ],
+     [
+      49.99,
+      45.15
+     ],
+     [
+      44.98,
+      47.64
+     ],
+     [
+      47.15,
+      52.01
+     ],
+     [
+      35.73,
+      57.67
+     ],
+     [
+      28.24,
+      42.54
+     ],
+     [
+      38.62,
+      36.89
+     ],
+     [
+      41.13,
+      41.71
+     ],
+     [
+      46.81,
+      38.73
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    38.9,
+    46.7
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077326",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077326",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 21.8,
+    "plateau_base_z": 34.2,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      168.32,
+      5.64
+     ],
+     [
+      165.3,
+      7.26
+     ],
+     [
+      167.11,
+      10.61
+     ],
+     [
+      148.51,
+      20.58
+     ],
+     [
+      144.68,
+      13.51
+     ],
+     [
+      162.05,
+      4.21
+     ],
+     [
+      161.28,
+      2.75
+     ],
+     [
+      160.32,
+      3.28
+     ],
+     [
+      158.75,
+      0.36
+     ],
+     [
+      161.41,
+      -1.06
+     ],
+     [
+      160.64,
+      -2.47
+     ],
+     [
+      163.19,
+      -3.84
+     ],
+     [
+      168.32,
+      5.64
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_45ee080d-f0e1-4c6b-9625-96beb8ef6535"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    157.6,
+    9.8
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077411",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077411",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 13.8,
+    "plateau_base_z": 27.18,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      222.68,
+      -11.19
+     ],
+     [
+      216.29,
+      -17.96
+     ],
+     [
+      215.39,
+      -17.12
+     ],
+     [
+      212.63,
+      -20.04
+     ],
+     [
+      213.49,
+      -20.85
+     ],
+     [
+      207.53,
+      -27.18
+     ],
+     [
+      218.2,
+      -37.25
+     ],
+     [
+      222.15,
+      -33.06
+     ],
+     [
+      223.29,
+      -34.14
+     ],
+     [
+      230.38,
+      -26.63
+     ],
+     [
+      229.4,
+      -25.71
+     ],
+     [
+      233.49,
+      -21.38
+     ],
+     [
+      222.68,
+      -11.19
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_d96eb867-c5b6-4614-83eb-353430c9beda"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    220.7,
+    -24.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077511",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077511",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.2,
+    "plateau_base_z": 25.82,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      220.68,
+      -55.84
+     ],
+     [
+      224.26,
+      -57.07
+     ],
+     [
+      228.19,
+      -45.58
+     ],
+     [
+      224.6,
+      -44.37
+     ],
+     [
+      220.68,
+      -55.84
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_ef862c26-1869-47a5-9646-6f9979f01152"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    224.4,
+    -50.7
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077542",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077542",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.7,
+    "plateau_base_z": 46.25,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -16.69,
+      29.98
+     ],
+     [
+      -10.72,
+      26.9
+     ],
+     [
+      -7.87,
+      32.41
+     ],
+     [
+      -21.95,
+      39.7
+     ],
+     [
+      -27.62,
+      42.64
+     ],
+     [
+      -30.47,
+      37.12
+     ],
+     [
+      -16.69,
+      29.98
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_be7e5355-75e1-4ac8-90a3-bc58ff26375e"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -19.2,
+    34.8
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077563",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077563",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 18.6,
+    "plateau_base_z": 43.41,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      110.65,
+      177.87
+     ],
+     [
+      112.53,
+      181.45
+     ],
+     [
+      95.69,
+      190.25
+     ],
+     [
+      93.82,
+      186.68
+     ],
+     [
+      110.65,
+      177.87
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_d47b0db7-33dd-4f17-b2c6-0ccd39ad731a"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    103.2,
+    184.1
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077695",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077695",
+   "building_tag": "retail",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 8.1,
+    "plateau_base_z": 18.93,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      263.58,
+      -109.16
+     ],
+     [
+      264.68,
+      -105.0
+     ],
+     [
+      259.07,
+      -103.53
+     ],
+     [
+      254.85,
+      -119.53
+     ],
+     [
+      262.46,
+      -121.59
+     ],
+     [
+      265.59,
+      -109.66
+     ],
+     [
+      263.58,
+      -109.16
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_5eb17a76-b9ce-4439-a269-e8719595d407"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    260.4,
+    -112.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077861",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077861",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.6,
+    "plateau_base_z": 25.36,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      225.86,
+      -57.46
+     ],
+     [
+      227.6,
+      -58.05
+     ],
+     [
+      227.98,
+      -57.0
+     ],
+     [
+      229.94,
+      -57.67
+     ],
+     [
+      232.75,
+      -49.47
+     ],
+     [
+      230.93,
+      -48.84
+     ],
+     [
+      231.74,
+      -46.43
+     ],
+     [
+      229.87,
+      -45.8
+     ],
+     [
+      225.86,
+      -57.46
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_0704ef42-35d5-4595-aea4-bb29707c1a29"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    229.5,
+    -52.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077892",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077892",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": null,
+    "plateau_base_z": 28.62,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      194.38,
+      -47.52
+     ],
+     [
+      197.92,
+      -48.72
+     ],
+     [
+      199.91,
+      -42.92
+     ],
+     [
+      196.37,
+      -41.71
+     ],
+     [
+      194.38,
+      -47.52
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_fb9079b3-053c-4089-b7f6-0c0384aa82a7"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    197.1,
+    -45.2
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304077928",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304077928",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 11.1,
+    "plateau_base_z": 27.87,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      199.7,
+      -49.47
+     ],
+     [
+      203.23,
+      -50.67
+     ],
+     [
+      207.2,
+      -39.06
+     ],
+     [
+      203.66,
+      -37.84
+     ],
+     [
+      199.7,
+      -49.47
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_d5f1baac-5c4c-48b1-977a-17b8f7594ea8"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    203.4,
+    -44.3
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078223",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078223",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": null,
+    "plateau_base_z": 26.34,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      215.39,
+      -54.05
+     ],
+     [
+      218.97,
+      -55.27
+     ],
+     [
+      222.86,
+      -43.9
+     ],
+     [
+      219.28,
+      -42.66
+     ],
+     [
+      215.39,
+      -54.05
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_88adda53-0b3c-48b1-a467-556258e58223"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    219.1,
+    -49.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078323",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078323",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 16.4,
+    "plateau_base_z": 25.62,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      224.14,
+      -141.26
+     ],
+     [
+      211.61,
+      -138.25
+     ],
+     [
+      212.56,
+      -134.31
+     ],
+     [
+      179.42,
+      -126.35
+     ],
+     [
+      172.77,
+      -154.03
+     ],
+     [
+      218.42,
+      -165.01
+     ],
+     [
+      224.14,
+      -141.26
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_edb3365d-201e-4d68-968a-dcab05fff708"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    198.1,
+    -146.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078432",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078432",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 4.6,
+    "plateau_base_z": 33.41,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      115.87,
+      -114.34
+     ],
+     [
+      112.11,
+      -113.98
+     ],
+     [
+      111.85,
+      -116.72
+     ],
+     [
+      115.6,
+      -117.08
+     ],
+     [
+      115.87,
+      -114.34
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_54510a57-9475-48bd-b766-47fe3f058080"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    113.9,
+    -115.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078525",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078525",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.1,
+    "plateau_base_z": 26.92,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      210.15,
+      -52.55
+     ],
+     [
+      213.72,
+      -53.78
+     ],
+     [
+      217.66,
+      -42.27
+     ],
+     [
+      214.09,
+      -41.04
+     ],
+     [
+      210.15,
+      -52.55
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_95f3a3ed-06fd-4ae4-8f8a-fe2ed301311c"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    213.9,
+    -47.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078572",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078572",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 18.6,
+    "plateau_base_z": 43.43,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      136.83,
+      149.9
+     ],
+     [
+      139.73,
+      155.44
+     ],
+     [
+      123.58,
+      163.89
+     ],
+     [
+      120.69,
+      158.35
+     ],
+     [
+      136.83,
+      149.9
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_be266597-ff35-46f4-b700-0f663b4b91cf"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    130.2,
+    156.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078648",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078648",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 7.2,
+    "plateau_base_z": 33.82,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      111.32,
+      -113.52
+     ],
+     [
+      108.29,
+      -113.19
+     ],
+     [
+      107.97,
+      -116.23
+     ],
+     [
+      110.99,
+      -116.56
+     ],
+     [
+      111.32,
+      -113.52
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_76be2adc-4af2-41a1-aa0e-f1f6bc483d03"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    109.6,
+    -114.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078658",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078658",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.6,
+    "plateau_base_z": 27.35,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      204.97,
+      -50.91
+     ],
+     [
+      208.72,
+      -52.19
+     ],
+     [
+      212.73,
+      -40.51
+     ],
+     [
+      208.97,
+      -39.21
+     ],
+     [
+      204.97,
+      -50.91
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_b21e05b1-10d0-4ad2-824f-f6ff759cfc3e"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    208.8,
+    -45.7
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078680",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078680",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "2",
+    "plateau_height_m": 17.5,
+    "plateau_base_z": 34.53,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      168.42,
+      51.08
+     ],
+     [
+      167.15,
+      48.69
+     ],
+     [
+      163.88,
+      50.44
+     ],
+     [
+      150.15,
+      24.64
+     ],
+     [
+      153.65,
+      22.78
+     ],
+     [
+      152.27,
+      20.18
+     ],
+     [
+      158.72,
+      16.75
+     ],
+     [
+      160.04,
+      19.22
+     ],
+     [
+      161.32,
+      18.53
+     ],
+     [
+      175.09,
+      44.38
+     ],
+     [
+      173.73,
+      45.11
+     ],
+     [
+      175.04,
+      47.56
+     ],
+     [
+      168.42,
+      51.08
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_51c0cd52-077a-4e6a-ad74-595b49b13efe"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    162.7,
+    34.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078954",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078954",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 6.0,
+    "plateau_base_z": 26.0,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      215.53,
+      -125.57
+     ],
+     [
+      206.81,
+      -123.4
+     ],
+     [
+      205.55,
+      -128.44
+     ],
+     [
+      214.27,
+      -130.62
+     ],
+     [
+      215.53,
+      -125.57
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_1c9d53e6-8f43-4cc2-905d-28795e156fb3"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    210.5,
+    -127.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304078973",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304078973",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 17.0,
+    "plateau_base_z": 25.99,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      166.27,
+      -159.56
+     ],
+     [
+      173.71,
+      -130.17
+     ],
+     [
+      145.69,
+      -123.08
+     ],
+     [
+      140.37,
+      -144.13
+     ],
+     [
+      149.57,
+      -146.45
+     ],
+     [
+      147.46,
+      -154.8
+     ],
+     [
+      166.27,
+      -159.56
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_8b5f384d-743d-42a8-a2d2-8c1dd403a5d4"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    157.2,
+    -140.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1304081004",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1304081004",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 24.2,
+    "plateau_base_z": 42.95,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      31.28,
+      9.99
+     ],
+     [
+      25.98,
+      12.77
+     ],
+     [
+      35.82,
+      31.54
+     ],
+     [
+      22.02,
+      39.06
+     ],
+     [
+      19.59,
+      34.65
+     ],
+     [
+      21.63,
+      33.56
+     ],
+     [
+      20.13,
+      30.8
+     ],
+     [
+      22.46,
+      29.55
+     ],
+     [
+      16.13,
+      17.85
+     ],
+     [
+      19.75,
+      15.89
+     ],
+     [
+      12.29,
+      2.11
+     ],
+     [
+      9.4,
+      3.66
+     ],
+     [
+      2.35,
+      -9.39
+     ],
+     [
+      4.15,
+      -10.37
+     ],
+     [
+      1.03,
+      -16.14
+     ],
+     [
+      6.69,
+      -19.2
+     ],
+     [
+      17.05,
+      0.27
+     ],
+     [
+      24.01,
+      -3.44
+     ],
+     [
+      31.28,
+      9.99
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_2e2a316f-4471-4381-b071-ff0488fe8422"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    19.9,
+    10.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1305847740",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1305847740",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 5.5,
+    "plateau_base_z": 38.54,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -279.4,
+      823.14
+     ],
+     [
+      -270.4,
+      823.93
+     ],
+     [
+      -272.11,
+      843.45
+     ],
+     [
+      -264.45,
+      844.11
+     ],
+     [
+      -264.91,
+      849.27
+     ],
+     [
+      -276.22,
+      848.27
+     ],
+     [
+      -276.05,
+      846.4
+     ],
+     [
+      -278.89,
+      846.15
+     ],
+     [
+      -278.67,
+      843.47
+     ],
+     [
+      -281.17,
+      843.26
+     ],
+     [
+      -279.4,
+      823.14
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_5b393fbe-e81a-44a5-aba1-4367a513d729"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -274.6,
+    836.9
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1305848081",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1305848081",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 5.1,
+    "plateau_base_z": 37.9,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -275.64,
+      821.09
+     ],
+     [
+      -278.78,
+      820.8
+     ],
+     [
+      -278.02,
+      813.01
+     ],
+     [
+      -274.89,
+      813.31
+     ],
+     [
+      -275.64,
+      821.09
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_63af24a3-ef74-449a-8728-ae9cfcbeae41"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -276.8,
+    817.1
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1305848220",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1305848220",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 3.0,
+    "plateau_base_z": 38.98,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -262.03,
+      738.2
+     ],
+     [
+      -262.16,
+      740.29
+     ],
+     [
+      -256.58,
+      740.61
+     ],
+     [
+      -256.68,
+      742.59
+     ],
+     [
+      -268.39,
+      741.93
+     ],
+     [
+      -268.15,
+      737.85
+     ],
+     [
+      -262.03,
+      738.2
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_36862111-8541-4fd3-aaa8-c4f60b7b77c3"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -263.4,
+    740.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1305848633",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1305848633",
+   "building_tag": "public",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 5.7,
+    "plateau_base_z": 38.26,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      -227.09,
+      697.94
+     ],
+     [
+      -231.75,
+      697.34
+     ],
+     [
+      -231.18,
+      692.7
+     ],
+     [
+      -226.51,
+      693.29
+     ],
+     [
+      -227.09,
+      697.94
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_0045d4d4-cd31-43f1-894c-bd756bd484fb"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    -229.1,
+    695.3
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "osm-way-1316299591",
+   "name": null,
+   "name_source": null,
+   "osm": "way/1316299591",
+   "building_tag": "yes",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      155.61,
+      -74.36
+     ],
+     [
+      174.79,
+      -79.34
+     ],
+     [
+      171.59,
+      -91.55
+     ],
+     [
+      152.41,
+      -86.56
+     ],
+     [
+      155.61,
+      -74.36
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    163.6,
+    -83.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "lab2",
+   "name": "研究実験棟Ⅱ",
+   "name_source": "osm",
+   "osm": "relation/4823179",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      201.34,
+      -228.95
+     ],
+     [
+      128.34,
+      -211.03
+     ],
+     [
+      142.51,
+      -153.86
+     ],
+     [
+      215.51,
+      -171.78
+     ],
+     [
+      201.34,
+      -228.95
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    171.9,
+    -191.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "kyotsu-kita",
+   "name": "共通講義棟北",
+   "name_source": "osm",
+   "osm": "relation/17880124",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "1",
+    "plateau_height_m": 18.7,
+    "plateau_base_z": 40.54,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      29.95,
+      162.88
+     ],
+     [
+      33.64,
+      161.0
+     ],
+     [
+      34.58,
+      162.83
+     ],
+     [
+      42.74,
+      158.65
+     ],
+     [
+      50.96,
+      154.38
+     ],
+     [
+      57.28,
+      166.47
+     ],
+     [
+      62.7,
+      163.64
+     ],
+     [
+      68.69,
+      175.09
+     ],
+     [
+      74.13,
+      172.24
+     ],
+     [
+      78.46,
+      180.51
+     ],
+     [
+      87.98,
+      175.53
+     ],
+     [
+      93.82,
+      186.68
+     ],
+     [
+      110.65,
+      177.87
+     ],
+     [
+      126.55,
+      169.54
+     ],
+     [
+      123.58,
+      163.89
+     ],
+     [
+      120.69,
+      158.35
+     ],
+     [
+      136.83,
+      149.9
+     ],
+     [
+      150.49,
+      142.67
+     ],
+     [
+      147.36,
+      136.75
+     ],
+     [
+      124.35,
+      92.78
+     ],
+     [
+      120.72,
+      94.64
+     ],
+     [
+      118.27,
+      90.03
+     ],
+     [
+      53.74,
+      123.13
+     ],
+     [
+      49.67,
+      125.23
+     ],
+     [
+      30.65,
+      134.98
+     ],
+     [
+      22.19,
+      139.3
+     ],
+     [
+      23.3,
+      141.47
+     ],
+     [
+      19.89,
+      143.21
+     ],
+     [
+      29.95,
+      162.88
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_997a8669-0297-4812-b017-17bfa42fa769",
+    "bldg_713597eb-fd55-4124-ae38-cbd6df191965",
+    "bldg_2546d8ba-55a3-4465-bfdd-81587fa2ab9a"
+   ],
+   "plateau_match": "overlap",
+   "centroid": [
+    91.0,
+    139.5
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "lab3",
+   "name": "研究実験棟Ⅲ",
+   "name_source": "osm",
+   "osm": "relation/17880147",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      299.91,
+      -1.74
+     ],
+     [
+      284.53,
+      -65.97
+     ],
+     [
+      267.26,
+      -61.83
+     ],
+     [
+      269.82,
+      -51.23
+     ],
+     [
+      248.55,
+      -54.83
+     ],
+     [
+      240.75,
+      -8.77
+     ],
+     [
+      242.02,
+      -8.55
+     ],
+     [
+      240.82,
+      -1.27
+     ],
+     [
+      243.32,
+      -0.86
+     ],
+     [
+      243.0,
+      1.08
+     ],
+     [
+      273.23,
+      6.07
+     ],
+     [
+      273.68,
+      6.09
+     ],
+     [
+      274.2,
+      6.02
+     ],
+     [
+      293.38,
+      1.43
+     ],
+     [
+      293.02,
+      -0.08
+     ],
+     [
+      299.91,
+      -1.74
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    269.6,
+    -25.4
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "tower75",
+   "name": "タワー75",
+   "name_source": "osm",
+   "osm": "relation/17880184",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": "16",
+    "plateau_height_m": null,
+    "plateau_base_z": null,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      46.81,
+      38.73
+     ],
+     [
+      54.0,
+      34.96
+     ],
+     [
+      54.46,
+      35.86
+     ],
+     [
+      67.0,
+      29.29
+     ],
+     [
+      66.51,
+      28.38
+     ],
+     [
+      74.43,
+      24.24
+     ],
+     [
+      73.32,
+      22.09
+     ],
+     [
+      77.92,
+      19.69
+     ],
+     [
+      66.36,
+      -2.38
+     ],
+     [
+      64.77,
+      -5.4
+     ],
+     [
+      63.87,
+      -7.14
+     ],
+     [
+      56.78,
+      -3.44
+     ],
+     [
+      55.63,
+      -5.62
+     ],
+     [
+      49.31,
+      -2.3
+     ],
+     [
+      50.53,
+      0.04
+     ],
+     [
+      39.54,
+      5.78
+     ],
+     [
+      38.17,
+      3.13
+     ],
+     [
+      31.87,
+      6.44
+     ],
+     [
+      33.2,
+      9.0
+     ],
+     [
+      31.28,
+      9.99
+     ],
+     [
+      25.98,
+      12.77
+     ],
+     [
+      35.82,
+      31.54
+     ],
+     [
+      38.62,
+      36.89
+     ],
+     [
+      41.13,
+      41.71
+     ],
+     [
+      46.81,
+      38.73
+     ]
+    ]
+   ],
+   "plateau_parts": [],
+   "plateau_match": "none",
+   "centroid": [
+    52.2,
+    17.0
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  },
+  {
+   "id": "lab4",
+   "name": "研究実験棟Ⅳ",
+   "name_source": "osm",
+   "osm": "relation/18057088",
+   "building_tag": "university",
+   "reference": {
+    "levels_osm": null,
+    "plateau_height_m": 32.3,
+    "plateau_base_z": 33.65,
+    "note": "参考値。棟 JSON の measured には使わない"
+   },
+   "footprint_osm": [
+    [
+     [
+      156.38,
+      -58.05
+     ],
+     [
+      208.29,
+      -71.54
+     ],
+     [
+      197.1,
+      -114.25
+     ],
+     [
+      145.19,
+      -100.77
+     ],
+     [
+      156.38,
+      -58.05
+     ]
+    ]
+   ],
+   "plateau_parts": [
+    "bldg_61478a96-6818-4b59-953e-8a515018bf79"
+   ],
+   "plateau_match": "nearby",
+   "centroid": [
+    176.7,
+    -86.2
+   ],
+   "confirmation": {
+    "status": "unconfirmed",
+    "by": null,
+    "at": null,
+    "note": ""
+   }
+  }
+ ],
+ "plateau_only": [
+  "bldg_7a030207-1430-4e2f-ac78-b9010ad057d4",
+  "bldg_5af0b287-9f08-41b5-93cf-d3c0e86ca63a",
+  "bldg_2c0da1f0-2392-4ff2-a5b7-47dafd54355c",
+  "bldg_b8dd6be2-b776-4962-a9e5-569fcc107151",
+  "bldg_00c54453-4d22-4797-8edb-c8a6e158d37e",
+  "bldg_8e701835-a0b3-4e99-b83f-ecbbf975b15b",
+  "bldg_b59343bc-f873-41f7-b2f0-e3830dc29d96",
+  "bldg_55fe93a4-a112-4a59-a46c-2ea5da0de1eb",
+  "bldg_51dca8e9-9e95-47d2-a136-7894b96c3efc",
+  "bldg_26971389-a00e-4c99-8fb4-407b23e84473",
+  "bldg_8833c188-d01c-43f5-adb0-6f24ef92e3b2",
+  "bldg_dad94501-f57e-4750-9575-a7ddd84cfac6",
+  "bldg_e228ebc7-66b5-48e3-903b-270d3b32ac7a",
+  "bldg_3a67d89f-186a-40a1-be77-6b393a0a3ce8"
+ ],
+ "staff_additions": []
+}

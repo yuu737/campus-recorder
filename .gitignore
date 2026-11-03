@@ -15,3 +15,6 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.egg-info/
+data/reference/**
+!data/reference/index.json
+data/site/cache/

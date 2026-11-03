@@ -1,0 +1,13 @@
+{
+  "note": "参照資料の索引。ファイル本体は git に入れない（.gitignore）。用途は建物の名称と有無の確認だけで、形・位置・寸法はなぞらない。",
+  "items": [
+    {
+      "id": "campus-map-official",
+      "file": "campus_map_official.png",
+      "what": "名城大学 天白キャンパスの公式キャンパス図（イラスト）",
+      "use": "建物の名称と有無の確認のみ",
+      "permission": {"from": "（大学の担当部署・担当者を書く）", "date": "2026-11-03", "condition": "公開しない。確認用の参照のみ"},
+      "source_url": "（公開 URL を書く）"
+    }
+  ]
+}
