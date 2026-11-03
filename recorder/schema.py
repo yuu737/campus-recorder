@@ -103,7 +103,7 @@ class Measurement:
 # 「どの鍵が測定値か」をここに列挙する。検証と図面生成はこの表を見る。
 MEASUREMENT_KEYS_BUILDING = ("ground_z", "parapet_top", "floor_count", "floor_pitch")
 MEASUREMENT_KEYS_FACE = ("length",)
-MEASUREMENT_KEYS_BAYS = ("count", "pitch", "pier_width", "end_margin")
+MEASUREMENT_KEYS_BAYS = ("count", "pitch", "pier_width", "end_margin", "margin_from", "margin_to")
 MEASUREMENT_KEYS_LEVEL = ("z",)
 MEASUREMENT_KEYS_WINDOW = ("z_bottom", "z_top", "width", "recess")
 MEASUREMENT_KEYS_BAND = ("z_bottom", "z_top", "depth")
@@ -113,6 +113,37 @@ MEASUREMENT_KEYS_MATERIAL = ("unit_w", "unit_h", "joint_w")
 
 def _m(d: dict, key: str) -> Measurement:
     return Measurement.from_json(d.get(key))
+
+
+MARGIN_TOL = 0.05   # 余白の合計が合わないと見なす差（m）。各項目の tol があればそれも足す
+
+
+def bay_margins(bays: dict | None, length: float | None) -> tuple[float | None, float | None, list[str]]:
+    """面の両端の余白 (from 側, to 側, 警告) を m で返す。length が無ければ余りは決まらず None。
+
+    margin_from（無ければ従来の end_margin）と margin_to のうち値のある方をその側に置き、
+    無い側に余り（length − count×pitch − 既知の余白）を置く。両方 unknown なら余りを半分ずつ（仮）にして警告する。
+    unknown を 0 とは見なさない。
+    """
+    bays = bays or {}
+    mf = _m(bays, "margin_from" if "margin_from" in bays else "end_margin")
+    mt = _m(bays, "margin_to")
+    cnt, pitch = _m(bays, "count"), _m(bays, "pitch")
+    warns: list[str] = []
+    f = float(mf.value) if mf.known else None
+    t = float(mt.value) if mt.known else None
+    if not (cnt.known and pitch.known) or length is None:
+        return f, t, warns
+    rest = float(length) - float(cnt.value) * float(pitch.value)
+    if f is not None and t is not None:
+        return f, t, warns
+    if f is not None:
+        return f, rest - f, warns
+    if t is not None:
+        return rest - t, t, warns
+    if abs(rest) > 0.005:
+        warns.append("端の余白 unknown、仮に等分（余り %.2f m を両端に半分ずつ）" % rest)
+    return rest / 2, rest / 2, warns
 
 
 def load_building(path: str | Path) -> dict:
@@ -125,6 +156,19 @@ def save_building(b: dict, path: str | Path) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(b, f, ensure_ascii=False, indent=2)
         f.write("\n")
+
+
+def _check_margins(bays: dict, length: Measurement, where: str) -> list[str]:
+    mf = _m(bays, "margin_from" if "margin_from" in bays else "end_margin")
+    mt = _m(bays, "margin_to")
+    cnt, pitch = _m(bays, "count"), _m(bays, "pitch")
+    if not (mf.known and mt.known and cnt.known and pitch.known and length.known):
+        return []
+    rest = float(length.value) - float(cnt.value) * float(pitch.value)
+    tol = MARGIN_TOL + (length.tol or 0.0) + (pitch.tol or 0.0) * float(cnt.value)
+    if abs(rest - (mf.value + mt.value)) > tol:
+        return [f"{where}.bays: 余白の合計が合いません（length − count×pitch = {rest:.2f} m、margin_from + margin_to = {mf.value + mt.value:.2f} m、許容 {tol:.2f} m）"]
+    return []
 
 
 def validate_building(b: dict) -> list[str]:
@@ -174,6 +218,7 @@ def validate_building(b: dict) -> list[str]:
             for k in MEASUREMENT_KEYS_BAYS:
                 if k in bays:
                     errs += _m(bays, k).problems(f"{where}.bays.{k}")
+            errs += _check_margins(bays, _m(fc, "length"), where)
         for i, w in enumerate(fc.get("windows", [])):
             for k in MEASUREMENT_KEYS_WINDOW:
                 if k in w:

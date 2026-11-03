@@ -10,6 +10,8 @@
   python -m recorder photos rectify <写真> [--f35 26]  壁を正面に向け直し out/rectified/ に画像と根拠 JSON を出す
   python -m recorder photos measure <front.jpg> [--known floor_pitch=3.99]
                                                  正面化画像から柱間隔・階高の候補を数える（既知の長さがあれば m に換算）
+  python -m recorder photos stitch <A_front.jpg> <B_front.jpg> [--overlap-hint 左|右] [--pin "A:x=B:x"] [--out ...]
+                                                 片端ずつの 2 枚を階高で揃えて横につなぐ（決まらなければ ambiguous）
   python -m recorder site confirm <id> <status> --by 名前 [--name 新しい名前] [--note ...]
                                                  職員の確認を敷地 JSON に書く
 """
@@ -95,6 +97,13 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("front_jpg", help="rectify が出した *_front.jpg")
     q.add_argument("--known", default=None, help="既知の長さ 例: floor_pitch=3.99 / bay_pitch=5.3 / wall_width=47.7")
     q.add_argument("--known-status", default="measured", choices=["measured", "estimated"])
+    q = psub.add_parser("stitch", help="片端ずつ写した 2 枚の正面化画像を、階高を揃えて横につなぐ")
+    q.add_argument("a_front", help="A（rectify が出した *_front.jpg）")
+    q.add_argument("b_front", help="B（同じ面の別の端）")
+    q.add_argument("--overlap-hint", choices=["左", "右"], default=None, help="B が A の 右 / 左 にある")
+    q.add_argument("--pin", default=None, help='人が読んだ目印の対応 1 組 "A:x_px=B:x_px"（どちらも元の正面化画像の画素）')
+    q.add_argument("--band", default=None, help="比べる行の範囲 y0,y1（A の画素）。木で隠れた階を外す時")
+    q.add_argument("--out", default=None, help="out/rectified/<name>_stitched.jpg")
 
     q = psub.add_parser("pose", help="写真の視点を逆算：正面化＋検収の結果から（--from-rectify）か、点の対応（--points）から")
     q.add_argument("photo")
@@ -251,6 +260,25 @@ def _photos(a) -> int:
             m = f"  ≈ {per.period_m} m（{per.status}）" if per.period_m else ""
             print(f"{name}: 周期 {per.period_px} px（強さ {per.strength}）  区間 {per.count}  エッジ {len(per.peaks_px)} 本{m}")
         print(f"比（柱間隔÷階高）: {res.ratio_bay_over_floor}   結果 JSON: {Path(a.front_jpg).with_name(Path(a.front_jpg).stem + '_measure.json')}")
+        return 0
+    if a.photos_cmd == "stitch":
+        from . import stitch
+
+        band = tuple(float(v) for v in a.band.split(",")) if a.band else None
+        res, js = stitch.stitch_files(Path(a.a_front), Path(a.b_front), Path(a.out) if a.out else None,
+                                      hint=a.overlap_hint, pin=a.pin, band=band)
+        for w in res.get("warnings", []):
+            print("注意:", w)
+        if res["status"] != "ok":
+            print(f"{'決まりません' if res['status'] == 'ambiguous' else 'つなげません'}: {res['reason']}")
+            print(f"結果 JSON: {js}")
+            return 2 if res["status"] == "ambiguous" else 1
+        c = res["check"]
+        print(f"つないだ画像: {res['image']}  B の拡縮 {res['scale_b']}  ずれ dx {res['dx_px']} px  dy {res['dy_px']} px"
+              f"  相関 {res['ncc']}（2 位との比 {res['second_over_first']}）")
+        print(f"検算 柱間隔÷階高: A {c['ratio_A']} / B {c['ratio_B']} / つないだ画像 {c['ratio_stitched']}"
+              f"（柱 {c['bay_px']} px、階 {c['floor_px']} px）  一致 {c['ratio_agree']}")
+        print(f"結果 JSON: {js}")
         return 0
     if a.photos_cmd == "pose":
         from . import pose

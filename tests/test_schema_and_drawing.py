@@ -88,3 +88,82 @@ def test_new_building_is_valid_and_all_unknown():
 def test_missing_face_raises():
     with pytest.raises(KeyError):
         drawing.elevation_svg(load(), "Z")
+
+
+# --- 面の端の余白（margin_from / margin_to） ---------------------------------------
+
+def _mm(v, status="estimated"):
+    if v is None:
+        return {"value": None, "unit": "m", "tol": None, "status": "unknown", "evidence": [], "method": "", "note": ""}
+    return {"value": v, "unit": "m", "tol": 0.1, "status": status, "evidence": [], "method": "テスト", "note": ""}
+
+
+def _face_b(**bays_extra):
+    """長さ 36.8、6 スパン×5.6 = 33.6、余り 3.2。柱の幅は 0（線で描く）。"""
+    b = load()
+    f = b["faces"][0]
+    f["length"] = {"value": 36.8, "unit": "m", "tol": 0.1, "status": "estimated", "evidence": [], "method": "テスト", "note": ""}
+    f["bays"] = {"count": {"value": 6, "unit": "個", "tol": None, "status": "estimated", "evidence": [], "method": "テスト", "note": ""},
+                 "pitch": _mm(5.6), "pier_width": _mm(0.0)}
+    f["bays"].update(bays_extra)
+    return b, f
+
+
+def _edges(b, f):
+    mf, mt, w = schema.bay_margins(f["bays"], f["length"]["value"])
+    return mf, mt, w
+
+
+def test_margin_from_only():
+    b, f = _face_b(margin_from=_mm(0.0))
+    mf, mt, w = _edges(b, f)
+    assert mf == 0.0 and abs(mt - 3.2) < 1e-9 and not w
+    assert schema.validate_building(b) == []
+    svg = drawing.elevation_svg(b, f["id"])
+    assert "仮に等分" not in svg
+
+
+def test_margin_to_only_puts_remainder_at_from_side():
+    b, f = _face_b(margin_to=_mm(0.0), margin_from=_mm(None))
+    mf, mt, w = _edges(b, f)
+    assert abs(mf - 3.2) < 1e-9 and mt == 0.0 and not w      # unknown の from 側に余りが出る（0 ではない）
+    assert schema.validate_building(b) == []
+
+
+def test_both_null_splits_remainder_and_warns():
+    b, f = _face_b(margin_from=_mm(None), margin_to=_mm(None))
+    mf, mt, w = _edges(b, f)
+    assert abs(mf - 1.6) < 1e-9 and abs(mt - 1.6) < 1e-9
+    assert w and "仮に等分" in w[0]
+    drawing.MARGIN_WARNINGS.clear()
+    svg = drawing.elevation_svg(b, f["id"])
+    assert "端の余白 unknown、仮に等分" in svg
+    assert any("仮に等分" in x for x in drawing.MARGIN_WARNINGS)
+
+
+def test_pier_positions_follow_margin_side():
+    b, f = _face_b(margin_from=_mm(None), margin_to=_mm(0.0))
+    svg = drawing.elevation_svg(b, f["id"])
+    left = drawing.LEFT
+    # 最初の柱線は from 端から 3.2 m（余り）の所、最後は面の端
+    x_first = left + 3.2 * drawing.SCALE
+    x_last = left + 36.8 * drawing.SCALE
+    assert f'x1="{x_first:.1f}"' in svg or f'x1="{x_first:.0f}"' in svg or f"{x_first:.1f}" in svg
+    assert f"{x_last:.1f}" in svg
+
+
+def test_end_margin_is_alias_of_margin_from():
+    b, f = _face_b(end_margin=_mm(0.6))
+    mf, mt, w = _edges(b, f)
+    assert mf == 0.6 and abs(mt - 2.6) < 1e-9
+    assert schema.validate_building(b) == []
+    b2, f2 = _face_b(margin_from=_mm(0.6))
+    assert drawing.elevation_svg(b, f["id"]) == drawing.elevation_svg(b2, f2["id"])
+
+
+def test_margin_sum_mismatch_fails_validate():
+    b, f = _face_b(margin_from=_mm(1.0), margin_to=_mm(0.5))     # 合計 1.5 だが余りは 3.2
+    errs = schema.validate_building(b)
+    assert any("余白の合計" in e for e in errs)
+    b, f = _face_b(margin_from=_mm(1.6), margin_to=_mm(1.6))
+    assert schema.validate_building(b) == []

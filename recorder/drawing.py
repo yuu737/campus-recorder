@@ -19,7 +19,10 @@ import html
 import math
 from typing import Any
 
+from . import schema
 from .schema import Measurement
+
+MARGIN_WARNINGS: list[str] = []   # 端の余白が unknown で仮に等分した面（draw が表示する）
 
 SCALE = 14.0  # px / m
 LEFT = 70
@@ -84,11 +87,13 @@ def _face_geometry(b: dict, fc: dict) -> tuple[Measurement, float, list[str]]:
     notes: list[str] = []
     length = _m(fc, "length")
     bays = fc.get("bays") or {}
-    cnt, pitch, margin = _m(bays, "count"), _m(bays, "pitch"), _m(bays, "end_margin")
+    cnt, pitch = _m(bays, "count"), _m(bays, "pitch")
     if length.known:
         return length, float(length.value), notes
     if cnt.known and pitch.known:
-        L = cnt.value * pitch.value + (2 * margin.value if margin.known else 0.0)
+        mf, mt, _w = schema.bay_margins(bays, None)
+        known = [x for x in (mf, mt) if x is not None]
+        L = cnt.value * pitch.value + (sum(known) if len(known) == 2 else 2 * known[0] if known else 0.0)
         notes.append("面の長さはスパン数×スパンから")
         return Measurement(L, status="estimated", method="スパン数×スパン", evidence=cnt.evidence + pitch.evidence), float(L), notes
     notes.append("面の長さが未確定（仮の幅 40 m で描画）")
@@ -143,10 +148,12 @@ def elevation_svg(b: dict, face_id: str) -> str:
 
     # 柱型（bays）
     bays = fc.get("bays") or {}
-    cnt, pitch, pier, margin = _m(bays, "count"), _m(bays, "pitch"), _m(bays, "pier_width"), _m(bays, "end_margin")
+    cnt, pitch, pier = _m(bays, "count"), _m(bays, "pitch"), _m(bays, "pier_width")
     bay_edges: list[float] = []
     if cnt.known and pitch.known:
-        m0 = margin.value if margin.known else 0.0
+        m0, _mt, mwarn = schema.bay_margins(bays, L)
+        notes += mwarn
+        MARGIN_WARNINGS.extend(f"{b.get('id')} {face_id}: {w}" for w in mwarn)
         bay_edges = [m0 + i * pitch.value for i in range(int(cnt.value) + 1)]
         pw = pier.value if pier.known else 0.0
         if pw > 0:

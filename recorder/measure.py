@@ -28,6 +28,9 @@ class Periodic:
     count: int = 0                  # 周期に合う区間の数（スパン数・階数の候補）
     period_m: float | None = None
     status: str = "unknown"         # 換算できたら estimated か measured、できなければ unknown
+    candidates: list[dict] = field(default_factory=list)  # 周期の候補（上位 3 つ）。{period_px, strength, note}。先頭が採用した物
+    confidence: str = "low"         # high / mid / low。判断役が候補から選ぶ時の目安
+    warnings: list[str] = field(default_factory=list)     # 「2 倍周期の可能性」「相関が弱い」など
 
 
 @dataclass
@@ -87,6 +90,127 @@ def _period(p: np.ndarray, min_px: int, max_px: int) -> tuple[float | None, floa
     return float(i + off), float(ac[i])
 
 
+def _refine(ac: np.ndarray, i: int) -> float:
+    if 1 <= i < len(ac) - 1:
+        y0, y1, y2 = ac[i - 1], ac[i], ac[i + 1]
+        denom = y0 - 2 * y1 + y2
+        return float(i + (0.5 * (y0 - y2) / denom if abs(denom) > 1e-9 else 0.0))
+    return float(i)
+
+
+def _ncc(x: np.ndarray, max_lag: int) -> np.ndarray:
+    """ずらした 2 本の重なり部分どうしの正規化相関（長いずれでも重なりの分で割るので、長い周期が不利にならない）。"""
+    n = len(x)
+    full = np.correlate(x, x, mode="full")[n - 1:]
+    c2 = np.concatenate([[0.0], np.cumsum(x * x)])
+    out = np.zeros(max_lag + 1)
+    for k in range(1, max_lag + 1):
+        a = c2[n - k] - c2[0]            # x[0 : n-k] の二乗和
+        b = c2[n] - c2[k]                # x[k : n] の二乗和
+        d = float(np.sqrt(a * b))
+        out[k] = full[k] / d if d > 1e-9 else 0.0
+    return out
+
+
+def _gauss(p: np.ndarray, sigma: float) -> np.ndarray:
+    r = max(1, int(4 * sigma))
+    k = np.exp(-0.5 * (np.arange(-r, r + 1) / sigma) ** 2)
+    return np.convolve(p, k / k.sum(), mode="same")
+
+
+def _local_peaks(ac: np.ndarray, lo: int, hi: int, thr: float) -> list[tuple[float, float]]:
+    return [(_refine(ac, i), float(ac[i])) for i in range(max(lo, 1), min(hi, len(ac) - 1))
+            if ac[i] >= ac[i - 1] and ac[i] >= ac[i + 1] and ac[i] > thr]
+
+
+def _near(cands: list[tuple[float, float]], target: float, tol: float = 0.08):
+    hit = [c for c in cands if abs(c[0] - target) <= tol * target]
+    return max(hit, key=lambda c: c[1]) if hit else None
+
+
+def _candidates(p: np.ndarray, min_px: int, max_px: int) -> tuple[list[dict], list[str]]:
+    """周期の候補を上位 3 つまで（先頭が採用）。戻り値 (候補, 警告)。
+
+    1. 普通の自己相関の山（柱・階の周期）。
+    2. 一番短い強い山が壁の長さの 1/40 より細かければ、タイルの目地などの細かい繰り返しとみなし、
+       その幅でならした並びで重なり部分の正規化相関を取り直す（細かい繰り返しの整数倍に引きずられない）。
+    3. 一番強い山の 1/2・1/3 にも山があれば短い方を採る（stitch.py と同じ考え）。2 倍周期の疑いは警告に出す。
+    """
+    n = len(p)
+    warns: list[str] = []
+    x = p - p.mean()
+    if x.std() < 1e-6 or n < 2 * min_px:
+        return [], warns
+    ac = np.correlate(x, x, mode="full")[n - 1:]
+    ac = ac / ac[0]
+    hi = min(max_px, n - 1)
+    if hi <= min_px:
+        return [], warns
+    cands = _local_peaks(ac, min_px, hi, 0.05)
+    # 細かい繰り返し（目地）の判定：下限より短い所（4 px〜）から見て、強い山が壁の長さの 1/40 より細かければ目地
+    texture = None
+    fine = _local_peaks(ac, 4, hi, 0.05)
+    if fine:
+        best = max(c[1] for c in fine)
+        first = next((c for c in sorted(fine) if c[1] >= 0.5 * best), None)
+        if first and first[0] < n / 40 and first[1] >= 0.2:
+            texture = first[0]
+    if texture:
+        sm = _gauss(p, texture)
+        xs = sm - sm.mean()
+        if xs.std() > 1e-6:
+            top = int(0.7 * n)
+            nc = _ncc(xs, top)
+            lo = max(int(3 * texture), min_px)
+            coarse = _local_peaks(nc, lo, top, 0.15)
+            if coarse:
+                warns.append(f"細かい繰り返し（目地・タイル、{texture:.1f} px）を除いて探した")
+                cands = coarse
+    if not cands:
+        return [], warns
+    # 順位：強さ × 重なりの広さ（長い周期ほどデータが少ないので少し割り引く）
+    def score(c):
+        sc = c[1] * (1.0 - c[0] / n) ** 0.5
+        if c[0] > 0.5 * n and c[1] < 0.6:        # 繰り返しが 2 回に満たない周期は、強くなければ偶然の相関とみなす
+            sc *= 0.5
+        return sc
+    ordered = sorted(cands, key=score, reverse=True)
+    best = ordered[0]
+    # 1/2・1/3 に山があれば短い方
+    for _ in range(3):
+        for k in (2, 3):
+            sub = _near(cands, best[0] / k)
+            if sub and sub[0] >= min_px and sub[1] >= max(0.1, 0.85 * best[1]):
+                warns.append(f"{best[0]:.1f} px の 1/{k} にも山（{sub[0]:.1f} px、強さ {sub[1]:.2f}）→ 短い方を採用")
+                best = (best[0] / k, sub[1])
+                break
+        else:
+            break
+    out = [{"period_px": round(best[0], 1), "strength": round(best[1], 3), "note": "採用"}]
+    half = _near(cands, best[0] / 2)
+    if half and half[0] >= min_px and half[1] >= 0.1 and abs(half[0] - best[0]) > 0.08 * best[0]:
+        out.append({"period_px": round(half[0], 1), "strength": round(half[1], 3), "note": "採用の 1/2"})
+    for c in ordered:
+        if len(out) >= 3:
+            break
+        if all(abs(c[0] - o["period_px"]) > 0.08 * o["period_px"] for o in out):
+            note = ""
+            r = c[0] / best[0]
+            if abs(r - 2) < 0.16:
+                note = "採用の 2 倍"
+            elif abs(r - 0.5) < 0.04:
+                note = "採用の 1/2"
+            out.append({"period_px": round(c[0], 1), "strength": round(c[1], 3), "note": note})
+    # 2 倍周期の疑い：採用の 1/2 に（採用ほど強くはないが）山がある、または採用が 2 倍の候補の 1/2
+    if best[0] > 0.5 * n:
+        warns.append("周期が壁の半分より長い（繰り返しが 2 回未満。偶然の相関かもしれない）")
+    if half and half[0] >= min_px and half[1] >= 0.25 * best[1] and not any("1/2" in w for w in warns):
+        warns.append(f"2 倍周期の可能性（{half[0]:.1f} px にも強さ {half[1]:.2f} の山）")
+    if best[1] < 0.3:
+        warns.append("相関が弱い")
+    return out, warns
+
+
 def _peaks(p: np.ndarray, period: float) -> list[float]:
     """周期の 0.6 倍以上離れた局所最大を拾う（強い物から）。"""
     if period is None or period < 3:
@@ -138,11 +262,14 @@ def measure(img: np.ndarray, wall_box: list[float] | None = None,
 
     out = {}
     for axis, length in (("x", w), ("y", h)):
-        period, strength = _period(_profile(crop, axis, signed=True), min_px=max(8, length // 40), max_px=length // 2)
+        cands, warns = _candidates(_profile(crop, axis, signed=True), min_px=max(8, length // 40), max_px=int(length * 0.8))
+        period, strength = (cands[0]["period_px"], cands[0]["strength"]) if cands else (None, 0.0)
         p = _profile(crop, axis)
         pk = _peaks(p, period) if period else []
-        out[axis] = Periodic(axis=axis, period_px=round(period, 1) if period else None, strength=round(strength, 3),
-                             peaks_px=[round(v, 1) for v in pk], count=_count(pk, period) if period else 0)
+        conf = "low" if not cands or strength < 0.3 else ("high" if strength >= 0.5 and not [w for w in warns if "目地" not in w] else "mid")
+        out[axis] = Periodic(axis=axis, period_px=period, strength=strength,
+                             peaks_px=[round(v, 1) for v in pk], count=_count(pk, period) if period else 0,
+                             candidates=cands, confidence=conf, warnings=warns)
     res.bays, res.floors = out["x"], out["y"]
     if res.bays.period_px and res.floors.period_px:
         res.ratio_bay_over_floor = round(res.bays.period_px / res.floors.period_px, 3)

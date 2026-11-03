@@ -350,9 +350,23 @@ def build_building(b: dict, col) -> dict:
         count = val(bays.get("count"))
         pitch = val(bays.get("pitch"))
         pier = val(bays.get("pier_width"), 0.6, f"{fid} 柱型の幅", "未測。0.6 m と置いた") if count else None
-        margin = val(bays.get("end_margin"), 0.0) if count else 0.0
-        if count and not pitch:
-            pitch = (L - 2 * margin) / count
+        margin = 0.0          # from 側の余白（柱割りの始まり）。to 側は余り
+        if count:
+            mf_m = bays.get("margin_from" if "margin_from" in bays else "end_margin")
+            mf, mt = val(mf_m), val(bays.get("margin_to"))
+            if pitch:
+                rest = L - count * pitch
+                if mf is not None:
+                    margin = mf
+                elif mt is not None:
+                    margin = rest - mt
+                else:
+                    margin = rest / 2        # unknown を 0 とは見なさない。半分ずつと仮置き
+                    if abs(rest) > 0.005:
+                        assume(f"{fid} 端の余白", round(margin, 3), "端の余白 unknown、仮に等分（余り %.2f m を両端に半分ずつ）" % rest)
+            else:
+                margin = mf or 0.0
+                pitch = (L - (mf or 0.0) - (mt or 0.0)) / count
         face_top = val(f.get("top_z"), H)
         pier_depth = val(bays.get("pier_depth"), 0.0) if count else 0.0
         pier_z0 = max([val(op.get("z_top"), 0.0) for op in (f.get("openings") or [])] + [0.0])
