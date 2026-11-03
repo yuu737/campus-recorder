@@ -208,7 +208,7 @@ b["levels"] = [
     {"id": "west_plaza", "name": "西の広場（z の基準）", "z": est(0.0, 0.0, EV_W4 + [SOK], "z の基準。西北西面の大階段の下の広場")},
     {"id": "entrance", "name": "西の入口の階＝北のテラス", "z": est(2.25, 0.3, EV_W4 + ["PXL_20261103_070123308", SOK], "大階段 15 段 × 0.15 m（sokuryo_W）。070123308 で大階段の上とテラスの縁がそろう（kansatsu_f20）")},
     {"id": "north_sunken_plaza", "name": "北の沈んだ広場（低い地面）", "z": est(-SUNKEN, 1.0, EV_N5 + ["PXL_20261103_070327678", "PXL_20261103_070123308", SOK_N],
-        "sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い（約 2/3 階）。模型の地面は z=0 の 1 枚なので形には出ない（requests）")},
+        "sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い（約 2/3 階）。模型には faces の ground_offset（f20・f19 に同じ値）で沈みとして出す")},
 ]
 b["floor_count"] = m(16, None, "measured", EV_N5 + [KAZ_N], "kazoe_f20：沈んだ層 1＋基壇 2＋窓の段 13＝16（北北東面、2 枚で一致）。OSM levels=16 と一致。西北西面で見える 15 との差は沈んだ層", unit="階")
 b["floor_pitch"] = est(floor_m, 0.06, EV_W4 + [OSM, SOK], "正面化 3 枚の白い帯の間隔 241.0/256.3/262.4 px を柱間隔（OSM 32.67 m ÷ 9.49 周期 = 3.44 m）で換算 → 4.49/4.43/4.44 m。検収で 3〜8 階 4.51 m・9 階から上 4.43 m に分けた（070204974 で 242.8/238.8 px、070327678 で 260/255.3 px、どちらも 8 階と 9 階の間で変わる）。ここは 11 階の平均。北北東面は 4.45/4.49 m（OSM の f0＋f20 14.53 m を物差し、sokuryo_f20）で ±0.4%")
@@ -439,6 +439,18 @@ for k in range(2, 13):
                            "recess": est(0.15, 0.1, ["PXL_20261103_070003022"], "目視"), "rail": False})
 f19["windows_note"] = "見えるのは z2〜z12 の 11 段（measured、kazoe_f19）。z0・z1 と基壇は木で隠れて全段数は unknown（requests）"
 f19["render_view"] = True
+
+# 面の前の地面の高さ faces[].ground_offset（2026-11-04 設計係）：北の沈んだ広場は levels.north_sunken_plaza（−3.0 m）と同じ値を、
+# 広場に面する f20（前は沈んだ広場、北の歩道から階段：kansatsu_f20）と f19（下は沈んだ広場の上のパーゴラのテラス：kansatsu_f19）に書く。
+# levels は「どの高さの地面があるか」の記録として残し、ground_offset は「その面の前の地面」を模型・図面・検収に渡す欄（同じ定数 SUNKEN から出すので食い違わない）。
+# f18 は下半分が白い棟で隠れ、前が沈んだ広場か分からないので unknown。広場の奥行き（面から歩道の階段まで）は未測で depth は書かない（模型は仮の 12 m）
+SUNKEN_HOW = ("levels.north_sunken_plaza と同じ値。sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20：下 7・踊り場・上 9）× 0.15 m "
+              "→ 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い。検算：検収 B（070003022）のカメラ z 0.85 m は北の歩道（−0.6 m）＋目の高さ 1.5 m と合う。"
+              "国土地理院 5m 標高は面の前 0〜12 m で ground_z 42.9＋4〜5 m、北の歩道（カメラの足元）で 48.4 m と、逆に高く読める（西の広場の前は +1.1〜+2.3 m）。"
+              "5m 標高が沈んだ広場とテラス・パーゴラ・橋を分けられていない可能性があるが、未解決（requests）")
+for fid, extra in (("f20", "前は沈んだ広場（北の歩道から幅広の階段、kansatsu_f20）。"), ("f19", "下は沈んだ広場の上の青いパーゴラのテラス（kansatsu_f19）。テラス（+2.25 m か）は模型に無い。")):
+    F[fid]["ground_offset"] = est(-SUNKEN, 1.0, EV_N5 + ["PXL_20261103_070327678", "PXL_20261103_070123308", SOK_N, "gsi:dem5a@(60,41)"], extra + SUNKEN_HOW)
+F["f18"]["ground_offset"] = unk(note="下半分が白い棟で隠れ、前が沈んだ広場か分からない（kansatsu_f18）。北東の角を 45° から撮る依頼（requests）で決める")
 # 柱型の前面（帯だけ。頂部はパラペットより 1.7 段高い）
 for pid, s0, s1, nm in (("P19w", S_PW0, S_OP0, "西"), ("P19e", S_OP1, S_PE1, "東")):
     pf = {"id": pid, "name": f"北北東 {nm}の柱型の前面（脇の壁より 0.3 m 前）", "from": NP(s1, N_PIER), "to": NP(s0, N_PIER),
@@ -556,6 +568,19 @@ b["history"] = [
     {"at": "2026-11-04T04:30", "by": "設計係（Claude, claude-opus-5-5）", "what": "5 版：北北東側・南西の上部・頂部を kansatsu_north.md と sokuryo_f19/f20/SW1・kazoe_f19/f20 で置き換え。1 塊（67.9 m）をやめ、西の外周の帯（5.4 m、67.9 m）・南西の角の下（段の笠木 31.95 m＝8 階の床の帯の 0.2 段上）・東の外周の帯（西と同じと仮定）・中の塊（71.5 m）・北の柱型 2 本（79.3 m）に分けた。南西の引っ込みは bottom_z を使わず、下だけの塊（Ws）と奥の中の塊の足し算で表した（上だけ引っ込む角）。南東は unknown のまま。f19 の凹部 8 m（仮）→1.7 m、柱型 2.6 m・柱型の間 10.4 m、連窓は z2〜z12 の 11 段・5 枚割・ルーバー無し・白い帯無し。脇の壁は角の柱より 3.4 m 北（角の柱の北面を OSM の線に）、小窓は幅 0.67 m・13 段、凹部側にスリット 1.0 m。頂部のガラスの箱 67.9〜71.9 m（目視）→65.0〜78.4 m。北の沈んだ広場（−3.0 m）は levels に、模型の地面では表せないので requests（kind: tool）。PLATEAU 74.2 m は沈んだ広場から中の塊の頂部まで 74.5 m（+0.4%）と読む（塊 core の note）。floor_count 16 を measured に（沈んだ層 1＋基壇 2＋13）"},
     {"at": "2026-11-04T04:38", "by": "検収係（Claude, claude-opus-5-5）", "what": "5 版の検収：北北東の正面化 070003022・065946407 で f20・f19・柱型の線を手で読んで compare（kenshu_PXL_20261103_070003022/065946407.json）。脇の壁の小窓の上端 帯＋2.38→3.24 m（最上段 3.09）・下端 0.95→0.98（1 回目で +0.66/+0.74 m。段の換算の誤り）、北西の角の柱の脇の壁寄りの縦帯をガラスから格子の溝に（065946407）。2 回目で全線 0.15 m 以内。検収 B のカメラ (60.99, 77.28, 0.85)・(49.15, 80.9, 0.78)。070204974 の検収 B では南西の角の引っ込みが 1 列ぶん合わない（4 版の pose の柱の番号か、引っ込みの幅か。値は直さず requests）"},
 ]
+for rq in b["requests"]:
+    if rq.get("kind") == "tool" and "沈んだ広場" in rq.get("why", ""):
+        rq["status"] = "done"
+        rq["note"] = "2026-11-04 schema に faces[].ground_offset が入り、f20・f19 の前に −3.0 m の沈み（奥行きは仮の 12 m）を作れるようになった"
+b["requests"].append({"face": "f20", "kind": "data", "what": "北の沈んだ広場・北の歩道の高さと 5m 標高の食い違いを確かめる",
+                      "where": "広場の中と北の歩道で、同じ 1 枚に段と足元が入る写真（または現地で段の数え直し）",
+                      "why": "写真の推定では北の歩道は西の広場より 0.6 m 低く、沈んだ広場は 3.0 m 低い。5m 標高では北側（48.4 m）が西の広場の前（44〜45 m）より 3〜4 m 高い。どちらかが違う",
+                      "status": "open"})
+b["history"].append({"at": "2026-11-04T05:40", "by": "設計係（Claude, claude-opus-5-5）",
+                     "what": "北の沈んだ広場（−3.0 m ±1）を faces.f20・f19 の ground_offset にも書いた（levels.north_sunken_plaza は記録として残し、同じ定数から出す）。"
+                             "f18 は前が見えないので ground_offset を unknown。模型は面の前に沈み（奥行き 12 m は仮）を作る。"
+                             "5m 標高は北側を逆に 4〜5 m 高く読み、写真の推定と合わない（requests に追加、未解決）"})
+
 errs = validate_building(b)
 print("validate:", errs or "OK")
 save_building(b, Path("data/buildings/tower75.json"))

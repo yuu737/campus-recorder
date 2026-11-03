@@ -228,7 +228,7 @@
           "PXL_20261103_070123308",
           "out/tower75/sokuryo_f20.json"
         ],
-        "method": "sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い（約 2/3 階）。模型の地面は z=0 の 1 枚なので形には出ない（requests）",
+        "method": "sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い（約 2/3 階）。模型には faces の ground_offset（f20・f19 に同じ値）で沈みとして出す",
         "note": ""
       }
     }
@@ -23484,6 +23484,15 @@
           }
         }
       ],
+      "ground_offset": {
+        "value": null,
+        "unit": "m",
+        "tol": null,
+        "status": "unknown",
+        "evidence": [],
+        "method": "",
+        "note": "下半分が白い棟で隠れ、前が沈んだ広場か分からない（kansatsu_f18）。北東の角を 45° から撮る依頼（requests）で決める"
+      },
       "render_view": false
     },
     {
@@ -24367,7 +24376,23 @@
         }
       ],
       "windows_note": "見えるのは z2〜z12 の 11 段（measured、kazoe_f19）。z0・z1 と基壇は木で隠れて全段数は unknown（requests）",
-      "render_view": true
+      "render_view": true,
+      "ground_offset": {
+        "value": -3.0,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_065946407",
+          "PXL_20261103_070003022",
+          "PXL_20261103_070327678",
+          "PXL_20261103_070123308",
+          "out/tower75/sokuryo_f20.json",
+          "gsi:dem5a@(60,41)"
+        ],
+        "method": "下は沈んだ広場の上の青いパーゴラのテラス（kansatsu_f19）。テラス（+2.25 m か）は模型に無い。levels.north_sunken_plaza と同じ値。sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20：下 7・踊り場・上 9）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い。検算：検収 B（070003022）のカメラ z 0.85 m は北の歩道（−0.6 m）＋目の高さ 1.5 m と合う。国土地理院 5m 標高は面の前 0〜12 m で ground_z 42.9＋4〜5 m、北の歩道（カメラの足元）で 48.4 m と、逆に高く読める（西の広場の前は +1.1〜+2.3 m）。5m 標高が沈んだ広場とテラス・パーゴラ・橋を分けられていない可能性があるが、未解決（requests）",
+        "note": ""
+      }
     },
     {
       "id": "f20",
@@ -26021,6 +26046,22 @@
           }
         }
       ],
+      "ground_offset": {
+        "value": -3.0,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_065946407",
+          "PXL_20261103_070003022",
+          "PXL_20261103_070327678",
+          "PXL_20261103_070123308",
+          "out/tower75/sokuryo_f20.json",
+          "gsi:dem5a@(60,41)"
+        ],
+        "method": "前は沈んだ広場（北の歩道から幅広の階段、kansatsu_f20）。levels.north_sunken_plaza と同じ値。sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20：下 7・踊り場・上 9）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い。検算：検収 B（070003022）のカメラ z 0.85 m は北の歩道（−0.6 m）＋目の高さ 1.5 m と合う。国土地理院 5m 標高は面の前 0〜12 m で ground_z 42.9＋4〜5 m、北の歩道（カメラの足元）で 48.4 m と、逆に高く読める（西の広場の前は +1.1〜+2.3 m）。5m 標高が沈んだ広場とテラス・パーゴラ・橋を分けられていない可能性があるが、未解決（requests）",
+        "note": ""
+      },
       "render_view": true
     },
     {
@@ -29250,7 +29291,8 @@
       "what": "模型の地面を場所ごとの高さで描けるように（levels か pavement で低い地面を彫る）",
       "where": "recorder/blender_build.py の地面（z=0 の 1 枚）",
       "why": "北の沈んだ広場（levels.north_sunken_plaza、−3.0 m）が模型に出ない。地面の板が −0.3〜0 m で全部を覆うので、部品を z<0 に置いても隠れる",
-      "status": "open"
+      "status": "done",
+      "note": "2026-11-04 schema に faces[].ground_offset が入り、f20・f19 の前に −3.0 m の沈み（奥行きは仮の 12 m）を作れるようになった"
     },
     {
       "face": "W",
@@ -29264,6 +29306,14 @@
       "what": "昼の日陰のタイルを 1 m から",
       "where": "",
       "why": "色が夕日で橙に寄っている。タイルの形式も未確認",
+      "status": "open"
+    },
+    {
+      "face": "f20",
+      "kind": "data",
+      "what": "北の沈んだ広場・北の歩道の高さと 5m 標高の食い違いを確かめる",
+      "where": "広場の中と北の歩道で、同じ 1 枚に段と足元が入る写真（または現地で段の数え直し）",
+      "why": "写真の推定では北の歩道は西の広場より 0.6 m 低く、沈んだ広場は 3.0 m 低い。5m 標高では北側（48.4 m）が西の広場の前（44〜45 m）より 3〜4 m 高い。どちらかが違う",
       "status": "open"
     }
   ],
@@ -29297,6 +29347,11 @@
       "at": "2026-11-04T04:38",
       "by": "検収係（Claude, claude-opus-5-5）",
       "what": "5 版の検収：北北東の正面化 070003022・065946407 で f20・f19・柱型の線を手で読んで compare（kenshu_PXL_20261103_070003022/065946407.json）。脇の壁の小窓の上端 帯＋2.38→3.24 m（最上段 3.09）・下端 0.95→0.98（1 回目で +0.66/+0.74 m。段の換算の誤り）、北西の角の柱の脇の壁寄りの縦帯をガラスから格子の溝に（065946407）。2 回目で全線 0.15 m 以内。検収 B のカメラ (60.99, 77.28, 0.85)・(49.15, 80.9, 0.78)。070204974 の検収 B では南西の角の引っ込みが 1 列ぶん合わない（4 版の pose の柱の番号か、引っ込みの幅か。値は直さず requests）"
+    },
+    {
+      "at": "2026-11-04T05:40",
+      "by": "設計係（Claude, claude-opus-5-5）",
+      "what": "北の沈んだ広場（−3.0 m ±1）を faces.f20・f19 の ground_offset にも書いた（levels.north_sunken_plaza は記録として残し、同じ定数から出す）。f18 は前が見えないので ground_offset を unknown。模型は面の前に沈み（奥行き 12 m は仮）を作る。5m 標高は北側を逆に 4〜5 m 高く読み、写真の推定と合わない（requests に追加、未解決）"
     }
   ],
   "site_id": "tower75",
