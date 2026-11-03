@@ -127,6 +127,53 @@ def sphere(name: str, center: Vector, radius: float, col):
     return ob
 
 
+def mesh_volume(ob) -> float:
+    """閉じた形の体積（m³）。形は世界座標で作っている（オブジェクトの変換は単位）ので data のままでよい。"""
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    v = abs(bm.calc_volume())
+    bm.free()
+    return v
+
+
+def check_cut(before: float, after: float, cutter: float, name: str, tol: float = 0.5) -> None:
+    """引き算のブーリアンの結果が筋の通る体積か確かめる。
+
+    引き算は「彫る物の体積より多くは減らない」「増えない」。これを外れたら形が壊れている
+    （重なった塊を結合しただけの本体に EXACT を当てると、塔が丸ごと消えて薄い殻だけ残った。11/4）。
+    黙って描画に進まず、ここで止める。
+    """
+    lost = before - after
+    if lost > cutter * 1.01 + tol or after > before + tol:
+        raise RuntimeError(
+            f"ブーリアンが壊れました（{name}）：体積 {before:.1f} → {after:.1f} m³、彫る物は {cutter:.1f} m³。"
+            "本体が自己交差していないか（塊が重なったまま結合されていないか）を確かめてください")
+
+
+def union_bodies(bodies):
+    """塊（blocks）を 1 つの閉じた形にまとめる。
+
+    結合（join）だけだと、重なった塊（基壇の中に塔が入る等）が自己交差した形になり、
+    後の窓の彫り込み（EXACT）で塔が消える。足し算のブーリアンで本当に 1 つにする。
+    """
+    body = bodies[0]
+    for ob in bpy.context.scene.objects:
+        ob.select_set(False)
+    bpy.context.view_layer.objects.active = body
+    for other in bodies[1:]:
+        before, add = mesh_volume(body), mesh_volume(other)
+        mod = body.modifiers.new("union", "BOOLEAN")
+        mod.operation = "UNION"
+        mod.object = other
+        mod.solver = "EXACT"
+        bpy.ops.object.modifier_apply(modifier=mod.name)
+        after = mesh_volume(body)
+        if after < max(before, add) - 0.5 or after > before + add + 0.5:
+            raise RuntimeError(f"塊の足し算が壊れました（{other.name}）：{before:.1f} ＋ {add:.1f} → {after:.1f} m³")
+        bpy.data.objects.remove(other, do_unlink=True)
+    return body
+
+
 def boolean_cut(target, cutters):
     """彫る箱を 1 つに結合してから 1 回だけブーリアン（200 個を順に当てると数分かかる）。"""
     import time
@@ -155,11 +202,13 @@ def boolean_cut(target, cutters):
         ob.select_set(False)
     bpy.context.view_layer.objects.active = target
     for cutter in groups:
+        name, before, cv = cutter.name, mesh_volume(target), mesh_volume(cutter)
         mod = target.modifiers.new("cut", "BOOLEAN")
         mod.operation = "DIFFERENCE"
         mod.object = cutter
         mod.solver = "EXACT"
         bpy.ops.object.modifier_apply(modifier=mod.name)
+        check_cut(before, mesh_volume(target), cv, name)
         bpy.data.objects.remove(cutter, do_unlink=True)
     print(f"ブーリアン: {time.time() - t0:.1f} 秒（{len(groups)} 回）")
 
@@ -290,14 +339,7 @@ def build_building(b: dict, col) -> dict:
         ob = prism(f"{b['id']}_{blk['id']}", blk["polygon"], bottom, top, col)
         ob.data.materials.append(mats.main)
         bodies.append(ob)
-    body = bodies[0]
-    if len(bodies) > 1:
-        for ob in bpy.context.scene.objects:
-            ob.select_set(False)
-        for ob in bodies:
-            ob.select_set(True)
-        bpy.context.view_layer.objects.active = body
-        bpy.ops.object.join()
+    body = union_bodies(bodies)          # 重なる塊は足し算で 1 つに（join だと自己交差して後の彫り込みで塔が消える）
 
     cutters, extras = [], []
 

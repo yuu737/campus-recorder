@@ -45,6 +45,13 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("unknowns")
     p.add_argument("file")
 
+    p = sub.add_parser("run", help="validate → draw → model → overlay → run_report.json を 1 回で")
+    p.add_argument("file")
+    p.add_argument("--out", default=None)
+    p.add_argument("--fast", action="store_true")
+    p.add_argument("--skip-model", action="store_true")
+    p.add_argument("--blender", default=None)
+
     p = sub.add_parser("model", help="棟 JSON から Blender で模型を組み、四面図・鳥瞰・glb を出す")
     msub = p.add_subparsers(dest="model_cmd", required=True)
     q = msub.add_parser("build")
@@ -60,6 +67,8 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--campus", default="tempaku")
     q.add_argument("--plateau", default=r"D:\名城大学\data\raw\plateau\23100_nagoya-shi_city_2022_citygml_4_op.zip")
     q.add_argument("--no-plateau", action="store_true")
+    q = ssub.add_parser("export-web", help="Web 3D 用に web/data/site.json と glb を書き出す")
+    q.add_argument("--campus", default="tempaku")
     q = ssub.add_parser("confirm")
     q.add_argument("id")
     q.add_argument("status", choices=["confirmed", "renamed", "removed", "new"])
@@ -73,6 +82,9 @@ def main(argv: list[str] | None = None) -> int:
     q = psub.add_parser("import")
     q.add_argument("folder")
     q.add_argument("--campus", default="tempaku")
+    q.add_argument("--period", choices=["before", "during"], default=None,
+                   help="期間前 / 期間中。省略すると撮影日が 2026-11-02 12:00 JST より前なら before")
+    q.add_argument("--ledger", default=None, help="写真台帳.json。棟の候補を source 付きで入れる")
     q = psub.add_parser("list")
     q = psub.add_parser("rectify")
     q.add_argument("file")
@@ -160,6 +172,17 @@ def main(argv: list[str] | None = None) -> int:
             print(f"出力: {out / (name + '.svg')}")
         return 0
 
+    if a.cmd == "run":
+        from . import run as runner
+
+        r = runner.run(Path(a.file), Path(a.out) if a.out else None, a.fast, a.skip_model, a.blender)
+        for st in r["steps"]:
+            print(f"{'OK' if st['ok'] else 'NG'} {st['name']:<9} {st['seconds']}s  {st['error']}")
+        c = r["counts"]
+        print(f"measured {c['measured']} / estimated {c['estimated']} / unknown {c['unknown']}  撮影依頼 open {r['requests_open']}")
+        print(f"報告: {Path(r['out']) / 'run_report.json'}  合計 {r['seconds_total']}s")
+        return 0 if r["ok"] else 1
+
     if a.cmd == "unknowns":
         for u in schema.unknowns(schema.load_building(a.file)):
             print(u)
@@ -191,8 +214,10 @@ def _photos(a) -> int:
     if a.photos_cmd == "import":
         sp = site.DATA_SITE / f"{a.campus}.json"
         sdoc = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else None
-        idx, added = photos.import_photos(Path(a.folder), sdoc)
+        ledger = photos.load_ledger(Path(a.ledger)) if a.ledger else None
+        idx, added = photos.import_photos(Path(a.folder), sdoc, period=a.period, ledger=ledger)
         print(f"索引: {photos.INDEX_PATH}  合計 {len(idx['photos'])} 枚（今回 {len(added)} 枚）")
+        print("  期間別:", {k: v for k, v in photos.period_counts(idx).items() if k != "by_building"})
         for r in added:
             print("  " + photos.summary_line(r))
         return 0
@@ -299,6 +324,11 @@ def _site(a) -> int:
         for e in errs:
             print("   - " + e)
         return 1 if errs else 0
+
+    if a.site_cmd == "export-web":
+        r = site.export_web(a.campus)
+        print(f"Web 用: {r['path']}  箱 {r['boxes']} 件、模型 {r['models']}、地面格子 {r['grid']}（標高の欠けを近傍で埋めた割合 {r['nan_filled']:.1%}）")
+        return 0
 
     if a.site_cmd == "confirm":
         path = site.DATA_SITE / f"{a.campus}.json"

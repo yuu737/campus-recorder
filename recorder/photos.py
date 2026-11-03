@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -284,25 +285,121 @@ def save_index(idx: dict, path: Path = INDEX_PATH) -> None:
     path.write_text(json.dumps(idx, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
+# --- 期間（期間前 / 期間中）と台帳 -----------------------------------------------------
+
+PERIOD_START = "2026-11-02T12:00:00"   # ハッカソン開始（JST）。撮影日時はスマホの現地時刻なのでそのまま比べる
+LEDGER_SOURCE = "台帳(期間前)"
+
+# 台帳の場所名（folder / location）に含まれる語 → 棟 id。
+# 台帳の subject は写真ごとの説明文なので、場所名の側で対応させる。対応表に無い棟は building=None。
+LEDGER_BUILDING = {
+    "本部棟": "honbu",
+    "タワー75": "tower75",
+    "タワー": "tower75",
+    "図書館": "library",
+    "11号館": "b11",
+}
+
+
+def period_of(taken_at: str | None) -> str | None:
+    """撮影日時（"YYYY-MM-DDTHH:MM:SS"）から期間前 / 期間中を決める。日時が無ければ None。"""
+    if not taken_at or len(taken_at) < 10:
+        return None
+    t = taken_at.replace(" ", "T")
+    if len(t) == 10:
+        t += "T00:00:00"
+    return "before" if t < PERIOD_START else "during"
+
+
+def _norm_date(s: str | None) -> str | None:
+    """台帳の "2026:09:07 17:36:24" を "2026-09-07T17:36:24" にする。"""
+    if not s:
+        return None
+    try:
+        return time.strftime("%Y-%m-%dT%H:%M:%S", time.strptime(str(s), "%Y:%m:%d %H:%M:%S"))
+    except ValueError:
+        return None
+
+
+def ledger_building(name: str | None) -> str | None:
+    """場所名から棟 id。対応表の語が 2 つ以上別の棟に当たる（「図書館・11号館間」など）なら決めず None。"""
+    if not name:
+        return None
+    hits = {b for k, b in LEDGER_BUILDING.items() if k in name}
+    return hits.pop() if len(hits) == 1 else None
+
+
+def load_ledger(path: Path) -> dict[str, dict]:
+    """写真台帳.json を読み、台帳のあるフォルダからの相対パス（/ 区切り）→ 台帳の1件 の辞書にする。"""
+    rows = json.loads(Path(path).read_text(encoding="utf-8"))
+    if isinstance(rows, dict):
+        rows = next((v for v in rows.values() if isinstance(v, list)), [])
+    return {str(r["path"]).replace("\\", "/"): r for r in rows if r.get("path")}
+
+
+def ledger_fields(row: dict) -> dict:
+    """台帳の1件から索引に入れる項目。値に source を付け、台帳に無い面は null。"""
+    folder = str(row.get("folder") or "")
+    place = row.get("location") or folder.rsplit("/", 1)[-1] or None
+    return {
+        "building": ledger_building(f"{folder} {row.get('location') or ''}"),
+        "face": row.get("face"),   # 台帳には面が無い。あれば使う
+        "ledger_subject": place,
+        "ledger": {
+            "id": row.get("id"), "subject": row.get("subject"), "folder": folder or None,
+            "classification": row.get("classification"), "evidence": row.get("evidence"),
+            "sha256": row.get("sha256"), "taken_at": _norm_date(row.get("takenAt")),
+            "source": LEDGER_SOURCE,
+        },
+    }
+
+
+def _iter_images(folder: Path, ledger: dict[str, dict] | None = None):
+    """台帳があれば台帳に載っている写真だけ（閲覧用のサムネイル等を拾わない）。無ければ下位フォルダも含めて全部。"""
+    if ledger is not None:
+        for rel in sorted(ledger):
+            f = folder / rel
+            if f.is_file() and f.suffix.lower() in EXTS:
+                yield f
+        return
+    for f in sorted(folder.rglob("*")):
+        if f.is_file() and f.suffix.lower() in EXTS:
+            yield f
+
+
 def import_photos(folder: Path, site: dict | None = None, index_path: Path = INDEX_PATH,
-                  root: Path = PHOTO_DIR) -> tuple[dict, list[dict]]:
-    """フォルダの写真を索引に足す。既にある id は EXIF と checks だけ更新し、人が入れた building / face は残す。"""
+                  root: Path = PHOTO_DIR, period: str | None = None,
+                  ledger: dict[str, dict] | None = None) -> tuple[dict, list[dict]]:
+    """フォルダ（下位フォルダも）の写真を索引に足す。既にある id は EXIF と checks だけ更新し、人が入れた building / face は残す。
+
+    period: "before" / "during"。省略すると撮影日時（EXIF、無ければ台帳、ファイル名）から決める。
+    ledger: load_ledger の結果。台帳にある写真には building / face の候補を source 付きで入れる。
+    フォルダ外の絶対パスの写真は file に絶対パスで書く（data/photos/ にはコピーしない）。"""
+    if period not in (None, "before", "during"):
+        raise ValueError("period は before か during")
     idx = load_index(index_path)
     by_id = {p["id"]: p for p in idx["photos"]}
     added = []
-    for f in sorted(folder.iterdir()):
-        if f.suffix.lower() not in EXTS:
-            continue
+    for f in _iter_images(Path(folder), ledger):
         info = read_exif(f)
         pid = f.stem
         try:
             rel = str(f.relative_to(root)).replace("\\", "/")
         except ValueError:
-            rel = str(f).replace("\\", "/")
+            rel = str(f.resolve()).replace("\\", "/")
+        row = (ledger or {}).get(f.relative_to(folder).as_posix())
         rec = by_id.get(pid) or {"id": pid, "building": None, "face": None, "notes": ""}
+        taken = info["taken_at"] or (_norm_date(row.get("takenAt")) if row else None)
+        if taken is None:
+            m = re.search(r"(20\d{2})(\d{2})(\d{2})", f.name)
+            taken = f"{m[1]}-{m[2]}-{m[3]}" if m else None
+        if taken is None:   # 日付の無い画像（利用者の指定図など）は置いてあるフォルダ名の日付
+            m = re.search(r"_(20\d{2})(\d{2})(\d{2})", str(Path(folder).name))
+            taken = f"{m[1]}-{m[2]}-{m[3]}" if m else None
         rec.update({
             "file": rel,
-            "taken_at": info["taken_at"],
+            "taken_at": info["taken_at"] or taken,
+            "period": period or period_of(taken),
             "camera": {"make": info["make"], "model": info["model"]},
             "width": info["width"], "height": info["height"], "orientation": info["orientation"],
             "focal_mm": info["focal_mm"], "focal_35mm": info["focal_35mm"],
@@ -311,6 +408,15 @@ def import_photos(folder: Path, site: dict | None = None, index_path: Path = IND
             "candidates": building_candidates(info, site) if site else [],
             "imported_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         })
+        if row:
+            lf = ledger_fields(row)
+            rec["ledger_subject"], rec["ledger"] = lf["ledger_subject"], lf["ledger"]
+            # 人や測量係が入れた値は上書きしない。台帳由来の値だけ source を付けて入れる
+            if rec.get("building") is None and lf["building"]:
+                rec["building"], rec["building_source"] = lf["building"], LEDGER_SOURCE
+            if rec.get("face") is None and lf["face"]:
+                rec["face"], rec["face_source"] = lf["face"], LEDGER_SOURCE
+            rec["source"] = LEDGER_SOURCE
         if info["error"]:
             rec["error"] = info["error"]
         if pid not in by_id:
@@ -319,6 +425,18 @@ def import_photos(folder: Path, site: dict | None = None, index_path: Path = IND
             added.append(rec)
     save_index(idx, index_path)
     return idx, added
+
+
+def period_counts(idx: dict) -> dict:
+    """索引の件数（期間別、棟別、台帳あり）。"""
+    out: dict[str, Any] = {"before": 0, "during": 0, "unknown": 0, "ledger": 0, "by_building": {}}
+    for r in idx["photos"]:
+        pr = r.get("period") or period_of(r.get("taken_at")) or "unknown"
+        out[pr] += 1
+        out["ledger"] += 1 if r.get("ledger") else 0
+        k = f"{pr}/{r.get('building')}"
+        out["by_building"][k] = out["by_building"].get(k, 0) + 1
+    return out
 
 
 def summary_line(rec: dict) -> str:

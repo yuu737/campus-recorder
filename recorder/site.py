@@ -25,6 +25,7 @@ import json
 import math
 import re
 import time
+import warnings
 import zipfile
 from pathlib import Path
 from typing import Iterable
@@ -533,3 +534,133 @@ def draw_overview(site: dict, aerial_meta: dict | None, aerial_png: Path | None,
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out)
     return out
+
+
+# --- Web ビューア用の書き出し --------------------------------------------------------
+
+WEB_DIR = Path(__file__).resolve().parent.parent / "web"
+
+
+def _count_status(node, acc: dict) -> None:
+    if isinstance(node, dict):
+        s = node.get("status")
+        if s in ("measured", "estimated", "unknown"):
+            acc[s] = acc.get(s, 0) + 1
+        for v in node.values():
+            _count_status(v, acc)
+    elif isinstance(node, list):
+        for v in node:
+            _count_status(v, acc)
+
+
+def _has_evidence(node) -> bool:
+    """faces のどこかに、写真など PLATEAU 以外の根拠（evidence）を持つ measured/estimated があるか。
+    "plateau:" で始まる根拠だけの値は、写真の根拠とは数えない。"""
+    if isinstance(node, dict):
+        if node.get("status") in ("measured", "estimated") and any(
+                not str(e).startswith("plateau:") for e in (node.get("evidence") or [])):
+            return True
+        return any(_has_evidence(v) for v in node.values())
+    if isinstance(node, list):
+        return any(_has_evidence(v) for v in node)
+    return False
+
+
+def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 4, margin_m: float = 120.0) -> dict:
+    """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を step_m 間隔に間引き）・
+    設計済みの棟の一覧。glb がある設計済みの棟は箱を出さず、glb を web/data/models/ に写す。
+    glb の軸：glTF は Y が上。Blender の (x,y,z) → glTF の (x, z, -y)。つまり glb は x=東, y=高さ, z=-北。
+    glb の高さ(y)は ground_z 基準の相対値なので、置く時に ground_z を足す。"""
+    import shutil
+
+    web_dir = web_dir or WEB_DIR
+    data_dir = web_dir / "data"
+    (data_dir / "models").mkdir(parents=True, exist_ok=True)
+    doc = json.loads((DATA_SITE / f"{campus}.json").read_text(encoding="utf-8"))
+    pl_path = DATA_SITE / "plateau.json"
+    pl = {p["gml_id"]: p for p in json.loads(pl_path.read_text(encoding="utf-8"))["buildings"]} if pl_path.exists() else {}
+
+    designed = {}
+    for f in sorted((DATA_SITE.parent / "buildings").glob("*.json")):
+        b = json.loads(f.read_text(encoding="utf-8"))
+        if not b.get("faces"):
+            continue
+        acc: dict = {}
+        _count_status(b, acc)
+        designed[b.get("site_id") or b["id"]] = {"id": b["id"], "name": b["name"], "counts": acc,
+                                                  "evidenced": _has_evidence(b["faces"]),
+                                                  "ground_z": b["ground_z"]["value"]}
+    models = {}
+    boxes = []
+    used_parts: set[str] = set()
+    for sb in doc["buildings"]:
+        if sb["confirmation"]["status"] == "removed":
+            continue
+        d = designed.get(sb["id"])
+        glb = OUT_SITE.parent / sb["id"] / f"{sb['id']}.glb"
+        if d and d["evidenced"] and glb.exists() and glb.stat().st_size > 10_000:
+            shutil.copyfile(glb, data_dir / "models" / glb.name)
+            models[d["id"]] = {"url": f"data/models/{glb.name}", "ground_z": d["ground_z"]}
+            used_parts.update(sb["plateau_parts"])
+            continue
+        for gid in sb["plateau_parts"]:
+            p = pl.get(gid)
+            if not p:
+                continue
+            used_parts.add(gid)
+            boxes.append(_box(p, sb["id"], sb["name"], d))
+    for gid in doc.get("plateau_only", []):
+        p = pl.get(gid)
+        if p and gid not in used_parts:
+            boxes.append(_box(p, gid, None, None))
+
+    xs = [x for b in boxes for x, _ in b["footprint"]]
+    ys = [y for b in boxes for _, y in b["footprint"]]
+    dem = load_dem()
+    x0, x1 = min(xs) - margin_m, max(xs) + margin_m
+    y0, y1 = min(ys) - margin_m, max(ys) + margin_m
+    gx = np.arange(math.floor(x0 / step_m) * step_m, x1, step_m)
+    gy = np.arange(math.floor(y0 / step_m) * step_m, y1, step_m)
+    Z = np.full((len(gy), len(gx)), np.nan)
+    for j, y in enumerate(gy):
+        for i, x in enumerate(gx):
+            z = dem_at(dem, float(x), float(y))
+            if z is not None:
+                Z[j, i] = z
+    valid = ~np.isnan(Z)
+    nan_ratio = float(1 - valid.mean())
+    if valid.any():
+        for _ in range(Z.shape[0] + Z.shape[1]):   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
+            bad = np.isnan(Z)
+            if not bad.any():
+                break
+            P = np.pad(Z, 1, constant_values=np.nan)
+            nb = np.stack([P[:-2, 1:-1], P[2:, 1:-1], P[1:-1, :-2], P[1:-1, 2:]])
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", RuntimeWarning)
+                m = np.nanmean(nb, axis=0)
+            Z = np.where(bad, m, Z)
+    out = {
+        "schema": "campus-recorder/web/1",
+        "campus": campus,
+        "axes": "x=東, y=北, z=標高 m（原点 北緯35.1355° 東経136.9755°）。three.js 側で (x, z, -y) に並べ替える",
+        "ground": {"x0": float(gx[0]), "y0": float(gy[0]), "step": step_m, "nx": len(gx), "ny": len(gy),
+                   "z": [round(float(v), 1) for v in Z.ravel()], "nan_ratio_filled": round(nan_ratio, 3),
+                   "source": "国土地理院 標高（DEM5A）"},
+        "boxes": boxes,
+        "models": models,
+        "designed": designed,
+        "sources": doc.get("sources"),
+    }
+    (data_dir / "site.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    return {"path": data_dir / "site.json", "boxes": len(boxes), "models": list(models), "grid": (len(gx), len(gy)),
+            "nan_filled": nan_ratio}
+
+
+def _box(p: dict, sid: str, name: str | None, d: dict | None) -> dict:
+    c = (d or {}).get("counts", {})
+    grounded = bool(d) and d.get("evidenced", False)
+    return {"id": (d or {}).get("id", sid), "name": (d or {}).get("name") or name,
+            "footprint": p["footprint"], "base": p["base_z"], "height": p["height_m"],
+            "grounded": grounded, "evidenced": grounded,
+            "measured": c.get("measured", 0), "estimated": c.get("estimated", 0), "unknown": c.get("unknown", 0)}

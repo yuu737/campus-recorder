@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>キャンパスを歩く</title>
+<style>
+  :root { --ink:#1b2430; --bg:#dfe7ee; --panel:rgba(255,255,255,.92); --accent:#e0702a; --gray:#9aa3ab; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--ink);
+    font-family: system-ui, "Hiragino Sans", "Yu Gothic UI", sans-serif; touch-action:none; -webkit-user-select:none; user-select:none; }
+  canvas#view { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  .panel { position:fixed; background:var(--panel); border-radius:10px; padding:8px 10px; font-size:13px; line-height:1.5;
+    box-shadow:0 1px 6px rgba(0,0,0,.25); }
+  #legend { top:max(10px, env(safe-area-inset-top)); left:10px; max-width:calc(100vw - 20px); }
+  #legend b { font-size:14px; }
+  .sw { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:5px; }
+  #jump { margin-top:4px; display:flex; gap:6px; flex-wrap:wrap; }
+  #jump button { font:inherit; padding:4px 10px; border:1px solid #b9c3cc; border-radius:14px; background:#fff; color:var(--ink); }
+  #card { right:10px; bottom:max(10px, env(safe-area-inset-bottom)); width:min(230px, calc(100vw - 20px)); display:none; }
+  .touch #card { bottom:210px; right:10px; }
+  #card h3 { margin:0 0 2px; font-size:15px; }
+  #card .k { color:#52606d; }
+  #msg { left:50%; bottom:20px; transform:translateX(-50%); text-align:center; width:max-content; max-width:calc(100vw - 20px); pointer-events:none; }
+  #stick { position:fixed; left:max(18px, env(safe-area-inset-left)); bottom:max(26px, env(safe-area-inset-bottom)); width:120px; height:120px;
+    border-radius:50%; background:rgba(255,255,255,.35); border:2px solid rgba(255,255,255,.8); display:none; touch-action:none; }
+  #knob { position:absolute; left:40px; top:40px; width:40px; height:40px; border-radius:50%; background:rgba(40,50,60,.65); }
+  .touch #stick { display:block; }
+  .touch #msg { bottom:160px; }
+  #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); font-size:16px; z-index:5; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="loading">読み込み中…</div>
+<div id="legend" class="panel">
+  <b>キャンパスを歩く</b><br>
+  <span class="sw" style="background:var(--accent)"></span>根拠付き（measured / estimated）<br>
+  <span class="sw" style="background:var(--gray)"></span>未測（PLATEAU の箱）
+  <div id="jump"></div>
+</div>
+<div id="card" class="panel"></div>
+<div id="msg" class="panel">WASD とドラッグで歩く ／ 棟をクリックで札</div>
+<div id="stick"><div id="knob"></div></div>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+const EYE = 1.6, SPEED = 5.0;
+const touchDevice = matchMedia("(pointer:coarse)").matches || "ontouchstart" in window;
+if (touchDevice) {
+  document.body.classList.add("touch");
+  document.getElementById("msg").textContent = "左のスティックで移動 ／ 右ドラッグで向き ／ 棟をタップで札";
+}
+
+const canvas = document.getElementById("view");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xcfdde8);
+scene.fog = new THREE.Fog(0xcfdde8, 250, 900);
+const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 2000);
+camera.rotation.order = "YXZ";
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f78, 1.5));
+const sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(-200, 300, 150); scene.add(sun);
+
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+addEventListener("resize", resize); resize();
+
+const site = await (await fetch("data/site.json")).json();
+const G = site.ground;
+// データは x=東, y=北, z=標高。three.js は (x, 標高, -北)。glb は最初から この向き。
+
+function groundZ(x, n) {
+  const fx = (x - G.x0) / G.step, fy = (n - G.y0) / G.step;
+  const i = Math.max(0, Math.min(G.nx - 2, Math.floor(fx))), j = Math.max(0, Math.min(G.ny - 2, Math.floor(fy)));
+  const u = Math.max(0, Math.min(1, fx - i)), v = Math.max(0, Math.min(1, fy - j));
+  const z = (a, b) => G.z[b * G.nx + a];
+  return z(i, j) * (1 - u) * (1 - v) + z(i + 1, j) * u * (1 - v) + z(i, j + 1) * (1 - u) * v + z(i + 1, j + 1) * u * v;
+}
+{
+  const pos = new Float32Array(G.nx * G.ny * 3), idx = [];
+  for (let j = 0; j < G.ny; j++) for (let i = 0; i < G.nx; i++) {
+    const k = (j * G.nx + i) * 3;
+    pos[k] = G.x0 + i * G.step; pos[k + 1] = G.z[j * G.nx + i]; pos[k + 2] = -(G.y0 + j * G.step);
+  }
+  for (let j = 0; j < G.ny - 1; j++) for (let i = 0; i < G.nx - 1; i++) {
+    const a = j * G.nx + i, b = a + 1, c = a + G.nx, d = c + 1;
+    idx.push(a, b, c, b, d, c);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+  scene.add(new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: 0x9fae8c })));
+}
+
+const pickables = [];
+const matGray = new THREE.MeshLambertMaterial({ color: 0x9aa3ab });
+const matOn = new THREE.MeshLambertMaterial({ color: 0xe0702a });
+for (const b of site.boxes) {
+  const shape = new THREE.Shape(b.footprint.map(([x, n]) => new THREE.Vector2(x, n)));
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: (b.height || 10) + 2, bevelEnabled: false });
+  geo.rotateX(-Math.PI / 2);   // 形の y(北) → -z、押し出し → 上
+  const mesh = new THREE.Mesh(geo, b.grounded ? matOn : matGray);
+  mesh.position.y = b.base - 2;
+  mesh.userData.info = { id: b.id, name: b.name, grounded: b.grounded, measured: b.measured, estimated: b.estimated, unknown: b.unknown, height: b.height };
+  scene.add(mesh); pickables.push(mesh);
+}
+const loader = new GLTFLoader();
+const centers = {};
+await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res) => {
+  loader.load(m.url, (gltf) => {
+    const root = gltf.scene;
+    root.position.y = m.ground_z;     // glb の高さは ground_z 基準
+    const d = site.designed[id] || {}, c = d.counts || {};
+    const info = { id, name: d.name, grounded: true, measured: c.measured || 0, estimated: c.estimated || 0, unknown: c.unknown || 0 };
+    root.traverse((o) => { if (o.isMesh) { o.userData.info = info; pickables.push(o); } });
+    scene.add(root);
+    root.updateMatrixWorld(true);
+    const bb = new THREE.Box3().setFromObject(root);
+    const ct = bb.getCenter(new THREE.Vector3()); ct.y = bb.min.y; centers[id] = ct;
+    res();
+  }, undefined, (e) => { console.error("glb 読み込み失敗", m.url, e); res(); });
+})));
+
+let yaw = 0, pitch = 0;
+const player = new THREE.Vector3();
+function place(x, z, y) { player.set(x, 0, z); yaw = y; pitch = -0.05; }
+const groundAt = (x, z) => groundZ(x, -z);
+const jump = document.getElementById("jump");
+function addJump(label, id, off) {
+  const c = centers[id]; if (!c) return;
+  const go = () => place(c.x + off[0], c.z + off[1], Math.atan2(off[0], off[1]));   // 棟の方を向く
+  const btn = document.createElement("button"); btn.textContent = label; btn.onclick = go; jump.appendChild(btn);
+  return go;
+}
+const goHonbu = addJump("本部棟へ", "honbu", [-20, 37]);
+addJump("タワー75へ", "tower75", [10, 70]);
+(goHonbu || (() => place(0, 0, 0)))();
+
+const keys = {};
+addEventListener("keydown", (e) => { keys[e.code] = true; });
+addEventListener("keyup", (e) => { keys[e.code] = false; });
+const stick = { x: 0, y: 0, id: null };
+const look = { id: null, x: 0, y: 0, moved: 0, t: 0 };
+const stickEl = document.getElementById("stick"), knob = document.getElementById("knob");
+function stickUpdate(e) {
+  const r = stickEl.getBoundingClientRect();
+  let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+  const L = Math.hypot(dx, dy), max = 50; if (L > max) { dx *= max / L; dy *= max / L; }
+  knob.style.left = 40 + dx + "px"; knob.style.top = 40 + dy + "px";
+  stick.x = dx / max; stick.y = dy / max;
+}
+stickEl.addEventListener("pointerdown", (e) => { stick.id = e.pointerId; stickEl.setPointerCapture(e.pointerId); stickUpdate(e); });
+stickEl.addEventListener("pointermove", (e) => { if (e.pointerId === stick.id) stickUpdate(e); });
+const stickEnd = (e) => { if (e.pointerId === stick.id) { stick.id = null; stick.x = stick.y = 0; knob.style.left = knob.style.top = "40px"; } };
+stickEl.addEventListener("pointerup", stickEnd); stickEl.addEventListener("pointercancel", stickEnd);
+
+canvas.addEventListener("pointerdown", (e) => {
+  if (look.id !== null) return;
+  look.id = e.pointerId; look.x = e.clientX; look.y = e.clientY; look.moved = 0; look.t = performance.now();
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener("pointermove", (e) => {
+  if (e.pointerId !== look.id) return;
+  const dx = e.clientX - look.x, dy = e.clientY - look.y; look.x = e.clientX; look.y = e.clientY;
+  look.moved += Math.abs(dx) + Math.abs(dy);
+  yaw -= dx * 0.005; pitch = Math.max(-1.3, Math.min(1.3, pitch - dy * 0.005));
+});
+canvas.addEventListener("pointerup", (e) => {
+  if (e.pointerId !== look.id) return; look.id = null;
+  if (look.moved < 8 && performance.now() - look.t < 500) pick(e.clientX, e.clientY);
+});
+canvas.addEventListener("pointercancel", (e) => { if (e.pointerId === look.id) look.id = null; });
+
+const card = document.getElementById("card");
+const ray = new THREE.Raycaster();
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function pick(cx, cy) {
+  ray.setFromCamera(new THREE.Vector2(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1), camera);
+  const hit = ray.intersectObjects(pickables, false)[0];
+  if (!hit) { card.style.display = "none"; return; }
+  const i = hit.object.userData.info;
+  card.innerHTML = `<h3>${esc(i.name || "（名前未確認）")}</h3><div class="k">id：${esc(i.id)}</div>` +
+    (i.grounded
+      ? `<div>measured ${i.measured} ／ estimated ${i.estimated} ／ <b>unknown ${i.unknown}</b></div>`
+      : `<div>未測（PLATEAU の箱。高さ ${i.height ?? "不明"} m は参考値）</div>`);
+  card.style.display = "block";
+}
+
+const dbg = { up: 0 };
+const clock = new THREE.Clock();
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.1);
+  let f = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - stick.y;
+  let s = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + stick.x;
+  const L = Math.hypot(f, s); if (L > 1) { f /= L; s /= L; }
+  const sp = SPEED * (keys.ShiftLeft ? 2.5 : 1) * dt;
+  player.x += (-Math.sin(yaw) * f + Math.cos(yaw) * s) * sp;
+  player.z += (-Math.cos(yaw) * f - Math.sin(yaw) * s) * sp;
+  camera.position.set(player.x, groundAt(player.x, player.z) + EYE + dbg.up, player.z);
+  camera.rotation.set(pitch, yaw, 0);
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+document.getElementById("loading").style.display = "none";
+frame();
+window.__campus = { dbg, camera, player, place, pick, centers };   // 動作確認用
+</script>
+</body>
+</html>
