@@ -127,7 +127,23 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--out-dir", default=None, help="compare の JSON・PNG の出力先（省略時は out/<棟id>/compare/）")
     q.add_argument("--lines", default=None, help='判断役が読んだ線の位置（正面化画像の px）{"x_px": [...], "z_px": [...]}。あれば自動検出より優先')
 
+    p = sub.add_parser("agent", help="係（.claude/agents）を API で動かす")
+    asub = p.add_subparsers(dest="agent_cmd", required=True)
+    asub.add_parser("list")
+    q = asub.add_parser("run")
+    q.add_argument("name")
+    q.add_argument("--task", required=True)
+    q.add_argument("--dry-run", action="store_true")
+    q = asub.add_parser("pipeline")
+    q.add_argument("building")
+    q.add_argument("--photos", default="data/photos")
+    q.add_argument("--steps", default=None, help="カンマ区切り（既定: 全工程）")
+    q.add_argument("--dry-run", action="store_true")
+
     a = ap.parse_args(argv)
+
+    if a.cmd == "agent":
+        return _agent(a)
 
     if a.cmd == "site":
         return _site(a)
@@ -217,6 +233,28 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     return 2
+
+
+def _agent(a) -> int:
+    import json
+
+    from . import agents
+
+    try:
+        if a.agent_cmd == "list":
+            for d in agents.load_agent_defs().values():
+                print(f"{d['name']:<9} {d['model_id']:<20} {','.join(d['tools'])}  {d['description'][:50]}")
+            return 0
+        if a.agent_cmd == "run":
+            res = agents.run_agent(a.name, a.task, cwd=".", dry_run=a.dry_run)
+        else:
+            steps = a.steps.split(",") if a.steps else None
+            res = agents.run_pipeline(a.building, a.photos, steps=steps, dry_run=a.dry_run)
+    except agents.AgentError as e:
+        print(f"エラー: {e}")
+        return 1
+    print(json.dumps(res, ensure_ascii=False, indent=1))
+    return 0
 
 
 def _photos(a) -> int:

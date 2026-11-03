@@ -55,8 +55,18 @@ BAND_H = 0.22                                       # 白い帯の見付け 12 p
 WIDE_ROW1, WIDE_GAP = 4.79, 0.24                    # 広い段の 1 段目の高さ（帯→中の横桟）、笠木の厚み
 PODIUM_TOP = 8.5                                    # 西の広場から基壇の上の帯（の中心）まで
 TOP = round(PODIUM_TOP + 6 * FLOOR_LO + 5 * FLOOR_UP + 10.17, 2)   # 11 階ぶん＋広い 2 段と笠木 10.17 m（546 px）＝ 67.88
-Z_STEP = PODIUM_TOP + 8 * floor_m                   # 南の角の段（8 階の上）
-TOP_CORNER = TOP - floor_m                          # 角の上部は 1 階低い
+# 5 版：南西の角の段は西北西面の帯の梯子で z5.2（8 階の床の帯 z5 の 0.2 段上が段の笠木。sokuryo_SW1 の 5.20/5.17）
+Z_STEP = round(PODIUM_TOP + 5.2 * FLOOR_LO, 2)      # 31.95
+STEP_FLOOR = 8                                      # この階から上の南端 2 列が引っ込む
+SB_D, SB_W = 5.4, 6.7                               # 引っ込みの奥行き（5.3〜5.6 m）と幅（1.95 列）
+# 北の帯の番号 z（z0＝基壇の上の帯、z13.25＝西北西面のパラペット）を西の広場からの m に。2 点を通る一次式（帯の間隔 4.48 m、北の 4.47 と 0.3%）
+ZN_PITCH = (TOP - PODIUM_TOP) / 13.25
+def ZN(z):
+    return round(PODIUM_TOP + z * ZN_PITCH, 2)
+CORE_TOP = ZN(14.06)                                # 中の塊（北の脇の壁の笠木・南西の引っ込みの頂部）71.5
+PIER_TOP = ZN(15.8)                                 # f19 の柱型の頂部 79.3
+BOX_Z0, BOX_Z1 = ZN(12.6), ZN(15.6)                 # 頂部のガラスの箱 65.0〜78.4
+SUNKEN = 3.0                                        # 北の沈んだ広場は西の広場より 3.0 m 低い
 
 
 def m(value, tol, status, evidence=(), method="", note="", unit="m"):
@@ -109,6 +119,32 @@ for fid in order:
     ring2.append(edges[fid]["from"])
 # 短い辺（2 m 未満）が落ちているので、順番どおりに from だけ並べれば多角形になる（辺は連続）
 
+# --- 5 版：北北東側・南西の上部・頂部（out/tower75/kansatsu_north.md と sokuryo_f19/f20/SW1、kazoe_f19/f20） ---------
+EV_N5 = ["PXL_20261103_065946407", "PXL_20261103_070003022"]
+EV_SW = ["PXL_20261103_070327678", "PXL_20261103_070334137"]
+SOK_N, SOK_19, SOK_SW = "out/tower75/sokuryo_f20.json", "out/tower75/sokuryo_f19.json", "out/tower75/sokuryo_SW1.json"
+KAZ_N, KAZ_19 = "out/tower75/kazoe_f20.json", "out/tower75/kazoe_f19.json"
+KAN_N = "out/tower75/kansatsu_north.md"
+# 北の座標：北西の角（西北西面の北端）を原点に、s＝北北東の線に沿って東へ、n＝北へ（OSM の f0/f20 の線が n=0）
+_e0 = edges["f0"]
+P_NW = _e0["to"]
+uN = ((_e0["from"][0] - _e0["to"][0]) / _e0["L"], (_e0["from"][1] - _e0["to"][1]) / _e0["L"])
+nN = (-uN[1], uN[0])
+def NP(s, n):
+    return [round(P_NW[0] + s * uN[0] + n * nN[0], 2), round(P_NW[1] + s * uN[1] + n * nN[1], 2)]
+S_COL = 5.8                 # 北西の角の柱の幅（sokuryo_f20：5.8/5.9 m）
+N_FLANK = 3.4               # 脇の壁は角の柱より 3.4 m 北へ出る（sokuryo_f20 の set_back。角の柱の北面を OSM の線に置く：西北西面＝OSM の辺 32.67 m＝9.49 周期と合う向き）
+S_FLANK1 = S_COL + 8.7      # 脇の壁 8.7 m（sokuryo_f20）
+SLIT = 1.0                  # 脇の壁と柱型の間のガラスのスリット（sokuryo_f19）
+PIER19, OPEN19 = 2.6, 10.4  # 柱型の幅・柱型の間（sokuryo_f19）
+N_PIER = N_FLANK + 0.3      # 柱型は脇の壁より 0.3 m 前（周期の比 1.008）
+N_RECESS = N_FLANK - 1.7    # 凹部の奥の壁は脇の壁の面から 1.7 m 奥（sokuryo_f19 の 1.50/1.70/1.83 m）
+S_PW0 = S_FLANK1 + SLIT
+S_OP0, S_OP1 = S_PW0 + PIER19, S_PW0 + PIER19 + OPEN19
+S_PE1 = S_OP1 + PIER19
+S_F17 = 37.62               # OSM の f17（北東の角の段）の位置。東の脇の壁はここまで
+N_F16 = -2.42               # OSM の f16（北東の角の北面）
+
 
 def merged(ids, new_id, name):
     """一直線に並ぶ辺をひとつの面にする（窓の格子を通すため）。"""
@@ -130,44 +166,100 @@ for fid in order:
     e = edges[fid]
     face_defs.append({"id": fid, "name": f"{e['comp']}面（方位 {e['az']:.0f}°、{e['L']:.1f} m）", "from": e["from"], "to": e["to"], "L": e["L"], "az": e["az"]})
 
+# 5 版：北北東側の辺を写真の作りに置き換える（角の柱・脇の壁・スリット・柱型・浅い凹部・東の脇の壁）
+_i17 = order.index("f17")
+ring_osm = ring2
+ring2 = ring_osm[1:_i17 + 1] + [NP(S_F17, N_FLANK), NP(S_PE1, N_FLANK), NP(S_PE1, N_RECESS), NP(S_PW0, N_RECESS),
+                                NP(S_PW0, N_FLANK), NP(S_COL, N_FLANK), NP(S_COL, 0.0)]
+assert math.dist(ring_osm[_i17], NP(S_F17, N_F16)) < 0.05, (ring_osm[_i17], NP(S_F17, N_F16))
+NEWF = {"f0": (NP(S_COL, 0.0), NP(0.0, 0.0)), "f17": (NP(S_F17, N_F16), NP(S_F17, N_FLANK)), "f18": (NP(S_F17, N_FLANK), NP(S_PE1, N_FLANK)),
+        "f19": (NP(S_OP1, N_RECESS), NP(S_OP0, N_RECESS)), "f20": (NP(S_PW0, N_FLANK), NP(S_COL, N_FLANK))}
+for fd in face_defs:
+    if fd["id"] in NEWF:
+        fd["from"], fd["to"] = NEWF[fd["id"]]
+        fd["L"] = math.dist(fd["from"], fd["to"])
+        fd["moved"] = True
+
+
+def WP(a, d):
+    """西北西面に沿って北端から a m、内側へ d m。"""
+    W_ = groups[0]
+    ux, uy = (W_["to"][0] - W_["from"][0]) / W_["L"], (W_["to"][1] - W_["from"][1]) / W_["L"]
+    return [round(W_["from"][0] + ux * a - uy * d, 2), round(W_["from"][1] + uy * a + ux * d, 2)]
+
+
+def EP(a, d):
+    """東南東面に沿って南端から a m、内側へ d m。"""
+    E_ = groups[1]
+    ux, uy = (E_["to"][0] - E_["from"][0]) / E_["L"], (E_["to"][1] - E_["from"][1]) / E_["L"]
+    return [round(E_["from"][0] + ux * a - uy * d, 2), round(E_["from"][1] + uy * a + ux * d, 2)]
+
+
 # --- 棟 ---------------------------------------------------------------------------------
 b = new_building("tower75", "タワー75")
 b["site_id"] = "tower75"
-b["footprint"] = {"status": "estimated", "evidence": [OSM, OBS_REF] + EV_AER, "polygon": ring2,
-                  "method": "OSM の輪郭（屋上の精読で足元の位置が正しいと確認。屋上の像は南へ 15.1 m 倒れ込む）。南南西の凹部だけ観察票に従って 8 m に深くした（要確認）"}
+b["footprint"] = {"status": "estimated", "evidence": [OSM, OBS_REF, SOK_N, SOK_19] + EV_AER + EV_N5, "polygon": ring2,
+                  "method": "OSM の輪郭（屋上の精読で足元の位置が正しいと確認。屋上の像は南へ 15.1 m 倒れ込む）。南南西の凹部だけ観察票に従って 8 m に深くした（要確認）。"
+                            "5 版：北北東側は正面化 065946407・070003022 の作りに置き換え：北西の角の柱の北面を OSM の線に置き、脇の壁を 3.4 m 北へ、柱型を 3.7 m、凹部の奥の壁を 1.7 m（OSM の f19 は線から 1.0 m 北で 0.7 m 差）。"
+                            "東の脇の壁は西と鏡写しと仮定（070003022 で東の笠木が西の笠木と同じ行に写る）。北東の角の段 f16/f17 は OSM のまま"}
 b["ground_z"] = est(42.9, 1.0, ["gsi:dem5a"], "国土地理院 5m 標高を足元で読む")
-b["floor_count"] = est(16, None, EV_W + ["osm:levels=16"], "西北西面で 13 段が見え、基壇に 2〜3 層が隠れる。OSM の levels=16 と合う", unit="階")
-b["floor_pitch"] = est(floor_m, 0.06, EV_W4 + [OSM, SOK], "正面化 3 枚の白い帯の間隔 241.0/256.3/262.4 px を柱間隔（OSM 32.67 m ÷ 9.49 周期 = 3.44 m）で換算 → 4.49/4.43/4.44 m。検収で 3〜8 階 4.51 m・9 階から上 4.43 m に分けた（070204974 で 242.8/238.8 px、070327678 で 260/255.3 px、どちらも 8 階と 9 階の間で変わる）。ここは 11 階の平均。PLATEAU 74.2÷16 = 4.64 m とは 4% 差")
-b["parapet_top"] = est(TOP, 2.0, EV_W4 + [OSM, SOK], "西の広場から：大階段 2.25 m（15 段 × 0.15 m）＋入口の床〜基壇の上の帯 6.26 m ＋ 3〜8 階 6 × 4.51 m ＋ 9〜13 階 5 × 4.43 m ＋ 広い 2 段と笠木 10.17 m（070204974、縮尺は OSM の辺）。PLATEAU 74.2 m とは −6.3 m（−8.5%、5% 超）。PLATEAU の部品は足元の外で塔の物か不明。北の沈んだ広場（1 層下）から測った値なら近づく。地面の基準と屋上の高さは撮影依頼")
+b["ground_z"]["note"] = "模型の z=0 は西の広場（西の入口の大階段の下）。DEM の 42.9 m が西の広場・北の歩道・北の沈んだ広場のどれかは未確定（sokuryo_f20 の questions）"
+b["levels"] = [
+    {"id": "west_plaza", "name": "西の広場（z の基準）", "z": est(0.0, 0.0, EV_W4 + [SOK], "z の基準。西北西面の大階段の下の広場")},
+    {"id": "entrance", "name": "西の入口の階＝北のテラス", "z": est(2.25, 0.3, EV_W4 + ["PXL_20261103_070123308", SOK], "大階段 15 段 × 0.15 m（sokuryo_W）。070123308 で大階段の上とテラスの縁がそろう（kansatsu_f20）")},
+    {"id": "north_sunken_plaza", "name": "北の沈んだ広場（低い地面）", "z": est(-SUNKEN, 1.0, EV_N5 + ["PXL_20261103_070327678", "PXL_20261103_070123308", SOK_N],
+        "sokuryo_f20.sunken_plaza：正面化の目の高さ z−1.69 → 北の歩道 E−2.9 m、広場への階段 16 段（measured、kazoe_f20）× 0.15 m → 広場 E−5.3 m、西の広場は E−2.25 m → 3.05 m 低い（約 2/3 階）。模型の地面は z=0 の 1 枚なので形には出ない（requests）")},
+]
+b["floor_count"] = m(16, None, "measured", EV_N5 + [KAZ_N], "kazoe_f20：沈んだ層 1＋基壇 2＋窓の段 13＝16（北北東面、2 枚で一致）。OSM levels=16 と一致。西北西面で見える 15 との差は沈んだ層", unit="階")
+b["floor_pitch"] = est(floor_m, 0.06, EV_W4 + [OSM, SOK], "正面化 3 枚の白い帯の間隔 241.0/256.3/262.4 px を柱間隔（OSM 32.67 m ÷ 9.49 周期 = 3.44 m）で換算 → 4.49/4.43/4.44 m。検収で 3〜8 階 4.51 m・9 階から上 4.43 m に分けた（070204974 で 242.8/238.8 px、070327678 で 260/255.3 px、どちらも 8 階と 9 階の間で変わる）。ここは 11 階の平均。北北東面は 4.45/4.49 m（OSM の f0＋f20 14.53 m を物差し、sokuryo_f20）で ±0.4%")
+b["parapet_top"] = est(TOP, 2.0, EV_W4 + [OSM, SOK], "西北西面の外周の壁のパラペット（西の広場から）：大階段 2.25 m（15 段 × 0.15 m）＋入口の床〜基壇の上の帯 6.26 m ＋ 3〜8 階 6 × 4.51 m ＋ 9〜13 階 5 × 4.43 m ＋ 広い 2 段と笠木 10.17 m（070204974、縮尺は OSM の辺）。"
+                       "5 版：中の塊はこれより 3.6 m 高く 71.5 m（塊 core）、北の柱型は 79.3 m。PLATEAU 74.2 m は北の沈んだ広場（−3.0 m）から中の塊の頂部まで（3.0＋71.5＝74.5 m、+0.4%）と読む（塊 core の top_z の note）")
 
-# 塊：下（全体）、上（南の 2 角を 1 列ぶん欠く）、南の角の上部（引っ込み・1 階低い）、基壇
-poly = Polygon(ring2)
-W, E = groups[0], groups[1]
-def corner_square(face, at_end: bool, size: float, inset: float):
-    """面の端（at_end=True なら to 側）の角に、面に沿って size、内側へ size の正方形。inset だけ内側へずらす。"""
-    (x0, y0), (x1, y1) = face["from"], face["to"]
-    L = face["L"]
-    ux, uy = (x1 - x0) / L, (y1 - y0) / L
-    nx, ny = uy, -ux                      # 外向き
-    s0 = L - size if at_end else 0.0
-    pts = []
-    for (s, t) in ((s0, 0), (s0 + size, 0), (s0 + size, size), (s0, size)):
-        pts.append([round(x0 + ux * s - nx * (t + inset) - ux * (inset if at_end else -inset), 2),
-                    round(y0 + uy * s - ny * (t + inset) - uy * (inset if at_end else -inset), 2)])
-    return pts
+# 塊（5 版）：西の外周の帯（67.9 m）、南西の角の下（段の笠木 31.95 m）、東の外周の帯（西と同じと仮定）、中の塊（71.5 m）、北の柱型 2 本（79.3 m）、基壇
+poly = Polygon(ring_osm)
+foot = Polygon(ring2)
+assert foot.is_valid, "北北東側の輪郭が自己交差"
+OV = 0.05                                 # 塊どうしを少し重ねる（足し算のブーリアンで面が一致しないように）
+w_n = Polygon([WP(0, 0), WP(32.67 - SB_W, 0), WP(32.67 - SB_W, SB_D + OV), WP(0, SB_D + OV)]).union(
+      Polygon([NP(0, 0), NP(S_COL + OV, 0), NP(S_COL + OV, -SB_D), NP(0, -SB_D)])).intersection(foot)
+w_s = Polygon([WP(32.67 - SB_W, 0), WP(33.5, 0), WP(33.5, SB_D + OV), WP(32.67 - SB_W, SB_D + OV)]).intersection(foot)
+e_s = Polygon([EP(-1.0, 0), EP(28.33 + 1.0, 0), EP(28.33 + 1.0, SB_D + OV), EP(-1.0, SB_D + OV)]).intersection(foot)
+cut_w = Polygon([WP(-1, -1), WP(33.5, -1), WP(33.5, SB_D), WP(-1, SB_D)]).union(Polygon([NP(-1, 1), NP(S_COL, 1), NP(S_COL, -SB_D), NP(-1, -SB_D)]))
+cut_e = Polygon([EP(-1.0, -1), EP(29.33, -1), EP(29.33, SB_D), EP(-1.0, SB_D)])
+core = foot.difference(cut_w).difference(cut_e).buffer(0)
+if core.geom_type == "MultiPolygon":
+    core = max(core.geoms, key=lambda g: g.area)
 
-CS = 2 * bay_m                            # 南端 2 列ぶん
-sq_sw = corner_square(W, True, CS, 0.0)   # 西北西面の南端（to 側）
-sq_se = corner_square(E, False, CS, 0.0)  # 東南東面の南端（from 側）
-upper = poly.difference(Polygon(sq_sw)).difference(Polygon(sq_se)).buffer(0)
-if upper.geom_type == "MultiPolygon":
-    upper = max(upper.geoms, key=lambda g: g.area)
-upper_ring = [[round(x, 2), round(y, 2)] for x, y in list(upper.exterior.coords)[:-1]]
+
+def ringof(g):
+    g = g.simplify(0.02)
+    if g.geom_type == "MultiPolygon":
+        g = max(g.geoms, key=lambda q: q.area)
+    return [[round(x, 2), round(y, 2)] for x, y in list(g.exterior.coords)[:-1]]
+
+
+pier_w = [NP(S_PW0, N_RECESS - 0.5), NP(S_OP0, N_RECESS - 0.5), NP(S_OP0, N_PIER), NP(S_PW0, N_PIER)]
+pier_e = [NP(S_OP1, N_RECESS - 0.5), NP(S_PE1, N_RECESS - 0.5), NP(S_PE1, N_PIER), NP(S_OP1, N_PIER)]
 podium = [[round(x, 2), round(y, 2)] for x, y in list(poly.buffer(4.0, join_style=2).simplify(0.5).exterior.coords)[:-1]]
-# 南の 2 角の「8〜9 階から上が引っ込み、1 階低い」は寸法が unknown（観察票）。塊で試作したが位置が決まらず絵が崩れたので、
-# 3 版では 1 塊にして requests に残す（角を 45° から撮る依頼）。
+STRIP_WHY = ("中の塊の西の面は西北西面から 5.4 m 奥：南西の引っ込みの奥の壁（sokuryo_SW1 の 5.3〜5.6 m）、北西の角の柱の幅 5.8 m（sokuryo_f20）、"
+             "屋上の西の帯の暗い影の内側の縁 2.3＋3.3＝5.6 m（out/tower75_屋上.json の lower_step、確信度 低）の 3 つが合う")
 b["blocks"] = [
-    {"id": "A", "name": "塔（南の 2 角の上部の引っ込みは未反映）", "polygon": ring2, "top_z": est(TOP, 2.0, EV_W4 + [OSM, SOK], "西北西面の正面化で西の広場から（parapet_top と同じ）。PLATEAU 74.2 m とは −8.5%")},
+    {"id": "Wn", "name": "西の外周の帯（西北西面と北西の角の柱。パラペット 67.9 m）", "polygon": ringof(w_n),
+     "top_z": est(TOP, 2.0, EV_W4 + [OSM, SOK, SOK_N], "西北西面のパラペット（parapet_top と同じ）。北西の角の柱の頂部も同じ高さ（sokuryo_f20 の w_parapet z13.25）"),
+     "depth": est(SB_D, 0.2, EV_SW + [SOK_SW, SOK_N, "out/tower75_屋上.json"], STRIP_WHY)},
+    {"id": "Ws", "name": "南西の角の下の部分（8 階の床より上の南端 2 列は 5.4 m 奥へ引っ込む）", "polygon": ringof(w_s),
+     "top_z": est(Z_STEP, 0.3, EV_SW + [SOK_SW], "段の笠木：070327678 で z5.20、070334137 で z5.17（西北西面の帯の梯子）＝ 8.5＋5.2×4.51 m"),
+     "width": est(SB_W, 0.3, ["PXL_20261103_070327678", SOK_SW], "正面化で 1.95 列（388 px）＝6.7 m。南端は西北西面の南端とそろう")},
+    {"id": "Es", "name": "東の外周の帯（西と同じ作りと仮定）", "polygon": ringof(e_s),
+     "top_z": est(TOP, 2.5, EV_E + [OBS_REF], "見えていない：西北西面と同じ帯（観察票）なので同じ高さ・同じ奥行き 5.4 m と仮定。南東の角の上部の引っ込みは unknown（写真 1 枚、sokuryo_SW1）")},
+    {"id": "core", "name": "中の塊（外周の帯より 3.6 m 高い）", "polygon": ringof(core),
+     "top_z": {**est(CORE_TOP, 1.0, EV_N5 + ["PXL_20261103_070044607"] + EV_SW + [SOK_N, SOK_SW],
+                     "北の脇の壁の笠木 z14.06（14.11/13.99/14.12、065946407・070003022）と南西の引っ込みの頂部 z14.01/14.03（070327678・070334137）。西北西面のパラペット 67.88 m（z13.25）＋0.81 段 × 4.43 m＝71.5 m。南・東の外周は見えていないので同じと仮定"),
+               "note": "PLATEAU の 74.2 m との関係（estimated）：北の沈んだ広場（levels.north_sunken_plaza、−3.0 m）から測ると 3.0＋71.5＝74.5 m で +0.4%。西の広場から測った外周のパラペット 67.9 m とでは −8.5% だったのは、地面の差（3.0 m）と頂部の差（3.6 m）の 2 つ。PLATEAU の高さの取り方（最高点か代表値か）は未確定"}},
+    {"id": "P19w", "name": "北北東 西の柱型（塔でいちばん高い）", "polygon": pier_w,
+     "top_z": est(PIER_TOP, 1.5, EV_N5 + [SOK_19], "065946407 で z15.5〜15.8、070003022 で z15.9（柱型は 0.3 m 前のぶん −0.1）。67.88＋(15.8−13.25)×4.43")},
+    {"id": "P19e", "name": "北北東 東の柱型", "polygon": pier_e,
+     "top_z": est(PIER_TOP, 1.5, EV_N5 + [SOK_19], "西の柱型と同じ高さ（070003022 で東の柱型の頂部の行 61 px が西 63 px とそろう）")},
     {"id": "C", "name": "基壇（入口・大階段・通路橋の根元）", "polygon": podium,
      "top_z": est(PODIUM_TOP, 0.5, EV_W4 + [SOK], "070204974：入口の床〜基壇の上の帯 336 px＝6.26 m ＋ 大階段 2.25 m（蹴上げ 0.15 m の慣用値）。輪郭は塔を 4 m 広げた仮の形（形は unknown）")},
 ]
@@ -182,8 +274,9 @@ WIN = bay_m - PIER
 WIDE_W = 2.24        # 最上部 2 段の広い窓（070204974 で 120.4 px）
 
 
-def strip_windows(f, ev, bays_all, floors_cut=None, wide_top=False, top=TOP):
-    """縦長の帯の窓を階ごとに。floors_cut: 上部で外す列（南の角）。wide_top: 最上部 2 段は 2 倍幅。"""
+def strip_windows(f, ev, bays_all, floors_cut=None, wide_top=False, top=TOP, from_floor=3, to_floor=99):
+    """縦長の帯の窓を階ごとに。floors_cut: STEP_FLOOR 階から上で外す列（南西の角の引っ込み）。wide_top: 最上部 2 段は 2 倍幅。
+    from_floor〜to_floor: 窓と帯を置く階（引っ込んだ壁は 8 階から、南の角寄りの面は段の下まで）。"""
     k, z = 1, PODIUM_TOP
     rows = []
     while z + (FLOOR_LO if k <= 6 else FLOOR_UP) < top - 1.0:
@@ -200,7 +293,10 @@ def strip_windows(f, ev, bays_all, floors_cut=None, wide_top=False, top=TOP):
     for idx, (k, z) in enumerate(rows):
         floor = k + 2
         bays = list(bays_all)
-        if floors_cut and floor > 8 + 2:
+        if floor < from_floor or floor > to_floor:
+            continue
+        cut = bool(floors_cut) and floor >= STEP_FLOOR
+        if cut:
             bays = [i for i in bays if i not in floors_cut]
         wide = wide_top and idx >= len(rows) - 2
         # z は白い帯の中心。窓の列は帯の 0.20 m 上（格子パネルの下端）から次の帯の下端まで（070204974 で 11 px / 帯の見付け 12 px）
@@ -222,6 +318,8 @@ def strip_windows(f, ev, bays_all, floors_cut=None, wide_top=False, top=TOP):
                              "recess": est(0.2, 0.1, ev, "目視")})
         # 広い段の柱型にも中ほどに帯が 1 本ある（070204974 の柱型 x=1700 の縦の断面で y 1254。検収 B の重ねで確認）
         for j, (a0, a1) in enumerate(pier_spans):
+            if cut and j >= min(floors_cut):        # 引っ込んだ部分の柱型の帯は奥の壁（面 Wsb）へ
+                continue
             f["ledges"].append({"name": f"{floor}階の帯" + ("" if j == 0 else f"（柱型{j}）"), "along0": round(a0, 3), "along1": round(a1, 3),
                                 "z": est(z - BAND_H / 2, 0.1, ev4, "070204974 などの白い帯の中心 − 見付けの半分。柱型の上だけ"),
                                 "depth": est(0.1, 0.05, ev, "目視"), "height": est(BAND_H, 0.04, ev4, "帯の見付け 12 px（070204974）"), "material": "concrete"})
@@ -241,14 +339,28 @@ def small_windows(f, ev, top=TOP):
 
 
 faces = []
+TOP_OF = {"W": TOP, "E": TOP, "SW1": TOP, "f13": TOP, "f0": TOP, "f16": TOP}     # 外周の帯。ほかは中の塊
 for fd in face_defs:
+    tz = TOP_OF.get(fd["id"], CORE_TOP)
     f = {"id": fd["id"], "name": fd["name"], "from": fd["from"], "to": fd["to"],
          "length": est(fd["L"], 0.8, [OSM], "OSM の輪郭の辺" + ("（一直線の辺をまとめた）" if fd.get("merged") else "")),
-         "top_z": est(TOP, 2.0, PL, "塔の高さ"), "bays": {}, "windows": [], "bands": [], "openings": [], "glazing": [], "ledges": [], "materials": [tile]}
+         "top_z": est(tz, 2.0, EV_W4 + [SOK], "西北西面のパラペット（外周の帯）") if tz == TOP else
+                  est(tz, 1.0, EV_N5 + EV_SW + [SOK_N, SOK_SW], "中の塊の頂部（塊 core と同じ）。北の脇の壁と南西の引っ込みで測った。ほかの面は同じと仮定"),
+         "bays": {}, "windows": [], "bands": [], "openings": [], "glazing": [], "ledges": [], "materials": [tile]}
     faces.append(f)
 F = {f["id"]: f for f in faces}
+# 5 版で写真から置き直した面の長さ
+F["f0"]["length"] = est(S_COL, 0.3, EV_N5 + [SOK_N], "sokuryo_f20：角の柱 285/265 px（3.4 m 奥の縮尺 0.911）→ 5.8/5.9 m")
+F["f20"]["length"] = est(S_PW0 - S_COL, 0.4, EV_N5 + [SOK_N, SOK_19], "脇の壁 8.7 m（465/435 px、sokuryo_f20）＋スリット 1.0 m（sokuryo_f19）")
+F["f19"]["length"] = est(OPEN19, 0.4, ["PXL_20261103_070003022", SOK_19], "柱型の間：070003022 の正面化で 455→975 px ÷ 50.0 px/m（sokuryo_f19）。OSM の f19 14.16 m は物差しにしない")
+F["f18"]["length"] = est(S_F17 - S_PE1, 1.0, [OSM, SOK_19], "東のスリット 1.0 m＋脇の壁。脇の壁の東端は OSM の f17 の位置のまま（写真では白い棟で隠れる）。OSM の f18 8.94 m より 2.4 m 短いのは、柱型＋凹部が OSM の f19 より 1.4 m 長いのを西から積んだため")
+F["f17"]["length"] = est(N_FLANK - N_F16, 1.0, [OSM], "東の脇の壁を西と同じ 3.4 m 北へ出したので、OSM の北東の角の段 2.42 m が 5.82 m に伸びた（北東の角は撮影依頼）")
+F["f0"]["name"] = "北北東 北西の角の柱（縦のガラス帯 2 本。西北西面の北端）"
+F["f20"]["name"] = "北北東 西の脇の壁（小窓 1 列・13 段、凹部側にガラスのスリット）"
+F["f18"]["name"] = "北北東 東の脇の壁（西と鏡写しと仮定。下半分は白い棟で隠れる）"
+F["f17"]["name"] = "東北東 北東の角の段（OSM。脇の壁を北へ出したぶん伸びた）"
 
-# 西北西面：9 列、南端（to 側）2 列は 8 階より上を外す
+# 西北西面：9 列、南端（to 側）2 列は 8 階から上を外す（南西の角の引っ込み。sokuryo_SW1）
 w = F["W"]
 W_MF = PIER / 2       # 北端（from 側）は柱型から始まる：070327678 の角 1215 px と柱型 0 の左端 1222 px
 w["bays"] = {"count": est(9, None, EV_W + [OBS_REF], "観察票：窓の縦の列 9（070327678 の正面化でも 9）", unit="個"),
@@ -257,9 +369,20 @@ w["bays"] = {"count": est(9, None, EV_W + [OBS_REF], "観察票：窓の縦の�
              "margin_from": est(W_MF, 0.15, EV_W4, "北端は柱型から始まる（070327678・070334137 で角と柱型 0 の左端が一致）"),
              "margin_to": est(w["length"]["value"] - 9 * bay_m - W_MF, 0.5, EV_W4 + [OSM], "残り（南端の柱型 9 は 104 px とやや細く写る。その奥に小窓の帯の別の壁）"),
              "pier_depth": unk(note="柱型と壁の面の出入りは写真から読めない（3 版の 0.15 m は目視）。0.15 m の箱を全高に立てると、柱型の上の白い帯と最上部 2 段の広い窓が隠れた（検収 B、070204974）。凹凸は窓の奥行き 0.2 m で出す")}
-strip_windows(w, EV_W, range(1, 10), wide_top=True)
+strip_windows(w, EV_W, range(1, 10), floors_cut=(8, 9), wide_top=True)
 w["render_view"] = True
-# 東南東面：列数未確定（7＋2 列らしい）。8 列と置く。南端（from 側）2 列は上を外す
+# 南西の角の引っ込んだ奥の壁（中の塊の西の面）。帯は同じ階に見える（sokuryo_SW1 の周期 230.3/236.9 px）。窓の割付は西北西面と同じと仮定
+sb = {"id": "Wsb", "name": "西北西 南西の角の引っ込んだ奥の壁（8 階から上、5.4 m 奥）", "from": WP(32.67 - SB_W, SB_D), "to": WP(32.67, SB_D),
+      "length": est(SB_W, 0.3, ["PXL_20261103_070327678", SOK_SW], "正面化で 1.95 列（388 px）＝6.7 m"),
+      "top_z": est(CORE_TOP, 1.0, EV_SW + [SOK_SW], "頂部 z14.01/14.03（070327678・070334137）＝中の塊と同じ"),
+      "bays": {"count": est(2, None, EV_SW + [SOK_SW], "南端 2 列が引っ込む（sokuryo_SW1）", unit="個"),
+               "pitch": est(SB_W / 2, 0.2, EV_SW + [SOK_SW], "壁の幅を 2 等分（西北西面の柱間隔 3.44 m に近い）。窓の位置は写真で読んでいない"),
+               "pier_width": est(PIER, 0.2, EV_W4, "西北西面と同じと仮定"), "margin_from": est(0.0, 0.3, [], "壁の幅を 2 等分と仮定")},
+      "windows": [], "bands": [], "openings": [], "glazing": [], "ledges": [], "materials": [tile]}
+faces.append(sb)
+F["Wsb"] = sb
+strip_windows(sb, EV_SW, range(1, 3), wide_top=True, from_floor=STEP_FLOOR)
+# 東南東面：列数未確定（7＋2 列らしい）。8 列と置く
 e = F["E"]
 ne_ = 8
 e["bays"] = {"count": est(ne_, None, EV_E + [OBS_REF], "観察票では 7 列＋南端 2 列らしいが未確定。8 と置く", unit="個"), "pitch": est(bay_m, 0.2, EV_W, "西北西面と同じ"),
@@ -267,12 +390,12 @@ e["bays"] = {"count": est(ne_, None, EV_E + [OBS_REF], "観察票では 7 列＋
              "pier_depth": unk(note="西北西面と同じ理由で unknown")}
 strip_windows(e, EV_E, range(1, ne_ + 1), wide_top=True)
 e["render_view"] = True
-# 南南西の角寄り：窓の帯 2 列
+# 南南西の角寄り：窓の帯 2 列。SW1 は段（8 階の床）より下だけ（上は西の 5.4 m が無くなり、残りの面の窓は unknown）。f13（南東の角）は引っ込みが unknown なので全高
 for fid in ("SW1", "f13"):
     f = F[fid]
     f["bays"] = {"count": est(2, None, EV_S + [OBS_REF], "観察票：窓の帯 2 列", unit="個"), "pitch": est(bay_m, 0.2, EV_W, "西北西面と同じ"),
                  "pier_width": est(PIER, 0.2, EV_W, "同上"), "end_margin": est((f["length"]["value"] - 2 * bay_m) / 2, 0.4, EV_S, "余りを両端に半分ずつ"), "pier_depth": unk(note="西北西面と同じ理由で unknown")}
-    strip_windows(f, EV_S, range(1, 3), top=TOP_CORNER)
+    strip_windows(f, EV_S, range(1, 3), top=TOP, to_floor=(STEP_FLOOR - 1 if fid == "SW1" else 99))
 # f7・f11：無地。f8・f10（凹部の内側）、f6・f12（角の小面）：各階に小窓 1 つ
 for fid in ("f8", "f10", "f6", "f12"):
     small_windows(F[fid], EV_S if fid in ("f8", "f10") else EV_S + ["PXL_20261103_070409570"])
@@ -289,26 +412,90 @@ while z + floor_m < TOP - 3.0:
     z += floor_m
     k += 1
 f9["render_view"] = True
-# 北北東の中央 f19：奥まった凹部に横長の連窓。頂部にガラスの箱（部品）
+
+
+def north_bands(f, ks, ev, how, a0=0.0, a1=None):
+    for k in ks:
+        f["ledges"].append({"name": f"帯 z{k:g}", "along0": a0, "along1": a1 if a1 is not None else f["length"]["value"],
+                            "z": est(ZN(k) - BAND_H / 2, 0.15, ev, how), "depth": est(0.1, 0.05, ev, "目視"),
+                            "height": est(BAND_H, 0.04, EV_W4, "西北西面の帯と同じ見付け"), "material": "concrete"})
+
+
+# 北北東の中央 f19：浅い凹部の奥の壁に各階 1 本の連窓（5 枚割）。ルーバー・白い帯は無い（kansatsu_f19）
 f19 = F["f19"]
-f19["name"] = "北北東 中央（凹部・横長の連窓・頂部にガラスの箱）"
-f19["bays"] = {"count": est(1, None, EV_N + [OBS_REF], "各階に横長の連窓 1 つ（観察票）", unit="個"), "pitch": est(f19["length"]["value"], 0.5, EV_N, "面の幅"),
-               "pier_width": est(2.0, 0.5, EV_N, "両端にガラスブロックのパネル。目視"), "end_margin": est(0.0, 0.3, [], "面いっぱいに 1 つなので余白なし")}
-k, z = 1, PODIUM_TOP
-while z + floor_m < TOP - 4.0:
-    f19["windows"].append({"name": f"{k+2}階連窓", "floors": [k + 2], "per_bay": 1, "z_bottom": est(z + 1.0, 0.3, EV_N, "目視"), "z_top": est(z + floor_m - 0.8, 0.3, EV_N, "目視"),
-                           "width": est(f19["length"]["value"] - 2.0, 0.5, EV_N, "面の幅 − 両端のパネル"), "recess": est(0.3, 0.1, EV_N, "目視"), "rail": False})
-    z += floor_m
-    k += 1
+f19["name"] = "北北東 中央の凹部の奥の壁（浅い 1.7 m。各階 1 本の連窓・5 枚割。頂部にガラスの箱）"
+f19["bays"] = {"count": est(1, None, EV_N5 + [KAZ_19], "列ではなく各階 1 本の連窓（kazoe_f19）", unit="個"),
+               "pitch": est(OPEN19, 0.4, ["PXL_20261103_070003022", SOK_19], "柱型の間＝奥の壁の幅"),
+               "pier_width": est(0.2, 0.1, ["PXL_20261103_070003022"], "連窓の両脇に残る壁（正面化で奥の壁 525〜975 px に連窓がほぼいっぱい）"),
+               "margin_from": est(0.0, 0.1, [], "面いっぱいに 1 本"), "margin_to": est(0.0, 0.1, [], "同上")}
+RIB_B, RIB_T = 1.95, 3.63
+RIB_HOW = ("070003022 の正面化で連窓の上下 y1120/1200・1337/1418 px を奥の壁の縮尺（214.8 px/段、周期の比 0.956）と目の高さ（z−1.7）で段の番号に直し、"
+           "下の帯から +0.44/+0.43 段・+0.815/+0.805 段 → ×4.48 m")
+for k in range(2, 13):
+    f19["windows"].append({"name": f"連窓 z{k}", "floors": [k + 3], "per_bay": 5, "gap": est(0.15, 0.05, ["PXL_20261103_070003022"], "枠の見付け（目視）"),
+                           "z_bottom": est(ZN(k) + RIB_B, 0.2, EV_N5 + [KAZ_19], RIB_HOW), "z_top": est(ZN(k) + RIB_T, 0.2, EV_N5 + [KAZ_19], RIB_HOW),
+                           "width": est(OPEN19 - 0.2, 0.3, ["PXL_20261103_070003022"], "奥の壁いっぱい。5 枚割（ガラスブロック／窓／ガラスブロック（幅広）／窓／ガラスブロック、kansatsu_f19）。"
+                                        "模型は 5 等分で、ガラスブロックと透明ガラスを分けていない"),
+                           "recess": est(0.15, 0.1, ["PXL_20261103_070003022"], "目視"), "rail": False})
+f19["windows_note"] = "見えるのは z2〜z12 の 11 段（measured、kazoe_f19）。z0・z1 と基壇は木で隠れて全段数は unknown（requests）"
 f19["render_view"] = True
-# 北の 2 角のガラスの縦帯（f20 の北西角寄り、f18 の北東角寄り）＋小窓
-for fid, at_end in (("f20", True), ("f18", False)):
+# 柱型の前面（帯だけ。頂部はパラペットより 1.7 段高い）
+for pid, s0, s1, nm in (("P19w", S_PW0, S_OP0, "西"), ("P19e", S_OP1, S_PE1, "東")):
+    pf = {"id": pid, "name": f"北北東 {nm}の柱型の前面（脇の壁より 0.3 m 前）", "from": NP(s1, N_PIER), "to": NP(s0, N_PIER),
+          "length": est(PIER19, 0.2, EV_N5 + [SOK_19], "130/140 px（sokuryo_f19）"),
+          "top_z": est(PIER_TOP, 1.5, EV_N5 + [SOK_19], "z15.8（sokuryo_f19）"),
+          "bays": {}, "windows": [], "bands": [], "openings": [], "glazing": [], "ledges": [], "materials": [tile]}
+    north_bands(pf, list(range(2, 13)) + [13.2, 14.06], EV_N5,
+                "070003022 の柱型の帯 y910/1134/1361… を柱型の面（0.3 m 前、226.5 px/段）で段の番号に直すと脇の壁の帯と同じ段（z12.04・13.28・14.11 など）")
+    faces.append(pf)
+    F[pid] = pf
+
+# 脇の壁 f20（西）と f18（東）：小窓 1 列（幅 0.67 m、脇の壁の角寄りの端から中心まで 1.64 m）、凹部側にガラスのスリット
+FL_HOW = "070003022 の正面化（50.0 px/m、sokuryo_f20）で小窓 1513 px・幅 33 px、脇の壁 1160〜1595 px → 角寄りの端から中心 1.64 m"
+WIN_B, WIN_T, WIN_T12 = 0.98, 3.24, 3.09     # 最上段（z12）の小窓だけ上端が低い（2 枚で +3.04/+3.13。検収 A の 2 回目）
+WIN_HOW = ("小窓の下端・上端を帯から：070003022 で z10 +0.96/+3.13・z12 +0.89/+3.04 m（224.7 px/段）、065946407 で z0 +1.05/+3.37・z1 +1.01/+3.31・z10 +0.99/+3.16・z12 +1.03/+3.13 m（239.4 px/段）の平均。"
+           "検収 A の 1 回目で上端が +0.66/+0.74 m ずれた（5 版の初めは段の換算を誤って 2.38 m としていた）")
+for fid, ev, mirror in (("f20", EV_N5 + [SOK_N, KAZ_N], False), ("f18", EV_N5 + ["kansatsu_f18"], True)):
     f = F[fid]
     L = f["length"]["value"]
-    small_windows(f, EV_N)
-    a0, a1 = (L - 2.0, L - 0.6) if at_end else (0.6, 2.0)
-    f["glazing"].append({"name": "角寄りの縦のガラス帯", "along0": a0, "along1": a1, "z_bottom": PODIUM_TOP, "z_top": est(TOP - 1.5, 1.5, EV_N, "屋上の少し下まで（観察票）"),
-                         "inset": est(0.3, 0.2, EV_N, "目視"), "depth": est(2.0, 1.0, EV_N, "目視"), "beam": False})
+    st_how = "" if not mirror else "（西の脇の壁と鏡写しと仮定：kansatsu_f18 の「小窓 1 列、西と鏡写し」。段数は白い棟で隠れて数えていない）"
+    if not mirror:      # from 側（東端）がスリット、to 側（西端）が角寄り
+        f["bays"] = {"count": est(1, None, ev, "小窓 1 列（kazoe_f20）", unit="個"), "pitch": est(3.28, 0.3, ["PXL_20261103_070003022"], "窓の中心から角寄りの端まで 1.64 m の 2 倍（窓の位置を出すための割付）"),
+                     "pier_width": est(3.28 - 0.67, 0.3, ["PXL_20261103_070003022"], FL_HOW),
+                     "margin_from": est(L - 3.28, 0.4, ["PXL_20261103_070003022"], "スリット 1.0 m＋脇の壁の残り"), "margin_to": est(0.0, 0.1, [], "角寄りの端")}
+        slit = (0.0, SLIT)
+    else:               # from 側（東端）が角寄り、to 側（西端）がスリット
+        f["bays"] = {"count": est(1, None, ev, "小窓 1 列（西と鏡写しと仮定）", unit="個"), "pitch": est(3.28, 0.5, [], "西の脇の壁と鏡写しと仮定"),
+                     "pier_width": est(3.28 - 0.67, 0.5, [], "西の脇の壁と鏡写しと仮定"),
+                     "margin_from": est(0.0, 0.5, [], "角寄りの端（鏡写しと仮定）"), "margin_to": est(L - 3.28, 1.0, [], "残り")}
+        slit = (L - SLIT, L)
+    for k in range(0, 13):
+        f["windows"].append({"name": f"小窓 z{k}", "floors": [k + 3], "per_bay": 1,
+                             "z_bottom": est(ZN(k) + WIN_B, 0.2, ev, WIN_HOW + st_how), "z_top": est(ZN(k) + (WIN_T12 if k == 12 else WIN_T), 0.2, ev, WIN_HOW + st_how),
+                             "width": est(0.67, 0.1, ["PXL_20261103_070003022"], FL_HOW + st_how), "recess": est(0.2, 0.1, ev, "目視"), "rail": False})
+    north_bands(f, list(range(0, 13)) + [13.2], ev, "脇の壁の白い帯 z0〜z12 は等間隔（070003022 で 3641〜945 px、224.7 px/段）、z13.2 は最上段の上（670 px）" + st_how,
+                a0=(SLIT if not mirror else 0.0), a1=(L if not mirror else L - SLIT))
+    f["glazing"].append({"name": "凹部側の縦のガラスのスリット", "along0": slit[0], "along1": slit[1],
+                         "z_bottom": est(ZN(2.8), 1.0, ["PXL_20261103_070003022"], "見えている下端（070003022 の 3000 px＝z2.8）。それより下は木で隠れて unknown"),
+                         "z_top": est(ZN(13.9), 0.5, ["PXL_20261103_070003022"], "070003022 の 495 px＝z14.0 の少し下（笠木の下）"),
+                         "inset": est(0.3, 0.2, EV_N5, "目視"), "depth": est(0.5, 0.3, EV_N5, "目視"), "beam": False})
+    f["render_view"] = fid == "f20"
+# 北西の角の柱 f0：縦のガラス帯 2 本（070003022 の正面化で 1620〜1680 px と 1755〜1830 px、角の柱 1625〜1890 px・45.5 px/m）
+f0 = F["f0"]
+f0["glazing"].append({"name": "角の柱の縦のガラス帯", "along0": 2.9, "along1": 4.5,
+                      "z_bottom": est(PODIUM_TOP, 0.5, ["PXL_20261103_070003022"], "z0 の帯（低い塊の上）から"),
+                      "z_top": est(TOP - 0.4, 0.5, ["PXL_20261103_070003022"], "角の柱の頂部（926 px）のすぐ下 945 px まで"),
+                      "inset": est(0.3, 0.2, EV_N5, "目視"), "depth": est(0.5, 0.3, EV_N5, "目視"), "beam": False,
+                      "note": "065946407 で 1311〜1380 px（角の柱 1165〜1450 px、49.1 px/m）＝角から 1.4〜2.8 m、070003022 で 1.3〜2.9 m"})
+# 脇の壁寄りの 1 本は格子の縦溝（065946407 で灰色の格子に見える。070003022 では空が映って青い）。溝の深さは目視
+f0["bands"].append({"name": "角の柱の格子の縦溝", "along0": 0.2, "along1": 1.2,
+                    "z_bottom": est(PODIUM_TOP, 0.5, EV_N5, "ガラス帯と同じ範囲"), "z_top": est(TOP - 0.4, 0.5, EV_N5, "同上"),
+                    "depth": est(-0.3, 0.2, EV_N5, "目視（溝の奥行き）"), "color": "#8a8f96",
+                    "note": "065946407 で 1170〜1230 px（角から 4.5〜5.7 m）、070003022 で 4.6〜5.8 m。kansatsu_f20 の「格子の縦溝」"})
+# 北東の角 f16：縦のガラス帯（3 版の観察票、目視のまま）
+f16 = F["f16"]
+f16["glazing"].append({"name": "角寄りの縦のガラス帯", "along0": 0.6, "along1": 2.0, "z_bottom": PODIUM_TOP, "z_top": est(TOP - 1.5, 1.5, EV_N, "屋上の少し下まで（3 版の観察票、目視）"),
+                       "inset": est(0.3, 0.2, EV_N, "目視"), "depth": est(0.5, 0.3, EV_N, "目視"), "beam": False})
 
 b["faces"] = faces
 
@@ -320,13 +507,20 @@ def rect_from(face, along0, along1, out0, out1):
     nx, ny = uy, -ux
     return [[round(x0 + ux * a + nx * o, 2), round(y0 + uy * a + ny * o, 2)] for a, o in ((along0, out0), (along1, out0), (along1, out1), (along0, out1))]
 
-nx19, ny19 = None, None
+
+BOX_BACK = -4.9      # 屋上の精読の PH1 の南の縁（n＝−4.84/−4.88）
 parts = [
     {"type": "coping", "name": "パラペットの笠木", "height": est(0.24, 0.05, EV_W4, "070204974 で白い笠木 13 px"), "overhang": est(0.1, 0.05, [], "目視")},
-    {"type": "box", "name": "北北東 頂部のガラスの箱（塔屋。屋上の精読の候補 PH1 と一致）", "material": "glass",
-     "polygon": rect_from(F["f19"], 1.0, F["f19"]["length"]["value"] - 1.0, 0.0, -6.0), "z0": TOP, "z1": est(TOP + 4.0, 1.5, EV_N + EV_AER, "観察票（頂部のガラスの箱）と屋上の精読（12×6 m の候補）。高さは目視")},
-    {"type": "box", "name": "屋上の設備の列 1（屋上の精読）", "material": "metal", "polygon": rect_from(F["f7"], -1.0, 26.0, -6.0, -10.0), "z0": TOP, "z1": est(TOP + 2.5, 1.0, EV_AER, "屋上の精読：27×4 m の列が 2 本。高さは目視")},
-    {"type": "box", "name": "屋上の設備の列 2（屋上の精読）", "material": "metal", "polygon": rect_from(F["f7"], -1.0, 26.0, -12.0, -16.0), "z0": TOP, "z1": est(TOP + 2.5, 1.0, EV_AER, "同上")},
+    {"type": "box", "name": "北北東 頂部のガラスの箱（柱型の間。屋上の精読の候補 PH1）", "material": "glass",
+     "polygon": [NP(S_OP0, N_PIER), NP(S_OP1, N_PIER), NP(S_OP1, BOX_BACK), NP(S_OP0, BOX_BACK)],
+     "z0": est(BOX_Z0, 2.0, EV_N5 + [SOK_19], "z12.6（070003022 の正面化で箱の前面を柱型の面に置いて換算。箱が前へ出ていれば少し低い）"),
+     "z1": est(BOX_Z1, 2.0, EV_N5 + [SOK_19], "z15.6（同上）"),
+     "front": est(N_PIER - N_RECESS, None, EV_N5, "前面は柱型の面にそろえた。下面が見える＝奥の壁より前へ出るが、出の量は unknown（kansatsu_f19）"),
+     "back": est(N_RECESS - BOX_BACK, 1.0, EV_AER, "屋上の精読の PH1（12×5.8 m）の南の縁まで")},
+    {"type": "box", "name": "屋上の設備の列 1（屋上の精読）", "material": "metal", "polygon": rect_from(F["f7"], -1.0, 26.0, -6.0, -10.0),
+     "z0": est(CORE_TOP, 1.0, EV_N5 + EV_SW, "中の塊の屋上"), "z1": est(CORE_TOP + 2.5, 1.0, EV_AER, "屋上の精読：27×4 m の列が 2 本。高さは目視")},
+    {"type": "box", "name": "屋上の設備の列 2（屋上の精読）", "material": "metal", "polygon": rect_from(F["f7"], -1.0, 26.0, -12.0, -16.0),
+     "z0": est(CORE_TOP, 1.0, EV_N5 + EV_SW, "中の塊の屋上"), "z1": est(CORE_TOP + 2.5, 1.0, EV_AER, "同上")},
     {"type": "box", "name": "通路橋（西北西から取り付く白い橋。屋上の精読 29×7 m）", "material": "concrete",
      "polygon": rect_from(F["W"], 3.0, 10.0, 4.0, 33.0), "z0": est(7.5, 1.0, EV_W + EV_AER, "基壇の上あたりの高さ（観察票）。倒れ込みの小ささから約 10 m（屋上の精読）"), "z1": est(9.5, 1.0, EV_AER, "床板と手すりで 2 m と置く")},
 ]
@@ -341,21 +535,28 @@ for rec in idx["photos"]:
 save_index(idx)
 b["photos"] = [{"id": r["id"], "file": r["file"], "face": r.get("face"), "role": "全体" if r["id"] in EV_W + EV_N + EV_S + EV_E else "細部"}
                for r in idx["photos"] if r.get("building") == "tower75"]
-b["requests"] = [{"face": "f19", "what": "北北東の全体を遠くから正面で", "where": "北側の道路から", "why": "凹部の深さと連窓の割付が目視", "status": "open"},
-                 {"face": "f9", "what": "南南西の全体の正面と、凹部を斜め 45° から", "where": "南の広場から", "why": "凹部の深さ（8 m と置いた）が未確定", "status": "open"},
-                 {"face": "E", "what": "東南東の全体を日中に", "where": "東側の道路から", "why": "列数が未確定（7＋2 か）", "status": "open"},
-                 {"face": "*", "what": "4 つの角を 45° から 1 枚ずつ", "where": "", "why": "角の低い塊・上部の引っ込みの寸法が未確定", "status": "open"},
-                 {"face": "*", "what": "屋上を高い所から", "where": "", "why": "高さ 74.2 m の根拠（PLATEAU）が弱い。塔屋・設備の確認", "status": "open"},
-                 {"face": "W", "what": "西北西面を足元から屋上まで 1 枚で、木の無い所から", "where": "西の広場〜道路", "why": "4 版のパラペット 67.9 m は入口の床と大階段の段数から出した。地面（西の広場・北の沈んだ広場）の基準と PLATEAU 74.2 m の差 8.5% を確かめる", "status": "open"},
-                 {"face": "W", "what": "南西の角を 45° から、塔の南端の小窓の帯が入るように", "where": "南西の交差点", "why": "西北西面の南端の奥に 0.855 倍に写る平行な壁がある（段の奥行き・小窓の帯の位置が unknown）", "status": "open"},
+b["requests"] = [{"face": "f19", "what": "北北東の凹部の下半分を正面で（連窓の z0・z1 と足元、スリットの下端）", "where": "北の芝生の木の無い所か、沈んだ広場の中から", "why": "下 2 段と基壇が木で隠れ、連窓の全段数とスリットの下端が unknown（kazoe_f19）", "status": "open"},
+                 {"face": "f9", "what": "南南西の全体の正面と、凹部を斜め 45° から", "where": "南の広場から", "why": "凹部の深さ（8 m と置いた）が未確定。北の f19 は 1.7 m と浅く、対称ではなかった", "status": "open"},
+                 {"face": "E", "what": "東南東の全体を日中に、屋上まで", "where": "東側の道路から", "why": "列数が未確定（7＋2 か）。東の外周の帯の高さ・奥行きは西と同じと仮定（5 版）", "status": "open"},
+                 {"face": "f18", "what": "北東の角を 45° から（白い棟に隠れない位置）", "where": "北東の道路から", "why": "東の脇の壁の位置（西と鏡写しで 3.4 m 北へ出すと仮定）・段数・北東の角の段の高さが unknown（kansatsu_f18）", "status": "open"},
+                 {"face": "f13", "what": "南東の角を 45° から、塔の上まで入るように", "where": "南東の交差点から", "why": "南東の角の上部の引っ込み（何階から・奥行き）が unknown。写真は強い見上げ 1 枚（074606922、sokuryo_SW1）", "status": "open"},
+                 {"face": "SW1", "what": "南西の角を 45° から、段の上の南向きの面が入るように", "where": "南西の交差点", "why": "8 階から上の南向きの面（引っ込みの横の壁と残りの 2.75 m）の窓が unknown。段の奥行き 5.4 m の検算にもなる", "status": "open"},
+                 {"face": "f0", "what": "北西の角を 45° から、低い塊と角の柱が入るように", "where": "北西の歩道から", "why": "北西の角の低い塊（ガラスの縦帯 2 本）の出と高さが unknown。角の柱の 2 本の縦帯のどちらかが溝か（観察票と正面化で食い違い）", "status": "open"},
+                 {"face": "*", "what": "屋上を高い所から", "where": "", "why": "中の塊（71.5 m）の平面は南西と北西の角でしか確かめていない（外周の帯 5.4 m）。脇の壁の奥にさらに高い塊が両側に見える（070003022）。ガラスの箱の出の量", "status": "open"},
+                 {"face": "f20", "what": "北の沈んだ広場の中から、階段と西の脇の壁の足元を横向きに 1 枚", "where": "北の沈んだ広場", "why": "沈んだ広場の深さ 3.0 m は階段 16 段×慣用の蹴上げ 0.15 m と目の高さの仮定から（±1 m）。PLATEAU 74.2 m の説明（3.0＋71.5）の根拠", "status": "open"},
+                 {"face": "*", "kind": "tool", "what": "模型の地面を場所ごとの高さで描けるように（levels か pavement で低い地面を彫る）", "where": "recorder/blender_build.py の地面（z=0 の 1 枚）",
+                  "why": "北の沈んだ広場（levels.north_sunken_plaza、−3.0 m）が模型に出ない。地面の板が −0.3〜0 m で全部を覆うので、部品を z<0 に置いても隠れる", "status": "open"},
+                 {"face": "W", "what": "西北西面の北端（通路橋の下）を、柱の番号が端から数えられるように 1 枚", "where": "西の広場の北寄り", "why": "070204974 の検収 B で南西の角の引っ込みが 1 列ぶん合わない。4 版の pose の柱の番号（北端が通路橋で隠れる）か、引っ込みの幅（正面の 070327678 では 2 列）かを決める", "status": "open"},
                  {"face": "*", "what": "昼の日陰のタイルを 1 m から", "where": "", "why": "色が夕日で橙に寄っている。タイルの形式も未確認", "status": "open"}]
 b["history"] = [
     {"at": "2026-11-03T21:30", "by": "Claude（設計者）", "what": "南南西面の写真 1 枚と PLATEAU の高さから初版（長方形）"},
     {"at": "2026-11-03T22:20", "by": "Claude（設計者）", "what": "2 版：足元を OSM の輪郭に、全面に窓、北にガラス帯、東南東にガラスの張り出し"},
     {"at": "2026-11-04T01:30", "by": "Claude（設計者）", "what": "3 版：観察票と屋上の精読に従う。写真 11 は西北西面だった。凹部のガラス（南南西）、北の凹部の連窓と頂部のガラスの箱、北の 2 角のガラス帯、南の 2 角の上部の引っ込み、屋上の設備、通路橋。東南東の張り出しと f19 のガラス帯は撤回"},
     {"at": "2026-11-04T03:40", "by": "測量係・検収係（Claude, claude-opus-5-5）", "what": "4 版：西北西面の正面化 5 枚で縮尺を OSM の辺に取り直す（壁＝9.49 周期、北端は柱型から）。柱間隔 3.43→3.44、階高 4.40→3〜8 階 4.51／9 階から上 4.43（平均 4.47）、パラペット 74.2→67.9（西の広場から。PLATEAU と −8.5% で 5% 超、理由は out/tower75/sokuryo_W.json）、基壇の上 7.8→8.5、窓の列は帯の 0.20 m 上〜次の帯の下、帯の見付け 0.3→0.22、最上部 2 段の広い窓 2.92→2.24 m と高さ、白い帯を柱型の上だけに（窓の列で切れる）、柱型の出 0.15 m（目視）を unknown に（全高の箱が帯と広い窓を隠していた）、西北西面の余白を北 0.98 m／南 0.73 m に。タイルの周期を 070204974 で読み直し"},
+    {"at": "2026-11-04T04:30", "by": "設計係（Claude, claude-opus-5-5）", "what": "5 版：北北東側・南西の上部・頂部を kansatsu_north.md と sokuryo_f19/f20/SW1・kazoe_f19/f20 で置き換え。1 塊（67.9 m）をやめ、西の外周の帯（5.4 m、67.9 m）・南西の角の下（段の笠木 31.95 m＝8 階の床の帯の 0.2 段上）・東の外周の帯（西と同じと仮定）・中の塊（71.5 m）・北の柱型 2 本（79.3 m）に分けた。南西の引っ込みは bottom_z を使わず、下だけの塊（Ws）と奥の中の塊の足し算で表した（上だけ引っ込む角）。南東は unknown のまま。f19 の凹部 8 m（仮）→1.7 m、柱型 2.6 m・柱型の間 10.4 m、連窓は z2〜z12 の 11 段・5 枚割・ルーバー無し・白い帯無し。脇の壁は角の柱より 3.4 m 北（角の柱の北面を OSM の線に）、小窓は幅 0.67 m・13 段、凹部側にスリット 1.0 m。頂部のガラスの箱 67.9〜71.9 m（目視）→65.0〜78.4 m。北の沈んだ広場（−3.0 m）は levels に、模型の地面では表せないので requests（kind: tool）。PLATEAU 74.2 m は沈んだ広場から中の塊の頂部まで 74.5 m（+0.4%）と読む（塊 core の note）。floor_count 16 を measured に（沈んだ層 1＋基壇 2＋13）"},
+    {"at": "2026-11-04T04:38", "by": "検収係（Claude, claude-opus-5-5）", "what": "5 版の検収：北北東の正面化 070003022・065946407 で f20・f19・柱型の線を手で読んで compare（kenshu_PXL_20261103_070003022/065946407.json）。脇の壁の小窓の上端 帯＋2.38→3.24 m（最上段 3.09）・下端 0.95→0.98（1 回目で +0.66/+0.74 m。段の換算の誤り）、北西の角の柱の脇の壁寄りの縦帯をガラスから格子の溝に（065946407）。2 回目で全線 0.15 m 以内。検収 B のカメラ (60.99, 77.28, 0.85)・(49.15, 80.9, 0.78)。070204974 の検収 B では南西の角の引っ込みが 1 列ぶん合わない（4 版の pose の柱の番号か、引っ込みの幅か。値は直さず requests）"},
 ]
 errs = validate_building(b)
 print("validate:", errs or "OK")
 save_building(b, Path("data/buildings/tower75.json"))
-print("saved: faces", len(faces), "parts", len(parts), "blocks", len(b["blocks"]), "upper ring pts", len(upper_ring))
+print("saved: faces", len(faces), "parts", len(parts), "blocks", len(b["blocks"]))
