@@ -283,7 +283,7 @@ def elevation_svg(b: dict, face_id: str) -> str:
     reqs = [r for r in b.get("requests", []) if r.get("face") in (face_id, "*") and r.get("status", "open") == "open"]
     if not length_m.known:
         unknown_lines.insert(0, "面の長さ（length）")
-    if not height_m.known or height_m.status != "measured":
+    if not height_m.known:   # estimated は正規の値（未確定には入れない。琥珀の破線で描く）
         unknown_lines.insert(0, "パラペットの上端（parapet_top）")
     seen: set[str] = set()
     uniq = [u for u in unknown_lines if not (u in seen or seen.add(u))]

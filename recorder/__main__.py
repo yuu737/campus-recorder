@@ -29,8 +29,11 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("new")
     p.add_argument("id")
-    p.add_argument("name")
+    p.add_argument("name", nargs="?", default=None)
     p.add_argument("--dir", default="data/buildings")
+    p.add_argument("--from-site", action="store_true", help="敷地 JSON と PLATEAU から土台（灰色の箱）を起こす")
+    p.add_argument("--plateau-ids", default=None, help="PLATEAU の gml_id をカンマ区切りで（自動の対応が無い棟用）")
+    p.add_argument("--force", action="store_true")
 
     p = sub.add_parser("validate")
     p.add_argument("files", nargs="+")
@@ -41,6 +44,14 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("unknowns")
     p.add_argument("file")
+
+    p = sub.add_parser("model", help="棟 JSON から Blender で模型を組み、四面図・鳥瞰・glb を出す")
+    msub = p.add_subparsers(dest="model_cmd", required=True)
+    q = msub.add_parser("build")
+    q.add_argument("file")
+    q.add_argument("--out", default=None)
+    q.add_argument("--blender", default=None, help="Blender 5.2 のパス（無ければ環境変数 BLENDER）")
+    q.add_argument("--fast", action="store_true", help="小さめの描画")
 
     p = sub.add_parser("site")
     ssub = p.add_subparsers(dest="site_cmd", required=True)
@@ -72,6 +83,13 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--known", default=None, help="既知の長さ 例: floor_pitch=3.99 / bay_pitch=5.3 / wall_width=47.7")
     q.add_argument("--known-status", default="measured", choices=["measured", "estimated"])
 
+    q = psub.add_parser("compare", help="検収：正面化した写真と棟 JSON の面を m で重ね、ずれを数字で出す")
+    q.add_argument("front_jpg", help="rectify が出した *_front.jpg")
+    q.add_argument("--building", required=True, help="棟 JSON")
+    q.add_argument("--face", required=True, help="面の id（SW など）")
+    q.add_argument("--tol", type=float, default=0.15, help="合格の目安（m）")
+    q.add_argument("--px-per-m", type=float, default=None, help="縮尺を自分で与える（省略時は柱間隔から）")
+
     a = ap.parse_args(argv)
 
     if a.cmd == "site":
@@ -81,11 +99,25 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.cmd == "new":
         path = Path(a.dir) / f"{a.id}.json"
-        if path.exists():
-            print(f"すでにあります: {path}")
+        if path.exists() and not a.force:
+            print(f"すでにあります: {path}（上書きは --force）")
             return 1
-        schema.save_building(schema.new_building(a.id, a.name), path)
-        print(f"作成: {path}")
+        if a.from_site:
+            from . import skeleton
+
+            ids = [x for x in (a.plateau_ids or "").split(",") if x]
+            b = skeleton.from_site_cli(a.id, ids or None)
+        else:
+            if not a.name:
+                print("name が要ります")
+                return 1
+            b = schema.new_building(a.id, a.name)
+        errs = schema.validate_building(b)
+        if errs:
+            print("規約違反:", *errs, sep=chr(10) + "  ")
+            return 1
+        schema.save_building(b, path)
+        print(f"作成: {path}  面 {len(b.get('faces', []))}  撮影依頼 {len(b.get('requests', []))}")
         return 0
 
     if a.cmd == "validate":
@@ -119,6 +151,21 @@ def main(argv: list[str] | None = None) -> int:
     if a.cmd == "unknowns":
         for u in schema.unknowns(schema.load_building(a.file)):
             print(u)
+        return 0
+
+    if a.cmd == "model":
+        from . import model
+
+        b = schema.load_building(a.file)
+        errs = schema.validate_building(b)
+        if errs:
+            print("規約違反があるので組みません:")
+            for e in errs:
+                print(f"   - {e}")
+            return 1
+        out = model.build(Path(a.file), Path(a.out) if a.out else None, a.blender, a.fast)
+        print(f"模型: {out}")
+        print(f"四面図: {model.sheet(out, b)}")
         return 0
 
     return 2
@@ -167,6 +214,22 @@ def _photos(a) -> int:
             m = f"  ≈ {per.period_m} m（{per.status}）" if per.period_m else ""
             print(f"{name}: 周期 {per.period_px} px（強さ {per.strength}）  区間 {per.count}  エッジ {len(per.peaks_px)} 本{m}")
         print(f"比（柱間隔÷階高）: {res.ratio_bay_over_floor}   結果 JSON: {Path(a.front_jpg).with_name(Path(a.front_jpg).stem + '_measure.json')}")
+        return 0
+    if a.photos_cmd == "compare":
+        from . import compare
+
+        res, png = compare.compare_file(Path(a.front_jpg), Path(a.building), a.face, tol_m=a.tol, px_per_m=a.px_per_m)
+        if not res.ok:
+            print(f"比べられません: {res.reason}")
+            return 1
+        print(f"面 {res.face}  縮尺 {res.px_per_m} px/m  合格 {res.n_ok}  不合格 {res.n_ng}  見つからず {res.n_missing}  最大ずれ {res.worst_m} m")
+        if res.floor_pitch_photo_m:
+            print(f"階高: JSON {res.floor_pitch_json_m} m / 写真 {res.floor_pitch_photo_m} m")
+        for l in res.lines:
+            mark = "OK " if l.ok else ("NG " if l.ok is False else "-- ")
+            d = f"{l.diff_m:+.2f} m" if l.diff_m is not None else "見つからず"
+            print(f"  {mark}{l.axis} {l.what:<14} JSON {l.json_m:6.2f}  {d}")
+        print(f"画像: {png}")
         return 0
     if a.photos_cmd == "list":
         for r in photos.load_index()["photos"]:

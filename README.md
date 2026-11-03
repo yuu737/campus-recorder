@@ -28,6 +28,9 @@ Built with Claude: Japan 2026（2026-11-02 〜 11-08）の提出物です。コ�
 python -m venv .venv && .venv/Scripts/pip install -e ".[dev]"
 python -I -X utf8 -m recorder new honbu 本部棟          # 空の棟 JSON を作る
 python -I -X utf8 -m recorder validate data/buildings/honbu.json
+python -I -X utf8 -m recorder photos compare out/rectified/20261103/PXL_..._front.jpg --building data/buildings/honbu.json --face SW   # 検収：写真と立面のずれを m で
+python -I -X utf8 -m recorder new tower75 --from-site   # PLATEAU から土台の棟 JSON
+python -I -X utf8 -m recorder model build data/buildings/honbu.json   # Blender で模型→鳥瞰・四面図・glb（環境変数 BLENDER）
 python -I -X utf8 -m recorder draw data/buildings/honbu.json   # out/honbu/ に図面 SVG
 python -I -X utf8 -m recorder site build                        # 公開データから敷地の土台（OSM・航空写真・標高・PLATEAU・確認用の図）
 python -I -X utf8 -m recorder site confirm honbu confirmed --by 職員A   # 職員の確認を敷地 JSON に記録

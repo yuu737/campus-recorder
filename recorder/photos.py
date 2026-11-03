@@ -97,14 +97,14 @@ def read_exif(path: Path) -> dict:
         G = ExifTags.GPS
         lat = _dms(g.get(G.GPSLatitude), g.get(G.GPSLatitudeRef))
         lon = _dms(g.get(G.GPSLongitude), g.get(G.GPSLongitudeRef))
-        if lat is not None and lon is not None and (lat, lon) != (0.0, 0.0):
+        if lat is not None and lon is not None and lat == lat and lon == lon and (lat, lon) != (0.0, 0.0):  # NaN は未測位
             x, y = geo.lonlat_to_xy(lon, lat)
             alt = _rational(g.get(G.GPSAltitude))
             info["gps"] = {"lat": round(lat, 7), "lon": round(lon, 7), "alt": alt,
                            "x": round(x, 1), "y": round(y, 1),
                            "hdop": _rational(g.get(G.GPSDOP))}
         hd = _rational(g.get(G.GPSImgDirection))
-        if hd is not None:
+        if hd is not None and hd == hd:  # NaN（Pixel は位置情報オフでも空の GPS 欄を書く）は無し扱い
             ref = g.get(G.GPSImgDirectionRef)
             info["heading_deg"] = round(hd, 1)
             info["heading_ref"] = "magnetic" if ref == "M" else "true"
@@ -148,14 +148,50 @@ def quick_checks(path: Path, info: dict) -> dict:
 
 # --- 棟の候補 -----------------------------------------------------------------------
 
-def building_candidates(info: dict, site: dict, max_dist: float = 120.0, half_fov: float = 45.0) -> list[dict]:
-    """GPS と方位から、写っていそうな棟を並べる（確定しない）。"""
+DECLINATION_DEG = -8.0   # 名古屋付近の磁気偏角（磁北は真北の約8°西）。スマホの方位は磁北基準が多い
+
+
+def true_heading(info: dict) -> float | None:
+    """EXIF の方位を真北基準に直す。磁北基準なら偏角を足す。"""
+    hd = info.get("heading_deg")
+    if hd is None:
+        return None
+    if info.get("heading_ref", "magnetic") == "magnetic":
+        hd = hd + DECLINATION_DEG
+    return hd % 360
+
+
+def half_fov_deg(info: dict, margin: float = 5.0) -> float:
+    """横方向の画角の半分（度）。35mm 換算の焦点距離から。無ければ 45°。
+    Pixel の超広角 14mm なら約 52°、標準 25mm なら 36°。少し余裕を足す。"""
+    f35 = info.get("focal_35mm")
+    if not f35:
+        return 45.0
+    w, h = info.get("width") or 4, info.get("height") or 3
+    long_side = 36.0 if w >= h else 24.0   # 横長なら 36mm 側、縦長なら 24mm 側が横方向
+    return math.degrees(math.atan(long_side / 2 / f35)) + margin
+
+
+def _bearing(dx: float, dy: float) -> float:
+    return (math.degrees(math.atan2(dx, dy)) + 360) % 360
+
+
+def _ang_diff(a: float, b: float) -> float:
+    return abs((a - b + 180) % 360 - 180)
+
+
+def building_candidates(info: dict, site: dict, max_dist: float = 120.0, half_fov: float | None = None) -> list[dict]:
+    """GPS と方位から、写っていそうな棟を並べる（確定しない）。
+
+    足元の頂点のどれかが画角（方位 ± 半画角）に入っていれば候補。中心の方位だけで判定すると、
+    近くの大きな棟（画面いっぱいに写る物）を落としてしまうため。"""
     if not info.get("gps"):
         return []
     from shapely.geometry import MultiPolygon, Point, Polygon
 
     cam = Point(info["gps"]["x"], info["gps"]["y"])
-    heading = info.get("heading_deg")
+    heading = true_heading(info)
+    hf = half_fov if half_fov is not None else half_fov_deg(info)
     out = []
     for b in site.get("buildings", []):
         rings = b.get("footprint_osm") or []
@@ -167,15 +203,71 @@ def building_candidates(info: dict, site: dict, max_dist: float = 120.0, half_fo
         if dist > max_dist:
             continue
         c = shape.centroid
-        bearing = (math.degrees(math.atan2(c.x - cam.x, c.y - cam.y)) + 360) % 360
+        bearing = _bearing(c.x - cam.x, c.y - cam.y)
         diff = None
+        in_view = None
         if heading is not None:
-            diff = abs((bearing - heading + 180) % 360 - 180)
-            if diff > half_fov and dist > 5:
+            diff = _ang_diff(bearing, heading)
+            verts = [v for r in rings for v in r]
+            in_view = any(_ang_diff(_bearing(vx - cam.x, vy - cam.y), heading) <= hf for vx, vy in verts) or dist <= 5
+            if not in_view:
                 continue
         out.append({"building": b["id"], "name": b.get("name"), "distance_m": round(dist, 1),
                     "bearing_deg": round(bearing, 1), "bearing_diff_deg": round(diff, 1) if diff is not None else None})
-    out.sort(key=lambda r: (r["bearing_diff_deg"] if r["bearing_diff_deg"] is not None else 999, r["distance_m"]))
+    out.sort(key=lambda r: (r["distance_m"], r["bearing_diff_deg"] if r["bearing_diff_deg"] is not None else 999))
+    return out
+
+
+def footprint_faces(building: dict) -> list[dict]:
+    """足元の輪郭の辺を「面」として並べる。外向きの法線の方位・長さ・両端の座標。
+    面 id は f0, f1, …（輪郭の順）。棟 JSON の面 id はこれを元に人か測量係が付ける。"""
+    from shapely.geometry import Polygon
+    from shapely.geometry.polygon import orient
+
+    faces = []
+    for ri, ring in enumerate(building.get("footprint_osm") or []):
+        if len(ring) < 3:
+            continue
+        poly = orient(Polygon(ring), sign=1.0)   # 反時計回りにそろえる（外向き法線＝進行方向の右）
+        pts = list(poly.exterior.coords)[:-1]
+        for i in range(len(pts)):
+            (x0, y0), (x1, y1) = pts[i], pts[(i + 1) % len(pts)]
+            dx, dy = x1 - x0, y1 - y0
+            L = math.hypot(dx, dy)
+            if L < 1.0:
+                continue
+            normal = _bearing(dy, -dx)   # 反時計回りの辺の右手＝外側
+            faces.append({"face": f"f{len(faces)}", "ring": ri, "p0": [round(x0, 1), round(y0, 1)], "p1": [round(x1, 1), round(y1, 1)],
+                          "length_m": round(L, 1), "normal_deg": round(normal, 1)})
+    return faces
+
+
+def face_candidates(info: dict, building: dict, max_dist: float = 80.0) -> list[dict]:
+    """1枚の写真に写っていそうな面を並べる（確定しない）。
+    条件：面の中点がカメラから max_dist 以内、面がカメラ側を向いている（法線とカメラ方向の角 < 80°）、
+    面の中点が画角に入っている。斜めから見る角度（obliquity）も出す。0° が真正面。"""
+    if not info.get("gps"):
+        return []
+    cx, cy = info["gps"]["x"], info["gps"]["y"]
+    heading = true_heading(info)
+    hf = half_fov_deg(info)
+    out = []
+    for f in footprint_faces(building):
+        mx, my = (f["p0"][0] + f["p1"][0]) / 2, (f["p0"][1] + f["p1"][1]) / 2
+        d = math.hypot(mx - cx, my - cy)
+        if d > max_dist:
+            continue
+        to_cam = _bearing(cx - mx, cy - my)
+        obliq = _ang_diff(to_cam, f["normal_deg"])
+        if obliq >= 80:
+            continue
+        rec = {**f, "distance_m": round(d, 1), "obliquity_deg": round(obliq, 1), "in_view": None}
+        if heading is not None:
+            rec["in_view"] = _ang_diff(_bearing(mx - cx, my - cy), heading) <= hf
+            if not rec["in_view"]:
+                continue
+        out.append(rec)
+    out.sort(key=lambda r: (r["obliquity_deg"], r["distance_m"]))
     return out
 
 

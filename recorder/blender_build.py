@@ -1,0 +1,737 @@
+"""棟 JSON から Blender で模型を組み立て、描画と glb 書き出しをする（Blender の中で動く）。
+
+使い方（recorder の CLI から呼ぶ）:
+    blender -b -P recorder/blender_build.py -- data/buildings/honbu.json out/honbu [--fast]
+
+出てくる物（out/<id>/）:
+    persp_sketch.png   鳥瞰のスケッチ風（線画）
+    persp_shaded.png   鳥瞰の着色（JSON の素材から作ったタイル、空、影）
+    persp_shaded2.png  別の向きの鳥瞰（着色）
+    view_A〜D.png      四面図（棟の一番長い面に正対した 4 方向、正射影の線画）
+    view_top.png       屋根伏せ（真上の線画）
+    <id>.glb           Web ビューア用
+    model_report.json  模型を作るときに置いた仮の値（JSON に無い物）。全部ここに出す
+
+設計の語彙（棟 JSON）
+    blocks[]            棟を高さの違う塊に分ける。{id, polygon, top_z}。無ければ footprint 全体を parapet_top まで
+    faces[]             面。bays（柱割り）、windows（階ごとの窓）、bands（帯）、openings（ピロティ）、glazing（ガラス張りの範囲）、materials
+    parts[]             部品。type で分ける:
+        box             {polygon, z0, z1, material}            塔屋・階段塔・設備の箱
+        balcony         {face, along0, along1, z, depth, parapet_h, material}   踊り場・テラス・渡り廊下
+        coping          {height, overhang}                     パラペットの笠木（全部の塊の上端）
+        ac_units        {face, along, count, w, h, d, gap}     室外機の列（地面置き）
+        pipes           {face, along, count, radius, z0, z1}   縦の配管・雨樋
+        tree            {x, y, height, radius}                 木（丸い樹冠。種類は後で CC0 素材に差し替え）
+        pavement        {polygon, z, material}                 舗装（煉瓦など）
+
+決まり:
+    形は全部 JSON から。値が unknown の所は、模型として立てるための「仮の値」を使い、report に列挙する。
+    仮の値は JSON には書かない（規約1）。
+"""
+
+from __future__ import annotations
+
+import json
+import math
+import sys
+from pathlib import Path
+
+import bpy
+import bmesh
+from mathutils import Vector
+
+ASSUMED: list[dict] = []
+UNKNOWN_COLOR = (0.62, 0.62, 0.62, 1.0)
+UP = Vector((0, 0, 1))
+
+
+def assume(what: str, value, why: str):
+    ASSUMED.append({"what": what, "value": value, "why": why})
+    return value
+
+
+def val(m, default=None, what: str = "", why: str = ""):
+    """Measurement（か裸の数）から値を取る。無ければ仮の値（記録する）。"""
+    if isinstance(m, (int, float)):
+        return m
+    if m and m.get("value") is not None and m.get("status") != "unknown":
+        return m["value"]
+    if what:
+        return assume(what, default, why)
+    return default
+
+
+# --- 形を作る道具 -----------------------------------------------------------------
+
+def new_object(name: str, mesh, col):
+    ob = bpy.data.objects.new(name, mesh)
+    col.objects.link(ob)
+    return ob
+
+
+def ccw(pts):
+    a2 = sum(pts[i][0] * pts[(i + 1) % len(pts)][1] - pts[(i + 1) % len(pts)][0] * pts[i][1] for i in range(len(pts)))
+    return list(pts) if a2 >= 0 else list(reversed(pts))
+
+
+def prism(name: str, pts, z0: float, z1: float, col):
+    """平面多角形を z0〜z1 に持ち上げた柱体。"""
+    pts = ccw([tuple(p) for p in pts])
+    bm = bmesh.new()
+    bot = [bm.verts.new((x, y, z0)) for x, y in pts]
+    top = [bm.verts.new((x, y, z1)) for x, y in pts]
+    n = len(pts)
+    bm.faces.new(list(reversed(bot)))
+    bm.faces.new(top)
+    for i in range(n):
+        bm.faces.new((bot[i], bot[(i + 1) % n], top[(i + 1) % n], top[i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    return new_object(name, me, col)
+
+
+def box(name: str, center: Vector, u: Vector, v: Vector, w: Vector, su: float, sv: float, sw: float, col):
+    bm = bmesh.new()
+    vs = []
+    for a in (-0.5, 0.5):
+        for b in (-0.5, 0.5):
+            for c in (-0.5, 0.5):
+                vs.append(bm.verts.new(center + u * (a * su) + v * (b * sv) + w * (c * sw)))
+    for f in [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]:
+        bm.faces.new([vs[i] for i in f])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    return new_object(name, me, col)
+
+
+def cylinder(name: str, center: Vector, radius: float, z0: float, z1: float, col, seg: int = 12):
+    pts = [(center.x + radius * math.cos(2 * math.pi * i / seg), center.y + radius * math.sin(2 * math.pi * i / seg)) for i in range(seg)]
+    return prism(name, pts, z0, z1, col)
+
+
+def sphere(name: str, center: Vector, radius: float, col):
+    bm = bmesh.new()
+    bmesh.ops.create_icosphere(bm, subdivisions=2, radius=radius)
+    for v in bm.verts:
+        v.co = Vector((v.co.x, v.co.y, v.co.z * 0.8)) + center
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    ob = new_object(name, me, col)
+    for p in me.polygons:
+        p.use_smooth = True
+    return ob
+
+
+def boolean_cut(target, cutters):
+    """彫る箱を 1 つに結合してから 1 回だけブーリアン（200 個を順に当てると数分かかる）。"""
+    import time
+    t0 = time.time()
+    # 窓（互いに離れている）は 1 つに結合。ピロティ・ガラスなど面が接する物は別々に当てる
+    wins = [c for c in cutters if c.name.startswith("cut_win")]
+    others = [c for c in cutters if not c.name.startswith("cut_win")]
+    groups = []
+    if wins:
+        for ob in bpy.context.scene.objects:
+            ob.select_set(False)
+        for c in wins:
+            c.select_set(True)
+        bpy.context.view_layer.objects.active = wins[0]
+        if len(wins) > 1:
+            bpy.ops.object.join()
+        groups.append(wins[0])
+    groups += others
+    for ob in bpy.context.scene.objects:
+        ob.select_set(False)
+    bpy.context.view_layer.objects.active = target
+    for cutter in groups:
+        mod = target.modifiers.new("cut", "BOOLEAN")
+        mod.operation = "DIFFERENCE"
+        mod.object = cutter
+        mod.solver = "EXACT"
+        bpy.ops.object.modifier_apply(modifier=mod.name)
+        bpy.data.objects.remove(cutter, do_unlink=True)
+    print(f"ブーリアン: {time.time() - t0:.1f} 秒（{len(groups)} 回）")
+
+
+def face_frame(f: dict):
+    """面の始点・単位方向・外向き法線・長さ。"""
+    p0, p1 = Vector((*f["from"], 0.0)), Vector((*f["to"], 0.0))
+    d = p1 - p0
+    L = d.length
+    u = d / L
+    n = Vector((u.y, -u.x, 0.0))
+    return p0, u, n, L
+
+
+# --- 素材 ---------------------------------------------------------------------------
+
+def hex_to_rgb(h: str):
+    h = h.lstrip("#")
+    return tuple(int(h[i:i + 2], 16) / 255.0 for i in (0, 2, 4))
+
+
+def material_brick(name: str, color: str, unit_w: float, unit_h: float, joint: float):
+    """JSON の寸法どおりのタイル割り。世界座標で 1 単位＝1 m。"""
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nt = mat.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
+    brick = nt.nodes.new("ShaderNodeTexBrick")
+    noise = nt.nodes.new("ShaderNodeTexNoise")
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type = "RGBA"
+    mix.blend_type = "MULTIPLY"
+    coord = nt.nodes.new("ShaderNodeTexCoord")
+    r, g, b = hex_to_rgb(color)
+    brick.inputs["Color1"].default_value = (r, g, b, 1)
+    brick.inputs["Color2"].default_value = (r * 0.92, g * 0.9, b * 0.88, 1)
+    brick.inputs["Mortar"].default_value = (r * 0.72, g * 0.7, b * 0.68, 1)
+    brick.inputs["Scale"].default_value = 1.0
+    brick.inputs["Mortar Size"].default_value = joint
+    brick.inputs["Mortar Smooth"].default_value = 0.0
+    brick.inputs["Bias"].default_value = 0.0
+    brick.inputs["Brick Width"].default_value = unit_w + joint
+    brick.inputs["Row Height"].default_value = unit_h + joint
+    brick.offset = 0.5
+    brick.offset_frequency = 2
+    noise.inputs["Scale"].default_value = 0.4
+    noise.inputs["Detail"].default_value = 2.0
+    nt.links.new(coord.outputs["Object"], brick.inputs["Vector"])
+    nt.links.new(coord.outputs["Object"], noise.inputs["Vector"])
+    nt.links.new(brick.outputs["Color"], mix.inputs[6])
+    mix.inputs[7].default_value = (r * 0.85, g * 0.85, b * 0.85, 1)
+    nt.links.new(noise.outputs["Fac"], mix.inputs[0])    # 明るさのムラだけ（色相は変えない）
+    mix.blend_type = "MIX"
+    nt.links.new(mix.outputs[2], bsdf.inputs["Base Color"])
+    bsdf.inputs["Roughness"].default_value = 0.8
+    nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    return mat
+
+
+def material_plain(name: str, rgba, roughness=0.8, metallic=0.0):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes["Principled BSDF"]
+    bsdf.inputs["Base Color"].default_value = rgba
+    bsdf.inputs["Roughness"].default_value = roughness
+    bsdf.inputs["Metallic"].default_value = metallic
+    return mat
+
+
+class Mats:
+    def __init__(self, b: dict):
+        self.by_face: dict[str, bpy.types.Material] = {}
+        cache: dict[str, bpy.types.Material] = {}
+        for f in b.get("faces", []):
+            m = (f.get("materials") or [None])[0]
+            if m and m.get("color"):
+                key = json.dumps(m, sort_keys=True)
+                if key not in cache:
+                    cache[key] = material_brick(
+                        f"tile_{f['id']}", m["color"],
+                        val(m.get("unit_w"), 0.227, f"{f['id']} タイル幅", "JIS 二丁掛"),
+                        val(m.get("unit_h"), 0.06, f"{f['id']} タイル高さ", "JIS 二丁掛"),
+                        val(m.get("joint_w"), 0.01, f"{f['id']} 目地", "JIS 標準"))
+                self.by_face[f["id"]] = cache[key]
+        self.unknown = material_plain("unknown_face", UNKNOWN_COLOR)
+        self.main = next(iter(self.by_face.values()), self.unknown)
+        if self.main is not self.unknown:
+            for f in b.get("faces", []):
+                if f["id"] not in self.by_face:
+                    assume(f"{f['id']} の仕上げ", "主材料と同じ", "この面の材料は未測。主材料のタイルと同じと置いた")
+        self.glass = material_plain("glass", (0.22, 0.28, 0.34, 1.0), roughness=0.12, metallic=0.4)
+        self.concrete = material_plain("concrete", (0.80, 0.79, 0.76, 1.0))
+        self.dark = material_plain("dark_band", (0.22, 0.17, 0.13, 1.0), roughness=0.6)
+        self.metal = material_plain("metal", (0.75, 0.76, 0.78, 1.0), roughness=0.4, metallic=0.6)
+        self.ground = material_plain("ground", (0.50, 0.49, 0.46, 1.0), roughness=0.95)
+        self.pavement = material_plain("pavement", (0.46, 0.33, 0.28, 1.0), roughness=0.95)
+        self.leaf = material_plain("leaf", (0.20, 0.33, 0.14, 1.0), roughness=0.95)
+        self.trunk = material_plain("trunk", (0.30, 0.22, 0.15, 1.0))
+        self.coping = material_plain("coping", (0.25, 0.25, 0.26, 1.0), roughness=0.5)
+        self.curtain = material_plain("curtain", (0.80, 0.78, 0.72, 1.0), roughness=1.0)
+        self.roof = material_plain("roof", (0.52, 0.51, 0.49, 1.0), roughness=0.95)
+
+    def named(self, name: str | None):
+        return {"glass": self.glass, "concrete": self.concrete, "dark": self.dark, "metal": self.metal,
+                "tile": self.main, "coping": self.coping}.get(name or "tile", self.main)
+
+
+# --- 棟を組む -----------------------------------------------------------------------
+
+def build_building(b: dict, col) -> dict:
+    poly = ccw([tuple(p) for p in b["footprint"]["polygon"]])
+    H = val(b.get("parapet_top"))
+    if H is None:
+        cnt, pitch = val(b.get("floor_count")), val(b.get("floor_pitch"))
+        H = assume("parapet_top", (cnt or 4) * (pitch or 3.6), "パラペット未確定。階数×階高（無ければ 4×3.6）")
+    mats = Mats(b)
+    faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
+
+    blocks = b.get("blocks") or [{"id": "main", "polygon": poly, "top_z": H}]
+    bodies = []
+    tops = {}
+    for blk in blocks:
+        top = val(blk.get("top_z"), H, f"blocks[{blk['id']}].top_z", "高さ未確定。parapet_top と同じと置いた")
+        tops[blk["id"]] = top
+        ob = prism(f"{b['id']}_{blk['id']}", blk["polygon"], 0.0, top, col)
+        ob.data.materials.append(mats.main)
+        bodies.append(ob)
+    body = bodies[0]
+    if len(bodies) > 1:
+        for ob in bpy.context.scene.objects:
+            ob.select_set(False)
+        for ob in bodies:
+            ob.select_set(True)
+        bpy.context.view_layer.objects.active = body
+        bpy.ops.object.join()
+
+    cutters, extras = [], []
+
+    for fid, f in faces.items():
+        p0, u, n, L = face_frame(f)
+        fmat = mats.by_face.get(fid, mats.main)
+        bays = f.get("bays") or {}
+        count = val(bays.get("count"))
+        pitch = val(bays.get("pitch"))
+        pier = val(bays.get("pier_width"), 0.6, f"{fid} 柱型の幅", "未測。0.6 m と置いた") if count else None
+        margin = val(bays.get("end_margin"), 0.0) if count else 0.0
+        if count and not pitch:
+            pitch = (L - 2 * margin) / count
+        face_top = val(f.get("top_z"), H)
+        pier_depth = val(bays.get("pier_depth"), 0.0) if count else 0.0
+        pier_z0 = max([val(op.get("z_top"), 0.0) for op in (f.get("openings") or [])] + [0.0])
+
+        # 帯の引っ込み（depth が負）：壁を帯の範囲だけ彫り、奥に濃い面を置く
+        band_recess = []   # (zb, zt, 引っ込み m)
+        for bd in f.get("bands") or []:
+            zb, zt, dep = val(bd.get("z_bottom")), val(bd.get("z_top")), val(bd.get("depth"), 0.0)
+            if zb is None or zt is None or dep >= 0:
+                continue
+            a0, a1 = val(bd.get("along0"), 0.0), val(bd.get("along1"), L)
+            r = -dep
+            band_recess.append((zb, zt, r))
+            cutters.append(box(f"cut_band_{fid}_{int(zb)}", p0 + u * ((a0 + a1) / 2) - n * (r / 2 - 0.25) + UP * ((zb + zt) / 2), u, n, UP, a1 - a0 + 0.02, r + 0.5, zt - zb, col))
+            bb = box(f"band_{fid}_{int(zb)}", p0 + u * ((a0 + a1) / 2) - n * (r - 0.015) + UP * ((zb + zt) / 2), u, n, UP, a1 - a0, 0.03, zt - zb, col)
+            bb.data.materials.append(material_plain(f"band_{fid}_{int(zb)}", (*hex_to_rgb(bd["color"]), 1.0), roughness=0.6) if bd.get("color") else mats.dark)
+            extras.append(bb)
+
+        def recess_at(z: float) -> float:
+            return max([r for zb, zt, r in band_recess if zb - 0.05 <= z <= zt + 0.05] + [0.0])
+
+        # 柱型が壁から出る（全高。ピロティの上から）
+        if count and pier_depth > 0:
+            for i in range(int(count) + 1):
+                c = p0 + u * (margin + i * pitch) + n * (pier_depth / 2 - 0.01) + UP * ((pier_z0 + face_top) / 2)
+                pc = box(f"pierx_{fid}_{i}", c, u, n, UP, pier, pier_depth + 0.01, face_top - pier_z0, col)
+                pc.data.materials.append(fmat)
+                extras.append(pc)
+        # 水切り・庇の線（面に沿って出る横の段）
+        for lg in f.get("ledges") or []:
+            z = val(lg.get("z"))
+            if z is None:
+                continue
+            dep, hgt = val(lg.get("depth"), 0.12), val(lg.get("height"), 0.15)
+            a0, a1 = val(lg.get("along0"), 0.0), val(lg.get("along1"), L)
+            lb = box(f"ledge_{fid}_{int(z * 10)}", p0 + u * ((a0 + a1) / 2) + n * (dep / 2 - 0.01) + UP * (z + hgt / 2), u, n, UP, a1 - a0, dep + 0.01, hgt, col)
+            lb.data.materials.append(mats.named(lg.get("material", "tile")))
+            extras.append(lb)
+
+        for op in f.get("openings") or []:
+            zt = val(op.get("z_top"))
+            if zt is None:
+                continue
+            depth = val(op.get("depth"), 8.0, f"{fid} ピロティの奥行き", "未測。8 m と置いた")
+            op_bays = op.get("bays") or list(range(1, int(count or 1) + 1))
+            bw = pitch if count else L
+            s0 = margin + (min(op_bays) - 1) * bw
+            s1 = margin + max(op_bays) * bw
+            c = p0 + u * ((s0 + s1) / 2) - n * (depth / 2) + UP * (zt / 2)
+            cutters.append(box(f"cut_pilotis_{fid}_{int(s0)}", c, u, n, UP, s1 - s0 - 0.04, depth + 0.02, zt + 0.02, col))
+            if count:
+                for i in range(int(min(op_bays)) - 1, int(max(op_bays)) + 1):
+                    for k, dd in enumerate((pier / 2, depth - pier / 2)):
+                        c = p0 + u * (margin + i * bw) - n * dd + UP * (zt / 2)
+                        pc = box(f"pier_{fid}_{i}_{k}", c, u, n, UP, pier, pier, zt, col)
+                        pc.data.materials.append(fmat)
+                        extras.append(pc)
+            beam = box(f"beam_{fid}", p0 + u * ((s0 + s1) / 2) - n * (depth / 2) + UP * (zt - 0.25), u, n, UP, s1 - s0, depth, 0.5, col)
+            beam.data.materials.append(mats.concrete)
+            extras.append(beam)
+
+        for gz in f.get("glazing") or []:
+            zb, zt = val(gz.get("z_bottom"), 0.0), val(gz.get("z_top"))
+            a0, a1 = val(gz.get("along0"), 0.0), val(gz.get("along1"), L)
+            if zt is None:
+                continue
+            inset = val(gz.get("inset"), 0.3, f"{fid} ガラスの引っ込み", "未測。0.3 m と置いた")
+            depth = val(gz.get("depth"), 6.0, f"{fid} ガラス部分の奥行き", "未測。6 m と置いた")
+            cutters.append(box(f"cut_glazing_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * (inset / 2 - 0.25) + UP * ((zb + zt) / 2 + 0.01), u, n, UP, a1 - a0 - 0.04, inset + 0.5, zt - zb + 0.02, col))
+            gb = box(f"glazing_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * (inset + depth / 2) + UP * ((zb + zt) / 2), u, n, UP, a1 - a0 - 0.05, depth, zt - zb - 0.05, col)
+            gb.data.materials.append(mats.glass)
+            extras.append(gb)
+            # ガラスの縦枠
+            for k in range(1, int((a1 - a0) / 1.8)):
+                fr = box(f"glazing_frame_{fid}_{int(a0)}_{k}", p0 + u * (a0 + k * 1.8) - n * (inset + 0.03) + UP * ((zb + zt) / 2), u, n, UP, 0.06, 0.06, zt - zb, col)
+                fr.data.materials.append(mats.metal)
+                extras.append(fr)
+
+        if count and pitch:
+            for w in f.get("windows") or []:
+                zb, zt = val(w.get("z_bottom")), val(w.get("z_top"))
+                if zb is None or zt is None:
+                    continue
+                ww = val(w.get("width"), pitch - pier, f"{fid} 窓幅", "柱間隔−柱型")
+                rec = val(w.get("recess"), 0.35, f"{fid} 窓の奥行き", "未測。0.35 m と置いた")
+                per = int(w.get("per_bay") or 1)
+                sub = ww / per
+                bays_list = w.get("bays") or list(range(1, int(count) + 1))
+                base = recess_at((zb + zt) / 2)            # 帯の中なら帯の面から
+                gap = val(w.get("gap"), 0.15) if per > 1 else 0.1
+                for i in bays_list:
+                    for k in range(per):
+                        s = margin + (i - 1) * pitch + pitch / 2 + (k - (per - 1) / 2) * sub
+                        wsub = sub - gap
+                        total = base + rec
+                        c = p0 + u * s - n * (total / 2 - 0.25) + UP * ((zb + zt) / 2)
+                        cutters.append(box(f"cut_win_{fid}_{i}_{k}", c, u, n, UP, wsub, total + 0.5, zt - zb, col))
+                        g = box(f"glass_{fid}_{i}_{k}", p0 + u * s - n * (total - 0.02) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
+                        g.data.materials.append(mats.glass)
+                        extras.append(g)
+                        # カーテン（ガラスの奥の明るい面。写真の窓はほぼ全部カーテンが見える）
+                        cur = box(f"curtain_{fid}_{i}_{k}", p0 + u * s - n * (total + 0.25) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
+                        cur.data.materials.append(mats.curtain)
+                        extras.append(cur)
+                        # サッシ：外枠（上下左右）と中央の縦桟
+                        fr_d = total - 0.05
+                        hh = zt - zb
+                        frames = [(0.0, hh / 2 - 0.03, wsub, 0.06), (0.0, -(hh / 2 - 0.03), wsub, 0.06),
+                                  (wsub / 2 - 0.03, 0.0, 0.06, hh), (-(wsub / 2 - 0.03), 0.0, 0.06, hh), (0.0, 0.0, 0.05, hh)]
+                        for j, (dx, dz, fw, fh) in enumerate(frames):
+                            fr = box(f"sash_{fid}_{i}_{k}_{j}", p0 + u * (s + dx) - n * fr_d + UP * ((zb + zt) / 2 + dz), u, n, UP, fw, 0.05, fh, col)
+                            fr.data.materials.append(mats.metal)
+                            extras.append(fr)
+                        # 手すり（腰の高さの細い横棒）
+                        if w.get("rail", True) and hh > 1.4:
+                            rl = box(f"rail_{fid}_{i}_{k}", p0 + u * s - n * (base + 0.08) + UP * (zb + 1.1), u, n, UP, wsub, 0.03, 0.03, col)
+                            rl.data.materials.append(mats.metal)
+                            extras.append(rl)
+                        sill = box(f"sill_{fid}_{i}_{k}", p0 + u * s - n * (base + rec / 2) + UP * (zb - 0.04), u, n, UP, wsub, rec, 0.08, col)
+                        sill.data.materials.append(mats.concrete)
+                        extras.append(sill)
+
+        for bd in f.get("bands") or []:
+            zb, zt = val(bd.get("z_bottom")), val(bd.get("z_top"))
+            if zb is None or zt is None or val(bd.get("depth"), 0.0) < 0:
+                continue
+            dep = val(bd.get("depth"), 0.0)
+            a0, a1 = val(bd.get("along0"), 0.0), val(bd.get("along1"), L)
+            c = p0 + u * ((a0 + a1) / 2) + n * (dep / 2 + 0.01) + UP * ((zb + zt) / 2)
+            bb = box(f"band_{fid}_{int(zb)}", c, u, n, UP, a1 - a0, max(dep, 0.03), zt - zb, col)
+            bb.data.materials.append(material_plain(f"band_{fid}_{int(zb)}", (*hex_to_rgb(bd["color"]), 1.0), roughness=0.6) if bd.get("color") else mats.dark)
+            extras.append(bb)
+
+    for i, pt in enumerate(b.get("parts") or []):
+        t = pt.get("type")
+        name = f"{t}_{i}"
+        if t == "box":
+            z0, z1 = val(pt.get("z0"), 0.0), val(pt.get("z1"))
+            if z1 is None:
+                continue
+            ob = prism(name, pt["polygon"], z0, z1, col)
+            ob.data.materials.append(mats.named(pt.get("material")))
+            extras.append(ob)
+        elif t == "balcony":
+            f = faces.get(pt.get("face"))
+            if not f:
+                continue
+            p0, u, n, L = face_frame(f)
+            a0, a1 = val(pt.get("along0"), 0.0), val(pt.get("along1"), L)
+            z = val(pt.get("z"))
+            if z is None:
+                continue
+            depth = val(pt.get("depth"), 2.0, f"{name} の張り出し", "未測。2 m と置いた")
+            slab = val(pt.get("slab"), 0.3)
+            ph = val(pt.get("parapet_h"), 1.1, f"{name} の手すり高さ", "建築基準法の最低 1.1 m")
+            pth = val(pt.get("parapet_t"), 0.15)
+            mat = mats.named(pt.get("material"))
+            sl = box(f"{name}_slab", p0 + u * ((a0 + a1) / 2) + n * (depth / 2) + UP * (z - slab / 2), u, n, UP, a1 - a0, depth, slab, col)
+            sl.data.materials.append(mat)
+            extras.append(sl)
+            pw = box(f"{name}_par", p0 + u * ((a0 + a1) / 2) + n * (depth - pth / 2) + UP * (z + ph / 2), u, n, UP, a1 - a0, pth, ph, col)
+            pw.data.materials.append(mat)
+            extras.append(pw)
+            if not pt.get("open_ends"):
+                for a in (a0, a1):
+                    pe = box(f"{name}_end{int(a)}", p0 + u * a + n * (depth / 2) + UP * (z + ph / 2), u, n, UP, pth, depth, ph, col)
+                    pe.data.materials.append(mat)
+                    extras.append(pe)
+        elif t == "coping":
+            h = val(pt.get("height"), 0.3)
+            o = val(pt.get("overhang"), 0.08)
+            for blk in blocks:
+                pts = ccw([tuple(p) for p in blk["polygon"]])
+                top = tops[blk["id"]]
+                for j in range(len(pts)):
+                    q0, q1 = Vector((*pts[j], 0)), Vector((*pts[(j + 1) % len(pts)], 0))
+                    d = q1 - q0
+                    Lj = d.length
+                    if Lj < 0.5:
+                        continue
+                    uj = d / Lj
+                    nj = Vector((uj.y, -uj.x, 0))
+                    cb = box(f"coping_{blk['id']}_{j}", (q0 + q1) / 2 + nj * (o / 2 - 0.15) + UP * (top + h / 2 - 0.02), uj, nj, UP, Lj + 2 * o, 0.3 + o, h, col)
+                    cb.data.materials.append(mats.coping)
+                    extras.append(cb)
+        elif t == "ac_units":
+            f = faces.get(pt.get("face"))
+            if not f:
+                continue
+            p0, u, n, L = face_frame(f)
+            a = val(pt.get("along"), 0.0)
+            cnt = int(val(pt.get("count"), 1))
+            w, h, d, gap = val(pt.get("w"), 0.9), val(pt.get("h"), 0.8), val(pt.get("d"), 0.35), val(pt.get("gap"), 0.15)
+            for k in range(cnt):
+                ob = box(f"{name}_{k}", p0 + u * (a + k * (w + gap) + w / 2) + n * (d / 2 + 0.3) + UP * (h / 2 + 0.1), u, n, UP, w, d, h, col)
+                ob.data.materials.append(mats.metal)
+                extras.append(ob)
+        elif t == "pipes":
+            f = faces.get(pt.get("face"))
+            if not f:
+                continue
+            p0, u, n, L = face_frame(f)
+            a = val(pt.get("along"), 0.0)
+            cnt = int(val(pt.get("count"), 1))
+            r = val(pt.get("radius"), 0.06)
+            z0, z1 = val(pt.get("z0"), 0.0), val(pt.get("z1"), H)
+            for k in range(cnt):
+                ob = cylinder(f"{name}_{k}", p0 + u * (a + k * 0.3) + n * (r + 0.05), r, z0, z1, col, seg=8)
+                ob.data.materials.append(mats.metal)
+                extras.append(ob)
+        elif t == "tree":
+            x, y = pt["x"], pt["y"]
+            hgt = val(pt.get("height"), 7.0)
+            rad = val(pt.get("radius"), 3.0)
+            tr = cylinder(f"{name}_trunk", Vector((x, y, 0)), 0.18, 0.0, hgt - rad * 0.6, col, seg=8)
+            tr.data.materials.append(mats.trunk)
+            cn = sphere(f"{name}_crown", Vector((x, y, hgt - rad * 0.5)), rad, col)
+            cn.data.materials.append(mats.leaf)
+            extras += [tr, cn]
+        elif t == "pavement":
+            z = val(pt.get("z"), 0.0)
+            ob = prism(name, pt["polygon"], z - 0.1, z + 0.02, col)
+            ob.data.materials.append(mats.pavement if pt.get("material", "brick") == "brick" else mats.ground)
+            extras.append(ob)
+
+    if cutters:
+        boolean_cut(body, cutters)
+    # 上向きの面（屋上・庇の上）は防水のコンクリート色
+    body.data.materials.append(mats.roof)
+    for pg in body.data.polygons:
+        if pg.normal.z > 0.9:
+            pg.material_index = 1
+    for e in extras:
+        e.parent = body
+
+    xs = [p[0] for p in poly]
+    ys = [p[1] for p in poly]
+    cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
+    R = 1500.0
+    g = prism("ground", [(cx - R, cy - R), (cx + R, cy - R), (cx + R, cy + R), (cx - R, cy + R)], -0.3, 0.0, col)
+    g.data.materials.append(mats.ground)
+    return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body, "ground": g}
+
+
+# --- 描画 -------------------------------------------------------------------------------
+
+def setup_scene(sketch: bool, fast: bool):
+    sc = bpy.context.scene
+    engines = [e.identifier for e in bpy.types.RenderSettings.bl_rna.properties["engine"].enum_items]
+    sc.render.engine = "BLENDER_EEVEE_NEXT" if "BLENDER_EEVEE_NEXT" in engines else ("BLENDER_EEVEE" if "BLENDER_EEVEE" in engines else "CYCLES")
+    sc.render.resolution_x, sc.render.resolution_y = (1400, 1000) if fast else (2400, 1700)
+    sc.render.film_transparent = False
+    vts = [i.identifier for i in bpy.types.ColorManagedViewSettings.bl_rna.properties["view_transform"].enum_items]
+    sc.view_settings.view_transform = "Khronos PBR Neutral" if "Khronos PBR Neutral" in vts else ("AgX" if "AgX" in vts else "Standard")
+    for attr, v in (("use_shadows", True), ("use_raytracing", True), ("taa_render_samples", 16 if fast else 48), ("shadow_ray_count", 2)):
+        try:
+            setattr(sc.eevee, attr, v)
+        except (AttributeError, TypeError):
+            pass
+    world = bpy.data.worlds.new("w") if sc.world is None else sc.world
+    sc.world = world
+    world.use_nodes = True
+    nt = world.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputWorld")
+    bg = nt.nodes.new("ShaderNodeBackground")
+    if sketch:
+        bg.inputs["Color"].default_value = (1, 1, 1, 1)
+        bg.inputs["Strength"].default_value = 1.0
+    else:
+        sky = nt.nodes.new("ShaderNodeTexSky")
+        kinds = [e.identifier for e in sky.bl_rna.properties["sky_type"].enum_items]
+        sky.sky_type = "MULTIPLE_SCATTERING" if "MULTIPLE_SCATTERING" in kinds else ("NISHITA" if "NISHITA" in kinds else kinds[0])
+        sky.sun_elevation = math.radians(42)
+        sky.sun_rotation = math.radians(145)
+        sky.sun_intensity = 0.25
+        sky.altitude = 50
+        nt.links.new(sky.outputs["Color"], bg.inputs["Color"])
+        bg.inputs["Strength"].default_value = 0.035   # Nishita の空は物理単位で明るいので弱く（青かぶりを防ぐ）
+    nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
+    for o in [o for o in sc.objects if o.type == "LIGHT"]:
+        bpy.data.objects.remove(o, do_unlink=True)
+    ld = bpy.data.lights.new("sun", "SUN")
+    ld.energy = 1.8 if sketch else 2.2
+    ld.angle = math.radians(2.5)
+    ld.color = (1.0, 0.97, 0.9)
+    sun = bpy.data.objects.new("sun", ld)
+    sc.collection.objects.link(sun)
+    sun.rotation_euler = (math.radians(48), 0, math.radians(-35))   # 光が南西から北東へ向かう（午後の太陽）
+    sc.render.use_freestyle = sketch
+    sc.render.line_thickness = 2.0
+    vl = bpy.context.view_layer
+    vl.use_freestyle = sketch
+    if sketch:
+        fs = vl.freestyle_settings
+        while fs.linesets:
+            fs.linesets.remove(fs.linesets[0])
+        ls = fs.linesets.new("lines")
+        ls.select_silhouette = True
+        ls.select_border = True
+        ls.select_crease = True
+        ls.linestyle.color = (0.08, 0.08, 0.08)
+        ls.linestyle.thickness = 2.0
+        gm = ls.linestyle.geometry_modifiers.new("wobble", "PERLIN_NOISE_1D")
+        gm.amplitude, gm.frequency, gm.octaves = 1.2, 12.0, 2
+        fs.crease_angle = math.radians(120)
+        vl.material_override = material_plain("sketch_white", (0.96, 0.96, 0.95, 1.0), roughness=1.0)
+    else:
+        vl.material_override = None
+
+
+def camera(name: str, loc: Vector, target: Vector, ortho_scale: float | None = None, lens: float = 32):
+    sc = bpy.context.scene
+    cd = bpy.data.cameras.new(name)
+    cam = bpy.data.objects.new(name, cd)
+    sc.collection.objects.link(cam)
+    cam.location = loc
+    cam.rotation_euler = (target - loc).to_track_quat("-Z", "Y").to_euler()
+    if ortho_scale:
+        cd.type = "ORTHO"
+        cd.ortho_scale = ortho_scale
+    else:
+        cd.lens = lens
+    cd.clip_end = 4000
+    sc.camera = cam
+    return cam
+
+
+def render(path: Path):
+    sc = bpy.context.scene
+    sc.render.filepath = str(path)
+    sc.render.image_settings.file_format = "PNG"
+    bpy.ops.render.render(write_still=True)
+
+
+def main():
+    argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+    if len(argv) < 2:
+        raise SystemExit("usage: blender -b -P blender_build.py -- building.json out_dir [--fast]")
+    src, out = Path(argv[0]).resolve(), Path(argv[1]).resolve()
+    fast = "--fast" in argv
+    out.mkdir(parents=True, exist_ok=True)
+    b = json.loads(src.read_text(encoding="utf-8"))
+
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    col = bpy.data.collections.new(b["id"])
+    bpy.context.scene.collection.children.link(col)
+    info = build_building(b, col)
+    c, H, E, ground_ob = info["center"], info["height"], max(info["extent"], 20.0, info["height"] * 0.9), info["ground"]   # 高い棟はカメラを引く
+
+    tall = H > info["extent"]          # 高い棟は見上げ気味に、少し引く
+    look = Vector((c.x, c.y, H * (0.45 if tall else 0.3)))
+    persp_sw = Vector((c.x, c.y, 0)) + Vector((-0.25, -0.97, 0)) * (E * (1.7 if tall else 1.45)) + Vector((0, 0, E * (0.6 if tall else 0.85)))
+    persp_se = Vector((c.x, c.y, 0)) + Vector((0.55, -0.83, 0)) * (E * (1.6 if tall else 1.3)) + Vector((0, 0, E * (0.55 if tall else 0.7)))
+
+    setup_scene(sketch=True, fast=fast)
+    camera("persp", persp_sw, look)
+    render(out / "persp_sketch.png")
+
+    faces = sorted([f for f in b.get("faces", []) if f.get("from")], key=lambda f: -((f.get("length") or {}).get("value") or 0))
+    if faces:
+        p0, p1 = Vector((*faces[0]["from"], 0)), Vector((*faces[0]["to"], 0))
+        u = (p1 - p0).normalized()
+        n0 = Vector((u.y, -u.x, 0))
+    else:
+        n0 = Vector((0, -1, 0))
+    names = []
+    ground_ob.hide_render = True
+    dist = E * 3
+    scale = max(E, H) * 1.25
+    for k in range(4):
+        d = Vector((n0.x * math.cos(k * math.pi / 2) - n0.y * math.sin(k * math.pi / 2),
+                    n0.x * math.sin(k * math.pi / 2) + n0.y * math.cos(k * math.pi / 2), 0))
+        az = (math.degrees(math.atan2(d.x, d.y)) + 360) % 360
+        comp = ["北", "北北東", "北東", "東北東", "東", "東南東", "南東", "南南東", "南", "南南西", "南西", "西南西", "西", "西北西", "北西", "北北西"][int((az + 11.25) // 22.5) % 16]
+        name = "ABCD"[k]
+        names.append({"file": f"view_{name}.png", "label": f"{comp}立面（方位 {az:.0f}°）"})
+        camera(f"view_{name}", Vector((c.x, c.y, H / 2)) + d * dist, Vector((c.x, c.y, H / 2)), ortho_scale=scale)
+        render(out / f"view_{name}.png")
+    (out / "views.json").write_text(json.dumps(names, ensure_ascii=False, indent=1), encoding="utf-8")
+    cam = camera("view_top", Vector((c.x, c.y, dist)), Vector((c.x, c.y, 0)), ortho_scale=scale)
+    cam.rotation_euler = (0, 0, 0)
+    render(out / "view_top.png")
+
+    ground_ob.hide_render = False
+    setup_scene(sketch=False, fast=fast)
+    camera("persp2", persp_se, look, lens=35)
+    render(out / "persp_shaded.png")
+    camera("persp3", persp_sw, look, lens=35)
+    render(out / "persp_shaded2.png")
+    if faces:
+        mid = (p0 + p1) / 2
+        eye = mid + n0 * 38.0 + Vector((0, 0, 1.6))
+        camera("street", eye, Vector((mid.x, mid.y, H * 0.45)), lens=16)
+        render(out / "persp_street.png")
+    for f in b.get("faces", []):
+        if not f.get("render_view") or not f.get("from"):
+            continue
+        q0, q1 = Vector((*f["from"], 0)), Vector((*f["to"], 0))
+        uu = (q1 - q0).normalized()
+        nn = Vector((uu.y, -uu.x, 0))
+        mid = (q0 + q1) / 2
+        top = val(f.get("top_z"), H)
+        eye = mid + nn * max(22.0, (q1 - q0).length * 0.85, top * 0.9) + Vector((0, 0, 1.6))
+        # 検収用：この面に斜めから日が当たるように太陽を回す（写真と凹凸を比べるため）
+        sun = bpy.context.scene.objects.get("sun")
+        if sun:
+            # 太陽の光は局所 -Z に進む。Euler (rx, 0, rz) で進行方向の xy は (-sin rz, cos rz)。
+            # 面の外向き法線 nn と逆向きに進ませたいので sin rz = nn.x, cos rz = -nn.y。横から 30° ずらす
+            rz = math.degrees(math.atan2(nn.x, -nn.y)) - 30.0
+            sun.rotation_euler = (math.radians(50), 0, math.radians(rz))
+        for o in bpy.context.scene.objects:
+            if o.name.startswith("tree_"):
+                o.hide_render = True
+        camera(f"street_{f['id']}", eye, Vector((mid.x, mid.y, top * 0.45)), lens=18)
+        render(out / f"persp_street_{f['id']}.png")
+
+    for o in bpy.context.scene.objects:
+        o.select_set(o.type == "MESH" and o.name != "ground")
+    bpy.ops.export_scene.gltf(filepath=str(out / f"{b['id']}.glb"), use_selection=True, export_apply=True)
+    bpy.ops.wm.save_as_mainfile(filepath=str(out / f"{b['id']}.blend"))
+
+    (out / "model_report.json").write_text(json.dumps({
+        "building": b["id"], "source": str(src), "height_m": H, "assumed": ASSUMED,
+        "note": "assumed は模型を立てるために置いた仮の値。棟 JSON には書かない。撮影依頼の元にする",
+    }, ensure_ascii=False, indent=1), encoding="utf-8")
+    print("模型:", out, "仮の値", len(ASSUMED), "件")
+
+
+if __name__ == "__main__":
+    main()

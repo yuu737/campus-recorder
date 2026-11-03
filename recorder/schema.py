@@ -191,6 +191,33 @@ def validate_building(b: dict) -> list[str]:
                 if k in mt:
                     errs += _m(mt, k).problems(f"{where}.materials[{i}].{k}")
 
+    # 設計の部品（blocks / parts / faces[].glazing）：中に入っている測定値を全部検証する
+    def walk(obj, where: str) -> None:
+        if isinstance(obj, dict):
+            if "status" in obj and "value" in obj:
+                errs.extend(Measurement.from_json(obj).problems(where))
+                return
+            for k, v in obj.items():
+                walk(v, f"{where}.{k}")
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                walk(v, f"{where}[{i}]")
+
+    for i, blk in enumerate(b.get("blocks", [])):
+        if not blk.get("id"):
+            errs.append(f"blocks[{i}]: id がありません")
+        if len(blk.get("polygon") or []) < 3:
+            errs.append(f"blocks[{i}]: polygon は3点以上必要です")
+        walk({k: v for k, v in blk.items() if k != "polygon"}, f"blocks[{blk.get('id', i)}]")
+    for i, pt in enumerate(b.get("parts", [])):
+        if not pt.get("type"):
+            errs.append(f"parts[{i}]: type がありません")
+        if pt.get("face") and pt["face"] not in face_ids:
+            errs.append(f"parts[{i}]: face={pt['face']} は faces にありません")
+        walk({k: v for k, v in pt.items() if k not in ("polygon",)}, f"parts[{i}:{pt.get('type')}]")
+    for fc in b.get("faces", []):
+        walk(fc.get("glazing", []), f"faces[{fc.get('id')}].glazing")
+
     for i, rq in enumerate(b.get("requests", [])):
         where = f"requests[{i}]"
         for k in ("face", "what", "why"):

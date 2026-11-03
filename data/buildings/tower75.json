@@ -1,0 +1,3529 @@
+{
+  "schema": "campus-recorder/building/1",
+  "id": "tower75",
+  "name": "タワー75",
+  "campus": "meijo-tempaku",
+  "crs": {
+    "epsg": 6675,
+    "origin_lat": 35.1355,
+    "origin_lon": 136.9755,
+    "note": "原点からの m。x=東, y=北。z は標高 m"
+  },
+  "footprint": {
+    "status": "estimated",
+    "evidence": [
+      "osm:way/tower75",
+      "PXL_20261103_070327678"
+    ],
+    "polygon": [
+      [
+        46.81,
+        38.73
+      ],
+      [
+        54.0,
+        34.96
+      ],
+      [
+        54.46,
+        35.86
+      ],
+      [
+        67.0,
+        29.29
+      ],
+      [
+        66.51,
+        28.38
+      ],
+      [
+        74.43,
+        24.24
+      ],
+      [
+        73.32,
+        22.09
+      ],
+      [
+        77.92,
+        19.69
+      ],
+      [
+        66.36,
+        -2.38
+      ],
+      [
+        64.77,
+        -5.4
+      ],
+      [
+        63.87,
+        -7.14
+      ],
+      [
+        56.78,
+        -3.44
+      ],
+      [
+        55.63,
+        -5.62
+      ],
+      [
+        49.31,
+        -2.3
+      ],
+      [
+        50.53,
+        0.04
+      ],
+      [
+        39.54,
+        5.78
+      ],
+      [
+        38.17,
+        3.13
+      ],
+      [
+        31.87,
+        6.44
+      ],
+      [
+        33.2,
+        9.0
+      ],
+      [
+        31.28,
+        9.99
+      ],
+      [
+        25.98,
+        12.77
+      ],
+      [
+        35.82,
+        31.54
+      ],
+      [
+        38.62,
+        36.89
+      ],
+      [
+        41.13,
+        41.71
+      ],
+      [
+        46.81,
+        38.73
+      ]
+    ],
+    "method": "基壇は OSM の輪郭。塔の主要部は写真の幅（正面化 1470 px + 460 px）と OSM の辺の向きから置いた長方形（blocks を見る）"
+  },
+  "ground_z": {
+    "value": 42.9,
+    "unit": "m",
+    "tol": 1.0,
+    "status": "estimated",
+    "evidence": [
+      "gsi:dem5a"
+    ],
+    "method": "国土地理院 5m 標高を足元で読む",
+    "note": ""
+  },
+  "floor_count": {
+    "value": 16,
+    "unit": "階",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [
+      "PXL_20261103_070327678",
+      "osm:levels=16"
+    ],
+    "method": "正面化画像で階の帯を数えた（上 12 段が見え、下は基壇と木で隠れる）。OSM の levels=16 と合う",
+    "note": ""
+  },
+  "floor_pitch": {
+    "value": 4.4,
+    "unit": "m",
+    "tol": 0.15,
+    "status": "estimated",
+    "evidence": [
+      "PXL_20261103_070327678",
+      "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+      "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+    ],
+    "method": "横エッジの自己相関 255.0 px。縮尺は PLATEAU の高さ 74.2 m（パラペット〜街路 4300 px）",
+    "note": ""
+  },
+  "parapet_top": {
+    "value": 74.2,
+    "unit": "m",
+    "tol": 1.5,
+    "status": "estimated",
+    "evidence": [
+      "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+      "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+    ],
+    "method": "PLATEAU の measuredHeight（主塔）。段の部分は 69.5 m で、差 4.7 m ≒ 1 階ぶんと写真が合う",
+    "note": ""
+  },
+  "levels": [],
+  "faces": [
+    {
+      "id": "SW",
+      "name": "南南西面（主塔。写真 11 で全体）",
+      "from": [
+        26.02,
+        12.84
+      ],
+      "to": [
+        48.5,
+        1.1
+      ],
+      "length": {
+        "value": 25.36,
+        "unit": "m",
+        "tol": 0.8,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070327678"
+        ],
+        "method": "塔の長方形の辺",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 7,
+          "unit": "個",
+          "tol": null,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "正面化画像で窓の縦の列を数えた",
+          "note": ""
+        },
+        "pitch": {
+          "value": 3.43,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "縦エッジの自己相関 199.0 px を換算",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 1.79,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "柱型（タイルの帯）の幅 104 px",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 0.66,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "角の柱型が広い。余りを両端に半分ずつ",
+          "note": ""
+        },
+        "pier_depth": {
+          "value": 0.15,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "柱型は窓よりわずかに前。目視",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 8.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 11.9,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 12.45,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 16.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "5階窓",
+          "floors": [
+            5
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 16.85,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 20.7,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "6階窓",
+          "floors": [
+            6
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 21.25,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 25.1,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "7階窓",
+          "floors": [
+            7
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 25.65,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 29.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "8階窓",
+          "floors": [
+            8
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 30.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 33.9,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "9階窓",
+          "floors": [
+            9
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 34.45,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 38.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "10階窓",
+          "floors": [
+            10
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 38.85,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 42.7,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "11階窓",
+          "floors": [
+            11
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 43.25,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 47.1,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "12階窓",
+          "floors": [
+            12
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 47.65,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 51.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "13階窓",
+          "floors": [
+            13
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 52.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 55.9,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "14階窓",
+          "floors": [
+            14
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 56.45,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 60.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "15階窓",
+          "floors": [
+            15
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 60.85,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 64.7,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "16階窓",
+          "floors": [
+            16
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 65.25,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 69.1,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [
+        {
+          "name": "3階の帯",
+          "z": {
+            "value": 7.75,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "4階の帯",
+          "z": {
+            "value": 12.15,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "5階の帯",
+          "z": {
+            "value": 16.55,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "6階の帯",
+          "z": {
+            "value": 20.95,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "7階の帯",
+          "z": {
+            "value": 25.35,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "8階の帯",
+          "z": {
+            "value": 29.75,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "9階の帯",
+          "z": {
+            "value": 34.15,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "10階の帯",
+          "z": {
+            "value": 38.55,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "11階の帯",
+          "z": {
+            "value": 42.95,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "12階の帯",
+          "z": {
+            "value": 47.35,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "13階の帯",
+          "z": {
+            "value": 51.75,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "14階の帯",
+          "z": {
+            "value": 56.15,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "15階の帯",
+          "z": {
+            "value": 60.55,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "16階の帯",
+          "z": {
+            "value": 64.95,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        }
+      ],
+      "materials": [
+        {
+          "name": "橙のタイル（小型。形式は未確認）",
+          "color": "#d9915a",
+          "color_note": "写真は夕日で橙が強い（#eaa96b）。少し戻した推定。昼の日陰の写真で取り直す",
+          "unit_w": {
+            "value": 0.22,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "横の周期 12.5 px。形式未確認",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.29,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "縦の周期 17.3 px から目地 8 mm を引いた推定",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.004,
+            "status": "estimated",
+            "evidence": [],
+            "method": "小型タイルの標準目地",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 74.2,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "塊の高さ",
+        "note": ""
+      },
+      "render_view": true
+    },
+    {
+      "id": "SW_B",
+      "name": "南南西面（段の部分）",
+      "from": [
+        49.89,
+        3.76
+      ],
+      "to": [
+        56.93,
+        0.08
+      ],
+      "length": {
+        "value": 7.94,
+        "unit": "m",
+        "tol": 0.8,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070327678"
+        ],
+        "method": "塔の長方形の辺",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 2,
+          "unit": "個",
+          "tol": null,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "正面化画像で窓の縦の列を数えた",
+          "note": ""
+        },
+        "pitch": {
+          "value": 3.43,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "縦エッジの自己相関 199.0 px を換算",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 1.79,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "柱型（タイルの帯）の幅 104 px",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 0.53,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "角の柱型が広い。余りを両端に半分ずつ",
+          "note": ""
+        },
+        "pier_depth": {
+          "value": 0.15,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_070327678"
+          ],
+          "method": "柱型は窓よりわずかに前。目視",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 8.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 11.9,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 12.45,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 16.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "5階窓",
+          "floors": [
+            5
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 16.85,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 20.7,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "6階窓",
+          "floors": [
+            6
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 21.25,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 25.1,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "7階窓",
+          "floors": [
+            7
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 25.65,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 29.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "8階窓",
+          "floors": [
+            8
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 30.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 33.9,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "9階窓",
+          "floors": [
+            9
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 34.45,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 38.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "10階窓",
+          "floors": [
+            10
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 38.85,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 42.7,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "11階窓",
+          "floors": [
+            11
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 43.25,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 47.1,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "12階窓",
+          "floors": [
+            12
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 47.65,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 51.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "13階窓",
+          "floors": [
+            13
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 52.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 55.9,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "14階窓",
+          "floors": [
+            14
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 56.45,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 60.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "15階窓",
+          "floors": [
+            15
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 60.85,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "階の帯（白い水切り）の上端から。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 64.7,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "次の帯の下端まで。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 1.64,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "窓の帯の幅 95 px",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [
+        {
+          "name": "3階の帯",
+          "z": {
+            "value": 7.75,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "4階の帯",
+          "z": {
+            "value": 12.15,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "5階の帯",
+          "z": {
+            "value": 16.55,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "6階の帯",
+          "z": {
+            "value": 20.95,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "7階の帯",
+          "z": {
+            "value": 25.35,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "8階の帯",
+          "z": {
+            "value": 29.75,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "9階の帯",
+          "z": {
+            "value": 34.15,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "10階の帯",
+          "z": {
+            "value": 38.55,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "11階の帯",
+          "z": {
+            "value": 42.95,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "12階の帯",
+          "z": {
+            "value": 47.35,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "13階の帯",
+          "z": {
+            "value": 51.75,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "14階の帯",
+          "z": {
+            "value": 56.15,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        },
+        {
+          "name": "15階の帯",
+          "z": {
+            "value": 60.55,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "白い水切りの帯",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "帯の見付け 18 px",
+            "note": ""
+          },
+          "material": "concrete"
+        }
+      ],
+      "materials": [
+        {
+          "name": "橙のタイル（小型。形式は未確認）",
+          "color": "#d9915a",
+          "color_note": "写真は夕日で橙が強い（#eaa96b）。少し戻した推定。昼の日陰の写真で取り直す",
+          "unit_w": {
+            "value": 0.22,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "横の周期 12.5 px。形式未確認",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.29,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "縦の周期 17.3 px から目地 8 mm を引いた推定",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.004,
+            "status": "estimated",
+            "evidence": [],
+            "method": "小型タイルの標準目地",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 69.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "塊の高さ",
+        "note": ""
+      }
+    },
+    {
+      "id": "E",
+      "name": "東南東面（段の部分の側面）",
+      "from": [
+        56.93,
+        0.08
+      ],
+      "to": [
+        69.47,
+        23.99
+      ],
+      "length": {
+        "value": 27.0,
+        "unit": "m",
+        "tol": 0.8,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070327678"
+        ],
+        "method": "塔の長方形の辺",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": [
+        {
+          "name": "橙のタイル（小型。形式は未確認）",
+          "color": "#d9915a",
+          "color_note": "写真は夕日で橙が強い（#eaa96b）。少し戻した推定。昼の日陰の写真で取り直す",
+          "unit_w": {
+            "value": 0.22,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "横の周期 12.5 px。形式未確認",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.29,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "縦の周期 17.3 px から目地 8 mm を引いた推定",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.004,
+            "status": "estimated",
+            "evidence": [],
+            "method": "小型タイルの標準目地",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 69.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "塊の高さ",
+        "note": ""
+      }
+    },
+    {
+      "id": "N",
+      "name": "北北東面",
+      "from": [
+        69.47,
+        23.99
+      ],
+      "to": [
+        39.95,
+        39.41
+      ],
+      "length": {
+        "value": 33.3,
+        "unit": "m",
+        "tol": 0.8,
+        "status": "estimated",
+        "evidence": [],
+        "method": "塔の長方形の辺",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": [
+        {
+          "name": "橙のタイル（小型。形式は未確認）",
+          "color": "#d9915a",
+          "color_note": "写真は夕日で橙が強い（#eaa96b）。少し戻した推定。昼の日陰の写真で取り直す",
+          "unit_w": {
+            "value": 0.22,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "横の周期 12.5 px。形式未確認",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.29,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "縦の周期 17.3 px から目地 8 mm を引いた推定",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.004,
+            "status": "estimated",
+            "evidence": [],
+            "method": "小型タイルの標準目地",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 74.2,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "塊の高さ",
+        "note": ""
+      }
+    },
+    {
+      "id": "W",
+      "name": "西北西面（入口側）",
+      "from": [
+        39.95,
+        39.41
+      ],
+      "to": [
+        26.02,
+        12.84
+      ],
+      "length": {
+        "value": 30.0,
+        "unit": "m",
+        "tol": 0.8,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070204974"
+        ],
+        "method": "塔の長方形の辺",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": [
+        {
+          "name": "橙のタイル（小型。形式は未確認）",
+          "color": "#d9915a",
+          "color_note": "写真は夕日で橙が強い（#eaa96b）。少し戻した推定。昼の日陰の写真で取り直す",
+          "unit_w": {
+            "value": 0.22,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "横の周期 12.5 px。形式未確認",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.29,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_070327678"
+            ],
+            "method": "縦の周期 17.3 px から目地 8 mm を引いた推定",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.004,
+            "status": "estimated",
+            "evidence": [],
+            "method": "小型タイルの標準目地",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 74.2,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "塊の高さ",
+        "note": ""
+      },
+      "render_view": true
+    }
+  ],
+  "photos": [
+    {
+      "id": "PXL_20261103_065946407",
+      "file": "20261103b/PXL_20261103_065946407.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_070003022",
+      "file": "20261103b/PXL_20261103_070003022.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_070044607",
+      "file": "20261103b/PXL_20261103_070044607.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_070114062",
+      "file": "20261103b/PXL_20261103_070114062.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070123308",
+      "file": "20261103b/PXL_20261103_070123308.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070134689",
+      "file": "20261103b/PXL_20261103_070134689.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070148248",
+      "file": "20261103b/PXL_20261103_070148248.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070156537",
+      "file": "20261103b/PXL_20261103_070156537.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070204974",
+      "file": "20261103b/PXL_20261103_070204974.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070222827",
+      "file": "20261103b/PXL_20261103_070222827.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070244955",
+      "file": "20261103b/PXL_20261103_070244955.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070327678",
+      "file": "20261103b/PXL_20261103_070327678.jpg",
+      "face": "f8",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070334137",
+      "file": "20261103b/PXL_20261103_070334137.jpg",
+      "face": "f8",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070409570",
+      "file": "20261103b/PXL_20261103_070409570.jpg",
+      "face": "f8",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070422004",
+      "file": "20261103b/PXL_20261103_070422004.jpg",
+      "face": "f8",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070606125",
+      "file": "20261103b/PXL_20261103_070606125.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070619739",
+      "file": "20261103b/PXL_20261103_070619739.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_070654529",
+      "file": "20261103b/PXL_20261103_070654529.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_070742138",
+      "file": "20261103b/PXL_20261103_070742138.jpg",
+      "face": "f0",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_074413490",
+      "file": "20261103b/PXL_20261103_074413490.jpg",
+      "face": "f0",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_074445985",
+      "file": "20261103b/PXL_20261103_074445985.jpg",
+      "face": "f0",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_074457079",
+      "file": "20261103b/PXL_20261103_074457079.jpg",
+      "face": "f0",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_074549768",
+      "file": "20261103b/PXL_20261103_074549768.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_074606922",
+      "file": "20261103b/PXL_20261103_074606922.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_074621752",
+      "file": "20261103b/PXL_20261103_074621752.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_074649138.MP",
+      "file": "20261103b/PXL_20261103_074649138.MP.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_074700641",
+      "file": "20261103b/PXL_20261103_074700641.jpg",
+      "face": null,
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_080314875",
+      "file": "20261103b/PXL_20261103_080314875.jpg",
+      "face": "f5",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_080325005",
+      "file": "20261103b/PXL_20261103_080325005.jpg",
+      "face": "f5",
+      "role": "全体"
+    }
+  ],
+  "requests": [
+    {
+      "face": "N",
+      "what": "北北東面の全体（遠くから）",
+      "where": "北側の道路から",
+      "why": "写真はあるが面の区画が決まらず、窓の割付も未確認",
+      "status": "open"
+    },
+    {
+      "face": "E",
+      "what": "東南東面の全体",
+      "where": "東側から",
+      "why": "同上",
+      "status": "open"
+    },
+    {
+      "face": "W",
+      "what": "入口の基壇と大階段を正面から、段が数えられる 1 枚",
+      "where": "通路橋の下から",
+      "why": "基壇の高さが目視の推定",
+      "status": "open"
+    },
+    {
+      "face": "*",
+      "what": "昼の日陰のタイルを 1 m から",
+      "where": "",
+      "why": "色が夕日で橙に寄っている。タイルの形式（寸法）も未確認",
+      "status": "open"
+    },
+    {
+      "face": "SW",
+      "what": "塔の足元が木に隠れない位置から 1 枚",
+      "where": "広場の東側",
+      "why": "最下 4 階と基壇の取り合いが見えていない",
+      "status": "open"
+    }
+  ],
+  "history": [
+    {
+      "at": "2026-11-03T21:30",
+      "by": "Claude（設計者）",
+      "what": "南南西面の写真 1 枚と PLATEAU の高さから初版。塔の主要部は長方形で置いた。段の部分は 1 階低い"
+    }
+  ],
+  "site_id": "tower75",
+  "blocks": [
+    {
+      "id": "A",
+      "name": "主塔",
+      "polygon": [
+        [
+          26.02,
+          12.84
+        ],
+        [
+          48.5,
+          1.1
+        ],
+        [
+          62.43,
+          27.67
+        ],
+        [
+          39.95,
+          39.41
+        ]
+      ],
+      "top_z": {
+        "value": 74.2,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "PLATEAU",
+        "note": ""
+      }
+    },
+    {
+      "id": "B",
+      "name": "段（主塔より 1 階低い）",
+      "polygon": [
+        [
+          49.89,
+          3.76
+        ],
+        [
+          56.93,
+          0.08
+        ],
+        [
+          69.47,
+          23.99
+        ],
+        [
+          62.43,
+          27.67
+        ]
+      ],
+      "top_z": {
+        "value": 69.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+        ],
+        "method": "PLATEAU の 2 つ目の高さ。写真で 1 階ぶん低い",
+        "note": ""
+      }
+    },
+    {
+      "id": "C",
+      "name": "基壇（入口・大階段）",
+      "polygon": [
+        [
+          46.81,
+          38.73
+        ],
+        [
+          54.0,
+          34.96
+        ],
+        [
+          54.46,
+          35.86
+        ],
+        [
+          67.0,
+          29.29
+        ],
+        [
+          66.51,
+          28.38
+        ],
+        [
+          74.43,
+          24.24
+        ],
+        [
+          73.32,
+          22.09
+        ],
+        [
+          77.92,
+          19.69
+        ],
+        [
+          66.36,
+          -2.38
+        ],
+        [
+          64.77,
+          -5.4
+        ],
+        [
+          63.87,
+          -7.14
+        ],
+        [
+          56.78,
+          -3.44
+        ],
+        [
+          55.63,
+          -5.62
+        ],
+        [
+          49.31,
+          -2.3
+        ],
+        [
+          50.53,
+          0.04
+        ],
+        [
+          39.54,
+          5.78
+        ],
+        [
+          38.17,
+          3.13
+        ],
+        [
+          31.87,
+          6.44
+        ],
+        [
+          33.2,
+          9.0
+        ],
+        [
+          31.28,
+          9.99
+        ],
+        [
+          25.98,
+          12.77
+        ],
+        [
+          35.82,
+          31.54
+        ],
+        [
+          38.62,
+          36.89
+        ],
+        [
+          41.13,
+          41.71
+        ],
+        [
+          46.81,
+          38.73
+        ]
+      ],
+      "top_z": {
+        "value": 7.8,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070204974"
+        ],
+        "method": "写真 8 で入口の基壇は 2 層分。目視",
+        "note": ""
+      }
+    }
+  ],
+  "parts": [
+    {
+      "type": "coping",
+      "name": "パラペットの笠木",
+      "height": {
+        "value": 0.4,
+        "unit": "m",
+        "tol": 0.1,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070327678"
+        ],
+        "method": "目視",
+        "note": ""
+      },
+      "overhang": {
+        "value": 0.1,
+        "unit": "m",
+        "tol": 0.05,
+        "status": "estimated",
+        "evidence": [],
+        "method": "目視",
+        "note": ""
+      }
+    },
+    {
+      "type": "box",
+      "name": "屋上のアンテナ台（仮）",
+      "material": "concrete",
+      "polygon": [
+        [
+          28.72,
+          13.69
+        ],
+        [
+          32.26,
+          11.84
+        ],
+        [
+          33.66,
+          14.49
+        ],
+        [
+          30.11,
+          16.34
+        ]
+      ],
+      "z0": 74.2,
+      "z1": {
+        "value": 75.0,
+        "unit": "m",
+        "tol": 0.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_070327678"
+        ],
+        "method": "写真でアンテナの根元の小さな箱。目視",
+        "note": ""
+      }
+    }
+  ]
+}

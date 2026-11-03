@@ -18,3 +18,9 @@ Thumbs.db
 data/reference/**
 !data/reference/index.json
 data/site/cache/
+位置情報確認.jpg
+位置情報2.jpg
+
+# 本部棟/ は撮影直後の置き場（data/photos/ に写してから使う）
+本部棟/
+タワーと図書館付近/

@@ -1,0 +1,282 @@
+{
+  "schema": "campus-recorder/building/1",
+  "id": "b11",
+  "name": "11号館",
+  "campus": "meijo-tempaku",
+  "crs": {
+    "epsg": 6675,
+    "origin_lat": 35.1355,
+    "origin_lon": 136.9755,
+    "note": "原点からの m。x=東, y=北。z は標高 m"
+  },
+  "footprint": {
+    "status": "estimated",
+    "evidence": [
+      "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+    ],
+    "polygon": [
+      [
+        47.83,
+        -65.52
+      ],
+      [
+        -2.46,
+        -38.66
+      ],
+      [
+        -9.44,
+        -51.73
+      ],
+      [
+        30.9,
+        -73.27
+      ],
+      [
+        42.79,
+        -74.96
+      ]
+    ],
+    "method": "PLATEAU 名古屋市 2022 版（2021 年測量）の LOD0 の足元形状"
+  },
+  "ground_z": {
+    "value": 40.36,
+    "unit": "m",
+    "tol": 1.0,
+    "status": "estimated",
+    "evidence": [
+      "gsi:dem5a"
+    ],
+    "method": "国土地理院 5m 標高を足元の中心で読む",
+    "note": ""
+  },
+  "floor_count": {
+    "value": 1,
+    "unit": "階",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [
+      "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+    ],
+    "method": "PLATEAU の storeysAboveGround（目安。写真で数え直す）",
+    "note": ""
+  },
+  "floor_pitch": {
+    "value": null,
+    "unit": "m",
+    "tol": null,
+    "status": "unknown",
+    "evidence": [],
+    "method": "",
+    "note": ""
+  },
+  "parapet_top": {
+    "value": 12.0,
+    "unit": "m",
+    "tol": 1.5,
+    "status": "estimated",
+    "evidence": [
+      "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+    ],
+    "method": "PLATEAU の measuredHeight（塔屋を含む最高高さ。パラペットはこれより低いことが多い）",
+    "note": ""
+  },
+  "levels": [],
+  "faces": [
+    {
+      "id": "f0",
+      "name": "北北東面 0（方位 28°、57.0 m）",
+      "from": [
+        47.83,
+        -65.52
+      ],
+      "to": [
+        -2.46,
+        -38.66
+      ],
+      "length": {
+        "value": 57.01,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f1",
+      "name": "西北西面 1（方位 298°、14.8 m）",
+      "from": [
+        -2.46,
+        -38.66
+      ],
+      "to": [
+        -9.44,
+        -51.73
+      ],
+      "length": {
+        "value": 14.82,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f2",
+      "name": "南南西面 2（方位 208°、45.7 m）",
+      "from": [
+        -9.44,
+        -51.73
+      ],
+      "to": [
+        30.9,
+        -73.27
+      ],
+      "length": {
+        "value": 45.73,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f3",
+      "name": "南面 3（方位 188°、12.0 m）",
+      "from": [
+        30.9,
+        -73.27
+      ],
+      "to": [
+        42.79,
+        -74.96
+      ],
+      "length": {
+        "value": 12.01,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f4",
+      "name": "東南東面 4（方位 118°、10.7 m）",
+      "from": [
+        42.79,
+        -74.96
+      ],
+      "to": [
+        47.83,
+        -65.52
+      ],
+      "length": {
+        "value": 10.7,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    }
+  ],
+  "photos": [],
+  "requests": [
+    {
+      "face": "f0",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f1",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f2",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f3",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f4",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    }
+  ],
+  "history": [
+    {
+      "at": "",
+      "by": "recorder new --from-site",
+      "what": "PLATEAU と 5m 標高から土台を起こした。写真はまだ無い"
+    }
+  ],
+  "site_id": "b11"
+}

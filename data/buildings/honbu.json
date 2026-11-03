@@ -1,0 +1,4493 @@
+{
+  "schema": "campus-recorder/building/1",
+  "id": "honbu",
+  "name": "本部棟",
+  "campus": "meijo-tempaku",
+  "crs": {
+    "epsg": 6675,
+    "origin_lat": 35.1355,
+    "origin_lon": 136.9755,
+    "note": "原点からの m。x=東, y=北。z は標高 m"
+  },
+  "footprint": {
+    "status": "estimated",
+    "evidence": [
+      "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+    ],
+    "method": "PLATEAU 名古屋市 2022 版（2021 年測量）の LOD0 の足元形状をそのまま使う",
+    "polygon": [
+      [
+        -51.7,
+        -13.3
+      ],
+      [
+        -7.7,
+        -36.5
+      ],
+      [
+        -0.4,
+        -22.5
+      ],
+      [
+        -32.9,
+        -5.3
+      ],
+      [
+        -18.6,
+        21.9
+      ],
+      [
+        -26.1,
+        25.9
+      ],
+      [
+        -27.4,
+        23.5
+      ],
+      [
+        -30.7,
+        25.2
+      ],
+      [
+        -40.8,
+        6.0
+      ],
+      [
+        -41.4,
+        6.3
+      ]
+    ]
+  },
+  "ground_z": {
+    "value": 43.9,
+    "unit": "m",
+    "tol": 0.7,
+    "status": "estimated",
+    "evidence": [],
+    "method": "国土地理院 5m 標高（DEM5A）を南西面の中点で読む",
+    "note": "PLATEAU の base_z は 41.94。差 2 m は未解決"
+  },
+  "floor_count": {
+    "value": 5,
+    "unit": "階",
+    "tol": null,
+    "status": "measured",
+    "evidence": [
+      "PXL_20261103_042900775",
+      "PXL_20261103_042822099",
+      "PXL_20261103_042853166"
+    ],
+    "method": "正面化した写真で窓の段を数えた（判断役 Claude）。1 階はピロティ",
+    "note": ""
+  },
+  "floor_pitch": {
+    "value": 4.22,
+    "unit": "m",
+    "tol": 0.15,
+    "status": "estimated",
+    "evidence": [
+      "PXL_20261103_042900775",
+      "PXL_20261103_042822099",
+      "PXL_20261103_042853166"
+    ],
+    "method": "正面化→横エッジの自己相関で周期 513.9 px。画素→m は PLATEAU の南西面の長さ 49.7 m ÷ 9 スパンで換算（0.00822 m/px）。検算：タイル1段 8.65 px を JIS の 70 mm と置くと 0.00809 m/px（差 1.5%）",
+    "note": ""
+  },
+  "parapet_top": {
+    "value": 23.68,
+    "unit": "m",
+    "tol": 0.4,
+    "status": "estimated",
+    "evidence": [
+      "PXL_20261103_042900775",
+      "PXL_20261103_042822099",
+      "PXL_20261103_042853166"
+    ],
+    "method": "正面化画像でパラペット上端と柱の足元の行の差 2882 px を換算",
+    "note": "PLATEAU の measuredHeight 32.1 m との差 8.4 m は屋上の塔屋（航空写真に小さい四角）と解釈"
+  },
+  "levels": [
+    {
+      "id": "pilotis_ceiling",
+      "name": "ピロティ天井",
+      "z": {
+        "value": 4.9,
+        "unit": "m",
+        "tol": 0.3,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_042900775",
+          "PXL_20261103_042822099",
+          "PXL_20261103_042853166"
+        ],
+        "method": "正面化画像の行の差 596 px を換算",
+        "note": ""
+      }
+    }
+  ],
+  "faces": [
+    {
+      "id": "NE",
+      "name": "北東面（中庭側・ピロティ）",
+      "from": [
+        -0.4,
+        -22.5
+      ],
+      "to": [
+        -32.9,
+        -5.3
+      ],
+      "length": {
+        "value": 36.8,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 6,
+          "unit": "個",
+          "tol": null,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043259125",
+            "PXL_20261103_043304319",
+            "PXL_20261103_043312297"
+          ],
+          "method": "写真の目視。南西面と同じ柱間隔と仮定して 36.8 m に入る数",
+          "note": ""
+        },
+        "pitch": {
+          "value": 5.52,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043259125",
+            "PXL_20261103_043304319",
+            "PXL_20261103_043312297"
+          ],
+          "method": "南西面と同じ塊なので同じ柱間隔と仮定",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 1.11,
+          "unit": "m",
+          "tol": 0.2,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043259125",
+            "PXL_20261103_043304319",
+            "PXL_20261103_043312297"
+          ],
+          "method": "南西面と同じと仮定",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 1.83,
+          "unit": "m",
+          "tol": 0.5,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043259125",
+            "PXL_20261103_043304319",
+            "PXL_20261103_043312297"
+          ],
+          "method": "余りを両端に半分ずつ",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 10.47,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "南西面と同じ階の窓の高さと仮定（写真 24 で同じ階数・同じ割付に見える）",
+            "note": ""
+          },
+          "z_top": {
+            "value": 13.36,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "同上",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "柱間隔 − 柱型",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "南西面と同じ",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 14.69,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "南西面と同じ階の窓の高さと仮定（写真 24 で同じ階数・同じ割付に見える）",
+            "note": ""
+          },
+          "z_top": {
+            "value": 17.58,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "同上",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "柱間隔 − 柱型",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "南西面と同じ",
+            "note": ""
+          }
+        },
+        {
+          "name": "5階窓",
+          "floors": [
+            5
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 18.91,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "南西面と同じ階の窓の高さと仮定（写真 24 で同じ階数・同じ割付に見える）",
+            "note": ""
+          },
+          "z_top": {
+            "value": 21.8,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "同上",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "柱間隔 − 柱型",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "南西面と同じ",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [],
+      "openings": [],
+      "glazing": [
+        {
+          "name": "1階（生協・玄関のガラス）",
+          "along0": {
+            "value": 16.57,
+            "unit": "m",
+            "tol": 1.0,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "通り抜けの道路（南西面のスパン 7〜9 の裏）を避ける",
+            "note": ""
+          },
+          "along1": 36.8,
+          "z_bottom": 0.0,
+          "z_top": {
+            "value": 4.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "写真 24・54 でテラスの下がガラス。高さはピロティ天井と同じと仮定",
+            "note": ""
+          },
+          "inset": {
+            "value": 1.5,
+            "unit": "m",
+            "tol": 0.5,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "テラスの奥行きぶん引っ込む。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 6.0,
+            "unit": "m",
+            "tol": 2.0,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043259125",
+              "PXL_20261103_043304319",
+              "PXL_20261103_043312297"
+            ],
+            "method": "目視",
+            "note": ""
+          }
+        }
+      ],
+      "ledges": [],
+      "materials": [
+        {
+          "name": "煉瓦タイル（橙）",
+          "where": "柱型・パラペット・壁面全体",
+          "color": "#dab087",
+          "color_note": "正面化画像のパラペットの平均色（日向。白バランス未補正）",
+          "unit_w": {
+            "value": 0.18,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の縦エッジの自己相関 21.9 px を換算。千鳥積みなので実寸の半分の可能性あり",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.06,
+            "unit": "m",
+            "tol": 0.01,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "1段の周期 8.65 px＝0.071 m。JIS 二丁掛・小口の高さ 60 mm＋目地 10 mm と一致",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.005,
+            "status": "estimated",
+            "evidence": [],
+            "method": "JIS の標準目地幅と置く",
+            "note": ""
+          }
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "name": "東面（翼の東側）",
+      "from": [
+        -32.9,
+        -5.3
+      ],
+      "to": [
+        -18.6,
+        21.9
+      ],
+      "length": {
+        "value": 30.8,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 8,
+          "unit": "個",
+          "tol": null,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043123901",
+            "PXL_20261103_043136840",
+            "PXL_20261103_043150092"
+          ],
+          "method": "東面の写真は斜めの 1 枚だけ。西面と同じ割付と仮定",
+          "note": ""
+        },
+        "pitch": {
+          "value": 3.6,
+          "unit": "m",
+          "tol": 0.4,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043123901",
+            "PXL_20261103_043136840",
+            "PXL_20261103_043150092"
+          ],
+          "method": "東面の写真は斜めの 1 枚だけ。西面と同じ割付と仮定",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 0.9,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043123901",
+            "PXL_20261103_043136840",
+            "PXL_20261103_043150092"
+          ],
+          "method": "目視。帯の幅との比",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 1.0,
+          "unit": "m",
+          "tol": 0.5,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043123901",
+            "PXL_20261103_043136840",
+            "PXL_20261103_043150092"
+          ],
+          "method": "余りを両端に半分ずつ",
+          "note": ""
+        },
+        "pier_depth": {
+          "value": 0.3,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043123901",
+            "PXL_20261103_043136840",
+            "PXL_20261103_043150092"
+          ],
+          "method": "柱型が壁から出ている。写真の影の幅と柱型の幅の比から目視",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "1階窓",
+          "floors": [
+            1
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 2.3,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "2階窓",
+          "floors": [
+            2
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 4.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 6.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 8.5,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 10.5,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 3,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 12.9,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 14.1,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.9,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [
+        {
+          "name": "1階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 0.0,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 2.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "2階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 4.6,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 6.8,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 8.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 10.6,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 12.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 14.3,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        }
+      ],
+      "openings": [],
+      "glazing": [],
+      "ledges": [
+        {
+          "name": "1階の帯の下の水切り",
+          "z": {
+            "value": -0.15,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "2階の帯の下の水切り",
+          "z": {
+            "value": 4.45,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "3階の帯の下の水切り",
+          "z": {
+            "value": 8.25,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "4階の帯の下の水切り",
+          "z": {
+            "value": 12.55,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043123901",
+              "PXL_20261103_043136840",
+              "PXL_20261103_043150092"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        }
+      ],
+      "materials": [
+        {
+          "name": "煉瓦タイル（橙）",
+          "where": "柱型・パラペット・壁面全体",
+          "color": "#dab087",
+          "color_note": "正面化画像のパラペットの平均色（日向。白バランス未補正）",
+          "unit_w": {
+            "value": 0.18,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の縦エッジの自己相関 21.9 px を換算。千鳥積みなので実寸の半分の可能性あり",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.06,
+            "unit": "m",
+            "tol": 0.01,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "1段の周期 8.65 px＝0.071 m。JIS 二丁掛・小口の高さ 60 mm＋目地 10 mm と一致",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.005,
+            "status": "estimated",
+            "evidence": [],
+            "method": "JIS の標準目地幅と置く",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 17.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043004629",
+          "PXL_20261103_043034043",
+          "PXL_20261103_043055592",
+          "PXL_20261103_043103134"
+        ],
+        "method": "写真で 4 階建て、西側の地盤が約 0.8 m 高い。階高 3.8 m×4＋パラペット 1 m＋地盤差 0.8 と置いた目視の推定",
+        "note": ""
+      },
+      "render_view": false
+    },
+    {
+      "id": "NE2",
+      "name": "北端の面（階段塔）",
+      "from": [
+        -18.6,
+        21.9
+      ],
+      "to": [
+        -26.1,
+        25.9
+      ],
+      "length": {
+        "value": 8.5,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "N_jog1",
+      "name": "北端の段差（西向き）",
+      "from": [
+        -26.1,
+        25.9
+      ],
+      "to": [
+        -27.4,
+        23.5
+      ],
+      "length": {
+        "value": 2.7,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "N_jog2",
+      "name": "北端の段差（北東向き）",
+      "from": [
+        -27.4,
+        23.5
+      ],
+      "to": [
+        -30.7,
+        25.2
+      ],
+      "length": {
+        "value": 3.7,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "NW_n",
+      "name": "北西面 北半",
+      "from": [
+        -30.7,
+        25.2
+      ],
+      "to": [
+        -40.8,
+        6.0
+      ],
+      "length": {
+        "value": 21.8,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 6,
+          "unit": "個",
+          "tol": null,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "写真 11〜17 の目視。窓 1 組が約 3.6 m 間隔に見える",
+          "note": ""
+        },
+        "pitch": {
+          "value": 3.6,
+          "unit": "m",
+          "tol": 0.4,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "写真 11〜17 の目視。窓 1 組が約 3.6 m 間隔に見える",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 0.9,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "目視。帯の幅との比",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 0.1,
+          "unit": "m",
+          "tol": 0.5,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "余りを両端に半分ずつ",
+          "note": ""
+        },
+        "pier_depth": {
+          "value": 0.3,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "柱型が壁から出ている。写真の影の幅と柱型の幅の比から目視",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "1階窓",
+          "floors": [
+            1
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 2.3,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "2階窓",
+          "floors": [
+            2
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 4.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 6.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 8.5,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 10.5,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 3,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 12.9,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 14.1,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.9,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [
+        {
+          "name": "1階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 0.0,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 2.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "2階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 4.6,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 6.8,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 8.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 10.6,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 12.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 14.3,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        }
+      ],
+      "openings": [],
+      "glazing": [],
+      "ledges": [
+        {
+          "name": "1階の帯の下の水切り",
+          "z": {
+            "value": -0.15,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "2階の帯の下の水切り",
+          "z": {
+            "value": 4.45,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "3階の帯の下の水切り",
+          "z": {
+            "value": 8.25,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "4階の帯の下の水切り",
+          "z": {
+            "value": 12.55,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        }
+      ],
+      "materials": [
+        {
+          "name": "煉瓦タイル（橙）",
+          "where": "柱型・パラペット・壁面全体",
+          "color": "#dab087",
+          "color_note": "正面化画像のパラペットの平均色（日向。白バランス未補正）",
+          "unit_w": {
+            "value": 0.18,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の縦エッジの自己相関 21.9 px を換算。千鳥積みなので実寸の半分の可能性あり",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.06,
+            "unit": "m",
+            "tol": 0.01,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "1段の周期 8.65 px＝0.071 m。JIS 二丁掛・小口の高さ 60 mm＋目地 10 mm と一致",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.005,
+            "status": "estimated",
+            "evidence": [],
+            "method": "JIS の標準目地幅と置く",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 17.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043004629",
+          "PXL_20261103_043034043",
+          "PXL_20261103_043055592",
+          "PXL_20261103_043103134"
+        ],
+        "method": "写真で 4 階建て、西側の地盤が約 0.8 m 高い。階高 3.8 m×4＋パラペット 1 m＋地盤差 0.8 と置いた目視の推定",
+        "note": ""
+      },
+      "render_view": false
+    },
+    {
+      "id": "NW_s",
+      "name": "北西面 南半",
+      "from": [
+        -41.4,
+        6.3
+      ],
+      "to": [
+        -51.7,
+        -13.3
+      ],
+      "length": {
+        "value": 22.1,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 6,
+          "unit": "個",
+          "tol": null,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "写真 11〜17 の目視。窓 1 組が約 3.6 m 間隔に見える",
+          "note": ""
+        },
+        "pitch": {
+          "value": 3.6,
+          "unit": "m",
+          "tol": 0.4,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "写真 11〜17 の目視。窓 1 組が約 3.6 m 間隔に見える",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 0.9,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "目視。帯の幅との比",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 0.25,
+          "unit": "m",
+          "tol": 0.5,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "余りを両端に半分ずつ",
+          "note": ""
+        },
+        "pier_depth": {
+          "value": 0.3,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_043004629",
+            "PXL_20261103_043034043",
+            "PXL_20261103_043055592",
+            "PXL_20261103_043103134"
+          ],
+          "method": "柱型が壁から出ている。写真の影の幅と柱型の幅の比から目視",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "1階窓",
+          "floors": [
+            1
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 2.3,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "2階窓",
+          "floors": [
+            2
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 4.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 6.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 8.5,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 10.5,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.7,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 3,
+          "gap": 0.2,
+          "z_bottom": {
+            "value": 12.9,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "階高 3.8 m（4 階で塊の高さに合う値）と窓台の高さを目視で置いた推定",
+            "note": ""
+          },
+          "z_top": {
+            "value": 14.1,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓の高さ。目視",
+            "note": ""
+          },
+          "width": {
+            "value": 2.9,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "柱型の間いっぱい。目視",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.12,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の面からの引っ込み。目視",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [
+        {
+          "name": "1階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 0.0,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 2.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "2階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 4.6,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 6.8,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 8.4,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 10.6,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階の濃い腰壁（引っ込む）",
+          "color": "#3a2c22",
+          "z_bottom": {
+            "value": 12.7,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "窓を含む濃い帯。目視",
+            "note": ""
+          },
+          "z_top": {
+            "value": 14.3,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "depth": {
+            "value": -0.25,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯はタイル面より引っ込む。写真の影から目視",
+            "note": ""
+          }
+        }
+      ],
+      "openings": [],
+      "glazing": [],
+      "ledges": [
+        {
+          "name": "1階の帯の下の水切り",
+          "z": {
+            "value": -0.15,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "2階の帯の下の水切り",
+          "z": {
+            "value": 4.45,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "3階の帯の下の水切り",
+          "z": {
+            "value": 8.25,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "4階の帯の下の水切り",
+          "z": {
+            "value": 12.55,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "帯の下端。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.1,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.15,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_043004629",
+              "PXL_20261103_043034043",
+              "PXL_20261103_043055592",
+              "PXL_20261103_043103134"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        }
+      ],
+      "materials": [
+        {
+          "name": "煉瓦タイル（橙）",
+          "where": "柱型・パラペット・壁面全体",
+          "color": "#dab087",
+          "color_note": "正面化画像のパラペットの平均色（日向。白バランス未補正）",
+          "unit_w": {
+            "value": 0.18,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の縦エッジの自己相関 21.9 px を換算。千鳥積みなので実寸の半分の可能性あり",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.06,
+            "unit": "m",
+            "tol": 0.01,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "1段の周期 8.65 px＝0.071 m。JIS 二丁掛・小口の高さ 60 mm＋目地 10 mm と一致",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.005,
+            "status": "estimated",
+            "evidence": [],
+            "method": "JIS の標準目地幅と置く",
+            "note": ""
+          }
+        }
+      ],
+      "top_z": {
+        "value": 17.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043004629",
+          "PXL_20261103_043034043",
+          "PXL_20261103_043055592",
+          "PXL_20261103_043103134"
+        ],
+        "method": "写真で 4 階建て、西側の地盤が約 0.8 m 高い。階高 3.8 m×4＋パラペット 1 m＋地盤差 0.8 と置いた目視の推定",
+        "note": ""
+      },
+      "render_view": true
+    },
+    {
+      "id": "SW",
+      "name": "南西面（正面・ピロティ）",
+      "from": [
+        -51.7,
+        -13.3
+      ],
+      "to": [
+        -7.7,
+        -36.5
+      ],
+      "length": {
+        "value": 49.7,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {
+        "count": {
+          "value": 9,
+          "unit": "個",
+          "tol": null,
+          "status": "measured",
+          "evidence": [
+            "PXL_20261103_042900775",
+            "PXL_20261103_042822099",
+            "PXL_20261103_042853166"
+          ],
+          "method": "正面化画像に周期の格子を重ね、判断役 Claude が端から端まで数えた",
+          "note": ""
+        },
+        "pitch": {
+          "value": 5.52,
+          "unit": "m",
+          "tol": 0.15,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_042900775",
+            "PXL_20261103_042822099",
+            "PXL_20261103_042853166"
+          ],
+          "method": "PLATEAU の辺の長さ ÷ スパン数。画素→m は PLATEAU の南西面の長さ 49.7 m ÷ 9 スパンで換算（0.00822 m/px）。検算：タイル1段 8.65 px を JIS の 70 mm と置くと 0.00809 m/px（差 1.5%）",
+          "note": ""
+        },
+        "pier_width": {
+          "value": 1.11,
+          "unit": "m",
+          "tol": 0.15,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_042900775",
+            "PXL_20261103_042822099",
+            "PXL_20261103_042853166"
+          ],
+          "method": "正面化画像で柱型の幅 135 px を換算",
+          "note": ""
+        },
+        "end_margin": {
+          "value": 0.0,
+          "unit": "m",
+          "tol": 0.3,
+          "status": "estimated",
+          "evidence": [],
+          "method": "両端の柱型は柱間隔の格子に乗っている（端の余白なし）と置く",
+          "note": ""
+        },
+        "pier_depth": {
+          "value": 0.12,
+          "unit": "m",
+          "tol": 0.08,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_042900775",
+            "PXL_20261103_042822099",
+            "PXL_20261103_042853166"
+          ],
+          "method": "柱型がわずかに出る。斜めの写真 32 の目視",
+          "note": ""
+        }
+      },
+      "windows": [
+        {
+          "name": "2階窓",
+          "floors": [
+            2
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 6.25,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の下端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "z_top": {
+            "value": 9.14,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の上端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "柱間隔 − 柱型の幅",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166",
+              "PXL_20261103_043405159"
+            ],
+            "method": "斜めの写真で柱型の奥行きを目視。柱間隔との比で約 0.5 m",
+            "note": ""
+          }
+        },
+        {
+          "name": "3階窓",
+          "floors": [
+            3
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 10.47,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の下端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "z_top": {
+            "value": 13.36,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の上端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "柱間隔 − 柱型の幅",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166",
+              "PXL_20261103_043405159"
+            ],
+            "method": "斜めの写真で柱型の奥行きを目視。柱間隔との比で約 0.5 m",
+            "note": ""
+          }
+        },
+        {
+          "name": "4階窓",
+          "floors": [
+            4
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 14.69,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の下端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "z_top": {
+            "value": 17.58,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の上端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "柱間隔 − 柱型の幅",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166",
+              "PXL_20261103_043405159"
+            ],
+            "method": "斜めの写真で柱型の奥行きを目視。柱間隔との比で約 0.5 m",
+            "note": ""
+          }
+        },
+        {
+          "name": "5階窓",
+          "floors": [
+            5
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 18.91,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の下端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "z_top": {
+            "value": 21.8,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "5階の窓の上端を正面化画像で読み、階高の倍数で下の階へ写す",
+            "note": ""
+          },
+          "width": {
+            "value": 4.41,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "柱間隔 − 柱型の幅",
+            "note": ""
+          },
+          "recess": {
+            "value": 0.5,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166",
+              "PXL_20261103_043405159"
+            ],
+            "method": "斜めの写真で柱型の奥行きを目視。柱間隔との比で約 0.5 m",
+            "note": ""
+          }
+        }
+      ],
+      "bands": [],
+      "openings": [
+        {
+          "name": "ピロティ（駐車）",
+          "bays": [
+            4,
+            5,
+            6
+          ],
+          "z_top": {
+            "value": 4.9,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の行の差を換算",
+            "note": ""
+          },
+          "depth": {
+            "value": 8.0,
+            "unit": "m",
+            "tol": 2.0,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "写真 6 で奥に壁が見える。目視",
+            "note": ""
+          }
+        },
+        {
+          "name": "ピロティ（通り抜けの道路）",
+          "bays": [
+            7,
+            8,
+            9
+          ],
+          "z_top": {
+            "value": 4.9,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の行の差を換算",
+            "note": ""
+          },
+          "depth": {
+            "value": 15.8,
+            "unit": "m",
+            "tol": 1.0,
+            "status": "estimated",
+            "evidence": [
+              "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8",
+              "PXL_20261103_043320836"
+            ],
+            "method": "写真 28 で反対側（中庭）まで抜けて見える → 塊の幅（PLATEAU）と同じ",
+            "note": ""
+          }
+        }
+      ],
+      "glazing": [
+        {
+          "name": "1階の事務室（ガラス張り）",
+          "along0": 0.0,
+          "along1": {
+            "value": 16.57,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "スパン 1〜3",
+            "note": ""
+          },
+          "z_bottom": 0.0,
+          "z_top": {
+            "value": 4.4,
+            "unit": "m",
+            "tol": 0.3,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "ピロティ天井の梁の下まで",
+            "note": ""
+          },
+          "inset": {
+            "value": 0.3,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "柱型の面からの引っ込み。目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 15.8,
+            "unit": "m",
+            "tol": 1.0,
+            "status": "estimated",
+            "evidence": [
+              "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+            ],
+            "method": "塊の幅",
+            "note": ""
+          }
+        }
+      ],
+      "ledges": [
+        {
+          "name": "2階の窓台の段",
+          "z": {
+            "value": 6.05,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "窓の下の横の段。正面化画像の目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.08,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "3階の窓台の段",
+          "z": {
+            "value": 10.27,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "窓の下の横の段。正面化画像の目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.08,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "4階の窓台の段",
+          "z": {
+            "value": 14.49,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "窓の下の横の段。正面化画像の目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.08,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        },
+        {
+          "name": "5階の窓台の段",
+          "z": {
+            "value": 18.71,
+            "unit": "m",
+            "tol": 0.2,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "窓の下の横の段。正面化画像の目視",
+            "note": ""
+          },
+          "depth": {
+            "value": 0.08,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "height": {
+            "value": 0.2,
+            "unit": "m",
+            "tol": 0.05,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "目視",
+            "note": ""
+          },
+          "material": "tile"
+        }
+      ],
+      "materials": [
+        {
+          "name": "煉瓦タイル（橙）",
+          "where": "柱型・パラペット・壁面全体",
+          "color": "#dab087",
+          "color_note": "正面化画像のパラペットの平均色（日向。白バランス未補正）",
+          "unit_w": {
+            "value": 0.18,
+            "unit": "m",
+            "tol": 0.03,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "正面化画像の縦エッジの自己相関 21.9 px を換算。千鳥積みなので実寸の半分の可能性あり",
+            "note": ""
+          },
+          "unit_h": {
+            "value": 0.06,
+            "unit": "m",
+            "tol": 0.01,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_042900775",
+              "PXL_20261103_042822099",
+              "PXL_20261103_042853166"
+            ],
+            "method": "1段の周期 8.65 px＝0.071 m。JIS 二丁掛・小口の高さ 60 mm＋目地 10 mm と一致",
+            "note": ""
+          },
+          "joint_w": {
+            "value": 0.01,
+            "unit": "m",
+            "tol": 0.005,
+            "status": "estimated",
+            "evidence": [],
+            "method": "JIS の標準目地幅と置く",
+            "note": ""
+          }
+        }
+      ],
+      "render_view": true
+    },
+    {
+      "id": "SE",
+      "name": "南東端面",
+      "from": [
+        -7.7,
+        -36.5
+      ],
+      "to": [
+        -0.4,
+        -22.5
+      ],
+      "length": {
+        "value": 15.8,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8"
+        ],
+        "method": "PLATEAU LOD0 の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    }
+  ],
+  "photos": [
+    {
+      "id": "PXL_20261103_042721424",
+      "file": "20261103/PXL_20261103_042721424.jpg",
+      "face": "approach",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_042734715",
+      "file": "20261103/PXL_20261103_042734715.jpg",
+      "face": "approach",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_042822099",
+      "file": "20261103/PXL_20261103_042822099.jpg",
+      "face": "SW",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_042830256",
+      "file": "20261103/PXL_20261103_042830256.jpg",
+      "face": "SW",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_042844361",
+      "file": "20261103/PXL_20261103_042844361.jpg",
+      "face": "SW",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_042853166",
+      "file": "20261103/PXL_20261103_042853166.jpg",
+      "face": "SW",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_042900775",
+      "file": "20261103/PXL_20261103_042900775.jpg",
+      "face": "SW",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_042909968",
+      "file": "20261103/PXL_20261103_042909968.jpg",
+      "face": "SW",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_042927350",
+      "file": "20261103/PXL_20261103_042927350.jpg",
+      "face": "SW_corner",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_042946748",
+      "file": "20261103/PXL_20261103_042946748.jpg",
+      "face": "SW_corner",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043004629",
+      "file": "20261103/PXL_20261103_043004629.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043026097",
+      "file": "20261103/PXL_20261103_043026097.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043034043",
+      "file": "20261103/PXL_20261103_043034043.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043041105",
+      "file": "20261103/PXL_20261103_043041105.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043049890",
+      "file": "20261103/PXL_20261103_043049890.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043055592",
+      "file": "20261103/PXL_20261103_043055592.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043103134",
+      "file": "20261103/PXL_20261103_043103134.jpg",
+      "face": "W",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043112969",
+      "file": "20261103/PXL_20261103_043112969.jpg",
+      "face": "E_corner",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043123901",
+      "file": "20261103/PXL_20261103_043123901.jpg",
+      "face": "E",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043129358",
+      "file": "20261103/PXL_20261103_043129358.jpg",
+      "face": "E",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043136840",
+      "file": "20261103/PXL_20261103_043136840.jpg",
+      "face": "E",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043150092",
+      "file": "20261103/PXL_20261103_043150092.jpg",
+      "face": "E",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043221663",
+      "file": "20261103/PXL_20261103_043221663.jpg",
+      "face": "E",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043259125",
+      "file": "20261103/PXL_20261103_043259125.jpg",
+      "face": "NE",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043304319",
+      "file": "20261103/PXL_20261103_043304319.jpg",
+      "face": "NE",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043312297",
+      "file": "20261103/PXL_20261103_043312297.jpg",
+      "face": "NE",
+      "role": "全体"
+    },
+    {
+      "id": "PXL_20261103_043314396",
+      "file": "20261103/PXL_20261103_043314396.jpg",
+      "face": "passage",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043320836",
+      "file": "20261103/PXL_20261103_043320836.jpg",
+      "face": "passage",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043327622",
+      "file": "20261103/PXL_20261103_043327622.jpg",
+      "face": "passage",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043334437",
+      "file": "20261103/PXL_20261103_043334437.jpg",
+      "face": "passage",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043342958",
+      "file": "20261103/PXL_20261103_043342958.jpg",
+      "face": "passage",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043405159",
+      "file": "20261103/PXL_20261103_043405159.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043515616",
+      "file": "20261103/PXL_20261103_043515616.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043608113",
+      "file": "20261103/PXL_20261103_043608113.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043612124",
+      "file": "20261103/PXL_20261103_043612124.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043613678",
+      "file": "20261103/PXL_20261103_043613678.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043623454",
+      "file": "20261103/PXL_20261103_043623454.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043642327",
+      "file": "20261103/PXL_20261103_043642327.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043753272",
+      "file": "20261103/PXL_20261103_043753272.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043759272",
+      "file": "20261103/PXL_20261103_043759272.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043812312",
+      "file": "20261103/PXL_20261103_043812312.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043826814",
+      "file": "20261103/PXL_20261103_043826814.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_043856844.MP",
+      "file": "20261103/PXL_20261103_043856844.MP.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044049610.MP",
+      "file": "20261103/PXL_20261103_044049610.MP.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044051601",
+      "file": "20261103/PXL_20261103_044051601.jpg",
+      "face": "courtyard",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044651355",
+      "file": "20261103/PXL_20261103_044651355.jpg",
+      "face": "plaza_steps",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044700654",
+      "file": "20261103/PXL_20261103_044700654.jpg",
+      "face": "plaza_steps",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044712412",
+      "file": "20261103/PXL_20261103_044712412.jpg",
+      "face": "plaza_steps",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044734408",
+      "file": "20261103/PXL_20261103_044734408.jpg",
+      "face": "plaza_steps",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044813659.MP",
+      "file": "20261103/PXL_20261103_044813659.MP.jpg",
+      "face": "entrance",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044822533",
+      "file": "20261103/PXL_20261103_044822533.jpg",
+      "face": "entrance",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044830148",
+      "file": "20261103/PXL_20261103_044830148.jpg",
+      "face": "entrance",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044849371",
+      "file": "20261103/PXL_20261103_044849371.jpg",
+      "face": "entrance",
+      "role": "細部"
+    },
+    {
+      "id": "PXL_20261103_044907567",
+      "file": "20261103/PXL_20261103_044907567.jpg",
+      "face": "entrance",
+      "role": "細部"
+    }
+  ],
+  "requests": [
+    {
+      "face": "E",
+      "what": "両端が入る正面に近い1枚",
+      "where": "東側の道路から",
+      "why": "東面は斜めの写真しか無く、西面と同じ割付と仮定している",
+      "status": "open"
+    },
+    {
+      "face": "NW_s",
+      "what": "両端が入る1枚",
+      "where": "西側の道路の反対側から、やや引いて",
+      "why": "北西面は近くからの斜めの写真だけで、柱間隔と階高が目視の推定",
+      "status": "open"
+    },
+    {
+      "face": "NE",
+      "what": "正面に近い角度で両端が入る1枚",
+      "where": "中庭の奥から",
+      "why": "階高の周期が取れず、南西面と同じと仮定している",
+      "status": "open"
+    },
+    {
+      "face": "SE",
+      "what": "南東の端の壁の全体",
+      "where": "東側の道路から",
+      "why": "窓の有無が未確認（模型では無窓）",
+      "status": "open"
+    },
+    {
+      "face": "*",
+      "what": "屋上が見える高い所からの1枚（タワー75 など）",
+      "where": "",
+      "why": "塔屋の位置と大きさ、屋上の設備が航空写真の目視だけ",
+      "status": "open"
+    }
+  ],
+  "history": [
+    {
+      "at": "2026-11-03T14:30",
+      "by": "Claude（測量係）",
+      "what": "南西面の写真 3 枚から初版。縮尺は PLATEAU の壁長さ、検算にタイル1段"
+    },
+    {
+      "at": "2026-11-03T16:30",
+      "by": "Claude（設計者）",
+      "what": "塊 2 つ（5 階・4 階）、笠木、塔屋、階段塔 2 本と踊り場、テラス、北東・北西・東面の窓と帯、室外機、配管、舗装、木を設計として追加。目視の推定は全部 estimated と方法付き"
+    }
+  ],
+  "site_id": "honbu",
+  "blocks": [
+    {
+      "id": "A",
+      "name": "南西の塊（5 階）",
+      "polygon": [
+        [
+          -51.7,
+          -13.3
+        ],
+        [
+          -7.7,
+          -36.5
+        ],
+        [
+          -0.4,
+          -22.5
+        ],
+        [
+          -44.32,
+          0.74
+        ]
+      ],
+      "top_z": {
+        "value": 23.68,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_042900775",
+          "PXL_20261103_042822099",
+          "PXL_20261103_042853166"
+        ],
+        "method": "parapet_top と同じ",
+        "note": ""
+      }
+    },
+    {
+      "id": "B",
+      "name": "北の翼（4 階）",
+      "polygon": [
+        [
+          -44.32,
+          0.74
+        ],
+        [
+          -32.9,
+          -5.3
+        ],
+        [
+          -18.6,
+          21.9
+        ],
+        [
+          -26.1,
+          25.9
+        ],
+        [
+          -27.4,
+          23.5
+        ],
+        [
+          -30.7,
+          25.2
+        ],
+        [
+          -40.8,
+          6.0
+        ],
+        [
+          -41.4,
+          6.3
+        ]
+      ],
+      "top_z": {
+        "value": 17.5,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043004629",
+          "PXL_20261103_043034043",
+          "PXL_20261103_043055592",
+          "PXL_20261103_043103134"
+        ],
+        "method": "写真で 4 階建て、西側の地盤が約 0.8 m 高い。階高 3.8 m×4＋パラペット 1 m＋地盤差 0.8 と置いた目視の推定",
+        "note": ""
+      }
+    }
+  ],
+  "parts": [
+    {
+      "type": "coping",
+      "name": "パラペットの笠木",
+      "height": {
+        "value": 0.35,
+        "unit": "m",
+        "tol": 0.1,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_042900775",
+          "PXL_20261103_042822099",
+          "PXL_20261103_042853166"
+        ],
+        "method": "正面化画像の上端の濃い帯",
+        "note": ""
+      },
+      "overhang": {
+        "value": 0.08,
+        "unit": "m",
+        "tol": 0.05,
+        "status": "estimated",
+        "evidence": [],
+        "method": "目視",
+        "note": ""
+      }
+    },
+    {
+      "type": "box",
+      "name": "屋上の塔屋（エレベーター機械室か階段）",
+      "material": "tile",
+      "polygon": [
+        [
+          -30.647255408449926,
+          -11.965104811994918
+        ],
+        [
+          -24.455271705052848,
+          -15.229968946513376
+        ],
+        [
+          -26.787317515423176,
+          -19.65281444893986
+        ],
+        [
+          -32.979301218820254,
+          -16.387950314421403
+        ]
+      ],
+      "z0": {
+        "value": 23.68,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_042900775",
+          "PXL_20261103_042822099",
+          "PXL_20261103_042853166"
+        ],
+        "method": "塊の上",
+        "note": ""
+      },
+      "z1": {
+        "value": 32.08,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_05e6cc71-7768-43d3-9af5-3ba5663c44c8",
+          "gsi:aerial_z18"
+        ],
+        "method": "PLATEAU の measuredHeight 32.1 − パラペット 23.7",
+        "note": ""
+      },
+      "note": "位置は航空写真（倒れ込み未補正）で屋上中央やや西の小さい四角。大きさは目視"
+    },
+    {
+      "type": "box",
+      "name": "西角の階段塔（無窓・塊より高い）",
+      "material": "tile",
+      "polygon": [
+        [
+          -42.8565349757713,
+          -10.444506736967647
+        ],
+        [
+          -45.92677521307152,
+          -16.2869056351312
+        ],
+        [
+          -51.68065291580835,
+          -13.26318418930521
+        ],
+        [
+          -48.61041267850812,
+          -7.420785291141661
+        ]
+      ],
+      "z0": 0.0,
+      "z1": {
+        "value": 25.48,
+        "unit": "m",
+        "tol": 0.8,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_042927350",
+          "PXL_20261103_042946748",
+          "PXL_20261103_043004629"
+        ],
+        "method": "写真 10〜11 で 5 階の塊より 1 階分弱高い。目視",
+        "note": ""
+      }
+    },
+    {
+      "type": "box",
+      "name": "北端の階段塔",
+      "material": "tile",
+      "polygon": [
+        [
+          -21.18823529411765,
+          17.04705882352941
+        ],
+        [
+          -28.68823529411765,
+          21.04705882352941
+        ],
+        [
+          -26.1,
+          25.9
+        ],
+        [
+          -18.6,
+          21.9
+        ]
+      ],
+      "z0": 0.0,
+      "z1": {
+        "value": 18.5,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "翼より 1 m 高い。写真 19〜22 の目視",
+        "note": ""
+      }
+    },
+    {
+      "type": "balcony",
+      "name": "階段塔の踊り場 1",
+      "face": "NE2",
+      "along0": 1.0,
+      "along1": 6.5,
+      "z": {
+        "value": 4.6,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "階段塔の踊り場。翼の階高 3.8 の半分ずれ。目視",
+        "note": ""
+      },
+      "depth": {
+        "value": 2.2,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "目視",
+        "note": ""
+      },
+      "parapet_h": {
+        "value": 1.2,
+        "unit": "m",
+        "tol": 0.1,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "煉瓦の手すり壁。目視",
+        "note": ""
+      },
+      "material": "tile"
+    },
+    {
+      "type": "balcony",
+      "name": "階段塔の踊り場 2",
+      "face": "NE2",
+      "along0": 1.0,
+      "along1": 6.5,
+      "z": {
+        "value": 8.4,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "同上",
+        "note": ""
+      },
+      "depth": {
+        "value": 2.2,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "目視",
+        "note": ""
+      },
+      "parapet_h": {
+        "value": 1.2,
+        "unit": "m",
+        "tol": 0.1,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "同上",
+        "note": ""
+      },
+      "material": "tile"
+    },
+    {
+      "type": "balcony",
+      "name": "階段塔の踊り場 3",
+      "face": "NE2",
+      "along0": 1.0,
+      "along1": 6.5,
+      "z": {
+        "value": 12.2,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "同上",
+        "note": ""
+      },
+      "depth": {
+        "value": 2.2,
+        "unit": "m",
+        "tol": 0.4,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "目視",
+        "note": ""
+      },
+      "parapet_h": {
+        "value": 1.2,
+        "unit": "m",
+        "tol": 0.1,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043123901",
+          "PXL_20261103_043136840",
+          "PXL_20261103_043150092"
+        ],
+        "method": "同上",
+        "note": ""
+      },
+      "material": "tile"
+    },
+    {
+      "type": "balcony",
+      "name": "北東面 2 階のテラス（煉瓦の手すり、渡り廊下）",
+      "face": "NE",
+      "along0": 0.0,
+      "along1": 36.8,
+      "z": {
+        "value": 4.9,
+        "unit": "m",
+        "tol": 0.3,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043259125",
+          "PXL_20261103_043304319",
+          "PXL_20261103_043312297"
+        ],
+        "method": "ピロティ天井＝2 階床と同じ高さ",
+        "note": ""
+      },
+      "depth": {
+        "value": 2.5,
+        "unit": "m",
+        "tol": 0.5,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043259125",
+          "PXL_20261103_043304319",
+          "PXL_20261103_043312297"
+        ],
+        "method": "目視",
+        "note": ""
+      },
+      "parapet_h": {
+        "value": 1.2,
+        "unit": "m",
+        "tol": 0.1,
+        "status": "estimated",
+        "evidence": [
+          "PXL_20261103_043259125",
+          "PXL_20261103_043304319",
+          "PXL_20261103_043312297"
+        ],
+        "method": "煉瓦の手すり壁。目視",
+        "note": ""
+      },
+      "material": "tile",
+      "open_ends": true
+    },
+    {
+      "type": "ac_units",
+      "name": "階段塔の足元の室外機",
+      "face": "NE2",
+      "along": 0.5,
+      "count": 3,
+      "w": 0.9,
+      "h": 1.0,
+      "d": 0.4,
+      "gap": 0.2
+    },
+    {
+      "type": "ac_units",
+      "name": "北西面の室外機",
+      "face": "NW_s",
+      "along": 9.0,
+      "count": 1,
+      "w": 0.8,
+      "h": 0.6,
+      "d": 0.3,
+      "gap": 0.2
+    },
+    {
+      "type": "pipes",
+      "name": "階段塔の縦配管",
+      "face": "NE2",
+      "along": 7.6,
+      "count": 3,
+      "radius": 0.06,
+      "z0": 0.0,
+      "z1": 17.0
+    },
+    {
+      "type": "pipes",
+      "name": "北西面の雨樋",
+      "face": "NW_n",
+      "along": 10.9,
+      "count": 1,
+      "radius": 0.07,
+      "z0": 0.0,
+      "z1": 17.0
+    },
+    {
+      "type": "pavement",
+      "name": "中庭の煉瓦舗装",
+      "material": "brick",
+      "z": 0.0,
+      "polygon": [
+        [
+          -32.9,
+          -5.3
+        ],
+        [
+          -0.4,
+          -22.5
+        ],
+        [
+          6.0,
+          -10.0
+        ],
+        [
+          -8.0,
+          16.0
+        ],
+        [
+          -18.6,
+          21.9
+        ]
+      ]
+    },
+    {
+      "type": "pavement",
+      "name": "南側の広場の煉瓦舗装",
+      "material": "brick",
+      "z": 0.0,
+      "polygon": [
+        [
+          -7.7,
+          -36.5
+        ],
+        [
+          -0.4,
+          -22.5
+        ],
+        [
+          12.0,
+          -29.0
+        ],
+        [
+          4.0,
+          -44.0
+        ]
+      ]
+    }
+  ]
+}
