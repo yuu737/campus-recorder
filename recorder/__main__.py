@@ -112,9 +112,11 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--compare", default=None, help="photos compare が出した *_compare.json")
     q.add_argument("--building", default=None)
     q.add_argument("--face", default=None)
+    q.add_argument("--out", default=None, help="pose JSON の出力先（省略時は out/<棟id>/poses/<写真>_pose.json）")
     q = psub.add_parser("overlay", help="写真と同じ視点の描画を写真に重ねる")
     q.add_argument("photo")
     q.add_argument("--render", required=True, help="model build --cameras が出した view_photo_*.png")
+    q.add_argument("--building", default=None, help="棟 id（省略時は --render のある out/<棟id>/ の名前）")
     q.add_argument("--out", default=None)
     q = psub.add_parser("compare", help="検収：正面化した写真と棟 JSON の面を m で重ね、ずれを数字で出す")
     q.add_argument("front_jpg", help="rectify が出した *_front.jpg")
@@ -122,6 +124,8 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--face", required=True, help="面の id（SW など）")
     q.add_argument("--tol", type=float, default=0.15, help="合格の目安（m）")
     q.add_argument("--px-per-m", type=float, default=None, help="縮尺を自分で与える（省略時は柱間隔から）")
+    q.add_argument("--out-dir", default=None, help="compare の JSON・PNG の出力先（省略時は out/<棟id>/compare/）")
+    q.add_argument("--lines", default=None, help='判断役が読んだ線の位置（正面化画像の px）{"x_px": [...], "z_px": [...]}。あれば自動検出より優先')
 
     a = ap.parse_args(argv)
 
@@ -284,7 +288,8 @@ def _photos(a) -> int:
         from . import pose
 
         if a.from_rectify:
-            res = pose.from_rectification(Path(a.photo), Path(a.from_rectify), Path(a.compare), Path(a.building), a.face)
+            res = pose.from_rectification(Path(a.photo), Path(a.from_rectify), Path(a.compare), Path(a.building), a.face,
+                                           out_json=Path(a.out) if a.out else None)
         else:
             res = pose.solve_file(Path(a.photo), Path(a.points))
         if res.reason:
@@ -293,17 +298,25 @@ def _photos(a) -> int:
             print(f"視点が決まりません: {res.reason}")
             return 1
         print(f"カメラ位置 {res.camera_xyz}（m）  焦点距離 {res.focal_px:.0f} px  再投影誤差 最大 {res.reproj_max_px} px  各点 {res.reproj_px}")
+        if res.holdout_reproj_px is not None:
+            print(f"検算（解に使わなかった {res.n_holdout} 点）再投影誤差 最大 {res.holdout_reproj_px} px、平均 {res.holdout_mean_px} px  カメラ高 {res.camera_height_m} m  面まで {res.distance_to_face_m} m")
         return 0
     if a.photos_cmd == "overlay":
         from . import pose
 
-        out = Path(a.out) if a.out else Path("out") / "overlay" / (Path(a.photo).stem + "_overlay.png")
+        if a.out:
+            out = Path(a.out)
+        else:       # run の overlay 工程と同じ命名：out/<棟id>/overlay_<写真id>.png
+            bid = a.building or (Path(a.render).parent.name if Path(a.render).parent.name not in ("", ".") else "overlay")
+            out = Path("out") / bid / f"overlay_{Path(a.photo).stem}.png"
         print(f"重ね合わせ: {pose.overlay(Path(a.photo), Path(a.render), out)}")
         return 0
     if a.photos_cmd == "compare":
         from . import compare
 
-        res, png = compare.compare_file(Path(a.front_jpg), Path(a.building), a.face, tol_m=a.tol, px_per_m=a.px_per_m)
+        res, png = compare.compare_file(Path(a.front_jpg), Path(a.building), a.face, tol_m=a.tol, px_per_m=a.px_per_m,
+                                       lines_json=Path(a.lines) if a.lines else None,
+                                       out_dir=Path(a.out_dir) if a.out_dir else None)
         if not res.ok:
             print(f"比べられません: {res.reason}")
             return 1

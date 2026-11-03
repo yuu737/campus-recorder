@@ -146,6 +146,19 @@ def bay_margins(bays: dict | None, length: float | None) -> tuple[float | None, 
     return rest / 2, rest / 2, warns
 
 
+def bay_edges(bays: dict | None, length: float | None) -> tuple[list[float], list[str]]:
+    """柱の中心線（面の始点から m）を左から並べる。count / pitch が未確定なら空。
+    余白の規則は bay_margins と同じ（図面・検収・模型で同じ並びを使うための共通関数）。"""
+    bays = bays or {}
+    cnt, pitch = _m(bays, "count"), _m(bays, "pitch")
+    if not (cnt.known and pitch.known):
+        return [], []
+    m0, _mt, warns = bay_margins(bays, length)
+    if m0 is None:
+        m0 = 0.0
+    return [m0 + i * float(pitch.value) for i in range(int(cnt.value) + 1)], warns
+
+
 def load_building(path: str | Path) -> dict:
     with open(path, encoding="utf-8") as f:
         return json.load(f)

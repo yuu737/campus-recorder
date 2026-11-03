@@ -151,10 +151,9 @@ def elevation_svg(b: dict, face_id: str) -> str:
     cnt, pitch, pier = _m(bays, "count"), _m(bays, "pitch"), _m(bays, "pier_width")
     bay_edges: list[float] = []
     if cnt.known and pitch.known:
-        m0, _mt, mwarn = schema.bay_margins(bays, L)
+        bay_edges, mwarn = schema.bay_edges(bays, L)
         notes += mwarn
         MARGIN_WARNINGS.extend(f"{b.get('id')} {face_id}: {w}" for w in mwarn)
-        bay_edges = [m0 + i * pitch.value for i in range(int(cnt.value) + 1)]
         pw = pier.value if pier.known else 0.0
         if pw > 0:
             for e in bay_edges:

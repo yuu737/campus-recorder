@@ -36,6 +36,11 @@ class Pose:
     blender: dict | None = None
     reproj_px: list[float] = field(default_factory=list)
     reproj_max_px: float | None = None
+    holdout_reproj_px: float | None = None      # 解に使わなかった点の再投影誤差の最大（px）。from_rectification の検算
+    holdout_mean_px: float | None = None
+    n_holdout: int = 0
+    camera_height_m: float | None = None        # カメラの地面（z=0）からの高さ
+    distance_to_face_m: float | None = None     # 面の平面までの距離（m）
     n_points: int = 0
     points_used: list[dict] = field(default_factory=list)
 
@@ -210,7 +215,11 @@ def from_rectification(photo: Path, front_json: Path, compare_json: Path, buildi
         res.reason = "面の格子点が写真にほとんど入りません"
         return res
     K = np.array([[res.focal_px, 0, w / 2.0], [0, res.focal_px, h / 2.0], [0, 0, 1]], float)
-    objA, imgA = np.asarray(obj, float).reshape(-1, 1, 3), np.asarray(img, float).reshape(-1, 1, 2)
+    objAll, imgAll = np.asarray(obj, float).reshape(-1, 1, 3), np.asarray(img, float).reshape(-1, 1, 2)
+    # 検算：格子点の半分（1 つおき）を解に使わず、解いたあとの再投影誤差を見る。
+    # 全点で解くと格子は H から作った点なので誤差 0 は当然で、検算にならない。
+    fit = np.arange(len(obj)) % 2 == 0
+    objA, imgA = objAll[fit], imgAll[fit]
     try:
         cnt, rvecs, tvecs, errs = cv2.solvePnPGeneric(objA, imgA, K, None, flags=cv2.SOLVEPNP_IPPE)
     except cv2.error:
@@ -223,12 +232,17 @@ def from_rectification(photo: Path, front_json: Path, compare_json: Path, buildi
         R, _ = cv2.Rodrigues(rvec)
         cam = (-R.T @ tvec).ravel()
         front = float(np.dot(cam[:2] - p0, n))          # 面の外側にいるか
-        proj, _ = cv2.projectPoints(objA, rvec, tvec, K, None)
-        err = np.linalg.norm(proj.reshape(-1, 2) - imgA.reshape(-1, 2), axis=1)
-        score = (front <= 0, float(err.max()))
+        proj, _ = cv2.projectPoints(objAll, rvec, tvec, K, None)
+        err = np.linalg.norm(proj.reshape(-1, 2) - imgAll.reshape(-1, 2), axis=1)
+        score = (front <= 0, float(err[fit].max()))
         if best is None or score < best[0]:
-            best = (score, R, tvec, cam, err)
-    _, R, tvec, cam, err = best
+            best = (score, R, tvec, cam, err, front)
+    _, R, tvec, cam, err, front = best
+    res.holdout_reproj_px = round(float(err[~fit].max()), 2)
+    res.holdout_mean_px = round(float(err[~fit].mean()), 2)
+    res.n_holdout = int((~fit).sum())
+    res.camera_height_m = round(float(cam[2]), 2)
+    res.distance_to_face_m = round(float(front), 2)
     res.camera_xyz = [round(float(v), 2) for v in cam]
     res.R_cv = [[float(v) for v in row] for row in R]
     res.t_cv = [float(v) for v in tvec.ravel()]
