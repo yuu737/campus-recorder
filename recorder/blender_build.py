@@ -132,10 +132,16 @@ def boolean_cut(target, cutters):
     import time
     t0 = time.time()
     # 窓（互いに離れている）は 1 つに結合。ピロティ・ガラスなど面が接する物は別々に当てる
-    wins = [c for c in cutters if c.name.startswith("cut_win")]
-    others = [c for c in cutters if not c.name.startswith("cut_win")]
+    # 窓は面ごとに結合（別の面の窓は角で互いに食い込むことがあり、1 つに結合すると自己交差で失敗する）
+    by_face: dict[str, list] = {}
+    others = []
+    for c in cutters:
+        if c.name.startswith("cut_win|"):
+            by_face.setdefault(c.name.split("|")[1], []).append(c)
+        else:
+            others.append(c)
     groups = []
-    if wins:
+    for fid, wins in by_face.items():
         for ob in bpy.context.scene.objects:
             ob.select_set(False)
         for c in wins:
@@ -246,7 +252,7 @@ class Mats:
             for f in b.get("faces", []):
                 if f["id"] not in self.by_face:
                     assume(f"{f['id']} の仕上げ", "主材料と同じ", "この面の材料は未測。主材料のタイルと同じと置いた")
-        self.glass = material_plain("glass", (0.22, 0.28, 0.34, 1.0), roughness=0.12, metallic=0.4)
+        self.glass = material_plain("glass", (0.18, 0.24, 0.32, 1.0), roughness=0.08, metallic=0.6)
         self.concrete = material_plain("concrete", (0.80, 0.79, 0.76, 1.0))
         self.dark = material_plain("dark_band", (0.22, 0.17, 0.13, 1.0), roughness=0.6)
         self.metal = material_plain("metal", (0.75, 0.76, 0.78, 1.0), roughness=0.4, metallic=0.6)
@@ -255,7 +261,7 @@ class Mats:
         self.leaf = material_plain("leaf", (0.20, 0.33, 0.14, 1.0), roughness=0.95)
         self.trunk = material_plain("trunk", (0.30, 0.22, 0.15, 1.0))
         self.coping = material_plain("coping", (0.25, 0.25, 0.26, 1.0), roughness=0.5)
-        self.curtain = material_plain("curtain", (0.80, 0.78, 0.72, 1.0), roughness=1.0)
+        self.curtain = material_plain("curtain", (0.42, 0.42, 0.40, 1.0), roughness=1.0)   # 奥は暗め（タイル色と紛れないように）
         self.roof = material_plain("roof", (0.52, 0.51, 0.49, 1.0), roughness=0.95)
 
     def named(self, name: str | None):
@@ -280,7 +286,8 @@ def build_building(b: dict, col) -> dict:
     for blk in blocks:
         top = val(blk.get("top_z"), H, f"blocks[{blk['id']}].top_z", "高さ未確定。parapet_top と同じと置いた")
         tops[blk["id"]] = top
-        ob = prism(f"{b['id']}_{blk['id']}", blk["polygon"], 0.0, top, col)
+        bottom = val(blk.get("bottom_z"), 0.0)          # 上だけの塊（角の引っ込みなど）は bottom_z を持つ
+        ob = prism(f"{b['id']}_{blk['id']}", blk["polygon"], bottom, top, col)
         ob.data.materials.append(mats.main)
         bodies.append(ob)
     body = bodies[0]
@@ -400,12 +407,12 @@ def build_building(b: dict, col) -> dict:
                         wsub = sub - gap
                         total = base + rec
                         c = p0 + u * s - n * (total / 2 - 0.25) + UP * ((zb + zt) / 2)
-                        cutters.append(box(f"cut_win_{fid}_{i}_{k}", c, u, n, UP, wsub, total + 0.5, zt - zb, col))
+                        cutters.append(box(f"cut_win|{fid}|{i}|{k}", c, u, n, UP, wsub, total + 0.5, zt - zb, col))
                         g = box(f"glass_{fid}_{i}_{k}", p0 + u * s - n * (total - 0.02) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
                         g.data.materials.append(mats.glass)
                         extras.append(g)
                         # カーテン（ガラスの奥の明るい面。写真の窓はほぼ全部カーテンが見える）
-                        cur = box(f"curtain_{fid}_{i}_{k}", p0 + u * s - n * (total + 0.25) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
+                        cur = box(f"curtain_{fid}_{i}_{k}", p0 + u * s - n * (total + 0.6) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
                         cur.data.materials.append(mats.curtain)
                         extras.append(cur)
                         # サッシ：外枠（上下左右）と中央の縦桟
@@ -659,8 +666,9 @@ def main():
     persp_sw = Vector((c.x, c.y, 0)) + Vector((-0.25, -0.97, 0)) * (E * (1.7 if tall else 1.45)) + Vector((0, 0, E * (0.6 if tall else 0.85)))
     persp_se = Vector((c.x, c.y, 0)) + Vector((0.55, -0.83, 0)) * (E * (1.6 if tall else 1.3)) + Vector((0, 0, E * (0.55 if tall else 0.7)))
 
+    lens = 22 if tall else 32    # 高い棟は広角で（上が切れないように）
     setup_scene(sketch=True, fast=fast)
-    camera("persp", persp_sw, look)
+    camera("persp", persp_sw, look, lens=lens)
     render(out / "persp_sketch.png")
 
     faces = sorted([f for f in b.get("faces", []) if f.get("from")], key=lambda f: -((f.get("length") or {}).get("value") or 0))
@@ -690,9 +698,9 @@ def main():
 
     ground_ob.hide_render = False
     setup_scene(sketch=False, fast=fast)
-    camera("persp2", persp_se, look, lens=35)
+    camera("persp2", persp_se, look, lens=lens + 3)
     render(out / "persp_shaded.png")
-    camera("persp3", persp_sw, look, lens=35)
+    camera("persp3", persp_sw, look, lens=lens + 3)
     render(out / "persp_shaded2.png")
     if faces:
         mid = (p0 + p1) / 2
@@ -721,6 +729,31 @@ def main():
         camera(f"street_{f['id']}", eye, Vector((mid.x, mid.y, top * 0.45)), lens=18)
         render(out / f"persp_street_{f['id']}.png")
 
+    # 写真の視点（pose JSON）からの描画：検収の重ね合わせ用
+    cams = [a for a in argv if a.startswith("--cameras=")]
+    if cams:
+        for cj in Path(cams[0].split("=", 1)[1]).read_text(encoding="utf-8").splitlines():
+            cj = cj.strip()
+            if not cj:
+                continue
+            pj = json.loads(Path(cj).read_text(encoding="utf-8"))
+            if not pj.get("ok") or not pj.get("blender"):
+                continue
+            bl = pj["blender"]
+            sc = bpy.context.scene
+            w, h = bl["resolution"]
+            sc.render.resolution_x, sc.render.resolution_y = (w // 2, h // 2) if fast else (w, h)
+            cd = bpy.data.cameras.new("photo_cam")
+            cd.lens = bl["lens_mm"]
+            cd.sensor_width = bl["sensor_width_mm"]
+            cd.sensor_fit = "AUTO"
+            cd.clip_end = 4000
+            cam = bpy.data.objects.new("photo_cam", cd)
+            sc.collection.objects.link(cam)
+            cam.location = Vector(bl["location"])
+            cam.rotation_euler = tuple(bl["rotation_euler"])
+            sc.camera = cam
+            render(out / f"view_photo_{Path(pj['photo']).stem}.png")
     for o in bpy.context.scene.objects:
         o.select_set(o.type == "MESH" and o.name != "ground")
     bpy.ops.export_scene.gltf(filepath=str(out / f"{b['id']}.glb"), use_selection=True, export_apply=True)

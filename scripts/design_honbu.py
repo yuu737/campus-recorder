@@ -102,7 +102,8 @@ win_bot = (GROUND_ROW - WIN5_BOT) * MPP
 for k in (2, 3, 4, 5):
     off = (5 - k) * floor_m
     sw["windows"].append({
-        "name": f"{k}階窓", "floors": [k], "per_bay": 1,
+        "name": f"{k}階窓", "floors": [k], "per_bay": 2 if k == 5 else 1, "gap": 0.6,
+        # 5 階だけ小窓が 1 スパンに 2 つ（数え係の報告 out/honbu_SW_スパン数.md。5 階の窓は全部で 18）
         "z_bottom": est(win_bot - off, 0.2, EV_SW, "5階の窓の下端を正面化画像で読み、階高の倍数で下の階へ写す"),
         "z_top": est(win_top - off, 0.2, EV_SW, "5階の窓の上端を正面化画像で読み、階高の倍数で下の階へ写す"),
         "width": est(bay_m - pier_m, 0.2, EV_SW, "柱間隔 − 柱型の幅"),

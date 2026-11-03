@@ -52,6 +52,7 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--out", default=None)
     q.add_argument("--blender", default=None, help="Blender 5.2 のパス（無ければ環境変数 BLENDER）")
     q.add_argument("--fast", action="store_true", help="小さめの描画")
+    q.add_argument("--cameras", nargs="*", default=None, help="写真の視点（photos pose が出した *_pose.json）。同じ視点で描く")
 
     p = sub.add_parser("site")
     ssub = p.add_subparsers(dest="site_cmd", required=True)
@@ -83,6 +84,17 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--known", default=None, help="既知の長さ 例: floor_pitch=3.99 / bay_pitch=5.3 / wall_width=47.7")
     q.add_argument("--known-status", default="measured", choices=["measured", "estimated"])
 
+    q = psub.add_parser("pose", help="写真の視点を逆算：正面化＋検収の結果から（--from-rectify）か、点の対応（--points）から")
+    q.add_argument("photo")
+    q.add_argument("--points", default=None, help='{"points": [{"px": [u, v], "xyz": [x, y, z], "what": "..."}]}')
+    q.add_argument("--from-rectify", default=None, help="rectify が出した *_front.json")
+    q.add_argument("--compare", default=None, help="photos compare が出した *_compare.json")
+    q.add_argument("--building", default=None)
+    q.add_argument("--face", default=None)
+    q = psub.add_parser("overlay", help="写真と同じ視点の描画を写真に重ねる")
+    q.add_argument("photo")
+    q.add_argument("--render", required=True, help="model build --cameras が出した view_photo_*.png")
+    q.add_argument("--out", default=None)
     q = psub.add_parser("compare", help="検収：正面化した写真と棟 JSON の面を m で重ね、ずれを数字で出す")
     q.add_argument("front_jpg", help="rectify が出した *_front.jpg")
     q.add_argument("--building", required=True, help="棟 JSON")
@@ -163,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
             for e in errs:
                 print(f"   - {e}")
             return 1
-        out = model.build(Path(a.file), Path(a.out) if a.out else None, a.blender, a.fast)
+        out = model.build(Path(a.file), Path(a.out) if a.out else None, a.blender, a.fast, [Path(c) for c in a.cameras] if a.cameras else None)
         print(f"模型: {out}")
         print(f"四面図: {model.sheet(out, b)}")
         return 0
@@ -214,6 +226,26 @@ def _photos(a) -> int:
             m = f"  ≈ {per.period_m} m（{per.status}）" if per.period_m else ""
             print(f"{name}: 周期 {per.period_px} px（強さ {per.strength}）  区間 {per.count}  エッジ {len(per.peaks_px)} 本{m}")
         print(f"比（柱間隔÷階高）: {res.ratio_bay_over_floor}   結果 JSON: {Path(a.front_jpg).with_name(Path(a.front_jpg).stem + '_measure.json')}")
+        return 0
+    if a.photos_cmd == "pose":
+        from . import pose
+
+        if a.from_rectify:
+            res = pose.from_rectification(Path(a.photo), Path(a.from_rectify), Path(a.compare), Path(a.building), a.face)
+        else:
+            res = pose.solve_file(Path(a.photo), Path(a.points))
+        if res.reason:
+            print("注意:", res.reason)
+        if not res.ok:
+            print(f"視点が決まりません: {res.reason}")
+            return 1
+        print(f"カメラ位置 {res.camera_xyz}（m）  焦点距離 {res.focal_px:.0f} px  再投影誤差 最大 {res.reproj_max_px} px  各点 {res.reproj_px}")
+        return 0
+    if a.photos_cmd == "overlay":
+        from . import pose
+
+        out = Path(a.out) if a.out else Path("out") / "overlay" / (Path(a.photo).stem + "_overlay.png")
+        print(f"重ね合わせ: {pose.overlay(Path(a.photo), Path(a.render), out)}")
         return 0
     if a.photos_cmd == "compare":
         from . import compare

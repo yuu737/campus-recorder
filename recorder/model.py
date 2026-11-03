@@ -26,13 +26,18 @@ def blender_path(explicit: str | None = None) -> Path:
     return p
 
 
-def build(building_json: Path, out_dir: Path | None = None, blender: str | None = None, fast: bool = False) -> Path:
+def build(building_json: Path, out_dir: Path | None = None, blender: str | None = None, fast: bool = False,
+          cameras: list[Path] | None = None) -> Path:
     b = json.loads(building_json.read_text(encoding="utf-8"))
     out = out_dir or Path("out") / b["id"]
     out.mkdir(parents=True, exist_ok=True)
     cmd = [str(blender_path(blender)), "-b", "-P", str(HERE / "blender_build.py"), "--", str(building_json.resolve()), str(out.resolve())]
     if fast:
         cmd.append("--fast")
+    if cameras:
+        lst = out / "cameras.txt"
+        lst.write_text(chr(10).join(str(Path(c).resolve()) for c in cameras), encoding="utf-8")
+        cmd.append(f"--cameras={lst.resolve()}")
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     tail = [ln for ln in r.stdout.splitlines() if "Traceback" in ln or "Error" in ln or "模型" in ln or ln.startswith("  File")]
     if r.returncode != 0 or "Traceback" in r.stdout or not (out / "persp_shaded.png").exists():
