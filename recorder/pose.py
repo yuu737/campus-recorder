@@ -39,7 +39,7 @@ class Pose:
     holdout_reproj_px: float | None = None      # 解に使わなかった点の再投影誤差の最大（px）。from_rectification の検算
     holdout_mean_px: float | None = None
     n_holdout: int = 0
-    camera_height_m: float | None = None        # カメラの地面（z=0）からの高さ
+    camera_height_m: float | None = None        # カメラの面の前の地面からの高さ（ground_offset が無ければ z=0 から）
     distance_to_face_m: float | None = None     # 面の平面までの距離（m）
     n_points: int = 0
     points_used: list[dict] = field(default_factory=list)
@@ -176,6 +176,22 @@ def solve_file(photo: Path, points_json: Path, out_json: Path | None = None) -> 
     return res
 
 
+def _grid_axes(cj: dict, L: float, g_off: float, top: float) -> tuple[list[float], list[float]]:
+    """PnP に使う格子の s（面に沿った m）と z（高さ m）。
+    柱割りの無い面でも動くよう、compare が写真で結べた線（面の上の線）の位置から作る：
+    s は結べた縦の線の範囲を等間隔に 7 つ＋結べた線そのもの、z は 地面（面の前）〜結べた高さの線の最大 を 5 つ＋結べた線。
+    結べた線が足りなければ（compare の JSON に lines が無い等）面全体 [0, L] × [地面, 上端] の格子。"""
+    xs = sorted({float(l["json_m"]) for l in cj.get("lines", []) if l.get("axis") == "x" and l.get("diff_m") is not None and l.get("in_plane", True)})
+    zs = sorted({float(l["json_m"]) for l in cj.get("lines", []) if l.get("axis") == "z" and l.get("diff_m") is not None and l.get("in_plane", True)})
+    if len(xs) >= 2 and xs[-1] - xs[0] > 0.2 * L:
+        s_list = sorted(set(np.round(np.linspace(xs[0], xs[-1], 7), 3)) | {round(v, 3) for v in xs[:12]})
+    else:
+        s_list = list(np.linspace(0, L, 7))
+    z_hi = max(zs) if zs and max(zs) - g_off > 0.3 * (top - g_off) else top
+    z_list = sorted(set(np.round(np.linspace(g_off, z_hi, 5), 3)) | {round(v, 3) for v in zs[:12]})
+    return [float(v) for v in s_list], [float(v) for v in z_list]
+
+
 def from_rectification(photo: Path, front_json: Path, compare_json: Path, building_json: Path, face_id: str,
                        out_json: Path | None = None) -> Pose:
     """手で点を指さずに視点を出す：正面化の射影変換 H（写真→正面化画像）と、検収で合わせた原点
@@ -183,7 +199,7 @@ def from_rectification(photo: Path, front_json: Path, compare_json: Path, buildi
     面の平面上の格子点を世界座標に起こし、その写真上の位置と対応させて PnP（平面用の IPPE）。"""
     import cv2
 
-    from .schema import load_building
+    from .schema import face_ground_offset, load_building
 
     fj = json.loads(front_json.read_text(encoding="utf-8"))
     cj = json.loads(compare_json.read_text(encoding="utf-8"))
@@ -195,14 +211,16 @@ def from_rectification(photo: Path, front_json: Path, compare_json: Path, buildi
     u = d / L
     n = np.array([u[1], -u[0]])
     top = (f.get("top_z") or {}).get("value") or (b.get("parapet_top") or {}).get("value") or 20.0
+    g_off = face_ground_offset(f)        # 面の前の地面の高さ。格子の下端と、カメラの「地面からの高さ」の原点
     H_img2rect = np.array(fj["H"], float)
     ppm, xo, zo = float(cj["px_per_m"]), float(cj["x_origin_px"]), float(cj["z_origin_px"])
     A = np.array([[ppm, 0, xo], [0, -ppm, zo], [0, 0, 1]], float)          # 面 (s, z) → 正面化 px
     H_plane2img = np.linalg.inv(H_img2rect) @ A
     w, h = fj["width"], fj["height"]
     obj, img = [], []
-    for s_ in np.linspace(0, L, 7):
-        for z_ in np.linspace(0, top, 5):
+    s_list, z_list = _grid_axes(cj, L, g_off, top)
+    for s_ in s_list:
+        for z_ in z_list:
             q = H_plane2img @ np.array([s_, z_, 1.0])
             if q[2] <= 1e-9:
                 continue
@@ -241,7 +259,7 @@ def from_rectification(photo: Path, front_json: Path, compare_json: Path, buildi
     res.holdout_reproj_px = round(float(err[~fit].max()), 2)
     res.holdout_mean_px = round(float(err[~fit].mean()), 2)
     res.n_holdout = int((~fit).sum())
-    res.camera_height_m = round(float(cam[2]), 2)
+    res.camera_height_m = round(float(cam[2] - g_off), 2)       # 面の前の地面から（ground_offset があれば z=0 からではなくその地面から）
     res.distance_to_face_m = round(float(front), 2)
     res.camera_xyz = [round(float(v), 2) for v in cam]
     res.R_cv = [[float(v) for v in row] for row in R]

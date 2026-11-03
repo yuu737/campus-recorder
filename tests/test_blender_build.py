@@ -29,6 +29,24 @@ if mode == "build":
     info = bb.build_building(b, col)
     print("RESULT", json.dumps({"volume": bb.mesh_volume(info["body"]),
                                 "zmax": max(v.co.z for v in info["body"].data.vertices)}))
+elif mode == "ground":
+    b = json.loads(open(src, encoding="utf-8").read())
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    col = bpy.data.collections.new(b["id"])
+    bpy.context.scene.collection.children.link(col)
+    vol0 = None
+    info = bb.build_building(b, col)
+    names = sorted(o.name for o in bpy.data.objects)
+    def zr(prefix):
+        ob = next(o for o in bpy.data.objects if o.name.startswith(prefix))
+        zs = [v.co.z for v in ob.data.vertices]
+        return [min(zs), max(zs)]
+    out = {"ground_volume": bb.mesh_volume(info["ground"]), "names": names,
+           "assumed": [a["what"] for a in bb.ASSUMED]}
+    for pre in ("ground_E_raised", "ground_S_floor", "ground_S_skirt"):
+        if any(o.name.startswith(pre) for o in bpy.data.objects):
+            out[pre] = zr(pre)
+    print("RESULT", json.dumps(out))
 else:
     out = {}
     for args in ([1000.0, 990.0, 10.0], [1000.0, 100.0, 10.0], [1000.0, 1010.0, 10.0]):
@@ -84,3 +102,37 @@ def test_check_cut_flags_impossible_loss(tmp_path: Path):
     assert res["[1000.0, 990.0, 10.0]"] == "ok"        # 彫る量だけ減った
     assert res["[1000.0, 100.0, 10.0]"] == "error"     # 彫る量よりずっと減った＝形が壊れた
     assert res["[1000.0, 1010.0, 10.0]"] == "error"    # 引き算で増えた
+
+
+def _ground_building(offset_s, offset_e):
+    sq = [[0, 0], [10, 0], [10, 10], [0, 10]]
+    faces = [{"id": "S", "from": [0, 0], "to": [10, 0], "length": m(10.0)},
+             {"id": "E", "from": [10, 0], "to": [10, 10], "length": m(10.0)}]
+    if offset_s is not None:
+        faces[0]["ground_offset"] = {"value": offset_s, "unit": "m", "status": "estimated", "evidence": [], "method": "テスト"}
+    if offset_e is not None:
+        faces[1]["ground_offset"] = {"value": offset_e, "unit": "m", "status": "estimated", "evidence": [], "method": "テスト"}
+    return {"id": "t", "name": "t", "footprint": {"polygon": sq}, "parapet_top": m(10.0), "faces": faces}
+
+
+@needs_blender
+def test_ground_offset_sunken_and_raised(tmp_path: Path):
+    """沈んだ広場（−3.0）は地面の 1 枚から長方形を抜き、底の板と足元の壁を置く。高い広場（+1.4）は板を積む。"""
+    src = tmp_path / "g.json"
+    src.write_text(json.dumps(_ground_building(-3.0, 1.4)), encoding="utf-8")
+    res = run_inner(tmp_path, "ground", str(src))
+    # 地面 3000×3000×0.3 から 面の幅 10 × 奥行き 12 × 厚み 0.3 = 36 m³ が抜けた
+    assert res["ground_volume"] == pytest.approx(3000 * 3000 * 0.3 - 36.0, abs=0.5)
+    assert res["ground_S_floor"][1] == pytest.approx(-3.0, abs=1e-6)          # 底の板の上面が ground_offset
+    assert res["ground_S_skirt"] == pytest.approx([-3.0, 0.0], abs=1e-6)       # 足元の壁は z=0 から地面まで
+    assert res["ground_E_raised"][1] == pytest.approx(1.4, abs=1e-6)           # 高い広場の板の上面
+    assert any("奥行き" in w for w in res["assumed"])                          # 奥行きは仮の値として report に出る
+
+
+@needs_blender
+def test_ground_offset_absent_changes_nothing(tmp_path: Path):
+    src = tmp_path / "g0.json"
+    src.write_text(json.dumps(_ground_building(None, None)), encoding="utf-8")
+    res = run_inner(tmp_path, "ground", str(src))
+    assert res["ground_volume"] == pytest.approx(3000 * 3000 * 0.3, abs=0.5)
+    assert not [n for n in res["names"] if n.startswith("ground_")]

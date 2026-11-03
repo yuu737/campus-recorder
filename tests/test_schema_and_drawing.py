@@ -167,3 +167,45 @@ def test_margin_sum_mismatch_fails_validate():
     assert any("余白の合計" in e for e in errs)
     b, f = _face_b(margin_from=_mm(1.6), margin_to=_mm(1.6))
     assert schema.validate_building(b) == []
+
+
+# --- 面ごとの地面の高さ（faces[].ground_offset）---------------------------------
+
+def _with_ground(v, status="estimated", evidence=None, method="タワー75 の広場の段差から"):
+    b = load()
+    b["faces"][0]["ground_offset"] = {"value": v, "unit": "m", "tol": 0.2, "status": status,
+                                      "evidence": evidence or [], "method": method, "note": ""}
+    return b
+
+
+def test_ground_offset_is_optional_and_existing_json_still_valid():
+    b = load()
+    assert "ground_offset" not in b["faces"][0] and schema.validate_building(b) == []
+    assert schema.face_ground_offset(b["faces"][0]) == 0.0
+
+
+def test_ground_offset_is_a_measurement_with_rules():
+    b = _with_ground(-3.0)
+    assert schema.validate_building(b) == [] and schema.face_ground_offset(b["faces"][0]) == -3.0
+    bad = _with_ground(1.4, status="measured", evidence=[])                       # measured は根拠が要る
+    assert any("ground_offset" in e and "根拠" in e for e in schema.validate_building(bad))
+    bare = load()
+    bare["faces"][0]["ground_offset"] = 1.4                                       # 裸の数は落とす
+    assert any("ground_offset" in e for e in schema.validate_building(bare))
+    unk = _with_ground(None, status="unknown", method="")
+    assert schema.validate_building(unk) == [] and schema.face_ground_offset(unk["faces"][0]) == 0.0
+    assert "faces[S].ground_offset" in schema.unknowns(unk)
+
+
+def test_elevation_draws_ground_line_at_offset():
+    import re
+    base = drawing.elevation_svg(load(), "S")
+    sunk = drawing.elevation_svg(_with_ground(-3.0), "S")
+    raised = drawing.elevation_svg(_with_ground(1.4), "S")
+    assert "地面（面の前）" in sunk and "z=0（棟の基準）" in sunk and "地面（面の前）" not in base
+    # 太い地面の線（stroke-width 1.5）の y。沈むと下がり（画像の y は増える）、高いと上がる
+    def ground_y(svg):
+        return max(float(m.group(1)) for m in re.finditer(r'<line x1="[\d.]+" y1="([\d.]+)" x2="[\d.]+" y2="\1"[^>]*stroke-width="1.5"', svg))
+    y0, ys, yr = ground_y(base), ground_y(sunk), ground_y(raised)
+    assert ys > y0 > yr
+    assert abs((ys - y0) - 3.0 * drawing.SCALE) < 1.0 and abs((y0 - yr) - 1.4 * drawing.SCALE) < 1.0

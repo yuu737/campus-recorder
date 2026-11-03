@@ -320,6 +320,54 @@ class Mats:
 
 # --- 棟を組む -----------------------------------------------------------------------
 
+GROUND_PATCH_DEPTH_M = 12.0     # 面の前の地面の板（広場）の奥行きの仮の値。faces[].ground_offset.depth があればそれを使う
+GROUND_WALL_T = 0.3
+
+
+def build_face_grounds(faces: dict, ground, body, mats, col) -> None:
+    """面ごとの地面の高さ（faces[].ground_offset、z=0 からの m）を模型にする。
+
+    方針：地面は z=0 の 1 枚のまま、面の前に長方形の「広場」を足し引きする（面の幅 × 奥行き、既定 12 m）。
+        正（高い広場、本部棟 東面前 +1.4 m 等）  z=0 から ground_offset まで積んだ板を面の前に置く。
+        負（沈んだ広場、タワー75 −3.0 m 等）    地面の 1 枚から長方形をブーリアンで抜き（地面は単純な 1 枚なので崩れない）、
+                                              底の板と 3 辺の擁壁（厚 0.3 m）を置き、壁は面の足元を ground_offset まで下げる。
+    奥行きは JSON に無いので仮の値（report に出す）。他の面の板と角で重なっても、板どうしは足し算しない（重ねて置くだけ）。"""
+    cutters = []
+    for fid, f in faces.items():
+        gm = f.get("ground_offset")
+        gz = val(gm)
+        if not gz:
+            continue
+        depth = gm.get("depth") if isinstance(gm, dict) else None
+        if not depth:
+            depth = assume(f"{fid} 面の前の地面の板の奥行き", GROUND_PATCH_DEPTH_M, "ground_offset の広がりは未測。面の幅 × この奥行きの長方形と置いた")
+        depth = float(depth)
+        p0, u, n, L = face_frame(f)
+        t = GROUND_WALL_T
+        extras = []
+
+        def slab(tag, c_u, c_n, su, sn, z0, z1, mat):
+            c = p0 + u * c_u + n * c_n + UP * ((z0 + z1) / 2)
+            ob = box(f"ground_{fid}_{tag}", c, u, n, UP, su, sn, z1 - z0, col)
+            ob.data.materials.append(mat)
+            return ob
+
+        if gz > 0:
+            extras.append(slab("raised", L / 2, depth / 2, L, depth, -0.05, gz, mats.ground))
+        else:
+            # 抜く箱は地面の厚み（−0.3〜0）を貫く
+            cutters.append(slab("pit", L / 2, depth / 2, L, depth, gz - 0.5, 0.2, mats.ground))
+            extras.append(slab("floor", L / 2, depth / 2, L + 2 * t, depth + t, gz - t, gz, mats.ground))
+            extras.append(slab("wallL", -t / 2, depth / 2, t, depth + t, gz - t, 0.0, mats.ground))
+            extras.append(slab("wallR", L + t / 2, depth / 2, t, depth + t, gz - t, 0.0, mats.ground))
+            extras.append(slab("wallF", L / 2, depth + t / 2, L, t, gz - t, 0.0, mats.ground))
+            extras.append(slab("skirt", L / 2, -t / 2, L, t, gz, 0.0, mats.main))       # 面の足元の壁（z=0 から地面まで）
+        for e in extras:
+            e.parent = body
+    if cutters:
+        boolean_cut(ground, cutters)
+
+
 def build_building(b: dict, col) -> dict:
     poly = ccw([tuple(p) for p in b["footprint"]["polygon"]])
     H = val(b.get("parapet_top"))
@@ -608,6 +656,7 @@ def build_building(b: dict, col) -> dict:
     R = 1500.0
     g = prism("ground", [(cx - R, cy - R), (cx + R, cy - R), (cx + R, cy + R), (cx - R, cy + R)], -0.3, 0.0, col)
     g.data.materials.append(mats.ground)
+    build_face_grounds(faces, g, body, mats, col)
     return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body, "ground": g}
 
 

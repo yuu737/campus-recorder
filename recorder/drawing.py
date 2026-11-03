@@ -127,7 +127,12 @@ def elevation_svg(b: dict, face_id: str) -> str:
 
     W = L * SCALE
     Hpx = H * SCALE
-    x0, y_ground = LEFT, TOP + Hpx
+    x0, y_ground = LEFT, TOP + Hpx          # y_ground は z=0（棟の基準面）の行
+    g_m = _m(fc, "ground_offset")           # 面の前の地面の高さ（z=0 から。沈んだ広場は負）。省略は 0
+    g = schema.face_ground_offset(fc)
+    below = max(0.0, -g) * SCALE            # 地面が z=0 より低い時は、壁を地面まで下げて描く
+    if "ground_offset" in fc and not g_m.known:
+        unknown_lines.append("面の前の地面の高さ（ground_offset）")
     svg = _Svg()
 
     def X(u: float) -> float:
@@ -144,7 +149,7 @@ def elevation_svg(b: dict, face_id: str) -> str:
     wall_attr = _style(height_m if not length_m.known or height_m.status == "unknown" else length_m)
     if length_m.known and height_m.known:
         wall_attr = 'stroke="#222"'
-    svg.rect(x0, TOP, W, Hpx, FILL_WALL, wall_attr, 1.2)
+    svg.rect(x0, TOP, W, Hpx + below, FILL_WALL, wall_attr, 1.2)
 
     # 柱型（bays）
     bays = fc.get("bays") or {}
@@ -228,7 +233,15 @@ def elevation_svg(b: dict, face_id: str) -> str:
                 svg.rect(X(step * i + (step - wv) / 2), Y(zt_v), wv * SCALE, (zt_v - zb_v) * SCALE, FILL_WIN, _style(st), 0.7)
 
     # 地面
-    svg.line(x0 - 20, y_ground, x0 + W + 20, y_ground, 'stroke="#222"', 1.5)
+    if g != 0.0:
+        # 面の前の地面が z=0 と違う：z=0 を細い破線で、実際の地面（面の前）を太い線で描く
+        if g > 0:
+            svg.rect(x0 - 20, Y(g), W + 40, g * SCALE, "#cfc9bd", 'stroke="none"')       # 地面より下に隠れる壁の根元
+        else:
+            svg.rect(x0 - 20, Y(g), W + 40, 10, "#cfc9bd", 'stroke="none"')
+        svg.line(x0 - 20, y_ground, x0 + W + 20, y_ground, 'stroke="#888" stroke-dasharray="4 3"', 0.8)
+        svg.text(x0 + W + 24, y_ground + 4, "z=0（棟の基準）", 10, "#888")
+    svg.line(x0 - 20, Y(g), x0 + W + 20, Y(g), 'stroke="#222"', 1.5)
 
     # 右側の寸法ラベル（高さ順に並べ、重なりを避ける）
     labels: list[tuple[float, str, Measurement]] = []
@@ -253,7 +266,10 @@ def elevation_svg(b: dict, face_id: str) -> str:
         if z.known:
             labels.append((float(z.value), f"{op.get('name', '開口')} 上端", z))
     # 地面を基準に、下から上へ 14px 以上の間隔で積む（地面のラベルは動かさない）
-    labels.append((0.0, "地面", Measurement(0.0, status="measured", evidence=[])))
+    if g != 0.0:
+        labels.append((g, "地面（面の前）", g_m))
+    else:
+        labels.append((0.0, "地面", Measurement(0.0, status="measured", evidence=[])))
     labels.sort(key=lambda t: t[0])
     last_y = 1e9
     xl = x0 + W + 26
@@ -265,7 +281,7 @@ def elevation_svg(b: dict, face_id: str) -> str:
         svg.text(xl, ty + 4, f"{z:.2f}　{name}　{m.label().split(' ', 1)[1] if ' ' in m.label() else ''}".rstrip(), 11, COL.get(m.status, "#222"))
 
     # 下の寸法（スパン）
-    yb = y_ground + 28
+    yb = y_ground + below + 28
     if bay_edges:
         for i in range(len(bay_edges) - 1):
             a, c = bay_edges[i], bay_edges[i + 1]

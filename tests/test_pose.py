@@ -89,3 +89,30 @@ def test_from_rectification_holdout_catches_wrong_focal(tmp_path):
     d = _rect_setup(tmp_path, f_true=1000.0, f_claimed=1500.0)     # 焦点距離が食い違うと、使わなかった点で誤差が出る
     res = pose.from_rectification(tmp_path / "p.jpg", d / "f.json", d / "c.json", d / "b.json", "S", out_json=d / "o.json")
     assert res.holdout_reproj_px > 1.0
+
+
+def test_from_rectification_camera_height_is_above_face_ground(tmp_path):
+    """faces[].ground_offset（沈んだ広場 −3.0 m）があれば、カメラの高さは z=0 ではなく面の前の地面から測る。
+    格子の下端も地面まで下がる（z=−3 の点が使われる）。ground_offset が無ければ従来どおり z=0 から。"""
+    import json
+    d = _rect_setup(tmp_path)
+    b = json.loads((d / "b.json").read_text(encoding="utf-8"))
+    b["faces"][0]["ground_offset"] = {"value": -3.0, "unit": "m", "status": "estimated", "evidence": [], "method": "t"}
+    (d / "b.json").write_text(json.dumps(b), encoding="utf-8")
+    res = pose.from_rectification(tmp_path / "p.jpg", d / "f.json", d / "c.json", d / "b.json", "S", out_json=d / "o.json")
+    assert res.ok
+    assert abs(res.camera_xyz[2] - 1.6) < 0.05                      # 世界の z は変わらない
+    assert abs(res.camera_height_m - 4.6) < 0.05                    # 面の前の地面（−3.0）から 4.6 m
+
+
+def test_grid_axes_follow_matched_lines_and_ground():
+    cj = {"lines": [{"axis": "x", "json_m": 4.36, "diff_m": 0.0, "in_plane": True},
+                    {"axis": "x", "json_m": 11.61, "diff_m": 0.1, "in_plane": True},
+                    {"axis": "x", "json_m": 15.0, "diff_m": 0.0, "in_plane": False},      # 手前に出た線は使わない
+                    {"axis": "z", "json_m": 23.68, "diff_m": 0.0, "in_plane": True},
+                    {"axis": "z", "json_m": 99.0, "diff_m": None, "in_plane": True}]}     # 結べなかった線も使わない
+    s_list, z_list = pose._grid_axes(cj, 22.1, -0.98, 23.68)
+    assert 4.36 in s_list and 11.61 in s_list and 15.0 not in s_list and min(s_list) == 4.36 and max(s_list) == 11.61
+    assert min(z_list) == -0.98 and max(z_list) == 23.68 and 99.0 not in z_list
+    s2, z2 = pose._grid_axes({}, 20.0, 0.0, 10.0)                                       # lines が無ければ従来の格子
+    assert s2[0] == 0.0 and s2[-1] == 20.0 and len(s2) == 7 and z2[0] == 0.0 and z2[-1] == 10.0

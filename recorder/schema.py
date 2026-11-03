@@ -102,7 +102,7 @@ class Measurement:
 # --- 棟 JSON の中で Measurement が入る場所 ---------------------------------
 # 「どの鍵が測定値か」をここに列挙する。検証と図面生成はこの表を見る。
 MEASUREMENT_KEYS_BUILDING = ("ground_z", "parapet_top", "floor_count", "floor_pitch")
-MEASUREMENT_KEYS_FACE = ("length",)
+MEASUREMENT_KEYS_FACE = ("length", "ground_offset")
 MEASUREMENT_KEYS_BAYS = ("count", "pitch", "pier_width", "end_margin", "margin_from", "margin_to")
 MEASUREMENT_KEYS_LEVEL = ("z",)
 MEASUREMENT_KEYS_WINDOW = ("z_bottom", "z_top", "width", "recess")
@@ -113,6 +113,14 @@ MEASUREMENT_KEYS_MATERIAL = ("unit_w", "unit_h", "joint_w")
 
 def _m(d: dict, key: str) -> Measurement:
     return Measurement.from_json(d.get(key))
+
+
+def face_ground_offset(f: dict) -> float:
+    """面の前の地面の高さ（棟の z=0 からの m。沈んだ広場は負、高い広場は正）。省略・unknown は 0。
+    faces[].ground_offset は寸法項目（status / evidence / method つき）。図面（地面の線）・模型（面の前の地面の板）・
+    検収（高さの原点）が同じ値を使うための共通関数。"""
+    m = Measurement.from_json(f.get("ground_offset"))
+    return float(m.value) if m.known else 0.0
 
 
 MARGIN_TOL = 0.05   # 余白の合計が合わないと見なす差（m）。各項目の tol があればそれも足す
@@ -305,8 +313,9 @@ def unknowns(b: dict) -> list[str]:
         chk(_m(lv, "z"), f"levels[{lv.get('id')}].z")
     for fc in b.get("faces", []):
         fid = fc.get("id")
-        if "length" in fc:
-            chk(_m(fc, "length"), f"faces[{fid}].length")
+        for k in MEASUREMENT_KEYS_FACE:
+            if k in fc:
+                chk(_m(fc, k), f"faces[{fid}].{k}")
         for k in MEASUREMENT_KEYS_BAYS:
             if fc.get("bays") and k in fc["bays"]:
                 chk(_m(fc["bays"], k), f"faces[{fid}].bays.{k}")
