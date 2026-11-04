@@ -1,0 +1,298 @@
+{
+ "schema": "campus-recorder/assets/1",
+ "note": "CC0 の公開アセットだけを入れる（CC-BY も不可）。位置・個数・大きさは棟 JSON の根拠付きの値、見た目はアセット。取得は python -I -X utf8 -m recorder assets fetch。取得物は assets/（git 管理外）。",
+ "items": [
+  {
+   "id": "brick_ochre",
+   "kind": "texture",
+   "what": "レンガ（薄い黄土色。本部棟の外壁タイルに近い色）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/brown_brick_02",
+   "page": "https://polyhaven.com/a/brown_brick_02",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:00:13+09:00",
+   "file": "polyhaven/brown_brick_02",
+   "maps": {
+    "color": "brown_brick_02_diff_1k.jpg",
+    "normal": "brown_brick_02_nor_gl_1k.jpg",
+    "rough": "brown_brick_02_rough_1k.jpg"
+   },
+   "tile_m": [
+    1.0,
+    1.0
+   ],
+   "polyhaven": {
+    "id": "brown_brick_02",
+    "res": "1k"
+   },
+   "note": "本部棟は 45 二丁掛け相当のタイルで、これは本物のレンガ積み。色と目地の見た目だけ借りる。目地の寸法は棟 JSON の materials（unit_w/unit_h/joint_w）が正で、tile_m との比で貼り方を決める",
+   "sha256": {
+    "polyhaven/brown_brick_02/brown_brick_02_diff_1k.jpg": "d769443de69cc16482d25a8a1777b1fa826ada8b4175c7c29d7abb08a91f8ac2",
+    "polyhaven/brown_brick_02/brown_brick_02_nor_gl_1k.jpg": "c4ca57e17a7ebfa27b561b126a6579e90b09a852c94ffa83a0b68d4ed62b46af",
+    "polyhaven/brown_brick_02/brown_brick_02_rough_1k.jpg": "4f76762b9ae52f3d411e9902a2064bdba3de1eaf5c852df98b930716eaa7e17c"
+   }
+  },
+  {
+   "id": "concrete_dark",
+   "kind": "texture",
+   "what": "濃いコンクリート（打ち放し、型枠の穴あり）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/concrete_wall_006",
+   "page": "https://polyhaven.com/a/concrete_wall_006",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:00:13+09:00",
+   "file": "polyhaven/concrete_wall_006",
+   "maps": {
+    "color": "concrete_wall_006_diff_1k.jpg",
+    "normal": "concrete_wall_006_nor_gl_1k.jpg",
+    "rough": "concrete_wall_006_rough_1k.jpg"
+   },
+   "tile_m": [
+    3.0,
+    3.0
+   ],
+   "polyhaven": {
+    "id": "concrete_wall_006",
+    "res": "1k"
+   },
+   "note": "",
+   "sha256": {
+    "polyhaven/concrete_wall_006/concrete_wall_006_diff_1k.jpg": "fea247dd085cd05d8deb335234c834764d622029da351f8bcc8913935316bacd",
+    "polyhaven/concrete_wall_006/concrete_wall_006_nor_gl_1k.jpg": "4ff16bb96fc2df3ef71d22007151aff1d8bf7cb10a493d3f8e973213a99dd428",
+    "polyhaven/concrete_wall_006/concrete_wall_006_rough_1k.jpg": "ceee98c940b8f1e49169af880497aa60eaae5de0ac5b3603aa753b76f687c455"
+   }
+  },
+  {
+   "id": "asphalt",
+   "kind": "texture",
+   "what": "アスファルト（車道）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/asphalt_02",
+   "page": "https://polyhaven.com/a/asphalt_02",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:00:14+09:00",
+   "file": "polyhaven/asphalt_02",
+   "maps": {
+    "color": "asphalt_02_diff_1k.jpg",
+    "normal": "asphalt_02_nor_gl_1k.jpg",
+    "rough": "asphalt_02_rough_1k.jpg"
+   },
+   "tile_m": [
+    3.0,
+    3.0
+   ],
+   "polyhaven": {
+    "id": "asphalt_02",
+    "res": "1k"
+   },
+   "note": "",
+   "sha256": {
+    "polyhaven/asphalt_02/asphalt_02_diff_1k.jpg": "1aa5ce99f58a625c71d48cfc3e68b65ca85ccb00f39e045c0a928608a0ea25ed",
+    "polyhaven/asphalt_02/asphalt_02_nor_gl_1k.jpg": "42a1c381b53204e83a982db2864479a30bc127bbdeebb1006f8ee51bff099df3",
+    "polyhaven/asphalt_02/asphalt_02_rough_1k.jpg": "70ba3edc65525eb4dc366cf010ca7ae0bd34e0251ff0225c2dad627a873d0712"
+   }
+  },
+  {
+   "id": "paving_block",
+   "kind": "texture",
+   "what": "舗装ブロック（コンクリートの連結ブロック）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/concrete_pavers",
+   "page": "https://polyhaven.com/a/concrete_pavers",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:00:14+09:00",
+   "file": "polyhaven/concrete_pavers",
+   "maps": {
+    "color": "concrete_pavers_diff_1k.jpg",
+    "normal": "concrete_pavers_nor_gl_1k.jpg",
+    "rough": "concrete_pavers_rough_1k.jpg"
+   },
+   "tile_m": [
+    1.92,
+    1.92
+   ],
+   "polyhaven": {
+    "id": "concrete_pavers",
+    "res": "1k"
+   },
+   "note": "構内の歩道。色の違う所は棟 JSON の pavement で別に書く",
+   "sha256": {
+    "polyhaven/concrete_pavers/concrete_pavers_diff_1k.jpg": "eea1fb8b498154754f4961ce0792092ef56cadc3d210becbb0dc3bf6c96c261d",
+    "polyhaven/concrete_pavers/concrete_pavers_nor_gl_1k.jpg": "761c8332b4b53ab06931adf83f5f8f4fa5b7559a1a8267bc7ef865f890b17894",
+    "polyhaven/concrete_pavers/concrete_pavers_rough_1k.jpg": "27fb26837b95523b4ff8d663745466005ac6ae9797e6f5ced1192eaebf6c1469"
+   }
+  },
+  {
+   "id": "hdri_overcast",
+   "kind": "hdri",
+   "what": "空と光（屋外・曇り・昼。ガラスの映り込み用）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/alte_veste_station",
+   "page": "https://polyhaven.com/a/alte_veste_station",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:00:16+09:00",
+   "file": "polyhaven/alte_veste_station/alte_veste_station_1k.hdr",
+   "polyhaven": {
+    "id": "alte_veste_station",
+    "res": "1k"
+   },
+   "note": "Poly Haven の分類で outdoor / urban / overcast / midday / low contrast",
+   "sha256": {
+    "polyhaven/alte_veste_station/alte_veste_station_1k.hdr": "0a578bd75f18c5191b2f5ae04b60ffb04aa2efa1de3729ace97d549596ffd6ed"
+   }
+  },
+  {
+   "id": "ac_outdoor",
+   "kind": "model",
+   "what": "室外機（1 台。gltf には色違いの錆びた物も並ぶが、使うのはきれいな方の節だけ）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/exterior_aircon_unit",
+   "page": "https://polyhaven.com/a/exterior_aircon_unit",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:00:59+09:00",
+   "file": "polyhaven/exterior_aircon_unit/exterior_aircon_unit_1k.gltf",
+   "size_m": [
+    0.8,
+    0.374,
+    0.928
+   ],
+   "polyhaven": {
+    "id": "exterior_aircon_unit",
+    "res": "1k"
+   },
+   "note": "Poly Haven の dimensions 1.8 m は 2 台並びの幅。1 台分を node で選んで測る",
+   "sha256": {
+    "polyhaven/exterior_aircon_unit/exterior_aircon_unit_1k.gltf": "f19d85c76948903047c2846068aeaa376d5e956a410675268cb6cb6aac5d97c2",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_01_nor_gl_1k.jpg": "e5a6f3c135b942d6efe62a24496c575d03f6a4316188efe65079035d7faf1c38",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_01_opacity_1k.jpg": "c19feb434c2b01923fbb3e16ace3aa6d9cb16b05c2a5c479ad237759b2d331d6",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_01_arm_1k.jpg": "51c103926b118bf00b902826001db802b15755c6eefa12b00afa24c60d7b341b",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_01_arm_1k.jpg": "14671920f716691dc3b8940432f7aba5c469e3b466441ff8ad500de92d3178fb",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_02_arm_1k.jpg": "1cdfa2d1c938c3af61a5f06510b0d94aeddddd4bdc1832008b3826240dd1535d",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_02_arm_1k.jpg": "6ac4cfca6a8d8bec6ef1ff756652eb1f36b780d1ff7d70d9cb3e0f7fe1faf271",
+    "polyhaven/exterior_aircon_unit/exterior_aircon_unit.bin": "b4b9ad082bdaa8f8b437bc14d9981caeaf318334499d4bf65d616fb2ec0c5ca8",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_02_nor_gl_1k.jpg": "864c0fb1e55aff910d826a8c1f6a2ad459f7db0124b5846445d466cabf0cadf5",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_01_nor_gl_1k.jpg": "14f105cda9172290be2e8b23b8e895099b65e222619850af3b13105901d922e2",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_01_diff_1k.jpg": "a8771db98ed7f3d46ce48fd70867f58a74a2530666c339f8dcc14f3e5de86d0b",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_01_diff_1k.jpg": "2ae5005b4836d2c91d1e712d9acf425c7dcc4973b7c0fc6f23da9afaa6381da6",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_02_opacity_1k.jpg": "a86bcaf9c4858cf250fd67c9a0ee362504454b9972ff6e1ac44e38bac3213421",
+    "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_02_nor_gl_1k.jpg": "3af4716b42812b742577594c7a0a342accd79925f02037c152b1da1c5831bb78"
+   },
+   "node": "exterior_aircon_unit",
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  },
+  {
+   "id": "street_lamp",
+   "kind": "model",
+   "what": "街灯（柱の頭に灯具）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/street_lamp_01",
+   "page": "https://polyhaven.com/a/street_lamp_01",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:01:05+09:00",
+   "file": "polyhaven/street_lamp_01/street_lamp_01_1k.gltf",
+   "size_m": [
+    0.704,
+    0.386,
+    3.871
+   ],
+   "polyhaven": {
+    "id": "street_lamp_01",
+    "res": "1k"
+   },
+   "note": "構内の街灯より低い。高さは棟 JSON の size.h で合わせる（拡大率の警告を見る）",
+   "sha256": {
+    "polyhaven/street_lamp_01/street_lamp_01_1k.gltf": "5d0358ede168b5e04547780b99d8e6d651cbe644e468e67cb505019047cbd5c8",
+    "polyhaven/street_lamp_01/textures/street_lamp_01_arm_1k.jpg": "4b5487a6c7ee300c3cf5449629e01c35409e5c7ac1695edb9fe69d4821853c7c",
+    "polyhaven/street_lamp_01/textures/street_lamp_01_diff_1k.jpg": "3e9d3471b33eb1f8075ed741c2b1932103598626d057ca12ef38005ea5fcb165",
+    "polyhaven/street_lamp_01/textures/street_lamp_01_nor_gl_1k.jpg": "172af0fd7ed4999e9f520b9f56e1f357a6dba87adbd7b8aa87e0a0b95840c63d",
+    "polyhaven/street_lamp_01/street_lamp_01.bin": "c283db9b6d95835d9e8fc1692829acadcb21a0623b2daaa7231cec1440488401"
+   },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  },
+  {
+   "id": "bench",
+   "kind": "model",
+   "what": "ベンチ（木の座面、塗装）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/painted_wooden_bench",
+   "page": "https://polyhaven.com/a/painted_wooden_bench",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:01:05+09:00",
+   "file": "polyhaven/painted_wooden_bench/painted_wooden_bench_1k.gltf",
+   "size_m": [
+    1.165,
+    0.497,
+    0.889
+   ],
+   "polyhaven": {
+    "id": "painted_wooden_bench",
+    "res": "1k"
+   },
+   "note": "",
+   "sha256": {
+    "polyhaven/painted_wooden_bench/painted_wooden_bench_1k.gltf": "2289ab82f3fe3045bf18f7b9541743d2c65b9f071cb34bbe424d2bc998f3e507",
+    "polyhaven/painted_wooden_bench/textures/painted_wooden_bench_diff_1k.jpg": "9bc533313091ee71eaca5fa6334b71d27935d9d75311f64df6a53c28a67c435c",
+    "polyhaven/painted_wooden_bench/textures/painted_wooden_bench_nor_gl_1k.jpg": "a0f53740d77fc61aac01de0b7e1ae6109445d1756839f739ae31fdf10c9911f2",
+    "polyhaven/painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg": "878785565eeff706b8f1e4db7e3d794a544e9cf0e56cee424d9a271ab4ead47e",
+    "polyhaven/painted_wooden_bench/painted_wooden_bench.bin": "5799bcb20924105cccd6424de8cdb8e67eb57fddc19c395befeac634a7b2e013"
+   },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  },
+  {
+   "id": "tree_small",
+   "kind": "model",
+   "what": "木（小さめの広葉樹）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/tree_small_02",
+   "page": "https://polyhaven.com/a/tree_small_02",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-04T12:01:06+09:00",
+   "file": "polyhaven/tree_small_02/tree_small_02_1k.gltf",
+   "size_m": [
+    2.917,
+    4.292,
+    4.557
+   ],
+   "polyhaven": {
+    "id": "tree_small_02",
+    "res": "1k"
+   },
+   "note": "種類は構内の木と同じとは限らない（見た目だけ）。高さ・幅は根拠付きの値で合わせる",
+   "sha256": {
+    "polyhaven/tree_small_02/tree_small_02_1k.gltf": "3062a709614c05b80fdc1e56583998bc3cb1027b0d52f956c8ecfb882ff8ca6d",
+    "polyhaven/tree_small_02/textures/tree_small_02_branch_nor_gl_1k.jpg": "a2efae9e7fede259601188cd5cb7e561fc502bd87e04d862a9532b2d8e647a62",
+    "polyhaven/tree_small_02/textures/tree_small_02_branch_diff_1k.jpg": "a71b768e330c0c6cca097e30314f6b4e842ef724a1370f6aab14b4434eec64cb",
+    "polyhaven/tree_small_02/textures/tree_small_02_branch_arm_1k.jpg": "8968b46d76c67da09ebbf4eed04b8123c9e0ddf5b55d123968b35b32aa76d27a",
+    "polyhaven/tree_small_02/textures/tree_small_02_leaves_nor_gl_1k.jpg": "8c72e04fb23e16ae1df79c01385a638473d1dd4dede3d51e83d70153c129f09b",
+    "polyhaven/tree_small_02/textures/tree_small_02_leaves_diff_1k.jpg": "261e7d7a5ac7d2e16ea8823ff8510be8f3f615999724232994039ad2885e5c36",
+    "polyhaven/tree_small_02/textures/tree_small_02_leaves_arm_1k.jpg": "71f81374daf5a8f3e6eb2c694264a1769fdb0bea508178e4105618eecea83c3e",
+    "polyhaven/tree_small_02/textures/tree_small_02_nor_gl_1k.jpg": "9c83be074c950ea1b94c732c0c0291b53b9ba357f932d378bafe3ca3b4418871",
+    "polyhaven/tree_small_02/textures/tree_small_02_diff_1k.jpg": "4e0093f407b3a1120a36de49a48ebe5a465a9a9b77e361c7a3e66866e115e404",
+    "polyhaven/tree_small_02/textures/tree_small_02_arm_1k.jpg": "891c5a1bb124292984b01558e9f2b0302d27d2fa3ccf9dfc6c34f9ea4ca24e6c",
+    "polyhaven/tree_small_02/tree_small_02.bin": "8da6c3c389ad8748286d1b7488cd827f75ebdad9d8f59ef7dfb0916df5edc634"
+   },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  }
+ ],
+ "not_found": [
+  {
+   "what": "金属の手すりの支柱",
+   "searched": "Poly Haven の models（rail / fence / post / bollard）。Kenney は zip が署名つきの一時リンクで自動取得できず未確認",
+   "fallback": "該当なし → 箱（parts_geom.rail_prims の柱）のまま"
+  },
+  {
+   "what": "扉",
+   "searched": "Poly Haven の models（door）：large_castle_door / rollershutter_door しか無く、大学の扉と形が違う",
+   "fallback": "該当なし → 箱のまま（面の openings / porch の形）"
+  }
+ ]
+}

@@ -114,6 +114,7 @@ Tests: `python -I -X utf8 -m pytest` (test files are in `tests/`).
 - **OpenStreetMap** (roads, boundaries, building names). `{{TBD}}`: attribution text (ODbL).
 - **Geospatial Information Authority of Japan**: aerial photos and 5 m elevation (attribution shown).
 - **CC0 assets** for sky/lighting/materials. `{{TBD}}`: list the actual assets when used.
+- **CC0 assets (Poly Haven / Kenney)**: the full list (source URL, license, SHA256) is in `data/assets/catalog.json`. Only CC0-1.0 is accepted (no CC-BY). They supply only the look; position, count and size come from the evidence-backed values in the building JSON. Files are fetched with `python -m recorder assets fetch` into `assets/` (not in the repository).
 - The official campus map was used only to confirm building names and existence, within the university's permission. No shapes, positions, or dimensions were traced. It is not in the repository (`data/reference/` is git-ignored).
 
 **Not used**: anything derived from Google (maps, aerial photos, 3D, Street View); tracing of any campus plan or web drawing; any previously finished model. Earlier project folders were read-only references; no code, model, or measurement was copied.

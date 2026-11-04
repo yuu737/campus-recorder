@@ -27,3 +27,6 @@ data/site/cache/
 
 # 歩ける画面の生成物（recorder site export-web で再生成）
 web/data/
+
+# CC0 アセットの取得物（recorder assets fetch で再取得。一覧は data/assets/catalog.json）
+/assets/

@@ -201,7 +201,14 @@ PART_REQUIRED = {
     "rail": ("face", "along0", "along1", "z", "height"),
     "column": ("x", "y", "z1"),
     "rooftop_units": ("source", "z0", "units"),
+    "asset": ("asset", "size"),
 }
+# CC0 アセット（data/assets/catalog.json）。位置・個数・大きさは根拠付きの値、見た目だけアセット。
+#   {"type": "asset", "asset": "<catalog id>", "face", "along", "offset", "z0", "yaw", "count", "pitch",
+#    "size": {"w", "d", "h"}}       面に付く物（単独の物は face/along の代わりに x, y）
+#   yaw は置き方の角度（度）で寸法ではないので裸の数を許す。size の各値は Measurement（unknown 可）。
+#   既存の部品の "material": "asset:<id>" は catalog の texture を指す。
+ASSET_PREFIX = "asset:"
 # 裸の数を書いてよい鍵（座標。寸法ではない）。それ以外の裸の数は「根拠の無い値」として落とす
 COORD_KEYS = {"x", "y", "polygon", "center", "from", "to"}
 
@@ -230,7 +237,10 @@ def check_new_part(pt: dict, where: str) -> list[str]:
     for k in PART_REQUIRED.get(t, ()):
         if k not in pt:
             errs.append(f"{where}: {k} がありません")
-    errs += check_values({k: v for k, v in pt.items() if k not in ("type", "face", "name", "material", "note")}, where)
+    skip = ("type", "face", "name", "material", "note") + (("asset", "yaw") if t == "asset" else ())
+    errs += check_values({k: v for k, v in pt.items() if k not in skip}, where)
+    if t == "asset":
+        errs += _check_asset_part(pt, where)
     if t == "stair_switchback" and not (pt.get("landing_z") or ("floors" in pt and "floor_pitch" in pt)):
         errs.append(f"{where}: 踊り場の高さ（landing_z か floors＋floor_pitch）がありません")
     if t == "steps":
@@ -248,6 +258,78 @@ def check_new_part(pt: dict, where: str) -> list[str]:
                 errs.append(f"{where}.units[{i}]: center の箱には w と d が要ります")
     if t == "column" and pt.get("section", "round") not in ("round", "square"):
         errs.append(f"{where}: section は round か square です")
+    return errs
+
+
+def _catalog_or_error() -> tuple[dict | None, str | None]:
+    try:
+        from . import assets
+    except ImportError:  # recorder/ を sys.path に入れて読んだとき
+        import assets  # type: ignore[no-redef]
+    try:
+        return assets.load_catalog(), None
+    except (OSError, ValueError) as e:
+        return None, f"アセットの台帳 data/assets/catalog.json が読めません（{e}）"
+
+
+def _catalog_kind(aid: str, want: str, where: str) -> list[str]:
+    cat, err = _catalog_or_error()
+    if err:
+        return [f"{where}: {err}"]
+    it = next((x for x in cat.get("items", []) if x.get("id") == aid), None)
+    if it is None:
+        return [f"{where}: アセット {aid} は台帳 data/assets/catalog.json にありません"]
+    out = []
+    if it.get("kind") != want:
+        out.append(f"{where}: アセット {aid} は {it.get('kind')} です（{want} が要ります）")
+    if it.get("license") != "CC0-1.0":
+        out.append(f"{where}: アセット {aid} は CC0 ではないので使えません")
+    return out
+
+
+def _check_asset_part(pt: dict, where: str) -> list[str]:
+    errs: list[str] = []
+    aid = pt.get("asset")
+    if not isinstance(aid, str) or not aid:
+        errs.append(f"{where}: asset（台帳の id）がありません")
+    else:
+        errs += _catalog_kind(aid, "model", where)
+    size = pt.get("size")
+    if not isinstance(size, dict):
+        errs.append(f"{where}: size は {{w, d, h}} です")
+    else:
+        for k in ("w", "d", "h"):
+            if k not in size:
+                errs.append(f"{where}.size: {k} がありません（unknown でも鍵は書く）")
+    if pt.get("face"):
+        if "along" not in pt:
+            errs.append(f"{where}: face に付けるなら along がありません")
+    elif not ("x" in pt and "y" in pt):
+        errs.append(f"{where}: face＋along か x＋y のどちらかが要ります")
+    yaw = pt.get("yaw")
+    if yaw is not None and not (isinstance(yaw, (int, float)) and not isinstance(yaw, bool)):
+        if not (isinstance(yaw, dict) and "value" in yaw):
+            errs.append(f"{where}: yaw は度の数か測定値です")
+        else:
+            errs += Measurement.from_json(yaw).problems(f"{where}.yaw")
+    cnt = Measurement.from_json(pt.get("count")) if pt.get("count") is not None else None
+    if cnt and cnt.known and float(cnt.value) > 1 and "pitch" not in pt:
+        errs.append(f"{where}: count が 2 以上なら pitch が要ります")
+    return errs
+
+
+def _asset_materials(obj, where: str) -> list[str]:
+    """"material": "asset:<id>" を全部探し、台帳の texture か調べる。"""
+    errs: list[str] = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k == "material" and isinstance(v, str) and v.startswith(ASSET_PREFIX):
+                errs += _catalog_kind(v[len(ASSET_PREFIX):], "texture", f"{where}.material")
+            else:
+                errs += _asset_materials(v, f"{where}.{k}")
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            errs += _asset_materials(v, f"{where}[{i}]")
     return errs
 
 
@@ -355,6 +437,8 @@ def validate_building(b: dict) -> list[str]:
         for i, bd in enumerate(fc.get("bands", [])):
             if "rail" in bd:
                 errs.extend(check_values(bd["rail"], f"faces[{fc.get('id')}].bands[{i}].rail"))
+
+    errs += _asset_materials({"faces": b.get("faces", []), "parts": b.get("parts", []), "blocks": b.get("blocks", [])}, "")
 
     for i, rq in enumerate(b.get("requests", [])):
         where = f"requests[{i}]"

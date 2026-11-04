@@ -14,6 +14,8 @@
                                                  片端ずつの 2 枚を階高で揃えて横につなぐ（決まらなければ ambiguous）
   python -m recorder site confirm <id> <status> --by 名前 [--name 新しい名前] [--note ...]
                                                  職員の確認を敷地 JSON に書く
+  python -m recorder assets list                CC0 アセットの台帳（data/assets/catalog.json）と取得状況
+  python -m recorder assets fetch [id ...]      台帳のアセットを assets/ に取る（差分だけ。sha256 を台帳に書く）
 """
 
 from __future__ import annotations
@@ -146,6 +148,13 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--steps", default=None, help="カンマ区切り（既定: 全工程）")
     q.add_argument("--dry-run", action="store_true")
 
+    p = sub.add_parser("assets", help="CC0 アセットの台帳と取得")
+    xsub = p.add_subparsers(dest="assets_cmd", required=True)
+    q = xsub.add_parser("list")
+    q.add_argument("--kind", default=None, choices=["model", "texture", "hdri"])
+    q = xsub.add_parser("fetch")
+    q.add_argument("ids", nargs="*")
+
     a = ap.parse_args(argv)
 
     if a.cmd == "agent":
@@ -155,6 +164,8 @@ def main(argv: list[str] | None = None) -> int:
         return _site(a)
     if a.cmd == "photos":
         return _photos(a)
+    if a.cmd == "assets":
+        return _assets(a)
 
     if a.cmd == "new":
         path = Path(a.dir) / f"{a.id}.json"
@@ -446,6 +457,36 @@ def _site(a) -> int:
         print(f"{b['id']}: {b['name']} → {a.status}（{a.by}）")
         return 0
     return 2
+
+
+def _assets(a) -> int:
+    from . import assets
+
+    cat = assets.load_catalog()
+    errs = assets.validate_catalog(cat)
+    if errs:
+        print("台帳の規約違反:")
+        for e in errs:
+            print(f"   - {e}")
+        return 1
+    if a.assets_cmd == "list":
+        for it in cat["items"]:
+            if a.kind and it["kind"] != a.kind:
+                continue
+            try:
+                assets.resolve(it["id"], cat)
+                st = "取得済み"
+            except FileNotFoundError:
+                st = "未取得"
+            size = " x ".join(f"{v:g}" for v in it.get("size_m") or it.get("tile_m") or [])
+            print(f"{it['id']:<16} {it['kind']:<8} {it['source']:<10} {st:<5} {size:<20} {it['what']}")
+        for nf in cat.get("not_found", []):
+            print(f"{'(該当なし)':<16} {nf['what']} → {nf['fallback']}")
+        return 0
+    r = assets.fetch(cat, a.ids or None)
+    assets.save_catalog(cat)
+    print(f"取得 {len(r['ok'])} / 変化なし {len(r['skip'])} / 失敗 {len(r['fail'])}")
+    return 1 if r["fail"] else 0
 
 
 if __name__ == "__main__":

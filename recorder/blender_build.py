@@ -389,6 +389,14 @@ class Mats:
         self.canopy = material_plain("canopy", (0.80, 0.84, 0.80, 1.0), roughness=0.3)        # かまぼこ庇（透ける板。色だけ）
 
     def named(self, name: str | None):
+        if isinstance(name, str) and name.startswith("asset:"):      # CC0 の質感（data/assets/catalog.json）
+            try:
+                import assets_blender
+                m = assets_blender.material_for(name)
+                if m is not None:
+                    return m
+            except Exception as e:  # noqa: BLE001  取れなければ既定の素材に落として続ける
+                print(f"[warn] asset material {name}: {e}", file=sys.stderr)
         return {"glass": self.glass, "concrete": self.concrete, "dark": self.dark, "metal": self.metal,
                 "tile": self.main, "coping": self.coping, "brick": self.pavement, "stone": self.stone,
                 "white": self.white, "canopy": self.canopy}.get(name or "tile", self.main)
@@ -845,6 +853,14 @@ def build_building(b: dict, col) -> dict:
             pg.material_index = 1
     for e in extras:
         e.parent = body
+    try:                                   # CC0 アセットの部品（parts[type=asset]。位置・個数・大きさは JSON、見た目はアセット）
+        import assets_blender
+        asset_report = assets_blender.build_asset_parts(b, col)
+        for r in asset_report:
+            for w in r.get("warnings", []):
+                print(f"[warn] asset parts[{r['index']}:{r['asset']}] {w}", file=sys.stderr)
+    except Exception as e:  # noqa: BLE001
+        print(f"[warn] asset parts: {e}", file=sys.stderr)
 
     xs = [p[0] for p in poly]
     ys = [p[1] for p in poly]
