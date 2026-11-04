@@ -1,0 +1,181 @@
+{
+ "building": "honbu",
+ "runner": "subagent",
+ "dry_run": false,
+ "steps": [
+  {
+   "agent": "satsuei",
+   "step": "satsuei",
+   "model": "claude-opus-5-5",
+   "seconds": 300.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [
+    "out/honbu/satsuei_checks.json"
+   ],
+   "note": "試走開始 20:51。退避 trial/honbu/20261104_205059。撮影係：14 枚判定、使える 12。困った所：棟 JSON が無い時の requests 照合と面 id、夕方の鮮明度 300 台の目安、『当たりそうな写真』の選び方",
+   "logged_at": "2026-11-04T20:53:17"
+  },
+  {
+   "agent": "shiwake",
+   "step": "shiwake",
+   "model": "claude-opus-5-5",
+   "seconds": 660.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [],
+   "note": "104 枚を 9 面に仕分け（f6 南南西 24、f0 北翼東 19、f8 中庭側 17、面なし 21）。困った所：ピロティ内の写真の扱い、notes と face だけの書き方の二重、一直線の f4/f5 の付け方。約束外れ：shiwake_library.json の冒頭を読んだ",
+   "logged_at": "2026-11-04T21:05:19"
+  },
+  {
+   "agent": "kansatsu",
+   "step": "kansatsu",
+   "model": "claude-opus-5-5",
+   "seconds": 900.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [
+    "out/honbu/kansatsu_f0.json",
+    "out/honbu/kansatsu_f1.json",
+    "out/honbu/kansatsu_f2.json",
+    "out/honbu/kansatsu_f3.json",
+    "out/honbu/kansatsu_f4.json",
+    "out/honbu/kansatsu_f5.json",
+    "out/honbu/kansatsu_f6.json",
+    "out/honbu/kansatsu_f7.json",
+    "out/honbu/kansatsu_f8.json",
+    "out/honbu/kansatsu_summary.json"
+   ],
+   "note": "9 面の観察票。塊 2（本体 5 階・北翼 4 階）、f6 9 スパン、f8 7、デッキと開放廊下の語彙無し。約束外れ：手順書の『本部棟で実際に出た数』が範囲読みで見えた（9 スパン・5 階小窓 2 は検証に使えない）→ 節を docs/検算の記録_本部棟.md に分離。困った所：見本が他棟の out/、仮 JSON 無し時の比較、スパンの数え方の基準",
+   "logged_at": "2026-11-04T21:20:37"
+  },
+  {
+   "agent": "kazoe",
+   "step": "kazoe",
+   "model": "claude-opus-5-5",
+   "seconds": 600.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [
+    "out/honbu/kazoe_f0.json",
+    "out/honbu/kazoe_f1.json",
+    "out/honbu/kazoe_f2.json",
+    "out/honbu/kazoe_f3.json",
+    "out/honbu/kazoe_f4.json",
+    "out/honbu/kazoe_f5.json",
+    "out/honbu/kazoe_f6.json",
+    "out/honbu/kazoe_f7.json",
+    "out/honbu/kazoe_f8.json"
+   ],
+   "note": "f6 9/5 階 measured、f8 7（窓 6 measured＋無窓 1 推定）、f0 4＋入隅のくぼみ、f4 3＋細い 1。困った所：無地の壁の bays の書き方（not_applicable）、スパン外の部分の扱い（segments）、無窓面の階数を同じ塊で決めてよいか、観察票と違った時の書き方",
+   "logged_at": "2026-11-04T21:31:36"
+  },
+  {
+   "agent": "sokuryo",
+   "step": "sokuryo",
+   "model": "claude-opus-5-5",
+   "seconds": 1200.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [
+    "out/honbu/sokuryo_f0.json",
+    "out/honbu/sokuryo_f4.json",
+    "out/honbu/sokuryo_f6.json",
+    "out/honbu/sokuryo_f8.json"
+   ],
+   "note": "f6 柱間 5.43/階高 4.14 measured（辺 49.72÷9.164、タイル −1.6%）、f8 同じ縮尺 estimated（辺 36.81 に 7.13 柱間が入らず −4.8%）、北翼 6.12・階高 unknown。道具：stitch が 5 階小窓 2 つで周期を割り続けて止まる、rectify --out がフォルダになる、measure が木で 1.2% ずれ。困った所：stitch 失敗時の代替（共通の柱型まで別々に測って足す）、辺÷スパンが角の柱型を含むか、PLATEAU の辺が 5% 超で食い違う時、段ごとに作りが違う面の階高の線",
+   "logged_at": "2026-11-04T21:47:21"
+  },
+  {
+   "agent": "sekkei",
+   "step": "sekkei",
+   "model": "claude-opus-5-5",
+   "seconds": 960.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [
+    "out/honbu/sekkei_summary.json"
+   ],
+   "note": "design_honbu.py 新設。measured 14・estimated 124（仮説 7：f8 を f6 から same_block）・unknown 23、requests 20（撮影 17・語彙 3：デッキ・開放廊下・幅の違うスパン）。部品は雨どい 1 本だけ（外階段・デッキ・玄関・大階段・屋上設備は寸法無しで依頼）。困った所：spandrel.in_recess の z_bottom、辺が短い時の扱い、坂の棟の z=0 の決まり、屋上設備の高さ、デッキの測り方。道具：街路視点のカメラが地形を見ない（f4 で真っ暗）",
+   "logged_at": "2026-11-04T22:04:24"
+  },
+  {
+   "agent": "seizu",
+   "step": "seizu",
+   "model": "code",
+   "seconds": 22.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [],
+   "note": "recorder run --fast OK（validate・draw・model）",
+   "logged_at": "2026-11-04T22:05:01"
+  },
+  {
+   "agent": "kenshu",
+   "step": "kenshu",
+   "model": "claude-opus-5-5",
+   "seconds": 1500.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [
+    "out/honbu/kenshu_PXL_20261103_042734715.json",
+    "out/honbu/kenshu_PXL_20261103_042822099.json",
+    "out/honbu/kenshu_PXL_20261103_042853166.json",
+    "out/honbu/kenshu_PXL_20261103_042900775.json",
+    "out/honbu/kenshu_PXL_20261103_043055592.json",
+    "out/honbu/kenshu_PXL_20261103_043259125.json",
+    "out/honbu/kenshu_PXL_20261103_043320836.json",
+    "out/honbu/kenshu_summary.json"
+   ],
+   "note": "7 枚登録（compare は 7 枚とも横原点が曖昧 → 面の端の縁で x_origin_px）。直し 2：f6 1 階開口の上端 4.78→4.60、f8 の仮説 7 値を確定（柱型 0.95→0.83）。合否 f6/f8/f4 合格、f0 不合格（1 枚）。被覆 f6 100/f4 96/f0 82/f8 76。困った所：--lines の x_named が自動検出を止める、compare の偽 NG、写真単位と面単位の合否、仮説確定時に値を直してよいか",
+   "logged_at": "2026-11-04T22:16:35"
+  },
+  {
+   "agent": "seizu",
+   "step": "seizu_final",
+   "model": "code",
+   "seconds": 42.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [],
+   "note": "recorder run（本番）OK",
+   "logged_at": "2026-11-04T22:17:25"
+  },
+  {
+   "agent": "seizu",
+   "step": "web",
+   "model": "code",
+   "seconds": 10.0,
+   "tokens": 0,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "outputs": [],
+   "note": "site export-web --with-coverage OK。試走終了 22:20（開始 20:51、約 1 時間 30 分）",
+   "logged_at": "2026-11-04T22:17:25"
+  }
+ ],
+ "stopped_early": false,
+ "seconds_total": 6194.0,
+ "cost_usd_estimate": null,
+ "made_at": "2026-11-04T20:53:17",
+ "tokens_total": 0
+}
