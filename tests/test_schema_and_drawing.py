@@ -197,8 +197,10 @@ def test_ground_offset_is_a_measurement_with_rules():
     assert "faces[S].ground_offset" in schema.unknowns(unk)
 
 
-def test_elevation_draws_ground_line_at_offset():
+def test_elevation_draws_ground_line_at_offset(monkeypatch):
     import re
+    from recorder import site
+    monkeypatch.setattr(site, "load_dem", lambda *a, **k: (_ for _ in ()).throw(FileNotFoundError()))   # 地形が無い時は ground_offset
     base = drawing.elevation_svg(load(), "S")
     sunk = drawing.elevation_svg(_with_ground(-3.0), "S")
     raised = drawing.elevation_svg(_with_ground(1.4), "S")
@@ -209,3 +211,16 @@ def test_elevation_draws_ground_line_at_offset():
     y0, ys, yr = ground_y(base), ground_y(sunk), ground_y(raised)
     assert ys > y0 > yr
     assert abs((ys - y0) - 3.0 * drawing.SCALE) < 1.0 and abs((y0 - yr) - 1.4 * drawing.SCALE) < 1.0
+
+
+def test_face_ground_line_priority():
+    import numpy as np
+    gx = np.arange(0.0, 60.0, 1.0)
+    dem = {"x": gx, "y": gx, "z": np.full((60, 60), 12.0)}
+    b = {"ground_z": {"value": 10.0, "status": "measured"}}
+    fc = {"from": [10.0, 10.0], "to": [30.0, 10.0], "ground_offset": {"value": -0.5, "status": "estimated", "method": "x", "evidence": []}}
+    v, src = drawing.face_ground_line(b, fc, dem)
+    assert src == "terrain" and abs(v - 2.0) < 1e-6              # 地形を優先（ground_offset は無視）
+    v, src = drawing.face_ground_line({}, fc, dem)               # ground_z が無ければ ground_offset
+    assert (v, src) == (-0.5, "ground_offset")
+    assert drawing.face_ground_line({}, {"from": [0, 0], "to": [1, 0]}, dem) == (0.0, "none")

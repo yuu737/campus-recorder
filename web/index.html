@@ -123,7 +123,9 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
     root.position.y = m.ground_z;     // glb の高さは ground_z 基準
     const d = site.designed[id] || {}, c = d.counts || {};
     const info = { id, name: d.name, grounded: true, measured: c.measured || 0, estimated: c.estimated || 0, unknown: c.unknown || 0 };
-    root.traverse((o) => { if (o.isMesh) { o.userData.info = info; pickables.push(o); } });
+    // glb の地形の面（terrain）は隠す。歩く画面の地面は site.json の格子（キャンパス全体）に統一する
+    root.traverse((o) => { if (o.isMesh && /^terrain/.test(o.name)) o.visible = false; });
+    root.traverse((o) => { if (o.isMesh && o.visible) { o.userData.info = info; pickables.push(o); } });
     scene.add(root);
     root.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(root);

@@ -128,6 +128,25 @@ def _face_height(b: dict) -> tuple[Measurement, float, list[str]]:
     return Measurement(None), 20.0, notes
 
 
+def face_ground_line(b: dict, fc: dict, dem: dict | None = None) -> tuple[float, str]:
+    """立面の地面の線の高さ（z=0 から）と出どころ。地形（面の前の帯の中央値）を優先し、無ければ ground_offset、どちらも無ければ 0。
+    模型は地形の面を使うので、立面もそれに合わせる。dem を渡さなければ out/site/dem5a.npz を探す。"""
+    gz = (b.get("ground_z") or {})
+    gzv = gz.get("value") if isinstance(gz, dict) and gz.get("status") != "unknown" else (gz if isinstance(gz, (int, float)) else None)
+    if gzv is not None and fc.get("from") and fc.get("to"):
+        try:
+            from . import site
+            d = dem if dem is not None else site.load_dem()
+            v = site.face_band_offset(d, fc["from"], fc["to"], gzv)
+            if v is not None:
+                return float(v), "terrain"
+        except (OSError, FileNotFoundError, KeyError, ValueError):
+            pass
+    if "ground_offset" in fc and schema.Measurement.from_json(fc.get("ground_offset")).known:
+        return schema.face_ground_offset(fc), "ground_offset"
+    return 0.0, "none"
+
+
 def elevation_svg(b: dict, face_id: str) -> str:
     faces = {f["id"]: f for f in b.get("faces", [])}
     if face_id not in faces:
@@ -143,9 +162,9 @@ def elevation_svg(b: dict, face_id: str) -> str:
     Hpx = H * SCALE
     x0, y_ground = LEFT, TOP + Hpx          # y_ground は z=0（棟の基準面）の行
     g_m = _m(fc, "ground_offset")           # 面の前の地面の高さ（z=0 から。沈んだ広場は負）。省略は 0
-    g = schema.face_ground_offset(fc)
+    g, g_src = face_ground_line(b, fc)
     below = max(0.0, -g) * SCALE            # 地面が z=0 より低い時は、壁を地面まで下げて描く
-    if "ground_offset" in fc and not g_m.known:
+    if g_src != "terrain" and "ground_offset" in fc and not g_m.known:
         unknown_lines.append("面の前の地面の高さ（ground_offset）")
     svg = _Svg()
 

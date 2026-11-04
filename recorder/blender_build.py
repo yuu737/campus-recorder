@@ -405,7 +405,8 @@ class Mats:
 # --- 棟を組む -----------------------------------------------------------------------
 
 TERRAIN_FAR_M = 200.0     # 鳥瞰・街路視点の背景用の粗い地形（5 m 格子）の広がり。描画だけで glb には入れない
-TERRAIN_FAR_STEP_M = 5.0
+TERRAIN_FAR_STEP_M = 10.0   # 5m 標高の画素より粗く（5 m 格子は画素の段がそのまま尖りになる）
+TERRAIN_FAR_SMOOTH_PX = 15  # 遠景は 5m 標高 3 画素分の窓で均してから間引く
 TERRAIN_FAR_DROP_M = 0.15  # 粗い地形は細かい地形の下に少し沈める（重なりのちらつき防止）
 FOOTING_DEPTH_M = 1.0      # 建物を地形の下まで伸ばす深さ（地形は切り欠かない）
 
@@ -427,7 +428,8 @@ class Terrain:
         dem = site.load_dem(npz)
         self.grid = site.terrain_grid(dem, poly, gz)
         try:
-            self.far = site.terrain_grid(dem, poly, gz, margin_m=TERRAIN_FAR_M, step_m=TERRAIN_FAR_STEP_M)
+            self.far = site.terrain_grid(dem, poly, gz, margin_m=TERRAIN_FAR_M, step_m=TERRAIN_FAR_STEP_M,
+                                     smooth_px=TERRAIN_FAR_SMOOTH_PX)
         except ValueError:
             self.far = None
         self.checks, self.warnings = site.check_ground_offsets(dem, b)
