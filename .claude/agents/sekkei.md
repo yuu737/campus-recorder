@@ -12,6 +12,9 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 - 面の id は足元の辺番号で固定。一直線の辺はまとめて `merged` に元 id を残す
 - 見えていない面は「同じ割付と仮定」と `method` に明記して `estimated`
 - 寸法が unknown の物は塊にしない（撮影依頼へ）
+- **語彙が無い部品は箱で近似しない**。`requests` に `kind: "tool"` で「何を表す語彙が要るか」を書く（語彙を足すのは実装係。本部棟では 1 日で 17 種増えた）。観察票にある 1 m 以上の物が模型に無いまま合格にしない
+- 形が定型の物（室外機・街灯・ベンチ・扉・木）は `parts[type=asset]`（CC0、`data/assets/catalog.json`）。位置・個数・大きさは写真の根拠、見た目はアセット
+- ガラスは透ける素材（`glass`）。窓の奥には暗い板が自動で入る。ガラスの箱・風除室は `vestibule`、面の一部のガラスは `glazing`
 - 直した理由は `history` に。足りない物は `requests` に「面・何を・どこから・なぜ」
 - 観察票の言葉 → 部品（11/4 午後の語彙。書き方は docs/手順_エージェント.md「生成器の教訓」、見本は tests/fixtures/parts_building.json）
   - 「軒裏・ピロティ天井の小梁／梁の格子」→ `ceiling_beams`（ピロティは side "in"、軒下は "out"。格子は direction "grid"）
