@@ -8,6 +8,7 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 
 ## 手順
 1. **登録済みの写真は recheck**：`recorder recheck data/buildings/<id>.json --fast` → `out/<id>/recheck/<日時>/summary.md` を読む（写真 × 面 × 線のずれ m・合否・前回との差、`lines_*.png`、`overlay_*.png`）。手で線を指さない。登録の一覧は `data/photos/registry.json`、未登録の理由は同じ台帳の `not_registered`。
+   recheck の後に `recorder photoproj data/buildings/<id>.json --fast` の `out/<id>/photoproj/<日時>/summary.md`（写真どうしの食い違いの悪い順・面の升・1 枚の所の怪しい）を読み、上位を `heat_*.png` で目視してから recheck の線で量を測る。
 2. **未登録の写真だけ**手で 1 回：検収 A `recorder photos compare <front.jpg> --building … --face …`（横の原点が曖昧なら `--lines` で柱の番号）→ `recorder photos register <写真id> --building … --face … --from-rectify <front.json> --compare <compare.json>` で登録 → 以後は 1 の recheck。視点（検収 B）は登録の時に正面化と compare から自動で解かれる（手で角を指す方法は使わない。失敗済み）。再投影 0 px・カメラ高さ 1 m 前後なら視点は合っている。
 3. 重ね画像を見て、ずれている部品を列挙（部品名・方向・推定 m・根拠の写真）。
 4. 目安：0.15 m 以内 合格。0.15〜0.5 m は JSON の値を直す。0.5 m 以上は対応の取り違え（窓の下端と水切り など）を先に疑う。斜め写真の正面化は縦線が ±0.5 m ぶれるので横線（高さ）を主に信用。模型の線が写真の縁の外なら大きすぎ／手前、内側なら小さすぎ。

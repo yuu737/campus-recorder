@@ -1269,6 +1269,193 @@ def render(path: Path):
     bpy.ops.render.render(write_still=True)
 
 
+# --- 写真の投影（photoproj）：写真の視点から世界座標と面・部品の id を描く -------------------------
+# 模型そのもの・glb・通常の描画は変えない。--photoproj=<spec.json> の時だけ、組み立てた後にここへ来て、他の描画をせずに終わる。
+# 写真を貼る計算（投影・見えるかどうか・食い違い）は外側の recorder/photoproj.py が numpy でする。ここは 1 視点ごとに
+#   P  : 画素に写る模型の点の世界座標 (x, y, z) m（emission で出して EXR 32bit で読む。何も無い所は nan）
+#   ID : 画素に写る面・部品の番号（pp_ids.json の表）
+# を出すだけ（遅延シェーディングの G バッファと同じ考え）。
+
+PP_RECESS_M = 0.8           # 面の線からこの奥行きまでの上向き・下向きの小面（窓の彫り込みの上下）は面そのものに数える
+
+
+def _pp_nearest_face(c, faces: dict) -> tuple[str | None, float]:
+    """一番近い面の線と、線からの外向きの距離 h（負＝奥）。"""
+    best = None
+    for fid, f in faces.items():
+        p0, u, n, L = face_frame(f)
+        d = Vector((c.x, c.y, 0)) - p0
+        t = max(0.0, min(L, d.dot(u)))
+        dist = (d - u * t).length
+        if best is None or dist < best[0]:
+            best = (dist, fid, d.dot(n))
+    return (best[1], best[2]) if best else (None, 0.0)
+
+
+def _pp_label(ob) -> str:
+    part = ob.get("part")
+    if part and part != "body":
+        return f"part:{part}"
+    if ob.get("face"):
+        return f"face:{ob['face']}"
+    nm = ob.name.split(".")[0]
+    if nm.startswith("terrain"):
+        return "ground"
+    if nm.startswith("footing_"):
+        return "body:footing"
+    if nm.startswith("tree_"):
+        return "tree"
+    return "other:" + nm.rstrip("0123456789_")
+
+
+def photoproj_ids(info: dict, b: dict) -> dict:
+    """全部の物の polygon に整数の属性 pp_id を付ける。本体の壁は面ごと（face_polygons）、本体のそれ以外は一番近い面＋向き。"""
+    faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
+    labels: dict = {}
+
+    def lid(label: str) -> int:
+        if label not in labels:
+            labels[label] = len(labels) + 1
+        return labels[label]
+
+    body = info["body"]
+    by_poly = {}
+    for fid, idxs in info["face_polys"].items():
+        for pi in idxs:
+            by_poly[pi] = f"face:{fid}"
+    seen = set()
+    for ob in bpy.context.scene.objects:
+        if ob.type != "MESH" or ob.data is None or ob.data.name in seen:
+            continue
+        me = ob.data
+        seen.add(me.name)
+        if "pp_id" in me.attributes:
+            me.attributes.remove(me.attributes["pp_id"])
+        at = me.attributes.new("pp_id", "INT", "FACE")
+        if ob == body:
+            vals = []
+            for pg in me.polygons:
+                lab = by_poly.get(pg.index)
+                if lab is None:
+                    c = ob.matrix_world @ pg.center
+                    nz = pg.normal.z
+                    fid, h = _pp_nearest_face(c, faces)
+                    kind = "上向き" if nz > 0.7 else ("下向き" if nz < -0.7 else "奥の壁")
+                    if fid and kind != "奥の壁" and -PP_RECESS_M <= h <= 0.3:
+                        lab = f"face:{fid}"            # 窓の彫り込みの上下・帯の上面は面の一部
+                    else:
+                        lab = f"face:{fid}:{kind}" if fid else f"body:{kind}"
+                vals.append(lid(lab))
+        else:
+            vals = [lid(_pp_label(ob))] * len(me.polygons)
+        if vals:
+            at.data.foreach_set("value", vals)
+    return {v: k for k, v in labels.items()}
+
+
+def _pp_material(kind: str, origin):
+    m = bpy.data.materials.new(f"pp_{kind}")
+    try:
+        m.use_nodes = True
+    except (AttributeError, TypeError):
+        pass
+    nt = m.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs["Strength"].default_value = 1.0
+    if kind == "pos":
+        g = nt.nodes.new("ShaderNodeNewGeometry")
+        sub = nt.nodes.new("ShaderNodeVectorMath")
+        sub.operation = "SUBTRACT"
+        sub.inputs[1].default_value = origin            # 負の値の光は避ける（全部正になるように原点をずらす）
+        nt.links.new(g.outputs["Position"], sub.inputs[0])
+        nt.links.new(sub.outputs["Vector"], em.inputs["Color"])
+    else:
+        at = nt.nodes.new("ShaderNodeAttribute")
+        at.attribute_type = "GEOMETRY"
+        at.attribute_name = "pp_id"
+        nt.links.new(at.outputs["Fac"], em.inputs["Color"])
+    nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return m
+
+
+def _pp_render_exr(path: Path):
+    sc = bpy.context.scene
+    sc.render.filepath = str(path)
+    ims = sc.render.image_settings
+    ims.file_format = "OPEN_EXR"
+    ims.color_depth = "32"
+    ims.color_mode = "RGBA"
+    bpy.ops.render.render(write_still=True)
+    img = bpy.data.images.load(str(path))
+    try:
+        img.colorspace_settings.name = "Non-Color"
+    except TypeError:
+        pass
+    w, h = img.size
+    a = np.empty(w * h * 4, np.float32)
+    img.pixels.foreach_get(a)
+    bpy.data.images.remove(img)
+    path.unlink(missing_ok=True)
+    return a.reshape(h, w, 4)[::-1]
+
+
+def photoproj_render(info: dict, b: dict, spec_path: Path, out: Path) -> None:
+    """spec の視点ごとに P（世界座標）と ID を描いて <name>.npz に。表は pp_ids.json。"""
+    from mathutils import Matrix
+
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    ids = photoproj_ids(info, b)
+    (out / "pp_ids.json").write_text(json.dumps({str(k): v for k, v in ids.items()}, ensure_ascii=False, indent=1), encoding="utf-8")
+    sc = bpy.context.scene
+    lo = [1e9, 1e9, 1e9]
+    for ob in sc.objects:
+        if ob.type == "MESH":
+            for c in ob.bound_box:
+                w = ob.matrix_world @ Vector(c)
+                lo = [min(lo[0], w.x), min(lo[1], w.y), min(lo[2], w.z)]
+    origin = Vector(lo) - Vector((1.0, 1.0, 1.0))
+    sc.render.engine = "CYCLES"
+    cy = sc.cycles
+    for attr, v in (("samples", 1), ("use_denoising", False), ("pixel_filter_type", "BOX"), ("filter_width", 0.01),
+                    ("max_bounces", 0), ("use_adaptive_sampling", False), ("sample_clamp_direct", 0.0), ("sample_clamp_indirect", 0.0)):
+        try:
+            setattr(cy, attr, v)
+        except (AttributeError, TypeError):
+            pass
+    sc.render.film_transparent = True
+    sc.render.use_freestyle = False
+    sc.view_settings.view_transform = "Standard"
+    sc.render.resolution_percentage = 100
+    sc.world = bpy.data.worlds.new("pp_w")
+    vl = bpy.context.view_layer
+    m_pos, m_id = _pp_material("pos", origin), _pp_material("id", origin)
+    for v in spec["views"]:
+        w, h = v["resolution"]
+        sc.render.resolution_x, sc.render.resolution_y = int(w), int(h)
+        cd = bpy.data.cameras.new(f"pp_{v['name']}")
+        cd.lens = v["lens_mm"]
+        cd.sensor_width = v["sensor_width_mm"]
+        cd.sensor_fit = "AUTO"
+        cd.clip_start, cd.clip_end = 0.1, 4000
+        cam = bpy.data.objects.new(f"pp_{v['name']}", cd)
+        sc.collection.objects.link(cam)
+        cam.matrix_world = Matrix(v["matrix_world"])
+        sc.camera = cam
+        vl.material_override = m_pos
+        pa = _pp_render_exr(out / f"_pp_{v['name']}_pos.exr")
+        vl.material_override = m_id
+        ia = _pp_render_exr(out / f"_pp_{v['name']}_id.exr")
+        hit = pa[..., 3] > 0.5
+        P = pa[..., :3] + np.array(origin, np.float32)
+        P[~hit] = np.nan
+        ID = np.where(ia[..., 3] > 0.5, np.rint(ia[..., 0]), 0).astype(np.int32)
+        np.savez_compressed(out / f"{v['name']}.npz", P=P.astype(np.float32), ID=ID)
+        print("photoproj 描画:", v["name"], int(hit.sum()), "px")
+    vl.material_override = None
+
+
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     if len(argv) < 2:
@@ -1282,6 +1469,10 @@ def main():
     col = bpy.data.collections.new(b["id"])
     bpy.context.scene.collection.children.link(col)
     info = build_building(b, col)
+    pp = [a for a in argv if a.startswith("--photoproj=")]
+    if pp:                               # 写真の投影用の描画だけ（photoproj）。通常の描画・glb は出さない
+        photoproj_render(info, b, Path(pp[0].split("=", 1)[1]), out)
+        return
     c, H, E = info["center"], info["height"], max(info["extent"], 20.0, info["height"] * 0.9)   # 高い棟はカメラを引く
     site_obs = info["grounds"] + info["footings"]       # 地形と地形の下に伸ばした足元
     far = [o for o in info["grounds"] if o.name == "terrain_far"]

@@ -21,6 +21,8 @@
                                                  写真を面に登録（data/photos/registry.json）。以後は recheck が自動で重ね直す
   python -m recorder recheck <json> [--photos ...] [--fast] [--no-render]
                                                  登録済みの写真を全部、今の棟 JSON に重ね直し、線ごとのずれを一覧（out/<棟>/recheck/<日時>/）
+  python -m recorder photoproj <json> [--photos id,...] [--fast] [--keep-renders]
+                                                 登録済みの写真を模型に投影し、写真どうしの食い違い（縁の強さ）から形の悪い所を悪い順に（out/<棟>/photoproj/<日時>/）
   python -m recorder coverage <json>             面ごとの被覆図（登録済みの写真が覆う範囲、未撮影は灰色）と撮影依頼の候補
 """
 
@@ -161,6 +163,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--blender", default=None)
     p.add_argument("--registry", default=None)
 
+    p = sub.add_parser("photoproj", help="登録済みの写真を模型に投影し、写真どうしの食い違いから形の悪い所を一覧にする")
+    p.add_argument("file")
+    p.add_argument("--photos", default=None, help="写真 id（カンマ区切り。頭だけでも可。省略で全部）")
+    p.add_argument("--fast", action="store_true", help="描画を写真の 1/8 に（通常 1/4）")
+    p.add_argument("--keep-renders", action="store_true", help="Blender の P・ID（render/*.npz）を残す")
+    p.add_argument("--reuse-renders", default=None, help="前の --keep-renders の render/ を使う（Blender を動かさない。棟 JSON を直した後は使わない）")
+    p.add_argument("--blender", default=None)
+    p.add_argument("--registry", default=None)
+
     p = sub.add_parser("coverage", help="面ごとの被覆図と撮影依頼の候補")
     p.add_argument("file")
     p.add_argument("--registry", default=None)
@@ -215,6 +226,25 @@ def main(argv: list[str] | None = None) -> int:
             print("注意:", w)
         for r in summ.get("renders", []):
             print(f"重ね: {r.get('overlay') or r.get('reason')}")
+        print(f"一覧: {out / 'summary.md'}")
+        return 0
+    if a.cmd == "photoproj":
+        from . import photoproj, registry
+
+        reg = registry.load_registry(Path(a.registry)) if a.registry else None
+        ph = [x.strip() for x in a.photos.split(",") if x.strip()] if a.photos else None
+        summ, out = photoproj.photoproj(Path(a.file), ph, a.fast, a.blender, reg, keep_renders=a.keep_renders,
+                                        reuse=Path(a.reuse_renders) if a.reuse_renders else None)
+        for k, r in enumerate(summ["ranking"][:10]):
+            print(f"{k + 1:>2}. {r['id']:<30} {r['kind']}  score {r['score']:.2f}  平均 {r['mean']:.3f}  p90 {r['p90']:.3f}  （{r['pair']}）")
+        for c in summ.get("cells", [])[:5]:
+            print(f"    升: {c['face']} s {c['s'][0]:.0f}–{c['s'][1]:.0f} m z {c['z'][0]:.0f}–{c['z'][1]:.0f} m  score {c['score']:.2f}（{c['pair']}）")
+        for r in summ["suspects"][:5]:
+            print(f"怪しい（1 枚の所）: {r['id']} +{r['increase']:.3f}（{photoproj.short_id(r['photo'])} {r['view']}）")
+        for r in summ.get("unsupported", [])[:5]:
+            print(f"縁の裏付けなし: {r['id']} {r['support']:.2f}（{photoproj.short_id(r['photo'])}）")
+        for w in summ["warnings"]:
+            print("注意:", w)
         print(f"一覧: {out / 'summary.md'}")
         return 0
     if a.cmd == "coverage":
