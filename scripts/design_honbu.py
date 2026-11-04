@@ -67,7 +67,8 @@ b["ground_z"] = m(43.9, 0.7, "estimated", [], "国土地理院 5m 標高（DEM5A
 b["floor_count"] = m(5, None, "measured", EV_SW, "正面化した写真で窓の段を数えた（判断役 Claude）。1 階はピロティ", unit="階")
 b["floor_pitch"] = est(floor_m, 0.15, EV_SW, "正面化→横エッジの自己相関で周期 513.9 px。" + scale_note)
 b["parapet_top"] = m(parapet, 0.4, "estimated", EV_SW, "正面化画像でパラペット上端と柱の足元の行の差 2882 px を換算",
-                     "PLATEAU の measuredHeight 32.1 m との差 8.4 m は屋上の塔屋（航空写真に小さい四角）と解釈")
+                     "PLATEAU の measuredHeight 32.1 m との差 8.4 m は、北西の西角の階段塔（上端 30.23 m、塊 A＋6.55 m）と屋上の設備で説明が付く"
+                     "（前版の『屋上中央の塔屋』は航空写真を倒れ込み 4.8 m 南で補正すると何も無く、P026・042900775 でも見えないので外した。out/honbu/roof.json）")
 b["levels"] = [{"id": "pilotis_ceiling", "name": "ピロティ天井", "z": est(pilotis, 0.3, EV_SW, "正面化画像の行の差 596 px を換算")}]
 b["blocks"] = [
     {"id": "A", "name": "南西の塊（5 階）", "polygon": BLOCK_A, "top_z": est(parapet, 0.4, EV_SW, "parapet_top と同じ")},
@@ -110,6 +111,10 @@ sw["bays"] = {
 sw["render_view"] = True
 win_top = (GROUND_ROW - WIN5_TOP) * MPP
 win_bot = (GROUND_ROW - WIN5_BOT) * MPP
+# 窓の下の濃いパネル（設計係 2026-11-04、観察係の差分表 SW「窓の額縁と窓下のパネル」）。
+# 正面化 042900775_front の行（スパン 2 の窓、x 2300〜2900）：ガラスの下端 → パネルの下端（奥まりの下端）。
+# 模型の窓の下端（5 階の下端を階高で写した行）はパネルの下端に近かったので、窓＝ガラスの範囲、その下をパネルにする。
+SW_SPANDREL_ROWS = {2: (2401, 2466), 3: (1907, 1959), 4: (1416, 1442)}   # 階: (ガラスの下端の行, パネルの下端の行)
 for k in (2, 3, 4, 5):
     off = (5 - k) * floor_m
     sw["windows"].append({
@@ -120,6 +125,19 @@ for k in (2, 3, 4, 5):
         "width": est(bay_m - pier_m, 0.2, EV_SW, "柱間隔 − 柱型の幅"),
         "recess": est(0.5, 0.2, EV_SW + ["PXL_20261103_043405159"], "斜めの写真で柱型の奥行きを目視。柱間隔との比で約 0.5 m"),
     })
+    if k in SW_SPANDREL_ROWS:
+        gr, pr = SW_SPANDREL_ROWS[k]
+        w = sw["windows"][-1]
+        old = w["z_bottom"]["value"]
+        w["z_bottom"] = est((GROUND_ROW - gr) * MPP, 0.1, EV_SW,
+                            f"ガラスの下端。正面化 042900775_front でスパン 2 の窓の行 {gr} px を換算（{scale_note}）。"
+                            f"前版 {old} m は 5 階の窓の下端を階高で写した値で、下の濃いパネルを窓に含めていた")
+        w["spandrel"] = {"height": est((pr - gr) * MPP, 0.05, EV_SW + ["期間前の写真（削除）"],
+                                       f"ガラスの下端 {gr} px → 濃いパネル（奥まりの下端）{pr} px の {pr - gr} px を換算。"
+                                       "観察係の差分表 SW：窓の下に濃い茶のパネル、2 階は厚い箱のように出る"),
+                         "depth": unk(note="パネルの出（2 階は厚い箱）は正面の写真では測れない。模型は薄い板（requests）"),
+                         "material": "dark"}
+        w["note"] = "パネルは実物では窓の奥まりの中にあるが、語彙（spandrel）は壁の面に付けるので面の位置に薄い板で置く（近似）"
     sw["ledges"].append({"name": f"{k}階の窓台の段", "z": est(win_bot - off - 0.2, 0.2, EV_SW, "窓の下の横の段。正面化画像の目視"),
                          "depth": est(0.08, 0.05, EV_SW, "目視"), "height": est(0.2, 0.05, EV_SW, "目視"), "material": "tile"})
 sw["openings"] = [
@@ -128,9 +146,16 @@ sw["openings"] = [
     {"name": "ピロティ（通り抜けの道路）", "bays": [7, 8, 9], "z_top": est(pilotis, 0.3, EV_SW, "正面化画像の行の差を換算"),
      "depth": est(15.8, 1.0, [PL, "PXL_20261103_043320836"], "写真 28 で反対側（中庭）まで抜けて見える → 塊の幅（PLATEAU）と同じ")},
 ]
-sw["glazing"] = [{"name": "1階の事務室（ガラス張り）", "along0": 0.0, "along1": est(3 * bay_m, 0.3, EV_SW, "スパン 1〜3"),
-                  "z_bottom": 0.0, "z_top": est(pilotis - 0.5, 0.3, EV_SW, "ピロティ天井の梁の下まで"),
-                  "inset": est(0.3, 0.2, EV_SW, "柱型の面からの引っ込み。目視"), "depth": est(15.8, 1.0, [PL], "塊の幅")}]
+# 1 階：スパン 1 は煉瓦の壁（小窓）、スパン 2 は軒下の奥のガラス、スパン 3 は正面玄関（parts の porch）。観察係の差分表 SW「1 階の作り」
+SW_EAVE_TOP = pilotis - 0.5
+sw["glazing"] = [{"name": "1階の軒下の奥のガラス（スパン 2）", "along0": round(bay_m + pier_m / 2, 2), "along1": round(2 * bay_m - pier_m / 2, 2),
+                  "z_bottom": 0.0, "z_top": est(SW_EAVE_TOP, 0.3, EV_SW, "ピロティ天井の梁の下まで"),
+                  "inset": est(0.9, 0.3, EV_SW,
+                               "軒裏の見え方から：正面化 042900775_front で軒の前の梁の下にガラスの上端までの軒裏が約 27 px（0.22 m）見え、"
+                               "カメラ（photos pose：面から 13.4 m、高さ 0.96 m）から軒裏の高さ 4.4 m を見上げた幾何で 0.91 m。"
+                               "スパン 3 の左の柱型の内側の側面の見え方（58 px）でも 0.83 m。前版 0.3 m は目視"),
+                  "depth": est(15.8, 1.0, [PL], "塊の幅"),
+                  "note": "スパン 1 は煉瓦の壁と小窓（観察係）なので前版のガラスを外した。小窓は大きさを測っていないので置かない。スパン 2 の左の曲面の煉瓦の壁は語彙が無いので置かない"}]
 img = read_image("out/rectified/20261103/PXL_20261103_042900775_front.jpg")
 bgr = img[345:520, 2000:4600].reshape(-1, 3).mean(axis=0)
 color = "#%02x%02x%02x" % (int(bgr[2]), int(bgr[1]), int(bgr[0]))
@@ -345,6 +370,34 @@ e["openings"] = []
 e["ledges"] = []
 e["materials"] = sw["materials"]
 
+# --- 部品の語彙（2026-11-04 設計係）：帯の上の手すり・窓の下のパネル（観察係の差分表 NE・E） -------------------------
+# 帯の z_top は「手すりの上端」として測っていたので、手すり（bands[].rail）を足す分だけ煉瓦の上端へ下げる。
+# 手すりの高さ：正面化で手すりの棒の上端と煉瓦の笠木の上端の差。E（043304319_front、帯の面は 196.9×1.378＝271 px/m）で 23 px＝0.085 m、
+# 北端の外階段（043129358_front、手すり壁 244.7 px/m）で 21 px＝0.086 m。棒が笠木の上にほぼ直に載る形
+RAIL_H = 0.09
+EV_RAIL = ["PXL_20261103_043304319", "PXL_20261103_043129358"]
+for fc, ev_rail in ((ne, EV_NE_KENSHU + ["期間前の写真（削除）"]), (e, EV_E)):
+    bd = fc["bands"][0]
+    top = bd["z_top"]["value"]
+    bd["z_top"] = est(round(top - RAIL_H, 2), bd["z_top"]["tol"], bd["z_top"]["evidence"],
+                      f"煉瓦の笠木の上端＝前版の手すりの上端 {top} m − 手すりの高さ {RAIL_H} m。前版の方法：" + bd["z_top"]["method"])
+    bd["rail"] = {"height": est(RAIL_H, 0.05, EV_RAIL + ev_rail,
+                                "正面化で手すりの棒の上端と笠木の上端の差：043304319（帯の面 271 px/m）23 px＝0.085 m、043129358（244.7 px/m）21 px＝0.086 m。"
+                                "観察係の差分表：煉瓦の腰壁の上端にステンレスの手すりが 1 本、帯の全長に通る"),
+                  "post_pitch": unk(note="支柱の間隔は写真で数えていない（模型は道具の既定 1.5 m）")}
+# E 面 3 階：奥まりの下の濃い腰板（spandrel）。窓の下端をガラスの下端に上げ、その下をパネルにする
+_e3 = e["windows"][0]
+_e3_old = _e3["z_bottom"]["value"]
+E3_PANEL = round(142 / 196.9, 2)       # 043304319_front：ガラス（カーテン）の下端 2302 px → 煉瓦 2444 px（E_ROWS 3F_bot）
+_e3["z_bottom"] = est(round(_e3_old + E3_PANEL, 2), 0.1, EV_E,
+                      f"ガラスの下端。奥まりの下端 {_e3_old} m（前版の窓の下端）＋ 濃い腰板の高さ {E3_PANEL} m")
+_e3["spandrel"] = {"height": est(E3_PANEL, 0.05, ["PXL_20261103_043304319"],
+                                 "正面化 043304319_front の窓の列（x 1500〜1700）の明るさの縦の並びで、ガラス（カーテン）の下端 2302 px → 煉瓦の上端 2444 px＝142 px ÷ 196.9 px/m（タイル 1 段 70 mm）。"
+                                 "観察係の差分表 E：3 階の横長窓の下に濃い茶のパネル"),
+                   "depth": est(0.0, 0.05, ["PXL_20261103_043304319"], "パネルはガラスとほぼ同じ面（観察票：窓と一体の濃い枠に見える）。模型は薄い板"),
+                   "material": "dark"}
+_e3["note"] = "前版は濃い腰板を含む奥まり全体を 1 つの窓にしていた。spandrel の語彙で分けた（パネルは壁の面に薄い板で置く近似）"
+
 # --- 部品（設計者の読み取り） ----------------------------------------------------------------
 def rect_on(face_id, along0, along1, depth_out, depth_in=0.0):
     """面に沿った長方形（外側へ depth_out、内側へ depth_in）。"""
@@ -419,12 +472,244 @@ ST_LANDINGS = [("右 1", 2600, 3045, 2708), ("左 a（大きい・下が歩道�
                ("左 b", 1140, 1820, 1272), ("右 3", 2600, 3045, 780)]
 
 
+def pt_on(face_id, along, n):
+    """面の始点から along、面から外へ n の世界座標（rect_on と同じ向き）。"""
+    import math
+    f = faces[face_id]
+    (x0, y0), (x1, y1) = f["from"], f["to"]
+    L = math.hypot(x1 - x0, y1 - y0)
+    ux, uy = (x1 - x0) / L, (y1 - y0) / L
+    return [round(x0 + ux * along + uy * n, 3), round(y0 + uy * along - ux * n, 3)]
+
+
+def rot_rect(cx, cy, w, d, axis):
+    """中心 (cx,cy)、axis 方向に w、直角に d の長方形（航空写真の設備の向きのまま）。"""
+    ux, uy = axis
+    vx, vy = -uy, ux
+    return [[round(cx + sx * ux * w / 2 + sy * vx * d / 2, 3), round(cy + sx * uy * w / 2 + sy * vy * d / 2, 3)]
+            for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+
+
+# --- 北端の折り返し外階段 stair_switchback（2026-11-04 設計係。観察係の差分表 NE2 の 11 件） ----------------------------
+# 前版の踊り場の板（balcony）5 枚を、折り返し外階段の語彙に置き換えた。高さは前版の踊り場の z（測量係・検収係）をそのまま引き継ぐ。
+# 面に沿った位置は正面化 043129358_front（手すり壁 244.7 px/m）の x と st_along()（外階段の右端＝along 5.61）。
+# 語彙は両端の踊り場の長さが同じ（landing_len 1 つ）なので、右の踊り場（x 2600〜3045＝1.82 m）に合わせ、
+# 左の踊り場の東への伸び（左 a は x 513 まで、左 b は x 1140 まで）は balcony で足す。
+ST_A_PX = 1820 - (3045 - 2600)                   # 左の踊り場の西の縁 1820 px から右の踊り場の長さだけ左＝1375 px
+ST_A = round(st_along(ST_A_PX), 2)               # −1.21
+ST_W = round((3045 - ST_A_PX) / ST_PXM, 2)       # 6.82
+ST_LL = round((3045 - 2600) / ST_PXM, 2)         # 1.82
+EV_ST_NEW = ["PXL_20261103_080431748", "PXL_20261103_043129358", "PXL_20261103_043136840", "期間前の写真（削除）"]
+ST_Z_HOW = (f"前版の踊り場の z を引き継ぐ：手すりの上端の行と外階段の足元 {ST_FOOT} px の差 ÷ 244.7 px/m − 手すり壁 {ST_PH} m ＋ 前の地面 +2.3 m（測量係 sokuryo_NE2・検収係）")
+st_landing_z = []
+for nm, x0, x1, y in ST_LANDINGS:
+    z = round(G_NE2_V + (ST_FOOT - y) / ST_PXM - ST_PH, 2)
+    st_landing_z.append(est(z, 0.4 if nm in ("右 1", "左 a（大きい・下が歩道）") else 0.3, EV_NE2 + [DEM + "@(-19.5,29.2)"],
+                            ST_Z_HOW + f"。踊り場 {nm}（手すりの上端 y {y} px）"))
+ST_FLOOR = 4.16
+_zb = st_landing_z[3]["value"]
+st_landing_z.append(est(round(_zb + ST_FLOOR, 2), 0.5, EV_ST_NEW,
+                        f"最上部の出口の踊り場（左）。写真では箱に隠れるので、同じ側（左）の踊り場の間隔 1 階分 {ST_FLOOR} m（測量係）を左 b {_zb} m に足した推定。"
+                        "検算：出口の灰色の手すり壁の上端（043129358_front の y 690 px）は手すり壁の面から約 1.1 m 奥にあるとするとこの床＋1.0 m と合う（下の exit_box）"))
+# 出口の灰色の手すり壁は外側の手すり壁より奥（左の縁 x 1355 が左 b の縁 x 1140 より内側）。上の床＋1.0 m の上端が y 690 px に写る奥行き：
+#  （043129358_front は 2 つの面の足元の行がほぼ同じ＝視点の高さが地面とほぼ同じ縮尺なので）見かけの高さ＝本当の高さ×7.65/(7.65+δ) → δ≈1.1 m
+ST_EXIT_SET = 1.1
+_ex_scale = 7.65 / (7.65 + ST_EXIT_SET)
+_ex_base = round(G_NE2_V + (ST_FOOT - 395) / ST_PXM / _ex_scale, 2)     # かまぼこ庇の下端 y 395 px
+_ex_rise = round((395 - 190) / ST_PXM / _ex_scale, 2)                   # 庇の上端 y 190 px
+st_parts = [
+    {"type": "stair_switchback", "name": "北端の折り返し外階段", "face": "NE2", "material": "concrete",
+     "along": est(ST_A, 0.3, EV_NE2,
+                  ST_ALONG_HOW + f"。外階段の西端（along 5.61）から右の踊り場の長さ＋斜めの段の長さ（x {ST_A_PX}〜3045 px）だけ東。"
+                  "面の始点（北東の角）より東に出る（観察係：2 階の踊り場は箱の左端を越えて伸びる。PLATEAU の E の辺が写真より 2.6 m 長い食い違いと同じ向き）"),
+     "width": est(ST_W, 0.2, EV_NE2, f"正面化 043129358_front の x {ST_A_PX}〜3045 px ÷ 244.7 px/m。斜めの段 x 1820〜2600（3.19 m）＋両端の踊り場 1.82 m"),
+     "depth": est(ST_DEPTH, 0.2, EV_NE2, "検収係：043129358・080431748 の正面化の H と消失点から 2.92・2.91 m（前版の踊り場と同じ値）"),
+     "landing_z": st_landing_z,
+     "landing_len": est(ST_LL, 0.15, EV_NE2, "右の踊り場 x 2600〜3045 px（3 枚とも同じ）÷ 244.7 px/m。左の踊り場は左 b で 2.78 m、左 a はさらに長い（balcony で足す）"),
+     "first_end": "to", "first_lane": "outer",
+     "parapet": {"material": "tile",
+                 "height": est(ST_PH, 0.15, ["PXL_20261103_043129358"], "前版の踊り場の手すり壁：左 b の煉瓦の見付け 352 px÷244.7＝1.44 m から床の厚さ 0.3 m を引いた")},
+     "rail": {"height": est(RAIL_H, 0.05, ["PXL_20261103_043129358"], "正面化で右 3 の踊り場の手すりの棒の上端 776 px と煉瓦の上端 797 px の差 21 px ÷ 244.7 px/m"),
+              "post_pitch": unk(note="支柱は数えていない（道具の既定 1.5 m）")},
+     "exit_box": {"material": "concrete",
+                  "along0": est(round((1355 - ST_A_PX) / ST_PXM, 2), 0.4, ["PXL_20261103_043129358"], "出口の灰色の手すり壁の左の縁 x 1355 px（手すり壁の縮尺のまま。奥にあるので ±0.4 m）"),
+                  "along1": est(round((1950 - ST_A_PX) / ST_PXM, 2), 0.4, ["PXL_20261103_043129358"], "出口の灰色の手すり壁の右の縁 x 1950 px（同上）"),
+                  "depth": est(round(ST_DEPTH - ST_EXIT_SET, 2), 0.5, ["PXL_20261103_043129358"],
+                               f"外階段の奥行き {ST_DEPTH} m − 灰色の手すり壁の引っ込み {ST_EXIT_SET} m（上の踊り場の z の検算から逆に出した値）"),
+                  "height": est(round(_ex_base - st_landing_z[-1]["value"], 2), 0.8, ["PXL_20261103_043129358", "PXL_20261103_080431748"],
+                                f"かまぼこ庇の下端（043129358_front の y 395 px）を引っ込み {ST_EXIT_SET} m の縮尺 {_ex_scale:.3f} で戻して z {_ex_base} m、そこから出口の踊り場の床を引いた。"
+                                "実物は灰色の手すり壁（床から約 1.0 m）の上に支柱で庇が載り、間は開いている。語彙が箱なので箱で近似")},
+     "canopy": {"shape": "barrel", "material": "canopy",
+                "rise": est(_ex_rise, 0.5, ["PXL_20261103_043129358", "期間前の写真（削除）"],
+                            "庇の下端 y 395 px → 上端 y 190 px の 205 px を同じ縮尺で戻した。観察係：半円筒の庇、透ける板。"
+                            "見かけでは箱の上端より上に出るが、手前にあるための見え方で、z では箱の上端（19.9 m）より低い")},
+     "note": "斜めの段は傾いた板（段は刻まない）、裏の面取りは無し（語彙の近似）。左の踊り場の東の端に語彙が腰壁を立てるので、balcony の伸びとの境に実物に無い壁が 1 枚出る（requests の道具の依頼）。"
+             "観察係の P304 は『一番下の段を北から』と判断（mid）。設計係には窓のある面の脇の直階段に見え、NE2 か確かめられない（根拠は 080431748・043129358 を主にした）"},
+    {"type": "balcony", "name": "外階段 2 階の踊り場の東への伸び（左 a）", "face": "NE2", "material": "tile", "open_ends": True,
+     "along0": est(round(st_along(513), 2), 0.2, EV_NE2, ST_ALONG_HOW + "。左 a の左の縁 x 513 px"),
+     "along1": est(ST_A, 0.3, EV_NE2, "外階段の語彙の左の踊り場の東の縁（x 1375 px）"),
+     "z": st_landing_z[1], "depth": est(ST_DEPTH, 0.2, EV_NE2, "外階段の奥行きと同じ（検収係）"),
+     "parapet_h": est(ST_PH, 0.15, ["PXL_20261103_043129358"], "前版と同じ。左 a の煉瓦は見付け 2.03 m で下まで壁が下りる（語彙では表せない）"),
+     "note": "観察係の差分表 NE2『2 階踊り場の左への伸び』。東の端の腰壁の折り返しは open_ends（両端とも無し）で省いた"},
+    {"type": "balcony", "name": "外階段 4 階側の踊り場の東への伸び（左 b）", "face": "NE2", "material": "tile", "open_ends": True,
+     "along0": est(round(st_along(1140), 2), 0.2, EV_NE2, ST_ALONG_HOW + "。左 b の左の縁 x 1140 px"),
+     "along1": est(ST_A, 0.3, EV_NE2, "外階段の語彙の左の踊り場の東の縁（x 1375 px）"),
+     "z": st_landing_z[3], "depth": est(ST_DEPTH, 0.2, EV_NE2, "外階段の奥行きと同じ（検収係）"),
+     "parapet_h": est(ST_PH, 0.15, ["PXL_20261103_043129358"], "前版と同じ")},
+    {"type": "column", "name": "外階段の下の煉瓦の角柱（1 階のピロティ）", "section": "square", "material": "tile",
+     "x": pt_on("NE2", -2.05, 0.41)[0], "y": pt_on("NE2", -2.05, 0.41)[1],
+     "along": est(-2.05, 0.3, ["PXL_20261103_043129358", "PXL_20261103_080431748"],
+                  "正面化 043129358_front で柱の左右の縁 x 1447〜1590 px。柱の煉瓦 1 段が 12.5 px で箱の面（177.5 px/m）と同じ → 柱は箱の面の線に立つと読み、"
+                  "箱の西の縁（x 3390 px＝along 8.5）から 177.5 px/m で換算：−2.45〜−1.64 m"),
+     "diameter": est(0.81, 0.1, ["PXL_20261103_043129358"], "143 px ÷ 177.5 px/m"),
+     "z0": est(G_NE2_V, 0.3, [DEM + "@(-19.5,29.2)"], "北端の前の地面 faces.NE2.ground_offset"),
+     "z1": est(round(st_landing_z[1]["value"] - 0.3, 2), 0.3, EV_NE2, "左 a の踊り場の床 − 床の厚さ 0.3 m（balcony の板の下端）。正面化で柱の上端 y 2850 px＝前の地面から 3.3 m（箱の面の縮尺）とも合う")},
+    {"type": "ac_units", "name": "外階段の脇の壁付けの室外機", "face": "NE2", "count": m(1, None, "measured", ["PXL_20261103_043129358", "PXL_20261103_080431748"], "正面化で 1 台", unit="台"),
+     "along": est(6.09, 0.3, ["PXL_20261103_043129358"], "正面化 043129358_front の左の縁 x 2963 px。壁の煉瓦 1 段 12.5 px（箱の面 177.5 px/m）なので箱の西の縁 x 3390 px（along 8.5）から換算"),
+     "w": est(0.6, 0.1, ["PXL_20261103_043129358"], "x 2963〜3069 px＝106 px ÷ 177.5"),
+     "h": est(0.72, 0.1, ["PXL_20261103_043129358"], "y 2543〜2671 px＝128 px ÷ 177.5"),
+     "d": unk(note="出は正面の写真で測れない（道具の既定 0.35 m）"),
+     "z0": est(round(G_NE2_V + (3437 - 2671) / 177.5, 2), 0.4, ["PXL_20261103_043129358", DEM + "@(-19.5,29.2)"],
+               "下端 y 2671 px と箱の足元 3437 px の差 ÷ 177.5 px/m＝前の地面から 4.32 m ＋ 前の地面 +2.3 m。斜めの腕金で壁に付く（観察係：中の踊り場の高さの壁に小型 1 台）")},
+    {"type": "steps", "name": "外階段の入口の赤煉瓦の段", "face": "NE2", "material": "brick",
+     "along": est(round(st_along(1623), 2), 0.2, ["PXL_20261103_043129358"], "正面化 043129358_front で段の左右の縁 x 1623〜1833 px（手すり壁の縮尺）"),
+     "width": est(round((1833 - 1623) / ST_PXM, 2), 0.15, ["PXL_20261103_043129358"], "210 px ÷ 244.7 px/m"),
+     "depth": unk(note="段の奥行きは正面の写真で測れない。形にしない（requests）"),
+     "count": m(1, None, "measured", ["PXL_20261103_043129358"], "正面化で蹴上げ 1 つ（観察係は 1〜2）", unit="段"),
+     "rise": est(round(33 / ST_PXM, 2), 0.04, ["PXL_20261103_043129358"], "蹴上げ y 3410〜3443 px＝33 px ÷ 244.7")},
+]
+
+# --- 正面玄関 porch＋L 字の段 steps（観察係の差分表 SW。面の判断は観察係） ---------------------------------------------
+# 観察係は 080531443・P233 を銘板の位置から南西面と判断（索引の GPS は北東側）。正面化 042900775_front でも、スパン 3 に銘板とカーテンのガラス、
+# その右の端に赤い段が写る（スパン 4 から先はピロティの道路）。玄関はスパン 3 の柱型の間に置く
+EV_ENT = ["PXL_20261103_080531443", "PXL_20261103_080542963", "期間前の写真（削除）", "PXL_20261103_042900775"]
+ENT_HOW = "面の判断は観察係（銘板と 042900775 の 1 階の銘板の位置から南西面）、現地確認待ち。"
+SW_SPAN3_A0 = round(2 * bay_m + pier_m / 2, 2)
+SW_SPAN3_A1 = round(3 * bay_m - pier_m / 2, 2)
+ENT_RISE, ENT_N = 0.21, 2
+ENT_Z0 = round(ENT_RISE * ENT_N, 2)
+ent_parts = [
+    {"type": "porch", "name": "正面玄関の軒下と風除室（ガラスの箱）", "face": "SW",
+     "along": est(SW_SPAN3_A0, 1.0, EV_ENT, ENT_HOW + "スパン 3 の左の柱型の右の縁（柱間隔 5.52 × 2 ＋ 柱型の半分）。どのスパンかは requests"),
+     "width": est(round(SW_SPAN3_A1 - SW_SPAN3_A0, 2), 0.3, EV_SW, "柱型の間（柱間隔 − 柱型の幅）"),
+     "depth": est(4.4, 1.5, EV_ENT,
+                  ENT_HOW + "風除室の前の面は軒裏の見え方から面の 0.85 m 奥（下の glass）、風除室の横の面の格子が 080531443 で正面の格子の約 4 間 → 約 3.5 m。"
+                            "0.85＋3.5≒4.4 m。斜めの写真の比なので幅を広く取った"),
+     "z0": est(ENT_Z0, 0.1, EV_ENT, f"段 {ENT_N} 段 × {ENT_RISE} m（下の steps）の上の床"),
+     "height": est(round(SW_EAVE_TOP - ENT_Z0, 2), 0.3, EV_SW, "軒の下端（ピロティ天井の梁の下 4.4 m、スパン 2 のガラスと同じ）− 床"),
+     "soffit_material": "dark",
+     "glass": {"along0": est(0.0, 0.3, EV_ENT, "柱型の間いっぱい（P233・042900775）"),
+               "along1": est(round(SW_SPAN3_A1 - SW_SPAN3_A0, 2), 0.3, EV_ENT, "柱型の間いっぱい"),
+               "depth": est(3.55, 1.5, EV_ENT, "軒下の奥行き 4.4 − 前の面の引っ込み 0.85。前の面の引っ込みは正面化 042900775_front でスパン 3 の左の柱型の内側の側面 58 px（カメラは面から 13.4 m、along 19.7 m）から 0.83 m"),
+               "mullion_pitch": est(0.75, 0.2, ["PXL_20261103_042900775", "PXL_20261103_080531443"], "正面化 042900775_front でスパン 3 のガラスの縦桟 約 6 間 / 4.4 m"),
+               "transom_pitch": est(0.75, 0.15, ["PXL_20261103_080531443", "PXL_20261103_080542963"], "観察係：横の桟 4〜5 段。ガラスの高さ約 4 m を 5〜6 段に割る")},
+     "method": "観察係の差分表 SW『正面玄関の風除室』『玄関の軒裏（黒い天井）』を porch の語彙で近似。風除室は 2 面がガラスで角が出る形だが、語彙は奥に付いた箱。右のもう 1 つの戸は置かない",
+     "note": "面の判断は観察係、現地確認待ち（requests）"},
+    {"type": "steps", "name": "正面玄関の前の L 字の段（御影石）", "face": "SW", "material": "stone",
+     "along": est(13.72, 1.0, ["PXL_20261103_042900775", "PXL_20261103_080531443"],
+                  ENT_HOW + "正面化 042900775_front で赤い段の左の縁 x 3267 px（スパン 3 の右寄り）。右は柱型まで"),
+     "width": est(round(SW_SPAN3_A1 - 13.72, 2), 0.4, ["PXL_20261103_042900775"], "段の左の縁から右の柱型の縁まで"),
+     "depth": est(round(ENT_N * 0.4, 2), 0.3, ["PXL_20261103_080531443"], "段 2 × 踏み面 0.4 m（080531443 で踏み面が蹴上げの約 2 倍に見える。斜めの比）"),
+     "count": m(ENT_N, None, "measured", ["PXL_20261103_080531443", "PXL_20261103_080542963"], "観察係：御影石の段 2", unit="段"),
+     "rise": est(ENT_RISE, 0.05, ["PXL_20261103_042900775"], "正面化 042900775_front で段の下端 3203 px → 上端 3147 px の 56 px（0.46 m）を、段が面より手前にある分（約 0.6 m、×13.4/12.8）で戻して 2 段で割った"),
+     "tread": est(0.4, 0.15, ["PXL_20261103_080531443"], "080531443 で踏み面が蹴上げの約 2 倍"),
+     "sides": ["from"], "edge": "straight",
+     "note": "観察係：L 字に角を回る（080531443 で左の端で回る）。右の端は柱型に当たる"},
+    # SW のピロティ下の赤煉瓦の大階段（観察係の差分表 SW。どのスパンかは写真から決まらない）
+    {"type": "steps", "name": "南西のピロティの下の赤煉瓦の大階段（位置は仮）", "face": "SW", "material": "brick",
+     "along": est(round(7 * bay_m, 2), 5.5, ["期間前の写真（削除）", "期間前の写真（削除）"],
+                  "位置は未確定。正面化 042900775_front ではスパン 4〜6 の前はピロティの道路で段は無く、P230 では道路のピロティの南東側の 2 スパンに段が見えるので、"
+                  "南東の端のスパン 8〜9 に仮に置いた。tol は 1 スパン（requests）"),
+     "width": est(round(2 * bay_m, 2), 3.0, ["期間前の写真（削除）", "期間前の写真（削除）"], "P230・P019 で段のあるスパンが 2 つ"),
+     "depth": est(2.6, 1.5, ["PXL_20261103_080615077", "期間前の写真（削除）"],
+                  "段 8 × 踏み面 0.33 m。実物はピロティの下（面より奥）と前にまたがる（P084）が、語彙は面の前だけなので全部を面の前に置いた（近似）"),
+     "count": est(8, 2, ["期間前の写真（削除）", "PXL_20261103_080615077"], "P084 で蹴上げ 7〜8、観察係は『段数が多い』（NE の同種は 6〜8）", unit="段"),
+     "rise": est(0.16, 0.03, ["期間前の写真（削除）"],
+                 "P019 で段の上端が柱の足元から 89 px、同じ柱の足元〜ピロティ天井 335 px（4.9 m）→ 全体 1.3 m ÷ 8 段"),
+     "tread": est(0.33, 0.1, ["PXL_20261103_080615077"], "080615077 で踏み面が蹴上げの約 2 倍に見える"),
+     "edge": "straight",
+     "note": "観察係：ピロティの下と前に赤煉瓦の広い段、柱の角を回り込み、上は広場。回り込みと地面の段差（上の広場）は置いていない"},
+]
+
+# --- E 面 1 階の軒下の角柱（観察係の差分表 E『1 階の軒下の角柱』） ------------------------------------------------------
+# 043304319_front の下端で、柱は 3 階の柱型（E_HALF＋k×柱間隔）の真下に 3 本。
+# 幅は 200 px 前後で、面の柱型（0.80 m＝158 px）より 1.27 倍大きく写る → 面より手前：8.38×(1−1/1.27)＝1.8 m（帯の出 2.28 m の内側）
+E_COL_N, E_COL_W = 1.8, 0.74
+e_cols = []
+for k in range(3):
+    a = round(E_HALF + k * E_PITCH, 2)
+    x, y = pt_on("E", a, E_COL_N)
+    e_cols.append({"type": "column", "name": f"東面 1 階の軒下の煉瓦の角柱 {k + 1}", "section": "square", "material": "tile", "x": x, "y": y,
+                   "along": est(a, 0.3, EV_E, "3 階の柱型の中心（入隅の半スパン 3.35 ＋ 柱間隔 6.10 × k）の真下（043304319_front で柱の中心の x が柱型と揃う）"),
+                   "offset": est(E_COL_N, 0.4, ["PXL_20261103_043304319"],
+                                 "柱の幅が面の柱型より 1.27 倍に写る（200/158 px）。面までの距離 8.38 m（photos pose）から 8.38×(1−1/1.27)＝1.8 m 手前"),
+                   "diameter": est(E_COL_W, 0.15, ["PXL_20261103_043304319"], "200 px ÷（196.9×1.27＝250 px/m）＝0.80、帯の出の位置なら 0.74。0.74 を採る"),
+                   "z0": est(0.0, 0.5, [DEM + "@(-20.4,5.5)"], "下端は z=0 から（面の前の地面の板 +1.4 m に埋めて置く。地面は面に沿って +0.9〜+2.1 と変わる）"),
+                   "z1": est(5.1, 0.1, EV_E, "2 階の帯の下端（faces.E.bands の z_bottom と同じ）")})
+
+# --- 屋上の設備 rooftop_units（out/honbu/roof.json、航空写真の読み取り） ----------------------------------------------
+ROOF = json.load(open("out/honbu/roof.json", encoding="utf-8"))
+EV_ROOF = EV_AER + ["out/honbu/roof.json"]
+H_HOW = "航空写真では高さが分からない。影の長さは未計測。屋上の設備の並の高さとして置いた"
+
+
+def roof_unit(u, w=None, d=None, wtol=0.5, how=""):
+    ww = w if w is not None else u["w"]
+    dd = d if d is not None else u["d"]
+    return {"polygon": rot_rect(u["cx_aerial"], u["cy_aerial"], ww, dd, u["axis_u"]),
+            "w": est(ww, wtol, EV_ROOF, how or f"roof.json の連結成分の長辺方向の長さ（{u['note']}）"),
+            "d": est(dd, wtol, EV_ROOF, how or "roof.json の連結成分の短辺方向の長さ"),
+            "h": est(1.5, 1.0, EV_ROOF, H_HOW),
+            "center": [u["cx_aerial"], u["cy_aerial"]]}
+
+
+def lean(v, how):
+    return {"value": [round(-v[0], 2), round(-v[1], 2)], "unit": "m", "tol": 1.0, "status": "estimated", "evidence": EV_ROOF,
+            "method": how, "note": ""}
+
+
+_byc = {(round(x["cx"], 2), round(x["cy"], 2)): x for x in ROOF["units"]}
+_A_ids = [(-40.03, -6.14), (-43.91, -10.99), (-47.06, -9.93)]
+_T_ids = [(-40.47, -3.96), (-44.03, -4.07)]
+LEAN_HOW = ("roof.json：足元の形を ±6 m 動かして航空写真の縁と一番重なる位置＝屋上の縁の見かけのずれ lean_m {} m（{}）。"
+            "補正はその逆向き。縁の候補の 1 位と 2 位が 1 m 違う（ambiguous）ので tol 1.0")
+roof_parts = [
+    {"type": "rooftop_units", "name": "塊 A の屋上の設備（北西の端と中央）", "source": "aerial",
+     "lean_correction_m": lean(ROOF["lean_by_block"][0]["lean_m"], LEAN_HOW.format(ROOF["lean_by_block"][0]["lean_m"], "塊 A の高さ 23.68 m で 4.78 m、南へ 186°")),
+     "z0": est(parapet, 0.4, EV_SW, "塊 A の屋上（blocks A の top_z と同じ）"),
+     "units": [roof_unit(_byc[c]) for c in _A_ids] + [
+         roof_unit(_byc[(-24.74, -16.6)], 2.0, 2.0, 1.0, "roof.json では 3.52×3.26 m だが影込み（暗い成分）。設備の本体を 2.0 m と置き tol 1.0")],
+     "note": "位置は航空写真で読んだまま（units[].polygon・center は aerial の座標）。生成器が lean_correction_m を足す。"
+             "(−39.4,−8.7) 12×6.9 m の暗い成分は西角の階段塔の影なので入れない。塔の上の 2 つは下の別の部品"},
+    {"type": "rooftop_units", "name": "西角の階段塔の上の設備", "source": "aerial",
+     "lean_correction_m": lean(ROOF["tall_parts_aerial"][0]["lean_m"],
+                               "roof.json の tall_parts_aerial：塔の上端 30.23 m の倒れ込み (−0.64, −6.06) m（塊 A の lean_ratio 0.2017 を高さで比例）。補正はその逆向き"),
+     "z0": est(WT_TOP, 0.4, EV_NWS, "西角の階段塔の上端（parts の塔の z1 と同じ）"),
+     "units": [roof_unit(_byc[c]) for c in _T_ids],
+     "note": "roof.json で on_part（塔の上）とされた 2 つ。塊 A の補正では塔の中に入るので塔の上の物と読んだ"},
+    {"type": "rooftop_units", "name": "北の翼（塊 B）の北端の屋上の設備", "source": "aerial",
+     "lean_correction_m": lean(ROOF["lean_by_block"][1]["lean_m"], LEAN_HOW.format(ROOF["lean_by_block"][1]["lean_m"], "塊 B の高さ 19.2 m で比例")),
+     "z0": est(19.2, 0.2, EV_E, "塊 B の屋上（blocks B の top_z と同じ）"),
+     "units": [roof_unit(_byc[(-30.14, 22.07)])]},
+]
+
+# --- ガラスの小屋（P123・P241。観察係は棟の外の物として表に入れず判断役に任せた） ------------------------------------
+HUT_A, HUT_N, HUT_W, HUT_H = 24.7, 4.0, 2.5, 2.6
+hut_g = 2.1
+EV_HUT = ["期間前の写真（削除）", "期間前の写真（削除）"]
+hut = {"type": "box", "name": "東面の北端の前の黒い枠のガラスの小屋", "material": "glass",
+       "polygon": rect_on("E", HUT_A - HUT_W / 2, HUT_A + HUT_W / 2, HUT_N + HUT_W / 2, -(HUT_N - HUT_W / 2)),
+       "along": est(HUT_A, 3.0, EV_HUT, "P123 で E 面のスパン 4 の中央の前。along＝3.35＋6.10×3＋3.05"),
+       "offset": est(HUT_N, 2.0, EV_HUT, "P241 で 2 階の帯の先端より少し外。帯の出 2.28 m ＋ 小屋の半分＋α。斜めの写真の目視なので tol 2 m"),
+       "width": est(HUT_W, 1.0, EV_HUT, "P123 で 90 px、同じ深さの面ならスパン 155 px＝6.10 m の比で 3.5 m（上限）。手前にあるので小さく見積もった。P241 で平面はほぼ正方形"),
+       "z0": est(hut_g, 0.6, [DEM + "@(-20.4,5.5)"], "E 面の前の地面の北端の値（faces.E.ground_offset の method：北端 +2.1）"),
+       "z1": est(hut_g + HUT_H, 0.6, EV_HUT, "P123 で小屋の上端は 2 階の帯の下端（5.1 m）より少し下に写り、手前にあるので実際はさらに低い。地面から約 2.6 m"),
+       "method": "観察係の質問『黒い枠のガラスの小屋を模型に入れるか』に、指示どおり入れる。porch の glass は壁をくり抜くので使えず、box（material glass）で近似。格子は無し",
+       "note": "位置は斜めの写真の目視の推定（requests）"}
+
 b["parts"] = [
     {"type": "coping", "name": "パラペットの笠木", "height": est(0.35, 0.1, EV_SW, "正面化画像の上端の濃い帯"), "overhang": est(0.08, 0.05, [], "目視")},
-    {"type": "box", "name": "屋上の塔屋（エレベーター機械室か階段）", "material": "tile",
-     "polygon": rect_on("SW", 19.0, 26.0, 0.0, 10.0)[:],   # 南西面の 19〜26 m、面から 3〜10 m 奥 → 下で作り直す
-     "z0": est(parapet, 0.4, EV_SW, "塊の上"), "z1": est(parapet + 8.4, 1.0, [PL] + EV_AER, "PLATEAU の measuredHeight 32.1 − パラペット 23.7"),
-     "note": "位置は航空写真（倒れ込み未補正）で屋上中央やや西の小さい四角。大きさは目視"},
+    # 屋上の塔屋の box は外した（2026-11-04。roof.json：倒れ込み補正後の位置に何も無い、P026・042900775 でも見えない。history）
     {"type": "box", "name": "西角の階段塔（無窓・塊より高い）", "material": "tile",
      # 北西面に沿って西角（P[0]）から 10.53〜17.78 m。NW_s の from は北の端 P[9] なので along は「面の長さ − 西角からの距離」
      "polygon": rect_on("NW_s", NWS_L - WT_N, NWS_L - WT_S, 0.0, 6.5),
@@ -449,23 +734,7 @@ b["parts"] = [
                           "測量係 out/honbu/sokuryo_NE2.json：箱の正面のタイル 1 段 12.40〜12.50 px（177.1〜177.9 px/m）で笠木の上端〜箱の足元 3114 px＝17.58 m（043129358）、3123 px＝17.56 m（080431748）。"
                           "これは前の地面からの高さで、前の地面 faces.NE2.ground_offset +2.3 m（5m 標高）を足して z=0 からの値にした（2026-11-04）"),
      "note": "前版は『北端の階段塔、上端 18.5 m（翼より 1 m 高い。目視）』。写真では窓の無い煉瓦の箱の前に折り返しの外階段が出る形"},
-    # 外階段の踊り場 5 つ（下から 右 1・左 a・右 2・左 b・右 3。左右交互、同じ側の間隔が 1 階分 4.16 m）
-] + [
-    {"type": "balcony", "name": f"外階段の踊り場 {nm}", "face": "NE2", "material": "tile",
-     "along0": est(round(st_along(x0), 2), 0.2, EV_NE2, ST_ALONG_HOW + f"。踊り場の左右の縁 x {x0}〜{x1} px"),
-     "along1": est(round(st_along(x1), 2), 0.2, EV_NE2, ST_ALONG_HOW + f"。踊り場の左右の縁 x {x0}〜{x1} px"),
-     "z": est(round(G_NE2_V + (ST_FOOT - y) / ST_PXM - ST_PH, 2), 0.3 if nm not in ("右 1", "左 a（大きい・下が歩道）") else 0.4, EV_NE2 + [DEM + "@(-19.5,29.2)"],
-              f"手すりの上端 y {y} px（測量係 kazoe_NE2/sokuryo_NE2）と外階段の足元 y {ST_FOOT} px の差 ÷ 手すり壁のタイル 244.7 px/m ＝ 手すりの上端の高さ、"
-              f"そこから手すり壁 {ST_PH} m を引いて床の高さ。同じ側の間隔は 1 階分 4.16 m（043129358 で 1028・1007 px、080431748 で 1014 px）。"
-              "足元の行は設計係が正面化画像で読んだ（±0.1 m）。前の地面 faces.NE2.ground_offset +2.3 m（5m 標高）を足して z=0 からの値にした"),
-     "depth": est(ST_DEPTH, 0.2, EV_NE2,
-                  "検収係：正面化の H を箱の面（タイル 177.1〜177.9 px/m）と手すり壁の面（244.7〜245.9 px/m）の縮尺で解き、カメラから面までの距離を出した。"
-                  "043129358：箱 10.56 m・手すり壁 7.65 m → 2.92 m、080431748：10.52・7.61 → 2.91 m。焦点距離は EXIF（1871 px）に依る。前版 2.2 m は目視"),
-     "parapet_h": est(ST_PH, 0.15, ["PXL_20261103_043129358"],
-                      "左 b の煉瓦の手すり壁の見付け 352 px÷244.7＝1.44 m から床の厚さ 0.3 m を引いた。左 a は 496 px（2.03 m）で下まで壁が下りる"),
-     "note": "外階段の長さ（面に沿った方向）10.4 m（043129358 で 10.39、080431748 で 10.41 m）の中の位置"}
-    for nm, x0, x1, y in ST_LANDINGS
-] + [
+] + st_parts + ent_parts + e_cols + roof_parts + [hut] + [
     # 北東面 2 階のテラス（balcony）は faces.NE.bands の腰壁に置き換えた（2026-11-04、history）
     {"type": "ac_units", "name": "階段塔の足元の室外機", "face": "NE2", "along": 0.5, "count": 3, "w": 0.9, "h": 1.0, "d": 0.4, "gap": 0.2},
     {"type": "ac_units", "name": "北西面の室外機", "face": "NW_s", "along": 9.0, "count": 1, "w": 0.8, "h": 0.6, "d": 0.3, "gap": 0.2},
@@ -476,8 +745,6 @@ b["parts"] = [
     {"type": "pavement", "name": "南側の広場の煉瓦舗装", "material": "brick", "z": 0.0,
      "polygon": [[-7.7, -36.5], [-0.4, -22.5], [12.0, -29.0], [4.0, -44.0]]},
 ]
-# 塔屋の位置：航空写真で屋上中央やや西。南西面から 6〜11 m 奥、面に沿って 18〜25 m
-b["parts"][1]["polygon"] = rect_on("SW", 18.0, 25.0, -6.0, 11.0)
 # 木は入れない（利用者の判断：建物の完成度が先。敷地の工程で CC0 の木に置き換える）
 
 # --- 写真と依頼 -----------------------------------------------------------------------------
@@ -520,13 +787,38 @@ b["requests"] = [
      "why": "箱の高さ 17.6 m・踊り場の高さは前の地面から。塊 B の 19.2 m と同じ高さなら地面が約 1.6 m 高い", "status": "done", "kind": "data",
      "note": "2026-11-04 5m 標高で +2.3 m（faces.NE2.ground_offset）。箱の上端 19.9 m・踊り場は +2.3 m。写真での検算（北端の足元が入る正面 1 枚）は未"},
     {"face": "NE2", "kind": "tool", "what": "室外機（ac_units）に足元の高さ（z0 か面の ground_offset）を持たせる", "where": "recorder/blender_build.py の ac_units",
-     "why": "ac_units は z=0＋0.1 m に置くので、地面の板（NE2 +2.3 m・NW_s +1.0 m）の中に埋まって見えない", "status": "open"},
+     "why": "ac_units は z=0＋0.1 m に置くので、地面の板（NE2 +2.3 m・NW_s +1.0 m）の中に埋まって見えない", "status": "done",
+     "note": "2026-11-04 語彙に ac_units.z0 が入った（省略すると面の前の地面＋0.1）。既存の 2 組は z0 を省略して地面に乗せ、北端の壁付けの 1 台に z0 を書いた"},
     # 南東端面 SE：本部棟の写真は 0 枚（索引で SE だった 075830062・075837016 は図書館の西の角と判断、sokuryo_SE.json）
     {"face": "SE", "what": "南東端面の両端が入る斜めの 1 枚", "where": "南の角の前の歩道から北東を向いて",
      "why": "南東端面の写真が 0 枚。窓の有無・階・長さが全部 unknown（模型は窓の無い壁のまま）", "status": "open"},
     {"face": "SE", "what": "南東端面のもう 1 枚（反対側から）", "where": "図書館との間の通路から南西を向いて",
      "why": "1 枚では縮尺の検算ができない。北東面の南東端の無窓の壁が南東端面へ回り込んでいるかもこれで決まる", "status": "open"},
-    {"face": "*", "what": "屋上が見える高い所からの1枚（タワー75 など）", "where": "", "why": "塔屋の位置と大きさ、屋上の設備が航空写真の目視だけ", "status": "open"},
+    {"face": "*", "what": "屋上が見える高い所からの1枚（タワー75 など）", "where": "タワー75 の上の階の窓か屋上から、本部棟の屋上を見下ろして",
+     "why": "屋上の設備 7 つは航空写真の読み取りだけ（高さ h は全部 1.5 m の仮置き、影の長さは未計測）。前版の塔屋は航空写真の補正で消えたが、別の物（設備・天窓）が無いかの確認も要る", "status": "open"},
+    # 2026-11-04 設計係：観察係の差分表（kansatsu_差分）を部品の語彙で入れた時の依頼
+    {"face": "SW", "what": "玄関がどの面の何スパン目かを確かめる写真（面の両端と玄関が 1 枚に入る物）", "where": "南西面の前の道路の向かいから、少し下がって",
+     "why": "正面玄関（porch）と L 字の段は、観察係が 080531443・P233 を銘板の位置から南西面と判断し（索引の GPS は北東側）、設計係がスパン 3 に置いた。面の判断は現地確認待ち", "status": "open"},
+    {"face": "SW", "what": "南西のピロティの下の赤煉瓦の大階段がどの柱間にあるかが分かる 1 枚", "where": "道路の向かいから南西面のピロティ全体（南東の端まで）を 1 枚",
+     "why": "大階段（steps）は位置が決まらないので南東の端のスパン 8〜9 に仮置き（along の tol 5.5 m）。042900775 ではスパン 4〜6 の前は道路で段は無い。"
+            "あわせて openings の『4〜6 駐車・7〜9 道路』が写真（スパン 4 から先が道路）と逆に見える件も確かめたい", "status": "open"},
+    {"face": "SW", "what": "2 階の窓の下の濃いパネル（厚い箱）を斜め横から 1 枚", "where": "南西面の端から面に沿って",
+     "why": "窓の下のパネル（spandrel）の高さは正面化で読んだが、出（depth）は正面では測れない（観察係：2 階は厚い箱のように出る）。模型は薄い板", "status": "open"},
+    {"face": "NE2", "what": "外階段の入口の赤煉瓦の段を横から 1 枚", "where": "北端の外階段の下（左 a の踊り場の下の歩道）から",
+     "why": "段（steps）の奥行きが unknown なので JSON に書いたが形にしていない", "status": "open"},
+    {"face": "NE2", "what": "最上部の出口の踊り場とかまぼこ庇を横か上から 1 枚", "where": "東側の道路の向こう（P123 の位置）か、タワー75 の上の階から",
+     "why": "出口の踊り場の高さ（同じ側の間隔 4.16 m からの推定）・灰色の手すり壁の引っ込み 1.1 m・庇の高さは、正面 1 枚の見え方からの逆算", "status": "open"},
+    {"face": "E", "what": "黒い枠のガラスの小屋の位置が分かる 1 枚（E 面の北端の角と小屋が両方入る、真横に近い物）", "where": "E 面の前の広場の北の端から南を向いて",
+     "why": "小屋（box、glass）は P123・P241 の斜めの目視で along ±3 m・面からの距離 ±2 m の仮置き", "status": "open"},
+    {"face": "*", "kind": "tool", "what": "stair_switchback の踊り場の長さを両端で別に（landing_len_from / landing_len_to）、端の腰壁を消す欄（open_end）",
+     "where": "recorder/parts_geom.py の stair_switchback",
+     "why": "本部棟の北端の外階段は右の踊り場 1.82 m・左 2.78 m 以上（左 a は東へ 3.5 m 伸びる）。今は右に合わせ、左の伸びを balcony で足したので、境に実物に無い腰壁が 1 枚出る", "status": "open"},
+    {"face": "*", "kind": "tool", "what": "windows[].spandrel を窓の奥まりの中（ガラスの面）に置く欄（inside: true）",
+     "where": "recorder/parts_geom.py の spandrel と blender_build.py の窓",
+     "why": "南西面・東面の濃いパネルは実物では窓の額縁の奥まりの中にあるが、語彙は壁の面に付けるので、窓の下端をガラスの下端に上げて壁の面に薄い板で置いた（奥まりの影が無くなる）", "status": "open"},
+    {"face": "*", "kind": "tool", "what": "差分表で語彙が無かった物：面の一部の素材（material patch）、天井の梁の格子（ceiling_beams）、ルーバー（louver）、坂と植え込みの縁（ramp・planter）、点の換気口（vents）、銘板（monument）",
+     "where": "recorder/parts_geom.py",
+     "why": "観察係の差分表 47 件のうち、これらの語彙が無いので入れられなかった物が 9 件（out/honbu/sekkei_差分対応.md）", "status": "open"},
 ]
 b["history"] = [
     {"at": "2026-11-03T14:30", "by": "Claude（測量係）", "what": "南西面の写真 3 枚から初版。縮尺は PLATEAU の壁長さ、検算にタイル1段"},
@@ -582,6 +874,21 @@ b["history"].append(
              "NE2 は面の top_z が無く compare で塊 B の 19.2 m に合わされていた（+0.36 NG）ので、面の top_z と箱の上端を 前の地面からの 17.6 m＋2.3＝19.9 m に、"
              "外階段の踊り場 5 つの床も +2.3 m（前の地面から測った値だった）。E・NE の窓・帯の高さは z=0（南西面の地面）からの値のまま"
              "（検収 B のカメラ 2.44・2.63 m が足元の DEM から 1.50・1.69 m になり、z=0 基準で読めていると判断）"})
+
+b["history"].append(
+    {"at": "2026-11-04T13:30", "by": "Claude（設計係, claude-opus-5-5）",
+     "what": "観察係の差分表（out/honbu/kansatsu_差分.md、47 件）を部品の語彙で入れた。対応は out/honbu/sekkei_差分対応.md。"
+             "外した物：屋上の塔屋の box（out/honbu/roof.json・roof_aerial.png：航空写真を倒れ込み 4.8 m 南で補正するとその位置に何も無く、P026・042900775 でも見えない。"
+             "PLATEAU の measuredHeight 32.1 m とパラペット 23.7 m の差は北西の西角の階段塔（上端 30.23 m）と屋上の設備で説明が付く）、北端の外階段の踊り場の板 5 枚。"
+             "足した物：北端の折り返し外階段 stair_switchback（踊り場 5＋出口 1、斜めの段・煉瓦の腰壁・手すり・出口の箱・かまぼこ庇。高さは前版の踊り場の z を引き継ぎ、"
+             "出口の踊り場は同じ側の間隔 4.16 m からの推定）と左の踊り場の東への伸び balcony 2、外階段の下の角柱、壁付けの室外機（z0）、入口の段（奥行き unknown で形にしない）。"
+             "南西面：正面玄関 porch（スパン 3、面の判断は観察係・現地確認待ち）と L 字の段、ピロティの下の大階段（位置は仮にスパン 8〜9、tol 1 スパン）、"
+             "1 階のガラスをスパン 1〜3 からスパン 2 だけに（スパン 1 は煉瓦の壁、スパン 3 は玄関）・引っ込み 0.3→0.9 m（軒裏の見え方）、"
+             "2〜4 階の窓の下の濃いパネル spandrel（窓の下端をガラスの下端に上げた：2 階 6.25→6.65、3 階 10.47→10.71、4 階 14.69→14.75 m）。"
+             "東面：3 階の窓の下の濃い腰板 spandrel 0.72 m（窓の下端 10.12→10.84）、1 階の軒下の角柱 3 本（column、面から 1.8 m）。"
+             "北東面・東面の 2 階の帯に手すり bands[].rail 0.09 m（帯の上端は手すりの分だけ下げた）。"
+             "屋上の設備 rooftop_units 7 つ（塊 A 4・塔の上 2・塊 B 1、高さは全部 1.5 m の仮置き、(−39.4,−8.7) の暗い成分は影なので外した）。"
+             "東面の北端の前のガラスの小屋を box（glass）で近似。既存の室外機は z0 を省略して面の前の地面に乗せた（語彙の変更で高さが変わる）"})
 
 errs = validate_building(b)
 print("validate:", errs or "OK")
