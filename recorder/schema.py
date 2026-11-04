@@ -192,6 +192,65 @@ def _check_margins(bays: dict, length: Measurement, where: str) -> list[str]:
     return []
 
 
+# --- 部品の新しい語彙（11/4。観察係の差分表から）---------------------------------
+# 必須の鍵（値は unknown でもよいが、鍵は書く）。形は recorder/parts_geom.py。
+PART_REQUIRED = {
+    "stair_switchback": ("face", "along", "width", "depth"),
+    "porch": ("face", "along", "width", "depth", "height"),
+    "steps": ("face", "along", "width", "depth", "count", "rise"),
+    "rail": ("face", "along0", "along1", "z", "height"),
+    "column": ("x", "y", "z1"),
+    "rooftop_units": ("source", "z0", "units"),
+}
+# 裸の数を書いてよい鍵（座標。寸法ではない）。それ以外の裸の数は「根拠の無い値」として落とす
+COORD_KEYS = {"x", "y", "polygon", "center", "from", "to"}
+
+
+def check_values(obj, where: str) -> list[str]:
+    """部品の中の値を全部調べる。{"value","status",...} は Measurement の規則で、裸の数は根拠が無いので落とす。"""
+    errs: list[str] = []
+    if isinstance(obj, dict):
+        if "status" in obj and "value" in obj:
+            return Measurement.from_json(obj).problems(where)
+        for k, v in obj.items():
+            if k in COORD_KEYS:
+                continue
+            errs += check_values(v, f"{where}.{k}")
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            errs += check_values(v, f"{where}[{i}]")
+    elif isinstance(obj, (int, float)) and not isinstance(obj, bool):
+        errs.append(f"{where}: 根拠の無い裸の数値です（{{\"value\", \"status\", \"evidence\", \"method\"}} の形で書く）")
+    return errs
+
+
+def check_new_part(pt: dict, where: str) -> list[str]:
+    t = pt.get("type")
+    errs: list[str] = []
+    for k in PART_REQUIRED.get(t, ()):
+        if k not in pt:
+            errs.append(f"{where}: {k} がありません")
+    errs += check_values({k: v for k, v in pt.items() if k not in ("type", "face", "name", "material", "note")}, where)
+    if t == "stair_switchback" and not (pt.get("landing_z") or ("floors" in pt and "floor_pitch" in pt)):
+        errs.append(f"{where}: 踊り場の高さ（landing_z か floors＋floor_pitch）がありません")
+    if t == "steps":
+        if pt.get("edge", "straight") not in ("straight", "curved"):
+            errs.append(f"{where}: edge は straight か curved です（{pt.get('edge')}）")
+        if pt.get("edge") == "curved" and "radius" not in pt:
+            errs.append(f"{where}: edge=curved なのに radius がありません")
+    if t == "rooftop_units":
+        if pt.get("source") == "aerial" and not isinstance(pt.get("lean_correction_m"), dict):
+            errs.append(f"{where}: source=aerial なら lean_correction_m（倒れ込みの補正 [dx,dy] m、根拠つき）を書いてください")
+        for i, u in enumerate(pt.get("units") or []):
+            if not (u.get("polygon") or u.get("center")):
+                errs.append(f"{where}.units[{i}]: polygon か center がありません")
+            if u.get("center") and not ("w" in u and "d" in u):
+                errs.append(f"{where}.units[{i}]: center の箱には w と d が要ります")
+    if t == "column" and pt.get("section", "round") not in ("round", "square"):
+        errs.append(f"{where}: section は round か square です")
+    return errs
+
+
 def validate_building(b: dict) -> list[str]:
     """規約違反の一覧を返す。空なら合格。"""
     errs: list[str] = []
@@ -280,9 +339,22 @@ def validate_building(b: dict) -> list[str]:
             errs.append(f"parts[{i}]: type がありません")
         if pt.get("face") and pt["face"] not in face_ids:
             errs.append(f"parts[{i}]: face={pt['face']} は faces にありません")
-        walk({k: v for k, v in pt.items() if k not in ("polygon",)}, f"parts[{i}:{pt.get('type')}]")
+        if pt.get("type") in PART_REQUIRED:
+            errs.extend(check_new_part(pt, f"parts[{i}:{pt.get('type')}]"))
+        else:
+            walk({k: v for k, v in pt.items() if k not in ("polygon",)}, f"parts[{i}:{pt.get('type')}]")
+            if pt.get("type") == "ac_units" and isinstance(pt.get("z0"), (int, float)):
+                errs.extend(check_values(pt["z0"], f"parts[{i}:ac_units].z0"))   # 取付け高さ（壁付け）。裸の数は落とす
     for fc in b.get("faces", []):
         walk(fc.get("glazing", []), f"faces[{fc.get('id')}].glazing")
+        for i, w in enumerate(fc.get("windows", [])):
+            if "spandrel" in w:
+                errs.extend(check_values({k: v for k, v in w["spandrel"].items() if k != "material"}, f"faces[{fc.get('id')}].windows[{i}].spandrel"))
+                if "height" not in w["spandrel"]:
+                    errs.append(f"faces[{fc.get('id')}].windows[{i}].spandrel: height がありません")
+        for i, bd in enumerate(fc.get("bands", [])):
+            if "rail" in bd:
+                errs.extend(check_values(bd["rail"], f"faces[{fc.get('id')}].bands[{i}].rail"))
 
     for i, rq in enumerate(b.get("requests", [])):
         where = f"requests[{i}]"

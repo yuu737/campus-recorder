@@ -1,0 +1,974 @@
+{
+ "schema": "campus-recorder/building/1",
+ "id": "parts_test",
+ "name": "部品見本棟（架空）",
+ "campus": "test",
+ "crs": {
+  "epsg": 6675,
+  "origin_lat": 35.1355,
+  "origin_lon": 136.9755
+ },
+ "footprint": {
+  "status": "estimated",
+  "evidence": [],
+  "method": "テスト用の値（架空の棟）",
+  "polygon": [
+   [
+    0,
+    0
+   ],
+   [
+    20,
+    0
+   ],
+   [
+    20,
+    12
+   ],
+   [
+    0,
+    12
+   ]
+  ]
+ },
+ "floor_count": {
+  "value": 3,
+  "unit": "階",
+  "tol": null,
+  "status": "estimated",
+  "evidence": [],
+  "method": "テスト用の値（架空の棟）",
+  "note": ""
+ },
+ "floor_pitch": {
+  "value": 4.0,
+  "unit": "m",
+  "tol": null,
+  "status": "estimated",
+  "evidence": [],
+  "method": "テスト用の値（架空の棟）",
+  "note": ""
+ },
+ "parapet_top": {
+  "value": 13.0,
+  "unit": "m",
+  "tol": null,
+  "status": "estimated",
+  "evidence": [],
+  "method": "テスト用の値（架空の棟）",
+  "note": ""
+ },
+ "levels": [],
+ "faces": [
+  {
+   "id": "S",
+   "name": "南面（玄関）",
+   "from": [
+    0,
+    0
+   ],
+   "to": [
+    20,
+    0
+   ],
+   "length": {
+    "value": 20.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "materials": [
+    {
+     "name": "タイル",
+     "color": "#c9a77c",
+     "unit_w": {
+      "value": 0.227,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "unit_h": {
+      "value": 0.06,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "joint_w": {
+      "value": 0.01,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     }
+    }
+   ],
+   "bays": {
+    "count": {
+     "value": 4,
+     "unit": "個",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "pitch": {
+     "value": 5.0,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "pier_width": {
+     "value": 0.6,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "margin_from": {
+     "value": 0.0,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "margin_to": {
+     "value": 0.0,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    }
+   },
+   "bands": [
+    {
+     "name": "2階の腰壁",
+     "z_bottom": {
+      "value": 4.0,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "z_top": {
+      "value": 5.0,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "depth": {
+      "value": 0.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "rail": {
+      "height": {
+       "value": 0.4,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      "post_pitch": {
+       "value": 1.5,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     }
+    }
+   ],
+   "windows": [
+    {
+     "name": "2階",
+     "z_bottom": {
+      "value": 5.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "z_top": {
+      "value": 7.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "width": {
+      "value": 3.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "recess": {
+      "value": 0.3,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "spandrel": {
+      "height": {
+       "value": 0.6,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      "depth": {
+       "value": 0.05,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      "material": "dark"
+     }
+    },
+    {
+     "name": "3階",
+     "z_bottom": {
+      "value": 9.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "z_top": {
+      "value": 11.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "width": {
+      "value": 3.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "recess": {
+      "value": 0.3,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "spandrel": {
+      "height": {
+       "value": 0.6,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      "depth": {
+       "value": 0.0,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      "material": "dark"
+     }
+    }
+   ]
+  },
+  {
+   "id": "E",
+   "name": "東面",
+   "from": [
+    20,
+    0
+   ],
+   "to": [
+    20,
+    12
+   ],
+   "length": {
+    "value": 12.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   }
+  },
+  {
+   "id": "N",
+   "name": "北面（外階段）",
+   "from": [
+    20,
+    12
+   ],
+   "to": [
+    0,
+    12
+   ],
+   "length": {
+    "value": 20.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   }
+  },
+  {
+   "id": "W",
+   "name": "西面",
+   "from": [
+    0,
+    12
+   ],
+   "to": [
+    0,
+    0
+   ],
+   "length": {
+    "value": 12.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   }
+  }
+ ],
+ "parts": [
+  {
+   "type": "porch",
+   "name": "玄関の軒下",
+   "face": "S",
+   "along": {
+    "value": 7.5,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "width": {
+    "value": 5.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "depth": {
+    "value": 3.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "height": {
+    "value": 3.5,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "glass": {
+    "along0": {
+     "value": 0.8,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "along1": {
+     "value": 4.2,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "depth": {
+     "value": 1.8,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "mullion_pitch": {
+     "value": 1.0,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "transom_pitch": {
+     "value": 0.8,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    }
+   },
+   "columns": {
+    "width": {
+     "value": 0.6,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "material": "tile"
+   }
+  },
+  {
+   "type": "steps",
+   "name": "玄関前の L 字の段",
+   "face": "S",
+   "along": {
+    "value": 7.5,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "width": {
+    "value": 5.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "depth": {
+    "value": 0.9,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "count": {
+    "value": 2,
+    "unit": "段",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "rise": {
+    "value": 0.15,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "tread": {
+    "value": 0.45,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "sides": [
+    "from",
+    "to"
+   ],
+   "edge": "straight",
+   "material": "stone"
+  },
+  {
+   "type": "steps",
+   "name": "曲線の大階段",
+   "face": "S",
+   "along": {
+    "value": 13.5,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "width": {
+    "value": 6.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "depth": {
+    "value": 3.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "count": {
+    "value": 5,
+    "unit": "段",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "rise": {
+    "value": 0.16,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "edge": "curved",
+   "radius": {
+    "value": 4.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "material": "brick"
+  },
+  {
+   "type": "stair_switchback",
+   "name": "北の外階段",
+   "face": "N",
+   "along": {
+    "value": 4.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "width": {
+    "value": 10.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "depth": {
+    "value": 3.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "floors": {
+    "value": 3,
+    "unit": "層",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "floor_pitch": {
+    "value": 4.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "landing_len": {
+    "value": 2.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "parapet": {
+    "material": "tile",
+    "height": {
+     "value": 1.1,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    }
+   },
+   "rail": {
+    "height": {
+     "value": 0.15,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "post_pitch": {
+     "value": 1.5,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    }
+   },
+   "pilotis": {
+    "count": {
+     "value": 2,
+     "unit": "本",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "size": {
+     "value": 0.5,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "shape": "square"
+   },
+   "exit_box": {
+    "height": {
+     "value": 2.5,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    },
+    "material": "concrete"
+   },
+   "canopy": {
+    "shape": "barrel",
+    "rise": {
+     "value": 0.9,
+     "unit": "m",
+     "tol": null,
+     "status": "estimated",
+     "evidence": [],
+     "method": "テスト用の値（架空の棟）",
+     "note": ""
+    }
+   }
+  },
+  {
+   "type": "rail",
+   "name": "東の手すり",
+   "face": "E",
+   "along0": {
+    "value": 2.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "along1": {
+    "value": 10.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "z": {
+    "value": 3.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "height": {
+    "value": 1.1,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "post_pitch": {
+    "value": 2.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   }
+  },
+  {
+   "type": "ac_units",
+   "face": "E",
+   "along": {
+    "value": 3.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "count": {
+    "value": 2,
+    "unit": "台",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "z0": {
+    "value": 2.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   }
+  },
+  {
+   "type": "column",
+   "name": "単独の柱",
+   "x": -2.0,
+   "y": -2.0,
+   "diameter": {
+    "value": 0.6,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "z0": {
+    "value": 0.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "z1": {
+    "value": 4.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "section": "round"
+  },
+  {
+   "type": "rooftop_units",
+   "name": "屋上の設備",
+   "source": "aerial",
+   "lean_correction_m": {
+    "value": [
+     -0.4,
+     -1.0
+    ],
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "z0": {
+    "value": 13.0,
+    "unit": "m",
+    "tol": null,
+    "status": "estimated",
+    "evidence": [],
+    "method": "テスト用の値（架空の棟）",
+    "note": ""
+   },
+   "units": [
+    {
+     "center": [
+      6.0,
+      7.0
+     ],
+     "w": {
+      "value": 3.0,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "d": {
+      "value": 2.0,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     },
+     "h": {
+      "value": 1.8,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     }
+    },
+    {
+     "polygon": [
+      [
+       12,
+       4
+      ],
+      [
+       16,
+       4
+      ],
+      [
+       16,
+       6
+      ],
+      [
+       12,
+       6
+      ]
+     ],
+     "h": {
+      "value": 1.2,
+      "unit": "m",
+      "tol": null,
+      "status": "estimated",
+      "evidence": [],
+      "method": "テスト用の値（架空の棟）",
+      "note": ""
+     }
+    }
+   ]
+  }
+ ],
+ "photos": [],
+ "requests": [],
+ "history": []
+}

@@ -23,6 +23,17 @@
         pipes           {face, along, count, radius, z0, z1}   縦の配管・雨樋
         tree            {x, y, height, radius}                 木（丸い樹冠。種類は後で CC0 素材に差し替え）
         pavement        {polygon, z, material}                 舗装（煉瓦など）
+        ac_units.z0     室外機の下端（壁付け）。省略は面の前の地面＋0.1
+    新しい語彙（11/4。形は parts_geom.py。立面図も同じ形を使う）:
+        stair_switchback {face, along, width, depth, landing_z[] | floors+floor_pitch, landing_len, parapet{height,material},
+                          rail{height,post_pitch}, pilotis{count|along[],size,shape}, exit_box{height}, canopy{shape:"barrel",rise}}
+        porch           {face, along, width, depth, height, glass{along0,along1,depth,mullion_pitch,transom_pitch}, columns{width}}
+                        壁を面ごとのブーリアンでくり抜く（check_cut で体積を検査）
+        steps           {face, along, width, depth, count, rise, tread, sides[], edge:"straight"|"curved", radius}
+        rail            {face, along0, along1, z, height, post_pitch}   帯・腰壁の上の手すり（bands[].rail でも書ける）
+        column          {x, y, diameter, z0, z1, section:"round"|"square"}
+        rooftop_units   {source:"aerial", lean_correction_m:[dx,dy], z0, units:[{polygon|center+w+d, h}]}
+        faces[].windows[].spandrel {height, depth, material}            窓の下の濃いパネル
 
 決まり:
     形は全部 JSON から。値が unknown の所は、模型として立てるための「仮の値」を使い、report に列挙する。
@@ -39,6 +50,9 @@ from pathlib import Path
 import bpy
 import bmesh
 from mathutils import Vector
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import parts_geom  # noqa: E402  （部品の形。bpy を使わない共通の幾何）
 
 ASSUMED: list[dict] = []
 UNKNOWN_COLOR = (0.62, 0.62, 0.62, 1.0)
@@ -125,6 +139,53 @@ def sphere(name: str, center: Vector, radius: float, col):
     for p in me.polygons:
         p.use_smooth = True
     return ob
+
+
+def solid(name: str, ring0, ring1, col):
+    """同じ形の 2 つの輪（Vector の並び）を結んだ閉じた形。"""
+    bm = bmesh.new()
+    v0 = [bm.verts.new(p) for p in ring0]
+    v1 = [bm.verts.new(p) for p in ring1]
+    n = len(v0)
+    bm.faces.new(list(reversed(v0)))
+    bm.faces.new(v1)
+    for i in range(n):
+        bm.faces.new((v0[i], v0[(i + 1) % n], v1[(i + 1) % n], v1[i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    return new_object(name, me, col)
+
+
+def prim_object(name: str, pr: dict, frame, col):
+    """parts_geom の素片 1 つを Blender の形に。frame = (始点, 面に沿う向き, 外向き)。"""
+    p0, u, nv = frame
+
+    def W(a, n, z):
+        return p0 + u * a + nv * n + UP * z
+
+    k = pr["k"]
+    if k == "prism":
+        r0 = [W(a, n, pr["z0"]) for a, n in pr["pts"]]
+        r1 = [W(a, n, pr["z1"]) for a, n in pr["pts"]]
+    elif k == "ext_a":
+        r0 = [W(a, pr["n0"], z) for a, z in pr["pts"]]
+        r1 = [W(a, pr["n1"], z) for a, z in pr["pts"]]
+    else:
+        r0 = [W(pr["a0"], n, z) for n, z in pr["pts"]]
+        r1 = [W(pr["a1"], n, z) for n, z in pr["pts"]]
+    return solid(name, r0, r1, col)
+
+
+def emit_prims(prefix: str, prims, frame, col, mats, fmat=None) -> list:
+    """素片の並びを形にして素材を付ける。mat が "tile"（か無し）なら面の仕上げ fmat。"""
+    obs = []
+    for pr in prims:
+        ob = prim_object(f"{prefix}_{pr['name']}", pr, frame, col)
+        ob.data.materials.append(fmat if (pr.get("mat") in (None, "tile") and fmat is not None) else mats.named(pr.get("mat")))
+        obs.append(ob)
+    return obs
 
 
 def mesh_volume(ob) -> float:
@@ -312,10 +373,14 @@ class Mats:
         self.coping = material_plain("coping", (0.25, 0.25, 0.26, 1.0), roughness=0.5)
         self.curtain = material_plain("curtain", (0.42, 0.42, 0.40, 1.0), roughness=1.0)   # 奥は暗め（タイル色と紛れないように）
         self.roof = material_plain("roof", (0.52, 0.51, 0.49, 1.0), roughness=0.95)
+        self.stone = material_plain("stone", (0.36, 0.30, 0.30, 1.0), roughness=0.5)          # 御影石の段（赤みの灰）
+        self.white = material_plain("white", (0.88, 0.88, 0.86, 1.0), roughness=0.8)          # 軒裏・段の裏
+        self.canopy = material_plain("canopy", (0.80, 0.84, 0.80, 1.0), roughness=0.3)        # かまぼこ庇（透ける板。色だけ）
 
     def named(self, name: str | None):
         return {"glass": self.glass, "concrete": self.concrete, "dark": self.dark, "metal": self.metal,
-                "tile": self.main, "coping": self.coping}.get(name or "tile", self.main)
+                "tile": self.main, "coping": self.coping, "brick": self.pavement, "stone": self.stone,
+                "white": self.white, "canopy": self.canopy}.get(name or "tile", self.main)
 
 
 # --- 棟を組む -----------------------------------------------------------------------
@@ -536,6 +601,11 @@ def build_building(b: dict, col) -> dict:
                         sill = box(f"sill_{fid}_{i}_{k}", p0 + u * s - n * (base + rec / 2) + UP * (zb - 0.04), u, n, UP, wsub, rec, 0.08, col)
                         sill.data.materials.append(mats.concrete)
                         extras.append(sill)
+                        # 窓の下の濃いパネル（windows[].spandrel）
+                        if w.get("spandrel"):
+                            sp = parts_geom.spandrel(w["spandrel"], s, wsub, zb, base, val, f"{fid} 窓の下のパネル")
+                            if sp:
+                                extras += emit_prims(f"spandrel_{fid}_{i}_{k}", [sp], (p0, u, n), col, mats, fmat)
 
         for bd in f.get("bands") or []:
             zb, zt = val(bd.get("z_bottom")), val(bd.get("z_top"))
@@ -547,6 +617,12 @@ def build_building(b: dict, col) -> dict:
             bb = box(f"band_{fid}_{int(zb)}", c, u, n, UP, a1 - a0, max(dep, 0.03), zt - zb, col)
             bb.data.materials.append(material_plain(f"band_{fid}_{int(zb)}", (*hex_to_rgb(bd["color"]), 1.0), roughness=0.6) if bd.get("color") else mats.dark)
             extras.append(bb)
+            # 帯（腰壁）の上の手すり（bands[].rail）
+            rl = bd.get("rail")
+            if rl:
+                rh = val(rl.get("height"), 0.9, f"{fid} 帯の上の手すりの高さ", "未測。0.9 m と置いた")
+                extras += emit_prims(f"bandrail_{fid}_{int(zb)}", parts_geom.rail_prims("rail", a0, a1, zt, rh, val(rl.get("post_pitch"), 1.5), max(dep, 0.03) / 2),
+                                     (p0, u, n), col, mats)
 
     for i, pt in enumerate(b.get("parts") or []):
         t = pt.get("type")
@@ -608,8 +684,9 @@ def build_building(b: dict, col) -> dict:
             a = val(pt.get("along"), 0.0)
             cnt = int(val(pt.get("count"), 1))
             w, h, d, gap = val(pt.get("w"), 0.9), val(pt.get("h"), 0.8), val(pt.get("d"), 0.35), val(pt.get("gap"), 0.15)
+            zb = parts_geom.ac_units_base(pt, f, val)        # z0（壁付け）か、面の前の地面＋0.1（地面の板に埋まらない）
             for k in range(cnt):
-                ob = box(f"{name}_{k}", p0 + u * (a + k * (w + gap) + w / 2) + n * (d / 2 + 0.3) + UP * (h / 2 + 0.1), u, n, UP, w, d, h, col)
+                ob = box(f"{name}_{k}", p0 + u * (a + k * (w + gap) + w / 2) + n * (d / 2 + 0.3) + UP * (zb + h / 2), u, n, UP, w, d, h, col)
                 ob.data.materials.append(mats.metal)
                 extras.append(ob)
         elif t == "pipes":
@@ -639,6 +716,20 @@ def build_building(b: dict, col) -> dict:
             ob = prism(name, pt["polygon"], z - 0.1, z + 0.02, col)
             ob.data.materials.append(mats.pavement if pt.get("material", "brick") == "brick" else mats.ground)
             extras.append(ob)
+        elif t in parts_geom.FACE_PART_TYPES or t in parts_geom.WORLD_PART_TYPES:
+            got = parts_geom.part_prims(pt, faces, val, f"parts[{i}:{t}]")
+            if not got:
+                continue
+            fr, cut, prims = got
+            if fr == "world":
+                frame, fm = (Vector((0, 0, 0)), Vector((1, 0, 0)), Vector((0, 1, 0))), None
+            else:
+                fp0, fu, fn, _L = face_frame(faces[fr])
+                frame, fm = (fp0, fu, fn), mats.by_face.get(fr, mats.main)
+            if cut is not None:
+                # くり抜き（玄関の軒下）。窓とは別に 1 回ずつ当てる（boolean_cut が体積を検査する）
+                cutters.append(prim_object(f"cut_{t}_{i}", cut, frame, col))
+            extras += emit_prims(name, prims, frame, col, mats, fm)
 
     if cutters:
         boolean_cut(body, cutters)

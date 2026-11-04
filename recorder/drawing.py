@@ -19,7 +19,7 @@ import html
 import math
 from typing import Any
 
-from . import schema
+from . import parts_geom, schema
 from .schema import Measurement
 
 MARGIN_WARNINGS: list[str] = []   # 端の余白が unknown で仮に等分した面（draw が表示する）
@@ -36,6 +36,20 @@ FILL_WALL = "#d9b48a"
 FILL_PIER = "#c99a69"
 FILL_WIN = "#3f4753"
 FILL_BAND = "#555b63"
+FILL_SPANDREL = "#4a3b30"
+FILL_RECESS = "#6f665c"
+# 部品の素材 → 立面の塗り（parts_geom の mat の名前）
+FILL_PART = {"tile": FILL_PIER, "glass": FILL_WIN, "metal": "#9aa0a6", "dark": FILL_BAND, "brick": "#a5523f",
+             "stone": "#7a6a6a", "concrete": "#e6e2da", "canopy": "#d5e4d6", "white": "#f2f0ea", "coping": "#444"}
+
+
+def _prim_depth(pr: dict) -> float:
+    """素片の手前側の n（大きいほど見る人に近い。立面は奥から順に描く）。"""
+    if pr["k"] == "prism":
+        return max(q[1] for q in pr["pts"])
+    if pr["k"] == "ext_a":
+        return pr["n1"]
+    return max(q[0] for q in pr["pts"])
 
 
 def _m(d: dict | None, key: str) -> Measurement:
@@ -192,6 +206,19 @@ def elevation_svg(b: dict, face_id: str) -> str:
         zb, zt = _m(bd, "z_bottom"), _m(bd, "z_top")
         if zb.known and zt.known:
             svg.rect(x0, Y(zt.value), W, (zt.value - zb.value) * SCALE, FILL_BAND, _style(zb), 0.6)
+            rl = bd.get("rail")
+            if rl:      # 帯（腰壁）の上の手すり：横の線と支柱
+                rh = _m(rl, "height")
+                h = float(rh.value) if rh.known else 0.9
+                if not rh.known:
+                    unknown_lines.append(f"帯『{bd.get('name', '')}』の手すりの高さ")
+                a0 = parts_geom.plain(bd.get("along0"), 0.0)
+                a1 = parts_geom.plain(bd.get("along1"), L)
+                svg.add('<g data-part="rail">')
+                for pr in parts_geom.rail_prims("rail", a0, a1, zt.value, h, parts_geom.plain(rl.get("post_pitch"), 1.5), 0.0):
+                    q = parts_geom.elevation_outline(pr)
+                    svg.add('<polygon points="' + " ".join(f"{X(a):.1f},{Y(z):.1f}" for a, z in q) + f'" fill="#9aa0a6" {_style(rh)} stroke-width="0.4"/>')
+                svg.add('</g>')
         else:
             unknown_lines.append(f"帯『{bd.get('name', '')}』の高さ")
 
@@ -215,6 +242,14 @@ def elevation_svg(b: dict, face_id: str) -> str:
         zb_v = zb.value if zb.known else (zt.value - 1.5 if zt.known else 1.0)
         zt_v = zt.value if zt.known else zb_v + 1.5
         st = zb if not zb.known else (zt if not zt.known else zb)
+        sp = w.get("spandrel")
+        sp_h = _m(sp, "height") if sp else None
+        if sp and not sp_h.known:
+            unknown_lines.append(f"窓『{w.get('name', '')}』の下のパネルの高さ")
+
+        def spandrel(xw: float, wv: float) -> None:     # 窓の下の濃いパネル（windows[].spandrel）
+            if sp and sp_h.known:
+                svg.rect(X(xw), Y(zb_v), wv * SCALE, float(sp_h.value) * SCALE, FILL_SPANDREL, _style(sp_h), 0.5)
         if bay_edges:
             pw = (pier.value if pier.known else 0.0)
             for i in range(len(bay_edges) - 1):
@@ -225,12 +260,35 @@ def elevation_svg(b: dict, face_id: str) -> str:
                 for j in range(per):
                     xw = a + gap * (j + 1) + wv * j
                     svg.rect(X(xw), Y(zt_v), wv * SCALE, (zt_v - zb_v) * SCALE, FILL_WIN, _style(st), 0.7)
+                    spandrel(xw, wv)
         else:
             wv = ww.value if ww.known else 2.0
             n = max(1, int(L // (wv * 2)))
             step = L / n
             for i in range(n):
                 svg.rect(X(step * i + (step - wv) / 2), Y(zt_v), wv * SCALE, (zt_v - zb_v) * SCALE, FILL_WIN, _style(st), 0.7)
+                spandrel(step * i + (step - wv) / 2, wv)
+
+    # 面に付く部品（外階段・玄関の軒下・段・手すり）。形は parts_geom（模型と同じ）を立面に投影し、奥から順に描く
+    faces_all = {f["id"]: f for f in b.get("faces", [])}
+    for i, pt in enumerate(b.get("parts", [])):
+        t = pt.get("type")
+        if pt.get("face") != face_id or t not in parts_geom.FACE_PART_TYPES:
+            continue
+        got = parts_geom.part_prims(pt, faces_all)
+        if not got or not (got[1] or got[2]):
+            unknown_lines.append(f"{pt.get('name', t)}（parts[{i}]）の寸法が未確定で描けません")
+            continue
+        _fr, cut, prims = got
+        svg.add(f'<g data-part="{_esc(t)}">')
+        if cut:     # くり抜き（玄関の軒下）：引っ込みの枠を破線で
+            q = parts_geom.elevation_outline(cut)
+            svg.add('<polygon points="' + " ".join(f"{X(a):.1f},{Y(z):.1f}" for a, z in q) + f'" fill="{FILL_RECESS}" stroke="#222" stroke-dasharray="5 3" stroke-width="1"/>')
+        for pr in sorted(prims, key=_prim_depth):
+            q = parts_geom.elevation_outline(pr)
+            fill = FILL_PART.get(pr.get("mat") or "tile", FILL_PIER)
+            svg.add('<polygon points="' + " ".join(f"{X(a):.1f},{Y(z):.1f}" for a, z in q) + f'" fill="{fill}" stroke="#333" stroke-width="0.6"/>')
+        svg.add('</g>')
 
     # 地面
     if g != 0.0:
@@ -383,6 +441,15 @@ def plan_svg(b: dict) -> str:
             cx, cy = P(c)
             svg.line(ax, ay, cx, cy, 'stroke="#185fa5"', 3)
             svg.text((ax + cx) / 2, (ay + cy) / 2 - 8, fc.get("id", ""), 11, "#185fa5", "middle", "bold")
+    # 単独の柱・屋上の設備（世界座標の部品）
+    for pt in b.get("parts", []):
+        if pt.get("type") not in parts_geom.WORLD_PART_TYPES:
+            continue
+        got = parts_geom.part_prims(pt, {})
+        dash = ' stroke-dasharray="4 3"' if pt.get("type") == "rooftop_units" else ""
+        for pr in (got[2] if got else []):
+            pp = " ".join(f"{P(q)[0]:.1f},{P(q)[1]:.1f}" for q in pr["pts"])
+            svg.add(f'<polygon data-part="{_esc(pt["type"])}" points="{pp}" fill="#9aa0a6" fill-opacity="0.6" stroke="#333"{dash} stroke-width="0.8"/>')
     # 北
     nxp, nyp = LEFT + 40 + (maxx - minx) * sc + 60, TOP + 60
     svg.line(nxp, nyp + 30, nxp, nyp, 'stroke="#222"', 1.2)

@@ -127,6 +127,12 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--out-dir", default=None, help="compare の JSON・PNG の出力先（省略時は out/<棟id>/compare/）")
     q.add_argument("--lines", default=None, help='判断役が読んだ線の位置（正面化画像の px）{"x_px": [...], "z_px": [...]}。あれば自動検出より優先')
 
+    q = psub.add_parser("roof", help="航空写真（国土地理院 z18）で屋上の縁・倒れ込み・設備を読む")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--out-dir", default=None, help="roof.json・roof_aerial.png の出力先（省略時は out/<棟id>/）")
+    q.add_argument("--roof-edge", default=None, help='人が指した屋上の縁の点（写真の上の m）"x,y;x,y;..."。あれば自動より優先')
+    q.add_argument("--units", default=None, help='人が指した設備（写真の上の中心 m と大きさ）"x,y,w,d;..."。あれば自動より優先')
+
     p = sub.add_parser("agent", help="係（.claude/agents）を API で動かす")
     asub = p.add_subparsers(dest="agent_cmd", required=True)
     asub.add_parser("list")
@@ -365,6 +371,24 @@ def _photos(a) -> int:
             mark = "OK " if l.ok else ("NG " if l.ok is False else "-- ")
             d = f"{l.diff_m:+.2f} m" if l.diff_m is not None else "見つからず"
             print(f"  {mark}{l.axis} {l.what:<14} JSON {l.json_m:6.2f}  {d}")
+        print(f"画像: {png}")
+        return 0
+    if a.photos_cmd == "roof":
+        from . import roof
+
+        res, jp, png = roof.run(Path(a.building), out_dir=Path(a.out_dir) if a.out_dir else None,
+                                roof_edge=a.roof_edge, units=a.units)
+        lx, ly = res["lean_m"]
+        print(f"倒れ込み lean_m=({lx:+.2f}, {ly:+.2f}) m  |{res['lean_abs_m']}| m  向き {res['lean_dir_deg']}°  率 {res['lean_ratio']}  縁={res['roof_edge_source']}  ambiguous={res['ambiguous']}")
+        for c in res["roof_edge_offset_candidates"]:
+            print(f"  候補 dx={c['dx']:+.2f} dy={c['dy']:+.2f}  点 {c['score']}  比 {c['rel']}  確からしさ {c['confidence']}")
+        ch = res["check_low_building"]
+        print(f"低い建物の検算: {ch.get('id')} ずれ {ch.get('offset_m')} → {ch.get('note')}")
+        for i, u in enumerate(res["units"], 1):
+            print(f"  設備 {i}: 中心 ({u['cx']}, {u['cy']})  {u['w']}×{u['d']} m  明るさ {u['brightness']}  {u['note']}")
+        for w in res["warnings"]:
+            print(f"警告: {w}")
+        print(f"JSON: {jp}")
         print(f"画像: {png}")
         return 0
     if a.photos_cmd == "list":
