@@ -261,6 +261,158 @@ def dem_at(dem: dict, x: float, y: float) -> float | None:
     return None
 
 
+# --- 地形（棟の模型の地面）-------------------------------------------------------------
+# 模型の地面は国土地理院 5m 標高から作る 1 枚の面。面ごとの ground_offset は形には使わず、検算にだけ使う。
+# Blender の中（blender_build.py）からも `from recorder import site` で読む（numpy だけで動くこと）。
+
+TERRAIN_MARGIN_M = 20.0        # 足元の外側この距離までを細かい格子（1 m）で
+TERRAIN_SMOOTH_PX = 5          # 5m 標高の画素（1 m 格子では 4〜5 個の同じ値の段）を均す窓。標高の解像度より細かい形は作らない
+FACE_BAND_M = (0.0, 12.0)      # ground_offset の検算に読む面の前の帯（面からの m）。棟 JSON の method と同じ
+
+
+def fill_gaps(Z: np.ndarray) -> tuple[np.ndarray, float]:
+    """欠け（NaN）を隣の有効値の平均で外から埋める（補間ではなく延長）。返り値：(埋めた格子, 欠けの割合)。
+    export_web の地面格子と模型の地形で共用する。全部欠けていれば NaN のまま返す。"""
+    Z = np.array(Z, dtype=float)
+    valid = ~np.isnan(Z)
+    ratio = float(1 - valid.mean()) if Z.size else 0.0
+    if not valid.any():
+        return Z, ratio
+    for _ in range(Z.shape[0] + Z.shape[1]):
+        bad = np.isnan(Z)
+        if not bad.any():
+            break
+        P = np.pad(Z, 1, constant_values=np.nan)
+        nb = np.stack([P[:-2, 1:-1], P[2:, 1:-1], P[1:-1, :-2], P[1:-1, 2:]])
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            m = np.nanmean(nb, axis=0)
+        Z = np.where(bad, m, Z)
+    return Z, ratio
+
+
+def box_mean(Z: np.ndarray, k: int) -> np.ndarray:
+    """k×k の窓の平均（端は端の値で延長）。k<=1 はそのまま。"""
+    if k <= 1:
+        return Z
+    r = k // 2
+    P = np.pad(Z, r, mode="edge")
+    c = np.cumsum(np.cumsum(np.pad(P, ((1, 0), (1, 0))), axis=0), axis=1)
+    h, w = Z.shape
+    s = c[k:k + h, k:k + w] - c[0:h, k:k + w] - c[k:k + h, 0:w] + c[0:h, 0:w]
+    return s / (k * k)
+
+
+def polygon_distance(px: np.ndarray, py: np.ndarray, poly) -> np.ndarray:
+    """点（配列）から多角形までの距離（m）。中は 0。"""
+    px, py = np.asarray(px, float), np.asarray(py, float)
+    d = np.full(px.shape, np.inf)
+    inside = np.zeros(px.shape, bool)
+    n = len(poly)
+    for i in range(n):
+        (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
+        ex, ey = bx - ax, by - ay
+        L2 = ex * ex + ey * ey or 1e-12
+        t = np.clip(((px - ax) * ex + (py - ay) * ey) / L2, 0, 1)
+        d = np.minimum(d, np.hypot(px - (ax + t * ex), py - (ay + t * ey)))
+        cross = ((ay > py) != (by > py)) & (px < ax + (py - ay) * (bx - ax) / ((by - ay) or 1e-12))
+        inside ^= cross
+    return np.where(inside, 0.0, d)
+
+
+def dem_sample(dem: dict, X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """dem_at を配列でまとめて読む（最近傍。範囲外・無効は NaN）。"""
+    gx, gy, Z = dem["x"], dem["y"], dem["z"]
+    i = np.rint((np.asarray(X, float) - gx[0]) / (gx[1] - gx[0])).astype(int)
+    j = np.rint((np.asarray(Y, float) - gy[0]) / (gy[1] - gy[0])).astype(int)
+    ok = (i >= 0) & (i < Z.shape[1]) & (j >= 0) & (j < Z.shape[0])
+    out = np.full(np.shape(X), np.nan)
+    out[ok] = Z[j[ok], i[ok]]
+    return out
+
+
+def terrain_grid(dem: dict, poly, ground_z: float, margin_m: float = TERRAIN_MARGIN_M, step_m: float = 1.0,
+                 smooth_px: int = TERRAIN_SMOOTH_PX) -> dict:
+    """足元の外接長方形の外側 margin_m までの地形の格子（step_m おき）。高さは ground_z を引いた値（棟の z=0 からの m）。
+
+    返り値 {x, y, z, mask, nan_ratio}：x, y は 1 次元、z は (ny, nx)、mask は面を張る格子点（長方形なので全部 True）。
+    1 m 格子で読み、欠けは fill_gaps で近傍から埋め、5m 標高の画素の段を smooth_px の窓で均してから step_m おきに間引く
+    （粗い格子でも細かい格子と同じ高さになり、継ぎ目が合う）。"""
+    xs = [p[0] for p in poly]
+    ys = [p[1] for p in poly]
+    k = max(1, int(round(step_m)))
+    x0, y0 = math.floor(min(xs) - margin_m), math.floor(min(ys) - margin_m)
+    nx = int(math.ceil((max(xs) + margin_m - x0) / k)) * k + 1
+    ny = int(math.ceil((max(ys) + margin_m - y0) / k)) * k + 1
+    gx1 = x0 + np.arange(nx, dtype=float)
+    gy1 = y0 + np.arange(ny, dtype=float)
+    GX, GY = np.meshgrid(gx1, gy1)
+    Z, ratio = fill_gaps(dem_sample(dem, GX, GY))
+    if np.isnan(Z).all():
+        raise ValueError("足元の周りに 5m 標高が 1 点もありません")
+    Z = box_mean(Z, max(1, int(smooth_px))) - float(ground_z)
+    Z = Z[::k, ::k]
+    return {"x": gx1[::k], "y": gy1[::k], "z": Z, "mask": np.ones(Z.shape, bool), "nan_ratio": ratio}
+
+
+def grid_z(t: dict, x: float, y: float) -> float:
+    """格子（terrain_grid）の高さを双一次で読む。範囲外は端の値。"""
+    gx, gy, Z = t["x"], t["y"], t["z"]
+    fx = min(max((x - gx[0]) / (gx[1] - gx[0]), 0.0), len(gx) - 1.000001)
+    fy = min(max((y - gy[0]) / (gy[1] - gy[0]), 0.0), len(gy) - 1.000001)
+    i, j = int(fx), int(fy)
+    a, c = fx - i, fy - j
+    return float((Z[j, i] * (1 - a) + Z[j, i + 1] * a) * (1 - c) + (Z[j + 1, i] * (1 - a) + Z[j + 1, i + 1] * a) * c)
+
+
+def face_band_offset(dem: dict, p0, p1, ground_z: float, band=FACE_BAND_M, step_m: float = 1.0) -> float | None:
+    """面の前の帯（面の幅 × 面から band m、step_m おき）の 5m 標高の中央値 − ground_z。棟 JSON の ground_offset の読み方と同じ。
+    外向き法線は (u.y, −u.x)（blender_build.face_frame と同じ）。"""
+    dx, dy = p1[0] - p0[0], p1[1] - p0[1]
+    L = math.hypot(dx, dy)
+    if L == 0:
+        return None
+    ux, uy = dx / L, dy / L
+    nx, ny = uy, -ux
+    vals = []
+    for a in np.arange(0.0, L + 1e-6, step_m):
+        for n in np.arange(band[0], band[1] + 1e-6, step_m):
+            z = dem_at(dem, p0[0] + ux * a + nx * n, p0[1] + uy * a + ny * n)
+            if z is not None:
+                vals.append(z)
+    return float(np.median(vals)) - float(ground_z) if vals else None
+
+
+def _mval(m):
+    if isinstance(m, (int, float)) and not isinstance(m, bool):
+        return float(m), None
+    if isinstance(m, dict) and m.get("value") is not None and m.get("status") != "unknown":
+        return float(m["value"]), m.get("tol")
+    return None, None
+
+
+def check_ground_offsets(dem: dict, b: dict) -> tuple[list[dict], list[str]]:
+    """faces[].ground_offset を地形で検算する。帯の中央値との差が tol（無ければ 0.5 m）を超えたら warning。"""
+    gz, _ = _mval(b.get("ground_z"))
+    checks, warns = [], []
+    if gz is None:
+        return checks, warns
+    for f in b.get("faces", []):
+        go, tol = _mval(f.get("ground_offset"))
+        if go is None or not f.get("from") or not f.get("to"):
+            continue
+        band = face_band_offset(dem, f["from"], f["to"], gz)
+        if band is None:
+            continue
+        tol = float(tol) if tol is not None else 0.5
+        diff = round(go - band, 2)
+        ok = abs(diff) <= tol
+        checks.append({"face": f["id"], "ground_offset": go, "terrain_band_median": round(band, 2), "diff": diff, "tol": tol, "ok": ok})
+        if not ok:
+            warns.append(f"{f['id']} の ground_offset {go:+.2f} m が地形（面の前 {FACE_BAND_M[0]:g}〜{FACE_BAND_M[1]:g} m の中央値 {band:+.2f} m）と "
+                         f"{diff:+.2f} m ずれる（tol {tol} m）。棟 JSON の値か ground_z を見直す")
+    return checks, warns
+
 # --- PLATEAU ---------------------------------------------------------------------
 
 NS = {
@@ -627,19 +779,7 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
             z = dem_at(dem, float(x), float(y))
             if z is not None:
                 Z[j, i] = z
-    valid = ~np.isnan(Z)
-    nan_ratio = float(1 - valid.mean())
-    if valid.any():
-        for _ in range(Z.shape[0] + Z.shape[1]):   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
-            bad = np.isnan(Z)
-            if not bad.any():
-                break
-            P = np.pad(Z, 1, constant_values=np.nan)
-            nb = np.stack([P[:-2, 1:-1], P[2:, 1:-1], P[1:-1, :-2], P[1:-1, 2:]])
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", RuntimeWarning)
-                m = np.nanmean(nb, axis=0)
-            Z = np.where(bad, m, Z)
+    Z, nan_ratio = fill_gaps(Z)   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
     out = {
         "schema": "campus-recorder/web/1",
         "campus": campus,

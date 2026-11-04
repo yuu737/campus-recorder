@@ -23,7 +23,7 @@
         pipes           {face, along, count, radius, z0, z1}   縦の配管・雨樋
         tree            {x, y, height, radius}                 木（丸い樹冠。種類は後で CC0 素材に差し替え）
         pavement        {polygon, z, material}                 舗装（煉瓦など）
-        ac_units.z0     室外機の下端（壁付け）。省略は面の前の地面＋0.1
+        ac_units.z0     室外機の下端（壁付け）。省略は面の前の地形＋0.1
     新しい語彙（11/4。形は parts_geom.py。立面図も同じ形を使う）:
         stair_switchback {face, along, width, depth, landing_z[] | floors+floor_pitch, landing_len, parapet{height,material},
                           rail{height,post_pitch}, pilotis{count|along[],size,shape}, exit_box{height}, canopy{shape:"barrel",rise}}
@@ -34,6 +34,12 @@
         column          {x, y, diameter, z0, z1, section:"round"|"square"}
         rooftop_units   {source:"aerial", lean_correction_m:[dx,dy], z0, units:[{polygon|center+w+d, h}]}
         faces[].windows[].spandrel {height, depth, material}            窓の下の濃いパネル
+
+地面（11/4）:
+    国土地理院 5m 標高（out/site/dem5a.npz）から ground_z を引いた地形の面 1 枚（足元の外側 20 m、1 m 格子。recorder.site.terrain_grid）。
+    建物は地形を切り欠かず、地形の一番低い所の 1 m 下まで伸ばす（footing_*）。faces[].ground_offset は形に使わず、
+    地形との検算だけ（model_report の ground_offset_checks / warnings）。室外機・段・玄関・外階段の足元は面の前の地形から。
+    四面図・屋根伏せでは地形を描かない。鳥瞰・街路視点・glb では描く（背景の粗い地形 terrain_far は描画だけ）。
 
 決まり:
     形は全部 JSON から。値が unknown の所は、模型として立てるための「仮の値」を使い、report に列挙する。
@@ -53,6 +59,11 @@ from mathutils import Vector
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import parts_geom  # noqa: E402  （部品の形。bpy を使わない共通の幾何）
+import numpy as np  # noqa: E402  （Blender 同梱）
+
+REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO))
+from recorder import site  # noqa: E402  （地形：5m 標高の格子。numpy だけで動く関数を使う）
 
 ASSUMED: list[dict] = []
 UNKNOWN_COLOR = (0.62, 0.62, 0.62, 1.0)
@@ -385,52 +396,131 @@ class Mats:
 
 # --- 棟を組む -----------------------------------------------------------------------
 
-GROUND_PATCH_DEPTH_M = 12.0     # 面の前の地面の板（広場）の奥行きの仮の値。faces[].ground_offset.depth があればそれを使う
-GROUND_WALL_T = 0.3
+TERRAIN_FAR_M = 200.0     # 鳥瞰・街路視点の背景用の粗い地形（5 m 格子）の広がり。描画だけで glb には入れない
+TERRAIN_FAR_STEP_M = 5.0
+TERRAIN_FAR_DROP_M = 0.15  # 粗い地形は細かい地形の下に少し沈める（重なりのちらつき防止）
+FOOTING_DEPTH_M = 1.0      # 建物を地形の下まで伸ばす深さ（地形は切り欠かない）
 
 
-def build_face_grounds(faces: dict, ground, body, mats, col) -> None:
-    """面ごとの地面の高さ（faces[].ground_offset、z=0 からの m）を模型にする。
+class Terrain:
+    """模型の地面。国土地理院 5m 標高（out/site/dem5a.npz）から ground_z を引いた 1 枚の面。
 
-    方針：地面は z=0 の 1 枚のまま、面の前に長方形の「広場」を足し引きする（面の幅 × 奥行き、既定 12 m）。
-        正（高い広場、本部棟 東面前 +1.4 m 等）  z=0 から ground_offset まで積んだ板を面の前に置く。
-        負（沈んだ広場、タワー75 −3.0 m 等）    地面の 1 枚から長方形をブーリアンで抜き（地面は単純な 1 枚なので崩れない）、
-                                              底の板と 3 辺の擁壁（厚 0.3 m）を置き、壁は面の足元を ground_offset まで下げる。
-    奥行きは JSON に無いので仮の値（report に出す）。他の面の板と角で重なっても、板どうしは足し算しない（重ねて置くだけ）。"""
-    cutters = []
-    for fid, f in faces.items():
-        gm = f.get("ground_offset")
-        gz = val(gm)
-        if not gz:
-            continue
-        depth = gm.get("depth") if isinstance(gm, dict) else None
-        if not depth:
-            depth = assume(f"{fid} 面の前の地面の板の奥行き", GROUND_PATCH_DEPTH_M, "ground_offset の広がりは未測。面の幅 × この奥行きの長方形と置いた")
-        depth = float(depth)
+    faces[].ground_offset は形には使わない（検算だけ。site.check_ground_offsets）。
+    5m 標高か ground_z が無い時だけ z=0 の平面（仮の値として report に出す）。"""
+
+    def __init__(self, b: dict, poly):
+        self.grid = self.far = None
+        self.checks, self.warnings, self.info = [], [], {}
+        gz = val(b.get("ground_z"))
+        npz = REPO / "out" / "site" / "dem5a.npz"
+        if gz is None or not npz.exists():
+            assume("地形", "z=0 の平面", "ground_z が unknown か 5m 標高（out/site/dem5a.npz）が無い。平らな地面と置いた")
+            return
+        dem = site.load_dem(npz)
+        self.grid = site.terrain_grid(dem, poly, gz)
+        try:
+            self.far = site.terrain_grid(dem, poly, gz, margin_m=TERRAIN_FAR_M, step_m=TERRAIN_FAR_STEP_M)
+        except ValueError:
+            self.far = None
+        self.checks, self.warnings = site.check_ground_offsets(dem, b)
+        zs = self.grid["z"][self.grid["mask"]]
+        self.info = {"source": "国土地理院 5m 標高（DEM5A）out/site/dem5a.npz − ground_z", "ground_z": gz,
+                     "margin_m": site.TERRAIN_MARGIN_M, "step_m": 1.0, "smooth_px": site.TERRAIN_SMOOTH_PX,
+                     "nan_ratio_filled": round(self.grid["nan_ratio"], 3),
+                     "z_range": [round(float(zs.min()), 2), round(float(zs.max()), 2)]}
+
+    def z(self, x: float, y: float) -> float:
+        return site.grid_z(self.grid, x, y) if self.grid is not None else 0.0
+
+    def min_near(self, poly, dist: float = 1.0) -> float:
+        """多角形から dist m 以内の地形の一番低い所（地形が無ければ 0）。"""
+        if self.grid is None:
+            return 0.0
+        GX, GY = np.meshgrid(self.grid["x"], self.grid["y"])
+        m = site.polygon_distance(GX, GY, poly) <= dist
+        return float(self.grid["z"][m].min()) if m.any() else 0.0
+
+    def front(self, f: dict, a0: float, a1: float) -> float:
+        """面 f の前（面から 0.5〜3 m）、面に沿って a0〜a1 の地形の高さの中央値。部品の足元に使う。"""
+        if self.grid is None:
+            return 0.0
         p0, u, n, L = face_frame(f)
-        t = GROUND_WALL_T
-        extras = []
+        a0, a1 = max(0.0, min(a0, a1)), min(L, max(a0, a1))
+        k = max(2, int((a1 - a0) / 0.5) + 1)
+        zs = [self.z(*(p0 + u * (a0 + (a1 - a0) * i / (k - 1)) + n * d).xy) for i in range(k) for d in (0.5, 1.5, 3.0)]
+        return float(np.median(zs))
 
-        def slab(tag, c_u, c_n, su, sn, z0, z1, mat):
-            c = p0 + u * c_u + n * c_n + UP * ((z0 + z1) / 2)
-            ob = box(f"ground_{fid}_{tag}", c, u, n, UP, su, sn, z1 - z0, col)
-            ob.data.materials.append(mat)
-            return ob
+    @staticmethod
+    def _mesh(name, g, mask, drop, col, mat):
+        gx, gy, Z = g["x"], g["y"], g["z"]
+        nx = len(gx)
+        verts = [(float(x), float(y), float(Z[j, i]) - drop) for j, y in enumerate(gy) for i, x in enumerate(gx)]
+        faces = [(j * nx + i, j * nx + i + 1, (j + 1) * nx + i + 1, (j + 1) * nx + i)
+                 for j in range(len(gy) - 1) for i in range(nx - 1)
+                 if mask[j, i] and mask[j, i + 1] and mask[j + 1, i + 1] and mask[j + 1, i]]
+        used = sorted({v for fc in faces for v in fc})
+        remap = {v: k for k, v in enumerate(used)}
+        me = bpy.data.meshes.new(name)
+        me.from_pydata([verts[v] for v in used], [], [tuple(remap[v] for v in fc) for fc in faces])
+        me.update()
+        for p in me.polygons:
+            p.use_smooth = True
+        ob = new_object(name, me, col)
+        ob.data.materials.append(mat)
+        return ob
 
-        if gz > 0:
-            extras.append(slab("raised", L / 2, depth / 2, L, depth, -0.05, gz, mats.ground))
-        else:
-            # 抜く箱は地面の厚み（−0.3〜0）を貫く
-            cutters.append(slab("pit", L / 2, depth / 2, L, depth, gz - 0.5, 0.2, mats.ground))
-            extras.append(slab("floor", L / 2, depth / 2, L + 2 * t, depth + t, gz - t, gz, mats.ground))
-            extras.append(slab("wallL", -t / 2, depth / 2, t, depth + t, gz - t, 0.0, mats.ground))
-            extras.append(slab("wallR", L + t / 2, depth / 2, t, depth + t, gz - t, 0.0, mats.ground))
-            extras.append(slab("wallF", L / 2, depth + t / 2, L, t, gz - t, 0.0, mats.ground))
-            extras.append(slab("skirt", L / 2, -t / 2, L, t, gz, 0.0, mats.main))       # 面の足元の壁（z=0 から地面まで）
-        for e in extras:
-            e.parent = body
-    if cutters:
-        boolean_cut(ground, cutters)
+    def build(self, poly, mats, col) -> list:
+        """地形の面（terrain：足元の外接長方形の外側 20 m、1 m 格子）と背景の粗い地形（terrain_far）を作る。"""
+        if self.grid is None:
+            xs, ys = [p[0] for p in poly], [p[1] for p in poly]
+            cx, cy, R = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, 1500.0
+            g = prism("terrain", [(cx - R, cy - R), (cx + R, cy - R), (cx + R, cy + R), (cx - R, cy + R)], -0.3, 0.0, col)
+            g.data.materials.append(mats.ground)
+            return [g]
+        obs = [self._mesh("terrain", self.grid, self.grid["mask"], 0.0, col, mats.ground)]
+        if self.far is not None:
+            # 細かい地形（長方形）の内側に全部入る四角は抜く。高さは同じ均した格子から取るので継ぎ目は合う
+            gx, gy = self.grid["x"], self.grid["y"]
+            FX, FY = np.meshgrid(self.far["x"], self.far["y"])
+            inner = (FX >= gx[0]) & (FX <= gx[-1]) & (FY >= gy[0]) & (FY <= gy[-1])
+            inside = inner[:-1, :-1] & inner[1:, :-1] & inner[:-1, 1:] & inner[1:, 1:]
+            obs.append(self._mesh_far("terrain_far", self.far, inside, col, mats.ground))
+        return obs
+
+    @staticmethod
+    def _mesh_far(name, g, drop_quads, col, mat):
+        gx, gy, Z = g["x"], g["y"], g["z"]
+        nx = len(gx)
+        verts = [(float(x), float(y), float(Z[j, i]) - TERRAIN_FAR_DROP_M) for j, y in enumerate(gy) for i, x in enumerate(gx)]
+        faces = [(j * nx + i, j * nx + i + 1, (j + 1) * nx + i + 1, (j + 1) * nx + i)
+                 for j in range(len(gy) - 1) for i in range(nx - 1) if not drop_quads[j, i]]
+        me = bpy.data.meshes.new(name)
+        me.from_pydata(verts, [], faces)
+        me.update()
+        ob = new_object(name, me, col)
+        ob.data.materials.append(mat)
+        return ob
+
+    def report(self) -> dict:
+        return {"terrain": self.info, "ground_offset_checks": self.checks}
+
+
+def face_part_span(pt: dict, f: dict) -> tuple[float, float]:
+    """面に付く部品が面に沿って占める範囲（地面の高さを読む所）。"""
+    a = val(pt.get("along"), 0.0) or 0.0
+    if pt.get("type") == "ac_units":
+        cnt = int(val(pt.get("count"), 1) or 1)
+        w, gap = val(pt.get("w"), 0.9) or 0.9, val(pt.get("gap"), 0.15) or 0.15
+        return a, a + cnt * (w + gap)
+    w = val(pt.get("width")) or 1.0
+    return a, a + w
+
+
+def with_front_ground(f: dict, terrain: "Terrain", a0: float, a1: float) -> dict:
+    """部品の足元の高さを地形から取るため、面の写しの ground_offset を地形の値にした物（棟 JSON は変えない）。"""
+    if terrain.grid is None:
+        return f
+    return {**f, "ground_offset": round(terrain.front(f, a0, a1), 3)}
 
 
 def build_building(b: dict, col) -> dict:
@@ -441,6 +531,7 @@ def build_building(b: dict, col) -> dict:
         H = assume("parapet_top", (cnt or 4) * (pitch or 3.6), "パラペット未確定。階数×階高（無ければ 4×3.6）")
     mats = Mats(b)
     faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
+    terrain = Terrain(b, poly)
 
     blocks = b.get("blocks") or [{"id": "main", "polygon": poly, "top_z": H}]
     bodies = []
@@ -452,7 +543,16 @@ def build_building(b: dict, col) -> dict:
         ob = prism(f"{b['id']}_{blk['id']}", blk["polygon"], bottom, top, col)
         ob.data.materials.append(mats.main)
         bodies.append(ob)
-    body = union_bodies(bodies)          # 重なる塊は足し算で 1 つに（join だと自己交差して後の彫り込みで塔が消える）
+    body = union_bodies(bodies)
+    # 地面に立つ塊は、地形を切り欠かずに建物の方を地形の下まで伸ばす（別の物 footing_*。立面図・屋根伏せでは隠す）
+    footings = []
+    for blk in blocks:
+        if val(blk.get("bottom_z"), 0.0) > 0.0:
+            continue
+        zb = min(0.0, terrain.min_near(blk["polygon"])) - FOOTING_DEPTH_M
+        ob = prism(f"footing_{blk['id']}", blk["polygon"], zb, 0.0, col)
+        ob.data.materials.append(mats.main)
+        footings.append(ob)          # 重なる塊は足し算で 1 つに（join だと自己交差して後の彫り込みで塔が消える）
 
     cutters, extras = [], []
 
@@ -684,7 +784,7 @@ def build_building(b: dict, col) -> dict:
             a = val(pt.get("along"), 0.0)
             cnt = int(val(pt.get("count"), 1))
             w, h, d, gap = val(pt.get("w"), 0.9), val(pt.get("h"), 0.8), val(pt.get("d"), 0.35), val(pt.get("gap"), 0.15)
-            zb = parts_geom.ac_units_base(pt, f, val)        # z0（壁付け）か、面の前の地面＋0.1（地面の板に埋まらない）
+            zb = parts_geom.ac_units_base(pt, with_front_ground(f, terrain, *face_part_span(pt, f)), val)   # z0（壁付け）か、前の地形＋0.1
             for k in range(cnt):
                 ob = box(f"{name}_{k}", p0 + u * (a + k * (w + gap) + w / 2) + n * (d / 2 + 0.3) + UP * (zb + h / 2), u, n, UP, w, d, h, col)
                 ob.data.materials.append(mats.metal)
@@ -706,9 +806,10 @@ def build_building(b: dict, col) -> dict:
             x, y = pt["x"], pt["y"]
             hgt = val(pt.get("height"), 7.0)
             rad = val(pt.get("radius"), 3.0)
-            tr = cylinder(f"{name}_trunk", Vector((x, y, 0)), 0.18, 0.0, hgt - rad * 0.6, col, seg=8)
+            tz = terrain.z(x, y)          # 木の根元は地形の上
+            tr = cylinder(f"{name}_trunk", Vector((x, y, tz)), 0.18, tz, tz + hgt - rad * 0.6, col, seg=8)
             tr.data.materials.append(mats.trunk)
-            cn = sphere(f"{name}_crown", Vector((x, y, hgt - rad * 0.5)), rad, col)
+            cn = sphere(f"{name}_crown", Vector((x, y, tz + hgt - rad * 0.5)), rad, col)
             cn.data.materials.append(mats.leaf)
             extras += [tr, cn]
         elif t == "pavement":
@@ -717,7 +818,11 @@ def build_building(b: dict, col) -> dict:
             ob.data.materials.append(mats.pavement if pt.get("material", "brick") == "brick" else mats.ground)
             extras.append(ob)
         elif t in parts_geom.FACE_PART_TYPES or t in parts_geom.WORLD_PART_TYPES:
-            got = parts_geom.part_prims(pt, faces, val, f"parts[{i}:{t}]")
+            pf = faces
+            if t in ("steps", "porch", "stair_switchback") and pt.get("face") in faces:
+                f = faces[pt["face"]]          # 足元の高さは面の前の地形から（ground_offset は検算だけ）
+                pf = {**faces, pt["face"]: with_front_ground(f, terrain, *face_part_span(pt, f))}
+            got = parts_geom.part_prims(pt, pf, val, f"parts[{i}:{t}]")
             if not got:
                 continue
             fr, cut, prims = got
@@ -744,11 +849,11 @@ def build_building(b: dict, col) -> dict:
     xs = [p[0] for p in poly]
     ys = [p[1] for p in poly]
     cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
-    R = 1500.0
-    g = prism("ground", [(cx - R, cy - R), (cx + R, cy - R), (cx + R, cy + R), (cx - R, cy + R)], -0.3, 0.0, col)
-    g.data.materials.append(mats.ground)
-    build_face_grounds(faces, g, body, mats, col)
-    return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body, "ground": g}
+    grounds = terrain.build(poly, mats, col)
+    for ob in footings:
+        ob.parent = body
+    return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body,
+            "ground": grounds[0], "grounds": grounds, "footings": footings, "terrain": terrain}
 
 
 # --- 描画 -------------------------------------------------------------------------------
@@ -855,7 +960,13 @@ def main():
     col = bpy.data.collections.new(b["id"])
     bpy.context.scene.collection.children.link(col)
     info = build_building(b, col)
-    c, H, E, ground_ob = info["center"], info["height"], max(info["extent"], 20.0, info["height"] * 0.9), info["ground"]   # 高い棟はカメラを引く
+    c, H, E = info["center"], info["height"], max(info["extent"], 20.0, info["height"] * 0.9)   # 高い棟はカメラを引く
+    site_obs = info["grounds"] + info["footings"]       # 地形と地形の下に伸ばした足元
+    far = [o for o in info["grounds"] if o.name == "terrain_far"]
+
+    def show_site(on: bool, far_on: bool = True):
+        for o in site_obs:
+            o.hide_render = not on or (o in far and not far_on)
 
     tall = H > info["extent"]          # 高い棟は見上げ気味に、少し引く
     look = Vector((c.x, c.y, H * (0.45 if tall else 0.3)))
@@ -864,6 +975,7 @@ def main():
 
     lens = 22 if tall else 32    # 高い棟は広角で（上が切れないように）
     setup_scene(sketch=True, fast=fast)
+    show_site(True, far_on=False)        # 線画の鳥瞰は足元の地形（20 m）だけ。背景の粗い地形は線がうるさい
     camera("persp", persp_sw, look, lens=lens)
     render(out / "persp_sketch.png")
 
@@ -875,7 +987,7 @@ def main():
     else:
         n0 = Vector((0, -1, 0))
     names = []
-    ground_ob.hide_render = True
+    show_site(False)                     # 四面図・屋根伏せは建物だけ（地形を描かない）
     dist = E * 3
     scale = max(E, H) * 1.25
     for k in range(4):
@@ -892,7 +1004,7 @@ def main():
     cam.rotation_euler = (0, 0, 0)
     render(out / "view_top.png")
 
-    ground_ob.hide_render = False
+    show_site(True)
     setup_scene(sketch=False, fast=fast)
     camera("persp2", persp_se, look, lens=lens + 3)
     render(out / "persp_shaded.png")
@@ -951,15 +1063,18 @@ def main():
             sc.camera = cam
             render(out / f"view_photo_{Path(pj['photo']).stem}.png")
     for o in bpy.context.scene.objects:
-        o.select_set(o.type == "MESH" and o.name != "ground")
+        o.select_set(o.type == "MESH" and o.name != "terrain_far")     # glb は足元の地形（20 m）まで
     bpy.ops.export_scene.gltf(filepath=str(out / f"{b['id']}.glb"), use_selection=True, export_apply=True)
     bpy.ops.wm.save_as_mainfile(filepath=str(out / f"{b['id']}.blend"))
 
     (out / "model_report.json").write_text(json.dumps({
         "building": b["id"], "source": str(src), "height_m": H, "assumed": ASSUMED,
+        **info["terrain"].report(), "warnings": info["terrain"].warnings,
         "note": "assumed は模型を立てるために置いた仮の値。棟 JSON には書かない。撮影依頼の元にする",
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print("模型:", out, "仮の値", len(ASSUMED), "件")
+    for w in info["terrain"].warnings:
+        print("  模型 warning:", w)
 
 
 if __name__ == "__main__":

@@ -41,11 +41,11 @@ elif mode == "ground":
         ob = next(o for o in bpy.data.objects if o.name.startswith(prefix))
         zs = [v.co.z for v in ob.data.vertices]
         return [min(zs), max(zs)]
-    out = {"ground_volume": bb.mesh_volume(info["ground"]), "names": names,
-           "assumed": [a["what"] for a in bb.ASSUMED]}
-    for pre in ("ground_E_raised", "ground_S_floor", "ground_S_skirt"):
-        if any(o.name.startswith(pre) for o in bpy.data.objects):
-            out[pre] = zr(pre)
+    t = bpy.data.objects["terrain"]
+    xs = [v.co.x for v in t.data.vertices]; ys = [v.co.y for v in t.data.vertices]
+    out = {"names": names, "assumed": [a["what"] for a in bb.ASSUMED],
+           "terrain_xy": [min(xs), max(xs), min(ys), max(ys)], "terrain_z": zr("terrain"),
+           "footing": zr("footing_"), "min_near": info["terrain"].min_near(b["footprint"]["polygon"]), "checks": info["terrain"].checks, "warnings": info["terrain"].warnings}
     print("RESULT", json.dumps(out))
 else:
     out = {}
@@ -116,23 +116,19 @@ def _ground_building(offset_s, offset_e):
 
 
 @needs_blender
-def test_ground_offset_sunken_and_raised(tmp_path: Path):
-    """沈んだ広場（−3.0）は地面の 1 枚から長方形を抜き、底の板と足元の壁を置く。高い広場（+1.4）は板を積む。"""
+def test_terrain_covers_footprint_and_building_reaches_below(tmp_path: Path):
+    """地面は 5m 標高から作る 1 枚の地形（面ごとの板は作らない）。足元の外側 20 m を覆い、建物は地形の一番低い所の 1 m 下まで伸びる。
+    ground_offset は形に使わず検算だけ：地形と大きくずれた値（S の −3.0）は warning、合う値は ok。"""
+    b = _ground_building(-3.0, None)
+    b["ground_z"] = {"value": 43.9, "unit": "m", "status": "estimated", "evidence": ["gsi:dem5a"], "method": "テスト"}
     src = tmp_path / "g.json"
-    src.write_text(json.dumps(_ground_building(-3.0, 1.4)), encoding="utf-8")
+    src.write_text(json.dumps(b), encoding="utf-8")
     res = run_inner(tmp_path, "ground", str(src))
-    # 地面 3000×3000×0.3 から 面の幅 10 × 奥行き 12 × 厚み 0.3 = 36 m³ が抜けた
-    assert res["ground_volume"] == pytest.approx(3000 * 3000 * 0.3 - 36.0, abs=0.5)
-    assert res["ground_S_floor"][1] == pytest.approx(-3.0, abs=1e-6)          # 底の板の上面が ground_offset
-    assert res["ground_S_skirt"] == pytest.approx([-3.0, 0.0], abs=1e-6)       # 足元の壁は z=0 から地面まで
-    assert res["ground_E_raised"][1] == pytest.approx(1.4, abs=1e-6)           # 高い広場の板の上面
-    assert any("奥行き" in w for w in res["assumed"])                          # 奥行きは仮の値として report に出る
-
-
-@needs_blender
-def test_ground_offset_absent_changes_nothing(tmp_path: Path):
-    src = tmp_path / "g0.json"
-    src.write_text(json.dumps(_ground_building(None, None)), encoding="utf-8")
-    res = run_inner(tmp_path, "ground", str(src))
-    assert res["ground_volume"] == pytest.approx(3000 * 3000 * 0.3, abs=0.5)
-    assert not [n for n in res["names"] if n.startswith("ground_")]
+    assert not [n for n in res["names"] if n.startswith("ground_")]           # 面ごとの板は無い
+    x0, x1, y0, y1 = res["terrain_xy"]
+    assert x0 <= -20 and x1 >= 30 and y0 <= -20 and y1 >= 30                 # 足元（0〜10）の外側 20 m を覆う
+    assert res["footing"][0] == pytest.approx(min(0.0, res["min_near"]) - 1.0, abs=1e-4)   # 足元の地形の一番低い所の 1 m 下まで
+    assert res["footing"][1] == pytest.approx(0.0, abs=1e-6)
+    assert not any("奥行き" in w for w in res["assumed"])                     # 板の奥行きの仮の値は消えた
+    assert [c["face"] for c in res["checks"]] == ["S"] and not res["checks"][0]["ok"]
+    assert res["warnings"] and "S の ground_offset" in res["warnings"][0]
