@@ -2,15 +2,18 @@
 
 元：out/library/kansatsu_f0〜f3.json・kansatsu.md（観察係）、kazoe_f1.json（数え係）、sokuryo_f1.json（測量係）、
 out/photos/shiwake_library.json（仕分け係）。数えられたのは f1（北北東）だけ。
-f0・f2・f3 は割付が無い／数えられないので窓なしの壁にし、寸法の無い物（屋上の塔・大階段・曲面ガラス・
+f0・f2 は割付が無い／数えられないので窓なしの壁、f3 は f1 の対面として仮説（symmetry）で同じ割付を置き、寸法の無い物（屋上の塔・大階段・曲面ガラス・
 張り出しの箱・西端の空洞・外階段・通路橋）は塊にせず requests に回す（決めつけない）。
 実行: python -I -X utf8 scripts/design_library.py  → data/buildings/library.json
 """
 import json, sys
 from pathlib import Path
 sys.path.insert(0, ".")
-from recorder.schema import new_building, save_building, validate_building, Measurement
+from recorder.schema import new_building, save_building, validate_building, Measurement, hypothesis_from, apply_hypotheses_off
 from recorder.rectify import read_image
+
+# 仮説の取り下げ：{面 id か "*": {"at", "reason"}}。recorder hypotheses --drop がこの行の下に追記する（再生成でも外れたまま）
+HYPOTHESES_OFF: dict = {}
 
 PL = "plateau:bldg_feae3e15-dd53-4b4a-8f30-bb05525d15e3"
 KZ = json.loads(Path("out/library/kazoe_f1.json").read_text(encoding="utf-8"))
@@ -139,14 +142,32 @@ f1["materials"] = [{"name": "外装タイル（黄土色）", "where": "柱型�
                     "unit_h": est(0.06, 0.01, EV_ST, "測量係：腰壁の縦の周期 8.53 px＝1 段 70 mm（タイル 60 mm＋目地 10 mm と置いた。45 二丁なら PLATEAU と 15% 以上食い違うので違う）"),
                     "joint_w": est(0.01, 0.005, [], "JIS の標準目地幅と置く")}]
 
-# f0・f2・f3：割付が無い／数えられない → 列数・窓は unknown、窓なしの壁
+# f0・f2：割付が無い／数えられない → 列数・窓は unknown、窓なしの壁（対称でも同じ塊の写しでもないので仮説も置かない）
 WHY = {"f0": "観察票 kansatsu_f0：格子の窓割りが無い（無地のタイル壁＋中央の縦長の曲面ガラス＋張り出しの箱 2 か所＋小窓が縦 3 段）。割付が無いので数えられない",
-       "f2": "観察票 kansatsu_f2：中央がガラスの凹部（4 列×5〜6 段の格子）で、両端が入る写真が無く数えられない",
-       "f3": "観察票 kansatsu_f3：南東の角からの強い斜め 4 枚だけ。列数・段数・窓の形とも不明"}
+       "f2": "観察票 kansatsu_f2：中央がガラスの凹部（4 列×5〜6 段の格子）で、両端が入る写真が無く数えられない"}
 for fid, why in WHY.items():
     f = faces[fid]
     f["bays"] = {"count": unk("個", method=why), "pitch": unk(method=why), "pier_width": unk(method=why)}
     f["windows_note"] = "窓は unknown。模型と立面は窓なしの壁（" + why + "）"
+
+# f3：仮説（symmetry）。f1 と同じ塊 A の対面で、足元の辺の長さが同じ 49.42 m（PLATEAU）。写真は南東の角からの強い斜め 4 枚だけで数えられない
+# （観察票 kansatsu_f3）。f1 の割付（柱間・柱型・端の余白）と、全柱間にある 4 段目の横長窓・5 段目の小窓だけを写す。
+# 2・3 段目は f1 自身が 1〜6 柱間だけ（外階段・通路橋・空洞の例外）なので写さない。部品・仕上げも写さない。
+# 写真で矛盾したら recorder hypotheses data/buildings/library.json --drop --face f3 --reason "…"
+f3 = faces["f3"]
+SYM = "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く"
+f3["bays"] = {k: hypothesis_from(f1["bays"][k], "symmetry", "f1", SYM) for k in ("count", "pitch", "pier_width", "end_margin")}
+for w1 in f1["windows"]:
+    if w1.get("bays"):          # f1 でも一部の柱間だけの段（例外のある段）は写さない
+        continue
+    w3 = {kk: vv for kk, vv in w1.items() if kk not in ("z_bottom", "z_top", "width", "gap", "recess")}
+    for kk in ("z_bottom", "z_top", "width", "gap"):
+        if kk in w1:
+            w3[kk] = hypothesis_from(w1[kk], "symmetry", "f1", SYM + f"。窓『{w1['name']}』の {kk}")
+    w3["recess"] = unk(method="f1 でも unknown")
+    f3["windows"].append(w3)
+f3["windows_note"] = ("仮説（symmetry、f1 から）：4 段目の横長窓と 5 段目の小窓だけ。2・3 段目は f1 自身が例外のある段なので unknown（窓なし）。"
+                      "写真で矛盾したら recorder hypotheses --drop --face f3")
 
 # --- 写真 ------------------------------------------------------------------------------------
 from recorder.photos import load_index
@@ -214,6 +235,10 @@ b["history"].append({"at": "2026-11-04T11:49", "by": "検収係（検収 C, Clau
                              "PLATEAU 33.7 m との差を塔にしていない（二重計上なし）。倒れ込みは recorder photos roof で南へ 4.76 m・率 0.194（候補 1・2 位が近い）。"
                              "航空写真の屋上の高い物 4 つと曲面ガラスの語彙を requests に足した"})
 
+b["history"].append({"at": "2026-11-04T16:30", "by": "Claude（実装係・仮説の見本, claude-opus-5-5）",
+                     "what": "f3 に仮説（symmetry、f1 から）：柱間 9・柱間隔・柱型・端の余白と、4 段目の横長窓・5 段目の小窓。"
+                             "f0・f2 は対称でも同じ塊の写しでもないので unknown のまま。写真で矛盾したら recorder hypotheses --drop --face f3"})
+b = apply_hypotheses_off(b, HYPOTHESES_OFF)
 errs = validate_building(b)
 print("validate:", errs or "OK")
 save_building(b, Path("data/buildings/library.json"))

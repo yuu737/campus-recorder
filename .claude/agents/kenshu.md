@@ -13,7 +13,8 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 2. **未登録の写真だけ**手で 1 回：検収 A `recorder photos compare <front.jpg> --building … --face …`（横の原点が曖昧なら `--lines` で柱の番号）→ `recorder photos register <写真id> --building … --face … --from-rectify <front.json> --compare <compare.json>` で登録 → 以後は 1 の recheck。視点（検収 B）は登録の時に正面化と compare から自動で解かれる（手で角を指す方法は使わない。失敗済み）。再投影 0 px・カメラ高さ 1 m 前後なら視点は合っている。
 3. 重ね画像を見て、ずれている部品を列挙（部品名・方向・推定 m・根拠の写真）。
 4. 目安：0.15 m 以内 合格。0.15〜0.5 m は JSON の値を直す。0.5 m 以上は対応の取り違え（窓の下端と水切り など）を先に疑う。斜め写真の正面化は縦線が ±0.5 m ぶれるので横線（高さ）を主に信用。模型の線が写真の縁の外なら大きすぎ／手前、内側なら小さすぎ。
-5. 直したら `history` に理由、再生成、同じ写真でもう 1 回。2 回で収束しなければ止めて報告（撮影依頼の候補を添える）。
+5. **仮説の確定／取り下げ**：写真が新しく登録された面に仮説（`recorder hypotheses <json> --list`）があれば、recheck の結果で必ずどちらかに決める。合えば design スクリプトで写真 id を根拠に estimated へ書き換えて確定（basis を外す）、矛盾すれば `recorder hypotheses <json> --drop --face <id> --reason "<写真 id と矛盾の中身>"` で unknown に戻す。放置しない
+6. 直したら `history` に理由、再生成、同じ写真でもう 1 回。2 回で収束しなければ止めて報告（撮影依頼の候補を添える）。
 
 ## 検収 C（意味の検査。A・B の後に必ず）
 線の位置が合っていても「建物として説明が付かない部品」は不合格。部品ごとに次を見る：

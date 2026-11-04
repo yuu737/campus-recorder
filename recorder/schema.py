@@ -488,6 +488,7 @@ def validate_building(b: dict) -> list[str]:
                 errs.extend(check_values(bd["rail"], f"faces[{fc.get('id')}].bands[{i}].rail"))
 
     errs += _asset_materials({"faces": b.get("faces", []), "parts": b.get("parts", []), "blocks": b.get("blocks", [])}, "")
+    errs += check_hypotheses(b)
 
     for i, rq in enumerate(b.get("requests", [])):
         where = f"requests[{i}]"
@@ -666,3 +667,161 @@ def evidence_summary(b: dict) -> dict:
             "shape_ratio": round((len(states) - count["unknown"]) / len(states), 3) if states else 0.0,
             "evidence_ratio": round(nm / len(allv), 3) if allv else 0.0,
             "state_counts": count, "values": len(allv), "measured_values": nm}
+
+
+# --- 仮説（未確定の所に「仮に置いた」値。写真で矛盾したら外す） ------------------------------
+# 書き方（design スクリプトでは hypothesis() で作る。JSON を手で書かない）：
+#   {"value": …, "status": "estimated", "basis": "hypothesis",
+#    "hypothesis": {"rule": "symmetry|same_block|footprint", "from": "<面 id か塊 id>", "note": "…"},
+#    "evidence": [元の値の根拠], "method": "…"}
+# 規則は 3 つだけ：
+#   symmetry    対面・対称の面と同じ割付
+#   same_block  同じ塊は同じ階高・同じ窓の形
+#   footprint   柱割りは足元の辺の長さに収まる整数の列数
+# 置いてよい所は面の割付・階高・窓の形まで（faces[].bays / windows / bands、floor_pitch・floor_count、levels、blocks の階高）。
+# 部品（parts：階段・庇・箱…）と土台（footprint・ground_z）には置かない（見えない物を足さない）。
+# 外す：drop_hypotheses()（値を unknown に戻し history に理由）。design スクリプトは HYPOTHESES_OFF に書いて再生成で反映
+#       （recorder hypotheses --drop が JSON と design スクリプトの両方に書く）。
+HYPOTHESIS_RULES = ("symmetry", "same_block", "footprint")
+_HYP_ALLOWED_TOP = ("faces", "floor_pitch", "floor_count", "levels", "blocks")
+_HYP_FACE_KEYS = ("bays", "windows", "bands")
+
+
+def hypothesis(value, rule: str, from_: str, note: str, evidence=(), method: str = "", unit: str = "m",
+               tol: float | None = None) -> dict:
+    """仮説の値。rule は HYPOTHESIS_RULES、from_ は写した元（面 id か塊 id）、note は何をどう写したか。"""
+    return {"value": value, "unit": unit, "tol": tol, "status": "estimated", "evidence": list(evidence),
+            "method": method or f"仮説（{rule}）：{from_} から", "note": "",
+            "basis": "hypothesis", "hypothesis": {"rule": rule, "from": from_, "note": note}}
+
+
+def hypothesis_from(src: dict, rule: str, from_: str, note: str) -> dict:
+    """既にある値 src（対の面の値など）をそのまま仮説として写す。src が分かっていない値なら unknown のまま返す。"""
+    if not (is_value(src) and _known(src)):
+        return Measurement(None, src.get("unit", "m") if isinstance(src, dict) else "m", None, "unknown", [],
+                           f"仮説の元 {from_} の値が unknown なので写さない").to_json()
+    return hypothesis(src["value"], rule, from_, note, src.get("evidence", []),
+                      f"仮説（{rule}）：{from_} の値を写した。元の方法：{src.get('method', '')}", src.get("unit", "m"), src.get("tol"))
+
+
+def is_hypothesis(d) -> bool:
+    return is_value(d) and d.get("basis") == "hypothesis"
+
+
+def iter_hypotheses(b: dict):
+    """(場所, 面 id か None, 値) を全部返す。場所は 'faces[f3].bays.count' の形。"""
+    def walk(obj, where, face):
+        if is_value(obj):
+            if is_hypothesis(obj):
+                yield where, face, obj
+            return
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if k in COORD_KEYS:
+                    continue
+                yield from walk(v, f"{where}.{k}" if where else k, face)
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                yield from walk(v, f"{where}[{i}]", face)
+
+    for k, v in b.items():
+        if k in _SUMMARY_SKIP:
+            continue
+        if k == "faces" and isinstance(v, list):
+            for f in v:
+                yield from walk({kk: vv for kk, vv in f.items() if kk not in ("id", "name")}, f"faces[{f.get('id')}]", f.get("id"))
+        else:
+            yield from walk(v, k, None)
+
+
+def _basis_walk(obj, where: str):
+    """basis か hypothesis の鍵を持つ測定値を (場所, 値) で全部返す（規則の検査用）。"""
+    if isinstance(obj, dict):
+        if "value" in obj and "status" in obj:
+            if "basis" in obj or "hypothesis" in obj:
+                yield where, obj
+            return
+        for k, v in obj.items():
+            yield from _basis_walk(v, f"{where}.{k}" if where else k)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            yield from _basis_walk(v, f"{where}[{i}]")
+
+
+def check_hypotheses(b: dict) -> list[str]:
+    """仮説の決まり：basis は hypothesis だけ、rule は 3 つ、from は必須で実在の面か塊、置き場所は割付・階高・窓の形まで。"""
+    errs: list[str] = []
+    ids = {f.get("id") for f in b.get("faces") or []} | {blk.get("id") for blk in b.get("blocks") or []}
+    for k, v in b.items():
+        if k in _SUMMARY_SKIP:
+            continue
+        for where, m in _basis_walk(v, k):
+            if m.get("basis") != "hypothesis":
+                errs.append(f"{where}: basis は \"hypothesis\" だけ使えます（{m.get('basis')!r}）")
+                continue
+            h = m.get("hypothesis")
+            if not isinstance(h, dict):
+                errs.append(f"{where}: 仮説なのに hypothesis（rule・from・note）がありません")
+                continue
+            if h.get("rule") not in HYPOTHESIS_RULES:
+                errs.append(f"{where}: 仮説の rule は {'/'.join(HYPOTHESIS_RULES)} のどれか（{h.get('rule')!r}）")
+            if not h.get("from"):
+                errs.append(f"{where}: 仮説の出所（hypothesis.from）がありません")
+            elif h["from"] not in ids:
+                errs.append(f"{where}: 仮説の出所 {h['from']} は面にも塊にもありません")
+            if m.get("status") != "estimated" or m.get("value") is None:
+                errs.append(f"{where}: 仮説は status estimated で value が要ります（外すなら unknown にして basis を消す）")
+            top = where.split(".")[0].split("[")[0]
+            if top not in _HYP_ALLOWED_TOP:
+                errs.append(f"{where}: 仮説は面の割付・階高・窓の形まで（{top} には置けない。部品は仮説で作らない）")
+            elif top == "faces":
+                sect = where.split(".")[1].split("[")[0] if "." in where else ""
+                if sect not in _HYP_FACE_KEYS:
+                    errs.append(f"{where}: 面の仮説は bays・windows・bands だけ（{sect}）")
+    return errs
+
+
+def drop_hypotheses(b: dict, face: str | None = None, reason: str = "", at: str = "", by: str = "recorder hypotheses --drop") -> tuple[dict, list[str]]:
+    """仮説の値を unknown に戻した写しと、戻した場所の一覧を返す（b は変えない）。face を渡すとその面だけ（棟全体の値は face=None の時だけ）。
+    値が全部仮説だった窓・帯は項目ごと外す（unknown の窓を既定値で描かない）。reason があれば history に書く。"""
+    import copy
+
+    out = copy.deepcopy(b)
+    dropped: list[str] = []
+    for where, fid, m in list(iter_hypotheses(out)):
+        if face is not None and fid != face:
+            continue
+        h, unit = m.get("hypothesis") or {}, m.get("unit", "m")
+        m.clear()
+        m.update(Measurement(None, unit, None, "unknown", [],
+                             f"仮説を外した（{h.get('rule')}、{h.get('from')} から）" + (f"：{reason}" if reason else "")).to_json())
+        dropped.append(where)
+    removed = []
+    for f in out.get("faces") or []:
+        if face is not None and f.get("id") != face:
+            continue
+        for key in ("windows", "bands"):
+            keep = []
+            for i, it in enumerate(f.get(key) or []):
+                vals = list(iter_values(it))
+                was_hyp = any(w.startswith(f"faces[{f.get('id')}].{key}[{i}].") for w in dropped)
+                if was_hyp and not any(_known(v) for v in vals):
+                    removed.append(f"faces[{f.get('id')}].{key}[{i}]（{it.get('name', '')}）")
+                    continue
+                keep.append(it)
+            if key in f:
+                f[key] = keep
+    if dropped and reason:
+        what = f"仮説を外した（{face or '棟全体'}、{len(dropped)} 値）：{reason}"
+        if removed:
+            what += "。項目ごと外した：" + "、".join(removed)
+        out.setdefault("history", []).append({"at": at, "by": by, "what": what})
+    return out, dropped
+
+
+def apply_hypotheses_off(b: dict, off: dict) -> dict:
+    """design スクリプトの HYPOTHESES_OFF（{面 id か "*": {"at", "reason"}}）を当てる。再生成でも外した状態が残る。"""
+    for key, d in (off or {}).items():
+        b, _ = drop_hypotheses(b, None if key == "*" else key, d.get("reason", ""), d.get("at", ""),
+                               d.get("by", "recorder hypotheses --drop"))
+    return b

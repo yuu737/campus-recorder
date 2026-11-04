@@ -10,7 +10,9 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 ## 変換の決まり
 - 列数 → `bays.count`、柱型:窓の比 → `pier_width`、「無地」→ 窓なし、「各階に小窓 1 つ」→ `count=1`、「凹部の全面ガラス」→ `glazing`＋各階 `ledges`、「頂部のガラスの箱」→ `box`（material glass）
 - 面の id は足元の辺番号で固定。一直線の辺はまとめて `merged` に元 id を残す
-- 見えていない面は「同じ割付と仮定」と `method` に明記して `estimated`
+- 見えていない面は、下の 3 規則のどれかに当たる時だけ仮説で置く（当たらなければ unknown と撮影依頼）。書き方・戻し方は手順書「仮説の置き方と戻し方」
+- 仮説の根拠は `symmetry`（対面・対称の面と同じ割付）・`same_block`（同じ塊は同じ階高・窓の形）・`footprint`（足元の辺に収まる整数の列数）の 3 つだけ。置くのは割付・階高・窓の形まで、**部品は仮説で作らない**
+- 書き方は `schema.hypothesis_from(元の値, rule, "<元の面 id か塊 id>", "なぜ同じと置くか")`（`basis: "hypothesis"`・`hypothesis.from` 必須）。design スクリプトに `HYPOTHESES_OFF: dict = {}` と保存直前の `apply_hypotheses_off` を置く
 - 寸法が unknown の物は塊にしない（撮影依頼へ）
 - **語彙が無い部品は箱で近似しない**。`requests` に `kind: "tool"` で「何を表す語彙が要るか」を書く（語彙を足すのは実装係。本部棟では 1 日で 17 種増えた）。観察票にある 1 m 以上の物が模型に無いまま合格にしない
 - 形が定型の物（室外機・街灯・ベンチ・扉・木）は `parts[type=asset]`（CC0、`data/assets/catalog.json`）。位置・個数・大きさは写真の根拠、見た目はアセット

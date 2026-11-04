@@ -353,6 +353,14 @@ def elevation_svg(b: dict, face_id: str) -> str:
     svg.line(x0 - 20, Y(g), x0 + W + 20, Y(g), 'stroke="#222"', 1.5)
 
     # 右側の寸法ラベル（高さ順に並べ、重なりを避ける）
+    # 仮説の面（schema.face_state が hypothesis）：壁の上に薄い斜線。出所を題名の下に書く
+    if schema.face_state(b, fc)["state"] == "hypothesis":
+        hyps = [(w, m.get("hypothesis") or {}) for w, f_, m in schema.iter_hypotheses(b) if f_ == face_id]
+        src = sorted({f"{h.get('rule')}、{h.get('from')} から" for _, h in hyps})
+        svg.add('<defs><pattern id="hyp" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">'
+                '<line x1="0" y1="0" x2="0" y2="10" stroke="#b07a10" stroke-width="1.2" stroke-opacity="0.35"/></pattern></defs>')
+        svg.add(f'<rect data-hypothesis="{_esc(face_id)}" x="{x0:.1f}" y="{TOP:.1f}" width="{W:.1f}" height="{Hpx + below:.1f}" fill="url(#hyp)" stroke="none"/>')
+        svg.text(LEFT, 74, f"薄い斜線は仮説（{' / '.join(src)}）。写真で矛盾したら recorder hypotheses --drop で unknown に戻す", 11, "#b07a10")
     labels: list[tuple[float, str, Measurement]] = []
     if height_m.known:
         labels.append((float(height_m.value), "パラペット上端" if height_m.status == "measured" else "高さ", height_m))

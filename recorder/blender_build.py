@@ -353,6 +353,48 @@ def material_brick(name: str, color: str, unit_w: float, unit_h: float, joint: f
     return mat
 
 
+HYPOTHESIS_RGBA = (0.95, 0.76, 0.10, 1.0)     # 仮説の面の縞の黄（Web の根拠モードの縞と同じ系統）
+HYPOTHESIS_STRIPE_M = 1.2                     # 縞の周期（m、斜め）
+
+
+HYPOTHESIS_ATTR = "hypothesis"                # 本体の面の属性（1＝仮説の面の壁）。線画の白い上書き素材もこれで縞を描く
+
+
+def material_hypothesis(name: str, base_rgba, by_attr: bool = False):
+    """仮説の面の壁：元の色と黄の斜めの縞（物体座標 (x+y+z) / 周期 の小数部が 0.65 以上を黄）。
+    by_attr=True は線画の上書き素材用（面の属性 HYPOTHESIS_ATTR が 1 の所だけ縞）。描画だけに使い、glb の前に外す。"""
+    mat = material_plain(name, base_rgba, roughness=1.0 if by_attr else 0.8)
+    nt = mat.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+
+    def math(op, a=None, b=None):
+        n = nt.nodes.new("ShaderNodeMath")
+        n.operation = op
+        for i, v in ((0, a), (1, b)):
+            if isinstance(v, (int, float)):
+                n.inputs[i].default_value = v
+            elif v is not None:
+                nt.links.new(v, n.inputs[i])
+        return n.outputs[0]
+
+    nt.links.new(tc.outputs["Object"], sep.inputs[0])
+    xyz = math("ADD", math("ADD", sep.outputs[0], sep.outputs[1]), sep.outputs[2])
+    fac = math("GREATER_THAN", math("FRACT", math("DIVIDE", xyz, HYPOTHESIS_STRIPE_M)), 0.65)
+    if by_attr:
+        at = nt.nodes.new("ShaderNodeAttribute")
+        at.attribute_name = HYPOTHESIS_ATTR
+        fac = math("MULTIPLY", fac, at.outputs["Fac"])
+    mix = nt.nodes.new("ShaderNodeMix")
+    mix.data_type = "RGBA"
+    mix.inputs[6].default_value = base_rgba
+    mix.inputs[7].default_value = HYPOTHESIS_RGBA
+    nt.links.new(fac, mix.inputs[0])
+    nt.links.new(mix.outputs[2], bsdf.inputs["Base Color"])
+    return mat
+
+
 def material_plain(name: str, rgba, roughness=0.8, metallic=0.0):
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
@@ -1155,6 +1197,22 @@ def build_building(b: dict, col) -> dict:
         for fid in gray:
             for pi in face_polys[fid]:
                 body.data.polygons[pi].material_index = ui
+    # 仮説の面の壁は黄の縞（描画だけ。glb の前に unstripe_hypotheses で元に戻し、glb は素材の extras の evidence で区別する）
+    hyp_saved = []
+    hyp = [fid for fid in face_polys if face_ev.get(fid) == "hypothesis"]
+    if hyp:
+        base = next((m.get("color") for f in b.get("faces", []) if f["id"] in hyp for m in (f.get("materials") or [])[:1] if m.get("color")), None)
+        if base is None:
+            base = next((m.get("color") for f in b.get("faces", []) for m in (f.get("materials") or [])[:1] if m.get("color")), None)
+        rgba = (*hex_to_rgb(base), 1.0) if base else UNKNOWN_COLOR
+        body.data.materials.append(material_hypothesis("hypothesis_face", rgba))
+        hi = len(body.data.materials) - 1
+        attr = body.data.attributes.new(HYPOTHESIS_ATTR, "FLOAT", "FACE")
+        for fid in hyp:
+            for pi in face_polys[fid]:
+                hyp_saved.append((pi, body.data.polygons[pi].material_index))
+                body.data.polygons[pi].material_index = hi
+                attr.data[pi].value = 1.0
     for e in extras:
         e.parent = body
     try:                                   # CC0 アセットの部品（parts[type=asset]。位置・個数・大きさは JSON、見た目はアセット）
@@ -1175,7 +1233,20 @@ def build_building(b: dict, col) -> dict:
     add_meter_uvs(col)
     return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body,
             "ground": grounds[0], "grounds": grounds, "footings": footings, "terrain": terrain,
-            "face_polys": face_polys, "face_ev": face_ev, "evidence": ev}
+            "face_polys": face_polys, "face_ev": face_ev, "evidence": ev, "hyp_saved": hyp_saved}
+
+
+def unstripe_hypotheses(body, saved: list) -> None:
+    """仮説の縞を外して元の素材に戻す（glb の前。縞の素材は最後に足したので末尾から外す）。"""
+    if not saved:
+        return
+    for pi, mi in saved:
+        body.data.polygons[pi].material_index = mi
+    if HYPOTHESIS_ATTR in body.data.attributes:
+        body.data.attributes.remove(body.data.attributes[HYPOTHESIS_ATTR])
+    m = body.data.materials[len(body.data.materials) - 1]
+    if m and m.name.startswith("hypothesis_face"):
+        body.data.materials.pop()
 
 
 # --- 描画 -------------------------------------------------------------------------------
@@ -1240,7 +1311,7 @@ def setup_scene(sketch: bool, fast: bool):
         gm = ls.linestyle.geometry_modifiers.new("wobble", "PERLIN_NOISE_1D")
         gm.amplitude, gm.frequency, gm.octaves = 1.2, 12.0, 2
         fs.crease_angle = math.radians(120)
-        vl.material_override = material_plain("sketch_white", (0.96, 0.96, 0.95, 1.0), roughness=1.0)
+        vl.material_override = material_hypothesis("sketch_white", (0.96, 0.96, 0.95, 1.0), by_attr=True)   # 仮説の面だけ黄の縞
     else:
         vl.material_override = None
 
@@ -1580,6 +1651,7 @@ def main():
             sc.camera = cam
             render(out / f"view_photo_{Path(pj['photo']).stem}.png")
     import time
+    unstripe_hypotheses(info["body"], info.get("hyp_saved"))   # glb は縞なし（Web が evidence の印で縞を描く）
     t_bake = time.time()
     objs = [o for o in bpy.context.scene.objects if o.type == "MESH" and o.name != "terrain_far"]   # glb は足元の地形（20 m）まで
     swap, bake_log = export_web_materials(objs, out / "tex", fast)
@@ -1608,7 +1680,7 @@ def main():
         "evidence": {"faces": info["face_ev"],
                      "wall_polygons": {fid: len(v) for fid, v in info["face_polys"].items()},
                      "shape_ratio": info["evidence"]["shape_ratio"], "evidence_ratio": info["evidence"]["evidence_ratio"],
-                     "note": "glb の node と素材の extras に evidence（measured/estimated/hypothesis/unknown）・face・part。unknown の面の壁は灰色"},
+                     "note": "glb の node と素材の extras に evidence（measured/estimated/hypothesis/unknown）・face・part。unknown の面の壁は灰色、hypothesis の面の壁は描画だけ黄の縞"},
         "note": "assumed は模型を立てるために置いた仮の値。棟 JSON には書かない。撮影依頼の元にする",
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print("模型:", out, "仮の値", len(ASSUMED), "件")

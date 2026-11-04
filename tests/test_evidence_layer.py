@@ -81,7 +81,8 @@ def test_library_faces():
         pytest.skip("図書館の JSON が無い")
     s = schema.evidence_summary(json.loads(p.read_text(encoding="utf-8")))
     st = {k: v["state"] for k, v in s["faces"].items()}
-    assert st["f0"] == st["f2"] == st["f3"] == "unknown"
+    assert st["f0"] == st["f2"] == "unknown"
+    assert st["f3"] == "hypothesis"          # f1 の対面として symmetry の仮説（scripts/design_library.py）
     assert st["f1"] in ("measured", "estimated")
     assert 0 < s["shape_ratio"] < 1 and 0 < s["evidence_ratio"] < 1
 

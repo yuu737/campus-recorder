@@ -26,6 +26,11 @@
   python -m recorder agent tasks <id> [--photos F]  各工程の依頼文を out/<id>/agent_tasks.json・.md に（API とサブエージェントで同じ文）
   python -m recorder agent log <id> --step S [--model opus --seconds N --tokens N --note ...]
                                                  サブエージェントの試走の 1 工程を out/<id>/pipeline_<日時>.json に追記
+  python -m recorder hypotheses <json> [--list]  仮説（basis: hypothesis）の一覧：面・場所・値・規則・出所
+  python -m recorder hypotheses <json> --drop [--face F] --reason "…"
+                                                 仮説を unknown に戻す（JSON と history、design スクリプトの HYPOTHESES_OFF に追記）
+  python -m recorder validate|draw <json> --no-hypotheses / model build <json> --no-hypotheses
+                                                 仮説を外した状態で検証・描画・模型（out/<id>/no_hypotheses/）
   python -m recorder coverage <json>             面ごとの被覆図（登録済みの写真が覆う範囲、未撮影は灰色）と撮影依頼の候補
 """
 
@@ -52,10 +57,21 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("validate")
     p.add_argument("files", nargs="+")
+    p.add_argument("--no-hypotheses", action="store_true", help="仮説を全部外した状態で検証する")
 
     p = sub.add_parser("draw")
     p.add_argument("file")
     p.add_argument("--out", default=None)
+    p.add_argument("--no-hypotheses", action="store_true", help="仮説を外した図面（既定の出力 out/<id>/no_hypotheses/）")
+
+    p = sub.add_parser("hypotheses", help="仮説（basis: hypothesis）の一覧と取り下げ")
+    p.add_argument("file")
+    p.add_argument("--list", action="store_true", help="一覧（既定）")
+    p.add_argument("--drop", action="store_true", help="仮説を unknown に戻す")
+    p.add_argument("--face", default=None, help="この面だけ（省略で棟全体）")
+    p.add_argument("--reason", default="", help="外す理由（--drop では必須。history に書く）")
+    p.add_argument("--script", default=None, help="追記する design スクリプト（既定 scripts/design_<id>.py）")
+    p.add_argument("--no-script", action="store_true", help="design スクリプトに書かない（試しに外すだけ。再生成で元に戻る）")
 
     p = sub.add_parser("unknowns")
     p.add_argument("file")
@@ -75,6 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--blender", default=None, help="Blender 5.2 のパス（無ければ環境変数 BLENDER）")
     q.add_argument("--fast", action="store_true", help="小さめの描画")
     q.add_argument("--cameras", nargs="*", default=None, help="写真の視点（photos pose が出した *_pose.json）。同じ視点で描く")
+    q.add_argument("--no-hypotheses", action="store_true", help="仮説を外した模型（既定の出力 out/<id>/no_hypotheses/）")
 
     p = sub.add_parser("site")
     ssub = p.add_subparsers(dest="site_cmd", required=True)
@@ -301,7 +318,11 @@ def main(argv: list[str] | None = None) -> int:
     if a.cmd == "validate":
         bad = 0
         for f in a.files:
-            errs = schema.validate_building(schema.load_building(f))
+            b = schema.load_building(f)
+            if a.no_hypotheses:
+                b, dropped = schema.drop_hypotheses(b)
+                print(f"仮説を外して検証: {f}（{len(dropped)} 値を unknown に）")
+            errs = schema.validate_building(b)
             if errs:
                 bad += 1
                 print(f"NG {f}")
@@ -311,15 +332,20 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"OK {f}")
         return 1 if bad else 0
 
+    if a.cmd == "hypotheses":
+        return _hypotheses(a)
+
     if a.cmd == "draw":
         b = schema.load_building(a.file)
+        if a.no_hypotheses:
+            b, _ = schema.drop_hypotheses(b)
         errs = schema.validate_building(b)
         if errs:
             print("規約違反があるので描きません:")
             for e in errs:
                 print(f"   - {e}")
             return 1
-        out = Path(a.out) if a.out else Path("out") / b["id"]
+        out = Path(a.out) if a.out else Path("out") / b["id"] / ("no_hypotheses" if a.no_hypotheses else "")
         out.mkdir(parents=True, exist_ok=True)
         for name, svg in drawing.all_drawings(b).items():
             (out / f"{name}.svg").write_text(svg, encoding="utf-8")
@@ -346,18 +372,81 @@ def main(argv: list[str] | None = None) -> int:
         from . import model
 
         b = schema.load_building(a.file)
+        src, out_dir = Path(a.file), Path(a.out) if a.out else None
+        if a.no_hypotheses:
+            b, dropped = schema.drop_hypotheses(b)
+            out_dir = out_dir or Path("out") / b["id"] / "no_hypotheses"
+            out_dir.mkdir(parents=True, exist_ok=True)
+            src = out_dir / f"{b['id']}.json"
+            schema.save_building(b, src)
+            print(f"仮説を外して組む（{len(dropped)} 値を unknown に）: {src}")
         errs = schema.validate_building(b)
         if errs:
             print("規約違反があるので組みません:")
             for e in errs:
                 print(f"   - {e}")
             return 1
-        out = model.build(Path(a.file), Path(a.out) if a.out else None, a.blender, a.fast, [Path(c) for c in a.cameras] if a.cameras else None)
+        out = model.build(src, out_dir, a.blender, a.fast, [Path(c) for c in a.cameras] if a.cameras else None)
         print(f"模型: {out}")
         print(f"四面図: {model.sheet(out, b)}")
         return 0
 
     return 2
+
+
+HYP_MARK = "HYPOTHESES_OFF: dict = {}"
+
+
+def _hypotheses(a) -> int:
+    """仮説の一覧（--list）と取り下げ（--drop）。取り下げは JSON に書き、design スクリプトの HYPOTHESES_OFF にも追記する
+    （design スクリプトが元なので、再生成しても外れたまま）。"""
+    import datetime
+    import json
+
+    b = schema.load_building(a.file)
+    hyps = list(schema.iter_hypotheses(b))
+    if not a.drop:
+        if not hyps:
+            print("仮説はありません")
+        for where, fid, m in hyps:
+            h = m.get("hypothesis") or {}
+            print(f"{fid or '-':<6} {where:<40} {m.get('value')!s:<8} {h.get('rule', '?'):<10} from {h.get('from', '?'):<6} {h.get('note', '')[:60]}")
+        faces = sorted({fid or "-" for _, fid, _ in hyps})
+        print(f"仮説 {len(hyps)} 値（面 {', '.join(faces) if faces else 'なし'}）")
+        return 0
+    if not a.reason:
+        print("--drop には --reason（外す理由。history に書く）が要ります")
+        return 1
+    at = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M")
+    nb, dropped = schema.drop_hypotheses(b, a.face, a.reason, at)
+    if not dropped:
+        print(f"外す仮説がありません（{a.face or '棟全体'}）")
+        return 0
+    errs = schema.validate_building(nb)
+    if errs:
+        print("外した後に規約違反があるので書きません:", *errs, sep=chr(10) + "  ")
+        return 1
+    schema.save_building(nb, a.file)
+    for w in dropped:
+        print(f"unknown に戻した: {w}")
+    print(f"書いた: {a.file}（history に理由）")
+    if a.no_script:
+        print("design スクリプトには書いていません（再生成すると仮説が戻ります）")
+        return 0
+    sp = Path(a.script) if a.script else Path("scripts") / f"design_{b['id']}.py"
+    if not sp.exists():
+        print(f"design スクリプトがありません: {sp}（再生成で戻らないよう、スクリプトに HYPOTHESES_OFF を書いてください）")
+        return 0
+    text = sp.read_text(encoding="utf-8")
+    if HYP_MARK not in text:
+        print(f"注意: {sp} に『{HYP_MARK}』の行がありません。再生成で仮説が戻ります（行を足して apply_hypotheses_off を呼ぶ）")
+        return 1
+    entry = json.dumps({"at": at, "reason": a.reason}, ensure_ascii=False)
+    line = f"HYPOTHESES_OFF[{json.dumps(a.face or '*', ensure_ascii=False)}] = {entry}   # recorder hypotheses --drop"
+    text = text.replace(HYP_MARK, HYP_MARK + chr(10) + line, 1)
+    sp.write_bytes(text.encode("utf-8"))
+    print(f"design スクリプトに追記: {sp}（{line}）")
+    return 0
 
 
 def _agent(a) -> int:

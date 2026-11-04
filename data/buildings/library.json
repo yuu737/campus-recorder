@@ -583,40 +583,249 @@
       },
       "bays": {
         "count": {
-          "value": null,
+          "value": 9,
           "unit": "個",
           "tol": null,
-          "status": "unknown",
-          "evidence": [],
-          "method": "観察票 kansatsu_f3：南東の角からの強い斜め 4 枚だけ。列数・段数・窓の形とも不明",
-          "note": ""
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_075437320",
+            "PXL_20261103_075438398",
+            "PXL_20261103_075448020",
+            "PXL_20261103_075500328",
+            "PXL_20261103_075510510"
+          ],
+          "method": "仮説（symmetry）：f1 の値を写した。元の方法：両端が入る 3 枚を正面化して数えた：075437320（out/rectified/library_f1/075437320、ROI 0.15,0,0.95,0.70）・075438398（同 075438398）・075448020（out/rectified/20261103b、こちらも東の角〜西の角が入っていた）。どれも 2〜4 段目の横長窓が 9、最上段の小窓が 18（柱間ごとに 2）。4 回目はつなぎ画像 library_f1_stitched.jpg（075500328＋075510510）で、柱型の縁を輝度の勾配で拾い、東の角（x≈545）から西の角（x≈6611）まで柱型 10 本・柱間 9。全部一致",
+          "note": "",
+          "basis": "hypothesis",
+          "hypothesis": {
+            "rule": "symmetry",
+            "from": "f1",
+            "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く"
+          }
         },
         "pitch": {
-          "value": null,
+          "value": 5.4,
           "unit": "m",
-          "tol": null,
-          "status": "unknown",
-          "evidence": [],
-          "method": "観察票 kansatsu_f3：南東の角からの強い斜め 4 枚だけ。列数・段数・窓の形とも不明",
-          "note": ""
+          "tol": 0.08,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_075500328",
+            "PXL_20261103_075510510",
+            "PXL_20261103_075448020"
+          ],
+          "method": "仮説（symmetry）：f1 の値を写した。元の方法：つなぎ画像の 2 段目の窓の帯（y 1150〜1300）で柱型の縁を勾配で拾った。右縁 1309・1968・2629・3287・3946・4608・5273・5937、左縁 1187・1847・2506・3160・3823・5150・5814・6476 → 柱型どうしの間隔 654〜665 px、両端の直線当てはめで 661.1 px。縮尺 1（PLATEAU 122.6 px/m）で 5.39 m、縮尺 2（タイル 122.0 px/m）で 5.42 m、差 0.5%。採用 5.40 m。注：『辺の長さ ÷ 9 ＝ 5.49 m』は角の柱型の外側ぶん（6060 − 9×661 ≒ 110 px ≒ 0.9 m）を含むので 1.8% 長すぎる。面の幅を px で測って縮尺を取り、柱間隔はその縮尺で換算した",
+          "note": "",
+          "basis": "hypothesis",
+          "hypothesis": {
+            "rule": "symmetry",
+            "from": "f1",
+            "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く"
+          }
         },
         "pier_width": {
-          "value": null,
+          "value": 1.0,
           "unit": "m",
-          "tol": null,
-          "status": "unknown",
-          "evidence": [],
-          "method": "観察票 kansatsu_f3：南東の角からの強い斜め 4 枚だけ。列数・段数・窓の形とも不明",
-          "note": ""
+          "tol": 0.05,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_075500328",
+            "PXL_20261103_075510510"
+          ],
+          "method": "仮説（symmetry）：f1 の値を写した。元の方法：中間の柱型 121〜127 px（6 本、中央値 123 px）→ 1.00 m。両端の角の柱型は 117〜119 px（0.96 m）。窓の開口 661−123＝538 px ≒ 4.39 m、柱型:窓 ≒ 1:4.4（観察票の 1:4 と合う）",
+          "note": "",
+          "basis": "hypothesis",
+          "hypothesis": {
+            "rule": "symmetry",
+            "from": "f1",
+            "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く"
+          }
+        },
+        "end_margin": {
+          "value": 0.41,
+          "unit": "m",
+          "tol": 0.1,
+          "status": "estimated",
+          "evidence": [
+            "PXL_20261103_075500328",
+            "PXL_20261103_075510510"
+          ],
+          "method": "仮説（symmetry）：f1 の値を写した。元の方法：(辺 49.42 − 9×5.4) ÷ 2。測量係：面の幅 6060 px − 9×661 px ≒ 110 px ≒ 0.9 m が角の柱型の外側ぶん（角の柱型は 0.96 m）。東西の角で同じ作りに見えるので半分ずつ置いた",
+          "note": "",
+          "basis": "hypothesis",
+          "hypothesis": {
+            "rule": "symmetry",
+            "from": "f1",
+            "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く"
+          }
         }
       },
-      "windows": [],
+      "windows": [
+        {
+          "name": "4段目の横長窓（1 つ/柱間）",
+          "floors": [
+            4
+          ],
+          "per_bay": 1,
+          "z_bottom": {
+            "value": 15.03,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：窓の下の腰壁の上端 行 1471（測量係）。つなぎ画像 library_f1_stitched の行を、パラペット上端（行 313、設計係が勾配で読んだ）＝壁の高さ 24.5 m（estimated）から下へ 122.3 px/m（測量係の 2 つの縮尺の平均）で換算。上端の値が推定なので estimated",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『4段目の横長窓（1 つ/柱間）』の z_bottom"
+            }
+          },
+          "z_top": {
+            "value": 18.48,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：横長窓の開口の上端 行 1049（測量係）。つなぎ画像 library_f1_stitched の行を、パラペット上端（行 313、設計係が勾配で読んだ）＝壁の高さ 24.5 m（estimated）から下へ 122.3 px/m（測量係の 2 つの縮尺の平均）で換算。上端の値が推定なので estimated",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『4段目の横長窓（1 つ/柱間）』の z_top"
+            }
+          },
+          "width": {
+            "value": 4.4,
+            "unit": "m",
+            "tol": 0.08,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：測量係：窓の開口 661−123＝538 px ≒ 4.39 m（柱間隔 5.4 − 柱型 1.0）",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『4段目の横長窓（1 つ/柱間）』の width"
+            }
+          },
+          "recess": {
+            "value": null,
+            "unit": "m",
+            "tol": null,
+            "status": "unknown",
+            "evidence": [],
+            "method": "f1 でも unknown",
+            "note": ""
+          }
+        },
+        {
+          "name": "5段目の小窓（2 つ/柱間）",
+          "floors": [
+            5
+          ],
+          "per_bay": 2,
+          "rail": false,
+          "z_bottom": {
+            "value": 19.43,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：小窓の下端 行 933（設計係がつなぎ画像の x 1380〜1480 の縦の勾配で読んだ）。つなぎ画像 library_f1_stitched の行を、パラペット上端（行 313、設計係が勾配で読んだ）＝壁の高さ 24.5 m（estimated）から下へ 122.3 px/m（測量係の 2 つの縮尺の平均）で換算。上端の値が推定なので estimated",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『5段目の小窓（2 つ/柱間）』の z_bottom"
+            }
+          },
+          "z_top": {
+            "value": 22.56,
+            "unit": "m",
+            "tol": 0.4,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：小窓の上端 行 550（同上）。つなぎ画像 library_f1_stitched の行を、パラペット上端（行 313、設計係が勾配で読んだ）＝壁の高さ 24.5 m（estimated）から下へ 122.3 px/m（測量係の 2 つの縮尺の平均）で換算。上端の値が推定なので estimated",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『5段目の小窓（2 つ/柱間）』の z_top"
+            }
+          },
+          "width": {
+            "value": 4.4,
+            "unit": "m",
+            "tol": 0.08,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：柱型の間の幅（2 つの窓と中の柱の合計）。窓 1 つは 208・210 px ≒ 1.71 m、中の柱 120 px ≒ 0.98 m（設計係が x 1313〜1851 で読んだ）",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『5段目の小窓（2 つ/柱間）』の width"
+            }
+          },
+          "gap": {
+            "value": 0.49,
+            "unit": "m",
+            "tol": 0.1,
+            "status": "estimated",
+            "evidence": [
+              "PXL_20261103_075500328",
+              "PXL_20261103_075510510"
+            ],
+            "method": "仮説（symmetry）：f1 の値を写した。元の方法：模型の割付（柱間の内側を 2 等分し、それぞれから gap を引く）で窓 1 つの幅 1.71 m を出すための値。実物は窓が柱型に接し中の柱 0.98 m なので、模型の窓の中心は実物より約 0.25 m 柱間の中央に寄る",
+            "note": "",
+            "basis": "hypothesis",
+            "hypothesis": {
+              "rule": "symmetry",
+              "from": "f1",
+              "note": "f1 と f3 は塊 A の対面で、足元の辺がどちらも 49.42 m（PLATEAU）。f3 は強い斜め 4 枚だけで列数を数えられない（kansatsu_f3）ので、f1 と同じ割付と仮に置く。窓『5段目の小窓（2 つ/柱間）』の gap"
+            }
+          },
+          "recess": {
+            "value": null,
+            "unit": "m",
+            "tol": null,
+            "status": "unknown",
+            "evidence": [],
+            "method": "f1 でも unknown",
+            "note": ""
+          }
+        }
+      ],
       "bands": [],
       "openings": [],
       "glazing": [],
       "ledges": [],
       "materials": [],
-      "windows_note": "窓は unknown。模型と立面は窓なしの壁（観察票 kansatsu_f3：南東の角からの強い斜め 4 枚だけ。列数・段数・窓の形とも不明）"
+      "windows_note": "仮説（symmetry、f1 から）：4 段目の横長窓と 5 段目の小窓だけ。2・3 段目は f1 自身が例外のある段なので unknown（窓なし）。写真で矛盾したら recorder hypotheses --drop --face f3"
     }
   ],
   "photos": [
@@ -905,6 +1114,11 @@
       "at": "2026-11-04T11:49",
       "by": "検収係（検収 C, Claude, claude-opus-5-5）",
       "what": "検収 C（out/library/kenshu_C.json・kenshu_C.md）。塊 A（24.5 m）は役割・大きさとも説明が付く。部品は無く、外す物も無い。PLATEAU 33.7 m との差を塔にしていない（二重計上なし）。倒れ込みは recorder photos roof で南へ 4.76 m・率 0.194（候補 1・2 位が近い）。航空写真の屋上の高い物 4 つと曲面ガラスの語彙を requests に足した"
+    },
+    {
+      "at": "2026-11-04T16:30",
+      "by": "Claude（実装係・仮説の見本, claude-opus-5-5）",
+      "what": "f3 に仮説（symmetry、f1 から）：柱間 9・柱間隔・柱型・端の余白と、4 段目の横長窓・5 段目の小窓。f0・f2 は対称でも同じ塊の写しでもないので unknown のまま。写真で矛盾したら recorder hypotheses --drop --face f3"
     }
   ],
   "site_id": "library",
