@@ -56,6 +56,8 @@
     <span class="sw" style="background:#e8912d"></span>estimated（推定。方法あり）<br>
     <span class="sw hyp"></span>仮説（hypothesis）<br>
     <span class="sw" style="background:#8f969c"></span>unknown（まだ分からない）<br>
+    <span class="sw" style="background:#5f6266;opacity:.6"></span>面の未撮影の所（被覆図から）<br>
+    <span class="sw" style="background:#b8bcc0;opacity:.6"></span>写っているが斜め・遮蔽で使えない所<br>
     <span class="k" style="color:#52606d">印の無い物（地面など）は元の色</span>
   </div>
 </div>
@@ -204,6 +206,8 @@ for (const b of site.boxes) {
 }
 // 根拠の層：glb の extras（node / 素材の userData.evidence・face・part）で素材を差し替える。戻すと元の素材
 const evRoots = [];
+const coverGroup = new THREE.Group();                 // 被覆の重ね（下で作る。根拠モードの時だけ見せる）
+coverGroup.visible = false;
 const EV_COLOR = { measured: 0x3fa34d, estimated: 0xe8912d, hypothesis: 0xf2c94c, unknown: 0x8f969c };
 function stripeMaterial(color) {                      // 仮説：黄の縞（UV に頼らず世界座標の斜めの縞）
   const m = new THREE.MeshStandardMaterial({ color, roughness: 0.9 });
@@ -228,6 +232,7 @@ function setEvidence(on) {
   document.body.classList.toggle("evmode", on);
   const btn = document.getElementById("evbtn");
   btn.classList.toggle("on", on); btn.textContent = on ? "元の見た目に戻す" : "根拠で見る";
+  coverGroup.visible = on;
   for (const root of evRoots) root.traverse((o) => {
     if (!o.isMesh) return;
     if (on) {
@@ -274,6 +279,39 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
     res();
   }, undefined, (e) => { console.error("glb 読み込み失敗", m.url, e); res(); });
 })));
+
+// 被覆の重ね（site export-web --with-coverage）：unknown でない面の、写真の無い所を面の平面に薄い板で重ねる。根拠モードの時だけ見せる。
+// 写真そのものは出さない（顔・ナンバー・貼り紙の処理が要るので）。矩形は [along0, along1, z0, z1]（面の from から m、棟の z=0 から m）
+{
+  const MAT = {
+    uncovered: new THREE.MeshBasicMaterial({ color: 0x5f6266, transparent: true, opacity: 0.6, depthWrite: false, side: THREE.DoubleSide,
+                                             polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
+    unusable: new THREE.MeshBasicMaterial({ color: 0xb8bcc0, transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide,
+                                            polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }),
+  };
+  for (const d of Object.values(site.designed || {})) {
+    if (!d.coverage) continue;
+    for (const kind of ["uncovered", "unusable"]) {
+      const pos = [];
+      for (const f of d.coverage.faces) {
+        const [x0, y0] = f.from, [x1, y1] = f.to, L = Math.hypot(x1 - x0, y1 - y0);
+        const ux = (x1 - x0) / L, uy = (y1 - y0) / L, nx = uy, ny = -ux, off = 0.08;   // 外向き（面から 8 cm 浮かす）
+        const P = (a, z) => [x0 + ux * a + nx * off, d.ground_z + z, -(y0 + uy * a + ny * off)];
+        for (const [a0, a1, z0, z1] of f[kind] || []) {
+          const A = P(a0, z0), B = P(a1, z0), C = P(a1, z1), D = P(a0, z1);
+          pos.push(...A, ...B, ...C, ...A, ...C, ...D);
+        }
+      }
+      if (!pos.length) continue;
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+      const mesh = new THREE.Mesh(geo, MAT[kind]);
+      mesh.renderOrder = 2;
+      coverGroup.add(mesh);
+    }
+  }
+  scene.add(coverGroup);
+}
 
 let yaw = 0, pitch = 0;
 const player = new THREE.Vector3();

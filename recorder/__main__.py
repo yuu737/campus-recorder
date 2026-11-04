@@ -79,6 +79,7 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--no-plateau", action="store_true")
     q = ssub.add_parser("export-web", help="Web 3D 用に web/data/site.json と glb を書き出す")
     q.add_argument("--campus", default="tempaku")
+    q.add_argument("--with-coverage", action="store_true", help="out/<棟>/coverage.json の未撮影の範囲（灰色だけ。写真は出さない）を足す")
     q = ssub.add_parser("confirm")
     q.add_argument("id")
     q.add_argument("status", choices=["confirmed", "renamed", "removed", "new"])
@@ -164,6 +165,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("file")
     p.add_argument("--registry", default=None)
     p.add_argument("--out", default=None)
+    p.add_argument("--no-photo", action="store_true", help="写真を貼らず、覆う範囲の塗りだけにする")
+    p.add_argument("--px-per-m", type=float, default=40.0, help="面の座標の写真の解像度（px/m）")
 
     p = sub.add_parser("agent", help="係（.claude/agents）を API で動かす")
     asub = p.add_subparsers(dest="agent_cmd", required=True)
@@ -218,9 +221,10 @@ def main(argv: list[str] | None = None) -> int:
         from . import coverage, registry
 
         reg = registry.load_registry(Path(a.registry)) if a.registry else None
-        res, jp = coverage.coverage(Path(a.file), reg, Path(a.out) if a.out else None)
+        res, jp = coverage.coverage(Path(a.file), reg, Path(a.out) if a.out else None, photo=not a.no_photo, px_per_m=a.px_per_m)
         for f in res["faces"]:
-            print(f"{f['face']:<7} 被覆 {f['coverage_pct']:5.1f} %  写真 {len(f['photos'])} 枚" + ("  (unknown)" if f["unknown"] else ""))
+            print(f"{f['face']:<7} 被覆 {f['coverage_pct']:5.1f} %（枠 {f['frame_pct']:5.1f} %）  写真 {len(f['photos'])} 枚"
+                  + ("  (unknown)" if f["unknown"] else "") + (f"  確認用 {f['check_png']}" if f.get("check_png") else ""))
         for r in res["requests"]:
             print("撮影依頼の候補:", r["text"])
         print(f"JSON: {jp}")
@@ -530,7 +534,7 @@ def _site(a) -> int:
         return 1 if errs else 0
 
     if a.site_cmd == "export-web":
-        r = site.export_web(a.campus)
+        r = site.export_web(a.campus, with_coverage=a.with_coverage)
         print(f"Web 用: {r['path']}  箱 {r['boxes']} 件、模型 {r['models']}、地面格子 {r['grid']}（標高の欠けを近傍で埋めた割合 {r['nan_filled']:.1%}）")
         return 0
 

@@ -766,12 +766,15 @@ def _small_jpg(src: Path, dst: Path, px: int) -> None:
         im.save(dst, "JPEG", quality=85)
 
 
-def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 4, margin_m: float = 120.0) -> dict:
+def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 4, margin_m: float = 120.0,
+               with_coverage: bool = False, out_root: Path | None = None) -> dict:
     """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を step_m 間隔に間引き）・
     設計済みの棟の一覧。glb がある設計済みの棟は箱を出さず、glb を web/data/models/ に写す。
     CC0 の空（HDRI）と地面の質感も web/data/env/・web/data/tex/ に写す（copy_web_assets）。
     glb の軸：glTF は Y が上。Blender の (x,y,z) → glTF の (x, z, -y)。つまり glb は x=東, y=高さ, z=-北。
-    glb の高さ(y)は ground_z 基準の相対値なので、置く時に ground_z を足す。"""
+    glb の高さ(y)は ground_z 基準の相対値なので、置く時に ground_z を足す。
+    with_coverage：out/<棟>/coverage.json（recorder coverage）があれば、unknown でない面の「未撮影」と「写っているが使えない」
+    範囲（面の m の矩形）だけを designed[].coverage.faces[] に足す。写真そのもの（顔・ナンバー・貼り紙が写る）は Web に出さない。"""
     import shutil
 
     from recorder import schema
@@ -797,6 +800,10 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
                                                   "shape_ratio": ev["shape_ratio"], "evidence_ratio": ev["evidence_ratio"],
                                                   "faces": {fid: d["state"] for fid, d in ev["faces"].items()},
                                                   "parts": ev["parts"], "body": ev["body"]}
+        if with_coverage:
+            cv = coverage_layer(b, ev, (out_root or OUT_SITE.parent) / b["id"] / "coverage.json")
+            if cv:
+                designed[b.get("site_id") or b["id"]]["coverage"] = cv
     models = {}
     boxes = []
     used_parts: set[str] = set()
@@ -855,6 +862,25 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
     return {"path": data_dir / "site.json", "boxes": len(boxes), "models": list(models), "grid": (len(gx), len(gy)),
             "nan_filled": nan_ratio, "env": (wa["env"] or {}).get("url"), "tex": sorted(wa["ground_tex"]),
             "skipped": wa["skipped"]}
+
+
+def coverage_layer(b: dict, ev: dict, cov_json: Path) -> dict | None:
+    """被覆図の結果から Web の灰色の重ね（未撮影・使えない所の矩形だけ）を作る。面の位置が unknown の面は出さない（本体が灰色）。
+    z は棟の z=0（ground_z）からの m。along は面の始点 from から m。"""
+    if not cov_json.exists():
+        return None
+    cj = json.loads(cov_json.read_text(encoding="utf-8"))
+    faces = {f["id"]: f for f in b.get("faces", [])}
+    out = []
+    for r in cj.get("faces", []):
+        f = faces.get(r["face"])
+        st = (ev["faces"].get(r["face"]) or {}).get("state")
+        if r.get("unknown") or not f or not (f.get("from") and f.get("to")) or st in (None, "unknown"):
+            continue
+        out.append({"id": r["face"], "from": f["from"], "to": f["to"], "coverage_pct": r.get("coverage_pct"),
+                    "uncovered": r.get("web_uncovered", r.get("uncovered_rects", [])),
+                    "unusable": r.get("web_unusable", r.get("unusable_rects", []))})
+    return {"made_at": cj.get("made_at"), "note": "灰色＝未撮影、薄い灰色＝写っているが斜め・遮蔽で使えない。写真は出さない", "faces": out}
 
 
 def _box(p: dict, sid: str, name: str | None, d: dict | None) -> dict:

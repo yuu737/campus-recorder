@@ -576,7 +576,25 @@
     "existing_pose_vs_compare_px": null
    },
    "registered_at": "2026-11-04T18:35:55",
-   "registered_by": "registry"
+   "registered_by": "registry",
+   "exclude": [
+    [
+     0.0,
+     30.0,
+     10.0,
+     23.68
+    ],
+    [
+     22.0,
+     37.0,
+     14.0,
+     23.68
+    ]
+   ],
+   "exclude_note": [
+    "手前の木の樹冠（左〜中央の上半分）。検収係の記録 out/honbu/kenshu_recheck.md『042822099 のスパン 7（木の枝の陰）』の木。範囲は面の座標に貼った写真を目視で囲んだ（coverage 実装係、2026-11-04）",
+    "同じ木の枝先（スパン 5〜7 の 4 階より上）。同上"
+   ]
   },
   {
    "photo": "PXL_20261103_042900775",
