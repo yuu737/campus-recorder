@@ -195,6 +195,25 @@ b["history"] = [
              "2・3 段目の窓は 1〜6 柱間だけ置き、7〜9 は壁のまま requests に回した"},
 ]
 
+# --- 検収 C（意味の検査、2026-11-04 検収係）：out/library/kenshu_C.json ------------------------------------
+# 塊 A だけ・部品なし。PLATEAU 33.7 m と壁 24.5 m の差 9.2 m を塔にしていない（二重計上なし）。外す物は無い。
+# 航空写真（recorder photos roof → out/library/roof.json・roof_aerial.png）で屋上の物を読み、写真にあって模型に無い物を requests に足す。
+b["requests"] += [
+    {"face": "*", "kind": "data", "what": "屋上の高い物の位置と高さ：航空写真で読めた 4 つ（像の位置、倒れ込みを戻していない、確信度 低）",
+     "where": "タワー75 の上階から屋上が見える 1 枚（既存の『屋上の塔 2 本』の依頼と同じ写真で足りる）",
+     "why": "out/library/roof_aerial.png で、屋上の西寄り（f2 側）に北面が暗い細長い高い箱（像で約 6×18 m、x 10〜27・y −15〜−30）、中ほどにガラスの縞 4 本の天窓らしい箱（約 9×12 m、x 31〜42・y −33〜−45）と北の小さい箱 2 区画、"
+            "南南西の縁に沿って白い設備の列（約 5×30 m、x 5〜35・y −38〜−55）、南東の角に小さい箱（約 5×10 m、x 45〜52・y −40〜−52、観察票の f0 南端の煙突状の塔か）。"
+            "高さが分からないので足元へ戻せず、部品にしていない。PLATEAU 33.7 m − 壁 24.5 m＝9.2 m はこのどれかの高さの候補（決めない）",
+     "status": "open"},
+    {"face": "f0", "kind": "tool", "what": "縦長の曲面ガラス（壁から出る円弧のガラス）の語彙",
+     "where": "recorder/parts_geom.py", "why": "f0 の中央の曲面ガラス（観察票 kansatsu_f0）を表す部品が無い。glazing は平らな面だけ",
+     "status": "open"},
+]
+b["history"].append({"at": "2026-11-04T11:49", "by": "検収係（検収 C, Claude, claude-opus-5-5）",
+                     "what": "検収 C（out/library/kenshu_C.json・kenshu_C.md）。塊 A（24.5 m）は役割・大きさとも説明が付く。部品は無く、外す物も無い。"
+                             "PLATEAU 33.7 m との差を塔にしていない（二重計上なし）。倒れ込みは recorder photos roof で南へ 4.76 m・率 0.194（候補 1・2 位が近い）。"
+                             "航空写真の屋上の高い物 4 つと曲面ガラスの語彙を requests に足した"})
+
 errs = validate_building(b)
 print("validate:", errs or "OK")
 save_building(b, Path("data/buildings/library.json"))
