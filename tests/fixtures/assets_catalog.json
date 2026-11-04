@@ -1,0 +1,13 @@
+{
+ "schema": "campus-recorder/assets/1",
+ "items": [
+  {"id": "box_unit", "kind": "model", "what": "試験用の箱", "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/box_unit", "license": "CC0-1.0", "license_url": "https://polyhaven.com/license",
+   "fetched_at": null, "file": "polyhaven/box_unit/box_unit_1k.gltf", "size_m": [0.8, 0.4, 1.0], "polyhaven": {"id": "box_unit", "res": "1k"}, "note": ""},
+  {"id": "tile", "kind": "texture", "what": "試験用の質感", "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/tile", "license": "CC0-1.0", "license_url": "https://polyhaven.com/license",
+   "fetched_at": null, "file": "polyhaven/tile", "maps": {"color": "tile_diff_1k.jpg", "normal": "tile_nor_gl_1k.jpg", "rough": "tile_rough_1k.jpg"},
+   "tile_m": [2.0, 2.0], "polyhaven": {"id": "tile", "res": "1k"}, "note": ""}
+ ],
+ "not_found": [{"what": "手すりの支柱", "searched": "試験", "fallback": "箱のまま"}]
+}
