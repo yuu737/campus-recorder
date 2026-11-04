@@ -40,7 +40,14 @@ FILL_SPANDREL = "#4a3b30"
 FILL_RECESS = "#6f665c"
 # 部品の素材 → 立面の塗り（parts_geom の mat の名前）
 FILL_PART = {"tile": FILL_PIER, "glass": FILL_WIN, "metal": "#9aa0a6", "dark": FILL_BAND, "brick": "#a5523f",
-             "stone": "#7a6a6a", "concrete": "#e6e2da", "canopy": "#d5e4d6", "white": "#f2f0ea", "coping": "#444"}
+             "stone": "#7a6a6a", "concrete": "#e6e2da", "canopy": "#d5e4d6", "white": "#f2f0ea", "coping": "#444",
+             "leaf": "#6f8f55", "interior": "#2a2c30", "roof": "#8a8883", "curtain": "#6b6a66"}
+
+
+def _fill(mat) -> str:
+    if isinstance(mat, str) and mat.startswith("asset:"):
+        return "#b9b2a6"            # CC0 の質感（立面では無地の灰）
+    return FILL_PART.get(mat or "tile", FILL_PIER)
 
 
 def _prim_depth(pr: dict) -> float:
@@ -288,26 +295,51 @@ def elevation_svg(b: dict, face_id: str) -> str:
                 svg.rect(X(step * i + (step - wv) / 2), Y(zt_v), wv * SCALE, (zt_v - zb_v) * SCALE, FILL_WIN, _style(st), 0.7)
                 spandrel(step * i + (step - wv) / 2, wv)
 
-    # 面に付く部品（外階段・玄関の軒下・段・手すり）。形は parts_geom（模型と同じ）を立面に投影し、奥から順に描く
+    # 部品。形は parts_geom（模型と同じ）を立面に投影し、奥から順に描く。
+    # 面に付く部品はこの面の物だけ。単独の部品（風除室・パーゴラ・渡り廊下・x,y の植え込みなど）は、面より手前（n > 0）に
+    # 出ていて面の幅に重なる物を、頂点の凸包で描く
     faces_all = {f["id"]: f for f in b.get("faces", [])}
+    fax = parts_geom.frame_axes(face_id, faces_all) if fc.get("from") and fc.get("to") else None
+    part_items: list = []
     for i, pt in enumerate(b.get("parts", [])):
         t = pt.get("type")
-        if pt.get("face") != face_id or t not in parts_geom.FACE_PART_TYPES:
+        if t not in parts_geom.ALL_PART_TYPES:
+            continue
+        own = pt.get("face") == face_id
+        if pt.get("face") and not own:
+            continue
+        if not own and fax is None:
             continue
         got = parts_geom.part_prims(pt, faces_all)
         if not got or not (got[1] or got[2]):
-            unknown_lines.append(f"{pt.get('name', t)}（parts[{i}]）の寸法が未確定で描けません")
+            if own:
+                unknown_lines.append(f"{pt.get('name', t)}（parts[{i}]）の寸法が未確定で描けません")
             continue
-        _fr, cut, prims = got
-        svg.add(f'<g data-part="{_esc(t)}">')
-        if cut:     # くり抜き（玄関の軒下）：引っ込みの枠を破線で
+        fr, cut, prims = got
+        if own:
+            items = [(_prim_depth(pr), parts_geom.elevation_outline(pr), pr) for pr in prims]
+        else:
+            pax = parts_geom.frame_axes(fr, faces_all)
+            items = []
+            for pr in prims:
+                v = parts_geom.to_frame(parts_geom.prim_vertices(pr, pax), fax)
+                if max(q[1] for q in v) <= 0.05 or max(q[0] for q in v) <= 0 or min(q[0] for q in v) >= L:
+                    continue
+                items.append((max(q[1] for q in v), parts_geom.hull([(q[0], q[2]) for q in v]), pr))
+            if not items:
+                continue
+        if cut:     # くり抜き（玄関の軒下）：引っ込みの枠を破線で（一番奥）
             q = parts_geom.elevation_outline(cut)
-            svg.add('<polygon points="' + " ".join(f"{X(a):.1f},{Y(z):.1f}" for a, z in q) + f'" fill="{FILL_RECESS}" stroke="#222" stroke-dasharray="5 3" stroke-width="1"/>')
-        for pr in sorted(prims, key=_prim_depth):
-            q = parts_geom.elevation_outline(pr)
-            fill = FILL_PART.get(pr.get("mat") or "tile", FILL_PIER)
-            svg.add('<polygon points="' + " ".join(f"{X(a):.1f},{Y(z):.1f}" for a, z in q) + f'" fill="{fill}" stroke="#333" stroke-width="0.6"/>')
-        svg.add('</g>')
+            part_items.append((-1e9, t, q, None))
+        part_items += [(d, t, q, pr) for d, q, pr in items]
+    # 部品をまたいで奥から順に（壁の素材の板 patch が外階段の上に描かれないように）
+    for _d, t, q, pr in sorted(part_items, key=lambda it: it[0]):
+        pts_s = " ".join(f"{X(a):.1f},{Y(z):.1f}" for a, z in q)
+        if pr is None:
+            svg.add(f'<polygon data-part="{_esc(t)}" points="{pts_s}" fill="{FILL_RECESS}" stroke="#222" stroke-dasharray="5 3" stroke-width="1"/>')
+            continue
+        op = ' fill-opacity="0.45"' if pr.get("mat") == "glass" else ""
+        svg.add(f'<polygon data-part="{_esc(t)}" points="{pts_s}" fill="{_fill(pr.get("mat"))}"{op} stroke="#333" stroke-width="0.6"/>')
 
     # 地面
     if g != 0.0:
@@ -460,15 +492,20 @@ def plan_svg(b: dict) -> str:
             cx, cy = P(c)
             svg.line(ax, ay, cx, cy, 'stroke="#185fa5"', 3)
             svg.text((ax + cx) / 2, (ay + cy) / 2 - 8, fc.get("id", ""), 11, "#185fa5", "middle", "bold")
-    # 単独の柱・屋上の設備（世界座標の部品）
+    # 単独の部品（柱・屋上の設備・風除室・パーゴラ・渡り廊下・x,y の植え込みや銘板）。頂点を平面に落とした凸包
     for pt in b.get("parts", []):
-        if pt.get("type") not in parts_geom.WORLD_PART_TYPES:
+        t = pt.get("type")
+        if t not in parts_geom.WORLD_PART_TYPES and not (t in parts_geom.FLEX_PART_TYPES and not pt.get("face")):
             continue
         got = parts_geom.part_prims(pt, {})
-        dash = ' stroke-dasharray="4 3"' if pt.get("type") == "rooftop_units" else ""
-        for pr in (got[2] if got else []):
-            pp = " ".join(f"{P(q)[0]:.1f},{P(q)[1]:.1f}" for q in pr["pts"])
-            svg.add(f'<polygon data-part="{_esc(pt["type"])}" points="{pp}" fill="#9aa0a6" fill-opacity="0.6" stroke="#333"{dash} stroke-width="0.8"/>')
+        if not got:
+            continue
+        pax = parts_geom.frame_axes(got[0], {})
+        dash = ' stroke-dasharray="4 3"' if t == "rooftop_units" else ""
+        for pr in got[2]:
+            q2 = pr["pts"] if (got[0] == "world" and pr["k"] == "prism") else parts_geom.hull([(v[0], v[1]) for v in parts_geom.prim_vertices(pr, pax)])
+            pp = " ".join(f"{P(q)[0]:.1f},{P(q)[1]:.1f}" for q in q2)
+            svg.add(f'<polygon data-part="{_esc(t)}" points="{pp}" fill="{_fill(pr.get("mat")) if t not in ("column", "rooftop_units") else "#9aa0a6"}" fill-opacity="0.6" stroke="#333"{dash} stroke-width="0.8"/>')
     # 北
     nxp, nyp = LEFT + 40 + (maxx - minx) * sc + 60, TOP + 60
     svg.line(nxp, nyp + 30, nxp, nyp, 'stroke="#222"', 1.2)

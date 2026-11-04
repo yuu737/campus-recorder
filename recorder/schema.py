@@ -202,7 +202,26 @@ PART_REQUIRED = {
     "column": ("x", "y", "z1"),
     "rooftop_units": ("source", "z0", "units"),
     "asset": ("asset", "size"),
+    # 11/4 午後（本部棟で見送られた物）
+    "ceiling_beams": ("face", "along0", "along1", "depth", "z", "pitch"),
+    "louver": ("face", "along", "width", "z0", "z1", "blade_pitch"),
+    "planter": ("height",),
+    "nameplate": ("width", "height", "thickness", "z0"),
+    "patch": ("face", "along0", "along1", "z0", "z1", "material"),
+    "vestibule": ("polygon", "z0", "height", "mullion_pitch"),
+    "pergola": ("polygon", "z0", "height", "post_pitch", "beam_pitch"),
+    "bridge": ("from", "to", "z_from", "z_to", "width", "height"),
+    "curved_glass": ("face", "along0", "along1", "radius", "z0", "z1", "mullion_pitch"),
 }
+# 文字の選択肢（鍵: 許す値）。省略時は先頭の値
+PART_ENUMS = {
+    "ceiling_beams": {"side": ("in", "out"), "direction": ("across", "along", "grid")},
+    "louver": {"orientation": ("horizontal", "vertical")},
+    "bridge": {"walls": ("full", "glass", "parapet", "none")},
+}
+# 裸の数を許す鍵（向きの角度・辺の番号。寸法ではない）
+PART_BARE_OK = {"asset": ("asset", "yaw"), "planter": ("yaw",), "nameplate": ("yaw",), "vestibule": ("wall_edges",),
+                "stair_switchback": ("end_parapet",)}
 # CC0 アセット（data/assets/catalog.json）。位置・個数・大きさは根拠付きの値、見た目だけアセット。
 #   {"type": "asset", "asset": "<catalog id>", "face", "along", "offset", "z0", "yaw", "count", "pitch",
 #    "size": {"w", "d", "h"}}       面に付く物（単独の物は face/along の代わりに x, y）
@@ -237,8 +256,38 @@ def check_new_part(pt: dict, where: str) -> list[str]:
     for k in PART_REQUIRED.get(t, ()):
         if k not in pt:
             errs.append(f"{where}: {k} がありません")
-    skip = ("type", "face", "name", "material", "note") + (("asset", "yaw") if t == "asset" else ())
+    skip = ("type", "face", "name", "material", "note") + PART_BARE_OK.get(t, ())
     errs += check_values({k: v for k, v in pt.items() if k not in skip}, where)
+    for k, allowed in PART_ENUMS.get(t, {}).items():
+        if k in pt and pt[k] not in allowed:
+            errs.append(f"{where}: {k} は {' / '.join(allowed)} のどれかです（{pt[k]}）")
+    if t in ("planter", "nameplate"):
+        if pt.get("face"):
+            if "along" not in pt:
+                errs.append(f"{where}: face に付けるなら along がありません")
+        elif not (("x" in pt and "y" in pt) or (t == "planter" and pt.get("polygon"))):
+            errs.append(f"{where}: face＋along か x＋y{'（か polygon）' if t == 'planter' else ''}のどれかが要ります")
+        if not pt.get("polygon"):
+            for k in ("width", "depth") if t == "planter" else ("width",):
+                if k not in pt:
+                    errs.append(f"{where}: {k} がありません")
+    if t in ("vestibule", "pergola") and len(pt.get("polygon") or []) < 3:
+        errs.append(f"{where}: polygon は 3 点以上必要です")
+    if t == "bridge":
+        for k in ("from", "to"):
+            if not (isinstance(pt.get(k), list) and len(pt[k]) == 2):
+                errs.append(f"{where}: {k} は [x, y] です")
+    if t == "patch" and not isinstance(pt.get("material"), str):
+        errs.append(f"{where}: material（素材の名前か asset:<id>）がありません")
+    if t == "curved_glass":
+        a0, a1, r = (Measurement.from_json(pt.get(k)) for k in ("along0", "along1", "radius"))
+        if a0.known and a1.known and r.known and float(r.value) < abs(float(a1.value) - float(a0.value)) / 2 - 1e-6:
+            errs.append(f"{where}: 半径 {r.value} m が弦の半分 {abs(float(a1.value) - float(a0.value)) / 2:.2f} m より小さい")
+    if t == "stair_switchback":
+        if "landing_len" not in pt and ("landing_len_from" in pt) != ("landing_len_to" in pt):
+            errs.append(f"{where}: landing_len が無いなら landing_len_from と landing_len_to を両方書く")
+        if any(e not in ("from", "to") for e in pt.get("end_parapet", [])):
+            errs.append(f"{where}: end_parapet は \"from\" / \"to\" の並びです")
     if t == "asset":
         errs += _check_asset_part(pt, where)
     if t == "stair_switchback" and not (pt.get("landing_z") or ("floors" in pt and "floor_pitch" in pt)):

@@ -12,6 +12,18 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 - 見えていない面は「同じ割付と仮定」と `method` に明記して `estimated`
 - 寸法が unknown の物は塊にしない（撮影依頼へ）
 - 直した理由は `history` に。足りない物は `requests` に「面・何を・どこから・なぜ」
+- 観察票の言葉 → 部品（11/4 午後の語彙。書き方は docs/手順_エージェント.md「生成器の教訓」、見本は tests/fixtures/parts_building.json）
+  - 「軒裏・ピロティ天井の小梁／梁の格子」→ `ceiling_beams`（ピロティは side "in"、軒下は "out"。格子は direction "grid"）
+  - 「ルーバー・横羽根／縦羽根の面」→ `louver`（orientation、羽根の角度は度の測定値）
+  - 「植え込み・花壇・縁付きの植栽」→ `planter`（面に沿う物は face＋along、離れた物は x,y か polygon）
+  - 「銘板・看板・モニュメント」→ `nameplate`（壁に貼る物は face、自立は x,y）
+  - 「面の一部だけ灰色のパネル／別の素材」→ `patch`（material か asset:<id>）
+  - 「ガラスの箱が出る・風除室」→ `vestibule`（壁に付く辺は wall_edges）
+  - 「柱と梁の格子・パーゴラ・藤棚」→ `pergola`
+  - 「渡り廊下・橋・連絡通路」→ `bridge`（両端の床の高さ z_from/z_to、壁は full/glass/parapet/none）
+  - 「曲面のガラス・丸く出た窓」→ `curved_glass`（弦の両端 along0/along1 と半径）
+  - 「踊り場が片側だけ長い」→ `stair_switchback` の `landing_len_from/to`（隣の床へ続く端は `end_parapet` から外す）
+  - 「窓下のパネルが窓の額縁の中にある」→ `spandrel.in_recess: true`
 
 ## 手順
 1. 観察票・数え・測量の JSON を読む。食い違い（面の取り違え）があれば先に直す。

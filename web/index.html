@@ -199,6 +199,19 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
     // glb の地形の面（terrain）は隠す。歩く画面の地面は site.json の格子（キャンパス全体）に統一する
     root.traverse((o) => { if (o.isMesh && /^terrain/.test(o.name)) o.visible = false; });
     root.traverse((o) => { if (o.isMesh && o.visible) { o.userData.info = info; pickables.push(o); o.castShadow = o.receiveShadow = true; } });
+    // 透けるガラス：glb は alphaMode BLEND（不透明度は Blender の Alpha 0.35）。奥の暗い板（curtain / interior）が透けて見える
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      for (const mt of [].concat(o.material)) {
+        if (!/glass/i.test(mt.name || "")) continue;
+        mt.transparent = true;
+        mt.opacity = mt.opacity < 1 ? mt.opacity : 0.35;
+        mt.depthWrite = false;
+        mt.side = THREE.FrontSide;
+        mt.envMapIntensity = 2.5;
+        o.castShadow = false;
+      }
+    });
     scene.add(root);
     root.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(root);

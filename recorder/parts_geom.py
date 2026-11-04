@@ -144,13 +144,20 @@ def stair_switchback(pt: dict, face: dict | None, V=plain, tag="stair_switchback
     Z = stair_landings_z(pt, z0, V, tag)
     if not Z:
         return []
-    ll = float(V(pt.get("landing_len"), min(1.5, W / 4), f"{tag} の踊り場の長さ", "未測。min(1.5 m, 幅/4) と置いた"))
+    ll = V(pt.get("landing_len"), None)
+    if ll is None and not ("landing_len_from" in pt and "landing_len_to" in pt):
+        ll = V(None, min(1.5, W / 4), f"{tag} の踊り場の長さ", "未測。min(1.5 m, 幅/4) と置いた")
+    # 両端で長さが違う踊り場（landing_len_from / landing_len_to）。無ければ landing_len
+    dflt = ll if ll is not None else min(1.5, W / 4)
+    llf = float(V(pt.get("landing_len_from"), dflt))
+    llt = float(V(pt.get("landing_len_to"), dflt))
     lane = float(V(pt.get("flight_width"), D / 2))
     slab = float(V(pt.get("slab"), 0.25))
-    ends = {"from": (A, A + ll), "to": (A + W - ll, A + W)}
+    ends = {"from": (A, A + llf), "to": (A + W - llt, A + W)}
     lanes = {"outer": (D - lane, D), "inner": (0.0, lane)}
     other = {"from": "to", "to": "from", "outer": "inner", "inner": "outer"}
-    a_lo, a_hi = A + ll, A + W - ll
+    a_lo, a_hi = A + llf, A + W - llt
+    end_par = pt.get("end_parapet", ["from", "to"])      # 端の腰壁を立てる側（隣に踊り場・床が続く側は外す）
     par = pt.get("parapet")
     ph = float(V((par or {}).get("height"), 1.1, f"{tag} の腰壁の高さ", "未測。建築基準法の最低 1.1 m")) if par else 0.0
     pthk = float(V((par or {}).get("thickness"), 0.15)) if par else 0.0
@@ -182,8 +189,9 @@ def stair_switchback(pt: dict, face: dict | None, V=plain, tag="stair_switchback
                 out += rail_prims(f"flight{i}_rail", a_lo, a_hi, zl + ph, rh, rp, D - pthk / 2, z1=zh + ph)
         if par:
             out.append(rect_prism(f"landing{i}_parapet", la0, la1, D - pthk, D, z - slab, z + ph, pmat))
-            ea0, ea1 = (la0, la0 + pthk) if end == "from" else (la1 - pthk, la1)
-            out.append(rect_prism(f"landing{i}_end", ea0, ea1, 0.0, D - pthk, z - slab, z + ph, pmat))
+            if end in end_par:
+                ea0, ea1 = (la0, la0 + pthk) if end == "from" else (la1 - pthk, la1)
+                out.append(rect_prism(f"landing{i}_end", ea0, ea1, 0.0, D - pthk, z - slab, z + ph, pmat))
             if rail:
                 out += rail_prims(f"landing{i}_rail", la0, la1, z + ph, rh, rp, D - pthk / 2)
         prev = z
@@ -278,7 +286,9 @@ def porch(pt: dict, face: dict | None, V=plain, tag="porch"):
         gd = float(V(gl.get("depth"), D / 2, f"{tag} のガラスの箱の奥行き", "未測。軒下の奥行きの半分と置いた"))
         gh = float(V(gl.get("height"), H - 0.05))
         nb, nf = -D, -D + gd
-        out.append(rect_prism("glass", g0, g1, nb, nf, z0, z0 + gh, "glass"))
+        # ガラスの箱は奥の壁から 0.05 m 離し、奥の壁に室内の暗い板（透けるガラスの向こうがタイルにならないように）
+        out.append(rect_prism("glass", g0, g1, nb + 0.05, nf, z0, z0 + gh, "glass"))
+        out.append(rect_prism("interior", g0, g1, nb + 0.002, nb + 0.008, z0, z0 + gh, "interior"))
         mp = float(V(gl.get("mullion_pitch"), 1.2, f"{tag} の縦の格子の間隔", "未測。1.2 m と置いた"))
         tp = V(gl.get("transom_pitch"))
         f = 0.05
@@ -351,14 +361,26 @@ def steps(pt: dict, face: dict | None, V=plain, tag="steps") -> list[dict]:
 
 # --- 窓の下のパネル（windows[].spandrel） -----------------------------------------
 
-def spandrel(sp: dict, s: float, wsub: float, zb: float, base: float, V=plain, tag="spandrel"):
-    """窓（中心 s、幅 wsub、下端 zb）の下の濃いパネル。壁の面（帯の引っ込みの中なら -base）から外へ depth（0 なら薄い板）。"""
+def spandrel(sp: dict, s: float, wsub: float, zb: float, base: float, V=plain, tag="spandrel", rec: float = 0.0):
+    """窓（中心 s、幅 wsub、下端 zb）の下の濃いパネル。壁の面（帯の引っ込みの中なら -base）から外へ depth（0 なら薄い板）。
+    in_recess: true なら窓の奥まり（rec）の中に置く：ガラスと同じ奥 −(base+rec) から手前へ depth。模型は窓の彫り込みを
+    パネルの下端まで下げる（spandrel_cut_bottom）。"""
     h = V(sp.get("height"), None, f"{tag} の高さ", "height が unknown。置かなかった")
     if h is None:
         return None
     dep = float(V(sp.get("depth"), 0.0))
     t = max(dep, 0.02)
-    return rect_prism("spandrel", s - wsub / 2, s + wsub / 2, -base, -base + t, zb - h, zb, sp.get("material", "dark"))
+    n0 = -(base + rec) if sp.get("in_recess") else -base
+    return rect_prism("spandrel", s - wsub / 2, s + wsub / 2, n0, n0 + t, zb - h, zb, sp.get("material", "dark"))
+
+
+def spandrel_cut_bottom(sp: dict | None, zb: float, V=plain) -> float:
+    """窓の彫り込みの下端。奥まりの中のパネル（in_recess）があればパネルの下端まで、無ければ窓の下端。"""
+    if sp and sp.get("in_recess"):
+        h = V(sp.get("height"))
+        if h is not None:
+            return zb - float(h)
+    return zb
 
 
 # --- 単独の柱（column）・屋上の設備（rooftop_units） ------------------------------
@@ -411,17 +433,413 @@ def ac_units_base(pt: dict, face: dict | None, V=plain) -> float:
     return float(z0) if z0 is not None else face_ground(face) + 0.1
 
 
+# --- 11/4 午後の語彙（本部棟で「語彙が無い」と見送られた物） ---------------------
+
+def spaced(lo: float, hi: float, pitch: float | None) -> list[float]:
+    """lo〜hi を pitch 以下の等間隔で、両端を含めて割った位置。"""
+    if not pitch or pitch <= 0 or hi - lo <= 1e-9:
+        return [lo, hi] if hi - lo > 1e-9 else [lo]
+    cnt = max(1, math.ceil((hi - lo) / pitch - 1e-9))
+    return [lo + (hi - lo) * i / cnt for i in range(cnt + 1)]
+
+
+def cells(lo: float, hi: float, pitch: float) -> list[float]:
+    """lo〜hi を間隔 pitch に近い個数の区画に割り、各区画の中心（羽根・梁を区画の真ん中に置く時）。"""
+    cnt = max(1, round((hi - lo) / pitch)) if pitch and pitch > 0 else 1
+    return [lo + (hi - lo) * (k + 0.5) / cnt for k in range(cnt)]
+
+
+def ccw_pts(pts):
+    pts = [tuple(map(float, p)) for p in pts]
+    a2 = sum(pts[i][0] * pts[(i + 1) % len(pts)][1] - pts[(i + 1) % len(pts)][0] * pts[i][1] for i in range(len(pts)))
+    return pts if a2 >= 0 else list(reversed(pts))
+
+
+def inset_polygon(pts, d: float):
+    """多角形を内側へ d（負なら外側へ）ずらした多角形。各辺を平行にずらし、隣の辺との交点を取る（単純な多角形向け）。"""
+    pts = ccw_pts(pts)
+    n = len(pts)
+    lines = []
+    for i in range(n):
+        (x0, y0), (x1, y1) = pts[i], pts[(i + 1) % n]
+        L = math.hypot(x1 - x0, y1 - y0) or 1.0
+        nx, ny = -(y1 - y0) / L, (x1 - x0) / L         # 反時計回りの内向き
+        lines.append(((x0 + nx * d, y0 + ny * d), ((x1 - x0) / L, (y1 - y0) / L)))
+    out = []
+    for i in range(n):
+        (p, u), (q, v) = lines[i - 1], lines[i]
+        den = u[0] * v[1] - u[1] * v[0]
+        if abs(den) < 1e-9:
+            out.append(q)
+            continue
+        t = ((q[0] - p[0]) * v[1] - (q[1] - p[1]) * v[0]) / den
+        out.append((p[0] + u[0] * t, p[1] + u[1] * t))
+    return out
+
+
+def edge_quad(p, q, t: float):
+    """平面の線分 p→q を太さ t（中心線の両側 t/2）の四角にした点の並び。"""
+    L = math.hypot(q[0] - p[0], q[1] - p[1]) or 1.0
+    nx, ny = -(q[1] - p[1]) / L * t / 2, (q[0] - p[0]) / L * t / 2
+    return [(p[0] - nx, p[1] - ny), (q[0] - nx, q[1] - ny), (q[0] + nx, q[1] + ny), (p[0] + nx, p[1] + ny)]
+
+
+def square_pts(c, s: float):
+    return [(c[0] - s / 2, c[1] - s / 2), (c[0] + s / 2, c[1] - s / 2), (c[0] + s / 2, c[1] + s / 2), (c[0] - s / 2, c[1] + s / 2)]
+
+
+def rotated_rect(cx: float, cy: float, w: float, d: float, yaw_deg: float):
+    """中心 (cx, cy)、幅 w（yaw の向き）× 奥行き d の長方形。yaw は x 軸（東）から反時計回りの度。"""
+    c, s = math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))
+    return [(cx + c * a - s * b, cy + s * a + c * b) for a, b in ((-w / 2, -d / 2), (w / 2, -d / 2), (w / 2, d / 2), (-w / 2, d / 2))]
+
+
+def _yaw(pt: dict, V) -> float:
+    y = pt.get("yaw", 0.0)
+    if isinstance(y, (int, float)) and not isinstance(y, bool):
+        return float(y)
+    return float(V(y, 0.0))
+
+
+def ceiling_beams(pt: dict, face: dict | None, V=plain, tag="ceiling_beams") -> list[dict]:
+    """ピロティ・軒下の天井の小梁の格子。面の along0〜along1、面から depth（side "in" は建物の中＝ピロティ、"out" は外＝軒下）。
+    天井の高さ z から下へ梁の成 beam_height。direction "across"（面に直角の梁を面に沿って pitch で並べる）／
+    "along"（面に平行の梁を奥へ pitch で並べる）／"grid"（両方。奥への間隔は pitch_n、無ければ pitch）。"""
+    a0 = V(pt.get("along0"), None, f"{tag} の始まり", "along0 が unknown。置かなかった")
+    a1 = V(pt.get("along1"), None, f"{tag} の終わり", "along1 が unknown。置かなかった")
+    D = V(pt.get("depth"), None, f"{tag} の奥行き", "depth が unknown。置かなかった")
+    z = V(pt.get("z"), None, f"{tag} の天井の高さ", "z が unknown。置かなかった")
+    pitch = V(pt.get("pitch"), None, f"{tag} の梁の間隔", "pitch が unknown。置かなかった")
+    if None in (a0, a1, D, z, pitch):
+        return []
+    bw = float(V(pt.get("beam_width"), 0.3, f"{tag} の梁の幅", "未測。0.3 m と置いた"))
+    bh = float(V(pt.get("beam_height"), 0.5, f"{tag} の梁の成", "未測。0.5 m と置いた"))
+    n0, n1 = (-D, 0.0) if pt.get("side", "in") == "in" else (0.0, D)
+    dirn = pt.get("direction", "across")
+    mat = pt.get("material", "white")
+    out = []
+    if dirn in ("across", "grid"):
+        for i, a in enumerate(spaced(a0, a1, pitch)):
+            out.append(rect_prism(f"beam_a{i}", max(a0, a - bw / 2), min(a1, a + bw / 2), n0, n1, z - bh, z, mat))
+    if dirn in ("along", "grid"):
+        pn = float(V(pt.get("pitch_n"), pitch))
+        for i, nn in enumerate(spaced(n0, n1, pn)):
+            out.append(rect_prism(f"beam_n{i}", a0, a1, max(n0, nn - bw / 2), min(n1, nn + bw / 2), z - bh, z, mat))
+    return out
+
+
+def louver(pt: dict, face: dict | None, V=plain, tag="louver") -> list[dict]:
+    """ルーバー。面の along〜along+width、z0〜z1。羽根は blade_pitch ごと（区画の中心）、幅 blade_width（面から外へ）、
+    厚さ blade_thickness、角度 angle（度。横羽根は外の縁が下がる向き、縦羽根は to 側へ振る向きが正）。
+    orientation "horizontal"（横羽根）/ "vertical"（縦羽根）。offset は壁から羽根の内の縁まで。frame で両端（上下）の枠。"""
+    A = V(pt.get("along"), None, f"{tag} の位置", "along が unknown。置かなかった")
+    W = V(pt.get("width"), None, f"{tag} の幅", "width が unknown。置かなかった")
+    z0 = V(pt.get("z0"), None, f"{tag} の下端", "z0 が unknown。置かなかった")
+    z1 = V(pt.get("z1"), None, f"{tag} の上端", "z1 が unknown。置かなかった")
+    pitch = V(pt.get("blade_pitch"), None, f"{tag} の羽根の間隔", "blade_pitch が unknown。置かなかった")
+    if None in (A, W, z0, z1, pitch):
+        return []
+    bw = float(V(pt.get("blade_width"), 0.15, f"{tag} の羽根の幅", "未測。0.15 m と置いた"))
+    bt = float(V(pt.get("blade_thickness"), 0.02))
+    ang = math.radians(float(V(pt.get("angle"), 0.0, f"{tag} の羽根の角度", "未測。0° と置いた")))
+    off = float(V(pt.get("offset"), 0.0))
+    mat = pt.get("material", "metal")
+    nc = off + bw / 2
+    c, s = math.cos(ang), math.sin(ang)
+    out = []
+    if pt.get("orientation", "horizontal") == "horizontal":
+        for k, zc in enumerate(cells(z0, z1, pitch)):
+            sec = [(nc + dx * c + dz * s, zc - dx * s + dz * c) for dx, dz in ((-bw / 2, -bt / 2), (bw / 2, -bt / 2), (bw / 2, bt / 2), (-bw / 2, bt / 2))]
+            out.append(P("ext_n", f"blade{k}", sec, A, A + W, mat))
+        if pt.get("frame", True):
+            f = 0.05
+            out.append(rect_prism("frame0", A, A + f, off, off + bw, z0, z1, mat))
+            out.append(rect_prism("frame1", A + W - f, A + W, off, off + bw, z0, z1, mat))
+    else:
+        for k, ac in enumerate(cells(A, A + W, pitch)):
+            sec = [(ac + da * c - dn * s, nc + da * s + dn * c) for da, dn in ((-bt / 2, -bw / 2), (bt / 2, -bw / 2), (bt / 2, bw / 2), (-bt / 2, bw / 2))]
+            out.append(P("prism", f"blade{k}", sec, z0, z1, mat))
+        if pt.get("frame", True):
+            f = 0.05
+            out.append(rect_prism("frame0", A, A + W, off, off + bw, z0, z0 + f, mat))
+            out.append(rect_prism("frame1", A, A + W, off, off + bw, z1 - f, z1, mat))
+    return out
+
+
+def _footprint(pt: dict, V, tag: str, w_key="width", d_key="depth"):
+    """面に付く物は (面の座標の長方形)、単独の物は (世界座標の多角形)。返り値 (pts, world か) か None。"""
+    if pt.get("polygon"):
+        return [tuple(map(float, q)) for q in pt["polygon"]], True
+    W = V(pt.get(w_key), None, f"{tag} の幅", f"{w_key} が unknown。置かなかった")
+    D = V(pt.get(d_key), None, f"{tag} の奥行き", f"{d_key} が unknown。置かなかった")
+    if W is None or D is None:
+        return None
+    if pt.get("face"):
+        A = V(pt.get("along"), 0.0)
+        off = float(V(pt.get("offset"), 0.0))
+        return [(A, off), (A + W, off), (A + W, off + D), (A, off + D)], False
+    if pt.get("x") is None or pt.get("y") is None:
+        return None
+    return rotated_rect(float(pt["x"]), float(pt["y"]), W, D, _yaw(pt, V)), True
+
+
+def planter(pt: dict, face: dict | None, V=plain, tag="planter") -> list[dict]:
+    """植え込み・花壇。縁（material、既定 brick）の壁 wall 厚、中は緑（leaf）で縁より 0.05 m 低い。
+    面に付く物は {face, along, width, depth, offset}、単独は {x, y, width, depth, yaw} か {polygon}。z0 の既定は足元の地面。"""
+    fp = _footprint(pt, V, tag)
+    H = V(pt.get("height"), None, f"{tag} の高さ", "height が unknown。置かなかった")
+    if fp is None or H is None:
+        return []
+    pts, world = fp
+    z0 = float(V(pt.get("z0"), 0.0 if world else face_ground(face)))
+    wt = float(V(pt.get("wall"), 0.15, f"{tag} の縁の厚さ", "未測。0.15 m と置いた"))
+    mat = pt.get("material", "brick")
+    outer = ccw_pts(pts)
+    inner = inset_polygon(outer, wt)
+    out = []
+    n = len(outer)
+    for i in range(n):
+        q = [outer[i], outer[(i + 1) % n], inner[(i + 1) % n], inner[i]]
+        if area(q) > 1e-6:
+            out.append(P("prism", f"rim{i}", q, z0, z0 + H, mat))
+    out.append(P("prism", "soil", inner, z0, z0 + max(H - 0.05, 0.01), "leaf"))
+    return out
+
+
+def nameplate(pt: dict, face: dict | None, V=plain, tag="nameplate") -> list[dict]:
+    """銘板・看板。幅 width × 高さ height × 厚さ thickness、下端 z0。面に付く物は {face, along, offset}（壁から offset 離す。
+    既定 0＝壁に貼る）、単独は {x, y, yaw}（中心。板の面は yaw の向き）。material stone / metal / dark。"""
+    Hh = V(pt.get("height"), None, f"{tag} の高さ", "height が unknown。置かなかった")
+    z0 = V(pt.get("z0"), None, f"{tag} の下端", "z0 が unknown。置かなかった")
+    if Hh is None or z0 is None:
+        return []
+    fp = _footprint(pt, V, tag, d_key="thickness")
+    if fp is None:
+        return []
+    return [P("prism", "plate", fp[0], z0, z0 + Hh, pt.get("material", "stone"))]
+
+
+def patch(pt: dict, face: dict | None, V=plain, tag="patch") -> list[dict]:
+    """面の一部だけ別の素材。along0〜along1、z0〜z1 に、壁から 5 mm 浮かせた厚さ 5 mm の板（material か asset:<id>）。"""
+    vals = [V(pt.get(k), None, f"{tag} の {k}", f"{k} が unknown。置かなかった") for k in ("along0", "along1", "z0", "z1")]
+    if None in vals:
+        return []
+    a0, a1, z0, z1 = vals
+    return [rect_prism("patch", a0, a1, 0.005, 0.010, z0, z1, pt.get("material", "concrete"))]
+
+
+def vestibule(pt: dict, V=plain, tag="vestibule") -> list[dict]:
+    """角の出たガラスの箱（風除室）。平面 polygon（世界座標）、z0〜z0+height。辺ごとにガラスの板、縦の格子を mullion_pitch
+    以下の等間隔（角を含む）、横の格子を transom_pitch ごと（上下の枠は常に）。wall_edges（壁に付く辺の番号）にはガラスを
+    張らない。屋根は薄い板（roof{thickness, overhang, material}）。"""
+    pts = pt.get("polygon")
+    z0 = V(pt.get("z0"), None, f"{tag} の床の高さ", "z0 が unknown。置かなかった")
+    H = V(pt.get("height"), None, f"{tag} の高さ", "height が unknown。置かなかった")
+    if not pts or len(pts) < 3 or z0 is None or H is None:
+        return []
+    mp = float(V(pt.get("mullion_pitch"), 1.2, f"{tag} の縦の格子の間隔", "未測。1.2 m と置いた"))
+    tp = V(pt.get("transom_pitch"))
+    skip = set(pt.get("wall_edges") or [])
+    poly = [tuple(map(float, q)) for q in pts]
+    n = len(poly)
+    f, g = 0.06, 0.02
+    top = z0 + H
+    out = []
+    for i in range(n):
+        if i in skip:
+            continue
+        p, q = poly[i], poly[(i + 1) % n]
+        out.append(P("prism", f"glass{i}", edge_quad(p, q, g), z0, top, pt.get("material", "glass")))
+        L = math.hypot(q[0] - p[0], q[1] - p[1])
+        for k, t in enumerate(spaced(0.0, L, mp)):
+            c = (p[0] + (q[0] - p[0]) * t / L, p[1] + (q[1] - p[1]) * t / L)
+            out.append(P("prism", f"mullion{i}_{k}", square_pts(c, f), z0, top, "metal"))
+        zs = [z0 + f / 2, top - f / 2]
+        if tp:
+            k = 1
+            while z0 + k * tp < top - 0.1:
+                zs.append(z0 + k * tp)
+                k += 1
+        for k, zz in enumerate(zs):
+            out.append(P("prism", f"transom{i}_{k}", edge_quad(p, q, f), zz - f / 2, zz + f / 2, "metal"))
+    rf = pt.get("roof") or {}
+    rt = float(V(rf.get("thickness"), 0.15, f"{tag} の屋根の厚さ", "未測。0.15 m と置いた"))
+    ov = float(V(rf.get("overhang"), 0.0))
+    out.append(P("prism", "roof", inset_polygon(poly, -ov) if ov else poly, top, top + rt, rf.get("material", "concrete")))
+    return out
+
+
+def _clip_line(poly, c, d):
+    """直線 c + t·d と多角形の交わる区間 [(t0, t1), ...]。"""
+    ts = []
+    n = len(poly)
+    for i in range(n):
+        p, q = poly[i], poly[(i + 1) % n]
+        e = (q[0] - p[0], q[1] - p[1])
+        den = d[0] * e[1] - d[1] * e[0]
+        if abs(den) < 1e-12:
+            continue
+        w = (p[0] - c[0], p[1] - c[1])
+        t = (w[0] * e[1] - w[1] * e[0]) / den
+        s = (w[0] * d[1] - w[1] * d[0]) / den
+        if -1e-9 <= s < 1 - 1e-9:
+            ts.append(t)
+    ts.sort()
+    return [(ts[k], ts[k + 1]) for k in range(0, len(ts) - 1, 2)]
+
+
+def pergola(pt: dict, V=plain, tag="pergola") -> list[dict]:
+    """柱と梁の格子（パーゴラ）。平面 polygon（世界座標）、z0〜z0+height。柱は辺に沿って post_pitch 以下の等間隔（角を含む）、
+    太さ post_size。外周の大梁（辺の上）と、最初の辺に平行な小梁を beam_pitch ごと（多角形で切る）。梁の幅 beam_width・成 beam_height。
+    大梁は z_top−2×成〜z_top−成、小梁はその上（z_top まで）。"""
+    pts = pt.get("polygon")
+    z0 = V(pt.get("z0"), None, f"{tag} の足元", "z0 が unknown。置かなかった")
+    H = V(pt.get("height"), None, f"{tag} の高さ", "height が unknown。置かなかった")
+    pp = V(pt.get("post_pitch"), None, f"{tag} の柱の間隔", "post_pitch が unknown。置かなかった")
+    bp = V(pt.get("beam_pitch"), None, f"{tag} の梁の間隔", "beam_pitch が unknown。置かなかった")
+    if not pts or len(pts) < 3 or None in (z0, H, pp, bp):
+        return []
+    ps = float(V(pt.get("post_size"), 0.25, f"{tag} の柱の太さ", "未測。0.25 m と置いた"))
+    bw = float(V(pt.get("beam_width"), 0.15, f"{tag} の梁の幅", "未測。0.15 m と置いた"))
+    bh = float(V(pt.get("beam_height"), 0.25, f"{tag} の梁の成", "未測。0.25 m と置いた"))
+    mat = pt.get("material", "concrete")
+    poly = ccw_pts(pts)
+    n = len(poly)
+    top = z0 + H
+    out = []
+    seen = []
+    for i in range(n):
+        p, q = poly[i], poly[(i + 1) % n]
+        L = math.hypot(q[0] - p[0], q[1] - p[1])
+        for t in spaced(0.0, L, pp):
+            c = (p[0] + (q[0] - p[0]) * t / max(L, 1e-9), p[1] + (q[1] - p[1]) * t / max(L, 1e-9))
+            if any(math.hypot(c[0] - o[0], c[1] - o[1]) < 1e-3 for o in seen):
+                continue
+            seen.append(c)
+            out.append(P("prism", f"post{len(seen) - 1}", square_pts(c, ps), z0, top - 2 * bh, mat))
+        out.append(P("prism", f"girder{i}", edge_quad(p, q, bw), top - 2 * bh, top - bh, mat))
+    (x0, y0), (x1, y1) = poly[0], poly[1]
+    L0 = math.hypot(x1 - x0, y1 - y0) or 1.0
+    d = ((x1 - x0) / L0, (y1 - y0) / L0)
+    nrm = (-d[1], d[0])
+    proj = [(q[0] - x0) * nrm[0] + (q[1] - y0) * nrm[1] for q in poly]
+    k = 0
+    for s in cells(min(proj), max(proj), bp):
+        c = (x0 + nrm[0] * s, y0 + nrm[1] * s)
+        for t0, t1 in _clip_line(poly, c, d):
+            a, b = (c[0] + d[0] * t0, c[1] + d[1] * t0), (c[0] + d[0] * t1, c[1] + d[1] * t1)
+            out.append(P("prism", f"rafter{k}", edge_quad(a, b, bw), top - bh, top, mat))
+            k += 1
+    return out
+
+
+def bridge(pt: dict, V=plain, tag="bridge"):
+    """渡り廊下・橋。from [x,y]（床 z_from）→ to [x,y]（床 z_to）、幅 width、天井まで height、床の厚さ slab。
+    walls: "full"（壁と屋根で閉じた廊下）/ "glass"（腰壁 0.9 m＋上はガラス、屋根あり）/ "parapet"（腰壁だけ、屋根なし）/ "none"。
+    roof を true/false で上書きできる。座標は部品の局所（a＝from から to へ、n＝横、z）。返り値 (frame, prims)。"""
+    fr, to = pt.get("from"), pt.get("to")
+    zf = V(pt.get("z_from"), None, f"{tag} の始点の床", "z_from が unknown。置かなかった")
+    zt = V(pt.get("z_to"), None, f"{tag} の終点の床", "z_to が unknown。置かなかった")
+    W = V(pt.get("width"), None, f"{tag} の幅", "width が unknown。置かなかった")
+    if not fr or not to or None in (zf, zt, W):
+        return None, []
+    L = math.hypot(to[0] - fr[0], to[1] - fr[1])
+    if L < 1e-6:
+        return None, []
+    walls = pt.get("walls", "full")
+    H = float(V(pt.get("height"), 2.8, f"{tag} の天井の高さ", "未測。2.8 m と置いた"))
+    slab = float(V(pt.get("slab"), 0.3))
+    wt = float(V(pt.get("wall_thickness"), 0.15))
+    mat = pt.get("material", "concrete")
+
+    def band(name, lo, hi, n0, n1, m):
+        return P("ext_a", name, [(0.0, zf + lo), (L, zt + lo), (L, zt + hi), (0.0, zf + hi)], n0, n1, m)
+
+    out = [band("slab", -slab, 0.0, -W / 2, W / 2, mat)]
+    sides = ((-W / 2, -W / 2 + wt), (W / 2 - wt, W / 2))
+    for k, (n0, n1) in enumerate(sides):
+        if walls == "full":
+            out.append(band(f"wall{k}", 0.0, H, n0, n1, mat))
+        elif walls == "glass":
+            par = 0.9
+            out.append(band(f"wall{k}", 0.0, par, n0, n1, mat))
+            out.append(band(f"glass{k}", par, H, (n0 + n1) / 2 - 0.01, (n0 + n1) / 2 + 0.01, "glass"))
+        elif walls == "parapet":
+            ph = float(V(pt.get("parapet_h"), 1.1, f"{tag} の腰壁の高さ", "未測。建築基準法の最低 1.1 m"))
+            out.append(band(f"wall{k}", 0.0, ph, n0, n1, mat))
+    if pt.get("roof", walls in ("full", "glass")):
+        out.append(band("roof", H, H + slab, -W / 2, W / 2, mat))
+    return {"from": [float(fr[0]), float(fr[1])], "to": [float(to[0]), float(to[1])]}, out
+
+
+def curved_glass(pt: dict, face: dict | None, V=plain, tag="curved_glass") -> list[dict]:
+    """曲面ガラス。面の along0〜along1 を弦にして外へふくらむ半径 radius の円弧（24 分割）、z0〜z1。
+    縦の格子は弧の長さで mullion_pitch 以下の等間隔（両端を含む）、横の格子は transom_pitch ごと（上下の枠は常に）。
+    cap（既定 true）で上下にふくらみの形の板。奥の壁には室内の暗い板（interior）を貼る。"""
+    vals = [V(pt.get(k), None, f"{tag} の {k}", f"{k} が unknown。置かなかった") for k in ("along0", "along1", "radius", "z0", "z1")]
+    if None in vals:
+        return []
+    a0, a1, R, z0, z1 = map(float, vals)
+    h = (a1 - a0) / 2
+    if R < h - 1e-6:
+        V(None, None, f"{tag} の半径", f"半径 {R} m が弦の半分 {h:.2f} m より小さい。置かなかった")
+        return []
+    mp = float(V(pt.get("mullion_pitch"), 1.2, f"{tag} の縦の格子の間隔", "未測。1.2 m と置いた"))
+    tp = V(pt.get("transom_pitch"))
+    ac, nc = (a0 + a1) / 2, -math.sqrt(max(R * R - h * h, 0.0))
+    th0, th1 = math.atan2(-nc, a0 - ac), math.atan2(-nc, a1 - ac)
+    seg = 24
+    g, f = 0.02, 0.06
+
+    def at(th, r):
+        return (ac + r * math.cos(th), nc + r * math.sin(th))
+
+    ths = [th0 + (th1 - th0) * i / seg for i in range(seg + 1)]
+    mat = pt.get("material", "glass")
+    out = []
+    for i in range(seg):
+        q = [at(ths[i], R), at(ths[i + 1], R), at(ths[i + 1], R - g), at(ths[i], R - g)]
+        out.append(P("prism", f"glass{i}", q, z0, z1, mat))
+    arc = abs(th1 - th0) * R
+    for k, s in enumerate(spaced(0.0, arc, mp)):
+        th = th0 + (th1 - th0) * s / max(arc, 1e-9)
+        out.append(P("prism", f"mullion{k}", square_pts(at(th, R - g / 2), f), z0, z1, "metal"))
+    zs = [z0 + f / 2, z1 - f / 2]
+    if tp:
+        k = 1
+        while z0 + k * tp < z1 - 0.1:
+            zs.append(z0 + k * tp)
+            k += 1
+    for k, zz in enumerate(zs):
+        for i in range(seg):
+            q = [at(ths[i], R + 0.01), at(ths[i + 1], R + 0.01), at(ths[i + 1], R - f), at(ths[i], R - f)]
+            out.append(P("prism", f"transom{k}_{i}", q, zz - f / 2, zz + f / 2, "metal"))
+    out.append(rect_prism("interior", a0, a1, 0.002, 0.008, z0, z1, "interior"))
+    if pt.get("cap", True):
+        region = dedupe([at(t, R) for t in ths])
+        out.append(P("prism", "cap_top", region, z1, z1 + 0.15, pt.get("cap_material", "concrete")))
+        out.append(P("prism", "cap_bottom", region, z0 - 0.15, z0, pt.get("cap_material", "concrete")))
+    return out
+
+
 # --- 部品の type → 形 ------------------------------------------------------------
 
-FACE_PART_TYPES = ("stair_switchback", "porch", "steps", "rail")
-WORLD_PART_TYPES = ("column", "rooftop_units")
+FACE_PART_TYPES = ("stair_switchback", "porch", "steps", "rail", "ceiling_beams", "louver", "patch", "curved_glass")
+WORLD_PART_TYPES = ("column", "rooftop_units", "vestibule", "pergola", "bridge")
+FLEX_PART_TYPES = ("planter", "nameplate")          # face＋along か x,y（か polygon）
+ALL_PART_TYPES = FACE_PART_TYPES + WORLD_PART_TYPES + FLEX_PART_TYPES
+FACE_FUNCS = {"steps": steps, "ceiling_beams": ceiling_beams, "louver": louver, "patch": patch, "curved_glass": curved_glass,
+              "planter": planter, "nameplate": nameplate}
 
 
 def part_prims(pt: dict, faces: dict, V=plain, tag: str | None = None):
-    """新しい部品 1 つの形。返り値: (frame, cut, prims)。frame は面 id か "world"。対象外の type は None。"""
+    """新しい部品 1 つの形。返り値: (frame, cut, prims)。frame は面 id、"world"、または局所の線 {"from","to"}（渡り廊下）。
+    対象外の type は None。"""
     t = pt.get("type")
     tag = tag or t
-    if t in FACE_PART_TYPES:
+    if t in FLEX_PART_TYPES and not pt.get("face"):
+        return "world", None, FACE_FUNCS[t](pt, None, V, tag)
+    if t in FACE_PART_TYPES or t in FLEX_PART_TYPES:
         f = faces.get(pt.get("face"))
         if not f:
             return None
@@ -430,8 +848,8 @@ def part_prims(pt: dict, faces: dict, V=plain, tag: str | None = None):
         if t == "porch":
             cut, prims = porch(pt, f, V, tag)
             return pt["face"], cut, prims
-        if t == "steps":
-            return pt["face"], None, steps(pt, f, V, tag)
+        if t in FACE_FUNCS:
+            return pt["face"], None, FACE_FUNCS[t](pt, f, V, tag)
         a0, a1 = V(pt.get("along0"), 0.0), V(pt.get("along1"))
         z, h = V(pt.get("z")), V(pt.get("height"), 1.1, f"{tag} の高さ", "未測。1.1 m と置いた")
         if a1 is None or z is None:
@@ -442,4 +860,65 @@ def part_prims(pt: dict, faces: dict, V=plain, tag: str | None = None):
         return "world", None, [c] if c else []
     if t == "rooftop_units":
         return "world", None, rooftop_units(pt, V, tag)
+    if t == "vestibule":
+        return "world", None, vestibule(pt, V, tag)
+    if t == "pergola":
+        return "world", None, pergola(pt, V, tag)
+    if t == "bridge":
+        fr, prims = bridge(pt, V, tag)
+        return (fr or "world"), None, prims
     return None
+
+
+# --- 座標の変換（立面図・平面図で、別の座標の部品を面に投影する） ----------------
+
+def frame_axes(frame, faces: dict | None = None):
+    """frame（"world"・面 id・{"from","to"}）の (原点 x, y, 沿う向き ux, uy, 外向き nx, ny)。面の外向きは (u.y, −u.x)。"""
+    if frame == "world":
+        return 0.0, 0.0, 1.0, 0.0, 0.0, 1.0
+    f = frame if isinstance(frame, dict) else (faces or {})[frame]
+    (x0, y0), (x1, y1) = f["from"], f["to"]
+    L = math.hypot(x1 - x0, y1 - y0) or 1.0
+    ux, uy = (x1 - x0) / L, (y1 - y0) / L
+    return float(x0), float(y0), ux, uy, uy, -ux
+
+
+def prim_vertices(pr: dict, axes) -> list[tuple[float, float, float]]:
+    """素片の頂点を世界座標 (x, y, z) で。"""
+    x0, y0, ux, uy, nx, ny = axes
+
+    def W(a, n, z):
+        return (x0 + ux * a + nx * n, y0 + uy * a + ny * n, z)
+
+    if pr["k"] == "prism":
+        return [W(a, n, z) for a, n in pr["pts"] for z in (pr["z0"], pr["z1"])]
+    if pr["k"] == "ext_a":
+        return [W(a, n, z) for a, z in pr["pts"] for n in (pr["n0"], pr["n1"])]
+    return [W(a, n, z) for n, z in pr["pts"] for a in (pr["a0"], pr["a1"])]
+
+
+def to_frame(verts, axes) -> list[tuple[float, float, float]]:
+    """世界座標の頂点を frame の (a, n, z) に。"""
+    x0, y0, ux, uy, nx, ny = axes
+    return [((x - x0) * ux + (y - y0) * uy, (x - x0) * nx + (y - y0) * ny, z) for x, y, z in verts]
+
+
+def hull(pts) -> list[tuple[float, float]]:
+    """2 次元の凸包（立面・平面に投影した輪郭の近似）。"""
+    P2 = sorted(set((round(p[0], 6), round(p[1], 6)) for p in pts))
+    if len(P2) < 3:
+        return P2
+
+    def cross(o, a, b):
+        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+    lo, up = [], []
+    for p in P2:
+        while len(lo) >= 2 and cross(lo[-2], lo[-1], p) <= 0:
+            lo.pop()
+        lo.append(p)
+    for p in reversed(P2):
+        while len(up) >= 2 and cross(up[-2], up[-1], p) <= 0:
+            up.pop()
+        up.append(p)
+    return lo[:-1] + up[:-1]

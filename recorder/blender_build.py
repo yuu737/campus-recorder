@@ -33,7 +33,9 @@
         rail            {face, along0, along1, z, height, post_pitch}   帯・腰壁の上の手すり（bands[].rail でも書ける）
         column          {x, y, diameter, z0, z1, section:"round"|"square"}
         rooftop_units   {source:"aerial", lean_correction_m:[dx,dy], z0, units:[{polygon|center+w+d, h}]}
-        faces[].windows[].spandrel {height, depth, material}            窓の下の濃いパネル
+        faces[].windows[].spandrel {height, depth, material, in_recess}   窓の下の濃いパネル（in_recess で窓の奥まりの中）
+    語彙 その 2（11/4 午後）: ceiling_beams・louver・planter・nameplate・patch・vestibule・pergola・bridge・curved_glass
+        （書き方は parts_geom.py の各関数と docs/手順_エージェント.md）。ガラスは透ける（material_glass、Alpha 0.35）
 
 地面（11/4）:
     国土地理院 5m 標高（out/site/dem5a.npz）から ground_z を引いた地形の面 1 枚（足元の外側 20 m、1 m 格子。recorder.site.terrain_grid）。
@@ -360,6 +362,25 @@ def material_plain(name: str, rgba, roughness=0.8, metallic=0.0):
     return mat
 
 
+GLASS_RGBA = (0.62, 0.76, 0.74, 0.35)     # 淡い青緑、不透明度 0.35（Web も glb の alpha から同じ値を読む）
+
+
+def material_glass(name: str = "glass"):
+    """透けるガラス。Principled の Alpha（EEVEE は BLENDED で描く）、IOR 1.5、粗さ 0.05。
+    glTF には alphaMode BLEND で出る（KHR_materials_transmission は three.js で重いので使わない）。"""
+    mat = material_plain(name, (*GLASS_RGBA[:3], 1.0), roughness=0.05, metallic=0.0)
+    bsdf = mat.node_tree.nodes["Principled BSDF"]
+    bsdf.inputs["Alpha"].default_value = GLASS_RGBA[3]
+    bsdf.inputs["IOR"].default_value = 1.5
+    for attr, v in (("surface_render_method", "BLENDED"), ("blend_method", "BLEND"), ("use_transparent_shadow", True),
+                    ("use_transparency_overlap", True), ("shadow_method", "HASHED"), ("use_backface_culling", False)):
+        try:
+            setattr(mat, attr, v)
+        except (AttributeError, TypeError):
+            pass
+    return mat
+
+
 class Mats:
     def __init__(self, b: dict):
         self.by_face: dict[str, bpy.types.Material] = {}
@@ -381,7 +402,8 @@ class Mats:
             for f in b.get("faces", []):
                 if f["id"] not in self.by_face:
                     assume(f"{f['id']} の仕上げ", "主材料と同じ", "この面の材料は未測。主材料のタイルと同じと置いた")
-        self.glass = material_plain("glass", (0.18, 0.24, 0.32, 1.0), roughness=0.08, metallic=0.6)
+        self.glass = material_glass("glass")
+        self.interior = material_plain("interior", (0.07, 0.07, 0.08, 1.0), roughness=0.9)     # ガラスの奥の室内の暗さ
         self.concrete = material_plain("concrete", (0.80, 0.79, 0.76, 1.0))
         self.dark = material_plain("dark_band", (0.22, 0.17, 0.13, 1.0), roughness=0.6)
         self.metal = material_plain("metal", (0.75, 0.76, 0.78, 1.0), roughness=0.4, metallic=0.6)
@@ -390,7 +412,7 @@ class Mats:
         self.leaf = material_plain("leaf", (0.20, 0.33, 0.14, 1.0), roughness=0.95)
         self.trunk = material_plain("trunk", (0.30, 0.22, 0.15, 1.0))
         self.coping = material_plain("coping", (0.25, 0.25, 0.26, 1.0), roughness=0.5)
-        self.curtain = material_plain("curtain", (0.42, 0.42, 0.40, 1.0), roughness=1.0)   # 奥は暗め（タイル色と紛れないように）
+        self.curtain = material_plain("curtain", (0.20, 0.20, 0.19, 1.0), roughness=1.0)   # 透けるガラスの奥の室内（暗め。11/4 午後 0.42→0.20）
         self.roof = material_plain("roof", (0.52, 0.51, 0.49, 1.0), roughness=0.95)
         self.stone = material_plain("stone", (0.36, 0.30, 0.30, 1.0), roughness=0.5)          # 御影石の段（赤みの灰）
         self.white = material_plain("white", (0.88, 0.88, 0.86, 1.0), roughness=0.8)          # 軒裏・段の裏
@@ -407,7 +429,8 @@ class Mats:
                 print(f"[warn] asset material {name}: {e}", file=sys.stderr)
         return {"glass": self.glass, "concrete": self.concrete, "dark": self.dark, "metal": self.metal,
                 "tile": self.main, "coping": self.coping, "brick": self.pavement, "stone": self.stone,
-                "white": self.white, "canopy": self.canopy}.get(name or "tile", self.main)
+                "white": self.white, "canopy": self.canopy, "leaf": self.leaf, "interior": self.interior,
+                "roof": self.roof, "curtain": self.curtain}.get(name or "tile", self.main)
 
 
 def _has_texture(mat) -> bool:
@@ -831,10 +854,14 @@ def build_building(b: dict, col) -> dict:
                 continue
             inset = val(gz.get("inset"), 0.3, f"{fid} ガラスの引っ込み", "未測。0.3 m と置いた")
             depth = val(gz.get("depth"), 6.0, f"{fid} ガラス部分の奥行き", "未測。6 m と置いた")
-            cutters.append(box(f"cut_glazing_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * (inset / 2 - 0.25) + UP * ((zb + zt) / 2 + 0.01), u, n, UP, a1 - a0 - 0.04, inset + 0.5, zt - zb + 0.02, col))
-            gb = box(f"glazing_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * (inset + depth / 2) + UP * ((zb + zt) / 2), u, n, UP, a1 - a0 - 0.05, depth, zt - zb - 0.05, col)
+            # 彫り込みはガラスの面より 0.1 m 奥まで。ガラスは薄い板、その奥に室内の暗い箱（透けるガラスの向こうが壁にならないように）
+            cutters.append(box(f"cut_glazing_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * ((inset + 0.1) / 2 - 0.25) + UP * ((zb + zt) / 2 + 0.01), u, n, UP, a1 - a0 - 0.04, inset + 0.6, zt - zb + 0.02, col))
+            gb = box(f"glazing_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * inset + UP * ((zb + zt) / 2), u, n, UP, a1 - a0 - 0.05, 0.02, zt - zb - 0.05, col)
             gb.data.materials.append(mats.glass)
             extras.append(gb)
+            ib = box(f"glazing_room_{fid}_{int(a0)}", p0 + u * ((a0 + a1) / 2) - n * (inset + 0.05 + (depth - 0.05) / 2) + UP * ((zb + zt) / 2), u, n, UP, a1 - a0 - 0.05, max(depth - 0.05, 0.05), zt - zb - 0.05, col)
+            ib.data.materials.append(mats.interior)
+            extras.append(ib)
             # ガラスの縦枠
             for k in range(1, int((a1 - a0) / 1.8)):
                 fr = box(f"glazing_frame_{fid}_{int(a0)}_{k}", p0 + u * (a0 + k * 1.8) - n * (inset + 0.03) + UP * ((zb + zt) / 2), u, n, UP, 0.06, 0.06, zt - zb, col)
@@ -853,18 +880,20 @@ def build_building(b: dict, col) -> dict:
                 bays_list = w.get("bays") or list(range(1, int(count) + 1))
                 base = recess_at((zb + zt) / 2)            # 帯の中なら帯の面から
                 gap = val(w.get("gap"), 0.15) if per > 1 else 0.1
+                zc = parts_geom.spandrel_cut_bottom(w.get("spandrel"), zb, val)   # 奥まりの中のパネルがあれば、その下端まで彫る
                 for i in bays_list:
                     for k in range(per):
                         s = margin + (i - 1) * pitch + pitch / 2 + (k - (per - 1) / 2) * sub
                         wsub = sub - gap
                         total = base + rec
-                        c = p0 + u * s - n * (total / 2 - 0.25) + UP * ((zb + zt) / 2)
-                        cutters.append(box(f"cut_win|{fid}|{i}|{k}", c, u, n, UP, wsub, total + 0.5, zt - zb, col))
+                        c = p0 + u * s - n * (total / 2 - 0.25) + UP * ((zc + zt) / 2)
+                        cutters.append(box(f"cut_win|{fid}|{i}|{k}", c, u, n, UP, wsub, total + 0.5, zt - zc, col))
                         g = box(f"glass_{fid}_{i}_{k}", p0 + u * s - n * (total - 0.02) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
                         g.data.materials.append(mats.glass)
                         extras.append(g)
                         # カーテン（ガラスの奥の明るい面。写真の窓はほぼ全部カーテンが見える）
-                        cur = box(f"curtain_{fid}_{i}_{k}", p0 + u * s - n * (total + 0.6) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.02, zt - zb, col)
+                        # 彫り込みの奥の面とガラスの間に置く（透けるガラスの向こうに見える室内）
+                        cur = box(f"curtain_{fid}_{i}_{k}", p0 + u * s - n * (total - 0.004) + UP * ((zb + zt) / 2), u, n, UP, wsub, 0.004, zt - zb, col)
                         cur.data.materials.append(mats.curtain)
                         extras.append(cur)
                         # サッシ：外枠（上下左右）と中央の縦桟
@@ -881,12 +910,12 @@ def build_building(b: dict, col) -> dict:
                             rl = box(f"rail_{fid}_{i}_{k}", p0 + u * s - n * (base + 0.08) + UP * (zb + 1.1), u, n, UP, wsub, 0.03, 0.03, col)
                             rl.data.materials.append(mats.metal)
                             extras.append(rl)
-                        sill = box(f"sill_{fid}_{i}_{k}", p0 + u * s - n * (base + rec / 2) + UP * (zb - 0.04), u, n, UP, wsub, rec, 0.08, col)
+                        sill = box(f"sill_{fid}_{i}_{k}", p0 + u * s - n * (base + rec / 2) + UP * (zc - 0.04), u, n, UP, wsub, rec, 0.08, col)
                         sill.data.materials.append(mats.concrete)
                         extras.append(sill)
                         # 窓の下の濃いパネル（windows[].spandrel）
                         if w.get("spandrel"):
-                            sp = parts_geom.spandrel(w["spandrel"], s, wsub, zb, base, val, f"{fid} 窓の下のパネル")
+                            sp = parts_geom.spandrel(w["spandrel"], s, wsub, zb, base, val, f"{fid} 窓の下のパネル", rec)
                             if sp:
                                 extras += emit_prims(f"spandrel_{fid}_{i}_{k}", [sp], (p0, u, n), col, mats, fmat)
 
@@ -1000,17 +1029,24 @@ def build_building(b: dict, col) -> dict:
             ob = prism(name, pt["polygon"], z - 0.1, z + 0.02, col)
             ob.data.materials.append(mats.pavement if pt.get("material", "brick") == "brick" else mats.ground)
             extras.append(ob)
-        elif t in parts_geom.FACE_PART_TYPES or t in parts_geom.WORLD_PART_TYPES:
+        elif t in parts_geom.ALL_PART_TYPES:
             pf = faces
-            if t in ("steps", "porch", "stair_switchback") and pt.get("face") in faces:
+            if t in ("steps", "porch", "stair_switchback", "planter") and pt.get("face") in faces:
                 f = faces[pt["face"]]          # 足元の高さは面の前の地形から（ground_offset は検算だけ）
                 pf = {**faces, pt["face"]: with_front_ground(f, terrain, *face_part_span(pt, f))}
+            elif t == "planter" and not pt.get("face") and "z0" not in pt and terrain.grid is not None:
+                pts = pt.get("polygon") or [[pt["x"], pt["y"]]]
+                zg = min(terrain.z(float(q[0]), float(q[1])) for q in pts)       # 単独の植え込みの足元は地形から
+                pt = {**pt, "z0": {"value": round(zg, 3), "status": "estimated", "method": "地形（5m 標高）"}}
             got = parts_geom.part_prims(pt, pf, val, f"parts[{i}:{t}]")
             if not got:
                 continue
             fr, cut, prims = got
             if fr == "world":
                 frame, fm = (Vector((0, 0, 0)), Vector((1, 0, 0)), Vector((0, 1, 0))), None
+            elif isinstance(fr, dict):                    # 渡り廊下などの局所の線
+                fp0, fu, fn, _L = face_frame(fr)
+                frame, fm = (fp0, fu, fn), None
             else:
                 fp0, fu, fn, _L = face_frame(faces[fr])
                 frame, fm = (fp0, fu, fn), mats.by_face.get(fr, mats.main)
