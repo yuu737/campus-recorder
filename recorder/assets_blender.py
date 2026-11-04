@@ -18,6 +18,13 @@ blender_build.py からの呼び方（1 行）:
         空と光を HDRI にする（ガラスの映り込み用）。
     build_asset_parts(b, col)
         棟 JSON の parts[type=asset] を全部置く。置いた物と警告の一覧を返す。
+
+Web 用の焼き込み（11/4。blender_build が glb 書き出しの直前に使う）
+    UV_NAME = "UV"        面の実寸（m）の UV。壁は (面に沿った水平距離, 高さ)、上向き・下向きの面は (x, y)
+    face_uv(p, n)         1 点の m 単位の UV（bpy 不要。テストあり）
+    needs_bake(types)     素材のノードの種類から「焼く必要があるか」（手続き的な模様があり、画像が無い）
+    brick_period(...)     タイル割りが継ぎ目なく繰り返す周期（m）。目地の周期の整数倍
+    ensure_meter_uv(ob)   m 単位の UV を持たない物に UV_NAME を作る
 """
 
 from __future__ import annotations
@@ -28,6 +35,60 @@ try:
     from . import assets  # recorder パッケージとして（pytest）
 except ImportError:  # Blender の中で recorder/ を sys.path に入れて import されたとき
     import assets  # type: ignore[no-redef]
+
+UV_NAME = "UV"
+BAKE_PX = 1024        # --fast では 512
+BAKE_PX_FAST = 512
+BAKE_TARGET_M = 3.0   # 焼く板の大きさの目安（m）。周期はこれに近い、模様の周期の整数倍
+# 画像を使わない手続き的な模様のノード（glb に出ない）。画像・環境の画像は除く
+_PROCEDURAL = {"ShaderNodeTexBrick", "ShaderNodeTexNoise", "ShaderNodeTexVoronoi", "ShaderNodeTexWave",
+               "ShaderNodeTexChecker", "ShaderNodeTexMagic", "ShaderNodeTexGradient", "ShaderNodeTexWhiteNoise",
+               "ShaderNodeTexGabor", "ShaderNodeTexMusgrave", "ShaderNodeTexSky"}
+_IMAGE = {"ShaderNodeTexImage", "ShaderNodeTexEnvironment"}
+
+
+def needs_bake(node_types) -> bool:
+    """素材のノードの種類の一覧から、焼き込みが要るか。画像テクスチャがある素材（CC0 の質感）は glb にそのまま入るので焼かない。"""
+    t = set(node_types)
+    return bool(t & _PROCEDURAL) and not (t & _IMAGE)
+
+
+def brick_period(unit_w: float, unit_h: float, joint: float, target_m: float = BAKE_TARGET_M) -> tuple[float, float]:
+    """タイル割り（1 段おきに半分ずらす）が継ぎ目なく繰り返す周期 (横, 縦) m。
+    横は (タイル幅＋目地) の整数倍、縦は 2 段分 (タイル高さ＋目地)×2 の整数倍で、target_m に一番近い物。"""
+    cw, ch = unit_w + joint, 2.0 * (unit_h + joint)
+    if cw <= 0 or ch <= 0:
+        raise ValueError("タイルの寸法が 0 以下")
+    return max(1, round(target_m / cw)) * cw, max(1, round(target_m / ch)) * ch
+
+
+def face_uv(p, n) -> tuple[float, float]:
+    """点 p（世界座標 m）の、面の法線 n に応じた m 単位の UV。
+    ほぼ水平な面（|n.z| > 0.7）は (x, y)。それ以外は (水平の接線方向の距離, z)。接線は法線を z 軸まわりに +90°。"""
+    nx, ny, nz = n
+    if abs(nz) > 0.7:
+        return float(p[0]), float(p[1])
+    L = math.hypot(nx, ny) or 1.0
+    tx, ty = -ny / L, nx / L
+    return float(p[0] * tx + p[1] * ty), float(p[2])
+
+
+def ensure_meter_uv(ob) -> bool:
+    """m 単位の UV（UV_NAME）が無ければ作る。作ったら True。既に UV_NAME があればそれを使う（作り直さない）。"""
+    me = ob.data
+    if me is None or UV_NAME in me.uv_layers:
+        return False
+    uv = me.uv_layers.new(name=UV_NAME)
+    mw = ob.matrix_world
+    nm = mw.to_3x3().inverted_safe().transposed()
+    verts = me.vertices
+    for pg in me.polygons:
+        n = (nm @ pg.normal).normalized()
+        for li in pg.loop_indices:
+            p = mw @ verts[me.loops[li].vertex_index].co
+            uv.data[li].uv = face_uv(p, n)
+    return True
+
 
 _TEMPLATES: dict[str, dict] = {}
 _MATERIALS: dict[str, object] = {}
@@ -142,7 +203,8 @@ def import_model(aid: str, at=(0.0, 0.0, 0.0), yaw: float = 0.0, size_m=None, co
 def material_from_texture(aid: str, scale: float = 1.0, cat: dict | None = None):
     """texture の画像（基本色・法線・粗さ）を Principled BSDF につないだ素材。名前は "asset:<id>"。
 
-    物体座標（1 単位＝1 m）を tile_m × scale で割り、箱投影で貼る（壁も床も実寸）。"""
+    m 単位の UV（UV_NAME。ensure_meter_uv）を tile_m × scale で割って貼る（壁も床も実寸）。
+    UV と割り算（Mapping）は glTF の UV と KHR_texture_transform にそのまま出るので、Web でも同じ貼り方になる。"""
     key = f"asset:{aid}" + ("" if scale == 1.0 else f"@{scale:g}")
     if key in _MATERIALS:
         return _MATERIALS[key]
@@ -161,18 +223,17 @@ def material_from_texture(aid: str, scale: float = 1.0, cat: dict | None = None)
     nt.nodes.clear()
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
-    coord = nt.nodes.new("ShaderNodeTexCoord")
+    coord = nt.nodes.new("ShaderNodeUVMap")
+    coord.uv_map = UV_NAME
     mapping = nt.nodes.new("ShaderNodeMapping")
-    mapping.inputs["Scale"].default_value = (1.0 / (tw * scale), 1.0 / (th * scale), 1.0 / (th * scale))
-    nt.links.new(coord.outputs["Object"], mapping.inputs["Vector"])
+    mapping.inputs["Scale"].default_value = (1.0 / (tw * scale), 1.0 / (th * scale), 1.0)
+    nt.links.new(coord.outputs["UV"], mapping.inputs["Vector"])
 
     def img(path, non_color: bool):
         n = nt.nodes.new("ShaderNodeTexImage")
         n.image = bpy.data.images.load(str(path), check_existing=True)
         if non_color:
             n.image.colorspace_settings.name = "Non-Color"
-        n.projection = "BOX"
-        n.projection_blend = 0.2
         nt.links.new(mapping.outputs["Vector"], n.inputs["Vector"])
         return n
 

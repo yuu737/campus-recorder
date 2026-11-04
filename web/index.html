@@ -27,6 +27,7 @@
   #knob { position:absolute; left:40px; top:40px; width:40px; height:40px; border-radius:50%; background:rgba(40,50,60,.65); }
   .touch #stick { display:block; }
   .touch #msg { bottom:160px; }
+  .noui .panel, .noui #stick { display:none !important; }
   #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); font-size:16px; z-index:5; }
 </style>
 <script type="importmap">
@@ -52,6 +53,21 @@
 <script type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
+
+// URL 引数（比較・調整用）
+//   cam=x,y,z,yaw,pitch,fov  視点を固定（x=東, y=北, z=標高 m、yaw は北から時計回り°、pitch は上向き +°、fov は縦の画角°）。
+//                            Blender の街路視点の値は out/<id>/model_report.json の web_cameras。歩くと固定は外れる
+//   size=1400x1000           描画の大きさを固定（Blender の描画と同じ縦横比で比べる）
+//   ui=0                     札や案内を隠す
+//   exp=1 env=0.8 sun=2.2    露出・環境光（HDRI）の強さ・太陽の強さ
+//   tm=neutral|aces          トーンマッピング（既定 neutral＝Blender の Khronos PBR Neutral と同じ式）
+const Q = new URLSearchParams(location.search);
+const qnum = (k, d) => { const v = parseFloat(Q.get(k)); return Number.isFinite(v) ? v : d; };
+const camQ = (Q.get("cam") || "").split(",").map(Number);
+const fixedCam = camQ.length === 6 && camQ.every(Number.isFinite) ? camQ : null;
+const sizeQ = (Q.get("size") || "").match(/^(\d+)x(\d+)$/);
+if (Q.get("ui") === "0") document.body.classList.add("noui");
 
 const EYE = 1.6, SPEED = 5.0;
 const touchDevice = matchMedia("(pointer:coarse)").matches || "ontouchstart" in window;
@@ -61,23 +77,61 @@ if (touchDevice) {
 }
 
 const canvas = document.getElementById("view");
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: !!fixedCam });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+// 光：空の HDRI から PMREM で環境光（起動時 1 回）＋ 太陽の平行光（影あり）。Blender の描画（太陽＋空＋影、PBR Neutral）に合わせる
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = Q.get("tm") === "aces" ? THREE.ACESFilmicToneMapping : THREE.NeutralToneMapping;
+renderer.toneMappingExposure = qnum("exp", 1.0);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xcfdde8);
-scene.fog = new THREE.Fog(0xcfdde8, 250, 900);
-const camera = new THREE.PerspectiveCamera(70, 1, 0.1, 2000);
+scene.background = new THREE.Color(0xcfdde8);       // HDRI が読めるまで（読めなければこのまま）
+scene.fog = new THREE.Fog(0xcfdde8, 300, 1200);
+scene.environmentIntensity = qnum("env", 0.8);
+const camera = new THREE.PerspectiveCamera(fixedCam ? fixedCam[5] : 70, 1, 0.1, 2000);
 camera.rotation.order = "YXZ";
-scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f78, 1.5));
-const sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(-200, 300, 150); scene.add(sun);
+// 太陽：blender_build の setup_scene と同じ向き（rotation_euler = (48°, 0, -35°)、光は南西の上から北東へ進む）。
+// 光の進む向き（データの x=東, y=北, z=上）= (0.426, 0.609, -0.669)。three.js では (x, z, -y)
+const SUN_DIR = new THREE.Vector3(0.426, -0.669, -0.609).normalize();
+const SUN_DIST = 300, SHADOW_R = 90;                  // 影は視点のまわり ±90 m（2048 px で約 9 cm／画素）
+const sun = new THREE.DirectionalLight(0xfff7e6, qnum("sun", 2.2));
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -SHADOW_R, right: SHADOW_R, top: SHADOW_R, bottom: -SHADOW_R, near: 1, far: SUN_DIST * 2 });
+sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.04;
+scene.add(sun); scene.add(sun.target);
+function sunFollow(p) {
+  sun.target.position.copy(p);
+  sun.position.copy(p).addScaledVector(SUN_DIR, -SUN_DIST);
+}
+async function loadEnv(env) {
+  if (!env) return;
+  try {
+    const hdr = await new RGBELoader().loadAsync(env.url);
+    hdr.mapping = THREE.EquirectangularReflectionMapping;
+    const pm = new THREE.PMREMGenerator(renderer);
+    scene.environment = pm.fromEquirectangular(hdr).texture;
+    pm.dispose();
+    scene.background = hdr;
+    scene.backgroundIntensity = scene.environmentIntensity;
+    scene.fog.color.set(0xc9ccd0);
+  } catch (e) { console.error("HDRI 読み込み失敗", e); }
+}
 
 function resize() {
-  const w = innerWidth, h = innerHeight;
+  let w = innerWidth, h = innerHeight;
+  if (sizeQ) {                                         // 決めた大きさ（画面に収まるよう縮める）
+    const W = +sizeQ[1], H = +sizeQ[2], k = Math.min(1, innerWidth / W, innerHeight / H);
+    w = Math.round(W * k); h = Math.round(H * k);
+    canvas.style.width = w + "px"; canvas.style.height = h + "px";
+  }
   renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
 }
 addEventListener("resize", resize); resize();
 
 const site = await (await fetch("data/site.json")).json();
+const envReady = loadEnv(site.env);
 const G = site.ground;
 // データは x=東, y=北, z=標高。three.js は (x, 標高, -北)。glb は最初から この向き。
 
@@ -98,14 +152,32 @@ function groundZ(x, n) {
     const a = j * G.nx + i, b = a + 1, c = a + G.nx, d = c + 1;
     idx.push(a, b, c, b, d, c);
   }
+  // 地面：芝・舗装の区分は根拠のあるデータが無いので塗り分けない。全体を CC0 の舗装の質感（UV は m ÷ 1 枚の実寸）
+  const gt = (site.ground_tex || {}).asphalt;
+  const tile = gt ? gt.tile_m[0] : 1;
+  const uv = new Float32Array(G.nx * G.ny * 2);
+  for (let j = 0; j < G.ny; j++) for (let i = 0; i < G.nx; i++) {
+    const k = (j * G.nx + i) * 2;
+    uv[k] = (G.x0 + i * G.step) / tile; uv[k + 1] = (G.y0 + j * G.step) / tile;
+  }
   const g = new THREE.BufferGeometry();
-  g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
-  scene.add(new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: 0x9fae8c })));
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeVertexNormals();
+  const gm = new THREE.MeshStandardMaterial({ color: 0x7f7d76, roughness: 0.95 });   // 質感が無い時は Blender の ground と同じ灰色
+  if (gt) {
+    const tl = new THREE.TextureLoader(), maxAniso = renderer.capabilities.getMaxAnisotropy();
+    const tex = (url, srgb) => { const t = tl.load(url); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = maxAniso;
+      if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t; };
+    gm.color.set(0xffffff); gm.map = tex(gt.color, true); gm.normalMap = tex(gt.normal, false);
+  }
+  const groundMesh = new THREE.Mesh(g, gm);
+  groundMesh.receiveShadow = true;                    // 地面は影を受けるだけ
+  scene.add(groundMesh);
 }
 
 const pickables = [];
-const matGray = new THREE.MeshLambertMaterial({ color: 0x9aa3ab });
-const matOn = new THREE.MeshLambertMaterial({ color: 0xe0702a });
+const matGray = new THREE.MeshStandardMaterial({ color: 0x9aa3ab, roughness: 0.9 });
+const matOn = new THREE.MeshStandardMaterial({ color: 0xe0702a, roughness: 0.9 });
 for (const b of site.boxes) {
   const shape = new THREE.Shape(b.footprint.map(([x, n]) => new THREE.Vector2(x, n)));
   const geo = new THREE.ExtrudeGeometry(shape, { depth: (b.height || 10) + 2, bevelEnabled: false });
@@ -113,6 +185,7 @@ for (const b of site.boxes) {
   const mesh = new THREE.Mesh(geo, b.grounded ? matOn : matGray);
   mesh.position.y = b.base - 2;
   mesh.userData.info = { id: b.id, name: b.name, grounded: b.grounded, measured: b.measured, estimated: b.estimated, unknown: b.unknown, height: b.height };
+  mesh.castShadow = mesh.receiveShadow = true;
   scene.add(mesh); pickables.push(mesh);
 }
 const loader = new GLTFLoader();
@@ -125,7 +198,7 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
     const info = { id, name: d.name, grounded: true, measured: c.measured || 0, estimated: c.estimated || 0, unknown: c.unknown || 0 };
     // glb の地形の面（terrain）は隠す。歩く画面の地面は site.json の格子（キャンパス全体）に統一する
     root.traverse((o) => { if (o.isMesh && /^terrain/.test(o.name)) o.visible = false; });
-    root.traverse((o) => { if (o.isMesh && o.visible) { o.userData.info = info; pickables.push(o); } });
+    root.traverse((o) => { if (o.isMesh && o.visible) { o.userData.info = info; pickables.push(o); o.castShadow = o.receiveShadow = true; } });
     scene.add(root);
     root.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(root);
@@ -148,6 +221,14 @@ function addJump(label, id, off) {
 const goHonbu = addJump("本部棟へ", "honbu", [-20, 37]);
 addJump("タワー75へ", "tower75", [10, 70]);
 (goHonbu || (() => place(0, 0, 0)))();
+let fixed = null;                                      // ?cam= の固定視点（three.js の座標）
+if (fixedCam) {
+  const [x, n, z, yawDeg, pitchDeg] = fixedCam;
+  fixed = new THREE.Vector3(x, z, -n);
+  player.set(x, 0, -n);
+  yaw = -yawDeg * Math.PI / 180;                      // three.js の yaw=0 は北（-z）、正で西へ回る
+  pitch = pitchDeg * Math.PI / 180;
+}
 
 const keys = {};
 addEventListener("keydown", (e) => { keys[e.code] = true; });
@@ -206,17 +287,21 @@ function frame() {
   let f = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0) - stick.y;
   let s = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0) + stick.x;
   const L = Math.hypot(f, s); if (L > 1) { f /= L; s /= L; }
+  if (fixed && L > 0) fixed = null;                    // 歩き出したら固定を外す
   const sp = SPEED * (keys.ShiftLeft ? 2.5 : 1) * dt;
   player.x += (-Math.sin(yaw) * f + Math.cos(yaw) * s) * sp;
   player.z += (-Math.cos(yaw) * f - Math.sin(yaw) * s) * sp;
-  camera.position.set(player.x, groundAt(player.x, player.z) + EYE + dbg.up, player.z);
+  if (fixed) camera.position.copy(fixed);
+  else camera.position.set(player.x, groundAt(player.x, player.z) + EYE + dbg.up, player.z);
   camera.rotation.set(pitch, yaw, 0);
+  sunFollow(camera.position);
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
+await envReady;
 document.getElementById("loading").style.display = "none";
 frame();
-window.__campus = { dbg, camera, player, place, pick, centers };   // 動作確認用
+window.__campus = { dbg, camera, player, place, pick, centers, renderer, scene, sun };   // 動作確認用
 </script>
 </body>
 </html>

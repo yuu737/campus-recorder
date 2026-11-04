@@ -718,9 +718,58 @@ def _has_evidence(node) -> bool:
     return False
 
 
+WEB_ENV_HDRI = "hdri_overcast"          # 空と環境光（CC0。data/assets/catalog.json）
+WEB_GROUND_TEX = ("asphalt", "paving_block")   # 地面の質感（CC0）。web/data/tex/ に小さくして写す
+WEB_TEX_PX = 512
+
+
+def copy_web_assets(data_dir: Path, cat: dict | None = None, store: Path | None = None, px: int = WEB_TEX_PX) -> dict:
+    """歩く画面用に CC0 のアセットを写す。HDRI（1k の .hdr）→ data/env/、地面の質感（色と法線を px 四方の jpg）→ data/tex/。
+    取得していない物は飛ばし、skipped に理由を書く（画面は 1 色に落ちて動く）。返り値は site.json の "env" と "ground_tex"。"""
+    import shutil
+    from . import assets
+
+    cat = cat if cat is not None else assets.load_catalog()
+    res: dict = {"env": None, "ground_tex": {}, "skipped": []}
+    try:
+        it = assets.item(cat, WEB_ENV_HDRI)
+        src = assets.resolve(WEB_ENV_HDRI, cat, store)
+        (data_dir / "env").mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, data_dir / "env" / src.name)
+        res["env"] = {"url": f"data/env/{src.name}", "asset": WEB_ENV_HDRI, "license": it["license"], "page": it.get("page")}
+    except (KeyError, ValueError, FileNotFoundError) as e:
+        res["skipped"].append(f"{WEB_ENV_HDRI}: {e}")
+    for aid in WEB_GROUND_TEX:
+        try:
+            it = assets.item(cat, aid)
+            maps = assets.texture_maps(aid, cat, store)
+            (data_dir / "tex").mkdir(parents=True, exist_ok=True)
+            rec = {"asset": aid, "tile_m": it["tile_m"], "license": it["license"], "page": it.get("page")}
+            for k in ("color", "normal"):
+                if k not in maps or not maps[k].exists():
+                    raise FileNotFoundError(f"{maps.get(k)} がありません")
+                _small_jpg(maps[k], data_dir / "tex" / f"{aid}_{k}.jpg", px)
+                rec[k] = f"data/tex/{aid}_{k}.jpg"
+            res["ground_tex"][aid] = rec
+        except (KeyError, ValueError, FileNotFoundError) as e:
+            res["skipped"].append(f"{aid}: {e}")
+    return res
+
+
+def _small_jpg(src: Path, dst: Path, px: int) -> None:
+    from PIL import Image
+
+    with Image.open(src) as im:
+        im = im.convert("RGB")
+        if max(im.size) > px:
+            im = im.resize((px, px), Image.LANCZOS)
+        im.save(dst, "JPEG", quality=85)
+
+
 def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 4, margin_m: float = 120.0) -> dict:
     """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を step_m 間隔に間引き）・
     設計済みの棟の一覧。glb がある設計済みの棟は箱を出さず、glb を web/data/models/ に写す。
+    CC0 の空（HDRI）と地面の質感も web/data/env/・web/data/tex/ に写す（copy_web_assets）。
     glb の軸：glTF は Y が上。Blender の (x,y,z) → glTF の (x, z, -y)。つまり glb は x=東, y=高さ, z=-北。
     glb の高さ(y)は ground_z 基準の相対値なので、置く時に ground_z を足す。"""
     import shutil
@@ -780,6 +829,7 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
             if z is not None:
                 Z[j, i] = z
     Z, nan_ratio = fill_gaps(Z)   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
+    wa = copy_web_assets(data_dir)
     out = {
         "schema": "campus-recorder/web/1",
         "campus": campus,
@@ -791,10 +841,14 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
         "models": models,
         "designed": designed,
         "sources": doc.get("sources"),
+        "env": wa["env"],
+        "ground_tex": wa["ground_tex"],
+        "ground_note": "地面の土地被覆（芝・舗装の区分）は根拠のあるデータが無いので塗り分けない。全体を舗装の質感にする",
     }
     (data_dir / "site.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     return {"path": data_dir / "site.json", "boxes": len(boxes), "models": list(models), "grid": (len(gx), len(gy)),
-            "nan_filled": nan_ratio}
+            "nan_filled": nan_ratio, "env": (wa["env"] or {}).get("url"), "tex": sorted(wa["ground_tex"]),
+            "skipped": wa["skipped"]}
 
 
 def _box(p: dict, sid: str, name: str | None, d: dict | None) -> dict:

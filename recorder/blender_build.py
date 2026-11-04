@@ -303,7 +303,9 @@ def hex_to_rgb(h: str):
 
 
 def material_brick(name: str, color: str, unit_w: float, unit_h: float, joint: float):
-    """JSON の寸法どおりのタイル割り。世界座標で 1 単位＝1 m。"""
+    """JSON の寸法どおりのタイル割り。m 単位の UV（assets_blender.UV_NAME：壁は面に沿った水平距離と高さ）で貼る。
+    11/4 まで物体座標の x, y で貼っていた（Brick は 2 次元なので、壁では縦縞になっていた）。
+    Web 用には同じ模様を周期 brick_period の板に焼いて glb に入れる（export_web_materials）。"""
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     nt = mat.node_tree
@@ -315,7 +317,8 @@ def material_brick(name: str, color: str, unit_w: float, unit_h: float, joint: f
     mix = nt.nodes.new("ShaderNodeMix")
     mix.data_type = "RGBA"
     mix.blend_type = "MULTIPLY"
-    coord = nt.nodes.new("ShaderNodeTexCoord")
+    coord = nt.nodes.new("ShaderNodeUVMap")
+    coord.uv_map = "UV"
     r, g, b = hex_to_rgb(color)
     brick.inputs["Color1"].default_value = (r, g, b, 1)
     brick.inputs["Color2"].default_value = (r * 0.92, g * 0.9, b * 0.88, 1)
@@ -330,8 +333,8 @@ def material_brick(name: str, color: str, unit_w: float, unit_h: float, joint: f
     brick.offset_frequency = 2
     noise.inputs["Scale"].default_value = 0.4
     noise.inputs["Detail"].default_value = 2.0
-    nt.links.new(coord.outputs["Object"], brick.inputs["Vector"])
-    nt.links.new(coord.outputs["Object"], noise.inputs["Vector"])
+    nt.links.new(coord.outputs["UV"], brick.inputs["Vector"])
+    nt.links.new(coord.outputs["UV"], noise.inputs["Vector"])
     nt.links.new(brick.outputs["Color"], mix.inputs[6])
     mix.inputs[7].default_value = (r * 0.85, g * 0.85, b * 0.85, 1)
     nt.links.new(noise.outputs["Fac"], mix.inputs[0])    # 明るさのムラだけ（色相は変えない）
@@ -339,6 +342,11 @@ def material_brick(name: str, color: str, unit_w: float, unit_h: float, joint: f
     nt.links.new(mix.outputs[2], bsdf.inputs["Base Color"])
     bsdf.inputs["Roughness"].default_value = 0.8
     nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+    try:
+        import assets_blender
+        mat["bake_period_m"] = list(assets_blender.brick_period(unit_w, unit_h, joint))
+    except Exception as e:  # noqa: BLE001
+        print(f"[warn] bake period {name}: {e}", file=sys.stderr)
     return mat
 
 
@@ -400,6 +408,171 @@ class Mats:
         return {"glass": self.glass, "concrete": self.concrete, "dark": self.dark, "metal": self.metal,
                 "tile": self.main, "coping": self.coping, "brick": self.pavement, "stone": self.stone,
                 "white": self.white, "canopy": self.canopy}.get(name or "tile", self.main)
+
+
+def _has_texture(mat) -> bool:
+    return bool(mat and mat.use_nodes and any(n.bl_idname.startswith("ShaderNodeTex") for n in mat.node_tree.nodes))
+
+
+def add_meter_uvs(col) -> int:
+    """模様か画像のある素材を使う物に m 単位の UV（"UV"）を作る。描画も Web も同じ UV で貼る。"""
+    import assets_blender
+    k = 0
+    for ob in col.all_objects:
+        if ob.type == "MESH" and any(_has_texture(m) for m in ob.data.materials):
+            k += assets_blender.ensure_meter_uv(ob)
+    return k
+
+
+# --- Web 用の焼き込み（glb には手続き的な模様が出ないので、画像にして入れる） -----------------------
+
+def _bake_plate(mat, pw: float, ph: float):
+    """周期 pw×ph m の板。UV "UV" は m（素材が読む）、UV "bake" は 0〜1（焼く先の画像）。"""
+    me = bpy.data.meshes.new("bake_plate")
+    me.from_pydata([(0, 0, 0), (pw, 0, 0), (pw, ph, 0), (0, ph, 0)], [], [(0, 1, 2, 3)])
+    uvm = me.uv_layers.new(name="UV")
+    uvb = me.uv_layers.new(name="bake")
+    for li, (a, c) in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))):
+        uvm.data[li].uv = (a * pw, c * ph)
+        uvb.data[li].uv = (a, c)
+    me.uv_layers.active = uvb
+    ob = bpy.data.objects.new("bake_plate", me)
+    bpy.context.scene.collection.objects.link(ob)
+    ob.data.materials.append(mat)
+    return ob
+
+
+def _principled(mat):
+    return next((n for n in mat.node_tree.nodes if n.bl_idname == "ShaderNodeBsdfPrincipled"), None)
+
+
+def _bake_one(mat, kind: str, img, pw: float, ph: float) -> None:
+    """kind = "color"（Base Color を Emission に付け替えて EMIT）か "normal"（接空間の NORMAL）。"""
+    tmp = mat.copy()
+    nt = tmp.node_tree
+    bsdf = _principled(tmp)
+    if kind == "color":
+        em = nt.nodes.new("ShaderNodeEmission")
+        src = bsdf.inputs["Base Color"]
+        if src.is_linked:
+            nt.links.new(src.links[0].from_socket, em.inputs["Color"])
+        else:
+            em.inputs["Color"].default_value = src.default_value
+        outn = next(n for n in nt.nodes if n.bl_idname == "ShaderNodeOutputMaterial")
+        nt.links.new(em.outputs["Emission"], outn.inputs["Surface"])
+    tn = nt.nodes.new("ShaderNodeTexImage")
+    tn.image = img
+    nt.nodes.active = tn
+    ob = _bake_plate(tmp, pw, ph)
+    for o in bpy.context.view_layer.objects:
+        o.select_set(False)
+    ob.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    if kind == "color":
+        bpy.ops.object.bake(type="EMIT", use_clear=True, margin=0)
+    else:
+        bpy.ops.object.bake(type="NORMAL", normal_space="TANGENT", use_clear=True, margin=0)
+    bpy.data.objects.remove(ob, do_unlink=True)
+    bpy.data.materials.remove(tmp)
+
+
+def export_web_materials(objs, tex_dir: Path, fast: bool) -> tuple[dict, list[dict]]:
+    """glb 用の素材の差し替え表 {元の素材: 書き出し用の素材} と、焼いた記録を返す。描画用の素材はそのまま。
+
+    焼く物：画像を持たない手続き的な素材（assets_blender.needs_bake）。周期（bake_period_m、無ければ 3 m 四方）の板に
+    基本色を EMIT で、法線（素材に凹凸がある時だけ）を NORMAL で焼き、tex_dir/<素材>_color.png・_normal.png に保存。
+    書き出し用の素材は UV "UV"（m）→ Mapping（1/周期。glTF の KHR_texture_transform）→ 画像 → Principled。
+    画像の素材（CC0 の質感）は UV "UV" で貼ってあるので、そのまま glb に入る（焼かない）。"""
+    import time
+    import assets_blender
+    sc = bpy.context.scene
+    used = []
+    for ob in objs:
+        for m in ob.data.materials:
+            if m and m not in used:
+                used.append(m)
+    todo = [m for m in used if m.use_nodes and assets_blender.needs_bake([n.bl_idname for n in m.node_tree.nodes])]
+    swap, log = {}, []
+    if not todo:
+        return swap, log
+    tex_dir.mkdir(parents=True, exist_ok=True)
+    px = assets_blender.BAKE_PX_FAST if fast else assets_blender.BAKE_PX
+    prev_engine = sc.render.engine
+    sc.render.engine = "CYCLES"
+    sc.cycles.samples = 4
+    sc.cycles.device = "CPU"
+    try:
+        for m in todo:
+            t0 = time.time()
+            pw, ph = (list(m["bake_period_m"]) if "bake_period_m" in m else [assets_blender.BAKE_TARGET_M] * 2)
+            bsdf = _principled(m)
+            if bsdf is None:
+                log.append({"material": m.name, "skipped": "Principled BSDF が無い"})
+                continue
+            safe = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in m.name)
+            files = {}
+            kinds = ["color"] + (["normal"] if bsdf.inputs["Normal"].is_linked else [])
+            for kind in kinds:
+                img = bpy.data.images.new(f"{safe}_{kind}", px, px, alpha=False)
+                if kind == "normal":
+                    img.colorspace_settings.name = "Non-Color"
+                _bake_one(m, kind, img, pw, ph)
+                path = tex_dir / f"{safe}_{kind}.png"
+                img.filepath_raw = str(path)
+                img.file_format = "PNG"
+                img.save()
+                files[kind] = img
+            wm = m.copy()
+            wm.name = f"{m.name}_web"
+            nt = wm.node_tree
+            nt.nodes.clear()
+            outn = nt.nodes.new("ShaderNodeOutputMaterial")
+            wb = nt.nodes.new("ShaderNodeBsdfPrincipled")
+            for k in ("Roughness", "Metallic"):
+                wb.inputs[k].default_value = bsdf.inputs[k].default_value
+            uvn = nt.nodes.new("ShaderNodeUVMap")
+            uvn.uv_map = assets_blender.UV_NAME
+            mp = nt.nodes.new("ShaderNodeMapping")
+            mp.inputs["Scale"].default_value = (1.0 / pw, 1.0 / ph, 1.0)
+            nt.links.new(uvn.outputs["UV"], mp.inputs["Vector"])
+            ci = nt.nodes.new("ShaderNodeTexImage")
+            ci.image = files["color"]
+            nt.links.new(mp.outputs["Vector"], ci.inputs["Vector"])
+            nt.links.new(ci.outputs["Color"], wb.inputs["Base Color"])
+            if "normal" in files:
+                ni = nt.nodes.new("ShaderNodeTexImage")
+                ni.image = files["normal"]
+                nmap = nt.nodes.new("ShaderNodeNormalMap")
+                nmap.uv_map = assets_blender.UV_NAME
+                nt.links.new(mp.outputs["Vector"], ni.inputs["Vector"])
+                nt.links.new(ni.outputs["Color"], nmap.inputs["Color"])
+                nt.links.new(nmap.outputs["Normal"], wb.inputs["Normal"])
+            nt.links.new(wb.outputs["BSDF"], outn.inputs["Surface"])
+            swap[m] = wm
+            log.append({"material": m.name, "period_m": [round(pw, 4), round(ph, 4)], "px": px,
+                        "files": [f"tex/{safe}_{k}.png" for k in files],
+                        "normal": "焼いた" if "normal" in files else "無し（描画用の素材に凹凸が無い）",
+                        "seconds": round(time.time() - t0, 2)})
+    finally:
+        sc.render.engine = prev_engine
+    return swap, log
+
+
+def street_camera_web(eye: Vector, target: Vector, lens: float, sensor_w: float, res: tuple[int, int], ground_z: float) -> dict:
+    """Blender の街路視点を、歩く画面の ?cam=x,y,z,yaw,pitch,fov（x=東, y=北, z=標高 m、yaw は北から時計回り°、
+    pitch は上向き +°、fov は縦の画角°）に直す。Blender の z は ground_z からの高さ。"""
+    d = target - eye
+    yaw = math.degrees(math.atan2(d.x, d.y)) % 360
+    pitch = math.degrees(math.atan2(d.z, math.hypot(d.x, d.y)))
+    w, h = res
+    half_long = sensor_w / 2                     # sensor_fit AUTO：長い辺に sensor_w
+    half_h = half_long * h / w if w >= h else half_long
+    vfov = math.degrees(2 * math.atan(half_h / lens))
+    z = eye.z + (ground_z or 0.0)
+    q = f"{eye.x:.2f},{eye.y:.2f},{z:.2f},{yaw:.2f},{pitch:.2f},{vfov:.2f}"
+    return {"eye": [round(eye.x, 3), round(eye.y, 3), round(z, 3)], "yaw_deg": round(yaw, 2), "pitch_deg": round(pitch, 2),
+            "vfov_deg": round(vfov, 2), "lens_mm": lens, "sensor_w_mm": sensor_w, "resolution": [w, h],
+            "aspect": round(w / h, 4), "query": f"cam={q}"}
 
 
 # --- 棟を組む -----------------------------------------------------------------------
@@ -870,6 +1043,7 @@ def build_building(b: dict, col) -> dict:
     grounds = terrain.build(poly, mats, col)
     for ob in footings:
         ob.parent = body
+    add_meter_uvs(col)
     return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body,
             "ground": grounds[0], "grounds": grounds, "footings": footings, "terrain": terrain}
 
@@ -992,6 +1166,7 @@ def main():
     persp_se = Vector((c.x, c.y, 0)) + Vector((0.55, -0.83, 0)) * (E * (1.6 if tall else 1.3)) + Vector((0, 0, E * (0.55 if tall else 0.7)))
 
     lens = 22 if tall else 32    # 高い棟は広角で（上が切れないように）
+    web_cams: dict = {}
     setup_scene(sketch=True, fast=fast)
     show_site(True, far_on=False)        # 線画の鳥瞰は足元の地形（20 m）だけ。背景の粗い地形は線がうるさい
     camera("persp", persp_sw, look, lens=lens)
@@ -1031,8 +1206,11 @@ def main():
     if faces:
         mid = (p0 + p1) / 2
         eye = mid + n0 * 38.0 + Vector((0, 0, 1.6))
-        camera("street", eye, Vector((mid.x, mid.y, H * 0.45)), lens=16)
+        cam = camera("street", eye, Vector((mid.x, mid.y, H * 0.45)), lens=16)
         render(out / "persp_street.png")
+        sc = bpy.context.scene
+        web_cams["street"] = street_camera_web(eye, Vector((mid.x, mid.y, H * 0.45)), 16, cam.data.sensor_width,
+                                               (sc.render.resolution_x, sc.render.resolution_y), val(b.get("ground_z"), 0.0))
     for f in b.get("faces", []):
         if not f.get("render_view") or not f.get("from"):
             continue
@@ -1080,14 +1258,30 @@ def main():
             cam.rotation_euler = tuple(bl["rotation_euler"])
             sc.camera = cam
             render(out / f"view_photo_{Path(pj['photo']).stem}.png")
+    import time
+    t_bake = time.time()
+    objs = [o for o in bpy.context.scene.objects if o.type == "MESH" and o.name != "terrain_far"]   # glb は足元の地形（20 m）まで
+    swap, bake_log = export_web_materials(objs, out / "tex", fast)
+    restore = []
+    for o in objs:
+        for i, slot in enumerate(o.material_slots):
+            if slot.material in swap:
+                restore.append((o, i, slot.material))
+                slot.material = swap[slot.material]
+    bake_s = time.time() - t_bake
     for o in bpy.context.scene.objects:
-        o.select_set(o.type == "MESH" and o.name != "terrain_far")     # glb は足元の地形（20 m）まで
+        o.select_set(o in objs)
     bpy.ops.export_scene.gltf(filepath=str(out / f"{b['id']}.glb"), use_selection=True, export_apply=True)
+    for o, i, m in restore:                               # 描画用の素材に戻してから .blend を保存
+        o.material_slots[i].material = m
     bpy.ops.wm.save_as_mainfile(filepath=str(out / f"{b['id']}.blend"))
 
     (out / "model_report.json").write_text(json.dumps({
         "building": b["id"], "source": str(src), "height_m": H, "assumed": ASSUMED,
         **info["terrain"].report(), "warnings": info["terrain"].warnings,
+        "web_bake": {"seconds": round(bake_s, 2), "materials": bake_log,
+                     "note": "glb に出ない手続き的な模様を、周期の板に焼いた画像（tex/）。描画用の素材はそのまま"},
+        "web_cameras": web_cams,
         "note": "assumed は模型を立てるために置いた仮の値。棟 JSON には書かない。撮影依頼の元にする",
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print("模型:", out, "仮の値", len(ASSUMED), "件")
