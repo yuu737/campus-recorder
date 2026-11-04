@@ -16,6 +16,12 @@
                                                  職員の確認を敷地 JSON に書く
   python -m recorder assets list                CC0 アセットの台帳（data/assets/catalog.json）と取得状況
   python -m recorder assets fetch [id ...]      台帳のアセットを assets/ に取る（差分だけ。sha256 を台帳に書く）
+  python -m recorder photos register <写真id> --building <json> --face <面> [--from-rectify F --compare C] [--pose P]
+  python -m recorder photos register --from-existing out/<棟> --building <json>
+                                                 写真を面に登録（data/photos/registry.json）。以後は recheck が自動で重ね直す
+  python -m recorder recheck <json> [--photos ...] [--fast] [--no-render]
+                                                 登録済みの写真を全部、今の棟 JSON に重ね直し、線ごとのずれを一覧（out/<棟>/recheck/<日時>/）
+  python -m recorder coverage <json>             面ごとの被覆図（登録済みの写真が覆う範囲、未撮影は灰色）と撮影依頼の候補
 """
 
 from __future__ import annotations
@@ -129,11 +135,35 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--out-dir", default=None, help="compare の JSON・PNG の出力先（省略時は out/<棟id>/compare/）")
     q.add_argument("--lines", default=None, help='判断役が読んだ線の位置（正面化画像の px）{"x_px": [...], "z_px": [...]}。あれば自動検出より優先')
 
+    q = psub.add_parser("register", help="写真を面に登録（面の平面→写真の射影と視点）。以後は recheck が自動で重ね直す")
+    q.add_argument("photo", nargs="?", default=None, help="索引の写真 id")
+    q.add_argument("--building", required=True)
+    q.add_argument("--face", default=None)
+    q.add_argument("--from-rectify", default=None, help="rectify が出した *_front.json")
+    q.add_argument("--compare", default=None, help="photos compare が出した *_compare.json（原点と縮尺）")
+    q.add_argument("--pose", default=None, help="photos pose が出した *_pose.json")
+    q.add_argument("--lines", default=None, help="compare に使った --lines の JSON（記録だけ）")
+    q.add_argument("--from-existing", default=None, help="out/<棟>：poses と compare から一括登録し、登録できない写真に理由を付ける")
+    q.add_argument("--registry", default=None, help="台帳の場所（既定 data/photos/registry.json）")
+
     q = psub.add_parser("roof", help="航空写真（国土地理院 z18）で屋上の縁・倒れ込み・設備を読む")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--out-dir", default=None, help="roof.json・roof_aerial.png の出力先（省略時は out/<棟id>/）")
     q.add_argument("--roof-edge", default=None, help='人が指した屋上の縁の点（写真の上の m）"x,y;x,y;..."。あれば自動より優先')
     q.add_argument("--units", default=None, help='人が指した設備（写真の上の中心 m と大きさ）"x,y,w,d;..."。あれば自動より優先')
+
+    p = sub.add_parser("recheck", help="登録済みの写真を全部、今の棟 JSON に重ね直してずれを一覧にする")
+    p.add_argument("file")
+    p.add_argument("--photos", nargs="*", default=None, help="写真 id（省略で全部）")
+    p.add_argument("--fast", action="store_true", help="描画を小さく")
+    p.add_argument("--no-render", action="store_true", help="線のずれだけ（Blender を使わない）")
+    p.add_argument("--blender", default=None)
+    p.add_argument("--registry", default=None)
+
+    p = sub.add_parser("coverage", help="面ごとの被覆図と撮影依頼の候補")
+    p.add_argument("file")
+    p.add_argument("--registry", default=None)
+    p.add_argument("--out", default=None)
 
     p = sub.add_parser("agent", help="係（.claude/agents）を API で動かす")
     asub = p.add_subparsers(dest="agent_cmd", required=True)
@@ -166,6 +196,35 @@ def main(argv: list[str] | None = None) -> int:
         return _photos(a)
     if a.cmd == "assets":
         return _assets(a)
+    if a.cmd == "recheck":
+        from . import recheck, registry
+
+        reg = registry.load_registry(Path(a.registry)) if a.registry else None
+        summ, out = recheck.recheck(Path(a.file), a.photos, a.fast, not a.no_render, registry=reg, blender=a.blender)
+        if not summ["photos"]:
+            print("登録済みの写真がありません（recorder photos register）")
+        for p in summ["photos"]:
+            wf, wp = p["worst_face"], p["worst_parts"]
+            print(f"{p['photo'][:34]:<34} {p['face']:<5} 面 {'合格' if p['pass_face'] else ('不合格' if p['pass_face'] is False else '—')}"
+                  f" 最大 {wf['diff_m']:+.2f} m（{wf['what']}）" if wf else f"{p['photo'][:34]:<34} {p['face']:<5} 面 —", end="")
+            print(f" / 部品 最大 {wp['diff_m']:+.2f} m（{wp['what']}）" if wp else " / 部品 —", f" 線 {p['n_found']}/{p['n_lines']}")
+        for w in summ["warnings"]:
+            print("注意:", w)
+        for r in summ.get("renders", []):
+            print(f"重ね: {r.get('overlay') or r.get('reason')}")
+        print(f"一覧: {out / 'summary.md'}")
+        return 0
+    if a.cmd == "coverage":
+        from . import coverage, registry
+
+        reg = registry.load_registry(Path(a.registry)) if a.registry else None
+        res, jp = coverage.coverage(Path(a.file), reg, Path(a.out) if a.out else None)
+        for f in res["faces"]:
+            print(f"{f['face']:<7} 被覆 {f['coverage_pct']:5.1f} %  写真 {len(f['photos'])} 枚" + ("  (unknown)" if f["unknown"] else ""))
+        for r in res["requests"]:
+            print("撮影依頼の候補:", r["text"])
+        print(f"JSON: {jp}")
+        return 0
 
     if a.cmd == "new":
         path = Path(a.dir) / f"{a.id}.json"
@@ -383,6 +442,37 @@ def _photos(a) -> int:
             d = f"{l.diff_m:+.2f} m" if l.diff_m is not None else "見つからず"
             print(f"  {mark}{l.axis} {l.what:<14} JSON {l.json_m:6.2f}  {d}")
         print(f"画像: {png}")
+        return 0
+    if a.photos_cmd == "register":
+        from . import registry
+
+        rp = Path(a.registry) if a.registry else registry.REGISTRY_PATH
+        reg = registry.load_registry(rp)
+        if a.from_existing:
+            done, nr = registry.register_existing(Path(a.from_existing), Path(a.building), reg)
+            registry.save_registry(reg, rp)
+            for e in done:
+                c = e["check"]
+                print(f"登録: {e['photo'][:40]:<40} {e['face']:<4} 被覆 {e['cover']['area_m2']} m²  検算 {c['pose_holdout_px']} px"
+                      f"  既存の pose との差 {c['existing_pose_vs_compare_px']} px{'（解き直した）' if e['source']['pose_resolved'] else ''}")
+            print(f"登録できない写真 {len(nr)} 枚:")
+            for n in nr:
+                print(f"  {n['photo'][:40]:<40} {n['face']:<12} {n['reason']}")
+            print(f"台帳: {rp}")
+            return 0
+        if not (a.photo and a.face):
+            print("写真 id と --face が要ります（一括は --from-existing）")
+            return 1
+        try:
+            e = registry.register(a.photo, Path(a.building), a.face, Path(a.from_rectify) if a.from_rectify else None,
+                                  Path(a.compare) if a.compare else None, Path(a.pose) if a.pose else None,
+                                  Path(a.lines) if a.lines else None)
+        except ValueError as ex:
+            print(f"登録できません: {ex}")
+            return 1
+        registry.upsert(reg, e)
+        registry.save_registry(reg, rp)
+        print(f"登録: {e['photo']} {e['face']}  被覆 {e['cover']['area_m2']} m²  検算 {e['check']}  台帳: {rp}")
         return 0
     if a.photos_cmd == "roof":
         from . import roof

@@ -5,6 +5,7 @@ out/
 data/photos/**
 !data/photos/.gitkeep
 !data/photos/index.json
+!data/photos/registry.json
 *.blend
 *.blend1
 *.glb
