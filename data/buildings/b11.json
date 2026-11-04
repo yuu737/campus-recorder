@@ -12,34 +12,73 @@
   "footprint": {
     "status": "estimated",
     "evidence": [
-      "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+      "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7",
+      "osm:way/163518234",
+      "out/b11/shiwake_公式図照合.md"
     ],
     "polygon": [
       [
-        47.83,
-        -65.52
+        52.47,
+        -80.69
       ],
       [
-        -2.46,
-        -38.66
+        52.96,
+        -76.83
       ],
       [
-        -9.44,
-        -51.73
+        -2.53,
+        -69.8
       ],
       [
-        30.9,
-        -73.27
+        -4.16,
+        -82.66
       ],
       [
-        42.79,
-        -74.96
+        -1.58,
+        -82.99
+      ],
+      [
+        -1.91,
+        -85.6
+      ],
+      [
+        0.43,
+        -85.9
+      ],
+      [
+        0.52,
+        -85.19
+      ],
+      [
+        2.0,
+        -85.38
+      ],
+      [
+        1.78,
+        -87.12
+      ],
+      [
+        50.41,
+        -93.04
+      ],
+      [
+        50.06,
+        -95.77
+      ],
+      [
+        60.25,
+        -97.06
+      ],
+      [
+        62.17,
+        -81.92
       ]
     ],
-    "method": "PLATEAU 名古屋市 2022 版（2021 年測量）の LOD0 の足元形状"
+    "method": "PLATEAU 名古屋市 2022 版（2021 年測量）の LOD0 の足元形状",
+    "note": "11 号館の 5 階の翼。足元を低い翼（PLATEAU bldg_b5e26f45）から差し替え。どの翼が 11 号館かの確認だけ公式ガイドブックで行った（形・寸法は図から取っていない）"
   },
   "ground_z": {
-    "value": 40.36,
+    "value": 38.03,
     "unit": "m",
     "tol": 1.0,
     "status": "estimated",
@@ -50,14 +89,16 @@
     "note": ""
   },
   "floor_count": {
-    "value": 1,
+    "value": 5,
     "unit": "階",
     "tol": null,
     "status": "estimated",
     "evidence": [
-      "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+      "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7",
+      "期間前の写真（削除）",
+      "期間前の写真（削除）"
     ],
-    "method": "PLATEAU の storeysAboveGround（目安。写真で数え直す）",
+    "method": "PLATEAU の storeysAboveGround 5 と、写真 A222・A226 で窓 5 段が一致（期間前の写真。屋上の塔屋は写らず不明）",
     "note": ""
   },
   "floor_pitch": {
@@ -70,12 +111,12 @@
     "note": ""
   },
   "parapet_top": {
-    "value": 12.0,
+    "value": 27.1,
     "unit": "m",
     "tol": 1.5,
     "status": "estimated",
     "evidence": [
-      "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+      "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
     ],
     "method": "PLATEAU の measuredHeight（塔屋を含む最高高さ。パラペットはこれより低いことが多い）",
     "note": ""
@@ -84,22 +125,22 @@
   "faces": [
     {
       "id": "f0",
-      "name": "北北東面 0（方位 28°、57.0 m）",
+      "name": "東面 0（方位 97°、3.9 m）",
       "from": [
-        47.83,
-        -65.52
+        52.47,
+        -80.69
       ],
       "to": [
-        -2.46,
-        -38.66
+        52.96,
+        -76.83
       ],
       "length": {
-        "value": 57.01,
+        "value": 3.89,
         "unit": "m",
         "tol": 1.0,
         "status": "estimated",
         "evidence": [
-          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
         ],
         "method": "足元の辺の長さ",
         "note": ""
@@ -114,22 +155,22 @@
     },
     {
       "id": "f1",
-      "name": "西北西面 1（方位 298°、14.8 m）",
+      "name": "北面 1（方位 7°、55.9 m）",
       "from": [
-        -2.46,
-        -38.66
+        52.96,
+        -76.83
       ],
       "to": [
-        -9.44,
-        -51.73
+        -2.53,
+        -69.8
       ],
       "length": {
-        "value": 14.82,
+        "value": 55.93,
         "unit": "m",
         "tol": 1.0,
         "status": "estimated",
         "evidence": [
-          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
         ],
         "method": "足元の辺の長さ",
         "note": ""
@@ -144,22 +185,22 @@
     },
     {
       "id": "f2",
-      "name": "南南西面 2（方位 208°、45.7 m）",
+      "name": "西面 2（方位 277°、13.0 m）",
       "from": [
-        -9.44,
-        -51.73
+        -2.53,
+        -69.8
       ],
       "to": [
-        30.9,
-        -73.27
+        -4.16,
+        -82.66
       ],
       "length": {
-        "value": 45.73,
+        "value": 12.96,
         "unit": "m",
         "tol": 1.0,
         "status": "estimated",
         "evidence": [
-          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
         ],
         "method": "足元の辺の長さ",
         "note": ""
@@ -174,22 +215,22 @@
     },
     {
       "id": "f3",
-      "name": "南面 3（方位 188°、12.0 m）",
+      "name": "南面 3（方位 187°、2.6 m）",
       "from": [
-        30.9,
-        -73.27
+        -4.16,
+        -82.66
       ],
       "to": [
-        42.79,
-        -74.96
+        -1.58,
+        -82.99
       ],
       "length": {
-        "value": 12.01,
+        "value": 2.6,
         "unit": "m",
         "tol": 1.0,
         "status": "estimated",
         "evidence": [
-          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
         ],
         "method": "足元の辺の長さ",
         "note": ""
@@ -204,22 +245,202 @@
     },
     {
       "id": "f4",
-      "name": "東南東面 4（方位 118°、10.7 m）",
+      "name": "西面 4（方位 277°、2.6 m）",
       "from": [
-        42.79,
-        -74.96
+        -1.58,
+        -82.99
       ],
       "to": [
-        47.83,
-        -65.52
+        -1.91,
+        -85.6
       ],
       "length": {
-        "value": 10.7,
+        "value": 2.63,
         "unit": "m",
         "tol": 1.0,
         "status": "estimated",
         "evidence": [
-          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76"
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f5",
+      "name": "南面 5（方位 187°、2.4 m）",
+      "from": [
+        -1.91,
+        -85.6
+      ],
+      "to": [
+        0.43,
+        -85.9
+      ],
+      "length": {
+        "value": 2.36,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f6",
+      "name": "南面 9（方位 187°、49.0 m）",
+      "from": [
+        1.78,
+        -87.12
+      ],
+      "to": [
+        50.41,
+        -93.04
+      ],
+      "length": {
+        "value": 48.99,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f7",
+      "name": "西面 10（方位 277°、2.8 m）",
+      "from": [
+        50.41,
+        -93.04
+      ],
+      "to": [
+        50.06,
+        -95.77
+      ],
+      "length": {
+        "value": 2.75,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f8",
+      "name": "南面 11（方位 187°、10.3 m）",
+      "from": [
+        50.06,
+        -95.77
+      ],
+      "to": [
+        60.25,
+        -97.06
+      ],
+      "length": {
+        "value": 10.27,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f9",
+      "name": "東面 12（方位 97°、15.3 m）",
+      "from": [
+        60.25,
+        -97.06
+      ],
+      "to": [
+        62.17,
+        -81.92
+      ],
+      "length": {
+        "value": 15.26,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "足元の辺の長さ",
+        "note": ""
+      },
+      "bays": {},
+      "windows": [],
+      "bands": [],
+      "openings": [],
+      "glazing": [],
+      "ledges": [],
+      "materials": []
+    },
+    {
+      "id": "f10",
+      "name": "北面 13（方位 7°、9.8 m）",
+      "from": [
+        62.17,
+        -81.92
+      ],
+      "to": [
+        52.47,
+        -80.69
+      ],
+      "length": {
+        "value": 9.78,
+        "unit": "m",
+        "tol": 1.0,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
         ],
         "method": "足元の辺の長さ",
         "note": ""
@@ -236,13 +457,6 @@
   "photos": [],
   "requests": [
     {
-      "face": "f0",
-      "what": "両端が入る1枚と、壁沿いの斜め1枚",
-      "where": "",
-      "why": "この面はまだ写真が無い（土台の灰色の箱）",
-      "status": "open"
-    },
-    {
       "face": "f1",
       "what": "両端が入る1枚と、壁沿いの斜め1枚",
       "where": "",
@@ -257,17 +471,38 @@
       "status": "open"
     },
     {
-      "face": "f3",
+      "face": "f6",
       "what": "両端が入る1枚と、壁沿いの斜め1枚",
       "where": "",
       "why": "この面はまだ写真が無い（土台の灰色の箱）",
       "status": "open"
     },
     {
-      "face": "f4",
+      "face": "f8",
       "what": "両端が入る1枚と、壁沿いの斜め1枚",
       "where": "",
       "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f9",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f10",
+      "what": "両端が入る1枚と、壁沿いの斜め1枚",
+      "where": "",
+      "why": "この面はまだ写真が無い（土台の灰色の箱）",
+      "status": "open"
+    },
+    {
+      "face": "f1",
+      "what": "低い翼（屋上緑地）の外壁を両端が入るように 1 枚ずつ、2 つの翼のつなぎ目も",
+      "where": "図書館側の上段通路と西の広場から",
+      "why": "低い翼は塊だけで面がまだ無い（依頼は低い翼に向き合う 5 階の翼の面に付けた）",
       "status": "open"
     }
   ],
@@ -275,8 +510,126 @@
     {
       "at": "",
       "by": "recorder new --from-site",
-      "what": "PLATEAU と 5m 標高から土台を起こした。写真はまだ無い"
+      "what": "PLATEAU と 5m 標高から土台を起こした（低い翼 bldg_b5e26f45）"
+    },
+    {
+      "at": "2026-11-04",
+      "by": "仕分け係（opus, claude-opus-5-5）scripts/design_b11.py",
+      "what": "公式ガイドブックで 11 号館が 2 つの翼の 1 棟と確認。足元を写真のある 5 階の翼（bldg_326ebceb）に差し替え、低い翼は塊 N"
     }
   ],
-  "site_id": "b11"
+  "site_id": "b11",
+  "blocks": [
+    {
+      "id": "S",
+      "name": "5 階の翼（写真の白い棟。足元と同じ）",
+      "polygon": [
+        [
+          52.47,
+          -80.69
+        ],
+        [
+          52.96,
+          -76.83
+        ],
+        [
+          -2.53,
+          -69.8
+        ],
+        [
+          -4.16,
+          -82.66
+        ],
+        [
+          -1.58,
+          -82.99
+        ],
+        [
+          -1.91,
+          -85.6
+        ],
+        [
+          0.43,
+          -85.9
+        ],
+        [
+          0.52,
+          -85.19
+        ],
+        [
+          2.0,
+          -85.38
+        ],
+        [
+          1.78,
+          -87.12
+        ],
+        [
+          50.41,
+          -93.04
+        ],
+        [
+          50.06,
+          -95.77
+        ],
+        [
+          60.25,
+          -97.06
+        ],
+        [
+          62.17,
+          -81.92
+        ]
+      ],
+      "top_z": {
+        "value": 27.1,
+        "unit": "m",
+        "tol": 1.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_326ebceb-417f-45a5-9633-710933a76db7"
+        ],
+        "method": "PLATEAU の measuredHeight（塔屋を含む最高高さ）",
+        "note": ""
+      }
+    },
+    {
+      "id": "N",
+      "name": "低い翼（屋上が緑地。写真はまだ無い）",
+      "polygon": [
+        [
+          42.79,
+          -74.96
+        ],
+        [
+          47.83,
+          -65.52
+        ],
+        [
+          -2.46,
+          -38.66
+        ],
+        [
+          -9.44,
+          -51.73
+        ],
+        [
+          30.9,
+          -73.27
+        ]
+      ],
+      "top_z": {
+        "value": 12.0,
+        "unit": "m",
+        "tol": 2.5,
+        "status": "estimated",
+        "evidence": [
+          "plateau:bldg_b5e26f45-552b-49bf-81ba-06e890b7ef76",
+          "osm:way/163518240"
+        ],
+        "method": "PLATEAU の measuredHeight",
+        "note": "PLATEAU の地面が 5 階の翼より 2.17 m 高い（坂）。棟の地面は 1 つなので tol を広げた。2 つの翼の間 0.6 m は PLATEAU のまま埋めていない"
+      }
+    }
+  ]
 }
