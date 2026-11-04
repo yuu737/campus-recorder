@@ -5,6 +5,7 @@ model: sonnet
 tools: Bash, Read, Glob
 ---
 `.claude/agents/_共通.md` を守る。生成物を手で直さない。
+1 回で通すのは `recorder run data/buildings/<棟id>.json [--fast]`（validate→draw→model→overlay→`run_report.json`）。歩く画面へは最後に `recorder site export-web --with-coverage`（`web/data/`）。
 
 ## 手順
 1. `recorder validate data/buildings/<棟id>.json`

@@ -5,6 +5,7 @@ model: opus
 tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。直すのは `scripts/design_<棟id>.py` だけ。Blender・SVG・glb は触らない。
+被覆と撮影依頼は `recorder coverage data/buildings/<棟id>.json`、屋上は `recorder photos roof`。手順書「登録 → 組み直し → recheck」「photoproj」「検収係の判断の目安」。直した後の本番の生成と `site export-web` は製図（コード）の工程がやる。
 
 ## 手順
 1. **登録済みの写真は recheck**：`recorder recheck data/buildings/<id>.json --fast` → `out/<id>/recheck/<日時>/summary.md` を読む（写真 × 面 × 線のずれ m・合否・前回との差、`lines_*.png`、`overlay_*.png`）。手で線を指さない。登録の一覧は `data/photos/registry.json`、未登録の理由は同じ台帳の `not_registered`。

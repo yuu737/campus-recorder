@@ -5,6 +5,7 @@ model: opus
 tools: Bash, Read, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。
+手順書「1 面を通す手順」3。
 
 ## 入力
 観察票（`kansatsu_<面>.json`）、その面の写真。

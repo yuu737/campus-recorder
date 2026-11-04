@@ -56,7 +56,7 @@ def test_pipeline_mocked(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     ran = {}
     import recorder.run as runner
-    monkeypatch.setattr(runner, "run", lambda p, out: ran.setdefault("p", str(p)) and {"ok": True, "out": str(out)})
+    monkeypatch.setattr(runner, "run", lambda p, out, **kw: ran.setdefault("p", str(p)) and {"ok": True, "out": str(out)})
     r = agents.run_pipeline("b1", steps=["satsuei", "shiwake", "seizu", "kenshu"], cwd=tmp_path, agents_dir=".claude/agents")
     assert [c[0] for c in calls] == ["satsuei", "shiwake", "kenshu"]
     assert calls[0][1:] == (12, 0.5) and calls[1][1:] == (30, 4.0)
@@ -72,3 +72,48 @@ def test_pipeline_stops_on_limit(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", lambda *a: {"text": "", "cost_usd": 4.0, "is_error": True, "stop": "error_max_budget_usd"})
     r = agents.run_pipeline("b1", steps=["shiwake", "kansatsu"], cwd=tmp_path, agents_dir=".claude/agents")
     assert r["stopped_early"] and len(r["steps"]) == 1 and r["steps"][0]["stopped_by_limit"]
+
+
+def test_tasks_cover_all_steps(tmp_path):
+    doc = agents.build_tasks("b1", "data/photos/20261104")
+    assert [s["step"] for s in doc["steps"]] == agents.PIPELINE_STEPS
+    assert agents.PIPELINE_STEPS[-3:] == ["kenshu", "seizu_final", "web"]
+    by = {s["step"]: s for s in doc["steps"]}
+    for s in doc["steps"]:
+        assert s["task"]
+        if s["kind"] == "agent":
+            assert s["system_files"][1] == f".claude/agents/{s['agent']}.md" and s["model_id"]
+    assert "--period during" in by["satsuei"]["task"]
+    assert "scripts/design_b1.py" in by["sekkei"]["task"] and "--from-site" in by["sekkei"]["task"]
+    for w in ("recheck", "photoproj", "register", "coverage", "検収 C"):
+        assert w in by["kenshu"]["task"]
+    assert by["web"]["command"] == "recorder site export-web --with-coverage" and by["seizu_final"]["agent"] == "seizu"
+    # API の pipeline と同じ文（状態に依らない）
+    r = agents.run_pipeline("b1", "data/photos/20261104", steps=["sekkei", "kenshu"], dry_run=True, cwd=tmp_path,
+                            agents_dir=".claude/agents")
+    assert [x["task"] for x in r["steps"]] == [by["sekkei"]["task"], by["kenshu"]["task"]]
+
+
+def test_write_tasks(tmp_path):
+    import shutil
+    shutil.copytree(".claude/agents", tmp_path / ".claude/agents")
+    w = agents.write_tasks("b1", None, cwd=tmp_path)
+    doc = json.loads((tmp_path / "out/b1/agent_tasks.json").read_text(encoding="utf-8"))
+    assert w["steps"] == len(doc["steps"]) == len(agents.PIPELINE_STEPS)
+    md = (tmp_path / "out/b1/agent_tasks.md").read_text(encoding="utf-8")
+    assert all(s["task"] in md for s in doc["steps"])
+
+
+def test_log_appends(tmp_path):
+    r1 = agents.log_step("b1", "shiwake", model="opus", seconds=60, tokens=1000, note="一回目", cwd=tmp_path)
+    (tmp_path / "out/b1/kansatsu_f0.json").write_text("{}", encoding="utf-8")
+    r2 = agents.log_step("b1", "kansatsu", seconds=30.5, tokens=500, cwd=tmp_path)
+    assert r1["record"] == r2["record"]
+    doc = json.loads(open(r2["record"], encoding="utf-8").read())
+    assert doc["runner"] == "subagent" and [s["step"] for s in doc["steps"]] == ["shiwake", "kansatsu"]
+    assert doc["steps"][0]["model"] == "claude-opus-5-5" and doc["steps"][1]["outputs"] == ["out/b1/kansatsu_f0.json"]
+    assert doc["seconds_total"] == 90.5 and doc["tokens_total"] == 1500
+    r3 = agents.log_step("b1", "web", model="code", cwd=tmp_path, new=True)
+    assert r3["record"] != r1["record"] and r3["steps"] == 1
+    with pytest.raises(agents.AgentError):
+        agents.log_step("b1", "nai", cwd=tmp_path)

@@ -5,6 +5,7 @@ model: opus
 tools: Bash, Read, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。道具：`recorder photos rectify`（複数面なら `--roi`）、`recorder photos measure`、物差し台帳 `data/rulers.json`。
+片端ずつしか入らない面は `recorder photos stitch`。手順書「1 面を通す手順」4〜6、「高さの物差しの検算」。
 
 ## 手順
 1. 面の両端が入る写真を正面化。傾きの検算が 1° 以内か見る。

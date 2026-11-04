@@ -5,6 +5,7 @@ model: opus
 tools: Bash, Read, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。見本は `out/tower75_観察票.json`（schema `tower75-observation/1`）。
+屋上は航空写真 `out/site/aerial_z18.png`。観察票の言葉は設計係が部品の語彙に直す（sekkei.md の対応表）ので、部品の名前で書けると早い。手順書「観察票 → 設計」。
 
 ## 入力
 仕分け済みの写真（面ごと）、足元の辺（`data/site/tempaku.json`）、あれば仮の棟 JSON。

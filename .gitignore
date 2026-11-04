@@ -31,3 +31,6 @@ web/data/
 
 # CC0 アセットの取得物（recorder assets fetch で再取得。一覧は data/assets/catalog.json）
 /assets/
+
+# 試走の退避（scripts/trial_reset.py）
+/trial/

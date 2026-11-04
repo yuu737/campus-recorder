@@ -5,6 +5,7 @@ model: haiku
 tools: Bash, Read, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。
+取り込みは `recorder photos import <folder> --period during`（期間前の写真は取り込まない・写さない）。写真が多い時は `out/<棟id>/satsuei_checks.json` に id ごとにまとめてよい。手順書「1 面を通す手順」1。
 
 ## 入力
 `recorder photos import <folder>` が出した索引の該当 id（`checks`・`candidates`）。棟 JSON の `requests`。

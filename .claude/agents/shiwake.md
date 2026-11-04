@@ -5,6 +5,7 @@ model: opus
 tools: Bash, Read, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。
+索引の `period`（before/during）と台帳由来の `building`（`source: "台帳(期間前)"`）は消さずに参考にする。面 id は `recorder new <id> --from-site` の土台と同じ足元の辺番号。索引へ書き戻すのは face / faces だけ。手順書「1 面を通す手順」2。
 
 ## 入力
 索引 `data/photos/index.json`（`candidates` は参考）、`data/site/tempaku.json` の足元（面 id は足元の辺番号 `f0`〜）、一覧画像（無ければ自分で縮小して並べる）。

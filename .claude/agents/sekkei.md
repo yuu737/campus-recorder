@@ -5,6 +5,7 @@ model: opus
 tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。形は `scripts/design_honbu.py` / `scripts/design_tower75.py` と `recorder/schema.py`。設計は `scripts/design_<棟id>.py` に書き、それが `data/buildings/<棟id>.json` を出す。JSON を手で直さない。
+新しい棟は `scripts/design_<棟id>.py` を新設し、土台は `recorder.skeleton.from_site_cli("<棟id>")`（＝`recorder new <棟id> --from-site`。見本 `scripts/design_b11.py`）。部品の語彙の一覧は手順書「生成器の教訓」、置く物（`type: asset`）は「アセットの使い方」、屋上は `recorder photos roof`。確かめは `recorder run data/buildings/<棟id>.json --fast`。
 
 ## 変換の決まり
 - 列数 → `bays.count`、柱型:窓の比 → `pier_width`、「無地」→ 窓なし、「各階に小窓 1 つ」→ `count=1`、「凹部の全面ガラス」→ `glazing`＋各階 `ledges`、「頂部のガラスの箱」→ `box`（material glass）

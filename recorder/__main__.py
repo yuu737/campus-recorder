@@ -23,6 +23,9 @@
                                                  登録済みの写真を全部、今の棟 JSON に重ね直し、線ごとのずれを一覧（out/<棟>/recheck/<日時>/）
   python -m recorder photoproj <json> [--photos id,...] [--fast] [--keep-renders]
                                                  登録済みの写真を模型に投影し、写真どうしの食い違い（縁の強さ）から形の悪い所を悪い順に（out/<棟>/photoproj/<日時>/）
+  python -m recorder agent tasks <id> [--photos F]  各工程の依頼文を out/<id>/agent_tasks.json・.md に（API とサブエージェントで同じ文）
+  python -m recorder agent log <id> --step S [--model opus --seconds N --tokens N --note ...]
+                                                 サブエージェントの試走の 1 工程を out/<id>/pipeline_<日時>.json に追記
   python -m recorder coverage <json>             面ごとの被覆図（登録済みの写真が覆う範囲、未撮影は灰色）と撮影依頼の候補
 """
 
@@ -188,9 +191,21 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--dry-run", action="store_true")
     q = asub.add_parser("pipeline")
     q.add_argument("building")
-    q.add_argument("--photos", default="data/photos")
+    q.add_argument("--photos", default=None, help="取り込む写真フォルダ（省略で索引の既存の写真）")
     q.add_argument("--steps", default=None, help="カンマ区切り（既定: 全工程）")
     q.add_argument("--dry-run", action="store_true")
+    q = asub.add_parser("tasks", help="各工程の依頼文（係の定義のパス＋task）を out/<棟>/agent_tasks.json・.md に出す")
+    q.add_argument("building")
+    q.add_argument("--photos", default=None, help="取り込む写真フォルダ（pipeline と同じ値を渡す）")
+    q = asub.add_parser("log", help="サブエージェントの試走の 1 工程を out/<棟>/pipeline_<日時>.json に追記")
+    q.add_argument("building")
+    q.add_argument("--step", required=True)
+    q.add_argument("--model", default="opus")
+    q.add_argument("--seconds", type=float, default=None)
+    q.add_argument("--tokens", type=int, default=None)
+    q.add_argument("--note", default="")
+    q.add_argument("--record", default=None, help="追記する記録（省略で runner subagent の最新）")
+    q.add_argument("--new", action="store_true", help="新しい記録を始める")
 
     p = sub.add_parser("assets", help="CC0 アセットの台帳と取得")
     xsub = p.add_subparsers(dest="assets_cmd", required=True)
@@ -357,6 +372,11 @@ def _agent(a) -> int:
             return 0
         if a.agent_cmd == "run":
             res = agents.run_agent(a.name, a.task, cwd=".", dry_run=a.dry_run)
+        elif a.agent_cmd == "tasks":
+            res = agents.write_tasks(a.building, a.photos)
+        elif a.agent_cmd == "log":
+            res = agents.log_step(a.building, a.step, model=a.model, seconds=a.seconds, tokens=a.tokens, note=a.note,
+                                  record=a.record, new=a.new)
         else:
             steps = a.steps.split(",") if a.steps else None
             res = agents.run_pipeline(a.building, a.photos, steps=steps, dry_run=a.dry_run)
