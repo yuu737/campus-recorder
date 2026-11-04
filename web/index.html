@@ -28,6 +28,11 @@
   .touch #stick { display:block; }
   .touch #msg { bottom:160px; }
   .noui .panel, .noui #stick { display:none !important; }
+  #evbtn { margin-top:6px; font:inherit; padding:4px 10px; border:1px solid #b9c3cc; border-radius:14px; background:#fff; color:var(--ink); }
+  #evbtn.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  #evlegend { display:none; margin-top:4px; }
+  .evmode #evlegend { display:block; }
+  .sw.hyp { background:repeating-linear-gradient(45deg, #f2c94c 0 3px, #8a6d12 3px 5px); }
   #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); font-size:16px; z-index:5; }
 </style>
 <script type="importmap">
@@ -45,6 +50,14 @@
   <span class="sw" style="background:var(--accent)"></span>根拠付き（measured / estimated）<br>
   <span class="sw" style="background:var(--gray)"></span>未測（PLATEAU の箱）
   <div id="jump"></div>
+  <button id="evbtn" type="button">根拠で見る</button>
+  <div id="evlegend">
+    <span class="sw" style="background:#3fa34d"></span>measured（写真で測った）<br>
+    <span class="sw" style="background:#e8912d"></span>estimated（推定。方法あり）<br>
+    <span class="sw hyp"></span>仮説（hypothesis）<br>
+    <span class="sw" style="background:#8f969c"></span>unknown（まだ分からない）<br>
+    <span class="k" style="color:#52606d">印の無い物（地面など）は元の色</span>
+  </div>
 </div>
 <div id="card" class="panel"></div>
 <div id="msg" class="panel">WASD とドラッグで歩く ／ 棟をクリックで札</div>
@@ -184,10 +197,50 @@ for (const b of site.boxes) {
   geo.rotateX(-Math.PI / 2);   // 形の y(北) → -z、押し出し → 上
   const mesh = new THREE.Mesh(geo, b.grounded ? matOn : matGray);
   mesh.position.y = b.base - 2;
-  mesh.userData.info = { id: b.id, name: b.name, grounded: b.grounded, measured: b.measured, estimated: b.estimated, unknown: b.unknown, height: b.height };
+  mesh.userData.info = { id: b.id, name: b.name, grounded: b.grounded, measured: b.measured, estimated: b.estimated, unknown: b.unknown, height: b.height,
+                         shape_ratio: b.shape_ratio, evidence_ratio: b.evidence_ratio };
   mesh.castShadow = mesh.receiveShadow = true;
   scene.add(mesh); pickables.push(mesh);
 }
+// 根拠の層：glb の extras（node / 素材の userData.evidence・face・part）で素材を差し替える。戻すと元の素材
+const evRoots = [];
+const EV_COLOR = { measured: 0x3fa34d, estimated: 0xe8912d, hypothesis: 0xf2c94c, unknown: 0x8f969c };
+function stripeMaterial(color) {                      // 仮説：黄の縞（UV に頼らず世界座標の斜めの縞）
+  const m = new THREE.MeshStandardMaterial({ color, roughness: 0.9 });
+  m.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vEvW;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvEvW = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vEvW;")
+      .replace("#include <color_fragment>", "#include <color_fragment>\nif (fract((vEvW.x + vEvW.y + vEvW.z) * 0.6) < 0.4) diffuseColor.rgb *= 0.45;");
+  };
+  return m;
+}
+const EV_MAT = Object.fromEntries(Object.entries(EV_COLOR).map(([k, c]) =>
+  [k, k === "hypothesis" ? stripeMaterial(c) : new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 })]));
+function evidenceOf(o, mt) {                          // 素材の印（面ごとの壁）＞ 物とその親の印
+  if (mt && mt.userData && mt.userData.evidence) return mt.userData.evidence;
+  for (let p = o; p; p = p.parent) if (p.userData && p.userData.evidence) return p.userData.evidence;
+  return null;
+}
+let evOn = false;
+function setEvidence(on) {
+  evOn = on;
+  document.body.classList.toggle("evmode", on);
+  const btn = document.getElementById("evbtn");
+  btn.classList.toggle("on", on); btn.textContent = on ? "元の見た目に戻す" : "根拠で見る";
+  for (const root of evRoots) root.traverse((o) => {
+    if (!o.isMesh) return;
+    if (on) {
+      if (!o.userData.origMat) o.userData.origMat = o.material;
+      const src = o.userData.origMat, arr = Array.isArray(src);
+      const swapped = [].concat(src).map((mt) => { const e = evidenceOf(o, mt); return e && EV_MAT[e] ? EV_MAT[e] : mt; });
+      o.material = arr ? swapped : swapped[0];
+    } else if (o.userData.origMat) {
+      o.material = o.userData.origMat;
+    }
+  });
+}
+document.getElementById("evbtn").addEventListener("click", () => setEvidence(!evOn));
 const loader = new GLTFLoader();
 const centers = {};
 await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res) => {
@@ -195,7 +248,8 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
     const root = gltf.scene;
     root.position.y = m.ground_z;     // glb の高さは ground_z 基準
     const d = site.designed[id] || {}, c = d.counts || {};
-    const info = { id, name: d.name, grounded: true, measured: c.measured || 0, estimated: c.estimated || 0, unknown: c.unknown || 0 };
+    const info = { id, name: d.name, grounded: true, measured: c.measured || 0, estimated: c.estimated || 0, unknown: c.unknown || 0,
+                   shape_ratio: d.shape_ratio, evidence_ratio: d.evidence_ratio };
     // glb の地形の面（terrain）は隠す。歩く画面の地面は site.json の格子（キャンパス全体）に統一する
     root.traverse((o) => { if (o.isMesh && /^terrain/.test(o.name)) o.visible = false; });
     root.traverse((o) => { if (o.isMesh && o.visible) { o.userData.info = info; pickables.push(o); o.castShadow = o.receiveShadow = true; } });
@@ -213,6 +267,7 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
       }
     });
     scene.add(root);
+    evRoots.push(root);
     root.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(root);
     const ct = bb.getCenter(new THREE.Vector3()); ct.y = bb.min.y; centers[id] = ct;
@@ -286,9 +341,15 @@ function pick(cx, cy) {
   const hit = ray.intersectObjects(pickables, false)[0];
   if (!hit) { card.style.display = "none"; return; }
   const i = hit.object.userData.info;
+  const pct = (v) => (v == null ? "—" : Math.round(v * 100) + "%");
+  const ratios = i.shape_ratio != null ? `<div>形 <b>${pct(i.shape_ratio)}</b> ／ 根拠 <b>${pct(i.evidence_ratio)}</b></div>` : "";
+  const hm = hit.object, hmt = Array.isArray(hm.material) ? null : hm.material;
+  const where = (hmt && hmt.userData.face) || (() => { for (let p = hm; p; p = p.parent) if (p.userData.face || p.userData.part) return p.userData.face || p.userData.part; return null; })();
+  const ev = evidenceOf(hm, (hm.userData.origMat && !Array.isArray(hm.userData.origMat)) ? hm.userData.origMat : hmt);
+  const here = ev ? `<div class="k">ここ（${esc(where || "本体")}）：${esc(ev)}</div>` : "";
   card.innerHTML = `<h3>${esc(i.name || "（名前未確認）")}</h3><div class="k">id：${esc(i.id)}</div>` +
     (i.grounded
-      ? `<div>measured ${i.measured} ／ estimated ${i.estimated} ／ <b>unknown ${i.unknown}</b></div>`
+      ? ratios + `<div>measured ${i.measured} ／ estimated ${i.estimated} ／ <b>unknown ${i.unknown}</b></div>` + here
       : `<div>未測（PLATEAU の箱。高さ ${i.height ?? "不明"} m は参考値）</div>`);
   card.style.display = "block";
 }
@@ -314,7 +375,7 @@ function frame() {
 await envReady;
 document.getElementById("loading").style.display = "none";
 frame();
-window.__campus = { dbg, camera, player, place, pick, centers, renderer, scene, sun };   // 動作確認用
+window.__campus = { dbg, camera, player, place, pick, centers, renderer, scene, sun, setEvidence };   // 動作確認用
 </script>
 </body>
 </html>

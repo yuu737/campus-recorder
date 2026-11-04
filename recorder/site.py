@@ -774,6 +774,8 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
     glb の高さ(y)は ground_z 基準の相対値なので、置く時に ground_z を足す。"""
     import shutil
 
+    from recorder import schema
+
     web_dir = web_dir or WEB_DIR
     data_dir = web_dir / "data"
     (data_dir / "models").mkdir(parents=True, exist_ok=True)
@@ -788,9 +790,13 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
             continue
         acc: dict = {}
         _count_status(b, acc)
+        ev = schema.evidence_summary(b)        # 根拠の層：形がある割合・根拠がある割合と、面・部品ごとの状態
         designed[b.get("site_id") or b["id"]] = {"id": b["id"], "name": b["name"], "counts": acc,
                                                   "evidenced": _has_evidence(b["faces"]),
-                                                  "ground_z": b["ground_z"]["value"]}
+                                                  "ground_z": b["ground_z"]["value"],
+                                                  "shape_ratio": ev["shape_ratio"], "evidence_ratio": ev["evidence_ratio"],
+                                                  "faces": {fid: d["state"] for fid, d in ev["faces"].items()},
+                                                  "parts": ev["parts"], "body": ev["body"]}
     models = {}
     boxes = []
     used_parts: set[str] = set()
@@ -857,4 +863,5 @@ def _box(p: dict, sid: str, name: str | None, d: dict | None) -> dict:
     return {"id": (d or {}).get("id", sid), "name": (d or {}).get("name") or name,
             "footprint": p["footprint"], "base": p["base_z"], "height": p["height_m"],
             "grounded": grounded, "evidenced": grounded,
-            "measured": c.get("measured", 0), "estimated": c.get("estimated", 0), "unknown": c.get("unknown", 0)}
+            "measured": c.get("measured", 0), "estimated": c.get("estimated", 0), "unknown": c.get("unknown", 0),
+            "shape_ratio": (d or {}).get("shape_ratio"), "evidence_ratio": (d or {}).get("evidence_ratio")}

@@ -18,3 +18,10 @@
 - 外壁のタイルは Blender のノードの模様なので、glb 書き出しの直前に周期の板へ焼いた画像（`out/<id>/tex/`）を glb に入れる。地面は CC0 の舗装の質感（`web/data/tex/`）。芝・舗装の区分は根拠が無いので塗り分けない
 - 比較用：`?cam=x,y,z,yaw,pitch,fov&size=1400x1000&ui=0`（x=東, y=北, z=標高 m、yaw は北から時計回り°、縦の画角°）。値は `out/<id>/model_report.json` の `web_cameras`
 - 調整用：`exp=`（露出）、`env=`（環境光の強さ、既定 0.8）、`sun=`（太陽、既定 2.2＝Blender と同じ）
+
+## 根拠で見る（11/4）
+- 左上の「根拠で見る」で、模型を根拠の状態の色に塗り替える：緑＝measured、橙＝estimated、黄の縞＝仮説（hypothesis）、灰＝unknown。もう一度押すと元の見た目
+- 色は glb の extras（`model build` が node と素材に付けた `evidence`・`face`・`part`）から。印の無い物（地面など）は元の色のまま
+- unknown の面は普段の見た目でも灰色の壁（窓の無いタイル壁にすると「窓が無い」と決めつけて見えるため）
+- 棟の札に「形 ○% ／ 根拠 ○%」（形がある割合＝unknown でない面・部品の割合、根拠がある割合＝measured の値の割合。site.json の designed）。根拠で見る時は、触った所の面と状態も出す
+- 古い glb（根拠の層より前に作った物）は印が無いので色が変わらない。`model build` で作り直す

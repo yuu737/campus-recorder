@@ -552,3 +552,117 @@ def new_building(bid: str, name: str, campus: str = "meijo-tempaku") -> dict:
         "requests": [],
         "history": [],
     }
+
+
+# --- 根拠の層（歩く画面の「根拠で見る」と棟の札の割合） --------------------------------
+# 面・部品ごとに「その形を決めている値」の status を集めて、状態を 1 つに決める。
+#   unknown     形を決める芯の値が無い（面：柱の数も窓・ガラス・開口・帯も分からない／部品：値が 1 つも分からない）
+#   hypothesis  分かっている値のどれかに "basis": "hypothesis"（仮説として置いた値）がある
+#   measured    集めた値が全部 measured（unknown の値が 1 つでも混じれば measured ではない）
+#   estimated   それ以外（measured と estimated の混在、細部に unknown が残る）
+# 面の値：bays.count・pitch・pier_width、窓・帯・開口・ガラス・水切りの値、floor_pitch、面の上端（top_z か塊の top_z か parapet_top）。
+#        length（足元の辺）と仕上げ（materials）は形の根拠に数えない。
+EVIDENCE_STATES = ("measured", "estimated", "hypothesis", "unknown")
+_FACE_DETAIL_KEYS = ("windows", "bands", "openings", "glazing", "ledges")
+_SUMMARY_SKIP = {"photos", "requests", "history", "crs"}
+
+
+def is_value(d) -> bool:
+    """{"value", "status"} の測定値か。"""
+    return isinstance(d, dict) and "value" in d and d.get("status") in STATUSES
+
+
+def iter_values(obj, skip: set | frozenset = frozenset()):
+    """obj の中の測定値（dict）を全部返す。座標（COORD_KEYS）と skip の鍵の下は見ない。"""
+    if is_value(obj):
+        yield obj
+        return
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in COORD_KEYS or k in skip:
+                continue
+            yield from iter_values(v, skip)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from iter_values(v, skip)
+
+
+def _known(m: dict) -> bool:
+    return m.get("value") is not None and m.get("status") != "unknown"
+
+
+def combine_state(values: list[dict], core_known: bool = True) -> str:
+    """値の status から状態を 1 つに決める（規則は上の表）。"""
+    known = [m for m in values if _known(m)]
+    if not core_known or not known:
+        return "unknown"
+    if any(m.get("basis") == "hypothesis" for m in known):
+        return "hypothesis"
+    if all(m.get("status") == "measured" for m in values):
+        return "measured"
+    return "estimated"
+
+
+def _face_top_values(b: dict, f: dict) -> list[dict]:
+    if is_value(f.get("top_z")):
+        return [f["top_z"]]
+    ends = [f.get("from"), f.get("to")]
+    out = []
+    for blk in b.get("blocks") or []:
+        pts = blk.get("polygon") or []
+        hit = all(e and any(abs(p[0] - e[0]) < 0.5 and abs(p[1] - e[1]) < 0.5 for p in pts) for e in ends)
+        if hit and is_value(blk.get("top_z")):
+            out.append(blk["top_z"])
+    if out:
+        return out
+    return [b["parapet_top"]] if is_value(b.get("parapet_top")) else []
+
+
+def face_state(b: dict, f: dict) -> dict:
+    """面の状態。{"state", "values": 数, "measured": 数, "not_measured": [どこが measured でないか]}。"""
+    bays = f.get("bays") or {}
+    named: list[tuple[str, dict]] = [(f"bays.{k}", bays[k]) for k in ("count", "pitch", "pier_width") if is_value(bays.get(k))]
+    detail = []
+    for k in _FACE_DETAIL_KEYS:
+        for i, it in enumerate(f.get(k) or []):
+            for j, m in enumerate(iter_values(it)):
+                detail.append((f"{k}[{i}]#{j}", m))
+    core_known = (is_value(bays.get("count")) and _known(bays["count"])) or any(_known(m) for _, m in detail)
+    named += detail
+    if core_known:
+        if is_value(b.get("floor_pitch")):
+            named.append(("floor_pitch", b["floor_pitch"]))
+        named += [("top_z", m) for m in _face_top_values(b, f)]
+    vals = [m for _, m in named]
+    st = combine_state(vals, core_known)
+    return {"state": st, "values": len(vals), "measured": sum(m.get("status") == "measured" for m in vals),
+            "not_measured": [w for w, m in named if m.get("status") != "measured"]}
+
+
+def part_name(pt: dict, i: int) -> str:
+    """部品の名前（blender_build の物の名前の頭と同じ <type>_<番号>）。"""
+    return f"{pt.get('type')}_{i}"
+
+
+def part_state(pt: dict) -> str:
+    vals = list(iter_values(pt))
+    return combine_state(vals, any(_known(m) for m in vals))
+
+
+def evidence_summary(b: dict) -> dict:
+    """棟の根拠の層。faces（面 id → 状態の詳細）・parts（部品名 → 状態）・body（塊の高さ）と 2 つの割合：
+        shape_ratio     形がある割合 = unknown でない面・部品の数 ÷ 面・部品の数
+        evidence_ratio  根拠がある割合 = measured の値の数 ÷ 棟 JSON の全部の測定値の数（photos・requests・history は除く）"""
+    faces = {f["id"]: face_state(b, f) for f in b.get("faces") or [] if f.get("from") and f.get("to")}
+    parts = {part_name(pt, i): part_state(pt) for i, pt in enumerate(b.get("parts") or [])}
+    tops = [blk["top_z"] for blk in b.get("blocks") or [] if is_value(blk.get("top_z"))]
+    if not tops and is_value(b.get("parapet_top")):
+        tops = [b["parapet_top"]]
+    states = [v["state"] for v in faces.values()] + list(parts.values())
+    allv = list(iter_values(b, _SUMMARY_SKIP))
+    nm = sum(m.get("status") == "measured" for m in allv)
+    count = {s: states.count(s) for s in EVIDENCE_STATES}
+    return {"faces": faces, "parts": parts, "body": combine_state(tops),
+            "shape_ratio": round((len(states) - count["unknown"]) / len(states), 3) if states else 0.0,
+            "evidence_ratio": round(nm / len(allv), 3) if allv else 0.0,
+            "state_counts": count, "values": len(allv), "measured_values": nm}

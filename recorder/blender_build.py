@@ -66,6 +66,7 @@ import numpy as np  # noqa: E402  （Blender 同梱）
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 from recorder import site  # noqa: E402  （地形：5m 標高の格子。numpy だけで動く関数を使う）
+from recorder import schema  # noqa: E402  （根拠の層：面・部品の状態。glb の extras に出す）
 
 ASSUMED: list[dict] = []
 UNKNOWN_COLOR = (0.62, 0.62, 0.62, 1.0)
@@ -382,7 +383,7 @@ def material_glass(name: str = "glass"):
 
 
 class Mats:
-    def __init__(self, b: dict):
+    def __init__(self, b: dict, gray_faces=()):
         self.by_face: dict[str, bpy.types.Material] = {}
         cache: dict[str, bpy.types.Material] = {}
         for f in b.get("faces", []):
@@ -400,7 +401,7 @@ class Mats:
         self.main = next(iter(self.by_face.values()), self.unknown)
         if self.main is not self.unknown:
             for f in b.get("faces", []):
-                if f["id"] not in self.by_face:
+                if f["id"] not in self.by_face and f["id"] not in gray_faces:
                     assume(f"{f['id']} の仕上げ", "主材料と同じ", "この面の材料は未測。主材料のタイルと同じと置いた")
         self.glass = material_glass("glass")
         self.interior = material_plain("interior", (0.07, 0.07, 0.08, 1.0), roughness=0.9)     # ガラスの奥の室内の暗さ
@@ -729,13 +730,85 @@ def with_front_ground(f: dict, terrain: "Terrain", a0: float, a1: float) -> dict
     return {**f, "ground_offset": round(terrain.front(f, a0, a1), 3)}
 
 
+def tag(ob, evidence: str, face: str | None = None, part: str | None = None) -> None:
+    """根拠の層の印（custom property。glb では node の extras）。evidence は schema.EVIDENCE_STATES のどれか。"""
+    ob["evidence"] = evidence
+    if face:
+        ob["face"] = face
+    if part:
+        ob["part"] = part
+
+
+FACE_POLY_DEPTH_M = 3.0      # 面の線からこの奥行きまでの壁（窓の彫り込みの内側を含む）をその面の物と見る
+
+
+def face_polygons(body, faces: dict) -> dict:
+    """本体の縦の面（|法線 z| < 0.7）を、一番近い面の線（from→to）に振り分ける。{面 id: [polygon の番号]}。
+    線の外向きに 0.3 m、奥に FACE_POLY_DEPTH_M まで、線の長さの範囲（±0.3 m）にある物だけ。どの線にも入らない物は振り分けない。"""
+    lines = {fid: face_frame(f) for fid, f in faces.items()}
+    out: dict = {}
+    for pg in body.data.polygons:
+        if abs(pg.normal.z) >= 0.7:
+            continue
+        c = body.matrix_world @ pg.center
+        best = None
+        for fid, (p0, u, n, L) in lines.items():
+            d = c - p0
+            t, h = d.dot(u), d.dot(n)
+            if -0.3 <= t <= L + 0.3 and -FACE_POLY_DEPTH_M <= h <= 0.3 and (best is None or abs(h) < best[0]):
+                best = (abs(h), fid)
+        if best:
+            out.setdefault(best[1], []).append(pg.index)
+    return out
+
+
+def tag_face_materials(body, face_polys: dict, states: dict) -> tuple:
+    """書き出しの間だけ、面ごとに素材を複製して印（face・evidence）を付け、その面の polygon に当てる。
+    glTF では素材の extras に出る（three.js の material.userData）。戻すための (元の番号, 元の数, 複製) を返す。"""
+    me = body.data
+    orig = [pg.material_index for pg in me.polygons]
+    n0 = len(me.materials)
+    made: dict = {}
+    for fid, idxs in face_polys.items():
+        for pi in idxs:
+            src_i = me.polygons[pi].material_index
+            key = (fid, src_i)
+            if key not in made:
+                m = me.materials[src_i].copy()
+                m.name = f"{me.materials[src_i].name}|{fid}"
+                m["face"] = fid
+                m["evidence"] = states.get(fid, "unknown")
+                me.materials.append(m)
+                made[key] = len(me.materials) - 1
+            me.polygons[pi].material_index = made[key]
+    return orig, n0, [me.materials[i] for i in made.values()]
+
+
+def untag_face_materials(body, saved: tuple) -> None:
+    orig, n0, copies = saved
+    me = body.data
+    for pg, i in zip(me.polygons, orig):
+        pg.material_index = i
+    while len(me.materials) > n0:
+        me.materials.pop()
+    for m in copies:
+        bpy.data.materials.remove(m)
+
+
+def _part_face(pt: dict) -> str | None:
+    f = pt.get("face")
+    return f if isinstance(f, str) else None
+
+
 def build_building(b: dict, col) -> dict:
     poly = ccw([tuple(p) for p in b["footprint"]["polygon"]])
+    ev = schema.evidence_summary(b)           # 根拠の層（面・部品の状態）
+    face_ev = {fid: d["state"] for fid, d in ev["faces"].items()}
     H = val(b.get("parapet_top"))
     if H is None:
         cnt, pitch = val(b.get("floor_count")), val(b.get("floor_pitch"))
         H = assume("parapet_top", (cnt or 4) * (pitch or 3.6), "パラペット未確定。階数×階高（無ければ 4×3.6）")
-    mats = Mats(b)
+    mats = Mats(b, gray_faces={fid for fid, st in face_ev.items() if st == "unknown"})
     faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
     terrain = Terrain(b, poly)
 
@@ -763,6 +836,7 @@ def build_building(b: dict, col) -> dict:
     cutters, extras = [], []
 
     for fid, f in faces.items():
+        n_extras = len(extras)
         p0, u, n, L = face_frame(f)
         fmat = mats.by_face.get(fid, mats.main)
         bays = f.get("bays") or {}
@@ -935,10 +1009,14 @@ def build_building(b: dict, col) -> dict:
                 rh = val(rl.get("height"), 0.9, f"{fid} 帯の上の手すりの高さ", "未測。0.9 m と置いた")
                 extras += emit_prims(f"bandrail_{fid}_{int(zb)}", parts_geom.rail_prims("rail", a0, a1, zt, rh, val(rl.get("post_pitch"), 1.5), max(dep, 0.03) / 2),
                                      (p0, u, n), col, mats)
+        for e in extras[n_extras:]:
+            tag(e, face_ev.get(fid, "unknown"), face=fid)
 
+    part_marks = []           # (部品名, 状態, 面, 増えた物の始まり)
     for i, pt in enumerate(b.get("parts") or []):
+        part_marks.append((schema.part_name(pt, i), ev["parts"].get(schema.part_name(pt, i), "unknown"), _part_face(pt), len(extras)))
         t = pt.get("type")
-        name = f"{t}_{i}"
+        name = schema.part_name(pt, i)
         if t == "box":
             z0, z1 = val(pt.get("z0"), 0.0), val(pt.get("z1"))
             if z1 is None:
@@ -1055,6 +1133,11 @@ def build_building(b: dict, col) -> dict:
                 cutters.append(prim_object(f"cut_{t}_{i}", cut, frame, col))
             extras += emit_prims(name, prims, frame, col, mats, fm)
 
+    for k, (pname, pst, pface, start) in enumerate(part_marks):       # 部品ごとに増えた物へ印
+        end = part_marks[k + 1][3] if k + 1 < len(part_marks) else len(extras)
+        for e in extras[start:end]:
+            tag(e, pst, face=pface, part=pname)
+
     if cutters:
         boolean_cut(body, cutters)
     # 上向きの面（屋上・庇の上）は防水のコンクリート色
@@ -1062,6 +1145,16 @@ def build_building(b: dict, col) -> dict:
     for pg in body.data.polygons:
         if pg.normal.z > 0.9:
             pg.material_index = 1
+    # 根拠の層：本体（塊）の印と、壁を面ごとに振り分けた表。unknown の面の壁は灰色（タイルの無地の壁だと「窓が無い」と決めつけて見える）
+    tag(body, ev["body"], part="body")
+    face_polys = face_polygons(body, faces)
+    gray = [fid for fid in face_polys if face_ev.get(fid) == "unknown"]
+    if gray:
+        body.data.materials.append(mats.unknown)
+        ui = len(body.data.materials) - 1
+        for fid in gray:
+            for pi in face_polys[fid]:
+                body.data.polygons[pi].material_index = ui
     for e in extras:
         e.parent = body
     try:                                   # CC0 アセットの部品（parts[type=asset]。位置・個数・大きさは JSON、見た目はアセット）
@@ -1081,7 +1174,8 @@ def build_building(b: dict, col) -> dict:
         ob.parent = body
     add_meter_uvs(col)
     return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body,
-            "ground": grounds[0], "grounds": grounds, "footings": footings, "terrain": terrain}
+            "ground": grounds[0], "grounds": grounds, "footings": footings, "terrain": terrain,
+            "face_polys": face_polys, "face_ev": face_ev, "evidence": ev}
 
 
 # --- 描画 -------------------------------------------------------------------------------
@@ -1307,7 +1401,9 @@ def main():
     bake_s = time.time() - t_bake
     for o in bpy.context.scene.objects:
         o.select_set(o in objs)
-    bpy.ops.export_scene.gltf(filepath=str(out / f"{b['id']}.glb"), use_selection=True, export_apply=True)
+    face_saved = tag_face_materials(info["body"], info["face_polys"], info["face_ev"])   # 面ごとの印（書き出しの間だけ）
+    bpy.ops.export_scene.gltf(filepath=str(out / f"{b['id']}.glb"), use_selection=True, export_apply=True, export_extras=True)
+    untag_face_materials(info["body"], face_saved)
     for o, i, m in restore:                               # 描画用の素材に戻してから .blend を保存
         o.material_slots[i].material = m
     bpy.ops.wm.save_as_mainfile(filepath=str(out / f"{b['id']}.blend"))
@@ -1318,6 +1414,10 @@ def main():
         "web_bake": {"seconds": round(bake_s, 2), "materials": bake_log,
                      "note": "glb に出ない手続き的な模様を、周期の板に焼いた画像（tex/）。描画用の素材はそのまま"},
         "web_cameras": web_cams,
+        "evidence": {"faces": info["face_ev"],
+                     "wall_polygons": {fid: len(v) for fid, v in info["face_polys"].items()},
+                     "shape_ratio": info["evidence"]["shape_ratio"], "evidence_ratio": info["evidence"]["evidence_ratio"],
+                     "note": "glb の node と素材の extras に evidence（measured/estimated/hypothesis/unknown）・face・part。unknown の面の壁は灰色"},
         "note": "assumed は模型を立てるために置いた仮の値。棟 JSON には書かない。撮影依頼の元にする",
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print("模型:", out, "仮の値", len(ASSUMED), "件")
