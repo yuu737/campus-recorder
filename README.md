@@ -129,6 +129,10 @@ Tests: `python -I -X utf8 -m pytest` (test files are in `tests/`).
 - Tool bugs found during use are kept in `docs/日誌.md`. `{{TBD}}`: final known-issues list.
 - The staff upload screen and the Agent SDK path are `{{TBD}}`: describe the state at submission.
 
+## Acknowledgements
+
+Meijo University (its public relations office) granted permission (2026-11-04) to trace the official campus maps and to publish photos taken on campus, on the condition that nothing related to research or laboratories is photographed. We also thank the faculty member who relayed the request. In this work the maps are used only to confirm building names and rough positions; shapes and dimensions come from photos, PLATEAU and OSM. See `data/reference/index.json`.
+
 ## License
 
 `{{LICENSE_TBD}}`: code under MIT (tentative; the author decides). Data and images (building JSON, models, drawings, photos) are not for reuse (tentative). The `LICENSE` file currently contains MIT.
