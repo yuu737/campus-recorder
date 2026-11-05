@@ -2152,6 +2152,2913 @@
    },
    "registered_at": "2026-11-05T11:45:54",
    "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261105_061241221",
+   "building": "tower75",
+   "face": "W",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061241221.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.992947908622029,
+      -0.10720966166914572,
+      0.050601770798322857
+     ],
+     [
+      -0.012075380116466493,
+      -0.33315040596931733,
+      -0.9427963683625016
+     ],
+     [
+      0.11793488015927069,
+      -0.936758717838946,
+      0.3295064014470006
+     ]
+    ],
+    "t_cv": [
+     28.010648232851963,
+     20.502585885792698,
+     48.58234255433847
+    ],
+    "camera_xyz": [
+     22.33,
+     55.34,
+     1.9
+    ],
+    "camera_height_m": 1.9,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      22.33113835289659,
+      55.343389852264714,
+      1.9041822444288645
+     ],
+     "rotation_euler": [
+      1.9070247640722515,
+      -0.05062339035492702,
+      -3.0340382262760595
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "f0",
+     "area_m2": 233.49,
+     "distance_m": 3.36,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "W",
+     "area_m2": 2120.65,
+     "distance_m": 22.98,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f16",
+     "area_m2": 17.92,
+     "distance_m": 5.9,
+     "unoccluded": 0.1
+    },
+    {
+     "face": "f19",
+     "area_m2": 381.56,
+     "distance_m": 1.61,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "W-10",
+      "cell": "B6",
+      "sub": "C1",
+      "u": 390.6,
+      "v": 2231.1,
+      "how": "cell+sub",
+      "name": "柱型1左 × 3階窓 下端",
+      "reproj_px": 16.2,
+      "inlier": true
+     },
+     {
+      "id": "W-25",
+      "cell": "D4",
+      "sub": "D2",
+      "u": 1137.1,
+      "v": 1375.6,
+      "how": "cell+sub",
+      "name": "柱型3左 × 7階窓 下端",
+      "reproj_px": 16.4,
+      "inlier": true
+     },
+     {
+      "id": "W-32",
+      "cell": "D4",
+      "sub": "G4",
+      "u": 1293.3,
+      "v": 1514.4,
+      "how": "cell+sub",
+      "name": "柱型4左 × 7階窓 下端",
+      "reproj_px": 2.7,
+      "inlier": true
+     },
+     {
+      "id": "W-33",
+      "cell": "D2",
+      "sub": "I8",
+      "u": 1397.5,
+      "v": 867.0,
+      "how": "cell+sub",
+      "name": "柱型4左 × 11階窓 下端",
+      "reproj_px": 5.8,
+      "inlier": true
+     },
+     {
+      "id": "W-26",
+      "cell": "D2",
+      "sub": "G6",
+      "u": 1293.3,
+      "v": 728.3,
+      "how": "cell+sub",
+      "name": "柱型3左 × 11階窓 下端",
+      "reproj_px": 13.9,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 5,
+    "n_inliers": 5,
+    "rms_px": 12.36,
+    "rms_frac_w": 0.0036,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": -3.46,
+    "camera_height_face_m": 1.9,
+    "ground_face": "W",
+    "warnings": [],
+    "yaw": 172.8,
+    "pitch": 19.2,
+    "roll": -3.1,
+    "tilt_from_vp": {
+     "pitch": 15.57,
+     "roll": 0.06,
+     "n_lines": 190,
+     "resid_px": 483.42
+    },
+    "edge_inlier": 0.283,
+    "edge_grad": 0.25,
+    "edge_coverage": 0.48,
+    "gps_dist_m": 14.7
+   },
+   "registered_at": "2026-11-06T02:23:24",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_061357582",
+   "building": "tower75",
+   "face": "W",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061357582.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.40564497967554897,
+      -0.9139225048166686,
+      0.014064339787188795
+     ],
+     [
+      0.3508070003077339,
+      -0.16987774645856657,
+      -0.9209104189839793
+     ],
+     [
+      0.8440299751780815,
+      -0.36862881933970504,
+      0.3895204674379791
+     ]
+    ],
+    "t_cv": [
+     43.077426772861486,
+     4.805853324257949,
+     4.709394509548538
+    ],
+    "camera_xyz": [
+     11.81,
+     41.92,
+     1.99
+    ],
+    "camera_height_m": 1.99,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      11.81334478815242,
+      41.9218558477053,
+      1.9854992804174716
+     ],
+     "rotation_euler": [
+      1.9709490420475948,
+      -0.014064803496120019,
+      -1.9885245901583846
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "W",
+     "area_m2": 2217.37,
+     "distance_m": 26.07,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "W-02",
+      "cell": "D2",
+      "sub": "H3",
+      "u": 1345.4,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 7.2,
+      "inlier": true
+     },
+     {
+      "id": "W-51",
+      "cell": "G2",
+      "sub": "E2",
+      "u": 2230.8,
+      "v": 450.8,
+      "how": "cell+sub",
+      "name": "柱型7左 × 上端（パラペット）",
+      "reproj_px": 7.8,
+      "inlier": true
+     },
+     {
+      "id": "W-38",
+      "cell": "G6",
+      "sub": "C6",
+      "u": 2126.6,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型5左 × 3階窓 下端",
+      "reproj_px": 11.5,
+      "inlier": true
+     },
+     {
+      "id": "W-45",
+      "cell": "G6",
+      "sub": "G6",
+      "u": 2334.9,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型6左 × 3階窓 下端",
+      "reproj_px": 20.2,
+      "inlier": true
+     },
+     {
+      "id": "W-59",
+      "cell": "I6",
+      "sub": "D6",
+      "u": 2873.1,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型8左 × 3階窓 下端",
+      "reproj_px": 26.0,
+      "inlier": true
+     },
+     {
+      "id": "W-66",
+      "cell": "I6",
+      "sub": "H6",
+      "u": 3081.4,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型9左 × 3階窓 下端",
+      "reproj_px": 18.2,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 6,
+    "n_inliers": 6,
+    "rms_px": 16.63,
+    "rms_frac_w": 0.0048,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": -2.82,
+    "camera_height_face_m": 1.99,
+    "ground_face": "W",
+    "warnings": [
+     "消失点の仰角 -0.86° と PnP の仰角 22.9° が 24° 違う"
+    ],
+    "yaw": 113.6,
+    "pitch": 22.9,
+    "roll": -0.9,
+    "tilt_from_vp": {
+     "pitch": -0.86,
+     "roll": 6.62,
+     "n_lines": 544,
+     "resid_px": 13137.83
+    },
+    "edge_inlier": 0.348,
+    "edge_grad": 0.234,
+    "edge_coverage": 0.561,
+    "gps_dist_m": 41.9
+   },
+   "registered_at": "2026-11-06T02:31:25",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_061402813",
+   "building": "tower75",
+   "face": "W",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061402813.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.5777388706709097,
+      -0.815820408979829,
+      -0.02559018577280303
+     ],
+     [
+      0.3791823943514997,
+      -0.24049780173186974,
+      -0.8935219746464
+     ],
+     [
+      0.7227990793642212,
+      -0.5259257244650835,
+      0.44828966440919815
+     ]
+    ],
+    "t_cv": [
+     41.53672163066081,
+     5.217206685003337,
+     11.711201033305997
+    ],
+    "camera_xyz": [
+     13.55,
+     41.3,
+     0.47
+    ],
+    "camera_height_m": 0.47,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      13.554260398500812,
+      41.30045385512882,
+      0.474610861194996
+     ],
+     "rotation_euler": [
+      2.035811674484363,
+      0.025592979584151663,
+      -2.1869839471899892
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "W",
+     "area_m2": 2217.37,
+     "distance_m": 24.24,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "W-02",
+      "cell": "D2",
+      "sub": "C3",
+      "u": 1085.0,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 5.2,
+      "inlier": true
+     },
+     {
+      "id": "W-05",
+      "cell": "C3",
+      "sub": "G3",
+      "u": 946.1,
+      "v": 982.6,
+      "how": "cell+sub",
+      "name": "面の端0 × 11階窓 下端",
+      "reproj_px": 5.8,
+      "inlier": true
+     },
+     {
+      "id": "W-31",
+      "cell": "E6",
+      "sub": "E6",
+      "u": 1536.4,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型4左 × 3階窓 下端",
+      "reproj_px": 15.2,
+      "inlier": true
+     },
+     {
+      "id": "W-46",
+      "cell": "F4",
+      "sub": "F6",
+      "u": 1935.6,
+      "v": 1653.1,
+      "how": "cell+sub",
+      "name": "柱型6左 × 7階窓 下端",
+      "reproj_px": 18.1,
+      "inlier": true
+     },
+     {
+      "id": "W-52",
+      "cell": "G6",
+      "sub": "E6",
+      "u": 2230.8,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型7左 × 3階窓 下端",
+      "reproj_px": 5.0,
+      "inlier": true
+     },
+     {
+      "id": "W-59",
+      "cell": "G6",
+      "sub": "I6",
+      "u": 2439.1,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型8左 × 3階窓 下端",
+      "reproj_px": 15.3,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 6,
+    "n_inliers": 6,
+    "rms_px": 12.09,
+    "rms_frac_w": 0.0035,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": -4.34,
+    "camera_height_face_m": 0.47,
+    "ground_face": "W",
+    "warnings": [
+     "消失点の仰角 4.92° と PnP の仰角 26.6° が 22° 違う"
+    ],
+    "yaw": 126.0,
+    "pitch": 26.6,
+    "roll": 1.6,
+    "tilt_from_vp": {
+     "pitch": 4.92,
+     "roll": 1.13,
+     "n_lines": 569,
+     "resid_px": 3353.9
+    },
+    "edge_inlier": 0.387,
+    "edge_grad": 0.254,
+    "edge_coverage": 0.577,
+    "gps_dist_m": 41.0
+   },
+   "registered_at": "2026-11-06T02:23:49",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_061418906",
+   "building": "tower75",
+   "face": "W",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061418906.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1843.1777777777775,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.030076023801070995,
+      -0.9994426791048003,
+      0.014483230859737573
+     ],
+     [
+      0.5291180157536441,
+      -0.028212415011461156,
+      -0.8480791148496393
+     ],
+     [
+      0.8480150695578729,
+      -0.01784350926920275,
+      0.5296716444928085
+     ]
+    ],
+    "t_cv": [
+     37.60212446575807,
+     -8.629118248939294,
+     -19.118667883558693
+    ],
+    "camera_xyz": [
+     21.91,
+     37.0,
+     2.26
+    ],
+    "camera_height_m": 2.26,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      21.90966279111519,
+      36.996575623272264,
+      2.2638410424489086
+     ],
+     "rotation_euler": [
+      2.1290752328263927,
+      -0.01448373725088795,
+      -1.6008800430977121
+     ],
+     "lens_mm": 14.349999999999998,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "W",
+     "area_m2": 1762.08,
+     "distance_m": 14.84,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "W-02",
+      "cell": "E2",
+      "sub": "F5",
+      "u": 1588.4,
+      "v": 658.9,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 10.0,
+      "inlier": true
+     },
+     {
+      "id": "W-09",
+      "cell": "E2",
+      "sub": "H4",
+      "u": 1692.6,
+      "v": 589.6,
+      "how": "cell+sub",
+      "name": "柱型1左 × 上端（パラペット）",
+      "reproj_px": 3.5,
+      "inlier": true
+     },
+     {
+      "id": "W-16",
+      "cell": "E2",
+      "sub": "J3",
+      "u": 1796.8,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "柱型2左 × 上端（パラペット）",
+      "reproj_px": 10.3,
+      "inlier": true
+     },
+     {
+      "id": "W-31",
+      "cell": "H6",
+      "sub": "G5",
+      "u": 2682.1,
+      "v": 2508.5,
+      "how": "cell+sub",
+      "name": "柱型4左 × 3階窓 下端",
+      "reproj_px": 29.7,
+      "inlier": true
+     },
+     {
+      "id": "W-38",
+      "cell": "J6",
+      "sub": "G3",
+      "u": 3320.1,
+      "v": 2369.8,
+      "how": "cell+sub",
+      "name": "柱型5左 × 3階窓 下端",
+      "reproj_px": 152.2,
+      "inlier": false
+     },
+     {
+      "id": "W-32",
+      "cell": "G3",
+      "sub": "F7",
+      "u": 2282.8,
+      "v": 1260.0,
+      "how": "cell+sub",
+      "name": "柱型4左 × 7階窓 下端",
+      "reproj_px": 25.1,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 6,
+    "n_inliers": 5,
+    "rms_px": 18.6,
+    "rms_frac_w": 0.0054,
+    "focal_px": 1843.1777777777775,
+    "focal_vs_exif": 1.025,
+    "camera_height_m": -1.67,
+    "camera_height_face_m": 2.26,
+    "ground_face": "W",
+    "warnings": [],
+    "yaw": 91.2,
+    "pitch": 32.0,
+    "roll": -1.0,
+    "tilt_from_vp": {
+     "pitch": 32.61,
+     "roll": -0.64,
+     "n_lines": 157,
+     "resid_px": 23.24
+    },
+    "edge_inlier": 0.261,
+    "edge_grad": 0.244,
+    "edge_coverage": 0.591,
+    "gps_dist_m": 39.3
+   },
+   "registered_at": "2026-11-06T02:36:48",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_061449185",
+   "building": "tower75",
+   "face": "W",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061449185.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1843.1777777777775,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.0038772019943684455,
+      -0.9994425717870659,
+      0.03315890535513111
+     ],
+     [
+      0.5433513315282206,
+      -0.025731661769270026,
+      -0.8391109653133496
+     ],
+     [
+      0.839496454924739,
+      0.021270338084938167,
+      0.5429486853161611
+     ]
+    ],
+    "t_cv": [
+     21.640006745194416,
+     -6.690560720400484,
+     -18.180566432347803
+    ],
+    "camera_xyz": [
+     18.81,
+     21.84,
+     3.54
+    ],
+    "camera_height_m": 0.54,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      18.813943467269088,
+      21.842491543994168,
+      3.5394328426152395
+     ],
+     "rotation_euler": [
+      2.145096563077564,
+      -0.03316498480488171,
+      -1.5669169817939446
+     ],
+     "lens_mm": 14.349999999999998,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "W",
+     "area_m2": 2168.31,
+     "distance_m": 10.56,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "W-02",
+      "cell": "D2",
+      "sub": "D8",
+      "u": 1137.1,
+      "v": 867.0,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 2.3,
+      "inlier": true
+     },
+     {
+      "id": "W-51",
+      "cell": "F1",
+      "sub": "E6",
+      "u": 1883.6,
+      "v": 317.9,
+      "how": "cell+sub",
+      "name": "柱型7左 × 上端（パラペット）",
+      "reproj_px": 3.9,
+      "inlier": true
+     },
+     {
+      "id": "W-53",
+      "cell": "F3",
+      "sub": "F6",
+      "u": 1935.6,
+      "v": 1190.7,
+      "how": "cell+sub",
+      "name": "柱型7左 × 7階窓 下端",
+      "reproj_px": 9.0,
+      "inlier": true
+     },
+     {
+      "id": "W-52",
+      "cell": "F6",
+      "sub": "G6",
+      "u": 1987.7,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型7左 × 3階窓 下端",
+      "reproj_px": 3.7,
+      "inlier": true
+     },
+     {
+      "id": "W-38",
+      "cell": "D6",
+      "sub": "E8",
+      "u": 1189.2,
+      "v": 2716.6,
+      "how": "cell+sub",
+      "name": "柱型5左 × 3階窓 下端",
+      "reproj_px": 8.5,
+      "inlier": true
+     },
+     {
+      "id": "W-31",
+      "cell": "C6",
+      "sub": "F9",
+      "u": 894.0,
+      "v": 2786.0,
+      "how": "cell+sub",
+      "name": "柱型4左 × 3階窓 下端",
+      "reproj_px": 8.4,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 6,
+    "n_inliers": 6,
+    "rms_px": 6.56,
+    "rms_frac_w": 0.0019,
+    "focal_px": 1843.1777777777775,
+    "focal_vs_exif": 1.025,
+    "camera_height_m": 0.54,
+    "camera_height_face_m": 3.54,
+    "ground_face": "W",
+    "warnings": [],
+    "yaw": 88.5,
+    "pitch": 32.9,
+    "roll": -2.3,
+    "tilt_from_vp": {
+     "pitch": 32.6,
+     "roll": -1.71,
+     "n_lines": 254,
+     "resid_px": 19.1
+    },
+    "edge_inlier": 0.308,
+    "edge_grad": 0.284,
+    "edge_coverage": 0.79,
+    "gps_dist_m": 16.2
+   },
+   "registered_at": "2026-11-06T02:23:26",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_061455930",
+   "building": "tower75",
+   "face": "W",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061455930.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.04746189022835742,
+      -0.9987956386110352,
+      0.01243548420956192
+     ],
+     [
+      0.5126297864972441,
+      0.01367096897399847,
+      -0.8585009065825745
+     ],
+     [
+      0.8572969561194894,
+      0.047120875404504714,
+      0.5126612450043129
+     ]
+    ],
+    "t_cv": [
+     17.21690993472325,
+     -5.564697512715551,
+     -16.961259738605946
+    ],
+    "camera_xyz": [
+     16.58,
+     18.07,
+     3.7
+    ],
+    "camera_height_m": 0.77,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      16.57631895433069,
+      18.0714787670529,
+      3.7039820632804528
+     ],
+     "rotation_euler": [
+      2.109123982201753,
+      -0.012435804738374308,
+      -1.5233129251081186
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "W",
+     "area_m2": 2198.01,
+     "distance_m": 10.79,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f6",
+     "area_m2": 182.67,
+     "distance_m": 18.93,
+     "unoccluded": 0.9
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "W-02",
+      "cell": "C2",
+      "sub": "I9",
+      "u": 1050.3,
+      "v": 936.4,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 21.3,
+      "inlier": true
+     },
+     {
+      "id": "W-51",
+      "cell": "F1",
+      "sub": "A6",
+      "u": 1675.2,
+      "v": 317.9,
+      "how": "cell+sub",
+      "name": "柱型7左 × 上端（パラペット）",
+      "reproj_px": 52.4,
+      "inlier": true
+     },
+     {
+      "id": "Wsb-30",
+      "cell": "F1",
+      "sub": "I7",
+      "u": 2091.9,
+      "v": 375.7,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 35.6,
+      "inlier": true
+     },
+     {
+      "id": "W-52",
+      "cell": "E6",
+      "sub": "E7",
+      "u": 1536.4,
+      "v": 2647.2,
+      "how": "cell+sub",
+      "name": "柱型7左 × 3階窓 下端",
+      "reproj_px": 6.4,
+      "inlier": true
+     },
+     {
+      "id": "W-59",
+      "cell": "F6",
+      "sub": "F6",
+      "u": 1935.6,
+      "v": 2577.9,
+      "how": "cell+sub",
+      "name": "柱型8左 × 3階窓 下端",
+      "reproj_px": 18.5,
+      "inlier": true
+     },
+     {
+      "id": "W-66",
+      "cell": "H5",
+      "sub": "D10",
+      "u": 2525.9,
+      "v": 2392.9,
+      "how": "cell+sub",
+      "name": "柱型9左 × 3階窓 下端",
+      "reproj_px": 109.8,
+      "inlier": false
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 6,
+    "n_inliers": 5,
+    "rms_px": 31.13,
+    "rms_frac_w": 0.009,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 0.77,
+    "camera_height_face_m": 3.7,
+    "ground_face": "W",
+    "warnings": [],
+    "yaw": 86.9,
+    "pitch": 30.8,
+    "roll": -0.8,
+    "tilt_from_vp": {
+     "pitch": 31.74,
+     "roll": 0.01,
+     "n_lines": 209,
+     "resid_px": 13.02
+    },
+    "edge_inlier": 0.182,
+    "edge_grad": 0.245,
+    "edge_coverage": 0.8,
+    "gps_dist_m": 13.0
+   },
+   "registered_at": "2026-11-06T02:34:22",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_060842230",
+   "building": "tower75",
+   "face": "f19",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_060842230.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.966869672146444,
+      0.25520757124190185,
+      -0.0056685680940845445
+     ],
+     [
+      -0.06489190040905664,
+      -0.2672023878465667,
+      -0.9614530280728194
+     ],
+     [
+      -0.24688474708804659,
+      -0.9292319298807495,
+      0.27491078943062286
+     ]
+    ],
+    "t_cv": [
+     46.04335325696787,
+     33.457232750609705,
+     87.84005745165734
+    ],
+    "camera_xyz": [
+     68.38,
+     78.81,
+     8.28
+    ],
+    "camera_height_m": 2.72,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      68.37539565185452,
+      78.81302623179705,
+      8.280378084561534
+     ],
+     "rotation_euler": [
+      1.8492978362542742,
+      0.005668598452222728,
+      2.883526035587838
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "f0",
+     "area_m2": 384.17,
+     "distance_m": 45.51,
+     "unoccluded": 0.98
+    },
+    {
+     "face": "f16",
+     "area_m2": 68.71,
+     "distance_m": 48.0,
+     "unoccluded": 0.2
+    },
+    {
+     "face": "f18",
+     "area_m2": 454.66,
+     "distance_m": 42.11,
+     "unoccluded": 0.98
+    },
+    {
+     "face": "f19",
+     "area_m2": 739.19,
+     "distance_m": 43.8,
+     "unoccluded": 0.95
+    },
+    {
+     "face": "f20",
+     "area_m2": 722.9,
+     "distance_m": 42.11,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "P19w",
+     "area_m2": 206.84,
+     "distance_m": 41.82,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "P19e",
+     "area_m2": 206.13,
+     "distance_m": 41.78,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "P19e-02",
+      "cell": "E2",
+      "sub": "A6",
+      "u": 1328.0,
+      "v": 728.3,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 21.5,
+      "inlier": true
+     },
+     {
+      "id": "P19w-02",
+      "cell": "E2",
+      "sub": "H5",
+      "u": 1692.6,
+      "v": 658.9,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 16.6,
+      "inlier": true
+     },
+     {
+      "id": "P19w-04",
+      "cell": "E2",
+      "sub": "I5",
+      "u": 1744.7,
+      "v": 658.9,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 27.3,
+      "inlier": true
+     },
+     {
+      "id": "f20-23",
+      "cell": "G2",
+      "sub": "B6",
+      "u": 2074.5,
+      "v": 728.3,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 19.5,
+      "inlier": true
+     },
+     {
+      "id": "f0-04",
+      "cell": "G2",
+      "sub": "E8",
+      "u": 2230.8,
+      "v": 867.0,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 29.7,
+      "inlier": true
+     },
+     {
+      "id": "f18-23",
+      "cell": "D2",
+      "sub": "H7",
+      "u": 1345.4,
+      "v": 797.6,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 128.3,
+      "inlier": false
+     },
+     {
+      "id": "f19-06",
+      "cell": "E3",
+      "sub": "B5",
+      "u": 1380.1,
+      "v": 1121.3,
+      "how": "cell+sub",
+      "name": "面の端0 × 連窓 z12 下端",
+      "reproj_px": 15.6,
+      "inlier": true
+     },
+     {
+      "id": "f19-13",
+      "cell": "E3",
+      "sub": "H5",
+      "u": 1692.6,
+      "v": 1121.3,
+      "how": "cell+sub",
+      "name": "面の端L × 連窓 z12 下端",
+      "reproj_px": 73.2,
+      "inlier": false
+     },
+     {
+      "id": "f19-12",
+      "cell": "E3",
+      "sub": "H9",
+      "u": 1692.6,
+      "v": 1398.8,
+      "how": "cell+sub",
+      "name": "面の端L × 連窓 z9 下端",
+      "reproj_px": 13.9,
+      "inlier": true
+     },
+     {
+      "id": "f19-11",
+      "cell": "E5",
+      "sub": "H3",
+      "u": 1692.6,
+      "v": 1907.4,
+      "how": "cell+sub",
+      "name": "面の端L × 連窓 z5 下端",
+      "reproj_px": 4.7,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 10,
+    "n_inliers": 8,
+    "rms_px": 20.02,
+    "rms_frac_w": 0.0058,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 2.72,
+    "camera_height_face_m": null,
+    "ground_face": null,
+    "warnings": [
+     "消失点の仰角 31.31° と PnP の仰角 16.0° が 15° 違う"
+    ],
+    "yaw": 194.9,
+    "pitch": 16.0,
+    "roll": 0.3,
+    "tilt_from_vp": {
+     "pitch": 31.31,
+     "roll": 13.07,
+     "n_lines": 179,
+     "resid_px": 459.91
+    },
+    "edge_inlier": 0.302,
+    "edge_grad": 0.263,
+    "edge_coverage": 0.419,
+    "gps_dist_m": 30.2
+   },
+   "registered_at": "2026-11-06T02:23:22",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_060904811",
+   "building": "tower75",
+   "face": "f19",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_060904811.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.9931199544082928,
+      -0.06798157340047639,
+      0.09534810870733651
+     ],
+     [
+      -0.05221310071981199,
+      -0.47174832700083547,
+      -0.8801859508564857
+     ],
+     [
+      0.10481673658959809,
+      -0.8791086517887926,
+      0.46495314826420797
+     ]
+    ],
+    "t_cv": [
+     49.90524707846088,
+     44.85202425434431,
+     56.33574673444944
+    ],
+    "camera_xyz": [
+     46.0,
+     74.08,
+     8.53
+    ],
+    "camera_height_m": 3.01,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      45.99883083713209,
+      74.07674698115784,
+      8.526267888647284
+     ],
+     "rotation_euler": [
+      2.0567831776762797,
+      -0.09549317540916548,
+      -3.073246741194108
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "f0",
+     "area_m2": 393.77,
+     "distance_m": 30.93,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "W",
+     "area_m2": 2217.37,
+     "distance_m": 10.7,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f18",
+     "area_m2": 431.93,
+     "distance_m": 27.51,
+     "unoccluded": 0.93
+    },
+    {
+     "face": "f19",
+     "area_m2": 631.15,
+     "distance_m": 29.2,
+     "unoccluded": 0.81
+    },
+    {
+     "face": "f20",
+     "area_m2": 722.9,
+     "distance_m": 27.51,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "P19w",
+     "area_m2": 206.84,
+     "distance_m": 27.24,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "P19e",
+     "area_m2": 206.13,
+     "distance_m": 27.17,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "P19e-02",
+      "cell": "D3",
+      "sub": "I7",
+      "u": 1397.5,
+      "v": 1260.0,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 15.6,
+      "inlier": true
+     },
+     {
+      "id": "P19w-02",
+      "cell": "E3",
+      "sub": "G5",
+      "u": 1640.5,
+      "v": 1121.3,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 20.8,
+      "inlier": true
+     },
+     {
+      "id": "P19w-04",
+      "cell": "E3",
+      "sub": "H4",
+      "u": 1692.6,
+      "v": 1052.0,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 15.0,
+      "inlier": true
+     },
+     {
+      "id": "f20-23",
+      "cell": "F3",
+      "sub": "F4",
+      "u": 1935.6,
+      "v": 1052.0,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 1.9,
+      "inlier": true
+     },
+     {
+      "id": "f0-04",
+      "cell": "F3",
+      "sub": "J5",
+      "u": 2144.0,
+      "v": 1121.3,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 3.6,
+      "inlier": true
+     },
+     {
+      "id": "f19-06",
+      "cell": "E4",
+      "sub": "B4",
+      "u": 1380.1,
+      "v": 1514.4,
+      "how": "cell+sub",
+      "name": "面の端0 × 連窓 z12 下端",
+      "reproj_px": 17.0,
+      "inlier": true
+     },
+     {
+      "id": "f19-05",
+      "cell": "E4",
+      "sub": "A8",
+      "u": 1328.0,
+      "v": 1791.8,
+      "how": "cell+sub",
+      "name": "面の端0 × 連窓 z9 下端",
+      "reproj_px": 7.0,
+      "inlier": true
+     },
+     {
+      "id": "f19-04",
+      "cell": "D5",
+      "sub": "E8",
+      "u": 1189.2,
+      "v": 2254.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 連窓 z5 下端",
+      "reproj_px": 7.3,
+      "inlier": true
+     },
+     {
+      "id": "f19-11",
+      "cell": "E5",
+      "sub": "D7",
+      "u": 1484.3,
+      "v": 2184.8,
+      "how": "cell+sub",
+      "name": "面の端L × 連窓 z5 下端",
+      "reproj_px": 13.2,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 9,
+    "n_inliers": 9,
+    "rms_px": 12.85,
+    "rms_frac_w": 0.0037,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 3.01,
+    "camera_height_face_m": null,
+    "ground_face": null,
+    "warnings": [],
+    "yaw": 173.2,
+    "pitch": 27.7,
+    "roll": -6.2,
+    "tilt_from_vp": {
+     "pitch": 29.72,
+     "roll": -3.39,
+     "n_lines": 79,
+     "resid_px": 18.91
+    },
+    "edge_inlier": 0.191,
+    "edge_grad": 0.284,
+    "edge_coverage": 0.469,
+    "gps_dist_m": 15.3
+   },
+   "registered_at": "2026-11-06T02:23:23",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_060927494",
+   "building": "tower75",
+   "face": "f19",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_060927494.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      -0.9030873676661961,
+      -0.4214958246632329,
+      0.0823072059615795
+     ],
+     [
+      0.09156062586855906,
+      -0.376217659571064,
+      -0.9219961629081918
+     ],
+     [
+      0.4195829574140236,
+      -0.8251069884677577,
+      0.3783498373587194
+     ]
+    ],
+    "t_cv": [
+     56.00928469856507,
+     37.17844352181984,
+     40.346521025697086
+    ],
+    "camera_xyz": [
+     30.25,
+     70.89,
+     14.4
+    ],
+    "camera_height_m": 8.83,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      30.248483312287917,
+      70.88506310975751,
+      14.403314870508623
+     ],
+     "rotation_euler": [
+      1.9602012400769808,
+      -0.08240042177920627,
+      -2.7049154357515968
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "f0",
+     "area_m2": 393.77,
+     "distance_m": 20.8,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "W",
+     "area_m2": 2217.37,
+     "distance_m": 23.17,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f18",
+     "area_m2": 397.83,
+     "distance_m": 17.36,
+     "unoccluded": 0.85
+    },
+    {
+     "face": "f19",
+     "area_m2": 482.59,
+     "distance_m": 19.05,
+     "unoccluded": 0.62
+    },
+    {
+     "face": "f20",
+     "area_m2": 722.9,
+     "distance_m": 17.37,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "P19w",
+     "area_m2": 206.84,
+     "distance_m": 17.1,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "P19e",
+     "area_m2": 206.13,
+     "distance_m": 17.02,
+     "unoccluded": 1.0
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "P19e-02",
+      "cell": "D3",
+      "sub": "I8",
+      "u": 1397.5,
+      "v": 1329.4,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 5.7,
+      "inlier": true
+     },
+     {
+      "id": "P19w-02",
+      "cell": "E3",
+      "sub": "F4",
+      "u": 1588.4,
+      "v": 1052.0,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 37.6,
+      "inlier": true
+     },
+     {
+      "id": "P19w-04",
+      "cell": "E3",
+      "sub": "G4",
+      "u": 1640.5,
+      "v": 1052.0,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 41.5,
+      "inlier": true
+     },
+     {
+      "id": "f20-23",
+      "cell": "F3",
+      "sub": "C2",
+      "u": 1779.4,
+      "v": 913.2,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 32.0,
+      "inlier": true
+     },
+     {
+      "id": "f0-04",
+      "cell": "F3",
+      "sub": "G2",
+      "u": 1987.7,
+      "v": 913.2,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 25.2,
+      "inlier": true
+     },
+     {
+      "id": "f18-09",
+      "cell": "D4",
+      "sub": "G5",
+      "u": 1293.3,
+      "v": 1583.7,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 26.8,
+      "inlier": true
+     },
+     {
+      "id": "W-16",
+      "cell": "G3",
+      "sub": "C5",
+      "u": 2126.6,
+      "v": 1121.3,
+      "how": "cell+sub",
+      "name": "柱型2左 × 上端（パラペット）",
+      "reproj_px": 35.8,
+      "inlier": true
+     },
+     {
+      "id": "W-23",
+      "cell": "G3",
+      "sub": "D6",
+      "u": 2178.7,
+      "v": 1190.7,
+      "how": "cell+sub",
+      "name": "柱型3左 × 上端（パラペット）",
+      "reproj_px": 56.2,
+      "inlier": true
+     },
+     {
+      "id": "f19-06",
+      "cell": "E4",
+      "sub": "C5",
+      "u": 1432.2,
+      "v": 1583.7,
+      "how": "cell+sub",
+      "name": "面の端0 × 連窓 z12 下端",
+      "reproj_px": 16.8,
+      "inlier": true
+     },
+     {
+      "id": "f19-05",
+      "cell": "E4",
+      "sub": "B9",
+      "u": 1380.1,
+      "v": 1861.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 連窓 z9 下端",
+      "reproj_px": 34.4,
+      "inlier": true
+     },
+     {
+      "id": "f19-11",
+      "cell": "E5",
+      "sub": "C9",
+      "u": 1432.2,
+      "v": 2323.6,
+      "how": "cell+sub",
+      "name": "面の端L × 連窓 z5 下端",
+      "reproj_px": 45.5,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 11,
+    "n_inliers": 11,
+    "rms_px": 35.07,
+    "rms_frac_w": 0.0101,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 8.83,
+    "camera_height_face_m": null,
+    "ground_face": null,
+    "warnings": [
+     "消失点の仰角 13.35° と PnP の仰角 22.2° が 9° 違う"
+    ],
+    "yaw": 153.0,
+    "pitch": 22.2,
+    "roll": -5.1,
+    "tilt_from_vp": {
+     "pitch": 13.35,
+     "roll": -14.48,
+     "n_lines": 460,
+     "resid_px": 988.53
+    },
+    "edge_inlier": 0.245,
+    "edge_grad": 0.226,
+    "edge_coverage": 0.568,
+    "gps_dist_m": 13.2
+   },
+   "registered_at": "2026-11-06T02:23:24",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_061711714",
+   "building": "tower75",
+   "face": "f9",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_061711714.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.579293231978311,
+      -0.8110768755592555,
+      -0.08107806927374955
+     ],
+     [
+      0.31155267480936955,
+      0.31223325289510173,
+      -0.8974660587485583
+     ],
+     [
+      0.753229236158057,
+      0.494635924412673,
+      0.4335677802572169
+     ]
+    ],
+    "t_cv": [
+     -12.755253753778765,
+     1.6037607439370878,
+     -14.933524539756858
+    ],
+    "camera_xyz": [
+     18.14,
+     -3.46,
+     6.88
+    ],
+    "camera_height_m": 5.25,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      18.13774350443078,
+      -3.459581080063319,
+      6.879844572702803
+     ],
+     "rotation_euler": [
+      2.020834500287263,
+      0.08116716293123571,
+      -0.9505855338120738
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW1",
+     "area_m2": 552.88,
+     "distance_m": 18.02,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f6",
+     "area_m2": 206.31,
+     "distance_m": 7.62,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f7",
+     "area_m2": 508.94,
+     "distance_m": 15.15,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f9",
+     "area_m2": 324.39,
+     "distance_m": 23.4,
+     "unoccluded": 0.37
+    },
+    {
+     "face": "f10",
+     "area_m2": 567.72,
+     "distance_m": 27.11,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f11",
+     "area_m2": 509.53,
+     "distance_m": 15.52,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f13",
+     "area_m2": 165.7,
+     "distance_m": 17.9,
+     "unoccluded": 0.31
+    },
+    {
+     "face": "Wsb",
+     "area_m2": 15.04,
+     "distance_m": 4.82,
+     "unoccluded": 0.03
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "f7-02",
+      "cell": "E1",
+      "sub": "D4",
+      "u": 1484.3,
+      "v": 202.3,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 31.2,
+      "inlier": true
+     },
+     {
+      "id": "f8-09",
+      "cell": "E1",
+      "sub": "I7",
+      "u": 1744.7,
+      "v": 375.7,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 32.1,
+      "inlier": true
+     },
+     {
+      "id": "f10-23",
+      "cell": "G2",
+      "sub": "D5",
+      "u": 2178.7,
+      "v": 658.9,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 32.6,
+      "inlier": true
+     },
+     {
+      "id": "f11-04",
+      "cell": "G2",
+      "sub": "G7",
+      "u": 2334.9,
+      "v": 797.6,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 17.5,
+      "inlier": true
+     },
+     {
+      "id": "f10-26",
+      "cell": "G3",
+      "sub": "H7",
+      "u": 2387.0,
+      "v": 1260.0,
+      "how": "cell+sub",
+      "name": "面の端L × 11階小窓 下端",
+      "reproj_px": 40.7,
+      "inlier": true
+     },
+     {
+      "id": "f10-25",
+      "cell": "H5",
+      "sub": "E2",
+      "u": 2578.0,
+      "v": 1838.0,
+      "how": "cell+sub",
+      "name": "面の端L × 7階小窓 下端",
+      "reproj_px": 19.6,
+      "inlier": true
+     },
+     {
+      "id": "f10-24",
+      "cell": "I7",
+      "sub": "E3",
+      "u": 2925.2,
+      "v": 2832.2,
+      "how": "cell+sub",
+      "name": "面の端L × 3階小窓 下端",
+      "reproj_px": 35.8,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 7,
+    "n_inliers": 7,
+    "rms_px": 30.91,
+    "rms_frac_w": 0.0089,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 5.25,
+    "camera_height_face_m": 6.88,
+    "ground_face": "f7",
+    "warnings": [],
+    "yaw": 56.7,
+    "pitch": 25.7,
+    "roll": 5.2,
+    "tilt_from_vp": {
+     "pitch": 30.54,
+     "roll": 1.24,
+     "n_lines": 221,
+     "resid_px": 26.71
+    },
+    "edge_inlier": 0.223,
+    "edge_grad": 0.222,
+    "edge_coverage": 0.498,
+    "gps_dist_m": 41.2
+   },
+   "registered_at": "2026-11-06T02:38:18",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_062246708",
+   "building": "tower75",
+   "face": "f9",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_062246708.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.8147591006711631,
+      -0.5789952078902729,
+      -0.030531248150328177
+     ],
+     [
+      0.3168101547079214,
+      0.4886795733709901,
+      -0.8129105734605067
+     ],
+     [
+      0.4855913237975533,
+      0.6526536783088306,
+      0.581587691102978
+     ]
+    ],
+    "t_cv": [
+     -25.841229254064373,
+     -5.529361550510094,
+     -13.363237229973539
+    ],
+    "camera_xyz": [
+     29.3,
+     -3.54,
+     2.49
+    ],
+    "camera_height_m": 1.17,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      29.295206652255573,
+      -3.5382959283242377,
+      2.48805283448067
+     ],
+     "rotation_euler": [
+      2.191808865896342,
+      0.030535993461141796,
+      -0.6178270266333565
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW1",
+     "area_m2": 479.24,
+     "distance_m": 12.92,
+     "unoccluded": 0.9
+    },
+    {
+     "face": "f7",
+     "area_m2": 508.94,
+     "distance_m": 10.03,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f9",
+     "area_m2": 605.52,
+     "distance_m": 18.3,
+     "unoccluded": 0.68
+    },
+    {
+     "face": "f10",
+     "area_m2": 523.63,
+     "distance_m": 17.18,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f11",
+     "area_m2": 389.91,
+     "distance_m": 10.4,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f13",
+     "area_m2": 92.89,
+     "distance_m": 12.8,
+     "unoccluded": 0.27
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "f7-02",
+      "cell": "E1",
+      "sub": "E8",
+      "u": 1536.4,
+      "v": 433.5,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 22.5,
+      "inlier": true
+     },
+     {
+      "id": "f8-09",
+      "cell": "E1",
+      "sub": "I8",
+      "u": 1744.7,
+      "v": 433.5,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 51.4,
+      "inlier": true
+     },
+     {
+      "id": "f10-23",
+      "cell": "G2",
+      "sub": "E4",
+      "u": 2230.8,
+      "v": 589.6,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 27.6,
+      "inlier": true
+     },
+     {
+      "id": "f11-04",
+      "cell": "G2",
+      "sub": "I4",
+      "u": 2439.1,
+      "v": 589.6,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 25.5,
+      "inlier": true
+     },
+     {
+      "id": "f10-28",
+      "cell": "G2",
+      "sub": "F5",
+      "u": 2282.8,
+      "v": 658.9,
+      "how": "cell+sub",
+      "name": "面の端L × 15階小窓 上端",
+      "reproj_px": 31.0,
+      "inlier": true
+     },
+     {
+      "id": "f10-26",
+      "cell": "H3",
+      "sub": "C2",
+      "u": 2473.8,
+      "v": 913.2,
+      "how": "cell+sub",
+      "name": "面の端L × 11階小窓 下端",
+      "reproj_px": 19.0,
+      "inlier": true
+     },
+     {
+      "id": "f10-25",
+      "cell": "H3",
+      "sub": "I8",
+      "u": 2786.3,
+      "v": 1329.4,
+      "how": "cell+sub",
+      "name": "面の端L × 7階小窓 下端",
+      "reproj_px": 31.4,
+      "inlier": true
+     },
+     {
+      "id": "f10-24",
+      "cell": "J5",
+      "sub": "G6",
+      "u": 3320.1,
+      "v": 2115.5,
+      "how": "cell+sub",
+      "name": "面の端L × 3階小窓 下端",
+      "reproj_px": 466.9,
+      "inlier": false
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 8,
+    "n_inliers": 7,
+    "rms_px": 31.32,
+    "rms_frac_w": 0.009,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 1.17,
+    "camera_height_face_m": 2.49,
+    "ground_face": "f7",
+    "warnings": [],
+    "yaw": 36.7,
+    "pitch": 35.6,
+    "roll": 2.2,
+    "tilt_from_vp": {
+     "pitch": 34.48,
+     "roll": 2.44,
+     "n_lines": 125,
+     "resid_px": 14.8
+    },
+    "edge_inlier": 0.276,
+    "edge_grad": 0.236,
+    "edge_coverage": 0.364,
+    "gps_dist_m": 28.8
+   },
+   "registered_at": "2026-11-06T02:38:39",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_062254010",
+   "building": "tower75",
+   "face": "f9",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_062254010.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1618.3999999999999,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.886369214237801,
+      -0.46297906159109925,
+      6.767339367796943e-05
+     ],
+     [
+      0.24192026633216981,
+      0.4630295186419283,
+      -0.8526888351585215
+     ],
+     [
+      0.39474574195200013,
+      0.7558135043742268,
+      0.52241912849389
+     ]
+    ],
+    "t_cv": [
+     -32.247682292816954,
+     -2.089162434181869,
+     -9.67756812058131
+    ],
+    "camera_xyz": [
+     32.91,
+     -6.65,
+     3.28
+    ],
+    "camera_height_m": 2.39,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      32.90894235541275,
+      -6.648221135115412,
+      3.276523531133866
+     ],
+     "rotation_euler": [
+      2.1204818802338727,
+      -6.767339372962327e-05,
+      -0.48135323242445255
+     ],
+     "lens_mm": 12.599999999999998,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW1",
+     "area_m2": 414.47,
+     "distance_m": 14.01,
+     "unoccluded": 0.77
+    },
+    {
+     "face": "f7",
+     "area_m2": 508.94,
+     "distance_m": 11.1,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f9",
+     "area_m2": 865.03,
+     "distance_m": 19.39,
+     "unoccluded": 0.98
+    },
+    {
+     "face": "f10",
+     "area_m2": 552.97,
+     "distance_m": 12.53,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f11",
+     "area_m2": 415.36,
+     "distance_m": 11.48,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f13",
+     "area_m2": 161.64,
+     "distance_m": 13.89,
+     "unoccluded": 0.45
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "f7-02",
+      "cell": "E1",
+      "sub": "D8",
+      "u": 1484.3,
+      "v": 433.5,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 1.6,
+      "inlier": true
+     },
+     {
+      "id": "f8-09",
+      "cell": "E1",
+      "sub": "I8",
+      "u": 1744.7,
+      "v": 433.5,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 3.7,
+      "inlier": true
+     },
+     {
+      "id": "f10-23",
+      "cell": "G2",
+      "sub": "D2",
+      "u": 2178.7,
+      "v": 450.8,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 3.9,
+      "inlier": true
+     },
+     {
+      "id": "f11-04",
+      "cell": "G2",
+      "sub": "I2",
+      "u": 2439.1,
+      "v": 450.8,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 1.8,
+      "inlier": true
+     },
+     {
+      "id": "f7-01",
+      "cell": "A9",
+      "sub": "G8",
+      "u": 282.1,
+      "v": 4103.8,
+      "how": "cell+sub",
+      "name": "面の端0 × 地面",
+      "reproj_px": 0.0,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 5,
+    "n_inliers": 5,
+    "rms_px": 2.65,
+    "rms_frac_w": 0.0008,
+    "focal_px": 1618.3999999999999,
+    "focal_vs_exif": 0.9,
+    "camera_height_m": 2.39,
+    "camera_height_face_m": 3.28,
+    "ground_face": "f7",
+    "warnings": [],
+    "yaw": 27.6,
+    "pitch": 31.5,
+    "roll": -0.0,
+    "tilt_from_vp": {
+     "pitch": 32.74,
+     "roll": 1.14,
+     "n_lines": 154,
+     "resid_px": 17.21
+    },
+    "edge_inlier": 0.237,
+    "edge_grad": 0.199,
+    "edge_coverage": 0.296,
+    "gps_dist_m": 33.5
+   },
+   "registered_at": "2026-11-06T02:23:28",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_062307232",
+   "building": "tower75",
+   "face": "f9",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_062307232.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1798.2222222222222,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.8608940263511007,
+      -0.5086942937124509,
+      -0.009570315427468529
+     ],
+     [
+      0.30728599589560124,
+      0.5348465752795473,
+      -0.7870924073056403
+     ],
+     [
+      0.40550806665150196,
+      0.6746623277285685,
+      0.6167608543223465
+     ]
+    ],
+    "t_cv": [
+     -37.36692235236777,
+     -7.0307573046295015,
+     -11.252494574376037
+    ],
+    "camera_xyz": [
+     38.89,
+     -7.66,
+     1.05
+    ],
+    "camera_height_m": 0.55,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      38.89239081639393,
+      -7.656329525941342,
+      1.0486292414013003
+     ],
+     "rotation_euler": [
+      2.235453221522662,
+      0.00957046152585036,
+      -0.5336945773845395
+     ],
+     "lens_mm": 14.0,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW1",
+     "area_m2": 200.12,
+     "distance_m": 12.13,
+     "unoccluded": 0.48
+    },
+    {
+     "face": "f7",
+     "area_m2": 464.12,
+     "distance_m": 9.21,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f8",
+     "area_m2": 592.32,
+     "distance_m": 5.62,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f9",
+     "area_m2": 886.65,
+     "distance_m": 17.51,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f10",
+     "area_m2": 567.72,
+     "distance_m": 6.76,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f11",
+     "area_m2": 478.0,
+     "distance_m": 9.59,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f13",
+     "area_m2": 233.98,
+     "distance_m": 12.01,
+     "unoccluded": 0.53
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "f7-02",
+      "cell": "D2",
+      "sub": "F3",
+      "u": 1241.2,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 6.1,
+      "inlier": true
+     },
+     {
+      "id": "f8-09",
+      "cell": "E2",
+      "sub": "D3",
+      "u": 1484.3,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 15.9,
+      "inlier": true
+     },
+     {
+      "id": "f10-23",
+      "cell": "F2",
+      "sub": "F4",
+      "u": 1935.6,
+      "v": 589.6,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 10.1,
+      "inlier": true
+     },
+     {
+      "id": "f11-04",
+      "cell": "G2",
+      "sub": "D4",
+      "u": 2178.7,
+      "v": 589.6,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 7.6,
+      "inlier": true
+     },
+     {
+      "id": "f10-26",
+      "cell": "F2",
+      "sub": "H8",
+      "u": 2039.8,
+      "v": 867.0,
+      "how": "cell+sub",
+      "name": "面の端L × 11階小窓 下端",
+      "reproj_px": 27.4,
+      "inlier": true
+     },
+     {
+      "id": "f10-25",
+      "cell": "G3",
+      "sub": "D6",
+      "u": 2178.7,
+      "v": 1190.7,
+      "how": "cell+sub",
+      "name": "面の端L × 7階小窓 下端",
+      "reproj_px": 26.9,
+      "inlier": true
+     },
+     {
+      "id": "f10-24",
+      "cell": "H5",
+      "sub": "B4",
+      "u": 2421.7,
+      "v": 1976.8,
+      "how": "cell+sub",
+      "name": "面の端L × 3階小窓 下端",
+      "reproj_px": 302.5,
+      "inlier": false
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 7,
+    "n_inliers": 6,
+    "rms_px": 17.91,
+    "rms_frac_w": 0.0052,
+    "focal_px": 1798.2222222222222,
+    "focal_vs_exif": 1.0,
+    "camera_height_m": 0.55,
+    "camera_height_face_m": 1.05,
+    "ground_face": "f8",
+    "warnings": [],
+    "yaw": 31.0,
+    "pitch": 38.1,
+    "roll": 0.7,
+    "tilt_from_vp": {
+     "pitch": 37.13,
+     "roll": -0.33,
+     "n_lines": 172,
+     "resid_px": 24.22
+    },
+    "edge_inlier": 0.279,
+    "edge_grad": 0.264,
+    "edge_coverage": 0.481,
+    "gps_dist_m": 4.7
+   },
+   "registered_at": "2026-11-06T02:42:14",
+   "registered_by": "mejirushi"
+  },
+  {
+   "photo": "PXL_20261105_062311895",
+   "building": "tower75",
+   "face": "f9",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_062311895.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1573.4444444444443,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.9177206010573531,
+      -0.39722519771869086,
+      0.0010201432630903284
+     ],
+     [
+      0.20143167341204987,
+      0.46315674288899844,
+      -0.8630823323778997
+     ],
+     [
+      0.34236556389530703,
+      0.7922739259964328,
+      0.5050622207657659
+     ]
+    ],
+    "t_cv": [
+     -40.91144969742612,
+     1.387416351594215,
+     -7.192481166547898
+    ],
+    "camera_xyz": [
+     39.73,
+     -11.2,
+     4.87
+    ],
+    "camera_height_m": 4.55,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      39.72826847942025,
+      -11.195234641977375,
+      4.871840591297888
+     ],
+     "rotation_euler": [
+      2.100250686388618,
+      -0.0010201434400329472,
+      -0.40849150675327467
+     ],
+     "lens_mm": 12.25,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW1",
+     "area_m2": 253.36,
+     "distance_m": 14.88,
+     "unoccluded": 0.53
+    },
+    {
+     "face": "f7",
+     "area_m2": 489.42,
+     "distance_m": 11.96,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f8",
+     "area_m2": 592.32,
+     "distance_m": 7.99,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f9",
+     "area_m2": 886.65,
+     "distance_m": 20.26,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f10",
+     "area_m2": 567.72,
+     "distance_m": 4.38,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f11",
+     "area_m2": 495.62,
+     "distance_m": 12.33,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f13",
+     "area_m2": 307.07,
+     "distance_m": 14.76,
+     "unoccluded": 0.68
+    }
+   ],
+   "source": {
+    "method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
+    "kind": "landmarks",
+    "picks": [
+     {
+      "id": "f7-02",
+      "cell": "D2",
+      "sub": "F3",
+      "u": 1241.2,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 8.6,
+      "inlier": true
+     },
+     {
+      "id": "f8-09",
+      "cell": "E2",
+      "sub": "D3",
+      "u": 1484.3,
+      "v": 520.2,
+      "how": "cell+sub",
+      "name": "面の端0 × 上端（パラペット）",
+      "reproj_px": 19.6,
+      "inlier": true
+     },
+     {
+      "id": "f10-23",
+      "cell": "F2",
+      "sub": "F2",
+      "u": 1935.6,
+      "v": 450.8,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 22.0,
+      "inlier": true
+     },
+     {
+      "id": "f11-04",
+      "cell": "G2",
+      "sub": "D2",
+      "u": 2178.7,
+      "v": 450.8,
+      "how": "cell+sub",
+      "name": "面の端L × 上端（パラペット）",
+      "reproj_px": 11.8,
+      "inlier": true
+     },
+     {
+      "id": "f10-22",
+      "cell": "H10",
+      "sub": "I6",
+      "u": 2786.3,
+      "v": 4363.9,
+      "how": "cell+sub",
+      "name": "面の端L × 地面",
+      "reproj_px": 1.2,
+      "inlier": true
+     }
+    ],
+    "focal_source": "exif_35mm を初期値に探索"
+   },
+   "check": {
+    "n_points": 5,
+    "n_inliers": 5,
+    "rms_px": 14.7,
+    "rms_frac_w": 0.0042,
+    "focal_px": 1573.4444444444443,
+    "focal_vs_exif": 0.875,
+    "camera_height_m": 4.55,
+    "camera_height_face_m": 4.87,
+    "ground_face": "f7",
+    "warnings": [],
+    "yaw": 23.4,
+    "pitch": 30.3,
+    "roll": -0.1,
+    "tilt_from_vp": {
+     "pitch": 33.0,
+     "roll": -1.6,
+     "n_lines": 175,
+     "resid_px": 25.89
+    },
+    "edge_inlier": 0.279,
+    "edge_grad": 0.227,
+    "edge_coverage": 0.499,
+    "gps_dist_m": 7.6
+   },
+   "registered_at": "2026-11-06T02:23:28",
+   "registered_by": "mejirushi"
   }
  ],
  "not_registered": [
@@ -2673,7 +5580,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "カメラの高さが地面から -4.3 m（5m 標高）／0.5 m（面 W の前の地面）（0.5〜12.0 m の外）",
+   "landmarks_code": "camera_height"
   },
   {
    "photo": "PXL_20261105_061410188",
@@ -2777,7 +5686,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 4 本・横の線 2 本、写真の中の広がり 幅 27%・高さ 11%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061704401",
@@ -2785,7 +5696,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 3 本・横の線 1 本、写真の中の広がり 幅 26%・高さ 12%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061708177",
@@ -2801,7 +5714,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が 1 点（4 点要る）",
+   "landmarks_code": "few_points"
   },
   {
    "photo": "PXL_20261105_061710650",
@@ -2809,7 +5724,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 2 本・横の線 5 本、写真の中の広がり 幅 5%・高さ 50%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061711714",
@@ -2825,7 +5742,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 3 本・横の線 1 本、写真の中の広がり 幅 28%・高さ 6%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_062046145",
@@ -2833,7 +5752,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "消失点の仰角 34.11° と PnP の仰角 53.8° が 15.0° 以上違う（対応の取り違えか、点が一直線に近い）",
+   "landmarks_code": "pitch_check"
   },
   {
    "photo": "PXL_20261105_062246708",
@@ -2841,7 +5762,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 3 本・横の線 4 本、写真の中の広がり 幅 36%・高さ 19%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_062254010",
@@ -2849,7 +5772,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "再投影の RMS 879.94 px（幅の 2%＝69 px まで）",
+   "landmarks_code": "reproj"
   },
   {
    "photo": "PXL_20261105_062300065",
@@ -2857,7 +5782,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 3 本・横の線 1 本、写真の中の広がり 幅 27%・高さ 6%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_062307232",
@@ -2921,7 +5848,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "カメラの高さが地面から -2.8 m（5m 標高）（0.3〜12.0 m の外）",
+   "landmarks_code": "camera_height"
   },
   {
    "photo": "PXL_20261105_060954729",
@@ -2937,7 +5866,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
-   "sfm_code": "few_anchors"
+   "sfm_code": "few_anchors",
+   "landmarks_reason": "対応が偏っている（縦の線 6 本・横の線 5 本、写真の中の広がり 幅 32%・高さ 23%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061939875",
@@ -3017,7 +5948,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "対応が偏っている（縦の線 5 本・横の線 5 本、写真の中の広がり 幅 22%・高さ 27%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_060601578",
@@ -3041,7 +5974,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "使われた対応が 4 点（5 点要る。外れた点を直すか足す）",
+   "landmarks_code": "few_inliers"
   },
   {
    "photo": "PXL_20261105_075532769",
@@ -3073,7 +6008,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "対応が偏っている（縦の線 4 本・横の線 3 本、写真の中の広がり 幅 9%・高さ 20%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061525822",
@@ -3097,7 +6034,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "対応が 0 点（4 点要る）",
+   "landmarks_code": "few_points"
   },
   {
    "photo": "PXL_20261105_060310392",
@@ -3105,7 +6044,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "使われた対応が 4 点（5 点要る。外れた点を直すか足す）",
+   "landmarks_code": "few_inliers"
   },
   {
    "photo": "PXL_20261105_062323658",
@@ -3145,7 +6086,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "対応が偏っている（縦の線 3 本・横の線 3 本、写真の中の広がり 幅 24%・高さ 27%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061247963",
@@ -3153,7 +6096,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "解いた視点で模型の線が写真の縁に乗らない（乗った割合 0.113、勾配 0.128。0.15 以上か 0.25 以上要る）。対応の取り違え（隣の柱型・別の窓の列・延長した点）を疑う",
+   "landmarks_code": "edge_check"
   },
   {
    "photo": "PXL_20261105_062637300",
@@ -3305,7 +6250,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "目印係の対応は門を通ったが、模型の線を重ねると柱型の縦線が実物と傾き、下の階で面から外れる（Fable が目視、11/6）。E 面は列数が未確定で南北の端が段になっているため、模型を直してから",
+   "landmarks_code": "visual_reject"
   },
   {
    "photo": "PXL_20261105_060730259",
@@ -3361,7 +6308,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "対応が偏っている（縦の線 6 本・横の線 2 本、写真の中の広がり 幅 72%・高さ 24%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   },
   {
    "photo": "PXL_20261105_061934785",
@@ -3409,7 +6358,9 @@
    "face": null,
    "period": "during",
    "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
+   "sfm_code": "not_in_model",
+   "landmarks_reason": "カメラの高さが地面から -3.5 m（0.5〜12.0 m の外）",
+   "landmarks_code": "camera_height"
   },
   {
    "photo": "PXL_20261105_062840332",
