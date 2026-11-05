@@ -116,6 +116,155 @@ def osm_site(raw: dict, relation_id: int = OSM_RELATION_TEMPAKU) -> dict:
             "buildings": buildings, "fetched_at": raw.get("_fetched_at")}
 
 
+# --- OpenStreetMap：地表の種類（道・歩道・芝・駐車場）----------------------------------------
+# 地面の塗り分けの根拠。値はすべて estimated（出典 OSM、ODbL）。道の幅は OSM の width が無ければ種類ごとの標準幅
+# （「標準幅で描いた」と width_method に書く）。取得は 1 回（data/site/cache/osm_ground_raw.json）、
+# 整えた物を敷地 JSON の ground_osm に置く（build_site で作り直しても引き継ぐ）。
+
+GROUND_KINDS = ("unknown", "asphalt", "paving", "grass", "parking", "steps", "building")   # マスクの id ＝ この並びの番号
+GROUND_KIND_LABEL = {"unknown": "根拠なし（OSM に無い）", "asphalt": "車道（アスファルト）", "paving": "歩道・広場（舗装）",
+                     "grass": "芝・植え込み", "parking": "駐車場", "steps": "階段", "building": "建物の足元"}
+GROUND_KIND_COLOR = {"unknown": (150, 146, 138), "asphalt": (62, 63, 66), "paving": (184, 172, 152), "grass": (98, 140, 70),
+                     "parking": (104, 106, 110), "steps": (214, 208, 196), "building": (40, 40, 40)}
+ROAD_WIDTH_M = {"road": 6.0, "service": 4.0, "foot": 2.0, "steps": 2.0}   # OSM に width が無い時の標準幅（m）
+ROAD_HIGHWAYS = {"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "living_street",
+                 "road", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link"}
+FOOT_HIGHWAYS = {"footway", "path", "pedestrian", "cycleway", "track", "corridor", "bridleway"}
+GRASS_TAGS = (("landuse", "grass"), ("landuse", "meadow"), ("landuse", "forest"), ("landuse", "village_green"),
+              ("leisure", "park"), ("leisure", "garden"), ("natural", "grassland"), ("natural", "scrub"),
+              ("natural", "wood"), ("natural", "heath"))
+SURFACE_KIND = {"asphalt": "asphalt", "paving_stones": "paving", "concrete": "paving",
+                "concrete:plates": "paving", "sett": "paving", "bricks": "paving", "brick": "paving", "tiles": "paving",
+                "grass": "grass", "grass_paver": "grass"}   # surface=paved は「舗装」としか言わないので種類の既定のまま
+
+
+def ground_bbox_lonlat(x0: float, y0: float, x1: float, y1: float) -> tuple[float, float, float, float]:
+    """原点からの m の長方形 → (south, west, north, east)（Overpass の bbox の並び）。"""
+    lon0, lat0 = geo.xy_to_lonlat(x0, y0)
+    lon1, lat1 = geo.xy_to_lonlat(x1, y1)
+    return round(min(lat0, lat1), 6), round(min(lon0, lon1), 6), round(max(lat0, lat1), 6), round(max(lon0, lon1), 6)
+
+
+def fetch_osm_ground(bbox_xy: tuple[float, float, float, float], cache: Path | None = None) -> dict:
+    """道・歩道・芝・駐車場・木を Overpass から 1 回だけ取る（cache があればそれを返す）。bbox_xy は (x0, y0, x1, y1) m。"""
+    cache = cache or DATA_SITE / "cache" / "osm_ground_raw.json"
+    if cache.exists():
+        return json.loads(cache.read_text(encoding="utf-8"))
+    import requests
+
+    s, w, n, e = ground_bbox_lonlat(*bbox_xy)
+    bb = f"({s},{w},{n},{e})"
+    q = ("[out:json][timeout:120];("
+         f'way["highway"]{bb};way["area:highway"]{bb};'
+         f'way["landuse"]{bb};rel["landuse"]{bb};way["leisure"]{bb};rel["leisure"]{bb};'
+         f'way["amenity"="parking"]{bb};rel["amenity"="parking"]{bb};'
+         f'way["natural"]{bb};rel["natural"]{bb};node["natural"="tree"]{bb};'
+         ");out geom;")
+    r = requests.post(OVERPASS_URL, data={"data": q}, headers={"User-Agent": USER_AGENT}, timeout=180)
+    r.raise_for_status()
+    d = r.json()
+    d["_fetched_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    d["_query"] = q
+    d["_bbox_xy"] = [round(float(v), 1) for v in bbox_xy]
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+    return d
+
+
+def _osm_width(t: dict) -> float | None:
+    m = re.match(r"^\s*([\d.]+)\s*(m)?\s*$", str(t.get("width", "")))
+    return float(m.group(1)) if m else None
+
+
+def classify_osm_ground(t: dict, closed: bool) -> tuple[str, str, str] | None:
+    """OSM のタグ → (種類, 形 "line"|"area", 種類を決めたタグ)。地表の種類に関係しない物（landuse=education 等）は None。"""
+    hw, sf = t.get("highway"), t.get("surface")
+    if t.get("area:highway"):
+        ah = t["area:highway"]
+        k = SURFACE_KIND.get(sf, "asphalt" if ah in ROAD_HIGHWAYS | {"service"} else "paving")
+        return k, "area", f"area:highway={ah}" + (f", surface={sf}" if sf else "")
+    if hw:
+        is_area = closed and (t.get("area") == "yes" or hw == "pedestrian")
+        if hw == "steps":
+            return "steps", "line", "highway=steps"
+        if hw in ROAD_HIGHWAYS:
+            base = "asphalt"
+        elif hw == "service":
+            base = "parking" if t.get("service") == "parking_aisle" else "asphalt"
+        elif hw in FOOT_HIGHWAYS:
+            base = "paving"
+        else:
+            return None
+        k = SURFACE_KIND.get(sf, base)
+        why = f"highway={hw}" + (f", surface={sf}" if sf in SURFACE_KIND else
+                                 f", surface={sf}（種類の既定）" if sf else "（surface タグ無し：種類の既定）")
+        return k, ("area" if is_area else "line"), why
+    if not closed:
+        return None
+    if t.get("amenity") == "parking":
+        return "parking", "area", "amenity=parking"
+    if t.get("leisure") == "pitch":
+        k = SURFACE_KIND.get(sf)
+        return (k, "area", f"leisure=pitch, surface={sf}") if k else None
+    for key, v in GRASS_TAGS:
+        if t.get(key) == v:
+            return "grass", "area", f"{key}={v}"
+    return None
+
+
+def _road_class(t: dict) -> str:
+    hw = t.get("highway")
+    if hw == "steps":
+        return "steps"
+    if hw == "service":
+        return "service"
+    if hw in FOOT_HIGHWAYS:
+        return "foot"
+    return "road"
+
+
+def osm_ground(raw: dict) -> dict:
+    """生の返事から、地表の種類の図形の一覧（原点からの m）を作る。敷地 JSON の ground_osm に入る。"""
+    feats, trees = [], []
+    for e in raw.get("elements", []):
+        t = e.get("tags", {})
+        if e["type"] == "node":
+            if t.get("natural") == "tree":
+                x, y = geo.lonlat_to_xy(e["lon"], e["lat"])
+                trees.append({"osm": f"node/{e['id']}", "xy": [round(x, 2), round(y, 2)]})
+            continue
+        if e["type"] == "way":
+            g = e.get("geometry") or []
+            if len(g) < 2:
+                continue
+            closed = len(g) >= 4 and g[0] == g[-1]
+        else:
+            closed = True
+        c = classify_osm_ground(t, closed)
+        if not c:
+            continue
+        kind, shape, why = c
+        f = {"osm": f"{e['type']}/{e['id']}", "kind": kind, "shape": shape, "tags_used": why}
+        if t.get("name"):
+            f["name"] = t["name"]
+        if shape == "line":
+            w = _osm_width(t)
+            rc = _road_class(t)
+            f["coords"] = [[round(x, 2), round(y, 2)] for x, y in _ring_xy(e["geometry"])]
+            f["width_m"] = w if w else ROAD_WIDTH_M[rc]
+            f["width_method"] = f"OSM width={t['width']}" if w else f"OSM に width が無いので {rc} の標準幅 {ROAD_WIDTH_M[rc]:g} m"
+        else:
+            rings = _osm_polygon(e)
+            if not rings:
+                continue
+            f["rings"] = [[[round(x, 2), round(y, 2)] for x, y in r] for r in rings]
+        feats.append(f)
+    return {"source": "OpenStreetMap contributors（ODbL）", "license": "ODbL", "fetched_at": raw.get("_fetched_at"),
+            "bbox_xy": raw.get("_bbox_xy"), "status": "estimated",
+            "method": "OSM のタグから地表の種類を決める（surface があればそれ、無ければ種類の既定）。道は中心線を幅で太らせる",
+            "standard_width_m": ROAD_WIDTH_M, "features": feats, "trees": trees}
+
+
 # --- 国土地理院 -------------------------------------------------------------------
 
 def _bbox_lonlat(rings: Iterable[list[list[float]]], margin_m: float = 60.0) -> tuple[float, float, float, float]:
@@ -588,6 +737,8 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
         "plateau_only": extra,
         "staff_additions": prev.get("staff_additions", []),
     }
+    if prev.get("ground_osm"):
+        doc["ground_osm"] = prev["ground_osm"]        # 地表の種類（OSM）は別に取った物。作り直しても引き継ぐ
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return doc
@@ -688,6 +839,202 @@ def draw_overview(site: dict, aerial_meta: dict | None, aerial_png: Path | None,
     return out
 
 
+# --- 地面の 3 段：OSM の塗り分け ／ 棟 JSON の ground_offset ／ 5 m 標高 -------------------------------
+# 1) 地表の種類（道・歩道・芝・駐車場）は OSM から（estimated、出典 OSM）。1 m 格子のマスクにする（ground_mask）。
+# 2) 建物まわりの段差は棟 JSON の faces[].ground_offset から、面の前の帯だけ地形を上書きする（apply_ground_overrides）。
+# 3) それ以外は 5 m 標高を均した面。道路の勾配を測ったわけではない（5 m 標高の画素より細かい形は無い）。
+
+MASK_STEP_M = 1.0
+GROUND_OVERRIDE_DEPTH_M = 12.0   # ground_offset を効かせる面の前の帯の奥行き（ground_offset.depth があればそれ）。読み方（FACE_BAND_M）と同じ
+GROUND_OVERRIDE_BLEND_M = 5.0    # 帯の外、この距離で元の地形へ滑らかに戻す
+GROUND_OVERRIDE_MAX_SHIFT_M = 4.0   # 帯の地形をこれより大きく動かす値は上書きしない（5 m 標高の均しで隠れる段差を超える＝ground_z か値の食い違い）
+
+
+def ground_mask(ground_osm: dict | None, bounds: tuple[float, float, float, float], footprints=(), step: float = MASK_STEP_M) -> dict:
+    """OSM の図形から地表の種類のマスク（1 m 格子、値は GROUND_KINDS の番号）を作る。bounds は (x0, y0, x1, y1) m。
+    行 0 が北の端（画像と同じ向き）。画素 (r, c) の中心は (x0 + (c+0.5)·step, y_top − (r+0.5)·step)。
+    塗る順（後が上）：芝 → 駐車場 → 舗装の面 → 車道の面 → 道の線（車道・駐車場・歩道・階段）→ 建物の足元。"""
+    from PIL import Image, ImageDraw
+
+    x0, y0, x1, y1 = bounds
+    W, H = int(math.ceil((x1 - x0) / step)), int(math.ceil((y1 - y0) / step))
+    y_top = y0 + H * step
+    S = 4                                          # PIL は頂点を整数に切り捨てて縁を含めて塗るので、4 倍で描いて各画素の中心を拾う
+    im = Image.new("L", (W * S, H * S), 0)
+    dr = ImageDraw.Draw(im)
+    kid = {k: i for i, k in enumerate(GROUND_KINDS)}
+
+    def px(p):
+        return ((p[0] - x0) / step * S, (y_top - p[1]) / step * S)
+
+    feats = (ground_osm or {}).get("features", [])
+    counts = {k: {"features": 0, "area_m2": 0.0} for k in GROUND_KINDS}
+    area_order = ("grass", "parking", "paving", "steps", "asphalt")
+    for k in area_order:
+        for f in feats:
+            if f["shape"] == "area" and f["kind"] == k:
+                for r in f["rings"]:
+                    if len(r) >= 3:
+                        dr.polygon([px(p) for p in r], fill=kid[k])
+                counts[k]["features"] += 1
+    line_order = ("asphalt", "parking", "paving", "grass", "steps")
+    for k in line_order:
+        for f in feats:
+            if f["shape"] == "line" and f["kind"] == k:
+                pts = [px(p) for p in f["coords"]]
+                rad = f["width_m"] / step / 2 * S
+                for (ax, ay), (bx, by) in zip(pts, pts[1:]):   # 区間ごとに幅の長方形（PIL の太線は丸めがずれるので使わない）
+                    L = math.hypot(bx - ax, by - ay)
+                    if L == 0:
+                        continue
+                    ox, oy = -(by - ay) / L * rad, (bx - ax) / L * rad
+                    dr.polygon([(ax + ox, ay + oy), (bx + ox, by + oy), (bx - ox, by - oy), (ax - ox, ay - oy)], fill=kid[k])
+                for qx, qy in pts:                        # 曲がり角の欠けを丸で埋める
+                    dr.ellipse([qx - rad, qy - rad, qx + rad, qy + rad], fill=kid[k])
+                counts[k]["features"] += 1
+    for poly in footprints:
+        if len(poly) >= 3:
+            dr.polygon([px(p) for p in poly], fill=kid["building"])
+    M = np.ascontiguousarray(np.asarray(im, dtype=np.uint8)[S // 2::S, S // 2::S])
+    for k, i in kid.items():
+        counts[k]["area_m2"] = round(float((M == i).sum()) * step * step, 1)
+    return {"mask": M, "x0": float(x0), "y_top": float(y_top), "step": float(step), "w": W, "h": H, "counts": counts}
+
+
+def mask_kind_at(gm: dict, X, Y) -> np.ndarray:
+    """マスクの種類番号を (x, y) で読む（最近傍。範囲外は 0 = unknown）。Blender の地形の色分けにも使う。"""
+    M = gm["mask"]
+    c = np.floor((np.asarray(X, float) - gm["x0"]) / gm["step"]).astype(int)
+    r = np.floor((gm["y_top"] - np.asarray(Y, float)) / gm["step"]).astype(int)
+    ok = (c >= 0) & (c < M.shape[1]) & (r >= 0) & (r < M.shape[0])
+    out = np.zeros(np.shape(X), dtype=np.uint8)
+    out[ok] = M[r[ok], c[ok]]
+    return out
+
+
+def save_ground_mask_png(gm: dict, path: Path) -> None:
+    """インデックス色の PNG（パレットは GROUND_KIND_COLOR）。画素の値＝種類の番号。"""
+    from PIL import Image
+
+    im = Image.fromarray(gm["mask"], mode="L").convert("P")
+    pal = []
+    for k in GROUND_KINDS:
+        pal.extend(GROUND_KIND_COLOR[k])
+    im.putpalette(pal + [0] * (768 - len(pal)))
+    im.putdata(list(gm["mask"].ravel()))         # convert("P") で番号が変わらないよう、値をそのまま入れ直す
+    path.parent.mkdir(parents=True, exist_ok=True)
+    im.save(path, optimize=True)
+
+
+def _save_mask_color(gm: dict, path: Path) -> None:
+    from PIL import Image
+
+    lut = np.array([GROUND_KIND_COLOR["unknown" if k == "building" else k] for k in GROUND_KINDS], dtype=np.uint8)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    Image.fromarray(lut[gm["mask"]], mode="RGB").save(path, optimize=True)
+
+
+def load_ground_mask(path: Path | None = None) -> dict | None:
+    """export_web が書いた out/site/ground_mask.npz（Blender から読む。無ければ None）。"""
+    path = path or OUT_SITE / "ground_mask.npz"
+    if not path.exists():
+        return None
+    d = np.load(path)
+    return {"mask": d["mask"], "x0": float(d["x0"]), "y_top": float(d["y_top"]), "step": float(d["step"])}
+
+
+def ground_override_specs(b: dict) -> list[dict]:
+    """棟 JSON の faces[].ground_offset（measured / estimated で値がある物）→ 地形を上書きする帯の一覧。
+    target_z は標高（ground_z + value）。unknown・値の無い物・面の位置が無い物は入れない。"""
+    gz, _ = _mval(b.get("ground_z"))
+    out = []
+    if gz is None:
+        return out
+    for f in b.get("faces", []):
+        go = f.get("ground_offset")
+        v, tol = _mval(go)
+        if v is None or not f.get("from") or not f.get("to"):
+            continue
+        dep, _ = _mval(go.get("depth")) if isinstance(go, dict) else (None, None)
+        out.append({"building": b.get("id"), "face": f["id"], "from": list(f["from"]), "to": list(f["to"]),
+                    "value": v, "tol": tol, "status": go.get("status", "estimated") if isinstance(go, dict) else "estimated",
+                    "evidence": list(go.get("evidence") or []) if isinstance(go, dict) else [],
+                    "depth_m": float(dep) if dep else GROUND_OVERRIDE_DEPTH_M, "ground_z": gz, "target_z": gz + v})
+    return out
+
+
+def apply_ground_overrides(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, specs: list[dict], z_ref: float = 0.0,
+                           blend_m: float = GROUND_OVERRIDE_BLEND_M,
+                           max_shift_m: float = GROUND_OVERRIDE_MAX_SHIFT_M) -> tuple[np.ndarray, list[dict]]:
+    """面の前の帯（面の幅 × 面から depth m。外向き法線は (u.y, −u.x)）の地形を、帯の中央値が target_z − z_ref になるよう上げ下げする。
+    帯の中の 5 m 標高の起伏はそのまま残す（平面を当てはめない）。帯の外 blend_m で滑らかに（smoothstep）元の地形へ戻す。
+    帯が重なる所（入隅）は重みで平均。動かす量が max_shift_m を超える帯は上書きせず skipped に理由を書く（決めつけない）。
+    Z は X, Y と同じ形。z_ref：Z が棟の z=0 からの m なら ground_z、標高なら 0。
+    返り値：(上書きした Z, 一覧（根拠付き）)。"""
+    Z = np.array(Z, dtype=float)
+    num = np.zeros_like(Z)
+    den = np.zeros_like(Z)
+    wmax = np.zeros_like(Z)
+    recs = []
+    for s in specs:
+        (ax, ay), (bx, by) = s["from"], s["to"]
+        L = math.hypot(bx - ax, by - ay)
+        if L == 0:
+            continue
+        ux, uy = (bx - ax) / L, (by - ay) / L
+        nx, ny = uy, -ux
+        a = (X - ax) * ux + (Y - ay) * uy
+        d = (X - ax) * nx + (Y - ay) * ny
+        D = s["depth_m"]
+        band = (a >= 0) & (a <= L) & (d >= 0) & (d <= D)
+        rec = {k: s[k] for k in ("building", "face", "value", "tol", "status", "evidence")}
+        rec.update({"from": s["from"], "to": s["to"], "depth_m": D, "blend_m": blend_m, "applied": False})
+        if not band.any():
+            rec["skipped"] = "帯の中に格子点が無い（格子が粗い）"
+            recs.append(rec)
+            continue
+        target = s["target_z"] - z_ref
+        med = float(np.median(Z[band]))
+        shift = target - med
+        rec.update({"terrain_band_median": round(med - target + s["value"], 2), "shift_m": round(shift, 2), "cells": int(band.sum())})
+        if abs(shift) > max_shift_m:
+            rec["skipped"] = (f"5 m 標高の帯の中央値 {med - target + s['value']:+.2f} m と {shift:+.2f} m 食い違う（上限 {max_shift_m:g} m）。"
+                              "ground_z か ground_offset を見直すまで上書きしない")
+            recs.append(rec)
+            continue
+        dist = np.hypot(np.maximum(np.maximum(-a, a - L), 0.0), np.maximum(np.maximum(-d, d - D), 0.0))
+        t = np.clip(1.0 - dist / blend_m, 0.0, 1.0) if blend_m > 0 else (dist == 0).astype(float)
+        w = t * t * (3 - 2 * t)
+        num += w * shift
+        den += w
+        wmax = np.maximum(wmax, w)
+        rec.update({"applied": True, "method": f"面の前 0〜{D:g} m の帯の 5 m 標高（均した面）の中央値 {med - target + s['value']:+.2f} m を "
+                              f"ground_offset {s['value']:+.2f} m に {shift:+.2f} m 動かす（帯の中の起伏は残す）。帯の外 {blend_m:g} m で元の地形へ"})
+        recs.append(rec)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        Z = Z + np.where(den > 0, wmax * num / np.where(den > 0, den, 1.0), 0.0)
+    return Z, recs
+
+
+def _designed_buildings() -> list[dict]:
+    out = []
+    for f in sorted((DATA_SITE.parent / "buildings").glob("*.json")):
+        out.append(json.loads(f.read_text(encoding="utf-8")))
+    return out
+
+
+def ensure_ground_osm(campus: str, bbox_xy: tuple[float, float, float, float]) -> dict:
+    """敷地 JSON に ground_osm が無ければ OSM から 1 回取って書き足す（取得は fetch_osm_ground のキャッシュ）。"""
+    path = DATA_SITE / f"{campus}.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    if doc.get("ground_osm"):
+        return doc["ground_osm"]
+    go = osm_ground(fetch_osm_ground(bbox_xy))
+    doc["ground_osm"] = go
+    path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+    return go
+
+
 # --- Web ビューア用の書き出し --------------------------------------------------------
 
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
@@ -766,9 +1113,10 @@ def _small_jpg(src: Path, dst: Path, px: int) -> None:
         im.save(dst, "JPEG", quality=85)
 
 
-def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 4, margin_m: float = 120.0,
+def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 2, margin_m: float = 120.0,
                with_coverage: bool = False, out_root: Path | None = None) -> dict:
-    """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を step_m 間隔に間引き）・
+    """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を均し、ground_offset の帯を上書きし、step_m 間隔に間引き）・
+    地表の種類のマスク（OSM。web/data/ground_mask.png と ground_mask.json、Blender 用に out/site/ground_mask.npz）・
     設計済みの棟の一覧。glb がある設計済みの棟は箱を出さず、glb を web/data/models/ に写す。
     CC0 の空（HDRI）と地面の質感も web/data/env/・web/data/tex/ に写す（copy_web_assets）。
     glb の軸：glTF は Y が上。Blender の (x,y,z) → glTF の (x, z, -y)。つまり glb は x=東, y=高さ, z=-北。
@@ -833,35 +1181,58 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
     dem = load_dem()
     x0, x1 = min(xs) - margin_m, max(xs) + margin_m
     y0, y1 = min(ys) - margin_m, max(ys) + margin_m
-    gx = np.arange(math.floor(x0 / step_m) * step_m, x1, step_m)
-    gy = np.arange(math.floor(y0 / step_m) * step_m, y1, step_m)
-    Z = np.full((len(gy), len(gx)), np.nan)
-    for j, y in enumerate(gy):
-        for i, x in enumerate(gx):
-            z = dem_at(dem, float(x), float(y))
-            if z is not None:
-                Z[j, i] = z
-    Z, nan_ratio = fill_gaps(Z)   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
+    X0, Y0 = math.floor(x0 / step_m) * step_m, math.floor(y0 / step_m) * step_m
+    nx, ny = len(np.arange(X0, x1, step_m)), len(np.arange(Y0, y1, step_m))
+    X1, Y1 = X0 + (nx - 1) * step_m, Y0 + (ny - 1) * step_m
+    # 地形：模型と同じ作り方（1 m 格子で読み、欠けを埋め、5 m 標高の画素の段を均す）→ ground_offset の帯を上書き → step_m おきに間引く
+    gx1, gy1 = np.arange(X0, X1 + 0.5, 1.0), np.arange(Y0, Y1 + 0.5, 1.0)
+    GX, GY = np.meshgrid(gx1, gy1)
+    Z, nan_ratio = fill_gaps(dem_sample(dem, GX, GY))   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
+    Z = box_mean(Z, TERRAIN_SMOOTH_PX)
+    specs = [s for b in _designed_buildings() for s in ground_override_specs(b)]
+    Z, overrides = apply_ground_overrides(GX, GY, Z, specs, z_ref=0.0)
+    k = int(step_m)
+    Z = Z[::k, ::k]
+    gx, gy = gx1[::k], gy1[::k]
+    # 地表の種類（OSM）：1 m 格子のマスク。建物の足元（OSM・PLATEAU・設計済みの棟）は building
+    gosm = ensure_ground_osm(campus, (X0, Y0, X1, Y1))
+    feet = [r for sb in doc["buildings"] if sb["confirmation"]["status"] != "removed" for r in sb.get("footprint_osm", [])]
+    feet += [p["footprint"] for p in pl.values()]
+    feet += [b["footprint"]["polygon"] for b in _designed_buildings() if (b.get("footprint") or {}).get("polygon")]
+    gm = ground_mask(gosm, (X0, Y0, X1, Y1), feet)
+    save_ground_mask_png(gm, data_dir / "ground_mask.png")
+    OUT_SITE.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(OUT_SITE / "ground_mask.npz", mask=gm["mask"], x0=gm["x0"], y_top=gm["y_top"], step=gm["step"])
+    _save_mask_color(gm, OUT_SITE / "ground_mask_color.png")   # Blender の背景の地形に貼る色の画像（建物の足元は根拠なしと同じ灰色）
+    mask_info = {"url": "data/ground_mask.png", "x0": gm["x0"], "y_top": gm["y_top"], "step": gm["step"], "w": gm["w"], "h": gm["h"],
+                 "kinds": [{"id": i, "kind": kd, "label": GROUND_KIND_LABEL[kd], "color": "#%02x%02x%02x" % GROUND_KIND_COLOR[kd]}
+                           for i, kd in enumerate(GROUND_KINDS)],
+                 "counts": gm["counts"], "status": "estimated", "source": gosm.get("source"), "license": gosm.get("license"),
+                 "fetched_at": gosm.get("fetched_at"), "method": gosm.get("method"), "standard_width_m": gosm.get("standard_width_m"),
+                 "note": "画素の値＝種類の番号（行 0 が北）。道は OSM の中心線を width（無ければ標準幅）で太らせた。unknown は OSM に何も無い所"}
+    (data_dir / "ground_mask.json").write_text(json.dumps(mask_info, ensure_ascii=False, indent=1), encoding="utf-8")
     wa = copy_web_assets(data_dir)
     out = {
         "schema": "campus-recorder/web/1",
         "campus": campus,
         "axes": "x=東, y=北, z=標高 m（原点 北緯35.1355° 東経136.9755°）。three.js 側で (x, z, -y) に並べ替える",
         "ground": {"x0": float(gx[0]), "y0": float(gy[0]), "step": step_m, "nx": len(gx), "ny": len(gy),
-                   "z": [round(float(v), 1) for v in Z.ravel()], "nan_ratio_filled": round(nan_ratio, 3),
-                   "source": "国土地理院 標高（DEM5A）"},
+                   "z": [round(float(v), 2) for v in Z.ravel()], "nan_ratio_filled": round(nan_ratio, 3),
+                   "source": f"国土地理院 標高（DEM5A）を 1 m 格子で {TERRAIN_SMOOTH_PX} 画素の窓で均した面。道路の勾配を測った物ではない",
+                   "overrides": overrides, "overrides_note": "棟 JSON の faces[].ground_offset で面の前の帯を上書きした所（根拠は evidence）",
+                   "mask": mask_info},
         "boxes": boxes,
         "models": models,
         "designed": designed,
         "sources": doc.get("sources"),
         "env": wa["env"],
         "ground_tex": wa["ground_tex"],
-        "ground_note": "地面の土地被覆（芝・舗装の区分）は根拠のあるデータが無いので塗り分けない。全体を舗装の質感にする",
+        "ground_note": "地面の 3 段：地表の種類は OSM（estimated）、建物まわりの段差は棟 JSON の ground_offset、残りは 5 m 標高を均した面",
     }
     (data_dir / "site.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     return {"path": data_dir / "site.json", "boxes": len(boxes), "models": list(models), "grid": (len(gx), len(gy)),
             "nan_filled": nan_ratio, "env": (wa["env"] or {}).get("url"), "tex": sorted(wa["ground_tex"]),
-            "skipped": wa["skipped"]}
+            "skipped": wa["skipped"], "mask": {k: v for k, v in gm["counts"].items()}, "overrides": overrides}
 
 
 def coverage_layer(b: dict, ev: dict, cov_json: Path) -> dict | None:

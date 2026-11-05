@@ -112,6 +112,7 @@ Tests: `python -I -X utf8 -m pytest` (test files are in `tests/`).
 - **A personal classification ledger made before the period** (which photo shows which building) was used as input to the tool-building. It is data, not code. Values from it are marked `source: "台帳(期間前)"`.
 - **PLATEAU** (MLIT Japan, Nagoya 2022): building footprints and heights, used only as a base and overwritten by photo evidence.
 - **OpenStreetMap** (roads, boundaries, building names). `{{TBD}}`: attribution text (ODbL).
+- **OpenStreetMap ground cover** (roads, footways, grass, parking): painted on the walk view and model ground as estimated (fetched once via Overpass, 2026-11-05; same ODbL attribution as above).
 - **Geospatial Information Authority of Japan**: aerial photos and 5 m elevation (attribution shown).
 - **CC0 assets** for sky/lighting/materials. `{{TBD}}`: list the actual assets when used.
 - **CC0 assets (Poly Haven / Kenney)**: the full list (source URL, license, SHA256) is in `data/assets/catalog.json`. Only CC0-1.0 is accepted (no CC-BY). They supply only the look; position, count and size come from the evidence-backed values in the building JSON. Files are fetched with `python -m recorder assets fetch` into `assets/` (not in the repository).

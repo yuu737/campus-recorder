@@ -58,7 +58,9 @@
     <span class="sw" style="background:#8f969c"></span>unknown（まだ分からない）<br>
     <span class="sw" style="background:#5f6266;opacity:.6"></span>面の未撮影の所（被覆図から）<br>
     <span class="sw" style="background:#b8bcc0;opacity:.6"></span>写っているが斜め・遮蔽で使えない所<br>
-    <span class="k" style="color:#52606d">印の無い物（地面など）は元の色</span>
+    <span class="sw" style="background:linear-gradient(90deg,#9e9fa1 0 33%,#dcd5c9 33% 66%,#b7c8a9 66%)"></span>地面の淡い色＝OpenStreetMap 由来の道・歩道・芝（estimated）。濃い灰は根拠なし<br>
+    <span class="sw" style="border:2px solid #e8912d"></span>棟 JSON の ground_offset で地面の高さを上書きした帯<br>
+    <span class="k" style="color:#52606d">印の無い物は元の色</span>
   </div>
 </div>
 <div id="card" class="panel"></div>
@@ -146,6 +148,52 @@ function resize() {
 addEventListener("resize", resize); resize();
 
 const site = await (await fetch("data/site.json")).json();
+// 地表の種類のマスク（ground_mask.png：インデックス色。色→種類の番号は G.mask.kinds）を地面の素材に差し込む。
+// 1 m 格子の境界は、隣の 4 画素の種類の色を双一次で混ぜてぼかす。根拠モードでは OSM 由来の所を淡い色、根拠の無い所を灰色に
+const groundUniforms = { uEv: { value: 0 } };
+function groundMaskShader(mat, M, pavTex, tileA, tileP) {
+  const mt = new THREE.TextureLoader().load(M.url);
+  mt.magFilter = mt.minFilter = THREE.NearestFilter; mt.generateMipmaps = false;
+  const pal = M.kinds.map((k) => new THREE.Color().setRGB(...[1, 3, 5].map((i) => parseInt(k.color.slice(i, i + 2), 16) / 255), THREE.SRGBColorSpace));
+  const raw = M.kinds.map((k) => new THREE.Vector3(...[1, 3, 5].map((i) => parseInt(k.color.slice(i, i + 2), 16) / 255)));
+  Object.assign(groundUniforms, {
+    uMask: { value: mt }, uPav: { value: pavTex }, uTileA: { value: tileA }, uTileP: { value: tileP },
+    uMaskO: { value: new THREE.Vector2(M.x0, M.y_top - M.h * M.step) }, uMaskStep: { value: M.step },
+    uMaskN: { value: new THREE.Vector2(M.w, M.h) },
+    uPalRaw: { value: raw }, uPalLin: { value: pal.map((c) => new THREE.Vector3(c.r, c.g, c.b)) },
+  });
+  const N = M.kinds.length;
+  mat.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, groundUniforms);
+    sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vGW;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvGW = (modelMatrix * vec4(transformed, 1.0)).xyz;");
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", `#include <common>
+varying vec3 vGW;
+uniform sampler2D uMask, uPav; uniform float uTileA, uTileP, uMaskStep, uEv; uniform vec2 uMaskO, uMaskN;
+uniform vec3 uPalRaw[${N}], uPalLin[${N}];
+int kindOf(vec2 t) {                       // 画素の色 → 種類の番号（パレットの一番近い色）
+  vec3 c = texture2D(uMask, (t + 0.5) / uMaskN).rgb; int best = 0; float bd = 1e9;
+  for (int i = 0; i < ${N}; i++) { vec3 d = c - uPalRaw[i]; float e = dot(d, d); if (e < bd) { bd = e; best = i; } }
+  return best;
+}
+vec3 kindColor(int k, vec3 a, vec3 p) {    // 0 unknown 1 asphalt 2 paving 3 grass 4 parking 5 steps 6 building
+  float l = dot(a, vec3(0.333));
+  if (uEv > 0.5) return (k >= 1 && k <= 5) ? mix(uPalLin[k], vec3(1.0), 0.45) : vec3(0.32);
+  if (k == 1) return a;
+  if (k == 2) return p;
+  if (k == 3) return vec3(0.075, 0.16, 0.035) * (0.55 + 2.2 * l);
+  if (k == 4) return a * 1.25;
+  if (k == 5) return p * 1.25;
+  return mix(a, vec3(0.30, 0.28, 0.25), 0.6);
+}`).replace("#include <map_fragment>", `
+  vec2 wxy = vec2(vGW.x, -vGW.z);
+  vec3 tA = texture2D(map, wxy / uTileA).rgb, tP = texture2D(uPav, wxy / uTileP).rgb;
+  vec2 q = (wxy - uMaskO) / uMaskStep - 0.5, b = floor(q), f = q - b;
+  vec3 gc = kindColor(kindOf(b), tA, tP) * (1.0 - f.x) * (1.0 - f.y) + kindColor(kindOf(b + vec2(1, 0)), tA, tP) * f.x * (1.0 - f.y)
+          + kindColor(kindOf(b + vec2(0, 1)), tA, tP) * (1.0 - f.x) * f.y + kindColor(kindOf(b + vec2(1, 1)), tA, tP) * f.x * f.y;
+  diffuseColor.rgb *= gc;`);
+  };
+}
 const envReady = loadEnv(site.env);
 const G = site.ground;
 // データは x=東, y=北, z=標高。three.js は (x, 標高, -北)。glb は最初から この向き。
@@ -167,8 +215,9 @@ function groundZ(x, n) {
     const a = j * G.nx + i, b = a + 1, c = a + G.nx, d = c + 1;
     idx.push(a, b, c, b, d, c);
   }
-  // 地面：芝・舗装の区分は根拠のあるデータが無いので塗り分けない。全体を CC0 の舗装の質感（UV は m ÷ 1 枚の実寸）
-  const gt = (site.ground_tex || {}).asphalt;
+  // 地面の 3 段：地表の種類は OSM のマスク（G.mask、1 m 格子、estimated）、建物まわりの段差は棟 JSON の ground_offset（G.overrides）、
+  // 残りは 5 m 標高を均した面。質感は CC0 の asphalt・paving_block（UV は m ÷ 1 枚の実寸）、芝は単色。OSM に何も無い所は灰色
+  const gt = (site.ground_tex || {}).asphalt, gp = (site.ground_tex || {}).paving_block;
   const tile = gt ? gt.tile_m[0] : 1;
   const uv = new Float32Array(G.nx * G.ny * 2);
   for (let j = 0; j < G.ny; j++) for (let i = 0; i < G.nx; i++) {
@@ -184,6 +233,7 @@ function groundZ(x, n) {
     const tex = (url, srgb) => { const t = tl.load(url); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = maxAniso;
       if (srgb) t.colorSpace = THREE.SRGBColorSpace; return t; };
     gm.color.set(0xffffff); gm.map = tex(gt.color, true); gm.normalMap = tex(gt.normal, false);
+    if (G.mask && gp) groundMaskShader(gm, G.mask, tex(gp.color, true), gt.tile_m[0], gp.tile_m[0]);
   }
   const groundMesh = new THREE.Mesh(g, gm);
   groundMesh.receiveShadow = true;                    // 地面は影を受けるだけ
@@ -226,6 +276,24 @@ function evidenceOf(o, mt) {                          // 素材の印（面ご�
   for (let p = o; p; p = p.parent) if (p.userData && p.userData.evidence) return p.userData.evidence;
   return null;
 }
+// 地面の高さを棟 JSON の ground_offset で上書きした帯（site.json の ground.overrides）：根拠モードの時だけ橙の枠で見せる
+const overGroup = new THREE.Group();
+overGroup.visible = false;
+{
+  const lm = new THREE.LineBasicMaterial({ color: 0xe8912d, depthTest: false });
+  for (const o of G.overrides || []) {
+    if (!o.applied) continue;
+    const [x0, y0] = o.from, [x1, y1] = o.to, L = Math.hypot(x1 - x0, y1 - y0), ux = (x1 - x0) / L, uy = (y1 - y0) / L;
+    const nx = uy, ny = -ux, D = o.depth_m;
+    const pts = [[0, 0], [L, 0], [L, D], [0, D], [0, 0]].map(([a, d]) => {
+      const x = x0 + ux * a + nx * d, n = y0 + uy * a + ny * d;
+      return new THREE.Vector3(x, groundZ(x, n) + 0.15, -n);
+    });
+    const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm);
+    ln.renderOrder = 3; overGroup.add(ln);
+  }
+  scene.add(overGroup);
+}
 let evOn = false;
 function setEvidence(on) {
   evOn = on;
@@ -233,6 +301,8 @@ function setEvidence(on) {
   const btn = document.getElementById("evbtn");
   btn.classList.toggle("on", on); btn.textContent = on ? "元の見た目に戻す" : "根拠で見る";
   coverGroup.visible = on;
+  overGroup.visible = on;
+  groundUniforms.uEv.value = on ? 1 : 0;
   for (const root of evRoots) root.traverse((o) => {
     if (!o.isMesh) return;
     if (on) {

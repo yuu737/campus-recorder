@@ -39,8 +39,10 @@
 
 地面（11/4）:
     国土地理院 5m 標高（out/site/dem5a.npz）から ground_z を引いた地形の面 1 枚（足元の外側 20 m、1 m 格子。recorder.site.terrain_grid）。
-    建物は地形を切り欠かず、地形の一番低い所の 1 m 下まで伸ばす（footing_*）。faces[].ground_offset は形に使わず、
-    地形との検算だけ（model_report の ground_offset_checks / warnings）。室外機・段・玄関・外階段の足元は面の前の地形から。
+    建物は地形を切り欠かず、地形の一番低い所の 1 m 下まで伸ばす（footing_*）。
+    11/5：faces[].ground_offset で面の前の帯（既定 12 m）の地形を上書きする（site.apply_ground_overrides。5 m 標高と 4 m 超
+    食い違う値は上書きせず report に理由）。検算（ground_offset_checks / warnings）は元の 5 m 標高で続ける。
+    地表の種類（OSM の車道・歩道・芝…）は out/site/ground_mask.npz（site export-web が書く）で地形の四角ごとに色分けする。室外機・段・玄関・外階段の足元は面の前の地形から。
     四面図・屋根伏せでは地形を描かない。鳥瞰・街路視点・glb では描く（背景の粗い地形 terrain_far は描画だけ）。
 
 決まり:
@@ -451,6 +453,7 @@ class Mats:
         self.dark = material_plain("dark_band", (0.22, 0.17, 0.13, 1.0), roughness=0.6)
         self.metal = material_plain("metal", (0.75, 0.76, 0.78, 1.0), roughness=0.4, metallic=0.6)
         self.ground = material_plain("ground", (0.50, 0.49, 0.46, 1.0), roughness=0.95)
+        self._ground_kinds: dict = {}
         self.pavement = material_plain("pavement", (0.46, 0.33, 0.28, 1.0), roughness=0.95)
         self.leaf = material_plain("leaf", (0.20, 0.33, 0.14, 1.0), roughness=0.95)
         self.trunk = material_plain("trunk", (0.30, 0.22, 0.15, 1.0))
@@ -460,6 +463,37 @@ class Mats:
         self.stone = material_plain("stone", (0.36, 0.30, 0.30, 1.0), roughness=0.5)          # 御影石の段（赤みの灰）
         self.white = material_plain("white", (0.88, 0.88, 0.86, 1.0), roughness=0.8)          # 軒裏・段の裏
         self.canopy = material_plain("canopy", (0.80, 0.84, 0.80, 1.0), roughness=0.3)        # かまぼこ庇（透ける板。色だけ）
+
+    def ground_kind(self, kind: str):
+        """地表の種類（OSM）の素材。色は site.GROUND_KIND_COLOR（sRGB）を線形にした単色。"""
+        if kind not in self._ground_kinds:
+            rgb = [(c / 255.0) ** 2.2 for c in site.GROUND_KIND_COLOR[kind]]
+            self._ground_kinds[kind] = material_plain(f"ground_{kind}", (*rgb, 1.0), roughness=0.95 if kind != "grass" else 1.0)
+        return self._ground_kinds[kind]
+
+    def ground_mask_image(self, mask: dict, png: Path):
+        """背景の粗い地形（10 m 格子）用：地表の種類の色の画像（out/site/ground_mask_color.png、1 m／画素）を
+        物の座標（＝世界の x, y）から貼る。四角ごとの色分けでは 10 m の段になり道が消えるので。glb には入らない（terrain_far）。"""
+        mat = bpy.data.materials.new("ground_mask_far")
+        mat.use_nodes = True
+        nt = mat.node_tree
+        bsdf = nt.nodes["Principled BSDF"]
+        bsdf.inputs["Roughness"].default_value = 0.95
+        img = bpy.data.images.load(str(png), check_existing=True)
+        h, w = mask["mask"].shape
+        W, H = w * mask["step"], h * mask["step"]
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        mp = nt.nodes.new("ShaderNodeMapping")
+        mp.vector_type = "POINT"
+        mp.inputs["Scale"].default_value = (1.0 / W, 1.0 / H, 1.0)
+        mp.inputs["Location"].default_value = (-mask["x0"] / W, -(mask["y_top"] - H) / H, 0.0)
+        tx = nt.nodes.new("ShaderNodeTexImage")
+        tx.image = img
+        tx.extension = "EXTEND"
+        nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs["Vector"], tx.inputs["Vector"])
+        nt.links.new(tx.outputs["Color"], bsdf.inputs["Base Color"])
+        return mat
 
     def named(self, name: str | None):
         if isinstance(name, str) and name.startswith("asset:"):      # CC0 の質感（data/assets/catalog.json）
@@ -653,12 +687,15 @@ FOOTING_DEPTH_M = 1.0      # 建物を地形の下まで伸ばす深さ（地形
 class Terrain:
     """模型の地面。国土地理院 5m 標高（out/site/dem5a.npz）から ground_z を引いた 1 枚の面。
 
-    faces[].ground_offset は形には使わない（検算だけ。site.check_ground_offsets）。
+    faces[].ground_offset は面の前の帯の地形を上書きする（site.apply_ground_overrides。一覧は report の ground_overrides）。
+    検算（site.check_ground_offsets）は上書き前の 5 m 標高で。地表の種類は OSM のマスク（out/site/ground_mask.npz）で色分け。
     5m 標高か ground_z が無い時だけ z=0 の平面（仮の値として report に出す）。"""
 
     def __init__(self, b: dict, poly):
         self.grid = self.far = None
         self.checks, self.warnings, self.info = [], [], {}
+        self.overrides = []
+        self.mask = site.load_ground_mask(REPO / "out" / "site" / "ground_mask.npz")
         gz = val(b.get("ground_z"))
         npz = REPO / "out" / "site" / "dem5a.npz"
         if gz is None or not npz.exists():
@@ -672,6 +709,11 @@ class Terrain:
         except ValueError:
             self.far = None
         self.checks, self.warnings = site.check_ground_offsets(dem, b)
+        GX, GY = np.meshgrid(self.grid["x"], self.grid["y"])
+        self.grid["z"], self.overrides = site.apply_ground_overrides(GX, GY, self.grid["z"], site.ground_override_specs(b), z_ref=gz)
+        for o in self.overrides:
+            if not o["applied"]:
+                self.warnings.append(f"{o['face']} の ground_offset で地形を上書きしなかった：{o['skipped']}")
         zs = self.grid["z"][self.grid["mask"]]
         self.info = {"source": "国土地理院 5m 標高（DEM5A）out/site/dem5a.npz − ground_z", "ground_z": gz,
                      "margin_m": site.TERRAIN_MARGIN_M, "step_m": 1.0, "smooth_px": site.TERRAIN_SMOOTH_PX,
@@ -727,13 +769,16 @@ class Terrain:
             g.data.materials.append(mats.ground)
             return [g]
         obs = [self._mesh("terrain", self.grid, self.grid["mask"], 0.0, col, mats.ground)]
+        self.paint_counts = self.paint(obs[0], mats)
         if self.far is not None:
             # 細かい地形（長方形）の内側に全部入る四角は抜く。高さは同じ均した格子から取るので継ぎ目は合う
             gx, gy = self.grid["x"], self.grid["y"]
             FX, FY = np.meshgrid(self.far["x"], self.far["y"])
             inner = (FX >= gx[0]) & (FX <= gx[-1]) & (FY >= gy[0]) & (FY <= gy[-1])
             inside = inner[:-1, :-1] & inner[1:, :-1] & inner[:-1, 1:] & inner[1:, 1:]
-            obs.append(self._mesh_far("terrain_far", self.far, inside, col, mats.ground))
+            png = REPO / "out" / "site" / "ground_mask_color.png"
+            far_mat = mats.ground_mask_image(self.mask, png) if self.mask is not None and png.exists() else mats.ground
+            obs.append(self._mesh_far("terrain_far", self.far, inside, col, far_mat))
         return obs
 
     @staticmethod
@@ -750,8 +795,32 @@ class Terrain:
         ob.data.materials.append(mat)
         return ob
 
+    def paint(self, ob, mats) -> dict:
+        """地形の四角ごとに、中心の地表の種類（OSM のマスク）で素材を分ける。マスクが無ければ 1 色のまま。返り値は種類ごとの四角の数。"""
+        if self.mask is None or self.grid is None:
+            return {}
+        me = ob.data
+        cs = np.array([p.center[:2] for p in me.polygons]) if len(me.polygons) else np.zeros((0, 2))
+        if not len(cs):
+            return {}
+        ks = site.mask_kind_at(self.mask, cs[:, 0], cs[:, 1])
+        slot, by_mat = {}, {}
+        for kd in sorted(set(int(k) for k in ks)):
+            name = site.GROUND_KINDS[kd]
+            if name == "building":
+                name = "unknown"                 # 建物の足元は根拠の無い所と同じ灰色（背景の地形の画像と揃える）
+            m = mats.ground_kind(name)
+            if m.name not in by_mat:
+                me.materials.append(m)
+                by_mat[m.name] = len(me.materials) - 1
+            slot[kd] = by_mat[m.name]
+        for p, k in zip(me.polygons, ks):
+            p.material_index = slot[int(k)]
+        return {site.GROUND_KINDS[int(k)]: int((ks == k).sum()) for k in set(ks.tolist())}
+
     def report(self) -> dict:
-        return {"terrain": self.info, "ground_offset_checks": self.checks}
+        return {"terrain": self.info, "ground_offset_checks": self.checks, "ground_overrides": self.overrides,
+                "ground_mask": self.paint_counts if hasattr(self, "paint_counts") else None}
 
 
 def face_part_span(pt: dict, f: dict) -> tuple[float, float]:
