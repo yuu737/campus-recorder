@@ -2645,6 +2645,822 @@
    "chain_code": "few_inliers",
    "sfm_reason": "SfM の模型 5（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
    "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060328137",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060342994",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061341818",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061357582",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061402813",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061410188",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061418906",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061423669",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061434917",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061442402",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061449185",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061455930",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061905208.MP",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061908705",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061909489",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061910368",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 5（16 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061647959",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061649102",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061704401",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061708177",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061709593",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061710650",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061711714",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061720413",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062046145",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062246708",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062254010",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062300065",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062307232",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062311895",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062317561",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 3（15 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060854125",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060904811",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060915328",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060927494",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060950084",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060954729",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061002256",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 0（7 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061939875",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 1（6 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061943220",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 1（6 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061946087",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 1（6 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062202098",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 1（6 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062211785",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 1（6 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_062220598",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 1（6 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061834617",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 4（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061836019",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 4（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_061836600",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型 4（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
+  },
+  {
+   "photo": "PXL_20261105_060842230",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060601578",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061511227",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060239806",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_075532769",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060800017",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060756828",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061122585",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061525822",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061830023",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060807986",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060310392",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062323658",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061255833",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060613837",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060552836",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060548823",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061247963",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062637300",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060542381",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062543289",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060834553",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062527087",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060725949.MP",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062330274",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060801653",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_075519850",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061520328",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060703663",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062549239",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061632682",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061837232",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060746293.MP",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061828741",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_055234749",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060316957",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060528804",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060730259",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062155782",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061034445",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061918505",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060255835",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062537872",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061300605",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061934785",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060534782",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061028255",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_060804738",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062846360",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_061241221",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "PXL_20261105_062840332",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
+  },
+  {
+   "photo": "20261105_165235743",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "焦点距離（35mm 換算）が索引に無い",
+   "sfm_code": "no_focal"
+  },
+  {
+   "photo": "20261105_165344878",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "焦点距離（35mm 換算）が索引に無い",
+   "sfm_code": "no_focal"
+  },
+  {
+   "photo": "20261105_165424644",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "焦点距離（35mm 換算）が索引に無い",
+   "sfm_code": "no_focal"
+  },
+  {
+   "photo": "20261105_165632499",
+   "building": "tower75",
+   "face": null,
+   "period": "during",
+   "sfm_reason": "焦点距離（35mm 換算）が索引に無い",
+   "sfm_code": "no_focal"
   }
  ]
 }
