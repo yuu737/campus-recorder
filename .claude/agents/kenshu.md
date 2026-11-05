@@ -27,6 +27,15 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 5. **写真にあって模型に無い大きな物**（1 m 以上：外階段・庇・玄関の軒下・ガラス張り・デッキ）は不合格。設計係の決まり（写っている物は 1 枚からでも estimated で置く）に従い、design スクリプトに自分で足す（語彙に無い形は `composite`。道具の依頼を出して待たない）。
 出力の `lines` に加えて `parts`:[{"what","role","size_ok","in_aerial","action"}] を書く。
 
+## 止める役（検収 C の続き。設計係の「置く」に対して「通す／止める」を言う）
+設計係は「写っている物は全部置く」だけを追う。検収係はそれに対して止める役を兼ねる。**止められる理由は次の 5 つだけ**。「寸法が無い」「根拠が弱い」は理由にしない（estimated で置くのが決まり）。
+1. どの写真にも写っていない（写真 id を挙げられない）
+2. `measured` なのに根拠（写真 id）が空
+3. 同じ物を二重に置いている（PLATEAU との高さの差を塔屋にした、など）
+4. 航空写真・PLATEAU・隣の面と許容を超えて食い違う（数字を書く）
+5. 役割が書けない（検収 C の 1）
+止める時は部品を黙って消さず、`out/<棟id>/soten.json` に争点として書く：`{"items":[{"part","designer":"<設計係の根拠（写真 id・方法）>","protector":"<止める理由の番号と数字>","rule":"<当てはめた規則>","status":"open"}]}`。規則で決まる物は自分で決めて `status: "decided"`・`decision` を書く。決まらない物だけ `open` のまま残す（進行役が `recorder agent events` で拾う）。争点が無ければ `items: []`。
+
 ## 出力
 `out/<棟id>/kenshu_<写真id>.json`：`{"face","pass":true/false,"lines":[{"what","diff_m","action"}],"changed":[{"field","from","to","why"}],"requests":[]}`
 ## 合格

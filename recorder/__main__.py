@@ -4,7 +4,7 @@
   python -m recorder validate <json...>         規約どおりか調べる（違反があれば終了コード 1）
   python -m recorder draw <json> [--out DIR]    図面 SVG を出す（既定 out/<id>/）
   python -m recorder unknowns <json>            未確定の一覧
-  python -m recorder site build [--campus tempaku] [--plateau ZIP]
+  python -m recorder site build [--campus X] [--plateau ZIP]
                                                  公開データから敷地の土台を作る（OSM・航空写真・標高・PLATEAU・確認用の図）
   python -m recorder photos import <folder>     写真の EXIF を読んで索引 data/photos/index.json に足す
   python -m recorder photos rectify <写真> [--f35 26]  壁を正面に向け直し out/rectified/ に画像と根拠 JSON を出す
@@ -96,11 +96,11 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("site")
     ssub = p.add_subparsers(dest="site_cmd", required=True)
     q = ssub.add_parser("build")
-    q.add_argument("--campus", default="tempaku")
-    q.add_argument("--plateau", default=r"D:\名城大学\data\raw\plateau\23100_nagoya-shi_city_2022_citygml_4_op.zip")
+    q.add_argument("--campus", default=None)
+    q.add_argument("--plateau", default=None, help="PLATEAU の zip。省略すると敷地 JSON の sources.plateau_zip")
     q.add_argument("--no-plateau", action="store_true")
     q = ssub.add_parser("export-web", help="Web 3D 用に web/data/site.json と glb を書き出す")
-    q.add_argument("--campus", default="tempaku")
+    q.add_argument("--campus", default=None)
     q.add_argument("--with-coverage", action="store_true", help="out/<棟>/coverage.json の未撮影の範囲（灰色だけ。写真は出さない）を足す")
     q = ssub.add_parser("confirm")
     q.add_argument("id")
@@ -108,17 +108,30 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--by", required=True)
     q.add_argument("--name", default=None)
     q.add_argument("--note", default="")
-    q.add_argument("--campus", default="tempaku")
+    q.add_argument("--campus", default=None)
+
+    p = sub.add_parser("campus", help="敷地の立ち上げ（敷地 JSON の骨組み・未解決の点検）")
+    csub = p.add_subparsers(dest="campus_cmd", required=True)
+    q = csub.add_parser("init", help="data/site/<slug>.json の骨組みを作る（あれば上書きしない）")
+    q.add_argument("slug")
+    q.add_argument("--university", required=True)
+    q.add_argument("--campus-name", required=True)
+    q.add_argument("--bbox", nargs=4, type=float, default=None, metavar=("LAT0", "LON0", "LAT1", "LON1"))
+    q = csub.add_parser("check", help="名前の対応・範囲・人に聞くこと・公式図の許可の未解決を一覧（問題があれば終了コード 1）")
+    q.add_argument("slug", nargs="?", default=None)
 
     p = sub.add_parser("photos")
     psub = p.add_subparsers(dest="photos_cmd", required=True)
     q = psub.add_parser("import")
     q.add_argument("folder")
-    q.add_argument("--campus", default="tempaku")
+    q.add_argument("--campus", default=None)
     q.add_argument("--period", choices=["before", "during"], default=None,
                    help="期間前 / 期間中。省略すると撮影日が 2026-11-02 12:00 JST より前なら before")
     q.add_argument("--ledger", default=None, help="写真台帳.json。棟の候補を source 付きで入れる")
     q = psub.add_parser("list")
+    q = psub.add_parser("assign", help="shiwake の結果（assignments.json）を索引に書く")
+    q.add_argument("--from", dest="from_json", required=True)
+    q.add_argument("--campus", default=None)
     q = psub.add_parser("rectify")
     q.add_argument("file")
     q.add_argument("--f35", type=float, default=None, help="35mm 換算の焦点距離。省略すると EXIF、無ければ消失点から推定")
@@ -230,6 +243,10 @@ def main(argv: list[str] | None = None) -> int:
     q = asub.add_parser("tasks", help="各工程の依頼文（係の定義のパス＋task）を out/<棟>/agent_tasks.json・.md に出す")
     q.add_argument("building")
     q.add_argument("--photos", default=None, help="取り込む写真フォルダ（pipeline と同じ値を渡す）")
+    q = asub.add_parser("events", help="棟（または --site で敷地全体）の出来事を検出")
+    q.add_argument("building", nargs="?", default=None)
+    q.add_argument("--site", action="store_true")
+    q.add_argument("--campus", default=None)
     q = asub.add_parser("log", help="サブエージェントの試走の 1 工程を out/<棟>/pipeline_<日時>.json に追記")
     q.add_argument("building")
     q.add_argument("--step", required=True)
@@ -254,6 +271,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.cmd == "site":
         return _site(a)
+    if a.cmd == "campus":
+        return _campus(a)
     if a.cmd == "photos":
         return _photos(a)
     if a.cmd == "assets":
@@ -470,6 +489,18 @@ def _agent(a) -> int:
 
     from . import agents
 
+    if a.agent_cmd == "events":
+        from .agents import detect_events   # 別の係が作る。無ければここで落ちる（--help は落ちない）
+
+        if not a.site and not a.building:
+            print("エラー: 棟 id か --site を指定してください")
+            return 2
+        doc = detect_events(None if a.site else a.building, cwd=".")
+        if isinstance(doc, dict) and doc.get("markdown"):
+            print(doc["markdown"])
+        else:
+            print(json.dumps(doc, ensure_ascii=False, indent=1))
+        return 0
     try:
         if a.agent_cmd == "list":
             for d in agents.load_agent_defs().values():
@@ -497,8 +528,16 @@ def _photos(a) -> int:
 
     from . import photos, site
 
+    if a.photos_cmd == "assign":
+        from .photos import assign_photos   # 別の係が作る
+
+        assignments = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
+        res = assign_photos(index_path=Path("data/photos/index.json"), assignments=assignments,
+                            campus=a.campus or site.default_campus())
+        print(json.dumps(res, ensure_ascii=False, indent=1))
+        return 0
     if a.photos_cmd == "import":
-        sp = site.DATA_SITE / f"{a.campus}.json"
+        sp = site.DATA_SITE / f"{a.campus or site.default_campus()}.json"
         sdoc = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else None
         ledger = photos.load_ledger(Path(a.ledger)) if a.ledger else None
         idx, added = photos.import_photos(Path(a.folder), sdoc, period=a.period, ledger=ledger)
@@ -734,6 +773,8 @@ def _site(a) -> int:
     from . import site
 
     if a.site_cmd == "build":
+        a.campus = a.campus or site.default_campus()
+        a.plateau = a.plateau or site.plateau_zip(a.campus)
         t = time.time()
         osm = site.osm_site(site.fetch_osm())
         print(f"OSM: 建物 {len(osm['buildings'])} 件、敷地境界 {len(osm['boundary'])} 面 ({time.time() - t:.0f}s)")
@@ -742,7 +783,7 @@ def _site(a) -> int:
         dem = site.fetch_dem(osm["boundary"])
         print(f"標高: 格子 {dem['shape']}、{dem['z_min']:.1f}〜{dem['z_max']:.1f} m、欠け {dem['nan_ratio']:.1%} ({time.time() - t:.0f}s)")
         pl = None
-        if not a.no_plateau and Path(a.plateau).exists():
+        if not a.no_plateau and a.plateau and Path(a.plateau).exists():
             pl = site.extract_plateau(a.plateau, osm["boundary"])
             print(f"PLATEAU: 敷地内の建物 {len(pl['buildings'])} 件 ({time.time() - t:.0f}s)")
         else:
@@ -758,12 +799,12 @@ def _site(a) -> int:
         return 1 if errs else 0
 
     if a.site_cmd == "export-web":
-        r = site.export_web(a.campus, with_coverage=a.with_coverage)
+        r = site.export_web(a.campus or site.default_campus(), with_coverage=a.with_coverage)
         print(f"Web 用: {r['path']}  箱 {r['boxes']} 件、模型 {r['models']}、地面格子 {r['grid']}（標高の欠けを近傍で埋めた割合 {r['nan_filled']:.1%}）")
         return 0
 
     if a.site_cmd == "confirm":
-        path = site.DATA_SITE / f"{a.campus}.json"
+        path = site.DATA_SITE / f"{a.campus or site.default_campus()}.json"
         doc = json.loads(path.read_text(encoding="utf-8"))
         b = site.confirm(doc, a.id, a.status, a.by, a.name, a.note)
         errs = site.validate_site(doc)
@@ -775,6 +816,29 @@ def _site(a) -> int:
         print(f"{b['id']}: {b['name']} → {a.status}（{a.by}）")
         return 0
     return 2
+
+
+def _campus(a) -> int:
+    import json
+
+    from . import site
+
+    if a.campus_cmd == "init":
+        path, made = site.campus_init(a.slug, a.university, a.campus_name, tuple(a.bbox) if a.bbox else None)
+        if made:
+            print(f"敷地 JSON の骨組みを作りました: {path}\n次：OSM の relation を sources.osm.relation に書き、`site build --campus {a.slug}` → aliases・name_links・scope を埋める")
+            return 0
+        print(f"既にあるので上書きしません: {path}")
+        return 1
+    try:
+        slug = a.slug or site.default_campus()
+        res = site.campus_check(slug, out=site.OUT_SITE / "campus_check.json")
+    except (ValueError, FileNotFoundError) as e:
+        print(f"エラー: {e}")
+        return 1
+    print("\n".join(site.campus_check_lines(res)))
+    print(f"（{site.OUT_SITE / 'campus_check.json'} にも書きました）")
+    return 0 if res["ok"] else 1
 
 
 def _assets(a) -> int:

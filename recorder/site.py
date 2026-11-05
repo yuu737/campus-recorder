@@ -660,17 +660,55 @@ def _parse_building(el: ET.Element) -> dict | None:
 
 # --- 敷地 JSON ----------------------------------------------------------------------
 
-SLUGS = {"本部棟": "honbu", "名城大学付属図書館": "library", "11号館": "b11", "12号館": "b12", "13号館": "b13",
-         "14号館": "b14", "6号館": "b06", "7号館": "b07", "8号館": "b08", "9号館": "b09", "10号館": "b10",
-         "タワー75": "tower75", "共通講義棟南": "kyotsu-minami", "共通講義棟東": "kyotsu-higashi",
-         "共通講義棟北": "kyotsu-kita", "新体育館": "gym", "研究実験棟Ⅰ": "lab1", "研究実験棟Ⅱ": "lab2",
-         "研究実験棟Ⅲ": "lab3", "研究実験棟Ⅳ": "lab4", "名城大学 校友会館": "koyu-kaikan"}
+# --- 敷地の立ち上げ（大学ごとの設定は data/site/<campus>.json に持つ。コードに大学名・棟名を書かない）-----------------------
+
+NON_CAMPUS_JSON = {"plateau.json"}
 
 
-def _slug(name: str | None, osm: str) -> str:
-    if name in SLUGS:
-        return SLUGS[name]
+def campus_path(campus: str, data_site: Path | None = None) -> Path:
+    return (data_site or DATA_SITE) / f"{campus}.json"
+
+
+def load_campus(campus: str, data_site: Path | None = None) -> dict:
+    """敷地 JSON を読む。無ければ {}。"""
+    p = campus_path(campus, data_site)
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+
+
+def campus_aliases(campus: str, data_site: Path | None = None) -> dict[str, str]:
+    """別名（OSM の名前・台帳の場所名・職員の呼び名）→ 棟 id。敷地 JSON の aliases。無ければ {}。"""
+    return dict(load_campus(campus, data_site).get("aliases") or {})
+
+
+def default_campus(data_site: Path | None = None) -> str:
+    """既定のキャンパス。data/site/ の <campus>.json（plateau.json は除く）が 1 つだけならそれ。
+    複数なら default_campus.txt の中身。どちらでもなければエラー。"""
+    d = data_site or DATA_SITE
+    found = sorted(p.stem for p in d.glob("*.json") if p.name not in NON_CAMPUS_JSON) if d.exists() else []
+    if len(found) == 1:
+        return found[0]
+    txt = d / "default_campus.txt"
+    if txt.exists():
+        v = txt.read_text(encoding="utf-8").strip()
+        if v:
+            return v
+    if not found:
+        raise ValueError(f"敷地 JSON が {d} にありません。`recorder campus init <slug> --university ... --campus-name ...` で作ってください")
+    raise ValueError(f"敷地 JSON が複数あります（{', '.join(found)}）。--campus で指すか、{txt} に既定の名前を 1 行書いてください")
+
+
+def plateau_zip(campus: str, data_site: Path | None = None) -> str | None:
+    """PLATEAU の zip の場所（敷地 JSON の sources.plateau_zip）。"""
+    return (load_campus(campus, data_site).get("sources") or {}).get("plateau_zip")
+
+
+def _slug(name: str | None, osm: str, aliases: dict[str, str] | None = None) -> str:
+    if name and aliases and name in aliases:
+        return aliases[name]
     return "osm-" + osm.replace("/", "-")
+
+
+CAMPUS_CARRY_KEYS = ("university", "campus_name", "aliases", "scope", "name_links", "questions")
 
 
 def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = None) -> dict:
@@ -681,6 +719,7 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
     out = out or DATA_SITE / f"{campus}.json"
     prev = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
     prev_b = {b["id"]: b for b in prev.get("buildings", [])}
+    aliases = prev.get("aliases") or campus_aliases(campus)
 
     pl = []
     for p in (plateau or {}).get("buildings", []):
@@ -690,7 +729,7 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
     buildings = []
     used = set()
     for b in osm["buildings"]:
-        bid = _slug(b["name"], b["osm"])
+        bid = _slug(b["name"], b["osm"], aliases)
         shape = MultiPolygon([Polygon(r) for r in b["rings"] if len(r) >= 3]).buffer(0)
         parts = [p["gml_id"] for p, poly in pl
                  if poly.area > 0 and poly.intersection(shape).area / poly.area > 0.5]
@@ -737,6 +776,11 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
         "plateau_only": extra,
         "staff_additions": prev.get("staff_additions", []),
     }
+    for k in CAMPUS_CARRY_KEYS:                       # 立ち上げの欄は作り直しても引き継ぐ
+        if k in prev:
+            doc[k] = prev[k]
+    for k, v in (prev.get("sources") or {}).items():
+        doc["sources"].setdefault(k, v)
     if prev.get("ground_osm"):
         doc["ground_osm"] = prev["ground_osm"]        # 地表の種類（OSM）は別に取った物。作り直しても引き継ぐ
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -1113,7 +1157,7 @@ def _small_jpg(src: Path, dst: Path, px: int) -> None:
         im.save(dst, "JPEG", quality=85)
 
 
-def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int = 2, margin_m: float = 120.0,
+def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: int = 2, margin_m: float = 120.0,
                with_coverage: bool = False, out_root: Path | None = None) -> dict:
     """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を均し、ground_offset の帯を上書きし、step_m 間隔に間引き）・
     地表の種類のマスク（OSM。web/data/ground_mask.png と ground_mask.json、Blender 用に out/site/ground_mask.npz）・
@@ -1130,6 +1174,7 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
     web_dir = web_dir or WEB_DIR
     data_dir = web_dir / "data"
     (data_dir / "models").mkdir(parents=True, exist_ok=True)
+    campus = campus or default_campus()
     doc = json.loads((DATA_SITE / f"{campus}.json").read_text(encoding="utf-8"))
     pl_path = DATA_SITE / "plateau.json"
     pl = {p["gml_id"]: p for p in json.loads(pl_path.read_text(encoding="utf-8"))["buildings"]} if pl_path.exists() else {}
@@ -1215,6 +1260,7 @@ def export_web(campus: str = "tempaku", web_dir: Path | None = None, step_m: int
     out = {
         "schema": "campus-recorder/web/1",
         "campus": campus,
+        "scope": doc.get("scope"),
         "axes": "x=東, y=北, z=標高 m（原点 北緯35.1355° 東経136.9755°）。three.js 側で (x, z, -y) に並べ替える",
         "ground": {"x0": float(gx[0]), "y0": float(gy[0]), "step": step_m, "nx": len(gx), "ny": len(gy),
                    "z": [round(float(v), 2) for v in Z.ravel()], "nan_ratio_filled": round(nan_ratio, 3),
@@ -1262,3 +1308,91 @@ def _box(p: dict, sid: str, name: str | None, d: dict | None) -> dict:
             "grounded": grounded, "evidenced": grounded,
             "measured": c.get("measured", 0), "estimated": c.get("estimated", 0), "unknown": c.get("unknown", 0),
             "shape_ratio": (d or {}).get("shape_ratio"), "evidence_ratio": (d or {}).get("evidence_ratio")}
+
+
+# --- 立ち上げ：campus init / campus check ------------------------------------------------------
+
+def campus_init(slug: str, university: str, campus_name: str, bbox: tuple[float, float, float, float] | None = None,
+                data_site: Path | None = None) -> tuple[Path, bool]:
+    """敷地 JSON の骨組みを作る。返り値 (パス, 新しく作ったか)。既にあれば上書きしない。
+    bbox は (lat0, lon0, lat1, lon1)。あれば原点をその中心にする（無ければ geo の既定の原点）。"""
+    path = campus_path(slug, data_site)
+    if path.exists():
+        return path, False
+    lat, lon = geo.ORIGIN_LAT, geo.ORIGIN_LON
+    if bbox:
+        lat, lon = round((bbox[0] + bbox[2]) / 2, 6), round((bbox[1] + bbox[3]) / 2, 6)
+    doc = {
+        "schema": SITE_SCHEMA,
+        "campus": slug,
+        "university": university,
+        "campus_name": campus_name,
+        "crs": {"epsg": geo.EPSG_PLANE, "origin_lat": lat, "origin_lon": lon,
+                "note": "原点からの m。x=東, y=北。z は標高 m"},
+        "bbox_lonlat": list(bbox) if bbox else None,
+        "boundary_osm": [],
+        "sources": {
+            "osm": {"relation": None, "license": "ODbL", "fetched_at": None},
+            "plateau": None,
+            "plateau_zip": None,
+            "gsi": "国土地理院 航空写真・DEM5A",
+            "campus_map": {"url": None, "checked_at": None, "map_date": None,
+                           "permission": {"status": None, "ref": None, "date": None},
+                           "use": "名称・有無・大まかな位置の確認のみ。形・寸法はなぞらない（CLAUDE.md 規約 4）"},
+        },
+        "aliases": {},
+        "scope": {"targets": [], "decided_by": None, "decided_at": None, "note": ""},
+        "name_links": [],
+        "questions": [],
+        "confirmation_statuses": list(CONFIRM_STATUSES),
+        "buildings": [],
+        "plateau_only": [],
+        "staff_additions": [],
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+    return path, True
+
+
+def campus_check(campus: str, data_site: Path | None = None, out: Path | None = None) -> dict:
+    """立ち上げの未解決を集める。problems が空なら 0 件。out があれば JSON でも書く。"""
+    doc = load_campus(campus, data_site)
+    if not doc:
+        raise FileNotFoundError(f"敷地 JSON がありません: {campus_path(campus, data_site)}")
+    links = doc.get("name_links") or []
+    ids = {b.get("id") for b in doc.get("buildings", [])}
+    res = {"campus": campus, "university": doc.get("university"), "campus_name": doc.get("campus_name")}
+    for st in ("map_only", "footprint_only", "ambiguous"):
+        res[st] = [l for l in links if l.get("status") == st]
+    res["targets_missing"] = [t for t in (doc.get("scope") or {}).get("targets", []) if t not in ids]
+    res["questions_open"] = [q for q in doc.get("questions") or [] if q.get("status") == "open"]
+    perm = (((doc.get("sources") or {}).get("campus_map")) or {}).get("permission") or {}
+    res["campus_map_permission"] = perm.get("status")
+    res["permission_ok"] = perm.get("status") == "granted"
+    n = (len(res["map_only"]) + len(res["footprint_only"]) + len(res["ambiguous"]) + len(res["targets_missing"])
+         + len(res["questions_open"]) + (0 if res["permission_ok"] else 1))
+    res["problem_count"] = n
+    res["ok"] = n == 0
+    if out is not None:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
+    return res
+
+
+def campus_check_lines(res: dict, limit: int = 8) -> list[str]:
+    """campus_check の結果を日本語の行に。"""
+    def nm(l):
+        return l.get("map_name") or l.get("building_id") or l.get("footprint") or "?"
+    L = [f"{res.get('university') or ''} {res.get('campus_name') or res['campus']}：問題 {res['problem_count']} 件"]
+    for key, label in (("map_only", "図にあるが足元が無い"), ("footprint_only", "足元はあるが図に名前が無い"), ("ambiguous", "対応が決まらない")):
+        items = res[key]
+        if items:
+            L.append(f"  {label}（{len(items)}）：" + "、".join(nm(l) for l in items[:limit]) + ("…" if len(items) > limit else ""))
+    if res["targets_missing"]:
+        L.append(f"  範囲の棟が敷地 JSON の buildings に無い（{len(res['targets_missing'])}）：" + "、".join(res["targets_missing"]))
+    if res["questions_open"]:
+        L.append(f"  人に聞くことが残っている（{len(res['questions_open'])}）：")
+        L += [f"    - {q.get('q')}" for q in res["questions_open"]]
+    if not res["permission_ok"]:
+        L.append(f"  公式図の許可が granted ではない（{res['campus_map_permission']}）")
+    return L

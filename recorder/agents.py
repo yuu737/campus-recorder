@@ -14,7 +14,8 @@ import warnings
 from datetime import datetime
 from pathlib import Path
 
-MODEL_MAP = {"haiku": "claude-haiku-5-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5"}
+MODEL_MAP = {"haiku": "claude-haiku-5-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5",
+             "fable": "claude-fable-5-1"}
 DEFAULT_DIR = ".claude/agents"
 COMMON_NAME = "_共通"
 
@@ -23,6 +24,7 @@ LIMITS = {
     "haiku": {"max_turns": 12, "max_budget_usd": 0.5},
     "sonnet": {"max_turns": 20, "max_budget_usd": 1.5},
     "opus": {"max_turns": 30, "max_budget_usd": 4.0},
+    "fable": {"max_turns": 20, "max_budget_usd": 6.0},      # 進行役。事件が起きた時だけ呼ぶ
 }
 
 # 工程の順。seizu・seizu_final・web はコード（recorder.run / site.export_web を直接呼ぶ。API は使わない）
@@ -60,7 +62,7 @@ def load_agent_defs(dir: str | Path = DEFAULT_DIR) -> dict[str, dict]:
         name = meta.get("name") or p.stem
         model = meta.get("model", "opus").lower()
         if model not in MODEL_MAP:
-            warnings.warn(f"{name}: model {model} は API の対応表に無いので opus に落とします（Fable は人の役）")
+            warnings.warn(f"{name}: model {model} は API の対応表に無いので opus に落とします")
             model = "opus"
         tools = [t.strip() for t in meta.get("tools", "").split(",") if t.strip()]
         prompt = (common + "\n\n" if common else "") + body.strip()
@@ -252,6 +254,168 @@ def write_tasks(building_id: str, photos_folder: str | None = None, *, cwd: str 
     return {"json": str(out / "agent_tasks.json"), "md": str(out / "agent_tasks.md"), "steps": len(doc["steps"])}
 
 
+# ---- 事件の検出（進行役 Fable を呼ぶ判断。読むだけ。API は呼ばない） ----
+STOP_EVENTS = ("stuck", "vocab", "asset")                 # この事件があれば工程を止める（done・human は記録だけ）
+EVENT_CALL = {"human": "human", "done": "fable", "stuck": "fable", "vocab": "fable", "asset": "fable", "setup": "fable"}
+EVENT_KINDS = ["stuck", "vocab", "asset", "done", "human", "setup"]
+_SETUP_BAD = ("map_only", "footprint_only", "ambiguous")
+
+
+def _jload(p: Path):
+    try:
+        return json.loads(Path(p).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def _walk_materials(obj):
+    if isinstance(obj, dict):
+        m = obj.get("material")
+        if isinstance(m, str):
+            yield m
+        for v in obj.values():
+            yield from _walk_materials(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from _walk_materials(v)
+
+
+def _site_json(cwd: Path) -> dict | None:
+    try:
+        from . import site
+        f = getattr(site, "default_campus", None)
+        if f:
+            r = f()
+            if isinstance(r, dict):
+                return r
+    except Exception:  # noqa: BLE001  別の係が編集中でも落ちない
+        pass
+    cands = [p for p in (cwd / "data" / "site").glob("*.json") if p.name != "plateau.json"]
+    return _jload(cands[0]) if len(cands) == 1 else None
+
+
+def _name_link_bad(nl) -> list[str]:
+    items = nl.items() if isinstance(nl, dict) else enumerate(nl or [])
+    bad = []
+    for k, v in items:
+        vals = [v] if isinstance(v, str) else [x for x in (v.values() if isinstance(v, dict) else []) if isinstance(x, str)]
+        if any(x in _SETUP_BAD for x in vals):
+            bad.append(str((v.get("id") or v.get("name") or k) if isinstance(v, dict) else k))
+    return bad
+
+
+def _site_events(cwd: Path) -> list[dict]:
+    ev: list[dict] = []
+    s = _site_json(cwd)
+    if s is None:
+        return ev
+    if not (s.get("scope") or {}).get("targets"):
+        ev.append({"kind": "setup", "why": "敷地 JSON に scope.targets（今回記録する棟の範囲）がありません", "evidence": {"scope": s.get("scope")}})
+    bad = _name_link_bad(s.get("name_links"))
+    if bad:
+        ev.append({"kind": "setup", "why": f"name_links に map_only / footprint_only / ambiguous の棟が {len(bad)} 件あります", "evidence": {"names": bad}})
+    qs = [q for q in (s.get("questions") or []) if isinstance(q, dict) and q.get("status") == "open"]
+    if qs:
+        ev.append({"kind": "human", "why": f"敷地の質問（questions）が open で {len(qs)} 件あります", "evidence": {"questions": qs}})
+    perm = (((s.get("sources") or {}).get("campus_map") or {}).get("permission") or {}).get("status")
+    if perm != "granted":
+        ev.append({"kind": "human", "why": f"公式キャンパス図の許可が granted ではありません（{perm}）", "evidence": {"permission": perm}})
+    return ev
+
+
+def _building_events(bid: str, cwd: Path, after_step: str | None) -> list[dict]:
+    ev: list[dict] = []
+    bpath = cwd / "data" / "buildings" / f"{bid}.json"
+    b = _jload(bpath) or {}
+    reqs = [r for r in (b.get("requests") or []) if isinstance(r, dict) and r.get("status") == "open"]
+    for kind, ekind, label in (("tool", "vocab", "語彙（部品の型）が足りない"), ("asset", "asset", "アセットが要る")):
+        rs = [r for r in reqs if r.get("kind") == kind]
+        if rs:
+            ev.append({"kind": ekind, "why": f"requests に kind \"{kind}\" の open が {len(rs)} 件（{label}）", "evidence": {"requests": rs}})
+    cat = _jload(cwd / "data" / "assets" / "catalog.json") or {}
+    ids = {x.get("id") for x in cat.get("items", []) if isinstance(x, dict)}
+    missing = sorted({m[len("asset:"):] for m in _walk_materials(b.get("parts")) if m.startswith("asset:")} - ids)
+    if missing:
+        ev.append({"kind": "asset", "why": f"部品の material が台帳 data/assets/catalog.json に無い asset id を指しています（{', '.join(missing)}）",
+                   "evidence": {"missing_ids": missing}})
+    photo_reqs = [r for r in reqs if r.get("kind") == "photo"]
+    if photo_reqs:
+        ev.append({"kind": "human", "why": f"撮影の依頼（kind \"photo\"）が open で {len(photo_reqs)} 件あります", "evidence": {"requests": photo_reqs}})
+
+    # 争点（規則で決まらない物）
+    soten = (_jload(cwd / "out" / bid / "soten.json") or {}).get("items") or []
+    open_soten = [x for x in soten if isinstance(x, dict) and x.get("status") == "open"]
+    undecided = [x for x in open_soten if not x.get("rule")]
+    if undecided:
+        ev.append({"kind": "stuck", "why": f"設計係と検収係の争点 {len(undecided)} 件が規則で決まりません", "evidence": {"soten": undecided}})
+
+    # 再検収（新しい順に 2 つ）
+    rdir = cwd / "out" / bid / "recheck"
+    sums = []
+    if rdir.is_dir():
+        for d in sorted((x for x in rdir.iterdir() if (x / "summary.json").is_file()), key=lambda x: x.name, reverse=True)[:2]:
+            j = _jload(d / "summary.json")
+            if isinstance(j, dict):
+                sums.append((d.name, j))
+
+    def ng(j):
+        return {(p.get("photo"), ln.get("what")) for p in j.get("photos", []) for ln in p.get("lines", []) if ln.get("ok") is False}
+
+    if len(sums) == 2:
+        same = sorted(ng(sums[0][1]) & ng(sums[1][1]), key=str)
+        if same:
+            ev.append({"kind": "stuck", "why": f"再検収を 2 回回しても同じ線 {len(same)} 本が直りません", "evidence": {
+                "recheck": [sums[1][0], sums[0][0]], "lines": [{"photo": a, "what": w} for a, w in same][:20]}})
+
+    # 登録 0 枚（登録は測量係の最後なので、測量より前の工程では見ない）
+    check_reg = after_step is None or (after_step in PIPELINE_STEPS and PIPELINE_STEPS.index(after_step) >= PIPELINE_STEPS.index("sokuryo"))
+    idx = _jload(cwd / "data" / "photos" / "index.json") or {}
+    n_photos = sum(1 for p in idx.get("photos", []) if isinstance(p, dict) and p.get("building") == bid)
+    reg = _jload(cwd / "data" / "photos" / "registry.json") or {}
+    n_reg = sum(1 for e in reg.get("entries", []) if isinstance(e, dict) and e.get("building") == bid and not e.get("exclude"))
+    if check_reg and n_photos > 0 and n_reg == 0 and bpath.exists():
+        ev.append({"kind": "stuck", "why": f"写真 {n_photos} 枚に対し登録が 0 枚で、設計に進めません", "evidence": {"photos": n_photos, "registered": 0}})
+
+    # 完成判定の候補
+    if bpath.exists() and sums:
+        try:
+            from . import schema
+            errs = schema.validate_building(b)
+        except Exception as e:  # noqa: BLE001
+            errs = [f"検証できません: {e}"]
+        latest = sums[0][1]
+        all_pass = bool(latest.get("photos")) and all(
+            p.get("pass_face") is not False and p.get("pass_parts") is not False and not p.get("n_ng") for p in latest["photos"])
+        only_photo = all(r.get("kind") == "photo" for r in reqs)
+        if not errs and all_pass and not open_soten and only_photo:
+            ev.append({"kind": "done", "why": "validate OK・最新の再検収が全面合格・争点ゼロ・open の依頼は撮影のみ（完成判定の候補）",
+                       "evidence": {"recheck": sums[0][0], "open_photo_requests": len(photo_reqs)}})
+    return ev
+
+
+def detect_events(building_id: str | None, cwd: str | Path = ".", now: str | None = None, *,
+                  after_step: str | None = None, write: bool = True) -> dict:
+    """進行役（Fable）や人を呼ぶ「事件」を、棟 JSON・再検収・争点・登録などから検出する（読むだけ。結果を out/<id>/events.json に書く）。
+    building_id が None なら敷地の事件（setup・human）だけ。after_step は run_pipeline が渡す（登録 0 枚を見る時期）。"""
+    cwd = Path(cwd)
+    now = now or datetime.now().isoformat(timespec="seconds")
+    events = _building_events(building_id, cwd, after_step) if building_id else _site_events(cwd)
+    for e in events:
+        e["call"] = EVENT_CALL[e["kind"]]
+    events.sort(key=lambda e: EVENT_KINDS.index(e["kind"]))
+    summary = {k: sum(1 for e in events if e["kind"] == k) for k in EVENT_KINDS}
+    lines = [f"# 事件 {building_id or '敷地'}（{now}）", ""]
+    if not events:
+        lines.append("事件なし。係で続ける。")
+    lines += [f"- [{e['kind']}]（{e['call']}）{e['why']}" for e in events]
+    doc = {"building": building_id, "made_at": now, "events": events, "summary": summary, "markdown": "\n".join(lines) + "\n"}
+    if write:
+        out = cwd / "out" / (building_id or "site")
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "events.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+    return doc
+
+
 def _run_code_step(step: str, building_id: str, cwd: Path) -> dict:
     rec = {"agent": step_agent(step), "step": step, "model": "code", "task": step_command(step, building_id),
            "input_tokens": None, "output_tokens": None, "cost_usd": 0.0}
@@ -259,7 +423,7 @@ def _run_code_step(step: str, building_id: str, cwd: Path) -> dict:
     if step == "web":
         from . import site
 
-        r = site.export_web("tempaku", with_coverage=True)
+        r = site.export_web(site.default_campus(), with_coverage=True)
         rec.update(ok=True, outputs=[str(r["path"])])
     else:
         from . import run as runner
@@ -298,6 +462,10 @@ def run_pipeline(building_id: str, photos_folder: str | None = None, *, steps: l
         results.append(rec)
         if stopped:
             break
+        ev = detect_events(building_id, cwd, after_step=s, write=not dry_run)
+        if any(e["kind"] in STOP_EVENTS for e in ev["events"]):
+            return {"building": building_id, "runner": "api", "dry_run": dry_run, "stopped_at": s, "events": ev,
+                    "steps": results, "stopped_early": True}
     costs = [r.get("cost_usd") for r in results if r.get("cost_usd") is not None]
     summary = {"building": building_id, "runner": "api", "dry_run": dry_run, "steps": results, "stopped_early": stopped,
                "seconds_total": round(time.time() - t_all, 1), "cost_usd_estimate": round(sum(costs), 4) if costs else None,

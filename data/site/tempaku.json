@@ -1,6 +1,8 @@
 {
  "schema": "campus-recorder/site/1",
  "campus": "tempaku",
+ "university": "名城大学",
+ "campus_name": "天白キャンパス",
  "crs": {
   "epsg": 6675,
   "origin_lat": 35.1355,
@@ -438,7 +440,19 @@
    "fetched_at": "2026-11-03T09:54:43"
   },
   "plateau": "PLATEAU 名古屋市 2022（国土交通省）、建物 LOD0/LOD1 のみ",
-  "gsi": "国土地理院 航空写真・DEM5A"
+  "gsi": "国土地理院 航空写真・DEM5A",
+  "plateau_zip": "D:\\名城大学\\data\\raw\\plateau\\23100_nagoya-shi_city_2022_citygml_4_op.zip",
+  "campus_map": {
+   "url": null,
+   "checked_at": null,
+   "map_date": null,
+   "permission": {
+    "status": "granted",
+    "ref": "data/reference/index.json",
+    "date": "2026-11-04"
+   },
+   "use": "名称・有無・大まかな位置の確認のみ。形・寸法はなぞらない（CLAUDE.md 規約 4）"
+  }
  },
  "confirmation_statuses": [
   "unconfirmed",
@@ -14525,5 +14539,319 @@
    }
   ],
   "trees": []
- }
+ },
+ "aliases": {
+  "本部棟": "honbu",
+  "名城大学付属図書館": "library",
+  "11号館": "b11",
+  "12号館": "b12",
+  "13号館": "b13",
+  "14号館": "b14",
+  "6号館": "b06",
+  "7号館": "b07",
+  "8号館": "b08",
+  "9号館": "b09",
+  "10号館": "b10",
+  "タワー75": "tower75",
+  "共通講義棟南": "kyotsu-minami",
+  "共通講義棟東": "kyotsu-higashi",
+  "共通講義棟北": "kyotsu-kita",
+  "新体育館": "gym",
+  "研究実験棟Ⅰ": "lab1",
+  "研究実験棟Ⅱ": "lab2",
+  "研究実験棟Ⅲ": "lab3",
+  "研究実験棟Ⅳ": "lab4",
+  "名城大学 校友会館": "koyu-kaikan",
+  "タワー": "tower75",
+  "図書館": "library"
+ },
+ "scope": {
+  "targets": [
+   "honbu",
+   "tower75",
+   "library",
+   "b11"
+  ],
+  "decided_by": "利用者",
+  "decided_at": "2026-11-04",
+  "note": "範囲 A 案：タワー75・図書館・本部棟＋広場。11号館は期間前の写真で試す"
+ },
+ "name_links": [
+  {
+   "map_name": "共通講義棟南",
+   "building_id": "kyotsu-minami",
+   "footprint": "osm way/163518235",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "新体育館",
+   "building_id": "gym",
+   "footprint": "osm way/163518238",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "11号館",
+   "building_id": "b11",
+   "footprint": "osm way/163518240",
+   "status": "linked",
+   "evidence": "公式ガイドブックで 1 棟と確認（2026-11-04）。足元は PLATEAU bldg_326ebceb",
+   "note": ""
+  },
+  {
+   "map_name": "9号館",
+   "building_id": "b09",
+   "footprint": "osm way/163518244",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "13号館",
+   "building_id": "b13",
+   "footprint": "osm way/163518246",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "10号館",
+   "building_id": "b10",
+   "footprint": "osm way/163518248",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "14号館",
+   "building_id": "b14",
+   "footprint": "osm way/163518249",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "研究実験棟Ⅰ",
+   "building_id": "lab1",
+   "footprint": "osm way/163518251",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "6号館",
+   "building_id": "b06",
+   "footprint": "osm way/163518253",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "12号館",
+   "building_id": "b12",
+   "footprint": "osm way/163518258",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "名城大学付属図書館",
+   "building_id": "library",
+   "footprint": "osm way/163518269",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "本部棟",
+   "building_id": "honbu",
+   "footprint": "osm way/163518271",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "共通講義棟東",
+   "building_id": "kyotsu-higashi",
+   "footprint": "osm way/163518277",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "名城大学 校友会館",
+   "building_id": "koyu-kaikan",
+   "footprint": "osm way/1247283198",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "研究実験棟Ⅱ",
+   "building_id": "lab2",
+   "footprint": "osm relation/4823179",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "共通講義棟北",
+   "building_id": "kyotsu-kita",
+   "footprint": "osm relation/17880124",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "研究実験棟Ⅲ",
+   "building_id": "lab3",
+   "footprint": "osm relation/17880147",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "タワー75",
+   "building_id": "tower75",
+   "footprint": "osm relation/17880184",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": "研究実験棟Ⅳ",
+   "building_id": "lab4",
+   "footprint": "osm relation/18057088",
+   "status": "linked",
+   "evidence": "OSM の建物名と敷地 JSON の id の対応（機械的に作成）",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_7a030207-1430-4e2f-ac78-b9010ad057d4",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_5af0b287-9f08-41b5-93cf-d3c0e86ca63a",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_2c0da1f0-2392-4ff2-a5b7-47dafd54355c",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_b8dd6be2-b776-4962-a9e5-569fcc107151",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_00c54453-4d22-4797-8edb-c8a6e158d37e",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_8e701835-a0b3-4e99-b83f-ecbbf975b15b",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_b59343bc-f873-41f7-b2f0-e3830dc29d96",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_55fe93a4-a112-4a59-a46c-2ea5da0de1eb",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_51dca8e9-9e95-47d2-a136-7894b96c3efc",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_26971389-a00e-4c99-8fb4-407b23e84473",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_8833c188-d01c-43f5-adb0-6f24ef92e3b2",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_dad94501-f57e-4750-9575-a7ddd84cfac6",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_e228ebc7-66b5-48e3-903b-270d3b32ac7a",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  },
+  {
+   "map_name": null,
+   "building_id": null,
+   "footprint": "plateau bldg_3a67d89f-186a-40a1-be77-6b393a0a3ce8",
+   "status": "footprint_only",
+   "evidence": "PLATEAU に足元があるが、OSM の建物と結ばれていない",
+   "note": ""
+  }
+ ],
+ "questions": [
+  {
+   "q": "P041 の棟は本部棟か",
+   "status": "open",
+   "answer": null
+  },
+  {
+   "q": "青い手すりの低い棟はどれか",
+   "status": "open",
+   "answer": null
+  }
+ ]
 }

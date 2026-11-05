@@ -35,6 +35,8 @@ def test_mesh3_code_of_campus():
     assert site.mesh3_of_lonlat(136.9740, 35.1355) == "52365767"  # すぐ西隣
 
 
+ALIASES = {"本部棟": "honbu", "タワー75": "tower75", "11号館": "b11", "図書館": "library"}   # 敷地 JSON の aliases の代わり
+
 # --- site -----------------------------------------------------------------------
 
 def _square(cx, cy, s):
@@ -65,6 +67,7 @@ def plateau_doc():
 
 def test_build_site_matches_plateau_and_keeps_confirmation(tmp_path, osm_doc, plateau_doc):
     out = tmp_path / "t.json"
+    out.write_text(json.dumps({"aliases": ALIASES}, ensure_ascii=False), encoding="utf-8")
     doc = site.build_site("t", osm_doc, plateau_doc, out)
     assert site.validate_site(doc) == []
     honbu = next(b for b in doc["buildings"] if b["id"] == "honbu")
@@ -169,6 +172,7 @@ def test_read_exif_and_candidates(tmp_path, osm_doc):
     info = photos.read_exif(p)
     assert info["focal_35mm"] == 26 and info["heading_deg"] == 90.0 and info["taken_at"] == "2026-11-03T13:05:09"
     assert abs(info["gps"]["x"] + 40) < 1.0 and abs(info["gps"]["y"]) < 1.0
+    (tmp_path / "s.json").write_text(json.dumps({"aliases": ALIASES}, ensure_ascii=False), encoding="utf-8")
     sdoc = site.build_site("t", osm_doc, None, tmp_path / "s.json")
     cands = photos.building_candidates(info, sdoc)
     ids = [c["building"] for c in cands]
@@ -187,6 +191,7 @@ def test_import_photos_keeps_manual_fields(tmp_path, osm_doc):
     _jpeg_with_exif(day / "IMG_0002.jpg", lat=None)  # GPS なし
     (day / "note.txt").write_text("x", encoding="utf-8")
     idx_path = root / "index.json"
+    (tmp_path / "s.json").write_text(json.dumps({"aliases": ALIASES}, ensure_ascii=False), encoding="utf-8")
     sdoc = site.build_site("t", osm_doc, None, tmp_path / "s.json")
     idx, added = photos.import_photos(day, sdoc, idx_path, root)
     assert len(added) == 2 and idx["photos"][0]["file"] == "20261103/IMG_0001.jpg"

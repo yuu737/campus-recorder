@@ -596,9 +596,9 @@ def run(building_json: Path, out_dir: Path | None = None, roof_edge: str | None 
     res["height_from"] = h_how
 
     # 検算：近くの低い建物
-    site_json = Path(site_json) if site_json else site.DATA_SITE / f"{b.get('campus', 'tempaku').split('-')[-1]}.json"
+    site_json = Path(site_json) if site_json else site.DATA_SITE / f"{str(b.get('campus') or site.default_campus()).split('-')[-1]}.json"
     if not site_json.exists():
-        site_json = site.DATA_SITE / "tempaku.json"
+        site_json = site.DATA_SITE / f"{site.default_campus()}.json"
     low = None
     chk: dict = {"ok": None, "note": "低い建物が見つからない"}
     if site_json.exists():

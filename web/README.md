@@ -25,3 +25,8 @@
 - unknown の面は普段の見た目でも灰色の壁（窓の無いタイル壁にすると「窓が無い」と決めつけて見えるため）
 - 棟の札に「形 ○% ／ 根拠 ○%」（形がある割合＝unknown でない面・部品の割合、根拠がある割合＝measured の値の割合。site.json の designed）。根拠で見る時は、触った所の面と状態も出す
 - 古い glb（根拠の層より前に作った物）は印が無いので色が変わらない。`model build` で作り直す
+
+## 職員の振り分け（staff.html、11/5）
+- `staff.html`：職員が写真ごとに「棟・外観/内装・階」だけを選び `assignments.json` を書き出す（写真は端末から出ない。面は聞かない）
+- `recorder photos assign --from assignments.json` が索引に書く（職員の値が勝つ。GPS は検算で、食い違いは警告だけ）
+- そのあと仕分け係は面の判定だけをする。`http://localhost:8000/staff.html` で開く

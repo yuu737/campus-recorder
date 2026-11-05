@@ -10,7 +10,11 @@
      "focal_mm": 5.1, "focal_35mm": 24, "width": 4032, "height": 3024,
      "checks": {...},                       # 速い返事の材料（使えるか、何が足りないか）
      "candidates": [{"building": "honbu", "distance_m": 32.1, "bearing_diff_deg": 8.0}, ...],
-     "building": null, "face": null}       # 確定は人か測量係のエージェントが入れる。ここでは決めつけない
+     "building": null, "face": null,       # 確定は職員（棟）と仕分け係（面）。ここでは決めつけない
+     # 職員の振り分け（assign_photos）。どれも無くても読める
+     "assigned_by": "staff"|"shiwake"|"gps"|"台帳"|null,
+     "interior": false, "floor": null,     # 内装の時だけ floor（int）
+     "assigned_at": "2026-11-05T10:00:00"}
 
 決まり：
     GPS と方位から「どの棟のどの面か」を**候補**として並べるだけで、確定しない。
@@ -26,7 +30,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from . import geo
+from . import geo, site
 
 INDEX_SCHEMA = "campus-recorder/photos/1"
 PHOTO_DIR = Path("data/photos")
@@ -290,15 +294,15 @@ def save_index(idx: dict, path: Path = INDEX_PATH) -> None:
 PERIOD_START = "2026-11-02T12:00:00"   # ハッカソン開始（JST）。撮影日時はスマホの現地時刻なのでそのまま比べる
 LEDGER_SOURCE = "台帳(期間前)"
 
-# 台帳の場所名（folder / location）に含まれる語 → 棟 id。
-# 台帳の subject は写真ごとの説明文なので、場所名の側で対応させる。対応表に無い棟は building=None。
-LEDGER_BUILDING = {
-    "本部棟": "honbu",
-    "タワー75": "tower75",
-    "タワー": "tower75",
-    "図書館": "library",
-    "11号館": "b11",
-}
+def campus_aliases(campus: str | None = None) -> dict[str, str]:
+    """棟の呼び名（別名）→ 棟 id。表は site.campus_aliases が持つ（無ければ空）。"""
+    fn = getattr(site, "campus_aliases", None)
+    if fn is None:
+        return {}
+    try:
+        return dict(fn(campus) or {})
+    except Exception:
+        return {}
 
 
 def period_of(taken_at: str | None) -> str | None:
@@ -321,11 +325,11 @@ def _norm_date(s: str | None) -> str | None:
         return None
 
 
-def ledger_building(name: str | None) -> str | None:
+def ledger_building(name: str | None, campus: str | None = None) -> str | None:
     """場所名から棟 id。対応表の語が 2 つ以上別の棟に当たる（「図書館・11号館間」など）なら決めず None。"""
     if not name:
         return None
-    hits = {b for k, b in LEDGER_BUILDING.items() if k in name}
+    hits = {b for k, b in campus_aliases(campus).items() if k in name}
     return hits.pop() if len(hits) == 1 else None
 
 
@@ -453,3 +457,78 @@ def summary_line(rec: dict) -> str:
         top = rec["candidates"][0]
         parts.append(f"候補: {top.get('name') or top['building']}（{top['distance_m']} m）")
     return "  ".join(parts)
+
+
+# --- 職員の振り分け -------------------------------------------------------------------
+
+GPS_MISMATCH_M = 15.0   # 職員の棟と最も近い GPS 候補の棟が違い、その候補との距離差がこれ以上なら警告
+
+
+def assign_photos(index_path: Path, assignments: list[dict], campus: str | None = None,
+                  now: str | None = None) -> dict:
+    """職員が選んだ「棟・外観/内装・階」を索引に書く。職員の値が勝つ。GPS は検算（警告だけ、上書きしない）。
+
+    assignments の1件：{"id" か "file"(basename), "building"(棟 id か別名), "interior": bool, "floor": int|None}
+    戻り値：{"assigned", "interior", "warnings", "errors", "not_found"}"""
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    idx = load_index(index_path)
+    photos = idx["photos"]
+    by_id = {p["id"]: p for p in photos}
+    by_base: dict[str, list[dict]] = {}
+    for p in photos:
+        by_base.setdefault(Path(str(p.get("file") or "")).name, []).append(p)
+    aliases = campus_aliases(campus)
+    known = set(aliases.values())
+    out = {"assigned": 0, "interior": 0, "warnings": [], "errors": [], "not_found": []}
+    for a in assignments:
+        key = a.get("id") or a.get("file")
+        if a.get("id"):
+            targets = [by_id[a["id"]]] if a["id"] in by_id else []
+        elif a.get("file"):
+            targets = by_base.get(Path(str(a["file"]).replace("\\", "/")).name, [])
+        else:
+            out["errors"].append({"item": a, "error": "id か file が無い"})
+            continue
+        if not targets:
+            out["not_found"].append(key)
+            continue
+        raw = str(a.get("building") or "").strip()
+        bid = aliases.get(raw) or (raw if raw in known else None)
+        if bid is None:
+            out["errors"].append({"id": key, "building": raw, "error": "棟の名前を id に直せない"})
+            continue
+        interior = bool(a.get("interior"))
+        floor = a.get("floor")
+        if interior and floor is not None:
+            try:
+                floor = int(floor)
+            except (TypeError, ValueError):
+                out["errors"].append({"id": key, "floor": floor, "error": "階が整数でない"})
+                continue
+        for p in targets:
+            cands = p.get("candidates") or []
+            if cands:
+                top = min(cands, key=lambda c: c.get("distance_m", 1e9))
+                if top.get("building") != bid:
+                    mine = next((c for c in cands if c.get("building") == bid), None)
+                    diff = (mine["distance_m"] - top["distance_m"]) if mine else None
+                    if diff is None or diff >= GPS_MISMATCH_M:
+                        out["warnings"].append({"id": p["id"], "staff": bid, "gps": top.get("building"),
+                                                "distance_m": top.get("distance_m")})
+            p["building"] = bid
+            p["assigned_by"] = "staff"
+            p["assigned_at"] = now
+            p["building_source"] = "staff"
+            p["interior"] = interior
+            if interior:
+                p["floor"] = floor
+                p["face"] = None
+                p["interior_views"] = True
+                out["interior"] += 1
+            else:
+                p["floor"] = None
+            note = f"職員が振り分け（{now}）"
+            p["notes"] = f"{p['notes']} / {note}" if p.get("notes") else note
+            out["assigned"] += 1
+    save_index(idx, index_path)
+    return out

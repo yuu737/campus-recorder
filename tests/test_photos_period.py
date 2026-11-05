@@ -5,6 +5,8 @@ from pathlib import Path
 
 from PIL import Image
 
+import pytest
+
 from recorder import photos
 
 
@@ -14,6 +16,13 @@ def test_period_of():
     assert photos.period_of("2026-11-03T13:27:21") == "during"
     assert photos.period_of("2026-09-07") == "before"
     assert photos.period_of(None) is None
+
+
+@pytest.fixture(autouse=True)
+def _aliases(monkeypatch):
+    # 名前の対応表は site.campus_aliases が持つ。ここでは固定の表を差す
+    monkeypatch.setattr(photos.site, "campus_aliases", lambda campus=None: {
+        "本部棟": "honbu", "タワー75": "tower75", "タワー": "tower75", "図書館": "library", "11号館": "b11"}, raising=False)
 
 
 def test_ledger_building_mapping():

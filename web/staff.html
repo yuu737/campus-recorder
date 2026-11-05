@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>写真の振り分け（職員用）</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 system-ui,"Hiragino Sans","Yu Gothic",sans-serif;background:#f4f4f2;color:#222;overflow-x:hidden}
+main{max-width:720px;margin:0 auto;padding:12px 16px 80px}
+h1{font-size:18px;margin:8px 0}
+.warn{background:#fff3cd;border:1px solid #e0b84a;border-radius:8px;padding:10px 12px;margin:8px 0;font-size:14px}
+button,select,input{font:inherit;max-width:100%}
+button{padding:8px 12px;border:1px solid #888;border-radius:8px;background:#fff}
+button.primary{background:#1b5e8c;color:#fff;border-color:#1b5e8c}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.card{display:flex;gap:10px;background:#fff;border:1px solid #ccc;border-radius:10px;padding:8px;margin:8px 0}
+.card.sel{outline:3px solid #1b5e8c}
+.card img{width:84px;height:84px;object-fit:cover;border-radius:6px;flex:none;background:#ddd}
+.f{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.name{font-size:12px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.row select,.row input[type=text]{flex:1;min-width:0}
+.tog button.on{background:#1b5e8c;color:#fff;border-color:#1b5e8c}
+.floor{width:64px}
+#out{font-size:13px;background:#fff;border:1px solid #ccc;border-radius:8px;padding:10px;margin-top:12px;word-break:break-all}
+code{background:#eee;padding:1px 4px;border-radius:4px}
+</style>
+</head>
+<body>
+<main>
+<h1>写真の振り分け（職員用）</h1>
+<div class="warn">研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。写真はこの端末から出ません（アップロードはしません）。</div>
+<div class="bar"><input id="pick" type="file" multiple accept="image/*"><span id="msg"></span></div>
+<div class="bar">
+ <button id="selall">全部選ぶ</button><button id="selnone">選択を外す</button>
+ <span id="bulk" class="row"></span>
+</div>
+<div id="list"></div>
+<div class="bar"><button id="export" class="primary">書き出し</button></div>
+<div id="out">写真を選んで、棟（と内装なら階）を決め、「書き出し」を押すと <code>assignments.json</code> が保存されます。それを <code>recorder photos assign --from assignments.json</code> に渡します。面（どの壁か）は聞きません。仕分け係が決めます。</div>
+</main>
+<script>
+"use strict";
+let buildings = [];      // {id,name}
+let manual = false;      // 棟の一覧が取れず手入力
+const items = [];        // {file, thumb, building, interior, floor, sel}
+const $ = s => document.querySelector(s);
+
+async function loadBuildings() {
+  try {
+    const r = await fetch("data/site.json");
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const names = {};
+    for (const b of d.boxes || []) if (b.id) names[b.id] = b.name || b.id;
+    for (const [id, v] of Object.entries(d.designed || {})) names[id] = v.name || names[id] || id;
+    const first = ((d.scope && d.scope.targets) || []).filter(i => i in names);
+    const rest = Object.keys(names).filter(i => !first.includes(i));
+    buildings = [...first, ...rest].map(id => ({id, name: names[id]}));
+    if (!buildings.length) throw new Error("empty");
+  } catch (e) {
+    manual = true;
+    $("#msg").textContent = "棟の一覧が読めないので、棟の名前を手で入力してください。";
+  }
+}
+
+function buildingControl(cur, onchange) {
+  if (manual) {
+    const t = document.createElement("input");
+    t.type = "text"; t.placeholder = "棟の名前"; t.value = cur || "";
+    t.oninput = () => onchange(t.value.trim());
+    return t;
+  }
+  const s = document.createElement("select");
+  const o0 = document.createElement("option"); o0.value = ""; o0.textContent = "棟を選ぶ"; s.append(o0);
+  for (const b of buildings) {
+    const o = document.createElement("option"); o.value = b.id; o.textContent = b.name; s.append(o);
+  }
+  s.value = cur || "";
+  s.onchange = () => onchange(s.value);
+  return s;
+}
+
+function render() {
+  const list = $("#list"); list.innerHTML = "";
+  items.forEach(it => {
+    const c = document.createElement("div"); c.className = "card" + (it.sel ? " sel" : "");
+    const img = document.createElement("img"); img.src = it.thumb; img.alt = "";
+    img.onclick = () => { it.sel = !it.sel; render(); };
+    const f = document.createElement("div"); f.className = "f";
+    const n = document.createElement("div"); n.className = "name"; n.textContent = it.file;
+    const r1 = document.createElement("div"); r1.className = "row";
+    r1.append(buildingControl(it.building, v => it.building = v));
+    const r2 = document.createElement("div"); r2.className = "row tog";
+    const b1 = document.createElement("button"), b2 = document.createElement("button");
+    b1.textContent = "外観"; b2.textContent = "内装";
+    (it.interior ? b2 : b1).classList.add("on");
+    b1.onclick = () => { it.interior = false; render(); };
+    b2.onclick = () => { it.interior = true; render(); };
+    r2.append(b1, b2);
+    if (it.interior) {
+      const fl = document.createElement("input"); fl.type = "number"; fl.className = "floor";
+      fl.step = 1; fl.placeholder = "階"; fl.value = it.floor ?? "";
+      fl.oninput = () => it.floor = fl.value === "" ? null : parseInt(fl.value, 10);
+      const u = document.createElement("span"); u.textContent = "階";
+      r2.append(fl, u);
+    }
+    f.append(n, r1, r2); c.append(img, f); list.append(c);
+  });
+  if (items.length) $("#msg").textContent = items.length + " 枚（" + items.filter(x => x.building).length + " 枚は棟が決まっています）";
+}
+
+function buildBulk() {
+  const bulk = $("#bulk"); bulk.innerHTML = "";
+  let cur = "";
+  bulk.append(buildingControl("", v => cur = v));
+  const mk = (label, fn) => {
+    const b = document.createElement("button"); b.textContent = label;
+    b.onclick = () => { items.filter(x => x.sel).forEach(fn); render(); };
+    bulk.append(b);
+  };
+  mk("選んだ写真をこの棟にする", x => x.building = cur);
+  mk("選んだ写真を外観に", x => x.interior = false);
+  mk("選んだ写真を内装に", x => x.interior = true);
+}
+
+function thumbOf(file) {   // 縮小したサムネイルだけを作る（元の写真は送らない）
+  return new Promise(res => {
+    const url = URL.createObjectURL(file), im = new Image();
+    im.onload = () => {
+      const k = 160 / Math.max(im.width, im.height, 1);
+      const cv = document.createElement("canvas");
+      cv.width = Math.max(1, Math.round(im.width * k)); cv.height = Math.max(1, Math.round(im.height * k));
+      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(url); res(cv.toDataURL("image/jpeg", 0.7));
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); res(""); };
+    im.src = url;
+  });
+}
+
+$("#pick").onchange = async e => {
+  for (const f of e.target.files) {
+    items.push({file: f.name, thumb: await thumbOf(f), building: "", interior: false, floor: null, sel: false});
+    if (items.length % 10 === 0) render();
+  }
+  render();
+};
+$("#selall").onclick = () => { items.forEach(x => x.sel = true); render(); };
+$("#selnone").onclick = () => { items.forEach(x => x.sel = false); render(); };
+$("#export").onclick = () => {
+  const todo = items.filter(x => x.building);
+  const skipped = items.length - todo.length;
+  const arr = todo.map(x => ({file: x.file, building: x.building, interior: x.interior,
+                              floor: x.interior ? x.floor : null}));
+  const blob = new Blob([JSON.stringify(arr, null, 1)], {type: "application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "assignments.json";
+  document.body.append(a); a.click(); a.remove();
+  $("#out").innerHTML = arr.length + " 枚を書き出しました" + (skipped ? "（棟が未選択の " + skipped + " 枚は含めていません）" : "") +
+    "。これを <code>recorder photos assign --from assignments.json</code> に渡してください。";
+};
+
+(async () => { await loadBuildings(); buildBulk(); render(); })();
+</script>
+</body>
+</html>

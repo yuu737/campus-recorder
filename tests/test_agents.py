@@ -5,7 +5,7 @@ import pytest
 
 from recorder import agents
 
-AGENTS = {"satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "kenshu"}
+AGENTS = {"satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "kenshu", "chizu", "shikichi", "shinko"}
 
 
 def test_load_defs():
@@ -17,11 +17,11 @@ def test_load_defs():
     assert "Bash" in d["kenshu"]["tools"] and "Write" in d["kenshu"]["tools"]
 
 
-def test_fable_falls_back(tmp_path):
+def test_fable_model(tmp_path):
     (tmp_path / "x.md").write_text("---\nname: x\nmodel: fable\ntools: Read\n---\n本文", encoding="utf-8")
-    with pytest.warns(UserWarning):
-        d = agents.load_agent_defs(tmp_path)
-    assert d["x"]["model_id"] == "claude-opus-5-5"
+    d = agents.load_agent_defs(tmp_path)
+    assert d["x"]["model"] == "fable" and d["x"]["model_id"] == "claude-fable-5-1"
+    assert agents.LIMITS["fable"] == {"max_turns": 20, "max_budget_usd": 6.0}
 
 
 def test_dry_run():

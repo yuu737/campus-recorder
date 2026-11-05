@@ -94,7 +94,7 @@ def from_site(site_id: str, site_doc: dict, plateau_doc: dict, dem=None, plateau
 
 
 def from_site_cli(site_id: str, plateau_ids: list[str] | None = None) -> dict:
-    site_doc = json.loads((site_mod.DATA_SITE / "tempaku.json").read_text(encoding="utf-8"))
+    site_doc = json.loads((site_mod.DATA_SITE / f"{site_mod.default_campus()}.json").read_text(encoding="utf-8"))
     plateau_doc = json.loads((site_mod.DATA_SITE / "plateau.json").read_text(encoding="utf-8"))
     try:
         dem = site_mod.load_dem()
