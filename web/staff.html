@@ -3,165 +3,322 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>写真の振り分け（職員用）</title>
+<title>写真の振り分け</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;font:15px/1.5 system-ui,"Hiragino Sans","Yu Gothic",sans-serif;background:#f4f4f2;color:#222;overflow-x:hidden}
-main{max-width:720px;margin:0 auto;padding:12px 16px 80px}
-h1{font-size:18px;margin:8px 0}
-.warn{background:#fff3cd;border:1px solid #e0b84a;border-radius:8px;padding:10px 12px;margin:8px 0;font-size:14px}
-button,select,input{font:inherit;max-width:100%}
-button{padding:8px 12px;border:1px solid #888;border-radius:8px;background:#fff}
-button.primary{background:#1b5e8c;color:#fff;border-color:#1b5e8c}
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
-.card{display:flex;gap:10px;background:#fff;border:1px solid #ccc;border-radius:10px;padding:8px;margin:8px 0}
-.card.sel{outline:3px solid #1b5e8c}
-.card img{width:84px;height:84px;object-fit:cover;border-radius:6px;flex:none;background:#ddd}
-.f{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-.name{font-size:12px;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.row select,.row input[type=text]{flex:1;min-width:0}
-.tog button.on{background:#1b5e8c;color:#fff;border-color:#1b5e8c}
-.floor{width:64px}
-#out{font-size:13px;background:#fff;border:1px solid #ccc;border-radius:8px;padding:10px;margin-top:12px;word-break:break-all}
-code{background:#eee;padding:1px 4px;border-radius:4px}
+  :root {
+    --bg: #ffffff; --fg: #1f1f1f; --muted: #5f6368; --line: #dadce0; --soft: #f8f9fa;
+    --blue: #0b57d0; --blue-soft: #e8f0fe; --warn: #b3261e; --ok: #146c2e;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg);
+    font-family: "Google Sans", "Segoe UI", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif; font-size: 15px; }
+  header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+  header h1 { font-size: 20px; font-weight: 500; margin: 0; flex: 1; }
+  header .count { color: var(--muted); font-size: 14px; }
+  main { padding: 16px 20px 120px; max-width: 1200px; margin: 0 auto; }
+  .notice { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+
+  /* ドロップ枠 */
+  #drop { border: 2px dashed var(--line); border-radius: var(--radius); min-height: 360px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center;
+    transition: background .15s, border-color .15s; cursor: pointer; }
+  #drop.over { background: var(--blue-soft); border-color: var(--blue); }
+  #drop.compact { min-height: 0; padding: 14px; flex-direction: row; justify-content: flex-start; gap: 14px; text-align: left; }
+  #drop.compact .cloud { width: 36px; height: 36px; }
+  #drop .cloud { width: 150px; height: 150px; }
+  #drop p { margin: 0; color: var(--fg); }
+  #drop p b { font-weight: 600; }
+  #drop .hint { color: var(--muted); font-size: 13px; }
+  .btn { border: 0; border-radius: 999px; padding: 10px 24px; font-size: 15px; cursor: pointer; font-family: inherit; }
+  .btn.primary { background: var(--blue); color: #fff; font-weight: 600; }
+  .btn.primary:disabled { background: #a8c0ea; cursor: not-allowed; }
+  .btn.ghost { background: transparent; color: var(--blue); border: 1px solid var(--line); }
+  .btn.ghost:hover { background: var(--blue-soft); }
+  input[type=file] { display: none; }
+
+  /* 一括の操作 */
+  #bulk { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+    padding: 10px 0; margin: 12px 0; display: none; align-items: center; gap: 8px; flex-wrap: wrap; }
+  #bulk.on { display: flex; }
+  #bulk .sel { color: var(--muted); font-size: 14px; margin-right: auto; }
+  .field { display: inline-flex; align-items: center; gap: 6px; }
+  .field input[type=text], .field input[type=number] { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 15px; font-family: inherit; }
+  .field input[type=text] { width: 180px; }
+  .field input[type=number] { width: 72px; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; padding: 7px 14px; font-size: 14px; cursor: pointer; font-family: inherit; color: var(--fg); }
+  .seg button.on { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
+
+  /* 写真の升 */
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+  .card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
+  .card.sel { outline: 3px solid var(--blue); outline-offset: -3px; }
+  .card.bad { border-color: var(--warn); }
+  .card .img { position: relative; aspect-ratio: 4 / 3; background: var(--soft); cursor: pointer; }
+  .card .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card .img .check { position: absolute; left: 8px; top: 8px; width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(255,255,255,.95); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--blue); }
+  .card.sel .img .check { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .card .img .name { position: absolute; right: 0; bottom: 0; left: 0; padding: 4px 8px; font-size: 11px; color: #fff;
+    background: linear-gradient(transparent, rgba(0,0,0,.6)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card .body { padding: 10px; display: grid; gap: 8px; }
+  .card input[type=text], .card input[type=number] { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 15px; font-family: inherit; }
+  .card input.unknown { border-color: #e8a317; }
+  .card .row { display: flex; gap: 8px; align-items: center; }
+  .card .row .seg { flex: 1; }
+  .card .row .seg button { flex: 1; }
+  .card .floor { display: none; }
+  .card.interior .floor { display: block; }
+  .card .msg { font-size: 12px; color: var(--warn); min-height: 1em; }
+  .card .msg.ok { color: var(--ok); }
+
+  /* 下の帯 */
+  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); border-top: 1px solid var(--line);
+    padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  footer .status { flex: 1; color: var(--muted); font-size: 14px; }
+  footer .status b { color: var(--fg); }
+  footer .status .warn { color: var(--warn); }
+  footer code { background: var(--soft); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
+
+  @media (max-width: 600px) {
+    header { padding: 12px 16px; } main { padding: 12px 16px 140px; }
+    #grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .card .body { padding: 8px; } .card input[type=text], .card input[type=number] { font-size: 14px; padding: 7px 8px; }
+    #drop { min-height: 280px; } #drop .cloud { width: 110px; height: 110px; }
+    .field input[type=text] { width: 140px; }
+    footer { padding: 10px 16px; }
+  }
 </style>
 </head>
 <body>
+<header>
+  <h1>写真の振り分け</h1>
+  <span class="count" id="count"></span>
+</header>
 <main>
-<h1>写真の振り分け（職員用）</h1>
-<div class="warn">研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。写真はこの端末から出ません（アップロードはしません）。</div>
-<div class="bar"><input id="pick" type="file" multiple accept="image/*"><span id="msg"></span></div>
-<div class="bar">
- <button id="selall">全部選ぶ</button><button id="selnone">選択を外す</button>
- <span id="bulk" class="row"></span>
-</div>
-<div id="list"></div>
-<div class="bar"><button id="export" class="primary">書き出し</button></div>
-<div id="out">写真を選んで、棟（と内装なら階）を決め、「書き出し」を押すと <code>assignments.json</code> が保存されます。それを <code>recorder photos assign --from assignments.json</code> に渡します。面（どの壁か）は聞きません。仕分け係が決めます。</div>
+  <p class="notice">写真はこの端末から出ません（アップロードしません）。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
+
+  <div id="drop">
+    <svg class="cloud" viewBox="0 0 160 160" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#34a853"/><stop offset="1" stop-color="#9ecbff"/></linearGradient></defs>
+      <path d="M44 122c-16 0-28-12-28-27 0-14 10-25 24-27 4-18 20-32 40-32 18 0 33 11 38 27 16 1 28 14 28 29 0 16-13 30-30 30H44z" fill="url(#g)" stroke="#1f1f1f" stroke-width="1.5"/>
+      <path d="M80 112V72M80 72l-16 16M80 72l16 16" fill="none" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <button class="btn primary" id="browse" type="button">参照</button>
+    <p>または、写真をここに<b>ドラッグ</b>して入れます</p>
+    <p class="hint">同じ棟の写真をまとめて入れると、一括で棟を付けられます</p>
+    <input type="file" id="file" multiple accept="image/*">
+  </div>
+
+  <div id="bulk">
+    <span class="sel"><span id="nsel">0</span> 枚を選択中</span>
+    <button class="btn ghost" type="button" id="selAll">全部選ぶ</button>
+    <button class="btn ghost" type="button" id="selNone">選択を外す</button>
+    <span class="field"><input type="text" id="bulkBuilding" list="buildings" placeholder="棟の名前（候補が出ます）"></span>
+    <span class="seg" id="bulkKind"><button type="button" data-k="ext" class="on">外観</button><button type="button" data-k="int">内装</button></span>
+    <span class="field" id="bulkFloorWrap" style="display:none">階 <input type="number" id="bulkFloor" min="-3" max="99" step="1"></span>
+    <button class="btn primary" type="button" id="apply">選んだ写真に付ける</button>
+  </div>
+
+  <div id="grid"></div>
+  <datalist id="buildings"></datalist>
 </main>
+<footer>
+  <div class="status" id="status">写真を入れてください。</div>
+  <button class="btn primary" id="export" type="button" disabled>書き出し</button>
+</footer>
+
 <script>
-"use strict";
-let buildings = [];      // {id,name}
-let manual = false;      // 棟の一覧が取れず手入力
-const items = [];        // {file, thumb, building, interior, floor, sel}
-const $ = s => document.querySelector(s);
+(() => {
+  const $ = s => document.querySelector(s);
+  const items = [];            // {file, thumb, building, interior, floor, sel, el}
+  let names = new Map();       // 表示名 → id
+  let idByLower = new Map();   // 小文字の表示名／id → id
 
-async function loadBuildings() {
-  try {
-    const r = await fetch("data/site.json");
-    if (!r.ok) throw new Error(r.status);
-    const d = await r.json();
-    const names = {};
-    for (const b of d.boxes || []) if (b.id) names[b.id] = b.name || b.id;
-    for (const [id, v] of Object.entries(d.designed || {})) names[id] = v.name || names[id] || id;
-    const first = ((d.scope && d.scope.targets) || []).filter(i => i in names);
-    const rest = Object.keys(names).filter(i => !first.includes(i));
-    buildings = [...first, ...rest].map(id => ({id, name: names[id]}));
-    if (!buildings.length) throw new Error("empty");
-  } catch (e) {
-    manual = true;
-    $("#msg").textContent = "棟の一覧が読めないので、棟の名前を手で入力してください。";
-  }
-}
-
-function buildingControl(cur, onchange) {
-  if (manual) {
-    const t = document.createElement("input");
-    t.type = "text"; t.placeholder = "棟の名前"; t.value = cur || "";
-    t.oninput = () => onchange(t.value.trim());
-    return t;
-  }
-  const s = document.createElement("select");
-  const o0 = document.createElement("option"); o0.value = ""; o0.textContent = "棟を選ぶ"; s.append(o0);
-  for (const b of buildings) {
-    const o = document.createElement("option"); o.value = b.id; o.textContent = b.name; s.append(o);
-  }
-  s.value = cur || "";
-  s.onchange = () => onchange(s.value);
-  return s;
-}
-
-function render() {
-  const list = $("#list"); list.innerHTML = "";
-  items.forEach(it => {
-    const c = document.createElement("div"); c.className = "card" + (it.sel ? " sel" : "");
-    const img = document.createElement("img"); img.src = it.thumb; img.alt = "";
-    img.onclick = () => { it.sel = !it.sel; render(); };
-    const f = document.createElement("div"); f.className = "f";
-    const n = document.createElement("div"); n.className = "name"; n.textContent = it.file;
-    const r1 = document.createElement("div"); r1.className = "row";
-    r1.append(buildingControl(it.building, v => it.building = v));
-    const r2 = document.createElement("div"); r2.className = "row tog";
-    const b1 = document.createElement("button"), b2 = document.createElement("button");
-    b1.textContent = "外観"; b2.textContent = "内装";
-    (it.interior ? b2 : b1).classList.add("on");
-    b1.onclick = () => { it.interior = false; render(); };
-    b2.onclick = () => { it.interior = true; render(); };
-    r2.append(b1, b2);
-    if (it.interior) {
-      const fl = document.createElement("input"); fl.type = "number"; fl.className = "floor";
-      fl.step = 1; fl.placeholder = "階"; fl.value = it.floor ?? "";
-      fl.oninput = () => it.floor = fl.value === "" ? null : parseInt(fl.value, 10);
-      const u = document.createElement("span"); u.textContent = "階";
-      r2.append(fl, u);
+  // --- 棟の候補（歩く画面の site.json から。無ければ手入力だけ）
+  async function loadBuildings() {
+    const dl = $("#buildings");
+    try {
+      const d = await (await fetch("data/site.json", {cache: "no-store"})).json();
+      const all = [];
+      const seen = new Set();
+      const push = (id, name) => { if (!id || seen.has(id)) return; seen.add(id); all.push({id, name: name || id}); };
+      const targets = (d.scope && d.scope.targets) || [];
+      const designed = d.designed || {};
+      targets.forEach(id => push(id, (designed[id] || {}).name || ((d.boxes || []).find(b => b.id === id) || {}).name));
+      Object.values(designed).forEach(b => push(b.id, b.name));
+      (d.boxes || []).forEach(b => push(b.id, b.name));
+      all.forEach(b => {
+        names.set(b.name, b.id);
+        idByLower.set(b.name.toLowerCase(), b.id);
+        idByLower.set(b.id.toLowerCase(), b.id);
+        const o = document.createElement("option");
+        o.value = b.name; o.label = b.name === b.id ? "（名前なし）" : b.id;
+        dl.appendChild(o);
+      });
+    } catch (e) {
+      $("#status").textContent = "棟の一覧を読めませんでした。棟の名前は手で入れてください（後で id に直します）。";
     }
-    f.append(n, r1, r2); c.append(img, f); list.append(c);
-  });
-  if (items.length) $("#msg").textContent = items.length + " 枚（" + items.filter(x => x.building).length + " 枚は棟が決まっています）";
-}
-
-function buildBulk() {
-  const bulk = $("#bulk"); bulk.innerHTML = "";
-  let cur = "";
-  bulk.append(buildingControl("", v => cur = v));
-  const mk = (label, fn) => {
-    const b = document.createElement("button"); b.textContent = label;
-    b.onclick = () => { items.filter(x => x.sel).forEach(fn); render(); };
-    bulk.append(b);
-  };
-  mk("選んだ写真をこの棟にする", x => x.building = cur);
-  mk("選んだ写真を外観に", x => x.interior = false);
-  mk("選んだ写真を内装に", x => x.interior = true);
-}
-
-function thumbOf(file) {   // 縮小したサムネイルだけを作る（元の写真は送らない）
-  return new Promise(res => {
-    const url = URL.createObjectURL(file), im = new Image();
-    im.onload = () => {
-      const k = 160 / Math.max(im.width, im.height, 1);
-      const cv = document.createElement("canvas");
-      cv.width = Math.max(1, Math.round(im.width * k)); cv.height = Math.max(1, Math.round(im.height * k));
-      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
-      URL.revokeObjectURL(url); res(cv.toDataURL("image/jpeg", 0.7));
-    };
-    im.onerror = () => { URL.revokeObjectURL(url); res(""); };
-    im.src = url;
-  });
-}
-
-$("#pick").onchange = async e => {
-  for (const f of e.target.files) {
-    items.push({file: f.name, thumb: await thumbOf(f), building: "", interior: false, floor: null, sel: false});
-    if (items.length % 10 === 0) render();
   }
-  render();
-};
-$("#selall").onclick = () => { items.forEach(x => x.sel = true); render(); };
-$("#selnone").onclick = () => { items.forEach(x => x.sel = false); render(); };
-$("#export").onclick = () => {
-  const todo = items.filter(x => x.building);
-  const skipped = items.length - todo.length;
-  const arr = todo.map(x => ({file: x.file, building: x.building, interior: x.interior,
-                              floor: x.interior ? x.floor : null}));
-  const blob = new Blob([JSON.stringify(arr, null, 1)], {type: "application/json"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "assignments.json";
-  document.body.append(a); a.click(); a.remove();
-  $("#out").innerHTML = arr.length + " 枚を書き出しました" + (skipped ? "（棟が未選択の " + skipped + " 枚は含めていません）" : "") +
-    "。これを <code>recorder photos assign --from assignments.json</code> に渡してください。";
-};
 
-(async () => { await loadBuildings(); buildBulk(); render(); })();
+  const resolve = text => {
+    const t = (text || "").trim();
+    if (!t) return {id: "", known: false};
+    const id = idByLower.get(t.toLowerCase());
+    return id ? {id, known: true} : {id: t, known: false};
+  };
+
+  // --- 縮小表示
+  function thumbOf(file) {
+    return new Promise(res => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const w = 480, h = Math.round(480 * img.height / img.width) || 360;
+        const c = document.createElement("canvas"); c.width = w; c.height = h;
+        c.getContext("2d").drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        res(c.toDataURL("image/jpeg", 0.75));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); res(""); };
+      img.src = url;
+    });
+  }
+
+  // --- 升
+  function card(it) {
+    const el = document.createElement("div"); el.className = "card";
+    el.innerHTML = `
+      <div class="img"><img alt=""><span class="check">✓</span><span class="name"></span></div>
+      <div class="body">
+        <input type="text" list="buildings" placeholder="棟の名前" autocomplete="off">
+        <div class="row">
+          <span class="seg"><button type="button" data-k="ext" class="on">外観</button><button type="button" data-k="int">内装</button></span>
+        </div>
+        <input type="number" class="floor" placeholder="何階か（必須）" min="-3" max="99" step="1">
+        <div class="msg"></div>
+      </div>`;
+    el.querySelector("img").src = it.thumb;
+    el.querySelector(".name").textContent = it.file;
+    el.querySelector(".img").addEventListener("click", () => { it.sel = !it.sel; el.classList.toggle("sel", it.sel); refresh(); });
+    const bIn = el.querySelector("input[type=text]");
+    bIn.addEventListener("input", () => { it.buildingText = bIn.value; validate(it); refresh(); });
+    el.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
+      it.interior = b.dataset.k === "int"; paint(it); validate(it); refresh();
+    }));
+    const fIn = el.querySelector(".floor");
+    fIn.addEventListener("input", () => { it.floor = fIn.value === "" ? null : Number(fIn.value); validate(it); refresh(); });
+    it.el = el; paint(it); validate(it);
+    return el;
+  }
+  function paint(it) {
+    const el = it.el;
+    el.classList.toggle("interior", it.interior);
+    el.querySelectorAll(".seg button").forEach(b => b.classList.toggle("on", (b.dataset.k === "int") === it.interior));
+    el.querySelector("input[type=text]").value = it.buildingText || "";
+    el.querySelector(".floor").value = it.floor == null ? "" : it.floor;
+  }
+  function validate(it) {
+    const r = resolve(it.buildingText);
+    it.building = r.id; it.known = r.known;
+    const bIn = it.el.querySelector("input[type=text]");
+    bIn.classList.toggle("unknown", !!r.id && !r.known);
+    const msg = it.el.querySelector(".msg");
+    let bad = false, text = "", ok = false;
+    if (!r.id) { text = "棟を入れてください"; bad = true; }
+    else if (it.interior && (it.floor == null || !Number.isInteger(it.floor))) { text = "内装は何階かが必要です"; bad = true; }
+    else if (!r.known) { text = "一覧に無い名前です（そのまま書き出し、後で確かめます）"; }
+    else { text = it.interior ? `内装 ${it.floor} 階` : "外観"; ok = true; }
+    msg.textContent = text; msg.classList.toggle("ok", ok);
+    it.el.classList.toggle("bad", bad);
+    it.ready = !bad;
+  }
+
+  function refresh() {
+    const n = items.length, ready = items.filter(i => i.ready).length, nsel = items.filter(i => i.sel).length;
+    $("#count").textContent = n ? `${n} 枚` : "";
+    $("#nsel").textContent = nsel;
+    $("#bulk").classList.toggle("on", n > 0);
+    $("#drop").classList.toggle("compact", n > 0);
+    const st = $("#status");
+    if (!n) st.textContent = "写真を入れてください。";
+    else {
+      const missing = n - ready;
+      st.innerHTML = `<b>${ready}</b> / ${n} 枚に棟が付きました` +
+        (missing ? `。<span class="warn">${missing} 枚は棟か階が足りません</span>` : "。書き出すと <code>assignments.json</code> が保存されます");
+    }
+    $("#export").disabled = ready === 0;
+  }
+
+  async function addFiles(files) {
+    const list = Array.from(files).filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|heic|webp)$/i.test(f.name));
+    const have = new Set(items.map(i => i.file));
+    const grid = $("#grid");
+    let done = 0;
+    for (const f of list) {
+      if (have.has(f.name)) continue;
+      const it = {file: f.name, thumb: "", building: "", buildingText: "", interior: false, floor: null, sel: false, ready: false};
+      it.thumb = await thumbOf(f);
+      items.push(it); grid.appendChild(card(it));
+      done++; $("#status").textContent = `読み込み中 ${done} / ${list.length}`;
+      refresh();
+    }
+    refresh();
+  }
+
+  // --- ドロップ枠
+  const drop = $("#drop"), fileIn = $("#file");
+  $("#browse").addEventListener("click", e => { e.stopPropagation(); fileIn.click(); });
+  drop.addEventListener("click", () => fileIn.click());
+  fileIn.addEventListener("change", () => { addFiles(fileIn.files); fileIn.value = ""; });
+  ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+  document.addEventListener("dragover", e => e.preventDefault());
+  document.addEventListener("drop", e => { e.preventDefault(); if (!drop.contains(e.target)) addFiles(e.dataTransfer.files); });
+
+  // --- 一括
+  $("#selAll").addEventListener("click", () => { items.forEach(i => { i.sel = true; i.el.classList.add("sel"); }); refresh(); });
+  $("#selNone").addEventListener("click", () => { items.forEach(i => { i.sel = false; i.el.classList.remove("sel"); }); refresh(); });
+  let bulkInterior = false;
+  $("#bulkKind").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    bulkInterior = b.dataset.k === "int";
+    $("#bulkKind").querySelectorAll("button").forEach(x => x.classList.toggle("on", x === b));
+    $("#bulkFloorWrap").style.display = bulkInterior ? "" : "none";
+  }));
+  $("#apply").addEventListener("click", () => {
+    const text = $("#bulkBuilding").value, fl = $("#bulkFloor").value;
+    const targets = items.filter(i => i.sel);
+    if (!targets.length) { $("#status").textContent = "先に写真を選んでください（写真をタップ）。"; return; }
+    targets.forEach(i => {
+      if (text.trim()) i.buildingText = text;
+      i.interior = bulkInterior;
+      if (bulkInterior && fl !== "") i.floor = Number(fl);
+      if (!bulkInterior) i.floor = null;
+      paint(i); validate(i);
+      i.sel = false; i.el.classList.remove("sel");
+    });
+    refresh();
+  });
+
+  // --- 書き出し
+  $("#export").addEventListener("click", () => {
+    const rows = items.filter(i => i.ready).map(i => ({
+      file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null,
+      building_text: i.buildingText.trim(), known: i.known
+    }));
+    const blob = new Blob([JSON.stringify(rows, null, 1)], {type: "application/json"});
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "assignments.json"; a.click();
+    const skipped = items.length - rows.length;
+    $("#status").innerHTML = `<b>${rows.length}</b> 枚を <code>assignments.json</code> に書き出しました` +
+      (skipped ? `（棟か階の無い ${skipped} 枚は入れていません）` : "") +
+      `。これを <code>recorder photos assign --from assignments.json</code> に渡してください。`;
+  });
+
+  loadBuildings().then(refresh);
+})();
 </script>
 </body>
 </html>
