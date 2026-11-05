@@ -5,7 +5,7 @@ import pytest
 
 from recorder import agents
 
-AGENTS = {"satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "kenshu", "chizu", "shikichi", "shinko"}
+AGENTS = {"satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "kenshu", "chizu", "shikichi", "shinko", "mejirushi"}
 
 
 def test_load_defs():

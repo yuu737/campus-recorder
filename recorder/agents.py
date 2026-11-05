@@ -182,6 +182,10 @@ def step_task(step: str, building_id: str, photos_folder: str | None = None, cwd
                    f"正面化した写真を `photos compare`（--px-per-m に測った縮尺）→ `photos register`（平らでない写真は `photos register-chain {j}`）、"
                    f"`recorder coverage {j}` で {out}/coverage_<面>_photo.png（設計係の製図板）を出す。"
                    f"出力 {out}/sokuryo_<面id>.json（正面化画像は out/rectified/、registered・not_registered・face_photo 付き）。",
+        "mejirushi": f"{head} 入力：`recorder photos landmarks {j}` が出す {out}/landmarks/（landmarks.json・<面>.png・<写真id>_grid.jpg・tasks.json）。"
+                     f"写真ごとに面の絵と升目の絵を見て目印 4〜6 点の升を指し、`recorder photos landmarks-crop` の寄りで升を詰め、"
+                     f"{out}/landmarks/picks_<写真id>.json を書いて `recorder photos pnp {j} --picks …` で解く。数値は読まない。"
+                     f"出力：台帳 data/photos/registry.json（kind pose・source.kind landmarks）と picks_*.json。",
         "sekkei": f"{head} 入力：{out}/kansatsu_*・kazoe_*・sokuryo_*.json、out/photos/shiwake_{b}.json、"
                   f"面の写真 {out}/coverage_<面>_photo.png と {out}/coverage.json（製図板。px を数えて m に）。"
                   f"{design} を新しく作り（形は既存の scripts/design_*.py、土台は recorder.skeleton.from_site_cli(\"{b}\")＝"

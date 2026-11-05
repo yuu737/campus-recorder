@@ -202,6 +202,18 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--budget-min", type=float, default=None, help="照合の時間の上限（分）。超えたら途中で止め、同じコマンドで続きから")
     q.add_argument("--registry", default=None)
 
+    q = psub.add_parser("landmarks", help="目印の登録の準備：棟 JSON から目印の一覧と面の絵、写真の升目の絵、目印係への依頼（out/<棟>/landmarks/）")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--photos", default=None, help="写真 id（カンマ区切り。頭だけでも可。省略で棟の未登録全部）")
+    q.add_argument("--include-registered", action="store_true")
+    q = psub.add_parser("landmarks-crop", help="写真の升を 1.25 倍に広げて切り出し、寄りの升目の絵を出す（目印係が寄りの升を指す）")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--photo", required=True)
+    q.add_argument("--cells", required=True, help="升（カンマ区切り。例 C7,D3）")
+    q = psub.add_parser("pnp", help="目印の対応（picks JSON）から視点を解き、合否を出して台帳に登録する")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--picks", required=True, help='{"photo", "picks": [{"id", "cell", "sub"} | {"id", "u", "v"}]} の JSON')
+    q.add_argument("--no-register", action="store_true")
     q = psub.add_parser("locate", help="模型合わせ：GPS を初期値に、写真 1 枚ごとに模型の縁が写真の縁に合う視点を探して登録する（重なり不要）")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--photos", default=None, help="試す写真 id（カンマ区切り。頭だけでも可。省略で棟の GPS 付き未登録全部）")
@@ -579,6 +591,38 @@ def _photos(a) -> int:
         res = photos.assign_from_folders(Path(a.folder), campus=a.campus or site.default_campus(), rename=not a.no_rename)
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0
+    if a.photos_cmd == "landmarks":
+        from . import landmarks
+
+        ph = [x.strip() for x in a.photos.split(",") if x.strip()] if a.photos else None
+        landmarks.prepare(Path(a.building), ph, include_registered=a.include_registered)
+        return 0
+    if a.photos_cmd == "landmarks-crop":
+        from . import landmarks
+        from .registry import photo_path, photo_record
+        from .rectify import read_image
+        from .schema import load_building
+
+        b = load_building(a.building)
+        rec = photo_record(a.photo)
+        if rec is None:
+            print(f"索引に無い: {a.photo}")
+            return 2
+        img = read_image(photo_path(rec))
+        out = Path("out") / b["id"] / "landmarks"
+        for cell in [c.strip() for c in a.cells.split(",") if c.strip()]:
+            print(landmarks.crop_image(img, cell, out / f"{rec['id']}_{cell.upper()}.jpg"))
+        return 0
+    if a.photos_cmd == "pnp":
+        from . import landmarks
+
+        doc = json.loads(Path(a.picks).read_text(encoding="utf-8"))
+        res = landmarks.register_picks(Path(a.building), doc, write=not a.no_register)
+        print(json.dumps({k: v for k, v in res.items() if k != "camera"}, ensure_ascii=False, indent=1))
+        if res.get("status") == "ok":
+            c = res["camera"]
+            print(f"登録: {res['photo']} 位置 {c['camera_xyz']} 高さ {c['camera_height_m']} m 焦点 {c['focal_px']:.0f} px 面 {[v['face'] for v in res['visible_faces']]}")
+        return 0 if res.get("status") == "ok" else 1
     if a.photos_cmd == "locate":
         from . import locate
 

@@ -2321,17 +2321,6 @@
    "sfm_code": "few_anchors"
   },
   {
-   "photo": "PXL_20261103_043150092",
-   "building": "honbu",
-   "face": "E",
-   "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
-   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail",
-   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
-   "sfm_code": "not_in_model"
-  },
-  {
    "photo": "PXL_20261103_043221663",
    "building": "honbu",
    "face": "E",
@@ -3461,6 +3450,14 @@
    "period": "during",
    "sfm_reason": "焦点距離（35mm 換算）が索引に無い",
    "sfm_code": "no_focal"
+  },
+  {
+   "photo": "PXL_20261103_043150092",
+   "building": "honbu",
+   "face": "E",
+   "period": "during",
+   "landmarks_reason": "対応が偏っている（縦の線 4 本・横の線 3 本、写真の中の広がり 幅 13%・高さ 70%。縦横 2 本以上・25% 以上要る）",
+   "landmarks_code": "picks_degenerate"
   }
  ]
 }
