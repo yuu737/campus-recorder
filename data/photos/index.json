@@ -14749,9 +14749,9 @@
   },
   {
    "id": "20261105_165235743",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/20261105_165235743.jpg",
    "taken_at": "2026-11-05T16:52:35",
    "period": "during",
@@ -14782,13 +14782,19 @@
     "blur_suspected": false
    },
    "candidates": [],
-   "imported_at": "2026-11-05T20:47:06"
+   "imported_at": "2026-11-05T20:47:06",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": true,
+   "floor": 1,
+   "interior_views": true
   },
   {
    "id": "20261105_165344878",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/20261105_165344878.jpg",
    "taken_at": "2026-11-05T16:53:44",
    "period": "during",
@@ -14819,13 +14825,19 @@
     "blur_suspected": false
    },
    "candidates": [],
-   "imported_at": "2026-11-05T20:47:06"
+   "imported_at": "2026-11-05T20:47:06",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": true,
+   "floor": 1,
+   "interior_views": true
   },
   {
    "id": "20261105_165424644",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/20261105_165424644.jpg",
    "taken_at": "2026-11-05T16:54:24",
    "period": "during",
@@ -14856,13 +14868,19 @@
     "blur_suspected": false
    },
    "candidates": [],
-   "imported_at": "2026-11-05T20:47:06"
+   "imported_at": "2026-11-05T20:47:06",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": true,
+   "floor": 1,
+   "interior_views": true
   },
   {
    "id": "20261105_165632499",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/20261105_165632499.jpg",
    "taken_at": "2026-11-05T16:56:32",
    "period": "during",
@@ -14893,13 +14911,19 @@
     "blur_suspected": false
    },
    "candidates": [],
-   "imported_at": "2026-11-05T20:47:06"
+   "imported_at": "2026-11-05T20:47:06",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": true,
+   "floor": 1,
+   "interior_views": true
   },
   {
    "id": "PXL_20261105_055234749",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_055234749.jpg",
    "taken_at": "2026-11-05T14:52:34",
    "period": "during",
@@ -14980,13 +15004,18 @@
      "bearing_diff_deg": 30.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:06"
+   "imported_at": "2026-11-05T20:47:06",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060239806",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060239806.jpg",
    "taken_at": "2026-11-05T15:02:39",
    "period": "during",
@@ -15095,13 +15124,18 @@
      "bearing_diff_deg": 2.4
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060255835",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060255835.jpg",
    "taken_at": "2026-11-05T15:02:55",
    "period": "during",
@@ -15217,13 +15251,18 @@
      "bearing_diff_deg": 40.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060310392",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060310392.jpg",
    "taken_at": "2026-11-05T15:03:10",
    "period": "during",
@@ -15325,13 +15364,18 @@
      "bearing_diff_deg": 11.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060316957",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060316957.jpg",
    "taken_at": "2026-11-05T15:03:16",
    "period": "during",
@@ -15440,13 +15484,18 @@
      "bearing_diff_deg": 14.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060328137",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060328137.jpg",
    "taken_at": "2026-11-05T15:03:28",
    "period": "during",
@@ -15555,13 +15604,18 @@
      "bearing_diff_deg": 17.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060342994",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060342994.jpg",
    "taken_at": "2026-11-05T15:03:42",
    "period": "during",
@@ -15656,13 +15710,18 @@
      "bearing_diff_deg": 33.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060528804",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060528804.jpg",
    "taken_at": "2026-11-05T15:05:28",
    "period": "during",
@@ -15757,13 +15816,18 @@
      "bearing_diff_deg": 49.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060534782",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060534782.jpg",
    "taken_at": "2026-11-05T15:05:34",
    "period": "during",
@@ -15858,13 +15922,18 @@
      "bearing_diff_deg": 49.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060542381",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060542381.jpg",
    "taken_at": "2026-11-05T15:05:42",
    "period": "during",
@@ -15945,13 +16014,18 @@
      "bearing_diff_deg": 48.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060548823",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060548823.jpg",
    "taken_at": "2026-11-05T15:05:48",
    "period": "during",
@@ -16039,13 +16113,18 @@
      "bearing_diff_deg": 55.1
     }
    ],
-   "imported_at": "2026-11-05T20:47:07"
+   "imported_at": "2026-11-05T20:47:07",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060552836",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060552836.jpg",
    "taken_at": "2026-11-05T15:05:52",
    "period": "during",
@@ -16133,13 +16212,18 @@
      "bearing_diff_deg": 34.1
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060601578",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060601578.jpg",
    "taken_at": "2026-11-05T15:06:01",
    "period": "during",
@@ -16220,13 +16304,18 @@
      "bearing_diff_deg": 39.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060613837",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060613837.jpg",
    "taken_at": "2026-11-05T15:06:13",
    "period": "during",
@@ -16300,13 +16389,18 @@
      "bearing_diff_deg": 55.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060703663",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060703663.jpg",
    "taken_at": "2026-11-05T15:07:03",
    "period": "during",
@@ -16373,13 +16467,18 @@
      "bearing_diff_deg": 28.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060725949.MP",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060725949.MP.jpg",
    "taken_at": "2026-11-05T15:07:25",
    "period": "during",
@@ -16453,13 +16552,18 @@
      "bearing_diff_deg": 40.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060730259",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060730259.jpg",
    "taken_at": "2026-11-05T15:07:30",
    "period": "during",
@@ -16540,13 +16644,18 @@
      "bearing_diff_deg": 54.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060746293.MP",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060746293.MP.jpg",
    "taken_at": "2026-11-05T15:07:46",
    "period": "during",
@@ -16627,13 +16736,18 @@
      "bearing_diff_deg": 39.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060756828",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060756828.jpg",
    "taken_at": "2026-11-05T15:07:56",
    "period": "during",
@@ -16714,13 +16828,18 @@
      "bearing_diff_deg": 39.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060800017",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060800017.jpg",
    "taken_at": "2026-11-05T15:08:00",
    "period": "during",
@@ -16801,13 +16920,18 @@
      "bearing_diff_deg": 41.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:08"
+   "imported_at": "2026-11-05T20:47:08",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060801653",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060801653.jpg",
    "taken_at": "2026-11-05T15:08:01",
    "period": "during",
@@ -16881,13 +17005,18 @@
      "bearing_diff_deg": 63.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060804738",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060804738.jpg",
    "taken_at": "2026-11-05T15:08:04",
    "period": "during",
@@ -16996,13 +17125,18 @@
      "bearing_diff_deg": 41.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060807986",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060807986.jpg",
    "taken_at": "2026-11-05T15:08:07",
    "period": "during",
@@ -17069,13 +17203,18 @@
      "bearing_diff_deg": 24.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060834553",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060834553.jpg",
    "taken_at": "2026-11-05T15:08:34",
    "period": "during",
@@ -17149,13 +17288,18 @@
      "bearing_diff_deg": 38.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060842230",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060842230.jpg",
    "taken_at": "2026-11-05T15:08:42",
    "period": "during",
@@ -17229,13 +17373,18 @@
      "bearing_diff_deg": 40.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060854125",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060854125.jpg",
    "taken_at": "2026-11-05T15:08:54",
    "period": "during",
@@ -17302,13 +17451,18 @@
      "bearing_diff_deg": 52.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060904811",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060904811.jpg",
    "taken_at": "2026-11-05T15:09:04",
    "period": "during",
@@ -17375,13 +17529,18 @@
      "bearing_diff_deg": 54.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060915328",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060915328.jpg",
    "taken_at": "2026-11-05T15:09:15",
    "period": "during",
@@ -17448,13 +17607,18 @@
      "bearing_diff_deg": 45.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060927494",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060927494.jpg",
    "taken_at": "2026-11-05T15:09:27",
    "period": "during",
@@ -17514,13 +17678,18 @@
      "bearing_diff_deg": 43.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:09"
+   "imported_at": "2026-11-05T20:47:09",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060950084",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060950084.jpg",
    "taken_at": "2026-11-05T15:09:50",
    "period": "during",
@@ -17580,13 +17749,18 @@
      "bearing_diff_deg": 62.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_060954729",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_060954729.jpg",
    "taken_at": "2026-11-05T15:09:54",
    "period": "during",
@@ -17646,13 +17820,18 @@
      "bearing_diff_deg": 69.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061002256",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061002256.jpg",
    "taken_at": "2026-11-05T15:10:02",
    "period": "during",
@@ -17712,13 +17891,18 @@
      "bearing_diff_deg": 64.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061028255",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061028255.jpg",
    "taken_at": "2026-11-05T15:10:28",
    "period": "during",
@@ -17785,13 +17969,18 @@
      "bearing_diff_deg": 58.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061034445",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061034445.jpg",
    "taken_at": "2026-11-05T15:10:34",
    "period": "during",
@@ -17851,13 +18040,18 @@
      "bearing_diff_deg": 60.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061122585",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061122585.jpg",
    "taken_at": "2026-11-05T15:11:22",
    "period": "during",
@@ -17924,13 +18118,18 @@
      "bearing_diff_deg": 62.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061241221",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061241221.jpg",
    "taken_at": "2026-11-05T15:12:41",
    "period": "during",
@@ -17997,13 +18196,18 @@
      "bearing_diff_deg": 37.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061247963",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061247963.jpg",
    "taken_at": "2026-11-05T15:12:47",
    "period": "during",
@@ -18063,13 +18267,18 @@
      "bearing_diff_deg": 59.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061255833",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061255833.jpg",
    "taken_at": "2026-11-05T15:12:55",
    "period": "during",
@@ -18129,13 +18338,18 @@
      "bearing_diff_deg": 80.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:10"
+   "imported_at": "2026-11-05T20:47:10",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061300605",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061300605.jpg",
    "taken_at": "2026-11-05T15:13:00",
    "period": "during",
@@ -18216,13 +18430,18 @@
      "bearing_diff_deg": 41.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061341818",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061341818.jpg",
    "taken_at": "2026-11-05T15:13:41",
    "period": "during",
@@ -18282,13 +18501,18 @@
      "bearing_diff_deg": 79.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061357582",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061357582.jpg",
    "taken_at": "2026-11-05T15:13:57",
    "period": "during",
@@ -18348,13 +18572,18 @@
      "bearing_diff_deg": 81.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061402813",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061402813.jpg",
    "taken_at": "2026-11-05T15:14:02",
    "period": "during",
@@ -18414,13 +18643,18 @@
      "bearing_diff_deg": 80.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061410188",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061410188.jpg",
    "taken_at": "2026-11-05T15:14:10",
    "period": "during",
@@ -18487,13 +18721,18 @@
      "bearing_diff_deg": 57.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061418906",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061418906.jpg",
    "taken_at": "2026-11-05T15:14:18",
    "period": "during",
@@ -18560,13 +18799,18 @@
      "bearing_diff_deg": 51.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061423669",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061423669.jpg",
    "taken_at": "2026-11-05T15:14:23",
    "period": "during",
@@ -18626,13 +18870,18 @@
      "bearing_diff_deg": 66.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061434917",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061434917.jpg",
    "taken_at": "2026-11-05T15:14:34",
    "period": "during",
@@ -18692,13 +18941,18 @@
      "bearing_diff_deg": 75.2
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061442402",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061442402.jpg",
    "taken_at": "2026-11-05T15:14:42",
    "period": "during",
@@ -18793,13 +19047,18 @@
      "bearing_diff_deg": 11.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:11"
+   "imported_at": "2026-11-05T20:47:11",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061449185",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061449185.jpg",
    "taken_at": "2026-11-05T15:14:49",
    "period": "during",
@@ -18894,13 +19153,18 @@
      "bearing_diff_deg": 8.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061455930",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061455930.jpg",
    "taken_at": "2026-11-05T15:14:55",
    "period": "during",
@@ -18995,13 +19259,18 @@
      "bearing_diff_deg": 5.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061511227",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061511227.jpg",
    "taken_at": "2026-11-05T15:15:11",
    "period": "during",
@@ -19103,13 +19372,18 @@
      "bearing_diff_deg": 44.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061520328",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061520328.jpg",
    "taken_at": "2026-11-05T15:15:20",
    "period": "during",
@@ -19204,13 +19478,18 @@
      "bearing_diff_deg": 49.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061525822",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061525822.jpg",
    "taken_at": "2026-11-05T15:15:25",
    "period": "during",
@@ -19291,13 +19570,18 @@
      "bearing_diff_deg": 3.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061632682",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061632682.jpg",
    "taken_at": "2026-11-05T15:16:32",
    "period": "during",
@@ -19385,13 +19669,18 @@
      "bearing_diff_deg": 47.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061647959",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061647959.jpg",
    "taken_at": "2026-11-05T15:16:47",
    "period": "during",
@@ -19465,13 +19754,18 @@
      "bearing_diff_deg": 17.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061649102",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061649102.jpg",
    "taken_at": "2026-11-05T15:16:49",
    "period": "during",
@@ -19531,13 +19825,18 @@
      "bearing_diff_deg": 10.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061704401",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061704401.jpg",
    "taken_at": "2026-11-05T15:17:04",
    "period": "during",
@@ -19618,13 +19917,18 @@
      "bearing_diff_deg": 22.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061708177",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061708177.jpg",
    "taken_at": "2026-11-05T15:17:08",
    "period": "during",
@@ -19684,13 +19988,18 @@
      "bearing_diff_deg": 9.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:12"
+   "imported_at": "2026-11-05T20:47:12",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061709593",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061709593.jpg",
    "taken_at": "2026-11-05T15:17:09",
    "period": "during",
@@ -19778,13 +20087,18 @@
      "bearing_diff_deg": 36.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061710650",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061710650.jpg",
    "taken_at": "2026-11-05T15:17:10",
    "period": "during",
@@ -19872,13 +20186,18 @@
      "bearing_diff_deg": 34.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061711714",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061711714.jpg",
    "taken_at": "2026-11-05T15:17:11",
    "period": "during",
@@ -19959,13 +20278,18 @@
      "bearing_diff_deg": 22.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061720413",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061720413.jpg",
    "taken_at": "2026-11-05T15:17:20",
    "period": "during",
@@ -20053,13 +20377,18 @@
      "bearing_diff_deg": 48.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061828741",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061828741.jpg",
    "taken_at": "2026-11-05T15:18:28",
    "period": "during",
@@ -20168,13 +20497,18 @@
      "bearing_diff_deg": 7.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061830023",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061830023.jpg",
    "taken_at": "2026-11-05T15:18:30",
    "period": "during",
@@ -20297,13 +20631,18 @@
      "bearing_diff_deg": 4.4
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061834617",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061834617.jpg",
    "taken_at": "2026-11-05T15:18:34",
    "period": "during",
@@ -20426,13 +20765,18 @@
      "bearing_diff_deg": 32.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061836019",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061836019.jpg",
    "taken_at": "2026-11-05T15:18:36",
    "period": "during",
@@ -20513,13 +20857,18 @@
      "bearing_diff_deg": 35.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061836600",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061836600.jpg",
    "taken_at": "2026-11-05T15:18:36",
    "period": "during",
@@ -20614,13 +20963,18 @@
      "bearing_diff_deg": 28.7
     }
    ],
-   "imported_at": "2026-11-05T20:47:13"
+   "imported_at": "2026-11-05T20:47:13",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061837232",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061837232.jpg",
    "taken_at": "2026-11-05T15:18:37",
    "period": "during",
@@ -20694,13 +21048,18 @@
      "bearing_diff_deg": 6.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061905208.MP",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061905208.MP.jpg",
    "taken_at": "2026-11-05T15:19:05",
    "period": "during",
@@ -20760,13 +21119,18 @@
      "bearing_diff_deg": 78.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061908705",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061908705.jpg",
    "taken_at": "2026-11-05T15:19:08",
    "period": "during",
@@ -20833,13 +21197,18 @@
      "bearing_diff_deg": 50.4
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061909489",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061909489.jpg",
    "taken_at": "2026-11-05T15:19:09",
    "period": "during",
@@ -20899,13 +21268,18 @@
      "bearing_diff_deg": 77.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061910368",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061910368.jpg",
    "taken_at": "2026-11-05T15:19:10",
    "period": "during",
@@ -20965,13 +21339,18 @@
      "bearing_diff_deg": 44.3
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061918505",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061918505.jpg",
    "taken_at": "2026-11-05T15:19:18",
    "period": "during",
@@ -21066,13 +21445,18 @@
      "bearing_diff_deg": 9.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061934785",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061934785.jpg",
    "taken_at": "2026-11-05T15:19:34",
    "period": "during",
@@ -21167,13 +21551,18 @@
      "bearing_diff_deg": 15.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061939875",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061939875.jpg",
    "taken_at": "2026-11-05T15:19:39",
    "period": "during",
@@ -21254,13 +21643,18 @@
      "bearing_diff_deg": 11.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061943220",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061943220.jpg",
    "taken_at": "2026-11-05T15:19:43",
    "period": "during",
@@ -21334,13 +21728,18 @@
      "bearing_diff_deg": 22.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:14"
+   "imported_at": "2026-11-05T20:47:14",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_061946087",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_061946087.jpg",
    "taken_at": "2026-11-05T15:19:46",
    "period": "during",
@@ -21414,13 +21813,18 @@
      "bearing_diff_deg": 31.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062046145",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062046145.jpg",
    "taken_at": "2026-11-05T15:20:46",
    "period": "during",
@@ -21501,13 +21905,18 @@
      "bearing_diff_deg": 18.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062155782",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062155782.jpg",
    "taken_at": "2026-11-05T15:21:55",
    "period": "during",
@@ -21588,13 +21997,18 @@
      "bearing_diff_deg": 4.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062202098",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062202098.jpg",
    "taken_at": "2026-11-05T15:22:02",
    "period": "during",
@@ -21675,13 +22089,18 @@
      "bearing_diff_deg": 3.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062211785",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062211785.jpg",
    "taken_at": "2026-11-05T15:22:11",
    "period": "during",
@@ -21776,13 +22195,18 @@
      "bearing_diff_deg": 40.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062220598",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062220598.jpg",
    "taken_at": "2026-11-05T15:22:20",
    "period": "during",
@@ -21863,13 +22287,18 @@
      "bearing_diff_deg": 15.8
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062246708",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062246708.jpg",
    "taken_at": "2026-11-05T15:22:46",
    "period": "during",
@@ -21950,13 +22379,18 @@
      "bearing_diff_deg": 32.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062254010",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062254010.jpg",
    "taken_at": "2026-11-05T15:22:54",
    "period": "during",
@@ -22030,13 +22464,18 @@
      "bearing_diff_deg": 27.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062300065",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062300065.jpg",
    "taken_at": "2026-11-05T15:23:00",
    "period": "during",
@@ -22117,13 +22556,18 @@
      "bearing_diff_deg": 42.9
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062307232",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062307232.jpg",
    "taken_at": "2026-11-05T15:23:07",
    "period": "during",
@@ -22197,13 +22641,18 @@
      "bearing_diff_deg": 6.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:15"
+   "imported_at": "2026-11-05T20:47:15",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062311895",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062311895.jpg",
    "taken_at": "2026-11-05T15:23:11",
    "period": "during",
@@ -22277,13 +22726,18 @@
      "bearing_diff_deg": 5.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062317561",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062317561.jpg",
    "taken_at": "2026-11-05T15:23:17",
    "period": "during",
@@ -22357,13 +22811,18 @@
      "bearing_diff_deg": 20.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062323658",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062323658.jpg",
    "taken_at": "2026-11-05T15:23:23",
    "period": "during",
@@ -22437,13 +22896,18 @@
      "bearing_diff_deg": 7.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062330274",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062330274.jpg",
    "taken_at": "2026-11-05T15:23:30",
    "period": "during",
@@ -22517,13 +22981,18 @@
      "bearing_diff_deg": 5.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062527087",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062527087.jpg",
    "taken_at": "2026-11-05T15:25:27",
    "period": "during",
@@ -22618,13 +23087,18 @@
      "bearing_diff_deg": 29.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062537872",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062537872.jpg",
    "taken_at": "2026-11-05T15:25:37",
    "period": "during",
@@ -22726,13 +23200,18 @@
      "bearing_diff_deg": 28.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062543289",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062543289.jpg",
    "taken_at": "2026-11-05T15:25:43",
    "period": "during",
@@ -22834,13 +23313,18 @@
      "bearing_diff_deg": 12.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062549239",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062549239.jpg",
    "taken_at": "2026-11-05T15:25:49",
    "period": "during",
@@ -22949,13 +23433,18 @@
      "bearing_diff_deg": 19.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062637300",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062637300.jpg",
    "taken_at": "2026-11-05T15:26:37",
    "period": "during",
@@ -23057,13 +23546,18 @@
      "bearing_diff_deg": 33.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062840332",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062840332.jpg",
    "taken_at": "2026-11-05T15:28:40",
    "period": "during",
@@ -23144,13 +23638,18 @@
      "bearing_diff_deg": 62.4
     }
    ],
-   "imported_at": "2026-11-05T20:47:16"
+   "imported_at": "2026-11-05T20:47:16",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062846360",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_062846360.jpg",
    "taken_at": "2026-11-05T15:28:46",
    "period": "during",
@@ -23238,7 +23737,12 @@
      "bearing_diff_deg": 5.6
     }
    ],
-   "imported_at": "2026-11-05T20:47:17"
+   "imported_at": "2026-11-05T20:47:17",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": false,
+   "floor": null
   },
   {
    "id": "PXL_20261105_062856422",
@@ -33217,9 +33721,9 @@
   },
   {
    "id": "PXL_20261105_075519850",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_075519850.jpg",
    "taken_at": "2026-11-05T16:55:19",
    "period": "during",
@@ -33328,13 +33832,19 @@
      "bearing_diff_deg": 35.5
     }
    ],
-   "imported_at": "2026-11-05T20:47:27"
+   "imported_at": "2026-11-05T20:47:27",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": true,
+   "floor": 1,
+   "interior_views": true
   },
   {
    "id": "PXL_20261105_075532769",
-   "building": null,
+   "building": "tower75",
    "face": null,
-   "notes": "",
+   "notes": "職員が振り分け（2026-11-05T21:00:39）",
    "file": "20261105/PXL_20261105_075532769.jpg",
    "taken_at": "2026-11-05T16:55:32",
    "period": "during",
@@ -33436,7 +33946,13 @@
      "bearing_diff_deg": 6.0
     }
    ],
-   "imported_at": "2026-11-05T20:47:27"
+   "imported_at": "2026-11-05T20:47:27",
+   "assigned_by": "staff",
+   "assigned_at": "2026-11-05T21:00:39",
+   "building_source": "staff",
+   "interior": true,
+   "floor": 1,
+   "interior_views": true
   }
  ]
 }
