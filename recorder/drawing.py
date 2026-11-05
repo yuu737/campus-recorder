@@ -536,4 +536,163 @@ def all_drawings(b: dict) -> dict[str, str]:
     out = {"plan": plan_svg(b)}
     for fc in b.get("faces", []):
         out[f"elev_{fc['id']}"] = elevation_svg(b, fc["id"])
+    from . import interior
+    for fl in interior.floors_with_rooms(b):           # 内装の平面図（階ごと）。立面図は変えない
+        out[f"plan_{fl}f"] = interior_plan_svg(b, fl)
     return out
+
+
+# --- 内装の平面図（階ごと。interior.rooms。立面図には出さない） ---------------------------------
+PLAN_SCALE = 200              # 1:200
+PLAN_U = 20.0                 # SVG の 1 単位 = 1/4 mm。1 m = 5 mm（1:200）= 20 単位
+PLAN_UNIT_MM = 0.25
+FILL_ROOM = "#f4efe4"
+FILL_COLUMN = "#7d7a74"
+GLASS_STROKE = "#3b7c8c"
+
+
+def _st_attrs(st: str, width: float) -> str:
+    col = COL.get(st, COL["unknown"])
+    dash = f' stroke-dasharray="{DASH[st]}"' if DASH.get(st) else ""
+    return f'stroke="{col}"{dash} stroke-width="{width}"'
+
+
+def _worst(*ms) -> str:
+    """いくつかの値の状態のうち一番弱い物（unknown > estimated > measured）。"""
+    sts = [m.status if isinstance(m, Measurement) else (m or "unknown") for m in ms]
+    for s in ("unknown", "estimated"):
+        if s in sts:
+            return s
+    return "measured"
+
+
+def interior_plan_svg(b: dict, floor: int) -> str:
+    """floor 階の内装の平面図（1:200）。足元の外形・部屋の輪郭（くり抜く形）・柱・ガラスの壁（細い二重線）・扉（弧）・置物。
+    線の色と破線は立面と同じ（黒 measured／琥珀の破線 estimated／赤の破線 unknown）。"""
+    from . import interior as I
+    fp = (b.get("footprint") or {}).get("polygon") or []
+    rms = [r for r in I.rooms(b) if r.get("floor") == floor]
+    svg = _Svg()
+    svg.text(LEFT * 2, 70, f"{b.get('name', '')}　{floor} 階 平面図（内装）　1:{PLAN_SCALE}", 52, weight="bold")
+    svg.text(LEFT * 2, 120, "座標は原点からの m（x=東, y=北）。黒＝実測（根拠の写真あり）、琥珀の破線＝推定、赤の破線＝未確定。", 34, "#666")
+    allp = [tuple(p) for p in fp] + [p for r in rms for p in (I.room_points(r) or [])]
+    if not allp:
+        svg.text(LEFT * 2, 220, "足元の外形も部屋の輪郭も未確定です。", 40, "#c8322b")
+        return _plan_render(svg, 2400, 400)
+    minx, maxx = min(p[0] for p in allp), max(p[0] for p in allp)
+    miny, maxy = min(p[1] for p in allp), max(p[1] for p in allp)
+    sc = PLAN_U
+    ox, oy = 200.0, 260.0 + (maxy - miny) * sc
+
+    def P(x: float, y: float) -> tuple[float, float]:
+        return ox + (x - minx) * sc, oy - (y - miny) * sc
+
+    def pts_attr(pts) -> str:
+        return " ".join("%.1f,%.1f" % P(*p) for p in pts)
+
+    if len(fp) >= 3:
+        st = (b.get("footprint") or {}).get("status", "unknown")
+        svg.add(f'<polygon data-kind="footprint" points="{pts_attr(fp)}" fill="{FILL_WALL}" {_st_attrs(st, 3)}/>')
+    faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
+    for fc in faces.values():
+        (ax, ay), (cx, cy) = P(*fc["from"]), P(*fc["to"])
+        _p0, _u, n, _L = I.face_frame(fc)
+        svg.text((ax + cx) / 2 + n[0] * 50, (ay + cy) / 2 - n[1] * 50 + 12, fc.get("id", ""), 34, "#185fa5", "middle", "bold")
+    legend_y = oy + 120
+    for r in rms:
+        rid = r.get("id", "?")
+        pts = I.room_points(r)
+        pg = r.get("polygon") or {}
+        if pts is None:
+            svg.text(LEFT * 2, legend_y, f"部屋 {rid}：輪郭が未確定（撮影依頼へ）", 34, COL["unknown"])
+            legend_y += 50
+            continue
+        cav = I.cavity_polygon(r, b)
+        svg.add(f'<polygon data-kind="room" data-room="{_esc(rid)}" points="{pts_attr(cav or pts)}" fill="{FILL_ROOM}" {_st_attrs(pg.get("status", "unknown"), 4)}/>')
+        # 柱
+        g = (r.get("columns") or {}).get("grid") or {}
+        cst = _worst(*(Measurement.from_json(g.get(k)) for k in ("origin", "dx", "dy", "nx", "ny"))) if g else "unknown"
+        for c in I.column_positions(r, b):
+            h = c["size"] / 2
+            ux, uy = c["ux"]
+            q = [(c["x"] + sx * h * ux - sy * h * uy, c["y"] + sx * h * uy + sy * h * ux) for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+            svg.add(f'<polygon data-kind="column" data-ij="{c["i"]},{c["j"]}" points="{pts_attr(q)}" fill="{FILL_COLUMN}" {_st_attrs(cst, 2)}/>')
+        wt = I.wall_thickness(r)
+        # ガラスの壁：外壁の厚さの中に細い二重線、縦枠は短い横線
+        for gw in r.get("glass_walls") or []:
+            seg = I.glass_segment(gw, b)
+            if seg is None:
+                continue
+            f = faces[gw["face"]]
+            st = _worst(Measurement.from_json(gw.get("from")), Measurement.from_json(gw.get("to")))
+            svg.add(f'<polygon data-kind="glass_gap" points="{pts_attr([I.face_point(f, seg[0], -0.02), I.face_point(f, seg[1], -0.02), I.face_point(f, seg[1], wt + 0.02), I.face_point(f, seg[0], wt + 0.02)])}" fill="#fbfaf7" stroke="none"/>')
+            for k_in in (wt * 0.35, wt * 0.65):
+                (x0, y0), (x1, y1) = P(*I.face_point(f, seg[0], k_in)), P(*I.face_point(f, seg[1], k_in))
+                svg.add(f'<line data-kind="glass" x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" stroke="{GLASS_STROKE}" stroke-width="2"/>')
+            for a in I.mullions(gw, b):
+                (x0, y0), (x1, y1) = P(*I.face_point(f, a, 0)), P(*I.face_point(f, a, wt))
+                svg.add(f'<line data-kind="mullion" x1="{x0:.1f}" y1="{y0:.1f}" x2="{x1:.1f}" y2="{y1:.1f}" {_st_attrs(st, 1.5)}/>')
+        # 扉：開口（白抜き）と弧（自動の引き戸は破線の弧を 2 枚）
+        for dr in r.get("doors") or []:
+            sp = I.door_span(dr, b)
+            if sp is None:
+                continue
+            f = faces[dr["face"]]
+            a0, a1, _h = sp
+            w = a1 - a0
+            st = _worst(*(Measurement.from_json(dr.get(k)) for k in ("at", "width", "height")))
+            q = [I.face_point(f, a0, -0.05), I.face_point(f, a1, -0.05), I.face_point(f, a1, wt + 0.05), I.face_point(f, a0, wt + 0.05)]
+            svg.add(f'<polygon data-kind="door_opening" points="{pts_attr(q)}" fill="#fbfaf7" stroke="none"/>')
+            leaves = [(a0, w)] if dr.get("kind") == "swing" else [(a0, w / 2), (a1, -w / 2)]
+            for hinge, lw in leaves:
+                hx, hy = P(*I.face_point(f, hinge, wt))
+                ex, ey = P(*I.face_point(f, hinge + lw, wt))
+                tx, ty = P(*I.face_point(f, hinge, wt + abs(lw)))
+                rr = abs(lw) * sc
+                # 弧の向き：扉の先（tx）から閉じた位置（ex）へ。SVG は y が下向きなので外積の符号で決める
+                cross = (tx - hx) * (ey - hy) - (ty - hy) * (ex - hx)
+                sweep = 1 if cross > 0 else 0
+                dash = ' stroke-dasharray="8 6"' if dr.get("kind") == "auto_sliding" else ""
+                svg.add(f'<path data-kind="door" d="M {hx:.1f},{hy:.1f} L {tx:.1f},{ty:.1f} A {rr:.1f},{rr:.1f} 0 0 {sweep} {ex:.1f},{ey:.1f}" fill="none" {_st_attrs(st, 2)}{dash}/>')
+        # 置物（大きさがあれば外形、無ければ丸い印）
+        for pt in r.get("parts") or []:
+            sw, sd, _sh = I.part_size(pt)
+            st = pt.get("status", "unknown")
+            label = pt.get("name") or pt.get("asset") or pt.get("type")
+            for (x, y, yaw) in I.part_spots(pt):
+                cx, cy = P(x, y)
+                if sw and sd:
+                    cu, su_ = math.cos(yaw), math.sin(yaw)
+                    q = [(x + sx * sw / 2 * cu - sy * sd / 2 * su_, y + sx * sw / 2 * su_ + sy * sd / 2 * cu) for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+                    svg.add(f'<polygon data-kind="part" data-part="{_esc(label)}" points="{pts_attr(q)}" fill="#c9b79c" fill-opacity="0.7" {_st_attrs(st, 1.5)}/>')
+                else:
+                    svg.add(f'<circle data-kind="part" data-part="{_esc(label)}" cx="{cx:.1f}" cy="{cy:.1f}" r="12" fill="#c9b79c" {_st_attrs(st, 1.5)}/>')
+                svg.text(cx, cy + 8, str(label), 22, "#444", "middle")
+        # 部屋の名前と高さ
+        cx, cy = P(*I.centroid(pts))
+        svg.text(cx, cy - 30, r.get("name", rid), 36, "#222", "middle", "bold")
+        fz, ch = Measurement.from_json(r.get("floor_z")), Measurement.from_json(r.get("ceiling_h"))
+        svg.text(LEFT * 2, legend_y, f"{r.get('name', rid)}（{rid}）　床 {fz.label()}　天井高 {ch.label()}　輪郭 {pg.get('status')}"
+                 + (f"［{','.join(map(str, pg.get('evidence') or []))}］" if pg.get("evidence") else ""), 30, COL.get(_worst(fz, ch), "#c8322b"))
+        legend_y += 46
+    for rq in (b.get("interior") or {}).get("requests") or []:
+        svg.text(LEFT * 2, legend_y, f"撮影依頼：{rq.get('face', '')} {rq.get('what', '')}（{rq.get('where', '')}）— {rq.get('why', '')}", 28, COL["unknown"])
+        legend_y += 42
+    # 縮尺の物差し（10 m）と北
+    bx, by = ox, legend_y + 30
+    svg.add(f'<line data-kind="scalebar" x1="{bx:.1f}" y1="{by:.1f}" x2="{bx + 10 * sc:.1f}" y2="{by:.1f}" stroke="#222" stroke-width="3"/>')
+    for k in range(0, 11, 5):
+        svg.line(bx + k * sc, by - 8, bx + k * sc, by + 8, 'stroke="#222"', 2)
+    svg.text(bx + 10 * sc + 16, by + 10, f"10 m（1:{PLAN_SCALE}、印刷で 50 mm）", 28, "#222")
+    nxp, nyp = ox + (maxx - minx) * sc + 140, 220
+    svg.line(nxp, nyp + 90, nxp, nyp, 'stroke="#222"', 3)
+    svg.add(f'<polygon points="{nxp - 14:.1f},{nyp + 24:.1f} {nxp + 14:.1f},{nyp + 24:.1f} {nxp:.1f},{nyp:.1f}" fill="#222"/>')
+    svg.text(nxp, nyp - 14, "N", 32, "#222", "middle")
+    w = max(2400.0, ox + (maxx - minx) * sc + 320)
+    return _plan_render(svg, w, by + 80)
+
+
+def _plan_render(svg: _Svg, w: float, h: float) -> str:
+    """1 単位 = 0.25 mm の印刷寸法を付ける（1:200 が紙の上で正しくなる）。"""
+    s = svg.render(w, h)
+    return s.replace(f'width="{w:.0f}" height="{h:.0f}"', f'width="{w * PLAN_UNIT_MM:.1f}mm" height="{h * PLAN_UNIT_MM:.1f}mm"', 1)

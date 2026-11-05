@@ -31,7 +31,8 @@
     "polyhaven/brown_brick_02/brown_brick_02_diff_1k.jpg": "d769443de69cc16482d25a8a1777b1fa826ada8b4175c7c29d7abb08a91f8ac2",
     "polyhaven/brown_brick_02/brown_brick_02_nor_gl_1k.jpg": "c4ca57e17a7ebfa27b561b126a6579e90b09a852c94ffa83a0b68d4ed62b46af",
     "polyhaven/brown_brick_02/brown_brick_02_rough_1k.jpg": "4f76762b9ae52f3d411e9902a2064bdba3de1eaf5c852df98b930716eaa7e17c"
-   }
+   },
+   "decision": "D-0001"
   },
   {
    "id": "concrete_dark",
@@ -62,7 +63,8 @@
     "polyhaven/concrete_wall_006/concrete_wall_006_diff_1k.jpg": "fea247dd085cd05d8deb335234c834764d622029da351f8bcc8913935316bacd",
     "polyhaven/concrete_wall_006/concrete_wall_006_nor_gl_1k.jpg": "4ff16bb96fc2df3ef71d22007151aff1d8bf7cb10a493d3f8e973213a99dd428",
     "polyhaven/concrete_wall_006/concrete_wall_006_rough_1k.jpg": "ceee98c940b8f1e49169af880497aa60eaae5de0ac5b3603aa753b76f687c455"
-   }
+   },
+   "decision": "D-0001"
   },
   {
    "id": "asphalt",
@@ -93,7 +95,8 @@
     "polyhaven/asphalt_02/asphalt_02_diff_1k.jpg": "1aa5ce99f58a625c71d48cfc3e68b65ca85ccb00f39e045c0a928608a0ea25ed",
     "polyhaven/asphalt_02/asphalt_02_nor_gl_1k.jpg": "42a1c381b53204e83a982db2864479a30bc127bbdeebb1006f8ee51bff099df3",
     "polyhaven/asphalt_02/asphalt_02_rough_1k.jpg": "70ba3edc65525eb4dc366cf010ca7ae0bd34e0251ff0225c2dad627a873d0712"
-   }
+   },
+   "decision": "D-0001"
   },
   {
    "id": "paving_block",
@@ -124,7 +127,8 @@
     "polyhaven/concrete_pavers/concrete_pavers_diff_1k.jpg": "eea1fb8b498154754f4961ce0792092ef56cadc3d210becbb0dc3bf6c96c261d",
     "polyhaven/concrete_pavers/concrete_pavers_nor_gl_1k.jpg": "761c8332b4b53ab06931adf83f5f8f4fa5b7559a1a8267bc7ef865f890b17894",
     "polyhaven/concrete_pavers/concrete_pavers_rough_1k.jpg": "27fb26837b95523b4ff8d663745466005ac6ae9797e6f5ced1192eaebf6c1469"
-   }
+   },
+   "decision": "D-0001"
   },
   {
    "id": "hdri_overcast",
@@ -144,7 +148,8 @@
    "note": "Poly Haven の分類で outdoor / urban / overcast / midday / low contrast",
    "sha256": {
     "polyhaven/alte_veste_station/alte_veste_station_1k.hdr": "0a578bd75f18c5191b2f5ae04b60ffb04aa2efa1de3729ace97d549596ffd6ed"
-   }
+   },
+   "decision": "D-0001"
   },
   {
    "id": "ac_outdoor",
@@ -184,7 +189,8 @@
     "polyhaven/exterior_aircon_unit/textures/exterior_aircon_unit_rusted_02_nor_gl_1k.jpg": "3af4716b42812b742577594c7a0a342accd79925f02037c152b1da1c5831bb78"
    },
    "node": "exterior_aircon_unit",
-   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）",
+   "decision": "D-0001"
   },
   {
    "id": "street_lamp",
@@ -214,7 +220,8 @@
     "polyhaven/street_lamp_01/textures/street_lamp_01_nor_gl_1k.jpg": "172af0fd7ed4999e9f520b9f56e1f357a6dba87adbd7b8aa87e0a0b95840c63d",
     "polyhaven/street_lamp_01/street_lamp_01.bin": "c283db9b6d95835d9e8fc1692829acadcb21a0623b2daaa7231cec1440488401"
    },
-   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）",
+   "decision": "D-0001"
   },
   {
    "id": "bench",
@@ -244,7 +251,8 @@
     "polyhaven/painted_wooden_bench/textures/painted_wooden_bench_arm_1k.jpg": "878785565eeff706b8f1e4db7e3d794a544e9cf0e56cee424d9a271ab4ead47e",
     "polyhaven/painted_wooden_bench/painted_wooden_bench.bin": "5799bcb20924105cccd6424de8cdb8e67eb57fddc19c395befeac634a7b2e013"
    },
-   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）",
+   "decision": "D-0001"
   },
   {
    "id": "tree_small",
@@ -280,6 +288,131 @@
     "polyhaven/tree_small_02/textures/tree_small_02_arm_1k.jpg": "891c5a1bb124292984b01558e9f2b0302d27d2fa3ccf9dfc6c34f9ea4ca24e6c",
     "polyhaven/tree_small_02/tree_small_02.bin": "8da6c3c389ad8748286d1b7488cd827f75ebdad9d8f59ef7dfb0916df5edc634"
    },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）",
+   "decision": "D-0001"
+  },
+  {
+   "id": "table_long",
+   "kind": "model",
+   "what": "内装の長机（学生ホール。写真の白い天板の長机に近い形の定型の机）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/dining_table",
+   "page": "https://polyhaven.com/a/dining_table",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-05T21:09:04+09:00",
+   "file": "polyhaven/dining_table/dining_table_1k.gltf",
+   "size_m": [
+    2.256,
+    1.39,
+    0.877
+   ],
+   "polyhaven": {
+    "id": "dining_table",
+    "res": "1k"
+   },
+   "note": "色と素材は写真と違う（木目）。置く位置・個数・大きさは棟 JSON の内装の根拠が正で、形だけ借りる",
+   "decision": "D-0003",
+   "sha256": {
+    "polyhaven/dining_table/dining_table_1k.gltf": "6af2b850b0524d364b4c89869c6c70112b8d340317a256cf35fbe739040654c7",
+    "polyhaven/dining_table/textures/dining_table_nor_gl_1k.jpg": "156d4bd665864b806973290c1c702dda3fc80736c91623311992f2ca2e773d84",
+    "polyhaven/dining_table/textures/dining_table_diff_1k.jpg": "af239dc33b8444c5d9ca653d502ee1a1f0bac1845a7a522a00eae6c3a0d62b97",
+    "polyhaven/dining_table/textures/dining_table_arm_1k.jpg": "f50a5105bb4c25985c726b1fa65b04bbfc5972794d08a970bd1a97c435159ad4",
+    "polyhaven/dining_table/dining_table.bin": "63a493a0bf2eeea4ecc94e5e4cb90c7780fd6cb79e82feed1d3db89ed2b63305"
+   },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  },
+  {
+   "id": "table_office",
+   "kind": "model",
+   "what": "内装の事務机（金属の脚の机。教室・事務室向け）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/metal_office_desk",
+   "page": "https://polyhaven.com/a/metal_office_desk",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-05T21:09:04+09:00",
+   "file": "polyhaven/metal_office_desk/metal_office_desk_1k.gltf",
+   "size_m": [
+    2.0,
+    0.947,
+    0.788
+   ],
+   "polyhaven": {
+    "id": "metal_office_desk",
+    "res": "1k"
+   },
+   "note": "置く位置・個数は棟 JSON の根拠が正",
+   "decision": "D-0003",
+   "sha256": {
+    "polyhaven/metal_office_desk/metal_office_desk_1k.gltf": "f07032a5ee89aacceebf10fd9fa192c22775ae81861cfb0bdb1594497179373c",
+    "polyhaven/metal_office_desk/textures/metal_office_desk_nor_gl_1k.jpg": "f57eb004937e46392151b803e0cb1d88983958d01ad11d93df78a82cfcc6c407",
+    "polyhaven/metal_office_desk/textures/metal_office_desk_diff_1k.jpg": "1f02e3e77e8f82a3600664c991bd45c1c187452d61e9ede4336c6f90f7fa3139",
+    "polyhaven/metal_office_desk/textures/metal_office_desk_arm_1k.jpg": "752916dd9bf8a163dc7e0d3673900791ee6d558bbe23894263ac92b42387f51b",
+    "polyhaven/metal_office_desk/metal_office_desk.bin": "65b558f41a75ad4822e31cc2a97eb34ed359199279a6bfbd650deb27cef78767"
+   },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  },
+  {
+   "id": "chair_stack",
+   "kind": "model",
+   "what": "内装のスタッキングチェア（樹脂の一体成形。学生ホールの布張りの椅子の代用）",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/plastic_monobloc_chair_01",
+   "page": "https://polyhaven.com/a/plastic_monobloc_chair_01",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-05T21:09:05+09:00",
+   "file": "polyhaven/plastic_monobloc_chair_01/plastic_monobloc_chair_01_1k.gltf",
+   "size_m": [
+    0.642,
+    0.628,
+    0.88
+   ],
+   "polyhaven": {
+    "id": "plastic_monobloc_chair_01",
+    "res": "1k"
+   },
+   "note": "布張りではない。形（座面の高さ・背もたれ）だけ借りる",
+   "decision": "D-0003",
+   "sha256": {
+    "polyhaven/plastic_monobloc_chair_01/plastic_monobloc_chair_01_1k.gltf": "899bf148139ab8d1718c25ec06112a652631f9476b5aaeeacb9eb1da9b7f1d3a",
+    "polyhaven/plastic_monobloc_chair_01/plastic_monobloc_chair_01.bin": "db5c778488d01d7e7d3409e2cda53ee8f6dd523a327c080000d549dd0f83b375",
+    "polyhaven/plastic_monobloc_chair_01/textures/plastic_monobloc_chair_01_arm_1k.jpg": "78a67659a19a9df9efc0ef71789de0c949a727db62ade4c4c8887cd2c803c1a2",
+    "polyhaven/plastic_monobloc_chair_01/textures/plastic_monobloc_chair_01_diff_1k.jpg": "fdd1255a02bf684cfcff2eae75c0e3eea0db1fb5ecbfbd8c4f9beab8fd83ff6c",
+    "polyhaven/plastic_monobloc_chair_01/textures/plastic_monobloc_chair_01_nor_gl_1k.jpg": "9ffa876b37d72ae1c0aed84d4dc1f62c956c844b3efec1f786f9080c10f63c9e"
+   },
+   "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
+  },
+  {
+   "id": "chair_school",
+   "kind": "model",
+   "what": "内装の教室用の椅子",
+   "source": "polyhaven",
+   "url": "https://api.polyhaven.com/files/SchoolChair_01",
+   "page": "https://polyhaven.com/a/SchoolChair_01",
+   "license": "CC0-1.0",
+   "license_url": "https://polyhaven.com/license",
+   "fetched_at": "2026-11-05T21:09:06+09:00",
+   "file": "polyhaven/SchoolChair_01/SchoolChair_01_1k.gltf",
+   "size_m": [
+    0.566,
+    0.675,
+    1.006
+   ],
+   "polyhaven": {
+    "id": "SchoolChair_01",
+    "res": "1k"
+   },
+   "note": "置く位置・個数は棟 JSON の根拠が正",
+   "decision": "D-0003",
+   "sha256": {
+    "polyhaven/SchoolChair_01/SchoolChair_01_1k.gltf": "1db6aca4bf379c2d568b2068492dcfcda15d764c0c3d98a970055af25b46281e",
+    "polyhaven/SchoolChair_01/textures/SchoolChair_01_nor_gl_1k.jpg": "4ee930562ad26e8c98af75e8aa6577d01cb56f6d22628f4e95c385e5364f0623",
+    "polyhaven/SchoolChair_01/textures/SchoolChair_01_diff_1k.jpg": "f10ae4dbddfb056ef716770ebd96e0eff0aa6f0b5ad0f263ff51c5cade6e1d8f",
+    "polyhaven/SchoolChair_01/textures/SchoolChair_01_arm_1k.jpg": "ff773eb01c9d59130dc3cc0274951ac626d73fa1b2f7eee519af4ca80835568b",
+    "polyhaven/SchoolChair_01/SchoolChair_01.bin": "7d64d556ba88d3962778085b9a190f1adb0d84e667bca8ef032c0ae34b31a9fe"
+   },
    "size_from": "取得した gltf の外形を測った値（recorder.assets.gltf_size）"
   }
  ],
@@ -293,6 +426,21 @@
    "what": "扉",
    "searched": "Poly Haven の models（door）：large_castle_door / rollershutter_door しか無く、大学の扉と形が違う",
    "fallback": "該当なし → 箱のまま（面の openings / porch の形）"
+  },
+  {
+   "what": "自販機",
+   "searched": "Poly Haven models を vending / machine / kiosk / appliances で全件確認（API 521 件）。CC0 の自販機は無い。Kenney は署名付きリンクで自動取得できないので除外",
+   "fallback": "該当なし → 箱のまま（D-0003）"
+  },
+  {
+   "what": "展示ケース",
+   "searched": "Poly Haven models を display / case / cabinet / shelves で確認。wooden_display_shelves_01 などは棚で、ガラスの展示ケースは無い",
+   "fallback": "該当なし → 箱のまま（D-0003）"
+  },
+  {
+   "what": "掲示板",
+   "searched": "Poly Haven models を board / notice / chalkboard で確認。standing_chalkboard_01 は立て看板で壁の掲示板ではない。そもそも貼り紙・掲示物は撮らない規約（CLAUDE.md 規約 4）",
+   "fallback": "該当なし → 箱のまま（D-0003）"
   }
  ]
 }

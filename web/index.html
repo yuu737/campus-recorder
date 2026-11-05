@@ -316,6 +316,10 @@ function setEvidence(on) {
   });
 }
 document.getElementById("evbtn").addEventListener("click", () => setEvidence(!evOn));
+// 室内の明かり：部屋の中（roomBoxes）にいる間だけ点ける半球光（天井に遮られて日が入らないので真っ暗にならないように）
+const roomBoxes = [];
+const roomLight = new THREE.HemisphereLight(0xfff6e8, 0x8a7f70, 0);
+scene.add(roomLight);
 const loader = new GLTFLoader();
 const centers = {};
 await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res) => {
@@ -341,6 +345,14 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
         o.castShadow = false;
       }
     });
+    // 内装（glb の extras.room）：部屋の床と天井の板から部屋の箱を作る（中に入ったら室内の明かりを点ける）
+    root.updateMatrixWorld(true);
+    const rb = {};
+    root.traverse((o) => {
+      if (!o.isMesh || !o.userData.room || !/_(floor|ceiling)$/.test(o.userData.part || "")) return;
+      (rb[o.userData.room] ||= new THREE.Box3()).expandByObject(o);
+    });
+    for (const k in rb) roomBoxes.push(rb[k]);
     scene.add(root);
     evRoots.push(root);
     root.updateMatrixWorld(true);
@@ -477,6 +489,7 @@ function frame() {
   else camera.position.set(player.x, groundAt(player.x, player.z) + EYE + dbg.up, player.z);
   camera.rotation.set(pitch, yaw, 0);
   sunFollow(camera.position);
+  roomLight.intensity = roomBoxes.some((bx) => bx.containsPoint(camera.position)) ? qnum("room", 1.6) : 0;
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }

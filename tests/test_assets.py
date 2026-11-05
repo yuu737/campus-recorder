@@ -176,6 +176,7 @@ def test_gltf_size_with_nodes(tmp_path):
 def test_fetch_skips_unchanged(tmp_path):
     c = cat()
     c["items"] = c["items"][:1]
+    c["items"][0]["decision"] = "D-0001"   # 進行役の決定が無い項目は fetch が拒否する（recorder/decisions.py）
     p = tmp_path / c["items"][0]["file"]
     p.parent.mkdir(parents=True)
     p.write_text("{}", encoding="utf-8")

@@ -590,6 +590,17 @@ def validate_building(b: dict) -> list[str]:
         if rq.get("face") and rq["face"] not in face_ids and rq["face"] != "*":
             errs.append(f"{where}: face={rq['face']} は faces にありません")
 
+    # 差し込み口：進行役の決定（語彙・アセットの許可）と内装の検証。モジュールが無ければ素通り
+    import importlib
+    for _hook in ("decisions", "interior"):
+        try:
+            _mod = importlib.import_module("." + _hook, __package__)
+        except ImportError:
+            continue
+        _fn = getattr(_mod, "validate_building_hook", None)
+        if _fn:
+            errs += list(_fn(b))
+
     return errs
 
 

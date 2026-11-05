@@ -331,7 +331,20 @@ def _building_events(bid: str, cwd: Path, after_step: str | None) -> list[dict]:
     for kind, ekind, label in (("tool", "vocab", "語彙（部品の型）が足りない"), ("asset", "asset", "アセットが要る")):
         rs = [r for r in reqs if r.get("kind") == kind]
         if rs:
-            ev.append({"kind": ekind, "why": f"requests に kind \"{kind}\" の open が {len(rs)} 件（{label}）", "evidence": {"requests": rs}})
+            from . import decisions
+
+            ddoc = _jload(cwd / "data" / "decisions.json") or {}
+            decided = [(r, decisions.match_request(ddoc, bid, r)) for r in rs]
+            ids_ = sorted({d["id"] for _r, d in decided if d})
+            ev1 = {"kind": ekind, "why": f"requests に kind \"{kind}\" の open が {len(rs)} 件（{label}）", "evidence": {"requests": rs}}
+            if ids_ and all(d for _r, d in decided):
+                ev1["why"] = f"決定済み（実装待ち）：requests に kind \"{kind}\" の open が {len(rs)} 件（{label}）。決定 {', '.join(ids_)}"
+                ev1["evidence"]["decision"] = ", ".join(ids_)
+            elif ids_:
+                n = sum(1 for _r, d in decided if d)
+                ev1["why"] += f"。うち {n} 件は決定済み（実装待ち）、決定 {', '.join(ids_)}"
+                ev1["evidence"]["decision"] = ", ".join(ids_)
+            ev.append(ev1)
     cat = _jload(cwd / "data" / "assets" / "catalog.json") or {}
     ids = {x.get("id") for x in cat.get("items", []) if isinstance(x, dict)}
     missing = sorted({m[len("asset:"):] for m in _walk_materials(b.get("parts")) if m.startswith("asset:")} - ids)

@@ -52,6 +52,12 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 ## 止められた時
 検収係が止める理由（5 つ）で部品を止めたら、消すのではなく `out/<棟id>/soten.json` に自分の根拠（写真 id・方法）を書く。規則で決まらない物は進行役が決める。止める理由に当たらない指摘（「寸法が無い」など）は受けない。
 
+## 語彙やアセットが足りない時（進行役の許可が要る）
+- 自分で型を増やさない・台帳に項目を足さない（`recorder validate` が `data/vocab.json`・`data/decisions.json` に無い型と、決定の無いアセットを拒否する）。
+- `requests` に `kind: "tool"`（語彙）か `kind: "asset"`（置物・質感）で「何を・どの写真に・なぜ既存の語彙で表せないか」を書き、**待たずに**今ある語彙で置く（composite の近似、アセットが無い物は箱）。
+- 進行役が approve したら（`recorder agent events` の evidence に決定 id が出る）、実装係が語彙を足した後に design スクリプトを差し替える。
+- 内装（`interior` 欄）は決定 D-0002 で許可済み。部屋は棟の座標の多角形＋床 z＋天井高、柱は格子、ガラスの壁は外観の面を参照、置物は CC0（D-0003：机・椅子）。見本は `tests/fixtures/interior_building.json`。
+
 ## 手順
 1. 観察票・数え・測量の JSON と `coverage_<面>_photo.png`・`coverage.json` を読む。食い違い（面の取り違え）があれば先に直す。
 2. 観察票の 1 m 以上の物を全部並べ、置く物ごとに「(a)/(b)/(c) のどれで寸法を取ったか」を決めてから design スクリプトを書く。

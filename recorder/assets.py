@@ -58,6 +58,34 @@ def save_catalog(cat: dict, path: str | Path | None = None) -> None:
     p.write_text(json.dumps(cat, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
+def decision_problem(it: dict, doc: dict | None = None) -> str | None:
+    """台帳の項目に進行役の承認（decision が決定の台帳にあり approve）があるか。無ければ理由。"""
+    try:
+        from . import decisions
+    except ImportError:   # Blender の中など、パッケージ外で読まれた時
+        import decisions  # type: ignore
+    p = decisions.problem(it.get("decision"), f"アセット {it.get('id')}", doc)
+    return None if p is None else f"{p}（進行役の決定が要る：recorder agent decide --kind asset …）"
+
+
+def add_item(item: dict, cat: dict | None = None, path: str | Path | None = None, save: bool = True) -> dict:
+    """台帳に項目を足す。decision が無い・決定の台帳に無い・deny なら拒否（ValueError）。規約違反も拒否。"""
+    cat = cat if cat is not None else load_catalog(path)
+    pr = decision_problem(item)
+    if pr:
+        raise ValueError(pr)
+    if any(it.get("id") == item.get("id") for it in cat.get("items", [])):
+        raise ValueError(f"アセット {item.get('id')} は台帳にすでにあります")
+    trial = {**cat, "items": [*cat.get("items", []), item]}
+    errs = validate_catalog(trial)
+    if errs:
+        raise ValueError("台帳の規約違反: " + " / ".join(errs))
+    cat.setdefault("items", []).append(item)
+    if save:
+        save_catalog(cat, path)
+    return cat
+
+
 def _safe_rel(s: str) -> bool:
     """assets/ の外に出ない相対パスか（.. や絶対パスを落とす）。"""
     if not s or "\\" in s:
@@ -374,6 +402,9 @@ def fetch(cat: dict, only: list[str] | None = None, store: str | Path | None = N
         if only and aid not in only:
             continue
         try:
+            pr = decision_problem(it)
+            if pr:
+                raise PermissionError(pr)   # 取りに行く前に拒否
             have = it.get("sha256") or {}
             if have and all((store / rel).exists() and sha256(store / rel) == h for rel, h in have.items()):
                 res["skip"].append(aid)

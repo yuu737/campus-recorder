@@ -1,0 +1,180 @@
+{
+ "schema": "campus-recorder/vocab/1",
+ "note": "語彙（部品の型）の名前の一覧。形は recorder/parts_geom.py など。追加は data/decisions.json の approve が要る（recorder agent decide --kind vocab）。decision は決定 id",
+ "types": [
+  {
+   "type": "box",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "塊の上の箱（立方体の部品）"
+  },
+  {
+   "type": "coping",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "パラペットの笠木（全部の塊の上端）"
+  },
+  {
+   "type": "balcony",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "踊り場・テラス・渡り廊下の床と腰壁"
+  },
+  {
+   "type": "ac_units",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "室外機の列（地面置き・壁付け）"
+  },
+  {
+   "type": "pipes",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "縦の配管・雨樋"
+  },
+  {
+   "type": "pavement",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "舗装（煉瓦など）の多角形"
+  },
+  {
+   "type": "stair_switchback",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "折り返しの外階段"
+  },
+  {
+   "type": "porch",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "玄関の軒下（壁をくり抜く）"
+  },
+  {
+   "type": "steps",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "段の塊（L 字に回る・円弧）"
+  },
+  {
+   "type": "rail",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "手すり"
+  },
+  {
+   "type": "column",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "単独の柱（丸・角）"
+  },
+  {
+   "type": "rooftop_units",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "屋上の設備（航空写真で位置を読む）"
+  },
+  {
+   "type": "asset",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "CC0 アセットの置物（位置・個数・大きさは根拠付き、見た目はアセット）"
+  },
+  {
+   "type": "ceiling_beams",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "天井の小梁"
+  },
+  {
+   "type": "louver",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "ルーバー"
+  },
+  {
+   "type": "planter",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "植え込み"
+  },
+  {
+   "type": "nameplate",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "銘板・看板"
+  },
+  {
+   "type": "patch",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "面の一部の素材"
+  },
+  {
+   "type": "vestibule",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "風除室"
+  },
+  {
+   "type": "pergola",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "パーゴラ"
+  },
+  {
+   "type": "bridge",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "渡り廊下"
+  },
+  {
+   "type": "curved_glass",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "曲面ガラス"
+  },
+  {
+   "type": "composite",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "組み立て部品（素片の組み合わせ）"
+  },
+  {
+   "type": "wedge",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "composite の素片：くさび（三角柱・斜路）"
+  },
+  {
+   "type": "cylinder",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "composite の素片：円柱"
+  },
+  {
+   "type": "prism",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "composite の素片：多角形の柱体"
+  },
+  {
+   "type": "arc_wall",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "composite の素片：円弧の壁"
+  },
+  {
+   "type": "cut",
+   "decision": "D-0001",
+   "since": "2026-11-04",
+   "what": "composite の素片の印：壁から彫る（置かない）"
+  },
+  {
+   "type": "interior",
+   "decision": "D-0002",
+   "since": "2026-11-05",
+   "what": "内装（部屋・柱・ガラスの壁・扉・置物）。棟 JSON の interior 欄"
+  }
+ ]
+}

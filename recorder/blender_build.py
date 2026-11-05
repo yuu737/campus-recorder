@@ -911,6 +911,226 @@ def _part_face(pt: dict) -> str | None:
     return f if isinstance(f, str) else None
 
 
+# --- 内装（interior.rooms。決定 D-0002） -----------------------------------------------------------
+# 順序：①塊を足し算（union_bodies）→ ②窓（面ごとに結合）・部品のくり抜き（boolean_cut）→ ③部屋のくり抜き（床〜天井、
+# 外壁の線から wall_t 内側に寄せた多角形）→ ④ガラスの壁・扉の開口（外壁を貫く箱）。③④は窓と別の回に 1 つずつ当て、
+# 体積を check_cut で確かめる（窓の彫り込みと重なっても「彫る物より多くは減らない」は成り立つ）。
+INTERIOR_EVIDENCE_PREFIX = "room_"
+
+
+def _interior_mod():
+    from recorder import interior
+    return interior
+
+
+def _int_mat(mats, name: str | None, kind: str):
+    """内装の素材：asset:<id> は台帳の質感、名前は interior.MATERIALS の色。"""
+    I = _interior_mod()
+    name = name or I.MATERIAL_DEFAULT.get(kind, "plaster")
+    if name.startswith("asset:"):
+        return mats.named(name)
+    key = f"int_{name}"
+    m = bpy.data.materials.get(key)
+    if m is None:
+        m = material_plain(key, I.MATERIALS.get(name, I.MATERIALS["plaster"]), roughness=0.7)
+    return m
+
+
+def material_light(name: str = "int_light", strength: float = 6.0):
+    """天井の照明（光る板）。glTF では emissive（強さ > 1 は KHR_materials_emissive_strength）で出る。"""
+    m = bpy.data.materials.get(name)
+    if m is None:
+        m = material_plain(name, (1.0, 0.98, 0.92, 1.0), roughness=0.5)
+        bsdf = m.node_tree.nodes["Principled BSDF"]
+        for k, v in (("Emission Color", (1.0, 0.97, 0.9, 1.0)), ("Emission", (1.0, 0.97, 0.9, 1.0)), ("Emission Strength", strength)):
+            if k in bsdf.inputs:
+                bsdf.inputs[k].default_value = v
+    return m
+
+
+def _ob_center(ob) -> Vector:
+    vs = ob.data.vertices
+    return sum((ob.matrix_world @ v.co for v in vs), Vector()) / max(len(vs), 1)
+
+
+def _room_tag(ob, room: dict, state: str, kind: str, evidence: list[str]) -> None:
+    rid = room.get("id", "room")
+    tag(ob, state, part=f"{INTERIOR_EVIDENCE_PREFIX}{rid}_{kind}")
+    ob["room"] = rid
+    ob["room_name"] = str(room.get("name", rid))
+    if evidence:
+        ob["part_evidence"] = ",".join(evidence)
+
+
+def build_interior(b: dict, faces: dict, mats, col, extras: list) -> dict:
+    """部屋ごとに、くり抜く箱（cav）・開口の箱（open）・中の物（objs）を作る。extras の中で部屋に埋もれる物
+    （窓の奥のカーテン・ガラス張りの奥の暗い箱、ガラスの壁の区間の窓のガラス・サッシ）は消す。"""
+    I = _interior_mod()
+    cav_cutters, open_cutters, objs, cavities = [], [], [], []
+    for room in I.rooms(b):
+        rid = room.get("id", "room")
+        pts = I.room_points(room)
+        z0, z1 = I.room_z(room, b, val)
+        if pts is None or z0 is None:
+            print(f"[interior] {rid}: 輪郭か高さが unknown なので作らない（撮影依頼へ）")
+            continue
+        cav = I.cavity_polygon(room, b, val)
+        wt = I.wall_thickness(room)                # 仮の値の記録は cavity_polygon で 1 回だけ
+        st = I.room_state(room)
+        evid = I.room_evidence(room)
+        cavities.append((rid, cav, z0, z1))
+        mset = room.get("materials") or {}
+        # ③ 部屋のくり抜き（床と天井は板で覆うので、くり抜きは床 z〜天井 z ちょうど）
+        cav_cutters.append(prism(f"cut_room_{rid}", cav, z0, z1, col))
+        # 床・天井の板
+        fl = prism(f"room_{rid}_floor", cav, z0, z0 + 0.03, col)
+        fl.data.materials.append(_int_mat(mats, mset.get("floor"), "floor"))
+        cl = prism(f"room_{rid}_ceiling", cav, z1 - 0.03, z1, col)
+        cl.data.materials.append(_int_mat(mats, mset.get("ceiling"), "ceiling"))
+        for ob, kind in ((fl, "floor"), (cl, "ceiling")):
+            _room_tag(ob, room, st, kind, evid)
+            objs.append(ob)
+        # 柱
+        for c in I.column_positions(room, b, val):
+            ux = Vector((c["ux"][0], c["ux"][1], 0))
+            uy = Vector((-ux.y, ux.x, 0))
+            ob = box(f"room_{rid}_column_{c['i']}_{c['j']}", Vector((c["x"], c["y"], (z0 + z1) / 2)), ux, uy, UP, c["size"], c["size"], z1 - z0, col)
+            ob.data.materials.append(_int_mat(mats, "white", "wall"))
+            _room_tag(ob, room, st, "columns", evid)
+            objs.append(ob)
+        # 照明（見た目だけ）
+        for k, (x, y) in enumerate(I.light_positions(room, b)):
+            ob = box(f"room_{rid}_light_{k}", Vector((x, y, z1 - 0.045)), Vector((1, 0, 0)), Vector((0, 1, 0)), UP, 1.2, 0.3, 0.02, col)
+            ob.data.materials.append(material_light())
+            _room_tag(ob, room, st, "lights", [])
+            objs.append(ob)
+        # ④ ガラスの壁（外壁の該当区間を床〜天井で貫いて、ガラスの板と縦枠）
+        doors = [(dr, I.door_span(dr, b)) for dr in room.get("doors") or []]
+        for k, gw in enumerate(room.get("glass_walls") or []):
+            seg = I.glass_segment(gw, b)
+            if seg is None:
+                continue
+            f = faces[gw["face"]]
+            p0, u, n, L = face_frame(f)
+            a0, a1 = seg
+            gst = "measured" if all((gw.get(x) or {}).get("status") == "measured" for x in ("from", "to")) else "estimated"
+            open_cutters.append(box(f"cut_roomglass_{rid}_{k}", p0 + u * ((a0 + a1) / 2) - n * (wt / 2) + UP * ((z0 + z1) / 2),
+                                    u, n, UP, a1 - a0, wt + 0.6, z1 - z0, col))
+            # 既存の窓（ガラス・サッシ・カーテン・窓台・手すり）のうち、この区間・この高さの物は消す
+            for e in list(extras):
+                nm = e.name
+                if not any(nm.startswith(p + f"_{f['id']}_") for p in ("glass", "sash", "curtain", "sill", "rail", "spandrel")):
+                    continue
+                c = _ob_center(e)
+                t = (c - p0).dot(u)
+                if a0 - 0.05 <= t <= a1 + 0.05 and z0 - 0.3 <= c.z <= z1 + 0.3:
+                    extras.remove(e)
+                    bpy.data.objects.remove(e, do_unlink=True)
+            # ガラスの板（扉の所は抜く）
+            gaps = sorted((sp[0], sp[1]) for dr, sp in doors if sp and dr.get("face") == gw["face"])
+            spans, s = [], a0
+            for g0, g1 in gaps:
+                if g1 <= a0 or g0 >= a1:
+                    continue
+                if g0 > s:
+                    spans.append((s, g0))
+                s = max(s, g1)
+            if s < a1:
+                spans.append((s, a1))
+            for j, (s0, s1) in enumerate(spans):
+                if s1 - s0 < 0.05:
+                    continue
+                gb = box(f"room_{rid}_glass_{k}_{j}", p0 + u * ((s0 + s1) / 2) - n * (wt / 2) + UP * ((z0 + z1) / 2), u, n, UP, s1 - s0, 0.02, z1 - z0, col)
+                gb.data.materials.append(mats.glass)
+                _room_tag(gb, room, gst, "glass", evid)
+                objs.append(gb)
+            for j, a in enumerate(I.mullions(gw, b)):
+                fr = box(f"room_{rid}_mullion_{k}_{j}", p0 + u * a - n * (wt / 2) + UP * ((z0 + z1) / 2), u, n, UP, 0.06, 0.12, z1 - z0, col)
+                fr.data.materials.append(mats.metal)
+                _room_tag(fr, room, gst, "glass", evid)
+                objs.append(fr)
+            for j, zz in enumerate((z0 + 0.04, z1 - 0.04)):
+                fr = box(f"room_{rid}_transom_{k}_{j}", p0 + u * ((a0 + a1) / 2) - n * (wt / 2) + UP * zz, u, n, UP, a1 - a0, 0.12, 0.08, col)
+                fr.data.materials.append(mats.metal)
+                _room_tag(fr, room, gst, "glass", evid)
+                objs.append(fr)
+        # 扉（開口＋薄い板。自動の引き戸はガラス 2 枚、開き戸は 1 枚の板）
+        for k, (dr, sp) in enumerate(doors):
+            if sp is None:
+                continue
+            f = faces[dr["face"]]
+            p0, u, n, L = face_frame(f)
+            a0, a1, h = sp
+            dst = "measured" if all((dr.get(x) or {}).get("status") == "measured" for x in ("at", "width", "height")) else "estimated"
+            open_cutters.append(box(f"cut_roomdoor_{rid}_{k}", p0 + u * ((a0 + a1) / 2) - n * (wt / 2) + UP * (z0 + h / 2 + 0.01),
+                                    u, n, UP, a1 - a0, wt + 0.6, h + 0.02, col))
+            leaves = [(a0, a1)] if dr.get("kind") == "swing" else [(a0, (a0 + a1) / 2), ((a0 + a1) / 2, a1)]
+            for j, (s0, s1) in enumerate(leaves):
+                lf = box(f"room_{rid}_door_{k}_{j}", p0 + u * ((s0 + s1) / 2) - n * (wt / 2 + (0.03 if j else -0.03)) + UP * (z0 + h / 2),
+                         u, n, UP, s1 - s0 - 0.02, 0.04, h, col)
+                lf.data.materials.append(mats.glass if dr.get("kind") == "auto_sliding" else _int_mat(mats, "wood", "wall"))
+                _room_tag(lf, room, dst, "door", evid)
+                objs.append(lf)
+            hd = box(f"room_{rid}_doorhead_{k}", p0 + u * ((a0 + a1) / 2) - n * (wt / 2) + UP * (z0 + h + 0.04), u, n, UP, a1 - a0, 0.14, 0.08, col)
+            hd.data.materials.append(mats.metal)
+            _room_tag(hd, room, dst, "door", evid)
+            objs.append(hd)
+        # 置物（type: asset は CC0 の模型、無い・読めない時は箱。type: box は箱）
+        for k, pt in enumerate(room.get("parts") or []):
+            w, d, h = I.part_size(pt)
+            label = pt.get("name") or pt.get("asset") or "box"
+            z_base = z0 + 0.03 + float(I.v(pt.get("z0"), 0.0))
+            for j, (x, y, yaw) in enumerate(I.part_spots(pt)):
+                made = []
+                if pt.get("type") == "asset":
+                    try:
+                        import assets_blender
+                        root, _w = assets_blender.import_model(pt["asset"], (x, y, z_base), yaw, [w, d, h], col,
+                                                               name=f"room_{rid}_part_{k}_{j}")
+                        made = [root] + list(root.children_recursive)
+                    except Exception as e:  # noqa: BLE001  アセットが取れない時は箱で代える（大きさが無ければ 0.5 m 角と仮置き）
+                        print(f"[interior] {rid} parts[{k}] {pt.get('asset')}: {e}。箱で代えた", file=sys.stderr)
+                if not made:
+                    bw = w or assume(f"interior.{rid}.parts[{k}].size.w", 0.5, "置物の大きさ未測。0.5 m と置いた")
+                    bd = d or assume(f"interior.{rid}.parts[{k}].size.d", 0.5, "置物の大きさ未測。0.5 m と置いた")
+                    bh = h or assume(f"interior.{rid}.parts[{k}].size.h", 0.75, "置物の高さ未測。0.75 m と置いた")
+                    ux = Vector((math.cos(yaw), math.sin(yaw), 0))
+                    ob = box(f"room_{rid}_part_{k}_{j}", Vector((x, y, z_base + bh / 2)), ux, Vector((-ux.y, ux.x, 0)), UP, bw, bd, bh, col)
+                    ob.data.materials.append(_int_mat(mats, pt.get("material") or "wood", "wall"))
+                    made = [ob]
+                for ob in made:
+                    _room_tag(ob, room, pt.get("status", "unknown"), "parts", [str(e) for e in pt.get("evidence") or []])
+                    ob["part_label"] = str(label)
+                objs += [o for o in made if o.type == "MESH"]
+        # 部屋に埋もれる物（窓の奥のカーテン・ガラス張りの奥の暗い箱）を消す
+        I_pip = I.point_in_polygon
+        for e in list(extras):
+            if not (e.name.startswith("curtain_") or e.name.startswith("glazing_room_")):
+                continue
+            c = _ob_center(e)
+            if z0 - 0.05 <= c.z <= z1 + 0.05 and I_pip((c.x, c.y), cav):
+                extras.remove(e)
+                bpy.data.objects.remove(e, do_unlink=True)
+    return {"cav_cutters": cav_cutters, "open_cutters": open_cutters, "objs": objs, "cavities": cavities}
+
+
+def room_polygons(body, cavities) -> dict:
+    """くり抜いた後の本体の面のうち、部屋の中に面する物 {polygon の番号: 部屋 id}（内壁の素材・photoproj の id 用）。"""
+    I = _interior_mod()
+    out = {}
+    for pg in body.data.polygons:
+        c = body.matrix_world @ pg.center
+        for rid, cav, z0, z1 in cavities:
+            if z0 - 0.02 <= c.z <= z1 + 0.02 and I.inside_or_on((c.x, c.y), cav, 0.02):
+                # 部屋の中を向く面だけ（法線が部屋の内側か、床・天井）
+                nrm = pg.normal
+                probe = c + nrm * 0.05
+                if abs(nrm.z) > 0.7 or I.point_in_polygon((probe.x, probe.y), cav):
+                    out[pg.index] = rid
+                    break
+    return out
+
+
 def build_building(b: dict, col) -> dict:
     poly = ccw([tuple(p) for p in b["footprint"]["polygon"]])
     ev = schema.evidence_summary(b)           # 根拠の層（面・部品の状態）
@@ -1255,17 +1475,32 @@ def build_building(b: dict, col) -> dict:
                 if pt.get("evidence"):
                     e["part_evidence"] = ",".join(map(str, pt["evidence"]))
 
+    inter = build_interior(b, faces, mats, col, extras) if (b.get("interior") or {}).get("rooms") else None
     if cutters:
         boolean_cut(body, cutters)
+    if inter and inter["cav_cutters"]:
+        # 内装：窓・部品の彫り込みの後に、部屋のくり抜き → ガラスの壁・扉の開口（1 つずつ、体積を検査）
+        boolean_cut(body, inter["cav_cutters"] + inter["open_cutters"])
     # 上向きの面（屋上・庇の上）は防水のコンクリート色
     body.data.materials.append(mats.roof)
     for pg in body.data.polygons:
         if pg.normal.z > 0.9:
             pg.material_index = 1
+    room_polys = room_polygons(body, inter["cavities"]) if inter else {}
+    if room_polys:                     # 部屋の内壁（くり抜いた面）は内装の壁の素材
+        for rid in set(room_polys.values()):
+            room = next(r for r in b["interior"]["rooms"] if r.get("id") == rid)
+            body.data.materials.append(_int_mat(mats, (room.get("materials") or {}).get("wall"), "wall"))
+            wi = len(body.data.materials) - 1
+            for pi, r2 in room_polys.items():
+                if r2 == rid:
+                    body.data.polygons[pi].material_index = wi
     # 根拠の層：本体（塊）の印と、壁を面ごとに振り分けた表。unknown の面の壁は灰色（タイルの無地の壁だと「窓が無い」と決めつけて見える）
     tag(body, ev["body"], part="body")
     face_polys = face_polygons(body, faces)
-    gray = [fid for fid in face_polys if face_ev.get(fid) == "unknown"]
+    if room_polys:                     # 部屋の内壁は外観の面に数えない（灰色・縞・面の印を付けない）
+        face_polys = {fid: [pi for pi in idxs if pi not in room_polys] for fid, idxs in face_polys.items()}
+    gray =[fid for fid in face_polys if face_ev.get(fid) == "unknown"]
     if gray:
         body.data.materials.append(mats.unknown)
         ui = len(body.data.materials) - 1
@@ -1290,6 +1525,11 @@ def build_building(b: dict, col) -> dict:
                 attr.data[pi].value = 1.0
     for e in extras:
         e.parent = body
+    for e in (inter or {}).get("objs", []):
+        if e.parent is None:
+            e.parent = body
+        elif e.parent.parent is None and e.parent.type == "EMPTY":     # アセットの根（空オブジェクト）
+            e.parent.parent = body
     try:                                   # CC0 アセットの部品（parts[type=asset]。位置・個数・大きさは JSON、見た目はアセット）
         import assets_blender
         asset_report = assets_blender.build_asset_parts(b, col)
@@ -1308,7 +1548,8 @@ def build_building(b: dict, col) -> dict:
     add_meter_uvs(col)
     return {"center": Vector((cx, cy, H / 2)), "height": H, "extent": max(max(xs) - min(xs), max(ys) - min(ys)), "body": body,
             "ground": grounds[0], "grounds": grounds, "footings": footings, "terrain": terrain,
-            "face_polys": face_polys, "face_ev": face_ev, "evidence": ev, "hyp_saved": hyp_saved}
+            "face_polys": face_polys, "face_ev": face_ev, "evidence": ev, "hyp_saved": hyp_saved,
+            "room_polys": room_polys, "rooms": (inter or {}).get("cavities", [])}
 
 
 def unstripe_hypotheses(body, saved: list) -> None:
@@ -1469,6 +1710,8 @@ def photoproj_ids(info: dict, b: dict) -> dict:
     for fid, idxs in info["face_polys"].items():
         for pi in idxs:
             by_poly[pi] = f"face:{fid}"
+    for pi, rid in (info.get("room_polys") or {}).items():        # 部屋の内壁・床・天井（くり抜いた面）
+        by_poly[pi] = f"part:{INTERIOR_EVIDENCE_PREFIX}{rid}_wall"
     seen = set()
     for ob in bpy.context.scene.objects:
         if ob.type != "MESH" or ob.data is None or ob.data.name in seen:
@@ -1678,6 +1921,24 @@ def main():
         sc = bpy.context.scene
         web_cams["street"] = street_camera_web(eye, Vector((mid.x, mid.y, H * 0.45)), 16, cam.data.sensor_width,
                                                (sc.render.resolution_x, sc.render.resolution_y), val(b.get("ground_z"), 0.0))
+    # 内装：部屋の中から見た描画（くり抜き・柱・ガラスの壁の確かめ用）。interior_<部屋 id>.png
+    I_mod = _interior_mod() if info.get("rooms") else None
+    for rid, cav, z0, z1 in info.get("rooms", []):
+        room = next(r for r in b["interior"]["rooms"] if r.get("id") == rid)
+        cxy = Vector((*I_mod.centroid(cav), 0))
+        gw = next((g for g in room.get("glass_walls") or [] if I_mod.glass_segment(g, b)), None)
+        if gw:
+            a0, a1 = I_mod.glass_segment(gw, b)
+            tgt = Vector((*I_mod.face_point(next(f for f in b["faces"] if f["id"] == gw["face"]), (a0 + a1) / 2), 0))
+        else:
+            tgt = Vector((*max(cav, key=lambda q: (Vector((*q, 0)) - cxy).length), 0))
+        d = (tgt - cxy)
+        far = Vector((*max(cav, key=lambda q: -(Vector((*q, 0)) - cxy).dot(d)), 0))
+        eye = cxy + (far - cxy) * 0.85
+        eye.z = z0 + 1.6
+        tgt.z = z0 + 1.3
+        camera(f"interior_{rid}", eye, tgt, lens=14)
+        render(out / f"interior_{rid}.png")
     for f in b.get("faces", []):
         if not f.get("render_view") or not f.get("from"):
             continue
@@ -1752,6 +2013,11 @@ def main():
         "web_bake": {"seconds": round(bake_s, 2), "materials": bake_log,
                      "note": "glb に出ない手続き的な模様を、周期の板に焼いた画像（tex/）。描画用の素材はそのまま"},
         "web_cameras": web_cams,
+        "interior": [{"room": rid, "floor_z": round(z0, 3), "ceiling_z": round(z1, 3),
+                      "cavity": [[round(x, 3), round(y, 3)] for x, y in cav],
+                      "cut_volume_est_m3": round(abs(_interior_mod().area(cav)) * (z1 - z0), 2),
+                      "inner_polygons": sum(1 for r in info.get("room_polys", {}).values() if r == rid),
+                      "render": f"interior_{rid}.png"} for rid, cav, z0, z1 in info.get("rooms", [])],
         "evidence": {"faces": info["face_ev"],
                      "wall_polygons": {fid: len(v) for fid, v in info["face_polys"].items()},
                      "shape_ratio": info["evidence"]["shape_ratio"], "evidence_ratio": info["evidence"]["evidence_ratio"],

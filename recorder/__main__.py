@@ -247,6 +247,14 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("building", nargs="?", default=None)
     q.add_argument("--site", action="store_true")
     q.add_argument("--campus", default=None)
+    q = asub.add_parser("decide", help="進行役の決定（語彙・アセットの追加の承認か却下）を data/decisions.json に書く")
+    q.add_argument("--kind", required=True, choices=["vocab", "asset"])
+    q.add_argument("--target", required=True)
+    q.add_argument("--decision", required=True, choices=["approve", "deny"])
+    q.add_argument("--why", required=True)
+    q.add_argument("--building", default=None)
+    q.add_argument("--request", default=None)
+    q.add_argument("--scope", default=None)
     q = asub.add_parser("log", help="サブエージェントの試走の 1 工程を out/<棟>/pipeline_<日時>.json に追記")
     q.add_argument("building")
     q.add_argument("--step", required=True)
@@ -256,6 +264,10 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--note", default="")
     q.add_argument("--record", default=None, help="追記する記録（省略で runner subagent の最新）")
     q.add_argument("--new", action="store_true", help="新しい記録を始める")
+
+    p = sub.add_parser("vocab", help="語彙（部品の型）の台帳 data/vocab.json")
+    vsub = p.add_subparsers(dest="vocab_cmd", required=True)
+    vsub.add_parser("list")
 
     p = sub.add_parser("assets", help="CC0 アセットの台帳と取得")
     xsub = p.add_subparsers(dest="assets_cmd", required=True)
@@ -268,6 +280,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.cmd == "agent":
         return _agent(a)
+    if a.cmd == "vocab":
+        from . import decisions
+
+        print("\n".join(decisions.vocab_list_lines()))
+        return 0
 
     if a.cmd == "site":
         return _site(a)
@@ -489,6 +506,16 @@ def _agent(a) -> int:
 
     from . import agents
 
+    if a.agent_cmd == "decide":
+        from . import decisions
+
+        try:
+            rec = decisions.add_decision(a.kind, a.target, a.decision, a.why, building=a.building, request=a.request, scope=a.scope)
+        except ValueError as e:
+            print(f"エラー: {e}")
+            return 2
+        print(f"{rec['id']} {rec['kind']} {rec['decision']}: {rec['target']}")
+        return 0
     if a.agent_cmd == "events":
         from .agents import detect_events   # 別の係が作る。無ければここで落ちる（--help は落ちない）
 

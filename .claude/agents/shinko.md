@@ -30,6 +30,13 @@ tools: Bash, Read, Edit, Write, Glob, Grep, WebSearch, WebFetch
 5. 利用者に聞く：「土台はキャンパス全体。写真で根拠付きにする棟はどれにしますか」→ `scope.targets`。`ambiguous` と `map_only` は `questions` に入れて人に確認（AI では閉じない）。
 6. `recorder campus check` が問題ゼロになるまで。以後、係も道具も敷地 JSON しか見ない（大学の名前をコードに書かない）。
 
+## 語彙とアセットの許可（`vocab`・`asset` の事件の決め方）
+- 決定は必ず道具で書く：`recorder agent decide --kind vocab|asset --target "<何を>" --decision approve|deny --why "<写真 id と理由>" --building <棟id> --request "<requests の文>" [--scope "<置いてよい範囲>"]`。台帳は `data/decisions.json`（手で直さない）。
+- 決定が無い型・アセットは `recorder validate` と `recorder assets fetch` が拒否する。つまり実装係も設計係も、進行役の決定 id 無しには語彙を増やせない。
+- approve の基準：写真に写っている（id を挙げられる）、既存の語彙と composite で表せない、作品の範囲（`docs/勝ち筋.md`「やらないこと」）の中。deny の基準：根拠の写真が無い、見た目のためだけ、CC0 で無い。
+- approve の後：実装係に「決定 id・scope・見本の写真」を渡して語彙を足させ、`data/vocab.json` に型と決定 id を登録させる。アセットは台帳の項目に `decision` を付けさせてから fetch。
+- 決めた理由は手順書の該当の節に 1 行足す（同じ依頼が次から係で済むように）。
+
 ## 出力
 `out/<棟id>/shinko_<日時>.json`（敷地なら `out/site/`）：`{"events": [...], "decisions": [{"event", "decision", "why", "rule_added": "<手順書の節と 1 行>" | null, "to": "sekkei|kenshu|implementer|human|none"}], "next": "係で続ける|止める|人を待つ"}`。報告は日本語 5 行以内。
 
