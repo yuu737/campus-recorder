@@ -654,6 +654,252 @@
    ]
   },
   {
+   "photo": "PXL_20261103_042830256",
+   "building": "honbu",
+   "face": "SW",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_042830256.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      0.9987314103675207,
+      0.006180944119033426,
+      0.04997365180873178
+     ],
+     [
+      0.0431235096592984,
+      0.4074210436091573,
+      -0.9122217143540761
+     ],
+     [
+      -0.02599870881346556,
+      0.9132195186012082,
+      0.40663764949376013
+     ]
+    ],
+    "t_cv": [
+     23.287769646735907,
+     18.556919757055525,
+     35.58129273775544
+    ],
+    "camera_xyz": [
+     -23.13,
+     -40.2,
+     1.3
+    ],
+    "camera_height_m": 1.3,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -23.13339886289312,
+      -40.19795104161604,
+      1.2955570173540123
+     ],
+     "rotation_euler": [
+      1.9901238874874505,
+      -0.04999447563479808,
+      0.006188716149496618
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW",
+     "area_m2": 1012.24,
+     "distance_m": 10.47,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_042822099",
+    "PXL_20261103_042900775",
+    "PXL_20261103_043259125"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "SW"
+   },
+   "check": {
+    "reproj_rms_px": 2.79,
+    "reproj_median_px": 2.28,
+    "reproj_max_px": 5.91,
+    "n_points": 245,
+    "n_candidates": 412,
+    "inlier_ratio": 0.595,
+    "inlier_box_frac": 0.26,
+    "points_by_face": {
+     "PXL_20261103_042822099:SW": 245
+    },
+    "points_spread_m": [
+     20.4,
+     10.76,
+     10.18
+    ],
+    "camera_height_m": 1.3,
+    "via_stats": {
+     "PXL_20261103_042822099": {
+      "matches": 811,
+      "geometric": 562,
+      "on_plane": 420
+     },
+     "PXL_20261103_042900775": {
+      "matches": 322,
+      "geometric": 21,
+      "on_plane": 18
+     },
+     "PXL_20261103_043259125": {
+      "matches": 161,
+      "geometric": 12,
+      "on_plane": 8
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:35:31",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_042844361",
+   "building": "honbu",
+   "face": "SW",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_042844361.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      0.9423950995629302,
+      -0.3343795097906516,
+      0.00904542712858497
+     ],
+     [
+      0.13695300963792156,
+      0.36102673312287814,
+      -0.9224443458126553
+     ],
+     [
+      0.3051808471560599,
+      0.8705458295820995,
+      0.3860241043332967
+     ]
+    ],
+    "t_cv": [
+     16.640257750803933,
+     19.339406288323758,
+     43.358068023905176
+    ],
+    "camera_xyz": [
+     -31.56,
+     -39.16,
+     0.95
+    ],
+    "camera_height_m": 0.95,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -31.562339186203634,
+      -39.16306674025329,
+      0.9517483686020451
+     ],
+     "rotation_euler": [
+      1.9671311658729083,
+      -0.009045550482227408,
+      -0.34096128098595463
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW",
+     "area_m2": 1004.93,
+     "distance_m": 13.49,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_042830256",
+    "PXL_20261103_042900775",
+    "PXL_20261103_042822099"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "SW"
+   },
+   "check": {
+    "reproj_rms_px": 2.75,
+    "reproj_median_px": 2.12,
+    "reproj_max_px": 5.93,
+    "n_points": 259,
+    "n_candidates": 590,
+    "inlier_ratio": 0.439,
+    "inlier_box_frac": 0.487,
+    "points_by_face": {
+     "PXL_20261103_042830256:SW": 224,
+     "PXL_20261103_042900775:SW": 5,
+     "PXL_20261103_042822099:SW": 30
+    },
+    "points_spread_m": [
+     29.05,
+     15.32,
+     14.43
+    ],
+    "camera_height_m": 0.95,
+    "via_stats": {
+     "PXL_20261103_042830256": {
+      "matches": 598,
+      "geometric": 327,
+      "on_plane": 324
+     },
+     "PXL_20261103_042900775": {
+      "matches": 569,
+      "geometric": 324,
+      "on_plane": 248
+     },
+     "PXL_20261103_042822099": {
+      "matches": 460,
+      "geometric": 192,
+      "on_plane": 167
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:39:03",
+   "registered_by": "register-chain"
+  },
+  {
    "photo": "PXL_20261103_042900775",
    "building": "honbu",
    "face": "SW",
@@ -802,6 +1048,898 @@
    "exclude_note": [
     "スパン 4・5 の 2〜4 階の前に下がる垂れ幕 4 枚（一時的な物。面より手前で写真ごとに位置がずれる）。042900775 の画素を登録の視点で面の平面へ戻して囲んだ（検収係 photoproj、11/4 夜）"
    ]
+  },
+  {
+   "photo": "PXL_20261103_044849371",
+   "building": "honbu",
+   "face": "entrance",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_044849371.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      0.5441416332819408,
+      0.837868506992612,
+      0.043430955771581126
+     ],
+     [
+      -0.08023413286959108,
+      0.10349557395366236,
+      -0.9913884960471686
+     ],
+     [
+      -0.8351481107276282,
+      0.5359711103800029,
+      0.1235419037658889
+     ]
+    ],
+    "t_cv": [
+     14.645997022392953,
+     0.8896463275643726,
+     -21.161819236521026
+    ],
+    "camera_xyz": [
+     -25.57,
+     -1.02,
+     2.86
+    ],
+    "camera_height_m": 1.46,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -25.571370094094714,
+      -1.0213703619985863,
+      2.86026692141709
+     ],
+     "rotation_euler": [
+      1.69477225262703,
+      -0.04344462096559552,
+      0.9948179775427622
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "E",
+     "area_m2": 82.06,
+     "distance_m": 4.5,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043304319",
+    "PXL_20261103_043259125",
+    "PXL_20261103_042900775"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "E"
+   },
+   "check": {
+    "reproj_rms_px": 1.94,
+    "reproj_median_px": 1.52,
+    "reproj_max_px": 5.06,
+    "n_points": 31,
+    "n_candidates": 65,
+    "inlier_ratio": 0.477,
+    "inlier_box_frac": 0.108,
+    "points_by_face": {
+     "PXL_20261103_043304319:E": 31
+    },
+    "points_spread_m": [
+     3.38,
+     6.44,
+     1.73
+    ],
+    "camera_height_m": 1.46,
+    "via_stats": {
+     "PXL_20261103_043304319": {
+      "matches": 137,
+      "geometric": 47,
+      "on_plane": 47
+     },
+     "PXL_20261103_043259125": {
+      "matches": 131,
+      "geometric": 32,
+      "on_plane": 31
+     },
+     "PXL_20261103_042900775": {
+      "matches": 119,
+      "geometric": 13,
+      "on_plane": 5
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:37:01",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_043314396",
+   "building": "honbu",
+   "face": "passage",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_043314396.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      -0.874431603292004,
+      0.4849155280189693,
+      0.015043332418700817
+     ],
+     [
+      -0.2439584571314457,
+      -0.41269681653849444,
+      -0.8775907980448729
+     ],
+     [
+      -0.41934906981919,
+      -0.7710630767356692,
+      0.47917438301384985
+     ]
+    ],
+    "t_cv": [
+     -18.033926823952186,
+     -3.731675243295611,
+     -11.630929246450195
+    ],
+    "camera_xyz": [
+     -21.56,
+     -1.76,
+     2.57
+    ],
+    "camera_height_m": 1.87,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -21.5572286418209,
+      -1.763299435234149,
+      2.5696498467646616
+     ],
+     "rotation_euler": [
+      2.0705719430131224,
+      -0.015043899865482536,
+      2.6352633261271587
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "NE",
+     "area_m2": 528.92,
+     "distance_m": 8.43,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "E",
+     "area_m2": 63.53,
+     "distance_m": 8.39,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043312297",
+    "PXL_20261103_043304319",
+    "PXL_20261103_043259125"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "NE"
+   },
+   "check": {
+    "reproj_rms_px": 2.86,
+    "reproj_median_px": 2.14,
+    "reproj_max_px": 5.97,
+    "n_points": 383,
+    "n_candidates": 731,
+    "inlier_ratio": 0.524,
+    "inlier_box_frac": 0.374,
+    "points_by_face": {
+     "PXL_20261103_043312297:NE": 383
+    },
+    "points_spread_m": [
+     9.28,
+     4.91,
+     16.28
+    ],
+    "camera_height_m": 1.87,
+    "via_stats": {
+     "PXL_20261103_043312297": {
+      "matches": 942,
+      "geometric": 712,
+      "on_plane": 657
+     },
+     "PXL_20261103_043304319": {
+      "matches": 393,
+      "geometric": 116,
+      "on_plane": 103
+     },
+     "PXL_20261103_043259125": {
+      "matches": 252,
+      "geometric": 43,
+      "on_plane": 41
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:35:29",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_043320836",
+   "building": "honbu",
+   "face": "passage",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_043320836.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      -0.9295048520704938,
+      0.3677244717739855,
+      0.02827442017005552
+     ],
+     [
+      -0.18987388546465866,
+      -0.41140389890977824,
+      -0.8914565270277549
+     ],
+     [
+      -0.31617817381337876,
+      -0.8339817412991583,
+      0.4522231944335231
+     ]
+    ],
+    "t_cv": [
+     -20.523663552223248,
+     -2.2743124922510867,
+     -8.338297379947896
+    ],
+    "camera_xyz": [
+     -22.15,
+     -0.34,
+     2.32
+    ],
+    "camera_height_m": 1.62,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -22.145065042023187,
+      -0.3425954564421747,
+      2.3236154482831366
+     ],
+     "rotation_euler": [
+      2.0402555347999787,
+      -0.028278188823090813,
+      2.764873634693691
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "NE",
+     "area_m2": 624.33,
+     "distance_m": 9.41,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "E",
+     "area_m2": 63.47,
+     "distance_m": 7.21,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043314396",
+    "PXL_20261103_043312297",
+    "PXL_20261103_043304319"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "NE"
+   },
+   "check": {
+    "reproj_rms_px": 2.8,
+    "reproj_median_px": 2.41,
+    "reproj_max_px": 5.88,
+    "n_points": 54,
+    "n_candidates": 436,
+    "inlier_ratio": 0.124,
+    "inlier_box_frac": 0.172,
+    "points_by_face": {
+     "PXL_20261103_043314396:NE": 53,
+     "PXL_20261103_043312297:NE": 1
+    },
+    "points_spread_m": [
+     19.56,
+     10.35,
+     11.65
+    ],
+    "camera_height_m": 1.62,
+    "via_stats": {
+     "PXL_20261103_043314396": {
+      "matches": 621,
+      "geometric": 350,
+      "on_plane": 348
+     },
+     "PXL_20261103_043312297": {
+      "matches": 301,
+      "geometric": 94,
+      "on_plane": 89
+     },
+     "PXL_20261103_043304319": {
+      "matches": 238,
+      "geometric": 65,
+      "on_plane": 64
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:39:04",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_043327622",
+   "building": "honbu",
+   "face": "passage",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_043327622.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      -0.9637026145919513,
+      0.2669677356311225,
+      0.0023449436300429227
+     ],
+     [
+      -0.11414964814410214,
+      -0.40408670732499674,
+      -0.9075702676883041
+     ],
+     [
+      -0.24134441874055151,
+      -0.874895514387423,
+      0.4198936894590719
+     ]
+    ],
+    "t_cv": [
+     -20.94930925254017,
+     -0.3263901068650255,
+     -6.1908712148018425
+    ],
+    "camera_xyz": [
+     -21.72,
+     0.04,
+     2.35
+    ],
+    "camera_height_m": 1.65,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -21.72029363125864,
+      0.04453429461988399,
+      2.35241074797635
+     ],
+     "rotation_euler": [
+      2.0041257785709203,
+      -0.0023449457790955253,
+      2.871346701972013
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "NE",
+     "area_m2": 726.29,
+     "distance_m": 9.95,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "E",
+     "area_m2": 44.05,
+     "distance_m": 7.41,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043334437",
+    "PXL_20261103_043320836",
+    "PXL_20261103_043342958"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "NE"
+   },
+   "check": {
+    "reproj_rms_px": 2.64,
+    "reproj_median_px": 1.87,
+    "reproj_max_px": 5.93,
+    "n_points": 113,
+    "n_candidates": 756,
+    "inlier_ratio": 0.149,
+    "inlier_box_frac": 0.225,
+    "points_by_face": {
+     "PXL_20261103_043334437:E": 8,
+     "PXL_20261103_043334437:NE": 80,
+     "PXL_20261103_043320836:NE": 21,
+     "PXL_20261103_043342958:NE": 4
+    },
+    "points_spread_m": [
+     18.71,
+     11.09,
+     11.65
+    ],
+    "camera_height_m": 1.65,
+    "via_stats": {
+     "PXL_20261103_043334437": {
+      "matches": 733,
+      "geometric": 479,
+      "on_plane": 479
+     },
+     "PXL_20261103_043320836": {
+      "matches": 649,
+      "geometric": 321,
+      "on_plane": 320
+     },
+     "PXL_20261103_043342958": {
+      "matches": 391,
+      "geometric": 128,
+      "on_plane": 128
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:45:55",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_043334437",
+   "building": "honbu",
+   "face": "passage",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_043334437.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      -0.9531719252544093,
+      0.3022602905381164,
+      0.010099389616016169
+     ],
+     [
+      -0.14453263173985081,
+      -0.4259386783974367,
+      -0.8931330027534521
+     ],
+     [
+      -0.26565692023577203,
+      -0.8527689951029285,
+      0.44967926539032943
+     ]
+    ],
+    "t_cv": [
+     -20.345770085383457,
+     -0.9118569465970061,
+     -6.710883113436366
+    ],
+    "camera_xyz": [
+     -21.31,
+     0.04,
+     2.41
+    ],
+    "camera_height_m": 1.71,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -21.3076024673082,
+      0.038490185610328444,
+      2.4088153149048277
+     ],
+     "rotation_euler": [
+      2.037228222164848,
+      -0.01009956130959942,
+      2.8345135129984103
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "NE",
+     "area_m2": 711.86,
+     "distance_m": 10.14,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "E",
+     "area_m2": 54.53,
+     "distance_m": 7.78,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043320836",
+    "PXL_20261103_043314396",
+    "PXL_20261103_043312297"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "NE"
+   },
+   "check": {
+    "reproj_rms_px": 2.77,
+    "reproj_median_px": 1.87,
+    "reproj_max_px": 5.71,
+    "n_points": 83,
+    "n_candidates": 313,
+    "inlier_ratio": 0.265,
+    "inlier_box_frac": 0.162,
+    "points_by_face": {
+     "PXL_20261103_043320836:E": 2,
+     "PXL_20261103_043320836:NE": 78,
+     "PXL_20261103_043314396:NE": 3
+    },
+    "points_spread_m": [
+     14.17,
+     7.94,
+     11.66
+    ],
+    "camera_height_m": 1.71,
+    "via_stats": {
+     "PXL_20261103_043320836": {
+      "matches": 492,
+      "geometric": 230,
+      "on_plane": 228
+     },
+     "PXL_20261103_043314396": {
+      "matches": 348,
+      "geometric": 96,
+      "on_plane": 96
+     },
+     "PXL_20261103_043312297": {
+      "matches": 261,
+      "geometric": 42,
+      "on_plane": 23
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:42:58",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_043342958",
+   "building": "honbu",
+   "face": "passage",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_043342958.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      -0.9293537829868377,
+      0.3691143231913068,
+      -0.0074941619329571
+     ],
+     [
+      -0.15710524764336836,
+      -0.4137649295224517,
+      -0.8967254453065312
+     ],
+     [
+      -0.33409502721676326,
+      -0.8321978127298246,
+      0.44252379967265754
+     ]
+    ],
+    "t_cv": [
+     -20.617484517992146,
+     0.010053372216943572,
+     -9.044780627115596
+    ],
+    "camera_xyz": [
+     -22.18,
+     0.09,
+     3.86
+    ],
+    "camera_height_m": 3.16,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -22.1811740247226,
+      0.08732192210603384,
+      3.857035037366838
+     ],
+     "rotation_euler": [
+      2.0292212739131625,
+      0.007494232083162171,
+      2.7635256320783537
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "NE",
+     "area_m2": 583.56,
+     "distance_m": 9.78,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "E",
+     "area_m2": 70.05,
+     "distance_m": 6.98,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043320836",
+    "PXL_20261103_043314396",
+    "PXL_20261103_043312297"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "NE"
+   },
+   "check": {
+    "reproj_rms_px": 2.57,
+    "reproj_median_px": 2.2,
+    "reproj_max_px": 5.41,
+    "n_points": 46,
+    "n_candidates": 136,
+    "inlier_ratio": 0.338,
+    "inlier_box_frac": 0.107,
+    "points_by_face": {
+     "PXL_20261103_043320836:NE": 42,
+     "PXL_20261103_043320836:E": 2,
+     "PXL_20261103_043314396:NE": 2
+    },
+    "points_spread_m": [
+     9.42,
+     5.12,
+     11.62
+    ],
+    "camera_height_m": 3.16,
+    "via_stats": {
+     "PXL_20261103_043320836": {
+      "matches": 340,
+      "geometric": 103,
+      "on_plane": 101
+     },
+     "PXL_20261103_043314396": {
+      "matches": 253,
+      "geometric": 47,
+      "on_plane": 47
+     },
+     "PXL_20261103_043312297": {
+      "matches": 250,
+      "geometric": 25,
+      "on_plane": 9
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:43:00",
+   "registered_by": "register-chain"
+  },
+  {
+   "photo": "PXL_20261103_044734408",
+   "building": "honbu",
+   "face": "plaza_steps",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_044734408.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      -0.983266657454721,
+      -0.17826375680376638,
+      0.0375328302693516
+     ],
+     [
+      0.006098105471343804,
+      -0.23812216418788668,
+      -0.9712160666052317
+     ],
+     [
+      0.18207002347306023,
+      -0.9547354963196274,
+      0.23522465563761552
+     ]
+    ],
+    "t_cv": [
+     -21.090223052293737,
+     2.800269481353793,
+     4.300672971113284
+    ],
+    "camera_xyz": [
+     -21.54,
+     1.01,
+     2.5
+    ],
+    "camera_height_m": 1.8,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -21.5374130930494,
+      1.0131889796622253,
+      2.4996181546394873
+     ],
+     "rotation_euler": [
+      1.8084166786208276,
+      -0.03754164802675599,
+      -2.9622432495125914
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "NE",
+     "area_m2": 687.07,
+     "distance_m": 10.89,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_043334437",
+    "PXL_20261103_043314396",
+    "PXL_20261103_043342958"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "NE"
+   },
+   "check": {
+    "reproj_rms_px": 2.35,
+    "reproj_median_px": 1.77,
+    "reproj_max_px": 5.99,
+    "n_points": 501,
+    "n_candidates": 897,
+    "inlier_ratio": 0.559,
+    "inlier_box_frac": 0.331,
+    "points_by_face": {
+     "PXL_20261103_043334437:NE": 501
+    },
+    "points_spread_m": [
+     17.54,
+     9.28,
+     17.85
+    ],
+    "camera_height_m": 1.8,
+    "via_stats": {
+     "PXL_20261103_043334437": {
+      "matches": 1069,
+      "geometric": 895,
+      "on_plane": 894
+     },
+     "PXL_20261103_043314396": {
+      "matches": 287,
+      "geometric": 39,
+      "on_plane": 39
+     },
+     "PXL_20261103_043342958": {
+      "matches": 269,
+      "geometric": 84,
+      "on_plane": 84
+     }
+    }
+   },
+   "registered_at": "2026-11-05T11:45:54",
+   "registered_by": "register-chain"
   }
  ],
  "not_registered": [
@@ -810,392 +1948,419 @@
    "building": "honbu",
    "face": "approach",
    "period": "during",
-   "reason": "面 id「approach」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「approach」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "視点に合う対応点が 9 点（12 点未満）",
+   "chain_code": "few_inliers"
   },
   {
    "photo": "PXL_20261103_042734715",
    "building": "honbu",
    "face": "approach",
    "period": "during",
-   "reason": "面 id「approach」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_042830256",
-   "building": "honbu",
-   "face": "SW",
-   "period": "during",
-   "reason": "正面化（photos rectify）が無い"
-  },
-  {
-   "photo": "PXL_20261103_042844361",
-   "building": "honbu",
-   "face": "SW",
-   "period": "during",
-   "reason": "正面化（photos rectify）が無い"
+   "reason": "面 id「approach」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_042853166",
    "building": "honbu",
    "face": "SW",
    "period": "during",
-   "reason": "compare が古い自動の結果で、横の原点（柱の何本目か）を検収係が確かめていない。--lines で柱の番号を与えて compare し直せば登録できる"
+   "reason": "compare が古い自動の結果で、横の原点（柱の何本目か）を検収係が確かめていない。--lines で柱の番号を与えて compare し直せば登録できる",
+   "chain_reason": "再投影の誤差 3.1 px（3.0 px 超）",
+   "chain_code": "reproj"
   },
   {
    "photo": "PXL_20261103_042909968",
    "building": "honbu",
    "face": "SW",
    "period": "during",
-   "reason": "正面化（photos rectify）が無い"
+   "reason": "正面化（photos rectify）が無い",
+   "chain_reason": "再投影の誤差 3.0 px（3.0 px 超）",
+   "chain_code": "reproj"
   },
   {
    "photo": "PXL_20261103_042927350",
    "building": "honbu",
    "face": "SW_corner",
    "period": "during",
-   "reason": "面 id「SW_corner」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「SW_corner」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_042946748",
    "building": "honbu",
    "face": "NW_s",
    "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない"
+   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043004629",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043026097",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043034043",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043041105",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043049890",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043055592",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "視点に合う対応点が 5 点（12 点未満）",
+   "chain_code": "few_inliers"
   },
   {
    "photo": "PXL_20261103_043103134",
    "building": "honbu",
    "face": "W",
    "period": "during",
-   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043112969",
    "building": "honbu",
    "face": "E_corner",
    "period": "during",
-   "reason": "面 id「E_corner」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「E_corner」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043123901",
    "building": "honbu",
    "face": "NE2",
    "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない"
+   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043129358",
    "building": "honbu",
    "face": "NE2",
    "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない"
+   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043136840",
    "building": "honbu",
    "face": "NE2",
    "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない"
+   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043150092",
    "building": "honbu",
    "face": "E",
    "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない"
+   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043221663",
    "building": "honbu",
    "face": "E",
    "period": "during",
-   "reason": "正面化（photos rectify）が無い"
-  },
-  {
-   "photo": "PXL_20261103_043314396",
-   "building": "honbu",
-   "face": "passage",
-   "period": "during",
-   "reason": "面 id「passage」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043320836",
-   "building": "honbu",
-   "face": "passage",
-   "period": "during",
-   "reason": "面 id「passage」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043327622",
-   "building": "honbu",
-   "face": "passage",
-   "period": "during",
-   "reason": "面 id「passage」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043334437",
-   "building": "honbu",
-   "face": "passage",
-   "period": "during",
-   "reason": "面 id「passage」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043342958",
-   "building": "honbu",
-   "face": "passage",
-   "period": "during",
-   "reason": "面 id「passage」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "正面化（photos rectify）が無い",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043405159",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043515616",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043608113",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043612124",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "視点に合う対応点が 6 点（12 点未満）",
+   "chain_code": "few_inliers"
   },
   {
    "photo": "PXL_20261103_043613678",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043623454",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043642327",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043753272",
-   "building": "honbu",
-   "face": "courtyard",
-   "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043759272",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_043812312",
    "building": "honbu",
    "face": "courtyard",
    "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043826814",
-   "building": "honbu",
-   "face": "courtyard",
-   "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_043856844.MP",
-   "building": "honbu",
-   "face": "courtyard",
-   "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_044049610.MP",
-   "building": "honbu",
-   "face": "courtyard",
-   "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_044051601",
-   "building": "honbu",
-   "face": "courtyard",
-   "period": "during",
-   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_044651355",
    "building": "honbu",
    "face": "plaza_steps",
    "period": "during",
-   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_044700654",
-   "building": "honbu",
-   "face": "plaza_steps",
-   "period": "during",
-   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_044712412",
    "building": "honbu",
    "face": "plaza_steps",
    "period": "during",
-   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_044734408",
-   "building": "honbu",
-   "face": "plaza_steps",
-   "period": "during",
-   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_044813659.MP",
    "building": "honbu",
    "face": "entrance",
    "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_044822533",
    "building": "honbu",
    "face": "entrance",
    "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_044830148",
    "building": "honbu",
    "face": "entrance",
    "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
-  },
-  {
-   "photo": "PXL_20261103_044849371",
-   "building": "honbu",
-   "face": "entrance",
-   "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_044907567",
    "building": "honbu",
    "face": "entrance",
    "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "視点に合う対応点が 6 点（12 点未満）",
+   "chain_code": "few_inliers"
   },
   {
    "photo": "PXL_20261103_080423326",
    "building": "honbu",
    "face": "NE2",
    "period": "during",
-   "reason": "正面化（photos rectify）が無い"
+   "reason": "正面化（photos rectify）が無い",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_080431748",
    "building": "honbu",
    "face": "NE2",
    "period": "during",
-   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない"
+   "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_080531443",
    "building": "honbu",
    "face": "entrance",
    "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_080542963",
    "building": "honbu",
    "face": "entrance",
    "period": "during",
-   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_080615077",
    "building": "honbu",
    "face": "plaza_steps",
    "period": "during",
-   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_080625727.MP",
    "building": "honbu",
    "face": "pilotis_steps",
    "period": "during",
-   "reason": "面 id「pilotis_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「pilotis_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
   },
   {
    "photo": "PXL_20261103_080635046.MP",
    "building": "honbu",
    "face": "pilotis_steps",
    "period": "during",
-   "reason": "面 id「pilotis_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる"
+   "reason": "面 id「pilotis_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
+  },
+  {
+   "photo": "PXL_20261103_044700654",
+   "building": "honbu",
+   "face": "plaza_steps",
+   "period": "during",
+   "reason": "鎖の登録（--via PXL_20261103_042822099,PXL_20261103_042900775）: PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
+  },
+  {
+   "photo": "PXL_20261103_043753272",
+   "building": "honbu",
+   "face": "courtyard",
+   "period": "during",
+   "reason": "鎖の登録（--via PXL_20261103_043259125,PXL_20261103_043304319）: PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
+  },
+  {
+   "photo": "PXL_20261103_043826814",
+   "building": "honbu",
+   "face": "courtyard",
+   "period": "during",
+   "chain_reason": "視点に合う点が 19 点で候補の 19%（30 点未満なら 25% 以上が要る。偶然の一致の疑い）",
+   "chain_code": "weak"
+  },
+  {
+   "photo": "PXL_20261103_043856844.MP",
+   "building": "honbu",
+   "face": "courtyard",
+   "period": "during",
+   "chain_reason": "視点に合う対応点が 10 点（12 点未満）",
+   "chain_code": "few_inliers"
+  },
+  {
+   "photo": "PXL_20261103_044051601",
+   "building": "honbu",
+   "face": "courtyard",
+   "period": "during",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
+  },
+  {
+   "photo": "PXL_20261103_044049610.MP",
+   "building": "honbu",
+   "face": "courtyard",
+   "period": "during",
+   "chain_reason": "視点に合う対応点が 7 点（12 点未満）",
+   "chain_code": "few_inliers"
   }
  ]
 }

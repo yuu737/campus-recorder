@@ -22,7 +22,7 @@ import numpy as np
 
 from . import parts_geom
 from .compare import face_lines_detail
-from .registry import (apply_H, entries_for, face_frame, face_top, load_registry, photo_path, plane_to_world,
+from .registry import (apply_H, entries_for, expand_entries, face_frame, face_top, load_registry, photo_path, plane_to_world,
                        project_world, world_to_plane)
 from .schema import Measurement, bay_edges, face_ground_offset, load_building
 
@@ -405,7 +405,7 @@ def recheck(building_json: Path, photos: list[str] | None = None, fast: bool = F
 
     b = load_building(building_json)
     reg = registry if registry is not None else load_registry()
-    ents = entries_for(reg, b["id"], photos)
+    ents = expand_entries(entries_for(reg, b["id"], photos), b)        # pose の登録は見えている面ごとに
     root = out_root or Path("out") / b["id"] / "recheck"
     out = root / (stamp or datetime.now().strftime("%Y%m%d_%H%M%S"))
     out.mkdir(parents=True, exist_ok=True)
@@ -482,6 +482,8 @@ def render_overlays(building_json: Path, ents: list[dict], out: Path, fast: bool
     pdir = out / "poses"
     pdir.mkdir(parents=True, exist_ok=True)
     cams, res = [], []
+    seen: set = set()
+    ents = [e for e in ents if not (e["photo"] in seen or seen.add(e["photo"]))]     # 写真ごとに 1 回（pose の登録は面ごとに並ぶ）
     for e in ents:
         bl = (e.get("camera") or {}).get("blender")
         if not bl:

@@ -697,14 +697,14 @@ def photoproj(building_json: Path, photos: list[str] | None = None, fast: bool =
               registry: dict | None = None, out_root: Path | None = None, keep_renders: bool = False,
               shift_deg: float = SHIFT_DEG, reuse: Path | None = None) -> tuple[dict, Path]:
     from .rectify import read_image
-    from .registry import entries_for, load_registry, photo_path
+    from .registry import entries_for, expand_entries, load_registry, photo_path
     from .schema import load_building
     import cv2
 
     b = load_building(building_json)
     faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
     reg = registry if registry is not None else load_registry()
-    ents = [e for e in entries_for(reg, b["id"]) if not photos or any(q in e["photo"] for q in photos)]   # 頭・途中の一部でも可
+    ents = [e for e in expand_entries(entries_for(reg, b["id"]), b) if not photos or any(q in e["photo"] for q in photos)]   # 頭・途中の一部でも可
     out = (out_root or Path("out") / b["id"] / "photoproj") / datetime.now().strftime("%Y%m%d_%H%M%S")
     rdir = Path(reuse) if reuse else out / "render"      # reuse：前の --keep-renders の描画を使う（棟 JSON を直したら使わない）
     out.mkdir(parents=True, exist_ok=True)

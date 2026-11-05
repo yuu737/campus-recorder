@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 
 from . import drawing
-from .registry import (compass8, cover_polygon, entries_for, face_frame, face_top, load_registry, photo_path, plane_to_world,
+from .registry import (compass8, cover_polygon, entries_for, expand_entries, face_frame, face_top, load_registry, photo_path, plane_to_world,
                        world_to_plane)
 from .schema import Measurement, load_building
 
@@ -329,7 +329,7 @@ def coverage(building_json: Path, registry: dict | None = None, out_dir: Path | 
              photo: bool = True, px_per_m: float = PX_PER_M, loader=None) -> tuple[dict, Path]:
     b = load_building(building_json)
     reg = registry if registry is not None else load_registry()
-    ents = entries_for(reg, b["id"])
+    ents = expand_entries(entries_for(reg, b["id"]), b)        # pose の登録は面ごとの H_plane に
     out = out_dir or Path("out") / b["id"]
     out.mkdir(parents=True, exist_ok=True)
     loader = loader or _load_photo

@@ -168,6 +168,14 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--lines", default=None, help="compare に使った --lines の JSON（記録だけ）")
     q.add_argument("--from-existing", default=None, help="out/<棟>：poses と compare から一括登録し、登録できない写真に理由を付ける")
     q.add_argument("--registry", default=None, help="台帳の場所（既定 data/photos/registry.json）")
+    q.add_argument("--via", default=None, help="鎖の登録：登録済みの写真 id（カンマ区切り）。平らな壁でない写真（階段・デッキ・角）を、"
+                                              "その写真との特徴点の対応から視点で登録する（kind pose。--face は要らない）")
+
+    q = psub.add_parser("register-chain", help="未登録の写真を、登録済みと重なる順に鎖の登録で試し、増えなくなるまで繰り返す")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--n-via", type=int, default=3, help="1 枚に使う登録済みの写真の数（重なりの多い順）")
+    q.add_argument("--photos", default=None, help="試す写真 id（カンマ区切り。頭だけでも可。省略で棟の未登録全部）")
+    q.add_argument("--registry", default=None)
 
     q = psub.add_parser("roof", help="航空写真（国土地理院 z18）で屋上の縁・倒れ込み・設備を読む")
     q.add_argument("building", help="棟 JSON")
@@ -603,8 +611,35 @@ def _photos(a) -> int:
                 print(f"  {n['photo'][:40]:<40} {n['face']:<12} {n['reason']}")
             print(f"台帳: {rp}")
             return 0
+        if a.via:
+            from . import chain
+
+            if not a.photo:
+                print("写真 id が要ります")
+                return 1
+            try:
+                e = chain.register_via(a.photo, Path(a.building), [v.strip() for v in a.via.split(",") if v.strip()], reg)
+            except chain.ChainFail as ex:
+                print(f"登録できません（{ex.code}）: {ex}")
+                for k, v in (ex.stats.get("via") or {}).items():
+                    print(f"  via {k}: {v}")
+                rec = registry.photo_record(a.photo) or {}
+                key = (rec.get("id", a.photo))
+                reg["not_registered"] = [n for n in reg.get("not_registered", []) if n.get("photo") != key] + [
+                    {"photo": key, "building": registry.load_building(Path(a.building))["id"], "face": rec.get("face"),
+                     "period": rec.get("period"), "reason": f"鎖の登録（--via {a.via}）: {ex}", "chain_code": ex.code}]
+                registry.save_registry(reg, rp)
+                return 1
+            registry.upsert(reg, e)
+            registry.save_registry(reg, rp)
+            c = e["check"]
+            print(f"登録（pose）: {e['photo']}  再投影 {c['reproj_rms_px']} px（中央 {c['reproj_median_px']}・最大 {c['reproj_max_px']}）"
+                  f"  点 {c['n_points']} / {c['n_candidates']}  カメラ {e['camera']['camera_xyz']}（地面から {c['camera_height_m']} m）")
+            print(f"  見えている面: {', '.join(v['face'] + '（' + str(v['area_m2']) + ' m²）' for v in e['visible_faces'])}")
+            print(f"  点の出所: {c['points_by_face']}  台帳: {rp}")
+            return 0
         if not (a.photo and a.face):
-            print("写真 id と --face が要ります（一括は --from-existing）")
+            print("写真 id と --face が要ります（一括は --from-existing、平らでない写真は --via）")
             return 1
         try:
             e = registry.register(a.photo, Path(a.building), a.face, Path(a.from_rectify) if a.from_rectify else None,
@@ -616,6 +651,20 @@ def _photos(a) -> int:
         registry.upsert(reg, e)
         registry.save_registry(reg, rp)
         print(f"登録: {e['photo']} {e['face']}  被覆 {e['cover']['area_m2']} m²  検算 {e['check']}  台帳: {rp}")
+        return 0
+    if a.photos_cmd == "register-chain":
+        from . import chain, registry
+
+        rp = Path(a.registry) if a.registry else registry.REGISTRY_PATH
+        reg = registry.load_registry(rp)
+        res = chain.register_chain(Path(a.building), reg, n_via=a.n_via,
+                                   photos=[p.strip() for p in a.photos.split(",")] if a.photos else None)
+        registry.save_registry(reg, rp)
+        print(f"登録できた写真 {res['added']} 枚（{' → '.join(str(r['added']) for r in res['rounds'])}）")
+        print(f"登録できない写真 {len(res['failed'])} 枚。理由の分布: {res['reasons']}")
+        for pid, why in sorted(res["failed"].items()):
+            print(f"  {pid[:40]:<40} {why}")
+        print(f"台帳: {rp}")
         return 0
     if a.photos_cmd == "roof":
         from . import roof

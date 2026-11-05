@@ -14,6 +14,9 @@
                camera（focal_px・R_cv・t_cv・camera_xyz・blender。Blender で同じ視点を描くため）、
                source（使った正面化・compare・pose・線の JSON、原点の値）、check（再投影の誤差 px）、registered_at
     not_registered[]: 面 id が付いているのに登録できなかった写真と理由
+
+登録の形 kind：plane（既定。上の通り）と pose（鎖の登録 recorder.chain が作る。H_plane は無く、camera と visible_faces と
+via・check（再投影 px・点の数・面ごとの点）だけ）。読む側は expand_entries で面ごとの H_plane（camera から）にそろえる。
 """
 
 from __future__ import annotations
@@ -446,3 +449,123 @@ def compass8(dx: float, dy: float) -> str:
     ang = (math.degrees(math.atan2(dx, dy)) + 360) % 360       # 北から時計回り
     names = ["北", "北東", "東", "南東", "南", "南西", "西", "北西"]
     return names[int((ang + 22.5) // 45) % 8]
+
+
+# --- 登録の 2 つの形（plane と pose）-------------------------------------------------------
+#
+# kind "plane"（既定。旧い entry もこれ）：1 つの面の H_plane（正面化と compare から）＋camera。
+# kind "pose" ：H_plane を持たない。camera（R_cv・t_cv・focal_px）と「見えている面の一覧」visible_faces だけ。
+#               鎖の登録（recorder.chain）が作る。面の平面と camera があれば H は一意（H_from_pose）なので、
+#               読む側（coverage・photoproj・recheck）は expand_entries で面ごとの plane の形に直してから使う。
+
+MIN_VISIBLE_M2 = 2.0      # 写真の枠に入る面の範囲がこれ未満の面は「見えている面」に数えない
+
+
+def entry_kind(e: dict) -> str:
+    return e.get("kind") or "plane"
+
+
+def face_rect_frame(b: dict, f: dict) -> dict:
+    """今の面の frame（from・to・長さ・面の前の地面・上端）。"""
+    frame = {"from": [float(v) for v in f["from"]], "to": [float(v) for v in f["to"]]}
+    _, _, _, L = face_frame(frame)
+    return {**frame, "length_m": round(L, 3), "ground_offset": face_ground_offset(f), "top_z": face_top(b, f)}
+
+
+def camera_dict(R, t, focal_px: float, w: int, h: int, ground: float | None = None) -> dict:
+    from .pose import cv_to_blender_numeric
+
+    R, t = np.asarray(R, float), np.asarray(t, float).reshape(3)
+    C = -R.T @ t
+    return {"focal_px": float(focal_px), "image_size": [int(w), int(h)], "R_cv": [[float(v) for v in row] for row in R],
+            "t_cv": [float(v) for v in t], "camera_xyz": [round(float(v), 2) for v in C],
+            "camera_height_m": (round(float(C[2] - ground), 2) if ground is not None else None),
+            "distance_to_face_m": None, "blender": cv_to_blender_numeric(R, t.reshape(3, 1), float(focal_px), int(w), int(h))}
+
+
+def _occluded(C: np.ndarray, P: np.ndarray, rects: list[tuple], skip: str) -> np.ndarray:
+    """カメラ C から点 P（N×3）への線分が、他の面の矩形（鉛直の板）を先に横切るか。"""
+    occ = np.zeros(len(P), bool)
+    d = P - C
+    for fid, p0, u, L, z0, z1 in rects:
+        if fid == skip:
+            continue
+        nrm = np.array([u[1], -u[0]])
+        den = d[:, :2] @ nrm
+        num = (p0 - C[:2]) @ nrm
+        with np.errstate(divide="ignore", invalid="ignore"):
+            lam = num / den
+        X = C + lam[:, None] * d
+        s = (X[:, :2] - p0) @ u
+        occ |= (lam > 1e-3) & (lam < 1 - 1e-3) & (s > 0.05) & (s < L - 0.05) & (X[:, 2] >= z0) & (X[:, 2] <= z1)
+    return occ
+
+
+def visible_faces(b: dict, cam: dict, min_m2: float = MIN_VISIBLE_M2) -> list[dict]:
+    """camera から見える面：カメラが面の外側にいて、写真の枠に入り、棟の他の面（鉛直の板とみなす）に隠れない範囲が
+    min_m2 以上の面。部品（階段・庇）や木による隠れは見ていない。"""
+    w, h = cam["image_size"]
+    R, t = np.array(cam["R_cv"], float), np.array(cam["t_cv"], float).ravel()
+    C = -R.T @ t
+    faces = [f for f in b.get("faces", []) if f.get("from") and f.get("to")]
+    rects = []
+    for f in faces:
+        fr = face_rect_frame(b, f)
+        p0, u, _, L = face_frame(fr)
+        rects.append((f["id"], p0, u, L, fr["ground_offset"], fr["top_z"]))
+    out = []
+    for f in faces:
+        fr = face_rect_frame(b, f)
+        p0, _, nv, L = face_frame(fr)
+        dist = float((C[:2] - p0) @ nv)
+        if dist <= 0.3:
+            continue
+        H = H_from_pose(R, t, cam["focal_px"], w, h, fr)
+        poly = cover_polygon(H, w, h, (0.0, L, fr["ground_offset"], fr["top_z"]))
+        a = poly_area(poly)
+        if a < min_m2:
+            continue
+        S, Z = np.meshgrid(np.linspace(0, L, 41), np.linspace(fr["ground_offset"], fr["top_z"], 21))
+        S, Z = S.ravel(), Z.ravel()
+        uu, vv, ww = apply_H(H, S, Z)
+        inside = (ww > 0.5) & (uu >= 0) & (uu < w) & (vv >= 0) & (vv < h)
+        if not inside.any():
+            continue
+        P = plane_to_world(fr, S[inside], Z[inside])
+        free = float((~_occluded(C, P, rects, f["id"])).mean())
+        if a * free >= min_m2:
+            out.append({"face": f["id"], "area_m2": round(a * free, 2), "distance_m": round(dist, 2),
+                        "unoccluded": round(free, 2)})
+    return out
+
+
+def expand_entries(ents: list[dict], b: dict) -> list[dict]:
+    """登録を面ごとの plane の形にそろえる。plane の entry はそのまま（H_plane は正面化から作った精しい物）。
+    pose の entry は visible_faces の各面について、今の面の位置と camera から H_plane を計算した仮の entry にする
+    （kind "pose_face"、derived_from に元の entry の面）。面が今の棟 JSON に無ければ飛ばす。"""
+    faces = {f["id"]: f for f in b.get("faces", []) if f.get("from") and f.get("to")}
+    out = []
+    for e in ents:
+        if entry_kind(e) != "pose":
+            out.append(e)
+            continue
+        cam = e.get("camera") or {}
+        if not cam.get("R_cv"):
+            continue
+        w, h = cam.get("image_size") or e["image_size"]
+        want = [v["face"] for v in e.get("visible_faces") or []] or list(faces)
+        for fid in want:
+            f = faces.get(fid)
+            if f is None:
+                continue
+            fr = face_rect_frame(b, f)
+            H = H_from_pose(cam["R_cv"], cam["t_cv"], cam["focal_px"], w, h, fr)
+            poly = cover_polygon(H, w, h, (0.0, fr["length_m"], fr["ground_offset"], fr["top_z"]))
+            if len(poly) < 3:
+                continue
+            out.append({**{k: v for k, v in e.items() if k not in ("visible_faces", "exclude", "exclude_note")},
+                        "kind": "pose_face", "face": fid, "derived_from": e["face"],
+                        "H_plane": [[float(v) for v in row] for row in H], "face_frame": fr,
+                        "cover": {"type": "polygon", "pts": [list(p) for p in poly], "area_m2": round(poly_area(poly), 2)},
+                        "exclude": (e.get("exclude_by_face") or {}).get(fid, [])})
+    return out
