@@ -34,11 +34,16 @@ CROP_EXPAND = 0.25          # 寄りの切り出しで升を各側にこの割�
 GRID_LONG = 1600            # 升目の絵の長辺
 MAX_REPROJ_FRAC = 0.02      # 合格：再投影の RMS が幅のこの割合まで
 MIN_POINTS = 4
-MIN_CAM_HEIGHT, MAX_CAM_HEIGHT = 0.5, 12.0
+MIN_CAM_HEIGHT, MAX_CAM_HEIGHT = 0.3, 12.0   # 0.3：しゃがんで撮った写真（本部棟の登録済みは 0.52 m が最低）
 PITCH_WARN_DEG = 8.0        # 消失点の仰角との差がこれを超えたら警告
 MIN_BBOX_FRAC = 0.25        # 対応の点が写真の幅・高さのこの割合以上に散っていること（一直線・一塊では解が暴れる）
 EDGE_MIN_INLIER = 0.15      # 検算：解いた視点で模型の線の点が写真の縁 3 px 以内に乗る割合（本部棟の正しい登録は 0.17〜0.46、偽の合格は 0.09）
 EDGE_MIN_GRAD = 0.25        # 検算：線に直角な勾配の平均（正しい登録 0.25〜0.44。どちらか一方を満たせば通す）
+MIN_INLIERS = 5             # 合格：PnP に使われた（外れでない）対応の数。4 点は解が点に合わせきりで検算にならない
+PITCH_FAIL_DEG = 15.0       # 消失点の仰角との差がこれを超え、消失点の当てはめが確か（残差 < PITCH_FAIL_RESID）なら不合格
+PITCH_FAIL_RESID = 200.0
+FACE_GROUND_DIST = 40.0     # カメラの高さの地面：面の前（法線の側）この距離以内なら、その面の ground_offset も地面として認める
+                            # （5m 標高は沈んだ広場を表せず、タワー75 の西の広場で 3〜5 m 食い違った）
 ELEV_PPM = 24               # 立面の絵の px/m
 MAX_WINDOW_ROWS = 4         # 目印に使う窓の下端の列の数（等間隔に選ぶ）
 
@@ -329,13 +334,19 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
         dem = None
     from .sfm import ground_at
     g, _ = ground_at(float(C[0]), float(C[1]), b, dem)
-    cam = R_.camera_dict(Rm, t, sol["focal"], w, h, g)
     hgt = float(C[2] - g)
+    g_face, face_near = _face_ground(b, C)
+    hgt_face = None if g_face is None else float(C[2] - g_face)
+    height_ok = (MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT) or (hgt_face is not None and MIN_CAM_HEIGHT <= hgt_face <= MAX_CAM_HEIGHT)
+    g_use = g if MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT or g_face is None else g_face
+    cam = R_.camera_dict(Rm, t, sol["focal"], w, h, g_use)
     check = {"n_points": len(P3), "n_inliers": len(sol["inliers"]), "rms_px": sol["rms_px"],
              "rms_frac_w": round(sol["rms_px"] / w, 4), "focal_px": sol["focal"], "focal_vs_exif": round(sol["focal"] / focal0, 3),
-             "camera_height_m": round(hgt, 2), "warnings": []}
+             "camera_height_m": round(hgt, 2), "camera_height_face_m": None if hgt_face is None else round(hgt_face, 2),
+             "ground_face": face_near, "warnings": []}
     # 検算（係の指し方に依らない独立の物差し）：消失点の仰角、模型の線が写真の縁に乗る割合、線に直角な勾配
     edge_ok = True
+    pitch_bad = False
     try:
         from .locate import EdgeDT, angles_of, model_points, pose_stats
         from .rectify import read_image
@@ -346,6 +357,7 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
         check.update({"yaw": round(yaw, 1), "pitch": round(pitch, 1), "roll": round(roll, 1), "tilt_from_vp": tilt})
         if tilt and abs(tilt["pitch"] - pitch) > PITCH_WARN_DEG:
             check["warnings"].append(f"消失点の仰角 {tilt['pitch']}° と PnP の仰角 {pitch:.1f}° が {abs(tilt['pitch'] - pitch):.0f}° 違う")
+        pitch_bad = bool(tilt and abs(tilt["pitch"] - pitch) > PITCH_FAIL_DEG and tilt.get("resid_px", 1e9) < PITCH_FAIL_RESID)
         st = pose_stats(C, Rm, sol["focal"], model_points(b), dt)
         check.update({"edge_inlier": st["inlier"], "edge_grad": st["grad"], "edge_coverage": st["coverage"]})
         edge_ok = st["inlier"] >= EDGE_MIN_INLIER or st["grad"] >= EDGE_MIN_GRAD
@@ -357,8 +369,16 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
     status, code, reason = "ok", None, None
     if sol["rms_px"] > MAX_REPROJ_FRAC * w:
         status, code, reason = "fail", "reproj", f"再投影の RMS {sol['rms_px']} px（幅の {MAX_REPROJ_FRAC:.0%}＝{MAX_REPROJ_FRAC * w:.0f} px まで）"
-    elif not (MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT):
-        status, code, reason = "fail", "camera_height", f"カメラの高さが地面から {hgt:.1f} m（{MIN_CAM_HEIGHT}〜{MAX_CAM_HEIGHT} m の外）"
+    elif len(sol["inliers"]) < MIN_INLIERS:
+        status, code, reason = "fail", "few_inliers", f"使われた対応が {len(sol['inliers'])} 点（{MIN_INLIERS} 点要る。外れた点を直すか足す）"
+    elif not height_ok:
+        status, code = "fail", "camera_height"
+        reason = (f"カメラの高さが地面から {hgt:.1f} m（5m 標高）"
+                  + (f"／{hgt_face:.1f} m（面 {face_near} の前の地面）" if hgt_face is not None else "")
+                  + f"（{MIN_CAM_HEIGHT}〜{MAX_CAM_HEIGHT} m の外）")
+    elif pitch_bad:
+        status, code = "fail", "pitch_check"
+        reason = f"消失点の仰角 {check['tilt_from_vp']['pitch']}° と PnP の仰角 {check['pitch']}° が {PITCH_FAIL_DEG}° 以上違う（対応の取り違えか、点が一直線に近い）"
     elif not edge_ok:
         status, code = "fail", "edge_check"
         reason = (f"解いた視点で模型の線が写真の縁に乗らない（乗った割合 {check.get('edge_inlier')}、勾配 {check.get('edge_grad')}。"
@@ -383,6 +403,21 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
             R_.note_not_registered(reg, b["id"], rec["id"], idx, reason or "", str(code), "landmarks")
         R_.save_registry(reg, registry_path or R_.REGISTRY_PATH)
     return out
+
+
+def _face_ground(b: dict, C) -> tuple[float | None, str | None]:
+    """カメラに一番近い面（法線の側、FACE_GROUND_DIST 以内、面の両端 ±10 m）の前の地面の高さと面 id。無ければ (None, None)。"""
+    best = None
+    for f in b.get("faces", []):
+        if not (f.get("from") and f.get("to")):
+            continue
+        fr = face_rect_frame(b, f)
+        p0, u, nv, L = face_frame(fr)
+        q = np.array(C[:2], float) - p0
+        d, sv = float(q @ nv), float(q @ u)
+        if 0.3 <= d <= FACE_GROUND_DIST and -10.0 <= sv <= L + 10.0 and (best is None or d < best[0]):
+            best = (d, fr["ground_offset"], f["id"])
+    return (best[1], best[2]) if best else (None, None)
 
 
 def _drop_landmark_entry(reg: dict, building_id: str, photo_id: str) -> None:
