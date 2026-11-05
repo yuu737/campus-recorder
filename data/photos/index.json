@@ -7802,8 +7802,8 @@
   {
    "id": "PXL_20261103_070654529",
    "building": "tower75",
-   "face": null,
-   "notes": "出隅の角を足元から見上げ（両面に日が当たる）。どの角か決められない",
+   "face": "SW1",
+   "notes": "出隅の角を足元から見上げ（両面に日が当たる）。どの角か決められない / 仕分け係（opus, 2026-11-06）: mid SW1",
    "file": "20261103b/PXL_20261103_070654529.jpg",
    "taken_at": "2026-11-03T16:06:54",
    "camera": {
@@ -7912,7 +7912,21 @@
     }
    ],
    "imported_at": "2026-11-04T20:51:33",
-   "period": "during"
+   "period": "during",
+   "faces": [
+    "SW1",
+    "f7",
+    "f9",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "SW1",
+    "f7",
+    "f9",
+    "f10"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261103_070742138",
@@ -8286,8 +8300,8 @@
   {
    "id": "PXL_20261103_074549768",
    "building": "tower75",
-   "face": null,
-   "notes": "東側の角を見上げ、右にガラスの渡り廊下。東南東向きの面（f1/f3/f9）のどれか決められない",
+   "face": "E",
+   "notes": "東側の角を見上げ、右にガラスの渡り廊下。東南東向きの面（f1/f3/f9）のどれか決められない / 仕分け係（opus, 2026-11-06）: mid E",
    "file": "20261103b/PXL_20261103_074549768.jpg",
    "taken_at": "2026-11-03T16:45:49",
    "camera": {
@@ -8389,7 +8403,17 @@
     }
    ],
    "imported_at": "2026-11-04T20:51:34",
-   "period": "during"
+   "period": "during",
+   "faces": [
+    "E",
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f13"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261103_074606922",
@@ -14922,8 +14946,8 @@
   {
    "id": "PXL_20261105_055234749",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low E",
    "file": "20261105/tower75/PXL_20261105_055234749.jpg",
    "taken_at": "2026-11-05T14:52:34",
    "period": "during",
@@ -15010,13 +15034,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f9",
+    "f13"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060239806",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060239806.jpg",
    "taken_at": "2026-11-05T15:02:39",
    "period": "during",
@@ -15131,13 +15165,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060255835",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060255835.jpg",
    "taken_at": "2026-11-05T15:02:55",
    "period": "during",
@@ -15259,13 +15301,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060310392",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060310392.jpg",
    "taken_at": "2026-11-05T15:03:10",
    "period": "during",
@@ -15373,13 +15423,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060316957",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060316957.jpg",
    "taken_at": "2026-11-05T15:03:16",
    "period": "during",
@@ -15494,13 +15552,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060328137",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060328137.jpg",
    "taken_at": "2026-11-05T15:03:28",
    "period": "during",
@@ -15615,13 +15681,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060342994",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060342994.jpg",
    "taken_at": "2026-11-05T15:03:42",
    "period": "during",
@@ -15722,13 +15796,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060528804",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060528804.jpg",
    "taken_at": "2026-11-05T15:05:28",
    "period": "during",
@@ -15829,13 +15911,25 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f16",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060534782",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060534782.jpg",
    "taken_at": "2026-11-05T15:05:34",
    "period": "during",
@@ -15936,13 +16030,25 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f16",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060542381",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060542381.jpg",
    "taken_at": "2026-11-05T15:05:42",
    "period": "during",
@@ -16029,13 +16135,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f17"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060548823",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060548823.jpg",
    "taken_at": "2026-11-05T15:05:48",
    "period": "during",
@@ -16129,13 +16245,25 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f17",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f17",
+    "f18"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060552836",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high E",
    "file": "20261105/tower75/PXL_20261105_060552836.jpg",
    "taken_at": "2026-11-05T15:05:52",
    "period": "during",
@@ -16229,13 +16357,25 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f17",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "E",
+    "f17",
+    "f18"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060601578",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f17",
    "file": "20261105/tower75/PXL_20261105_060601578.jpg",
    "taken_at": "2026-11-05T15:06:01",
    "period": "during",
@@ -16322,13 +16462,26 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f17",
+    "f18",
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f17",
+    "f16",
+    "f18",
+    "E"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_060613837",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f17",
    "file": "20261105/tower75/PXL_20261105_060613837.jpg",
    "taken_at": "2026-11-05T15:06:13",
    "period": "during",
@@ -16408,13 +16561,26 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f17",
+    "f18",
+    "E"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f17",
+    "f16",
+    "f18",
+    "E"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_060703663",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low f17",
    "file": "20261105/tower75/PXL_20261105_060703663.jpg",
    "taken_at": "2026-11-05T15:07:03",
    "period": "during",
@@ -16487,13 +16653,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f17",
+    "f16",
+    "f0"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060725949.MP",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f17",
    "file": "20261105/tower75/PXL_20261105_060725949.MP.jpg",
    "taken_at": "2026-11-05T15:07:25",
    "period": "during",
@@ -16573,13 +16749,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f17",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f17",
+    "f18",
+    "f16"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_060730259",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f17",
    "file": "20261105/tower75/PXL_20261105_060730259.jpg",
    "taken_at": "2026-11-05T15:07:30",
    "period": "during",
@@ -16666,13 +16853,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f17",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f17",
+    "f18",
+    "f16"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_060746293.MP",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f18",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low f18",
    "file": "20261105/tower75/PXL_20261105_060746293.MP.jpg",
    "taken_at": "2026-11-05T15:07:46",
    "period": "during",
@@ -16759,13 +16957,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060756828",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f18",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low f18",
    "file": "20261105/tower75/PXL_20261105_060756828.jpg",
    "taken_at": "2026-11-05T15:07:56",
    "period": "during",
@@ -16852,13 +17060,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060800017",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f18",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low f18",
    "file": "20261105/tower75/PXL_20261105_060800017.jpg",
    "taken_at": "2026-11-05T15:08:00",
    "period": "during",
@@ -16945,13 +17163,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060801653",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f18",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low f18",
    "file": "20261105/tower75/PXL_20261105_060801653.jpg",
    "taken_at": "2026-11-05T15:08:01",
    "period": "during",
@@ -17031,13 +17259,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060804738",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f18",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low f18",
    "file": "20261105/tower75/PXL_20261105_060804738.jpg",
    "taken_at": "2026-11-05T15:08:04",
    "period": "during",
@@ -17152,13 +17390,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18",
+    "f16",
+    "f17"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_060807986",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f19",
    "file": "20261105/tower75/PXL_20261105_060807986.jpg",
    "taken_at": "2026-11-05T15:08:07",
    "period": "during",
@@ -17231,13 +17479,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "P19w",
+    "P19e",
+    "f20",
+    "f18"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_060834553",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f19",
    "file": "20261105/tower75/PXL_20261105_060834553.jpg",
    "taken_at": "2026-11-05T15:08:34",
    "period": "during",
@@ -17317,13 +17576,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060842230",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f19",
    "file": "20261105/tower75/PXL_20261105_060842230.jpg",
    "taken_at": "2026-11-05T15:08:42",
    "period": "during",
@@ -17403,13 +17669,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060854125",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f19",
    "file": "20261105/tower75/PXL_20261105_060854125.jpg",
    "taken_at": "2026-11-05T15:08:54",
    "period": "during",
@@ -17482,13 +17755,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060904811",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f19",
    "file": "20261105/tower75/PXL_20261105_060904811.jpg",
    "taken_at": "2026-11-05T15:09:04",
    "period": "during",
@@ -17561,13 +17841,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060915328",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f19",
    "file": "20261105/tower75/PXL_20261105_060915328.jpg",
    "taken_at": "2026-11-05T15:09:15",
    "period": "during",
@@ -17640,13 +17927,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060927494",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f19",
    "file": "20261105/tower75/PXL_20261105_060927494.jpg",
    "taken_at": "2026-11-05T15:09:27",
    "period": "during",
@@ -17712,13 +18006,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_060950084",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_060950084.jpg",
    "taken_at": "2026-11-05T15:09:50",
    "period": "during",
@@ -17784,13 +18085,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0",
+    "f20",
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_060954729",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_060954729.jpg",
    "taken_at": "2026-11-05T15:09:54",
    "period": "during",
@@ -17856,13 +18168,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0",
+    "f20",
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061002256",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061002256.jpg",
    "taken_at": "2026-11-05T15:10:02",
    "period": "during",
@@ -17928,13 +18251,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0",
+    "f20",
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061028255",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061028255.jpg",
    "taken_at": "2026-11-05T15:10:28",
    "period": "during",
@@ -18007,13 +18341,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061034445",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061034445.jpg",
    "taken_at": "2026-11-05T15:10:34",
    "period": "during",
@@ -18079,13 +18419,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061122585",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061122585.jpg",
    "taken_at": "2026-11-05T15:11:22",
    "period": "during",
@@ -18158,13 +18504,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061241221",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061241221.jpg",
    "taken_at": "2026-11-05T15:12:41",
    "period": "during",
@@ -18237,13 +18589,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061247963",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061247963.jpg",
    "taken_at": "2026-11-05T15:12:47",
    "period": "during",
@@ -18309,13 +18667,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061255833",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061255833.jpg",
    "taken_at": "2026-11-05T15:12:55",
    "period": "during",
@@ -18381,13 +18745,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061300605",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061300605.jpg",
    "taken_at": "2026-11-05T15:13:00",
    "period": "during",
@@ -18474,13 +18844,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061341818",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061341818.jpg",
    "taken_at": "2026-11-05T15:13:41",
    "period": "during",
@@ -18546,13 +18922,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061357582",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061357582.jpg",
    "taken_at": "2026-11-05T15:13:57",
    "period": "during",
@@ -18618,13 +18999,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061402813",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061402813.jpg",
    "taken_at": "2026-11-05T15:14:02",
    "period": "during",
@@ -18690,13 +19076,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061410188",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061410188.jpg",
    "taken_at": "2026-11-05T15:14:10",
    "period": "during",
@@ -18769,13 +19160,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "Wsb"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061418906",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061418906.jpg",
    "taken_at": "2026-11-05T15:14:18",
    "period": "during",
@@ -18848,13 +19248,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061423669",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061423669.jpg",
    "taken_at": "2026-11-05T15:14:23",
    "period": "during",
@@ -18920,13 +19328,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "Wsb"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061434917",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061434917.jpg",
    "taken_at": "2026-11-05T15:14:34",
    "period": "during",
@@ -18992,13 +19409,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "Wsb"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061442402",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061442402.jpg",
    "taken_at": "2026-11-05T15:14:42",
    "period": "during",
@@ -19099,13 +19525,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061449185",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061449185.jpg",
    "taken_at": "2026-11-05T15:14:49",
    "period": "during",
@@ -19206,13 +19641,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061455930",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061455930.jpg",
    "taken_at": "2026-11-05T15:14:55",
    "period": "during",
@@ -19313,13 +19757,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "Wsb",
+    "f6"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061511227",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "SW1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high SW1",
    "file": "20261105/tower75/PXL_20261105_061511227.jpg",
    "taken_at": "2026-11-05T15:15:11",
    "period": "during",
@@ -19427,13 +19881,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "SW1",
+    "W",
+    "f6"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061520328",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "SW1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high SW1",
    "file": "20261105/tower75/PXL_20261105_061520328.jpg",
    "taken_at": "2026-11-05T15:15:20",
    "period": "during",
@@ -19534,13 +19995,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "SW1",
+    "W",
+    "f6"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061525822",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061525822.jpg",
    "taken_at": "2026-11-05T15:15:25",
    "period": "during",
@@ -19627,13 +20095,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061632682",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "SW1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high SW1",
    "file": "20261105/tower75/PXL_20261105_061632682.jpg",
    "taken_at": "2026-11-05T15:16:32",
    "period": "during",
@@ -19727,13 +20201,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "SW1",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f10"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061647959",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061647959.jpg",
    "taken_at": "2026-11-05T15:16:47",
    "period": "during",
@@ -19813,13 +20296,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061649102",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061649102.jpg",
    "taken_at": "2026-11-05T15:16:49",
    "period": "during",
@@ -19885,13 +20376,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061704401",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061704401.jpg",
    "taken_at": "2026-11-05T15:17:04",
    "period": "during",
@@ -19978,13 +20477,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061708177",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f7",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f7",
    "file": "20261105/tower75/PXL_20261105_061708177.jpg",
    "taken_at": "2026-11-05T15:17:08",
    "period": "during",
@@ -20050,13 +20557,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f7",
+    "SW1",
+    "f6",
+    "f9"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061709593",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061709593.jpg",
    "taken_at": "2026-11-05T15:17:09",
    "period": "during",
@@ -20150,13 +20665,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f11"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061710650",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061710650.jpg",
    "taken_at": "2026-11-05T15:17:10",
    "period": "during",
@@ -20250,13 +20775,23 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f11"
+   ],
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061711714",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061711714.jpg",
    "taken_at": "2026-11-05T15:17:11",
    "period": "during",
@@ -20343,13 +20878,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061720413",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_061720413.jpg",
    "taken_at": "2026-11-05T15:17:20",
    "period": "during",
@@ -20443,13 +20985,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061828741",
    "building": "tower75",
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low -",
    "file": "20261105/tower75/PXL_20261105_061828741.jpg",
    "taken_at": "2026-11-05T15:18:28",
    "period": "during",
@@ -20564,13 +21114,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0",
+    "f20"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_061830023",
    "building": "tower75",
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low -",
    "file": "20261105/tower75/PXL_20261105_061830023.jpg",
    "taken_at": "2026-11-05T15:18:30",
    "period": "during",
@@ -20699,13 +21256,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0",
+    "f20"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_061834617",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f0",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f0",
    "file": "20261105/tower75/PXL_20261105_061834617.jpg",
    "taken_at": "2026-11-05T15:18:34",
    "period": "during",
@@ -20834,13 +21398,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f0",
+    "W"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f20"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061836019",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f0",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f0",
    "file": "20261105/tower75/PXL_20261105_061836019.jpg",
    "taken_at": "2026-11-05T15:18:36",
    "period": "during",
@@ -20927,13 +21500,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f0",
+    "W"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f20"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061836600",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f0",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f0",
    "file": "20261105/tower75/PXL_20261105_061836600.jpg",
    "taken_at": "2026-11-05T15:18:36",
    "period": "during",
@@ -21034,13 +21616,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f0",
+    "W"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f20"
+   ],
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061837232",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061837232.jpg",
    "taken_at": "2026-11-05T15:18:37",
    "period": "during",
@@ -21120,13 +21711,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "f0"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061905208.MP",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061905208.MP.jpg",
    "taken_at": "2026-11-05T15:19:05",
    "period": "during",
@@ -21192,13 +21789,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061908705",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061908705.jpg",
    "taken_at": "2026-11-05T15:19:08",
    "period": "during",
@@ -21271,13 +21873,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061909489",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061909489.jpg",
    "taken_at": "2026-11-05T15:19:09",
    "period": "during",
@@ -21343,13 +21950,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061910368",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061910368.jpg",
    "taken_at": "2026-11-05T15:19:10",
    "period": "during",
@@ -21415,13 +22027,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061918505",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high W",
    "file": "20261105/tower75/PXL_20261105_061918505.jpg",
    "taken_at": "2026-11-05T15:19:18",
    "period": "during",
@@ -21522,13 +22139,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_061934785",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061934785.jpg",
    "taken_at": "2026-11-05T15:19:34",
    "period": "during",
@@ -21629,13 +22251,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061939875",
    "building": "tower75",
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low -",
    "file": "20261105/tower75/PXL_20261105_061939875.jpg",
    "taken_at": "2026-11-05T15:19:39",
    "period": "during",
@@ -21722,13 +22351,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "W",
+    "SW1"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_061943220",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061943220.jpg",
    "taken_at": "2026-11-05T15:19:43",
    "period": "during",
@@ -21808,13 +22444,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_061946087",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_061946087.jpg",
    "taken_at": "2026-11-05T15:19:46",
    "period": "during",
@@ -21894,13 +22537,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062046145",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_062046145.jpg",
    "taken_at": "2026-11-05T15:20:46",
    "period": "during",
@@ -21987,13 +22636,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f8",
+    "f10",
+    "f7",
+    "f11"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_062155782",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_062155782.jpg",
    "taken_at": "2026-11-05T15:21:55",
    "period": "during",
@@ -22080,13 +22738,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062202098",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_062202098.jpg",
    "taken_at": "2026-11-05T15:22:02",
    "period": "during",
@@ -22173,13 +22838,20 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062211785",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_062211785.jpg",
    "taken_at": "2026-11-05T15:22:11",
    "period": "during",
@@ -22280,13 +22952,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1",
+    "f10",
+    "f9"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062220598",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid W",
    "file": "20261105/tower75/PXL_20261105_062220598.jpg",
    "taken_at": "2026-11-05T15:22:20",
    "period": "during",
@@ -22373,13 +23053,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "SW1",
+    "f10",
+    "f9"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062246708",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_062246708.jpg",
    "taken_at": "2026-11-05T15:22:46",
    "period": "during",
@@ -22466,13 +23154,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_062254010",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_062254010.jpg",
    "taken_at": "2026-11-05T15:22:54",
    "period": "during",
@@ -22552,13 +23248,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "SW1",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_062300065",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_062300065.jpg",
    "taken_at": "2026-11-05T15:23:00",
    "period": "during",
@@ -22645,13 +23349,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_062307232",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_062307232.jpg",
    "taken_at": "2026-11-05T15:23:07",
    "period": "during",
@@ -22731,13 +23443,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f8",
+    "f10"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_062311895",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: high f9",
    "file": "20261105/tower75/PXL_20261105_062311895.jpg",
    "taken_at": "2026-11-05T15:23:11",
    "period": "during",
@@ -22817,13 +23538,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f8"
+   ],
+   "interior_views": false,
+   "face_confidence": "high"
   },
   {
    "id": "PXL_20261105_062317561",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f9",
    "file": "20261105/tower75/PXL_20261105_062317561.jpg",
    "taken_at": "2026-11-05T15:23:17",
    "period": "during",
@@ -22903,13 +23632,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f11",
+    "f8",
+    "f13",
+    "f12"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062323658",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f9",
    "file": "20261105/tower75/PXL_20261105_062323658.jpg",
    "taken_at": "2026-11-05T15:23:23",
    "period": "during",
@@ -22989,13 +23727,22 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f9",
+    "f11",
+    "f8",
+    "f13",
+    "f12"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062330274",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f11",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f11",
    "file": "20261105/tower75/PXL_20261105_062330274.jpg",
    "taken_at": "2026-11-05T15:23:30",
    "period": "during",
@@ -23075,13 +23822,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f11",
+    "f13",
+    "f12",
+    "f9"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062527087",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "f13",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid f13",
    "file": "20261105/tower75/PXL_20261105_062527087.jpg",
    "taken_at": "2026-11-05T15:25:27",
    "period": "during",
@@ -23182,13 +23937,21 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "f13",
+    "E",
+    "f11",
+    "f9"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062537872",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid E",
    "file": "20261105/tower75/PXL_20261105_062537872.jpg",
    "taken_at": "2026-11-05T15:25:37",
    "period": "during",
@@ -23296,13 +24059,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f13"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062543289",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid E",
    "file": "20261105/tower75/PXL_20261105_062543289.jpg",
    "taken_at": "2026-11-05T15:25:43",
    "period": "during",
@@ -23410,13 +24179,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f13"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062549239",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid E",
    "file": "20261105/tower75/PXL_20261105_062549239.jpg",
    "taken_at": "2026-11-05T15:25:49",
    "period": "during",
@@ -23531,13 +24306,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f13"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062637300",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "E",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: mid E",
    "file": "20261105/tower75/PXL_20261105_062637300.jpg",
    "taken_at": "2026-11-05T15:26:37",
    "period": "during",
@@ -23645,13 +24426,19 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "E",
+    "f13"
+   ],
+   "interior_views": false,
+   "face_confidence": "mid"
   },
   {
    "id": "PXL_20261105_062840332",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low W",
    "file": "20261105/tower75/PXL_20261105_062840332.jpg",
    "taken_at": "2026-11-05T15:28:40",
    "period": "during",
@@ -23738,13 +24525,24 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "Wsb"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "W",
+    "Wsb",
+    "SW1"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_062846360",
    "building": "tower75",
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）",
+   "face": "W",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） / 仕分け係（opus, 2026-11-06）: low W",
    "file": "20261105/tower75/PXL_20261105_062846360.jpg",
    "taken_at": "2026-11-05T15:28:46",
    "period": "during",
@@ -23838,7 +24636,18 @@
    "building_source": "staff",
    "interior": false,
    "floor": null,
-   "staff_label": "タワー"
+   "staff_label": "タワー",
+   "faces": [
+    "W",
+    "Wsb"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "W",
+    "Wsb",
+    "SW1"
+   ],
+   "face_confidence": "low"
   },
   {
    "id": "PXL_20261105_062856422",

@@ -40,6 +40,7 @@ MIN_BBOX_FRAC = 0.25        # 対応の点が写真の幅・高さのこの割�
 EDGE_MIN_INLIER = 0.15      # 検算：解いた視点で模型の線の点が写真の縁 3 px 以内に乗る割合（本部棟の正しい登録は 0.17〜0.46、偽の合格は 0.09）
 EDGE_MIN_GRAD = 0.25        # 検算：線に直角な勾配の平均（正しい登録 0.25〜0.44。どちらか一方を満たせば通す）
 ELEV_PPM = 24               # 立面の絵の px/m
+MAX_WINDOW_ROWS = 4         # 目印に使う窓の下端の列の数（等間隔に選ぶ）
 
 
 # --- 目印の一覧 ------------------------------------------------------------------------------
@@ -69,8 +70,11 @@ def face_landmarks(b: dict, face_id: str) -> list[dict]:
     horz: list[tuple[float, str]] = [(fr["ground_offset"], "地面"), (fr["top_z"], "上端（パラペット）")]
     lows = sorted((float(l.m), l.name) for l in zs if l.in_plane and l.name.endswith("下端") and "窓" in l.name)
     highs = sorted((float(l.m), l.name) for l in zs if l.in_plane and l.name.endswith("上端") and "窓" in l.name)
+    # 窓の下端の列：一番下と、高い棟でも写真の縦の広がりが出るように、等間隔に最大 MAX_WINDOW_ROWS 本
     if lows:
-        horz.append(lows[0])
+        k = min(MAX_WINDOW_ROWS, len(lows))
+        for i in sorted({int(round(j * (len(lows) - 1) / max(1, k - 1))) for j in range(k)}):
+            horz.append(lows[i])
     if highs:
         horz.append(highs[-1])
     # 0.7 m 以内に並ぶ縦線（面の端と端の柱型の縁など）は 1 本にまとめる（面の端を優先）
