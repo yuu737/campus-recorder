@@ -900,6 +900,112 @@
    "registered_by": "register-chain"
   },
   {
+   "photo": "PXL_20261103_042853166",
+   "building": "honbu",
+   "face": "SW",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_042853166.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1834.1987393971438,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      0.9862823447511474,
+      -0.1548867667298145,
+      -0.057072111614720665
+     ],
+     [
+      -0.013069732755314189,
+      0.2713896114804346,
+      -0.9623808294361452
+     ],
+     [
+      0.16454883323160857,
+      0.9499251382464212,
+      0.2656424537035328
+     ]
+    ],
+    "t_cv": [
+     31.37734028003735,
+     10.400829354886604,
+     40.7505423862698
+    ],
+    "camera_xyz": [
+     -37.52,
+     -36.67,
+     0.98
+    ],
+    "camera_height_m": 1.3,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -37.51643488656377,
+      -36.672706863034804,
+      0.9752557787764139
+     ],
+     "rotation_euler": [
+      1.8401164630459907,
+      0.05710313990962867,
+      -0.1557687983534227
+     ],
+     "lens_mm": 14.280093991846275,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW",
+     "area_m2": 767.76,
+     "distance_m": 14.06,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_042822099",
+    "PXL_20261103_042844361",
+    "PXL_20261103_042900775"
+   ],
+   "source": {
+    "method": "sfm：RootSIFT → COLMAP（pycolmap）の増分 SfM（照合・幾何の検証・三角測量・PnP・バンドル調整） → 登録済みの写真のカメラ位置で相似変換（Umeyama）",
+    "kind": "sfm",
+    "focal_source": "exif_35mm を初期値にバンドル調整",
+    "focal_exif_px": null,
+    "model": 0,
+    "anchors": [
+     "PXL_20261103_042822099",
+     "PXL_20261103_042844361",
+     "PXL_20261103_042900775"
+    ],
+    "anchors_dropped": {
+     "PXL_20261103_042830256": 0.554
+    },
+    "align_rms_m": 0.04,
+    "scale": 2.818331
+   },
+   "check": {
+    "reproj_rms_px": 1.44,
+    "n_points3d": 307,
+    "camera_height_m": 1.3,
+    "align_rms_m": 0.04,
+    "align_max_m": 0.057
+   },
+   "registered_at": "2026-11-05T12:26:03",
+   "registered_by": "register-sfm"
+  },
+  {
    "photo": "PXL_20261103_042900775",
    "building": "honbu",
    "face": "SW",
@@ -1048,6 +1154,112 @@
    "exclude_note": [
     "スパン 4・5 の 2〜4 階の前に下がる垂れ幕 4 枚（一時的な物。面より手前で写真ごとに位置がずれる）。042900775 の画素を登録の視点で面の平面へ戻して囲んだ（検収係 photoproj、11/4 夜）"
    ]
+  },
+  {
+   "photo": "PXL_20261103_042909968",
+   "building": "honbu",
+   "face": "SW",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261103/PXL_20261103_042909968.jpg",
+   "image_size": [
+    4624,
+    3472
+   ],
+   "camera": {
+    "focal_px": 1798.4156933954962,
+    "image_size": [
+     4624,
+     3472
+    ],
+    "R_cv": [
+     [
+      0.9190601548046193,
+      -0.39037241660050037,
+      -0.05420155171205723
+     ],
+     [
+      0.059754051786038126,
+      0.27395578367514767,
+      -0.9598842023317639
+     ],
+     [
+      0.38956114429658006,
+      0.8789525612616534,
+      0.2751081785514894
+     ]
+    ],
+    "t_cv": [
+     30.3977724154185,
+     11.635340554695077,
+     42.10657173002635
+    ],
+    "camera_xyz": [
+     -45.04,
+     -28.33,
+     1.23
+    ],
+    "camera_height_m": 1.19,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      -45.03572442943865,
+      -28.33079603096396,
+      1.2323237670123748
+     ],
+     "rotation_euler": [
+      1.8499198280821216,
+      0.054228125818986506,
+      -0.401660365572892
+     ],
+     "lens_mm": 14.001506263459746,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      4624,
+      3472
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "SW",
+     "area_m2": 492.47,
+     "distance_m": 10.19,
+     "unoccluded": 1.0
+    }
+   ],
+   "via": [
+    "PXL_20261103_042822099",
+    "PXL_20261103_042844361",
+    "PXL_20261103_042900775"
+   ],
+   "source": {
+    "method": "sfm：RootSIFT → COLMAP（pycolmap）の増分 SfM（照合・幾何の検証・三角測量・PnP・バンドル調整） → 登録済みの写真のカメラ位置で相似変換（Umeyama）",
+    "kind": "sfm",
+    "focal_source": "exif_35mm を初期値にバンドル調整",
+    "focal_exif_px": null,
+    "model": 0,
+    "anchors": [
+     "PXL_20261103_042822099",
+     "PXL_20261103_042844361",
+     "PXL_20261103_042900775"
+    ],
+    "anchors_dropped": {
+     "PXL_20261103_042830256": 0.554
+    },
+    "align_rms_m": 0.04,
+    "scale": 2.818331
+   },
+   "check": {
+    "reproj_rms_px": 1.35,
+    "n_points3d": 145,
+    "camera_height_m": 1.19,
+    "align_rms_m": 0.04,
+    "align_max_m": 0.057
+   },
+   "registered_at": "2026-11-05T12:26:03",
+   "registered_by": "register-sfm"
   },
   {
    "photo": "PXL_20261103_044849371",
@@ -1950,7 +2162,9 @@
    "period": "during",
    "reason": "面 id「approach」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "視点に合う対応点が 9 点（12 点未満）",
-   "chain_code": "few_inliers"
+   "chain_code": "few_inliers",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_042734715",
@@ -1959,25 +2173,9 @@
    "period": "during",
    "reason": "面 id「approach」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
-  },
-  {
-   "photo": "PXL_20261103_042853166",
-   "building": "honbu",
-   "face": "SW",
-   "period": "during",
-   "reason": "compare が古い自動の結果で、横の原点（柱の何本目か）を検収係が確かめていない。--lines で柱の番号を与えて compare し直せば登録できる",
-   "chain_reason": "再投影の誤差 3.1 px（3.0 px 超）",
-   "chain_code": "reproj"
-  },
-  {
-   "photo": "PXL_20261103_042909968",
-   "building": "honbu",
-   "face": "SW",
-   "period": "during",
-   "reason": "正面化（photos rectify）が無い",
-   "chain_reason": "再投影の誤差 3.0 px（3.0 px 超）",
-   "chain_code": "reproj"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_042927350",
@@ -1986,7 +2184,9 @@
    "period": "during",
    "reason": "面 id「SW_corner」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_042946748",
@@ -1995,7 +2195,9 @@
    "period": "during",
    "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043004629",
@@ -2004,7 +2206,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 1（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043026097",
@@ -2013,7 +2217,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 1（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043034043",
@@ -2022,7 +2228,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 1（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043041105",
@@ -2031,7 +2239,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 1（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043049890",
@@ -2040,7 +2250,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 2（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043055592",
@@ -2049,7 +2261,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "視点に合う対応点が 5 点（12 点未満）",
-   "chain_code": "few_inliers"
+   "chain_code": "few_inliers",
+   "sfm_reason": "SfM の模型 2（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043103134",
@@ -2058,7 +2272,9 @@
    "period": "during",
    "reason": "面 id「W」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 2（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043112969",
@@ -2067,7 +2283,9 @@
    "period": "during",
    "reason": "面 id「E_corner」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043123901",
@@ -2076,7 +2294,9 @@
    "period": "during",
    "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 3（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043129358",
@@ -2085,7 +2305,9 @@
    "period": "during",
    "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 3（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043136840",
@@ -2094,7 +2316,9 @@
    "period": "during",
    "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 3（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_043150092",
@@ -2103,7 +2327,9 @@
    "period": "during",
    "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043221663",
@@ -2112,7 +2338,9 @@
    "period": "during",
    "reason": "正面化（photos rectify）が無い",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043405159",
@@ -2121,7 +2349,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043515616",
@@ -2130,7 +2360,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043608113",
@@ -2139,7 +2371,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043612124",
@@ -2148,7 +2382,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "視点に合う対応点が 6 点（12 点未満）",
-   "chain_code": "few_inliers"
+   "chain_code": "few_inliers",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043613678",
@@ -2157,7 +2393,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043623454",
@@ -2166,7 +2404,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043642327",
@@ -2175,7 +2415,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043759272",
@@ -2184,7 +2426,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043812312",
@@ -2193,7 +2437,9 @@
    "period": "during",
    "reason": "面 id「courtyard」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044651355",
@@ -2202,7 +2448,9 @@
    "period": "during",
    "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044712412",
@@ -2211,7 +2459,9 @@
    "period": "during",
    "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044813659.MP",
@@ -2220,7 +2470,9 @@
    "period": "during",
    "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044822533",
@@ -2229,7 +2481,9 @@
    "period": "during",
    "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044830148",
@@ -2238,7 +2492,9 @@
    "period": "during",
    "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044907567",
@@ -2247,7 +2503,9 @@
    "period": "during",
    "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "視点に合う対応点が 6 点（12 点未満）",
-   "chain_code": "few_inliers"
+   "chain_code": "few_inliers",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_080423326",
@@ -2256,7 +2514,9 @@
    "period": "during",
    "reason": "正面化（photos rectify）が無い",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_080431748",
@@ -2265,7 +2525,9 @@
    "period": "during",
    "reason": "正面化はあるが検収 A（photos compare）が無いので原点（面の s=0・z=0 が写真のどこか）が決まっていない",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 3（4 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_080531443",
@@ -2274,7 +2536,9 @@
    "period": "during",
    "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_080542963",
@@ -2283,7 +2547,9 @@
    "period": "during",
    "reason": "面 id「entrance」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_080615077",
@@ -2292,7 +2558,9 @@
    "period": "during",
    "reason": "面 id「plaza_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_080625727.MP",
@@ -2301,7 +2569,9 @@
    "period": "during",
    "reason": "面 id「pilotis_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_080635046.MP",
@@ -2310,7 +2580,9 @@
    "period": "during",
    "reason": "面 id「pilotis_steps」は棟の面（E・NE・NE2・NW_n・NW_s・N_jog1・N_jog2・SE・SW）ではない（角・中庭・通路など）。面に割り当て直せば登録できる",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_044700654",
@@ -2319,7 +2591,9 @@
    "period": "during",
    "reason": "鎖の登録（--via PXL_20261103_042822099,PXL_20261103_042900775）: PnP が解けない（つじつまの合う対応の組が無い）",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043753272",
@@ -2328,7 +2602,9 @@
    "period": "during",
    "reason": "鎖の登録（--via PXL_20261103_043259125,PXL_20261103_043304319）: PnP が解けない（つじつまの合う対応の組が無い）",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043826814",
@@ -2336,7 +2612,9 @@
    "face": "courtyard",
    "period": "during",
    "chain_reason": "視点に合う点が 19 点で候補の 19%（30 点未満なら 25% 以上が要る。偶然の一致の疑い）",
-   "chain_code": "weak"
+   "chain_code": "weak",
+   "sfm_reason": "SfM の模型に入らなかった（他の写真との対応が足りない）",
+   "sfm_code": "not_in_model"
   },
   {
    "photo": "PXL_20261103_043856844.MP",
@@ -2344,7 +2622,9 @@
    "face": "courtyard",
    "period": "during",
    "chain_reason": "視点に合う対応点が 10 点（12 点未満）",
-   "chain_code": "few_inliers"
+   "chain_code": "few_inliers",
+   "sfm_reason": "SfM の模型 5（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_044051601",
@@ -2352,7 +2632,9 @@
    "face": "courtyard",
    "period": "during",
    "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
-   "chain_code": "pnp_fail"
+   "chain_code": "pnp_fail",
+   "sfm_reason": "SfM の模型 5（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   },
   {
    "photo": "PXL_20261103_044049610.MP",
@@ -2360,7 +2642,9 @@
    "face": "courtyard",
    "period": "during",
    "chain_reason": "視点に合う対応点が 7 点（12 点未満）",
-   "chain_code": "few_inliers"
+   "chain_code": "few_inliers",
+   "sfm_reason": "SfM の模型 5（3 枚）が世界座標に合わない：模型に入った登録済みの写真が 0 枚（合わせに 3 枚要る）",
+   "sfm_code": "few_anchors"
   }
  ]
 }

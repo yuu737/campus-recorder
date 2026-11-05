@@ -60,6 +60,22 @@ def upsert(reg: dict, entry: dict) -> None:
                              if (n.get("building"), n.get("photo"), n.get("face")) != key]
 
 
+def note_not_registered(reg: dict, building_id: str, photo_id: str, index: dict | None, reason: str, code: str,
+                        prefix: str) -> None:
+    """登録できなかった写真の理由を not_registered に書く（鎖・SfM の共用）。既にあれば <prefix>_reason・<prefix>_code を足す。
+    登録済みの写真には書かない。"""
+    if any(e["building"] == building_id and e["photo"] == photo_id for e in reg.get("entries", [])):
+        return
+    nr = reg.setdefault("not_registered", [])
+    n = next((x for x in nr if x.get("building") == building_id and x.get("photo") == photo_id), None)
+    if n is None:
+        rec = photo_record(photo_id, index) or {}
+        n = {"photo": photo_id, "building": building_id, "face": rec.get("face"), "period": rec.get("period")}
+        nr.append(n)
+    n[f"{prefix}_reason"] = reason
+    n[f"{prefix}_code"] = code
+
+
 def entries_for(reg: dict, building_id: str, photos: list[str] | None = None) -> list[dict]:
     out = [e for e in reg.get("entries", []) if e["building"] == building_id]
     if photos:

@@ -177,6 +177,14 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--photos", default=None, help="試す写真 id（カンマ区切り。頭だけでも可。省略で棟の未登録全部）")
     q.add_argument("--registry", default=None)
 
+    q = psub.add_parser("register-sfm", help="平面の鎖で載らない写真（中庭・ピロティ・段・デッキ）を、写真どうしの対応だけでまとめて"
+                                             "解き（COLMAP の SfM）、登録済みの写真に合わせて世界座標で登録する（kind pose）")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--photos", default=None, help="登録を試す写真 id（カンマ区切り。頭だけでも可。省略で棟の未登録全部）")
+    q.add_argument("--max", type=int, default=None, help="登録を試す未登録の写真の枚数の上限（登録済みは合わせの基準として全部入れる）")
+    q.add_argument("--budget-min", type=float, default=None, help="照合の時間の上限（分）。超えたら途中で止め、同じコマンドで続きから")
+    q.add_argument("--registry", default=None)
+
     q = psub.add_parser("roof", help="航空写真（国土地理院 z18）で屋上の縁・倒れ込み・設備を読む")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--out-dir", default=None, help="roof.json・roof_aerial.png の出力先（省略時は out/<棟id>/）")
@@ -663,6 +671,34 @@ def _photos(a) -> int:
         print(f"登録できた写真 {res['added']} 枚（{' → '.join(str(r['added']) for r in res['rounds'])}）")
         print(f"登録できない写真 {len(res['failed'])} 枚。理由の分布: {res['reasons']}")
         for pid, why in sorted(res["failed"].items()):
+            print(f"  {pid[:40]:<40} {why}")
+        print(f"台帳: {rp}")
+        return 0
+    if a.photos_cmd == "register-sfm":
+        from . import registry, sfm
+
+        rp = Path(a.registry) if a.registry else registry.REGISTRY_PATH
+        reg = registry.load_registry(rp)
+        res = sfm.register_sfm(Path(a.building), reg, photos=[p.strip() for p in a.photos.split(",")] if a.photos else None,
+                               max_n=a.max, budget_s=a.budget_min * 60 if a.budget_min else None)
+        if res.get("pending"):
+            print(f"照合が途中です（残り {res['pending']} 組 / 全 {res['n_pairs']} 組）。同じコマンドで続きから回してください")
+            return 2
+        registry.save_registry(reg, rp)
+        for al in res["aligns"]:
+            print(f"模型 {al['model']}（{al['n_images']} 枚）: 合わせ {'可' if al['ok'] else '不可'}  基準 {len(al.get('used', []))} 枚"
+                  f"  残差 RMS {al.get('rms_m')} m  最大 {max((al.get('residual_m') or {0: None}).values(), key=lambda v: v or 0)} m"
+                  f"  外した {al.get('dropped')}" + (f"  理由: {al['reason']}" if not al["ok"] else ""))
+        by_p: dict = {}
+        for e in res["added"]:
+            by_p[e.get("period")] = by_p.get(e.get("period"), 0) + 1
+        print(f"登録できた写真 {len(res['added'])} 枚 {by_p}")
+        for e in res["added"]:
+            c = e["check"]
+            print(f"  登録: {e['photo'][:40]:<40} {c['reproj_rms_px']} px  点 {c['n_points3d']}  高さ {c['camera_height_m']} m"
+                  f"  面 {','.join(v['face'] for v in e['visible_faces'])}")
+        print(f"登録できない写真 {len(res['failed'])} 枚。理由の分布: {res['reasons']}")
+        for pid, (code, why) in sorted(res["failed"].items()):
             print(f"  {pid[:40]:<40} {why}")
         print(f"台帳: {rp}")
         return 0
