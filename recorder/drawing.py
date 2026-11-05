@@ -652,9 +652,12 @@ def interior_plan_svg(b: dict, floor: int) -> str:
                 # 弧の向き：扉の先（tx）から閉じた位置（ex）へ。SVG は y が下向きなので外積の符号で決める
                 cross = (tx - hx) * (ey - hy) - (ty - hy) * (ex - hx)
                 sweep = 1 if cross > 0 else 0
-                dash = ' stroke-dasharray="8 6"' if dr.get("kind") == "auto_sliding" else ""
-                svg.add(f'<path data-kind="door" d="M {hx:.1f},{hy:.1f} L {tx:.1f},{ty:.1f} A {rr:.1f},{rr:.1f} 0 0 {sweep} {ex:.1f},{ey:.1f}" fill="none" {_st_attrs(st, 2)}{dash}/>')
+                attrs = _st_attrs(st, 2)
+                # 推定の破線が既にあれば、引き戸の破線は重ねない（属性の二重は SVG として壊れる）
+                dash = ' stroke-dasharray="8 6"' if dr.get("kind") == "auto_sliding" and "stroke-dasharray" not in attrs else ""
+                svg.add(f'<path data-kind="door" d="M {hx:.1f},{hy:.1f} L {tx:.1f},{ty:.1f} A {rr:.1f},{rr:.1f} 0 0 {sweep} {ex:.1f},{ey:.1f}" fill="none" {attrs}{dash}/>')
         # 置物（大きさがあれば外形、無ければ丸い印）
+        labeled: set = set()   # 同じ名前の置物（椅子 60 脚など）は名前を 1 回だけ書く
         for pt in r.get("parts") or []:
             sw, sd, _sh = I.part_size(pt)
             st = pt.get("status", "unknown")
@@ -667,7 +670,9 @@ def interior_plan_svg(b: dict, floor: int) -> str:
                     svg.add(f'<polygon data-kind="part" data-part="{_esc(label)}" points="{pts_attr(q)}" fill="#c9b79c" fill-opacity="0.7" {_st_attrs(st, 1.5)}/>')
                 else:
                     svg.add(f'<circle data-kind="part" data-part="{_esc(label)}" cx="{cx:.1f}" cy="{cy:.1f}" r="12" fill="#c9b79c" {_st_attrs(st, 1.5)}/>')
-                svg.text(cx, cy + 8, str(label), 22, "#444", "middle")
+                if label not in labeled:
+                    labeled.add(label)
+                    svg.text(cx, cy + 8, str(label), 22, "#444", "middle")
         # 部屋の名前と高さ
         cx, cy = P(*I.centroid(pts))
         svg.text(cx, cy - 30, r.get("name", rid), 36, "#222", "middle", "bold")
