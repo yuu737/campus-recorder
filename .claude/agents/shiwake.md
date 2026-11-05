@@ -11,7 +11,7 @@ tools: Bash, Read, Glob, Grep
 索引 `data/photos/index.json`（`candidates` は参考）、`data/site/tempaku.json` の足元（面 id は足元の辺番号 `f0`〜）、一覧画像（無ければ自分で縮小して並べる）。
 
 ## 手順
-0. **職員が振り分けた写真**（索引の `assigned_by: "staff"`。`web/staff.html` → `recorder photos assign --from assignments.json`）は `building` を変えない。やるのは面の判定だけ。`interior: true` の写真は面にしない（`face: null`、`interior_views: true`、`floor` はそのまま）。GPS との食い違い（assign の `warnings`）は `disagreement` に写すが、職員の値を優先する。棟未定（`building: null`）の写真だけ自分で棟を決め、`assigned_by: "shiwake"` と書く。
+0. **職員が振り分けた写真**（索引の `assigned_by: "staff"`。`web/staff.html` → `recorder photos assign --from assignments.json`）は `building` を変えない。やるのは面の判定だけ。`interior: true` の写真は面にしない（`face: null`、`interior_views: true`、`floor` はそのまま）。GPS との食い違い（assign の `warnings`）は `disagreement` に写すが、職員の値を優先する。棟未定（`building: null`）の写真だけ自分で棟を決め、`assigned_by: "shiwake"` と書く。 索引に `staff_choices`（職員がフォルダ名で「このどれか」と示した棟 id の一覧）がある写真は**その中から**選ぶ（外の棟にしない。どれにも当たらなければ `building: null` のまま `disagreement` に理由）。
 1. 写真を縮小して見る（長辺 1600 px 程度）。方位は 180° ずれることがあるので信用しない。入口・階段・通路橋・広場・道路・日の当たり方で面を決める。
 2. 同じ面の写真を束ねる。1 枚に複数の面があれば `faces: ["f1","f2"]` と主の面。
 3. 決められない物は `building: null` と理由。候補は `candidate` に残す。

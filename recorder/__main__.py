@@ -132,6 +132,10 @@ def main(argv: list[str] | None = None) -> int:
     q = psub.add_parser("assign", help="shiwake の結果（assignments.json）を索引に書く")
     q.add_argument("--from", dest="from_json", required=True)
     q.add_argument("--campus", default=None)
+    q = psub.add_parser("folders", help="職員が data/photos/<日付>/<棟名>/ に手で分けた写真を索引に反映し、フォルダを棟 id に改名する")
+    q.add_argument("folder", help="日付のフォルダ（例 data/photos/20261105）")
+    q.add_argument("--campus", default=None)
+    q.add_argument("--no-rename", action="store_true", help="フォルダ名を変えない（索引の file だけ合わせる）")
     q = psub.add_parser("rectify")
     q.add_argument("file")
     q.add_argument("--f35", type=float, default=None, help="35mm 換算の焦点距離。省略すると EXIF、無ければ消失点から推定")
@@ -561,6 +565,10 @@ def _photos(a) -> int:
         assignments = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
         res = assign_photos(index_path=Path("data/photos/index.json"), assignments=assignments,
                             campus=a.campus or site.default_campus())
+        print(json.dumps(res, ensure_ascii=False, indent=1))
+        return 0
+    if a.photos_cmd == "folders":
+        res = photos.assign_from_folders(Path(a.folder), campus=a.campus or site.default_campus(), rename=not a.no_rename)
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0
     if a.photos_cmd == "import":

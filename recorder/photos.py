@@ -479,7 +479,7 @@ def assign_photos(index_path: Path, assignments: list[dict], campus: str | None 
         by_base.setdefault(Path(str(p.get("file") or "")).name, []).append(p)
     aliases = campus_aliases(campus)
     known = set(aliases.values())
-    out = {"assigned": 0, "interior": 0, "warnings": [], "errors": [], "not_found": []}
+    out = {"assigned": 0, "interior": 0, "unchanged": 0, "warnings": [], "errors": [], "not_found": []}
     for a in assignments:
         key = a.get("id") or a.get("file")
         if a.get("id"):
@@ -506,6 +506,10 @@ def assign_photos(index_path: Path, assignments: list[dict], campus: str | None 
                 out["errors"].append({"id": key, "floor": floor, "error": "階が整数でない"})
                 continue
         for p in targets:
+            if (p.get("assigned_by") == "staff" and p.get("building") == bid
+                    and bool(p.get("interior")) == interior and (p.get("floor") if interior else None) == floor):
+                out["unchanged"] += 1
+                continue
             cands = p.get("candidates") or []
             if cands:
                 top = min(cands, key=lambda c: c.get("distance_m", 1e9))
@@ -532,3 +536,139 @@ def assign_photos(index_path: Path, assignments: list[dict], campus: str | None 
             out["assigned"] += 1
     save_index(idx, index_path)
     return out
+
+
+# --- 職員がフォルダで振り分ける ---------------------------------------------------------
+
+_FLOOR_RE = re.compile(r"(?:^|[^0-9])(\d{1,2})\s*(?:階|[fF]\b)")
+
+
+def parse_folder_label(label: str, aliases: dict[str, str]) -> dict:
+    """職員が付けたフォルダ名（例「タワー」「共通講義棟南」「主に図書館and本部棟と図書館の間」）を読む。
+
+    別名を長い物から順に探し、見つかった位置の順に棟 id を返す（同じ id は 1 回）。
+    「内装」か「n 階 / nF」があれば内装。棟が 2 つ以上なら決めず、候補として残す。
+    戻り値：{"ids": [...], "interior": bool, "floor": int|None}"""
+    rest = label
+    found: list[tuple[int, str]] = []
+    table = dict(aliases)
+    for bid in list(aliases.values()):
+        table.setdefault(bid, bid)          # 棟 id そのもの（改名後の ASCII 名 "library-honbu" も読める）
+    for name in sorted(table, key=len, reverse=True):
+        if not name:
+            continue
+        pos = rest.find(name)
+        while pos >= 0:
+            found.append((pos, table[name]))
+            rest = rest[:pos] + " " * len(name) + rest[pos + len(name):]
+            pos = rest.find(name)
+    ids: list[str] = []
+    for _, bid in sorted(found):
+        if bid not in ids:
+            ids.append(bid)
+    m = _FLOOR_RE.search(label)
+    floor = int(m.group(1)) if m else None
+    interior = ("内装" in label) or floor is not None
+    return {"ids": ids, "interior": interior, "floor": floor}
+
+
+def _ascii_folder(parsed: dict) -> str | None:
+    """フォルダの ASCII 名（COLMAP 等が日本語の道を嫌うため）。棟が決まらなければ None（名前は変えない）。"""
+    if not parsed["ids"]:
+        return None
+    name = "-".join(parsed["ids"])
+    if parsed["interior"]:
+        name += f"_{parsed['floor']}f" if parsed["floor"] is not None else "_interior"
+    return name
+
+
+def assign_from_folders(day_dir: Path, index_path: Path = INDEX_PATH, campus: str | None = None,
+                        now: str | None = None, rename: bool = True) -> dict:
+    """職員が `data/photos/<日付>/<棟名>/` に手で分けた写真を索引に反映する（staff.html を使わない振り分け方）。
+
+    - フォルダ名を別名表で棟 id にする。1 棟 → assign_photos と同じ書き方（職員の値が勝つ）。
+      2 棟以上（「主に図書館and本部棟と図書館の間」）→ 決めつけず `staff_choices` に候補を残し、棟は仕分け係が選ぶ。
+      読めない名前 → 警告（そのまま）。どの場合も元の名前を `staff_label` に残す。
+    - フォルダは ASCII 名（棟 id）に改名し、索引の `file` を今ある場所に合わせる（動かした写真も basename で追う）。
+    戻り値：{"folders": [...], "paths_updated", "assigned", "unchanged", "choices", "warnings", "errors", "unmatched"}"""
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    day_dir = Path(day_dir)
+    aliases = campus_aliases(campus)
+    report: dict = {"folders": [], "paths_updated": 0, "assigned": 0, "unchanged": 0, "choices": 0,
+                    "warnings": [], "errors": [], "unmatched": []}
+    plans = []
+    for d in sorted(p for p in day_dir.iterdir() if p.is_dir()):
+        files = sorted(f for f in d.iterdir() if f.is_file() and f.suffix.lower() in EXTS)
+        parsed = parse_folder_label(d.name, aliases)
+        new_name = _ascii_folder(parsed) if rename else None
+        plans.append((d, files, parsed, new_name))
+        if not parsed["ids"]:
+            report["warnings"].append({"folder": d.name, "warning": "棟の名前が別名表に無い（索引の staff_label にだけ残す）"})
+    # 1 棟のフォルダは assign_photos で（GPS の検算もそこで）
+    assignments = []
+    for d, files, parsed, _ in plans:
+        if len(parsed["ids"]) == 1:
+            for f in files:
+                assignments.append({"file": f.name, "building": parsed["ids"][0],
+                                    "interior": parsed["interior"], "floor": parsed["floor"]})
+    if assignments:
+        r = assign_photos(index_path, assignments, campus=campus, now=now)
+        report["assigned"] += r["assigned"]
+        report["unchanged"] += r.get("unchanged", 0)
+        report["warnings"] += r["warnings"]
+        report["errors"] += r["errors"]
+        report["unmatched"] += r["not_found"]
+    idx = load_index(index_path)
+    by_base: dict[str, list[dict]] = {}
+    for p in idx["photos"]:
+        by_base.setdefault(Path(str(p.get("file") or "")).name, []).append(p)
+    # 候補だけ残す（2 棟以上）とフォルダ名の記録
+    for d, files, parsed, new_name in plans:
+        for f in files:
+            for p in by_base.get(f.name, []):
+                p["staff_label"] = d.name
+                if len(parsed["ids"]) >= 2 and p.get("staff_choices") != parsed["ids"]:
+                    p["staff_choices"] = list(parsed["ids"])
+                    p["interior"] = parsed["interior"]
+                    if parsed["interior"]:
+                        p["floor"] = parsed["floor"]
+                    note = f"職員のフォルダ「{d.name}」（棟は {'/'.join(parsed['ids'])} のどれか。仕分け係が選ぶ）"
+                    p["notes"] = f"{p['notes']} / {note}" if p.get("notes") else note
+                    report["choices"] += 1
+        report["folders"].append({"folder": d.name, "files": len(files), "ids": parsed["ids"],
+                                  "interior": parsed["interior"], "floor": parsed["floor"],
+                                  "renamed_to": new_name if new_name and new_name != d.name else None})
+    # 改名（同名があれば中身を合流）
+    if rename:
+        for d, files, parsed, new_name in plans:
+            if not new_name or new_name == d.name:
+                continue
+            dst = day_dir / new_name
+            if dst.exists():
+                for f in files:
+                    f.rename(dst / f.name)
+                if not any(d.iterdir()):
+                    d.rmdir()
+            else:
+                d.rename(dst)
+    # 索引の file を今ある場所に合わせる（日付フォルダの下を basename で探す）
+    root = index_path.parent
+    where = {f.name: f for f in day_dir.rglob("*") if f.is_file() and f.suffix.lower() in EXTS}
+    try:
+        prefix = day_dir.relative_to(root).as_posix() + "/"
+    except ValueError:
+        prefix = None
+    for p in idx["photos"]:
+        fp = str(p.get("file") or "")
+        if prefix is None or not fp.startswith(prefix):
+            continue
+        f = where.get(Path(fp).name)
+        if f is None:
+            report["unmatched"].append(p["id"])
+            continue
+        rel = f.relative_to(root).as_posix()
+        if rel != fp:
+            p["file"] = rel
+            report["paths_updated"] += 1
+    save_index(idx, index_path)
+    return report
