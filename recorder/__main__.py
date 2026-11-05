@@ -202,6 +202,14 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--budget-min", type=float, default=None, help="照合の時間の上限（分）。超えたら途中で止め、同じコマンドで続きから")
     q.add_argument("--registry", default=None)
 
+    q = psub.add_parser("locate", help="模型合わせ：GPS を初期値に、写真 1 枚ごとに模型の縁が写真の縁に合う視点を探して登録する（重なり不要）")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--photos", default=None, help="試す写真 id（カンマ区切り。頭だけでも可。省略で棟の GPS 付き未登録全部）")
+    q.add_argument("--max", type=int, default=None)
+    q.add_argument("--radius", type=float, default=None, help="GPS の周りの探索半径 m（既定 40）")
+    q.add_argument("--no-register", action="store_true", help="台帳に書かない（結果と重ね画像だけ）")
+    q.add_argument("--truth", action="store_true", help="登録済みの写真も試し、既知の視点との差を出す（台帳は書かない）")
+    q.add_argument("--registry", default=None)
     q = psub.add_parser("roof", help="航空写真（国土地理院 z18）で屋上の縁・倒れ込み・設備を読む")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--out-dir", default=None, help="roof.json・roof_aerial.png の出力先（省略時は out/<棟id>/）")
@@ -570,6 +578,14 @@ def _photos(a) -> int:
     if a.photos_cmd == "folders":
         res = photos.assign_from_folders(Path(a.folder), campus=a.campus or site.default_campus(), rename=not a.no_rename)
         print(json.dumps(res, ensure_ascii=False, indent=1))
+        return 0
+    if a.photos_cmd == "locate":
+        from . import locate
+
+        ph = [x.strip() for x in a.photos.split(",") if x.strip()] if a.photos else None
+        locate.run(Path(a.building), ph, max_n=a.max, register=not (a.no_register or a.truth),
+                   radius=a.radius or locate.RADIUS_M, registry_path=Path(a.registry) if a.registry else None,
+                   include_registered=a.truth)
         return 0
     if a.photos_cmd == "import":
         sp = site.DATA_SITE / f"{a.campus or site.default_campus()}.json"
