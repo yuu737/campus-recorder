@@ -244,12 +244,15 @@ def test_blender_builds_all_new_parts(tmp_path: Path):
     assert line, r.stdout[-3000:] + r.stderr[-2000:]
     res = json.loads(line[len("RESULT "):])
     # 本体 20×12×13 から、玄関のくり抜き 5×3×3.5 と窓 8 か所（3.1×0.3×2.0）、3 階は奥まりの中のパネル（0.6）の分も彫る
-    assert res["volume"] == pytest.approx(20 * 12 * 13 - 5 * 3 * 3.5 - 8 * 3.1 * 0.3 * 2.0 - 4 * 3.1 * 0.3 * 0.6, abs=0.5)
+    # 組み立て部品（composite_21 ピロティ）の cut：x 16.6〜19.4 × y 9.6〜12（本体の中）× z 0〜3.2
+    assert res["volume"] == pytest.approx(20 * 12 * 13 - 5 * 3 * 3.5 - 8 * 3.1 * 0.3 * 2.0 - 4 * 3.1 * 0.3 * 0.6
+                                          - 2.8 * 2.4 * 3.2, abs=0.5)
     names = res["names"]
     for pre in ("stair_switchback_3_flight0", "stair_switchback_3_canopy", "porch_0_glass", "steps_2_step4",
                 "spandrel_S_", "bandrail_S_", "rail_4_rail_bar", "column_6_column", "rooftop_units_7_unit1",
                 "ceiling_beams_8_beam_a0", "louver_9_blade0", "louver_10_blade0", "planter_11_soil", "planter_12_rim0",
                 "nameplate_13_plate", "nameplate_14_plate", "patch_15_patch", "vestibule_16_glass0", "pergola_17_rafter0",
-                "bridge_18_slab", "curved_glass_19_glass23"):
+                "bridge_18_slab", "curved_glass_19_glass23", "composite_20_slab", "composite_20_coping",
+                "composite_20_round_planter_35", "composite_21_beam1", "composite_21_column"):
         assert any(n.startswith(pre) for n in names), pre
     assert res["ac_z"] == pytest.approx(2.0, abs=1e-4)          # 壁付けの室外機は z0 から

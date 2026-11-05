@@ -13393,6 +13393,1359 @@
    ],
    "imported_at": "2026-11-04T20:51:40",
    "period": "during"
+  },
+  {
+   "id": "20261104_164031587",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/20261104_164031587.jpg",
+   "taken_at": "2026-11-04T16:40:31",
+   "period": "during",
+   "camera": {
+    "make": null,
+    "model": null
+   },
+   "width": 1920,
+   "height": 1080,
+   "orientation": 1,
+   "focal_mm": null,
+   "focal_35mm": null,
+   "gps": null,
+   "heading_deg": null,
+   "heading_ref": null,
+   "checks": {
+    "has_gps": false,
+    "has_heading": false,
+    "has_focal": false,
+    "resolution_ok": false,
+    "sharpness": 1056.6,
+    "brightness": 106.1,
+    "dark_ratio": 0.099,
+    "bright_ratio": 0.015,
+    "edge_touch_top": 0.054,
+    "edge_touch_left": 0.108,
+    "edge_touch_right": 0.094,
+    "blur_suspected": false
+   },
+   "candidates": [],
+   "imported_at": "2026-11-04T22:50:49"
+  },
+  {
+   "id": "PXL_20261104_065927120.MP",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_065927120.MP.jpg",
+   "taken_at": "2026-11-04T15:59:27",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353056,
+    "lon": 136.9764861,
+    "alt": 84.9,
+    "x": 89.8,
+    "y": -21.7,
+    "hdop": null
+   },
+   "heading_deg": 158.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 940.9,
+    "brightness": 111.9,
+    "dark_ratio": 0.029,
+    "bright_ratio": 0.024,
+    "edge_touch_top": 0.017,
+    "edge_touch_left": 0.033,
+    "edge_touch_right": 0.066,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 0.0,
+     "bearing_deg": 192.7,
+     "bearing_diff_deg": 42.7
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 39.2,
+     "bearing_deg": 74.0,
+     "bearing_diff_deg": 76.0
+    },
+    {
+     "building": "b06",
+     "name": "6号館",
+     "distance_m": 64.3,
+     "bearing_deg": 75.9,
+     "bearing_diff_deg": 74.1
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 66.3,
+     "bearing_deg": 225.0,
+     "bearing_diff_deg": 75.0
+    },
+    {
+     "building": "lab4",
+     "name": "研究実験棟Ⅳ",
+     "distance_m": 75.9,
+     "bearing_deg": 126.6,
+     "bearing_diff_deg": 23.4
+    },
+    {
+     "building": "osm-way-1316299591",
+     "name": null,
+     "distance_m": 84.3,
+     "bearing_deg": 129.7,
+     "bearing_diff_deg": 20.3
+    },
+    {
+     "building": "b13",
+     "name": "13号館",
+     "distance_m": 92.9,
+     "bearing_deg": 91.1,
+     "bearing_diff_deg": 58.9
+    },
+    {
+     "building": "osm-way-1304078648",
+     "name": null,
+     "distance_m": 93.3,
+     "bearing_deg": 168.0,
+     "bearing_diff_deg": 18.0
+    },
+    {
+     "building": "osm-way-1304078432",
+     "name": null,
+     "distance_m": 94.9,
+     "bearing_deg": 165.6,
+     "bearing_diff_deg": 15.6
+    },
+    {
+     "building": "osm-way-1304077892",
+     "name": null,
+     "distance_m": 107.7,
+     "bearing_deg": 102.4,
+     "bearing_diff_deg": 47.6
+    },
+    {
+     "building": "osm-way-1304077928",
+     "name": null,
+     "distance_m": 113.4,
+     "bearing_deg": 101.2,
+     "bearing_diff_deg": 48.8
+    },
+    {
+     "building": "osm-way-1304078973",
+     "name": null,
+     "distance_m": 115.8,
+     "bearing_deg": 150.4,
+     "bearing_diff_deg": 0.4
+    },
+    {
+     "building": "osm-way-1304077411",
+     "name": null,
+     "distance_m": 117.9,
+     "bearing_deg": 91.2,
+     "bearing_diff_deg": 58.8
+    },
+    {
+     "building": "osm-way-1304078658",
+     "name": null,
+     "distance_m": 118.8,
+     "bearing_deg": 101.4,
+     "bearing_diff_deg": 48.6
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:49"
+  },
+  {
+   "id": "PXL_20261104_070928590",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_070928590.jpg",
+   "taken_at": "2026-11-04T16:09:28",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1355028,
+    "lon": 136.9754889,
+    "alt": 88.0,
+    "x": -1.0,
+    "y": 0.3,
+    "hdop": null
+   },
+   "heading_deg": 124.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1284.4,
+    "brightness": 105.7,
+    "dark_ratio": 0.053,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.074,
+    "edge_touch_left": 0.054,
+    "edge_touch_right": 0.143,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 7.6,
+     "bearing_deg": 63.1,
+     "bearing_diff_deg": 52.9
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 15.9,
+     "bearing_deg": 133.5,
+     "bearing_diff_deg": 17.5
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 29.7,
+     "bearing_deg": 72.6,
+     "bearing_diff_deg": 43.4
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 39.0,
+     "bearing_deg": 161.4,
+     "bearing_diff_deg": 45.4
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 66.0,
+     "bearing_deg": 97.4,
+     "bearing_diff_deg": 18.6
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 70.1,
+     "bearing_deg": 160.1,
+     "bearing_diff_deg": 44.1
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 73.4,
+     "bearing_deg": 57.3,
+     "bearing_diff_deg": 58.7
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 75.8,
+     "bearing_deg": 120.0,
+     "bearing_diff_deg": 4.0
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 80.5,
+     "bearing_deg": 82.2,
+     "bearing_diff_deg": 33.8
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:49"
+  },
+  {
+   "id": "PXL_20261104_071007945",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_071007945.jpg",
+   "taken_at": "2026-11-04T16:10:07",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1355028,
+    "lon": 136.9754889,
+    "alt": 88.0,
+    "x": -1.0,
+    "y": 0.3,
+    "hdop": null
+   },
+   "heading_deg": 65.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1278.7,
+    "brightness": 117.1,
+    "dark_ratio": 0.04,
+    "bright_ratio": 0.018,
+    "edge_touch_top": 0.079,
+    "edge_touch_left": 0.251,
+    "edge_touch_right": 0.066,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 7.6,
+     "bearing_deg": 63.1,
+     "bearing_diff_deg": 6.1
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 15.9,
+     "bearing_deg": 133.5,
+     "bearing_diff_deg": 76.5
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 29.7,
+     "bearing_deg": 72.6,
+     "bearing_diff_deg": 15.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 42.7,
+     "bearing_deg": 4.1,
+     "bearing_diff_deg": 52.9
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 45.1,
+     "bearing_deg": 31.2,
+     "bearing_diff_deg": 25.8
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 51.4,
+     "bearing_deg": 40.7,
+     "bearing_diff_deg": 16.3
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 66.0,
+     "bearing_deg": 97.4,
+     "bearing_diff_deg": 40.4
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 73.4,
+     "bearing_deg": 57.3,
+     "bearing_diff_deg": 0.3
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 75.8,
+     "bearing_deg": 120.0,
+     "bearing_diff_deg": 63.0
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 80.5,
+     "bearing_deg": 82.2,
+     "bearing_diff_deg": 25.2
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 118.7,
+     "bearing_deg": 19.5,
+     "bearing_diff_deg": 37.5
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:49"
+  },
+  {
+   "id": "PXL_20261104_071023801",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_071023801.jpg",
+   "taken_at": "2026-11-04T16:10:23",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1355028,
+    "lon": 136.9754889,
+    "alt": 88.0,
+    "x": -1.0,
+    "y": 0.3,
+    "hdop": null
+   },
+   "heading_deg": 161.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 949.7,
+    "brightness": 114.3,
+    "dark_ratio": 0.041,
+    "bright_ratio": 0.029,
+    "edge_touch_top": 0.051,
+    "edge_touch_left": 0.067,
+    "edge_touch_right": 0.056,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 7.6,
+     "bearing_deg": 63.1,
+     "bearing_diff_deg": 89.9
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 15.9,
+     "bearing_deg": 133.5,
+     "bearing_diff_deg": 19.5
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 19.9,
+     "bearing_deg": 251.4,
+     "bearing_diff_deg": 98.4
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 29.7,
+     "bearing_deg": 72.6,
+     "bearing_diff_deg": 80.4
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 39.0,
+     "bearing_deg": 161.4,
+     "bearing_diff_deg": 8.4
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 66.0,
+     "bearing_deg": 97.4,
+     "bearing_diff_deg": 55.6
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 70.1,
+     "bearing_deg": 160.1,
+     "bearing_diff_deg": 7.1
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 75.8,
+     "bearing_deg": 120.0,
+     "bearing_diff_deg": 33.0
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 80.5,
+     "bearing_deg": 82.2,
+     "bearing_diff_deg": 70.8
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_073521620",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_073521620.jpg",
+   "taken_at": "2026-11-04T16:35:21",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1356833,
+    "lon": 136.9755472,
+    "alt": 98.0,
+    "x": 4.3,
+    "y": 20.3,
+    "hdop": null
+   },
+   "heading_deg": 84.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1425.9,
+    "brightness": 115.6,
+    "dark_ratio": 0.03,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.024,
+    "edge_touch_left": 0.127,
+    "edge_touch_right": 0.067,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 12.1,
+     "bearing_deg": 121.0,
+     "bearing_diff_deg": 45.0
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 23.0,
+     "bearing_deg": 93.9,
+     "bearing_diff_deg": 17.9
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 25.0,
+     "bearing_deg": 42.8,
+     "bearing_diff_deg": 33.2
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 32.7,
+     "bearing_deg": 52.7,
+     "bearing_diff_deg": 23.3
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 60.5,
+     "bearing_deg": 67.3,
+     "bearing_diff_deg": 8.7
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 77.7,
+     "bearing_deg": 93.5,
+     "bearing_diff_deg": 17.5
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 114.1,
+     "bearing_deg": 36.0,
+     "bearing_diff_deg": 40.0
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_073547139",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_073547139.jpg",
+   "taken_at": "2026-11-04T16:35:47",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1356833,
+    "lon": 136.9755472,
+    "alt": 98.0,
+    "x": 4.3,
+    "y": 20.3,
+    "hdop": null
+   },
+   "heading_deg": 346.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 771.0,
+    "brightness": 123.4,
+    "dark_ratio": 0.033,
+    "bright_ratio": 0.005,
+    "edge_touch_top": 0.0,
+    "edge_touch_left": 0.044,
+    "edge_touch_right": 0.041,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 16.4,
+     "bearing_deg": 301.6,
+     "bearing_diff_deg": 36.4
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 22.3,
+     "bearing_deg": 0.7,
+     "bearing_diff_deg": 22.7
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 25.0,
+     "bearing_deg": 42.8,
+     "bearing_diff_deg": 64.8
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 46.3,
+     "bearing_deg": 283.6,
+     "bearing_diff_deg": 54.4
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 98.3,
+     "bearing_deg": 20.5,
+     "bearing_diff_deg": 42.5
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 114.1,
+     "bearing_deg": 36.0,
+     "bearing_diff_deg": 58.0
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_073618326",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_073618326.jpg",
+   "taken_at": "2026-11-04T16:36:18",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1356833,
+    "lon": 136.9755472,
+    "alt": 98.0,
+    "x": 4.3,
+    "y": 20.3,
+    "hdop": null
+   },
+   "heading_deg": 27.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 761.2,
+    "brightness": 115.1,
+    "dark_ratio": 0.029,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.0,
+    "edge_touch_left": 0.082,
+    "edge_touch_right": 0.192,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 12.1,
+     "bearing_deg": 121.0,
+     "bearing_diff_deg": 102.0
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 22.3,
+     "bearing_deg": 0.7,
+     "bearing_diff_deg": 18.3
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 23.0,
+     "bearing_deg": 93.9,
+     "bearing_diff_deg": 74.9
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 25.0,
+     "bearing_deg": 42.8,
+     "bearing_diff_deg": 23.8
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 32.7,
+     "bearing_deg": 52.7,
+     "bearing_diff_deg": 33.7
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 60.5,
+     "bearing_deg": 67.3,
+     "bearing_diff_deg": 48.3
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 98.3,
+     "bearing_deg": 20.5,
+     "bearing_diff_deg": 1.5
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 114.1,
+     "bearing_deg": 36.0,
+     "bearing_diff_deg": 17.0
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_073740937",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_073740937.jpg",
+   "taken_at": "2026-11-04T16:37:40",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1356361,
+    "lon": 136.9753278,
+    "alt": 88.09,
+    "x": -15.7,
+    "y": 15.1,
+    "hdop": null
+   },
+   "heading_deg": 247.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 892.6,
+    "brightness": 91.0,
+    "dark_ratio": 0.063,
+    "bright_ratio": 0.006,
+    "edge_touch_top": 0.048,
+    "edge_touch_left": 0.172,
+    "edge_touch_right": 0.045,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 5.7,
+     "bearing_deg": 206.8,
+     "bearing_diff_deg": 32.2
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 31.2,
+     "bearing_deg": 294.8,
+     "bearing_diff_deg": 55.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 39.9,
+     "bearing_deg": 260.1,
+     "bearing_diff_deg": 21.1
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 81.5,
+     "bearing_deg": 272.5,
+     "bearing_diff_deg": 33.5
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 81.8,
+     "bearing_deg": 284.9,
+     "bearing_diff_deg": 45.9
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 106.2,
+     "bearing_deg": 273.9,
+     "bearing_diff_deg": 34.9
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_074042680",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_074042680.jpg",
+   "taken_at": "2026-11-04T16:40:42",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.13565,
+    "lon": 136.97525,
+    "alt": 89.45,
+    "x": -22.8,
+    "y": 16.7,
+    "hdop": null
+   },
+   "heading_deg": 244.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 938.3,
+    "brightness": 89.2,
+    "dark_ratio": 0.058,
+    "bright_ratio": 0.006,
+    "edge_touch_top": 0.025,
+    "edge_touch_left": 0.134,
+    "edge_touch_right": 0.042,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 191.0,
+     "bearing_diff_deg": 45.0
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 24.2,
+     "bearing_deg": 296.9,
+     "bearing_diff_deg": 60.9
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 33.7,
+     "bearing_deg": 257.1,
+     "bearing_diff_deg": 21.1
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 74.3,
+     "bearing_deg": 271.7,
+     "bearing_diff_deg": 35.7
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 74.5,
+     "bearing_deg": 285.0,
+     "bearing_diff_deg": 49.0
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 99.0,
+     "bearing_deg": 273.3,
+     "bearing_diff_deg": 37.3
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 119.8,
+     "bearing_deg": 205.9,
+     "bearing_diff_deg": 30.1
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_074057880",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_074057880.jpg",
+   "taken_at": "2026-11-04T16:40:57",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.13565,
+    "lon": 136.97525,
+    "alt": 89.45,
+    "x": -22.8,
+    "y": 16.7,
+    "hdop": null
+   },
+   "heading_deg": 185.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 443.2,
+    "brightness": 95.7,
+    "dark_ratio": 0.079,
+    "bright_ratio": 0.004,
+    "edge_touch_top": 0.098,
+    "edge_touch_left": 0.002,
+    "edge_touch_right": 0.004,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 191.0,
+     "bearing_diff_deg": 14.0
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 33.7,
+     "bearing_deg": 257.1,
+     "bearing_diff_deg": 80.1
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 34.5,
+     "bearing_deg": 97.7,
+     "bearing_diff_deg": 79.3
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 42.9,
+     "bearing_deg": 130.9,
+     "bearing_diff_deg": 46.1
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 59.0,
+     "bearing_deg": 151.0,
+     "bearing_diff_deg": 26.0
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 88.8,
+     "bearing_deg": 152.4,
+     "bearing_diff_deg": 24.6
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 101.1,
+     "bearing_deg": 121.5,
+     "bearing_diff_deg": 55.5
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 119.8,
+     "bearing_deg": 205.9,
+     "bearing_diff_deg": 28.9
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_074148938",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_074148938.jpg",
+   "taken_at": "2026-11-04T16:41:48",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1356167,
+    "lon": 136.9754861,
+    "alt": 77.9,
+    "x": -1.2,
+    "y": 12.9,
+    "hdop": null
+   },
+   "heading_deg": 47.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1060.7,
+    "brightness": 108.8,
+    "dark_ratio": 0.064,
+    "bright_ratio": 0.002,
+    "edge_touch_top": 0.007,
+    "edge_touch_left": 0.117,
+    "edge_touch_right": 0.183,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 14.1,
+     "bearing_deg": 95.3,
+     "bearing_diff_deg": 56.3
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 27.2,
+     "bearing_deg": 85.6,
+     "bearing_diff_deg": 46.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 30.4,
+     "bearing_deg": 4.9,
+     "bearing_diff_deg": 34.1
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 34.1,
+     "bearing_deg": 41.3,
+     "bearing_diff_deg": 2.3
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 41.8,
+     "bearing_deg": 49.9,
+     "bearing_diff_deg": 10.9
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 68.1,
+     "bearing_deg": 64.3,
+     "bearing_diff_deg": 25.3
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 107.4,
+     "bearing_deg": 21.8,
+     "bearing_diff_deg": 17.2
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "PXL_20261104_074357308",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/PXL_20261104_074357308.jpg",
+   "taken_at": "2026-11-04T16:43:57",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1352361,
+    "lon": 136.9749722,
+    "alt": 82.01,
+    "x": -48.2,
+    "y": -29.2,
+    "hdop": null
+   },
+   "heading_deg": 249.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1164.6,
+    "brightness": 101.9,
+    "dark_ratio": 0.065,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.142,
+    "edge_touch_left": 0.149,
+    "edge_touch_right": 0.096,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 67.3,
+     "bearing_deg": 203.5,
+     "bearing_diff_deg": 37.5
+    },
+    {
+     "building": "osm-way-1304065520",
+     "name": null,
+     "distance_m": 91.7,
+     "bearing_deg": 226.1,
+     "bearing_diff_deg": 14.9
+    },
+    {
+     "building": "osm-way-1304065209",
+     "name": null,
+     "distance_m": 100.9,
+     "bearing_deg": 222.9,
+     "bearing_diff_deg": 18.1
+    }
+   ],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "図書館屋上1",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/図書館屋上1.jpg",
+   "taken_at": "2026-11-04T16:17:17",
+   "period": "during",
+   "camera": {
+    "make": null,
+    "model": null
+   },
+   "width": 1920,
+   "height": 1080,
+   "orientation": 1,
+   "focal_mm": null,
+   "focal_35mm": null,
+   "gps": null,
+   "heading_deg": null,
+   "heading_ref": null,
+   "checks": {
+    "has_gps": false,
+    "has_heading": false,
+    "has_focal": false,
+    "resolution_ok": false,
+    "sharpness": 182.6,
+    "brightness": 109.0,
+    "dark_ratio": 0.027,
+    "bright_ratio": 0.02,
+    "edge_touch_top": 0.093,
+    "edge_touch_left": 0.0,
+    "edge_touch_right": 0.0,
+    "blur_suspected": false
+   },
+   "candidates": [],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "図書館屋上2",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/図書館屋上2.jpg",
+   "taken_at": "2026-11-04T16:17:46",
+   "period": "during",
+   "camera": {
+    "make": null,
+    "model": null
+   },
+   "width": 1920,
+   "height": 1080,
+   "orientation": 1,
+   "focal_mm": null,
+   "focal_35mm": null,
+   "gps": null,
+   "heading_deg": null,
+   "heading_ref": null,
+   "checks": {
+    "has_gps": false,
+    "has_heading": false,
+    "has_focal": false,
+    "resolution_ok": false,
+    "sharpness": 493.5,
+    "brightness": 141.4,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.04,
+    "edge_touch_top": 0.109,
+    "edge_touch_left": 0.089,
+    "edge_touch_right": 0.048,
+    "blur_suspected": false
+   },
+   "candidates": [],
+   "imported_at": "2026-11-04T22:50:50"
+  },
+  {
+   "id": "本部棟屋上",
+   "building": null,
+   "face": null,
+   "notes": "",
+   "file": "20261104/本部棟屋上.jpg",
+   "taken_at": "2026-11-04T16:16:52",
+   "period": "during",
+   "camera": {
+    "make": null,
+    "model": null
+   },
+   "width": 1920,
+   "height": 1080,
+   "orientation": 1,
+   "focal_mm": null,
+   "focal_35mm": null,
+   "gps": null,
+   "heading_deg": null,
+   "heading_ref": null,
+   "checks": {
+    "has_gps": false,
+    "has_heading": false,
+    "has_focal": false,
+    "resolution_ok": false,
+    "sharpness": 737.2,
+    "brightness": 120.7,
+    "dark_ratio": 0.019,
+    "bright_ratio": 0.073,
+    "edge_touch_top": 0.182,
+    "edge_touch_left": 0.134,
+    "edge_touch_right": 0.128,
+    "blur_suspected": false
+   },
+   "candidates": [],
+   "imported_at": "2026-11-04T22:50:50"
   }
  ]
 }

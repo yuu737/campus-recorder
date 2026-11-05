@@ -1170,15 +1170,21 @@ def build_building(b: dict, col) -> dict:
             else:
                 fp0, fu, fn, _L = face_frame(faces[fr])
                 frame, fm = (fp0, fu, fn), mats.by_face.get(fr, mats.main)
-            if cut is not None:
-                # くり抜き（玄関の軒下）。窓とは別に 1 回ずつ当てる（boolean_cut が体積を検査する）
-                cutters.append(prim_object(f"cut_{t}_{i}", cut, frame, col))
+            for k, c in enumerate(parts_geom.cut_list(cut)):
+                # くり抜き（玄関の軒下・組み立て部品の cut: true）。窓とは別に 1 回ずつ当てる（boolean_cut が体積を検査する）
+                cutters.append(prim_object(f"cut_{t}_{i}" + (f"_{k}" if k else ""), c, frame, col))
             extras += emit_prims(name, prims, frame, col, mats, fm)
 
     for k, (pname, pst, pface, start) in enumerate(part_marks):       # 部品ごとに増えた物へ印
         end = part_marks[k + 1][3] if k + 1 < len(part_marks) else len(extras)
+        pt = (b.get("parts") or [])[k]
         for e in extras[start:end]:
             tag(e, pst, face=pface, part=pname)
+            if pt.get("type") == "composite":
+                # 組み立て部品は glb の extras に名前と根拠の写真も出す（歩く画面の「根拠で見る」）
+                e["part_label"] = str(pt.get("name", ""))
+                if pt.get("evidence"):
+                    e["part_evidence"] = ",".join(map(str, pt["evidence"]))
 
     if cutters:
         boolean_cut(body, cutters)

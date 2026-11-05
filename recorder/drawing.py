@@ -316,20 +316,28 @@ def elevation_svg(b: dict, face_id: str) -> str:
                 unknown_lines.append(f"{pt.get('name', t)}（parts[{i}]）の寸法が未確定で描けません")
             continue
         fr, cut, prims = got
+        cut_q: list = []
         if own:
             items = [(_prim_depth(pr), parts_geom.elevation_outline(pr), pr) for pr in prims]
+            cut_q = [parts_geom.elevation_outline(c) for c in parts_geom.cut_list(cut)]
         else:
             pax = parts_geom.frame_axes(fr, faces_all)
+            # 世界座標の組み立てが cut でこの面の壁を彫っていれば、彫った所の枠を描き、その奥の素片（ピロティの梁など）も描く
+            front = 0.05
+            for c in parts_geom.cut_list(cut):
+                v = parts_geom.to_frame(parts_geom.prim_vertices(c, pax), fax)
+                if min(q[1] for q in v) < 0 < max(q[1] for q in v) and max(q[0] for q in v) > 0 and min(q[0] for q in v) < L:
+                    cut_q.append(parts_geom.hull([(q[0], q[2]) for q in v]))
+                    front = min(front, min(q[1] for q in v))
             items = []
             for pr in prims:
                 v = parts_geom.to_frame(parts_geom.prim_vertices(pr, pax), fax)
-                if max(q[1] for q in v) <= 0.05 or max(q[0] for q in v) <= 0 or min(q[0] for q in v) >= L:
+                if max(q[1] for q in v) <= front or max(q[0] for q in v) <= 0 or min(q[0] for q in v) >= L:
                     continue
                 items.append((max(q[1] for q in v), parts_geom.hull([(q[0], q[2]) for q in v]), pr))
-            if not items:
+            if not items and not cut_q:
                 continue
-        if cut:     # くり抜き（玄関の軒下）：引っ込みの枠を破線で（一番奥）
-            q = parts_geom.elevation_outline(cut)
+        for q in cut_q:     # くり抜き（玄関の軒下・組み立ての cut）：引っ込みの枠を破線で（一番奥）
             part_items.append((-1e9, t, q, None))
         part_items += [(d, t, q, pr) for d, q, pr in items]
     # 部品をまたいで奥から順に（壁の素材の板 patch が外階段の上に描かれないように）

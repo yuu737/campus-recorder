@@ -212,6 +212,8 @@ PART_REQUIRED = {
     "pergola": ("polygon", "z0", "height", "post_pitch", "beam_pitch"),
     "bridge": ("from", "to", "z_from", "z_to", "width", "height"),
     "curved_glass": ("face", "along0", "along1", "radius", "z0", "z1", "mullion_pitch"),
+    # 11/5 語彙に無い形の組み立て（parts_geom.composite）。寸法は素片ごとの Measurement か、全体に 1 つの status/evidence
+    "composite": ("name", "primitives"),
 }
 # 文字の選択肢（鍵: 許す値）。省略時は先頭の値
 PART_ENUMS = {
@@ -253,6 +255,8 @@ def check_values(obj, where: str) -> list[str]:
 def check_new_part(pt: dict, where: str) -> list[str]:
     t = pt.get("type")
     errs: list[str] = []
+    if t == "composite":
+        return _check_composite(pt, where)
     for k in PART_REQUIRED.get(t, ()):
         if k not in pt:
             errs.append(f"{where}: {k} がありません")
@@ -307,6 +311,94 @@ def check_new_part(pt: dict, where: str) -> list[str]:
                 errs.append(f"{where}.units[{i}]: center の箱には w と d が要ります")
     if t == "column" and pt.get("section", "round") not in ("round", "square"):
         errs.append(f"{where}: section は round か square です")
+    return errs
+
+
+# 組み立て部品（composite）の形ごとの必須の鍵。世界座標の別名 x / y / polygon_xy は s / d / polygon_sd と同じ。
+COMPOSITE_SHAPE_KEYS = {"box": ("s", "d", "z"), "wedge": ("s", "d", "z"), "cylinder": ("at", "r", "z"),
+                        "prism": ("polygon_sd", "z"), "arc_wall": ("center", "r", "deg", "z", "t")}
+_COMPOSITE_ALIASES = {"x": "s", "y": "d", "polygon_xy": "polygon_sd"}
+_COMPOSITE_PAIRS = ("s", "d", "z", "at", "center", "deg")
+_COMPOSITE_WORDS = ("shape", "name", "material", "cut", "rise", "seg")      # 寸法でない鍵
+
+
+def _check_composite(pt: dict, where: str) -> list[str]:
+    """組み立て部品の検査。全体に status があれば（まとめの形）素片の裸の数を許し、その status の規則を全体に当てる。
+    無ければ素片の数は全部 Measurement（根拠付き）。どちらも部品なので仮説（basis）は不可。"""
+    errs: list[str] = []
+    if not isinstance(pt.get("name"), str) or not pt.get("name"):
+        errs.append(f"{where}: name（何の組み立てか。デッキ・ピロティの天井 など）がありません")
+    prims = pt.get("primitives")
+    if not isinstance(prims, list) or not prims:
+        errs.append(f"{where}: primitives（素片の並び）がありません")
+        prims = []
+    if "basis" in pt or "hypothesis" in pt:
+        errs.append(f"{where}: 部品は仮説で作らない（basis/hypothesis は使えません。写真に写っている物だけ置く）")
+    grouped = "status" in pt
+    if grouped:
+        st = pt.get("status")
+        if st not in STATUSES:
+            errs.append(f"{where}: status が不正です（{st}）")
+        elif st == "measured" and not pt.get("evidence"):
+            errs.append(f"{where}: measured なのに根拠（evidence）がありません")
+        elif st == "estimated":
+            if not pt.get("evidence"):
+                errs.append(f"{where}: estimated の組み立ても根拠の写真 id（evidence）が要ります（写っている物だけ置く）")
+            if not (pt.get("method") or pt.get("note")):
+                errs.append(f"{where}: estimated なのに推定の仕方（method か note）がありません")
+        tol = pt.get("tol")
+        if tol is not None and not (isinstance(tol, (int, float)) and not isinstance(tol, bool) and tol >= 0):
+            errs.append(f"{where}: tol は 0 以上の数です（{tol!r}）")
+    if "along" in pt:
+        if not pt.get("face"):
+            errs.append(f"{where}: along は face に付ける時だけ使えます")
+        if not grouped:
+            errs += check_values(pt["along"], f"{where}.along")
+        elif isinstance(pt["along"], dict):
+            errs += Measurement.from_json(pt["along"]).problems(f"{where}.along")
+    for i, raw in enumerate(prims):
+        w = f"{where}.primitives[{i}]"
+        if not isinstance(raw, dict):
+            errs.append(f"{w}: 素片は {{\"shape\", …}} の形です")
+            continue
+        pr = {_COMPOSITE_ALIASES.get(k, k): v for k, v in raw.items()}
+        sh = pr.get("shape")
+        if sh not in COMPOSITE_SHAPE_KEYS:
+            errs.append(f"{w}: shape は {' / '.join(COMPOSITE_SHAPE_KEYS)} のどれかです（{sh!r}）")
+            continue
+        w = f"{where}.primitives[{i}:{sh}]"
+        for k in COMPOSITE_SHAPE_KEYS[sh]:
+            if k not in pr:
+                errs.append(f"{w}: {k} がありません")
+        for k in _COMPOSITE_PAIRS:
+            if k in pr and not (isinstance(pr[k], list) and len(pr[k]) == 2):
+                errs.append(f"{w}: {k} は 2 つの値の並びです")
+        if "polygon_sd" in pr and not (isinstance(pr["polygon_sd"], list) and len(pr["polygon_sd"]) >= 3
+                                       and all(isinstance(q, list) and len(q) == 2 for q in pr["polygon_sd"])):
+            errs.append(f"{w}: polygon_sd は [s, d] の 3 点以上の並びです")
+        if sh == "wedge" and pr.get("rise", "+s") not in ("+s", "-s", "+d", "-d"):
+            errs.append(f"{w}: rise は +s / -s / +d / -d のどれかです（{pr.get('rise')!r}）")
+        if "material" in pr and not isinstance(pr["material"], str):
+            errs.append(f"{w}: material は素材の名前か asset:<id> です")
+        if "cut" in pr and not isinstance(pr["cut"], bool):
+            errs.append(f"{w}: cut は true / false です")
+        dims = {k: v for k, v in pr.items() if k not in _COMPOSITE_WORDS}
+        if grouped:
+            # まとめの形：裸の数は可。中に Measurement があればその規則で
+            def walk(o, ww):
+                if isinstance(o, dict):
+                    if "status" in o and "value" in o:
+                        errs.extend(Measurement.from_json(o).problems(ww))
+                        if "basis" in o:
+                            errs.append(f"{ww}: 部品は仮説で作らない（basis は使えません）")
+                elif isinstance(o, list):
+                    for j, v in enumerate(o):
+                        walk(v, f"{ww}[{j}]")
+            for k, v in dims.items():
+                walk(v, f"{w}.{k}")
+        else:
+            # 素片ごとの形：座標の鍵（center など）も寸法として調べる
+            errs += check_values({("_" + k if k in COORD_KEYS else k): v for k, v in dims.items()}, w)
     return errs
 
 
@@ -647,6 +739,9 @@ def part_name(pt: dict, i: int) -> str:
 
 def part_state(pt: dict) -> str:
     vals = list(iter_values(pt))
+    if pt.get("type") == "composite" and pt.get("status") in STATUSES:
+        # 組み立て部品のまとめの形：全体の status を 1 つの値として数える
+        vals.append({"value": 0 if pt["status"] != "unknown" else None, "status": pt["status"]})
     return combine_state(vals, any(_known(m) for m in vals))
 
 

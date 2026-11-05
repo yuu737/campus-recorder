@@ -1705,6 +1705,424 @@
     "method": "テスト用の値（架空の棟）",
     "note": ""
    }
+  },
+  {
+   "type": "composite",
+   "name": "デッキ",
+   "face": "W",
+   "along": 0.0,
+   "status": "estimated",
+   "evidence": [
+    "TEST_DECK_1"
+   ],
+   "tol": 0.3,
+   "method": "テスト用の値（架空の棟）。比率と写真 1 枚から",
+   "primitives": [
+    {
+     "shape": "box",
+     "name": "slab",
+     "s": [
+      0,
+      12
+     ],
+     "d": [
+      0,
+      2.2
+     ],
+     "z": [
+      8.6,
+      8.9
+     ]
+    },
+    {
+     "shape": "box",
+     "name": "parapet",
+     "s": [
+      0,
+      12
+     ],
+     "d": [
+      2.0,
+      2.2
+     ],
+     "z": [
+      8.9,
+      10.0
+     ],
+     "material": "tile"
+    },
+    {
+     "shape": "wedge",
+     "name": "coping",
+     "s": [
+      0,
+      12
+     ],
+     "d": [
+      2.0,
+      2.2
+     ],
+     "z": [
+      10.0,
+      10.06
+     ],
+     "rise": "-d",
+     "material": "coping"
+    },
+    {
+     "shape": "cylinder",
+     "name": "post0",
+     "at": [
+      0.5,
+      1.8
+     ],
+     "r": 0.2,
+     "z": [
+      0,
+      8.6
+     ]
+    },
+    {
+     "shape": "cylinder",
+     "name": "post1",
+     "at": [
+      11.5,
+      1.8
+     ],
+     "r": 0.2,
+     "z": [
+      0,
+      8.6
+     ]
+    },
+    {
+     "shape": "arc_wall",
+     "name": "round_planter",
+     "center": [
+      6.0,
+      1.0
+     ],
+     "r": 0.5,
+     "deg": [
+      0,
+      360
+     ],
+     "z": [
+      8.9,
+      9.4
+     ],
+     "t": 0.1,
+     "material": "brick"
+    }
+   ]
+  },
+  {
+   "type": "composite",
+   "name": "ピロティの天井の梁",
+   "primitives": [
+    {
+     "shape": "box",
+     "name": "void",
+     "x": [
+      {
+       "value": 16.6,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 19.4,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "y": [
+      {
+       "value": 9.6,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 12.1,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "z": [
+      {
+       "value": 0.0,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 3.2,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "cut": true
+    },
+    {
+     "shape": "box",
+     "name": "beam0",
+     "x": [
+      {
+       "value": 16.6,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 19.4,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "y": [
+      {
+       "value": 10.05,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 10.35,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "z": [
+      {
+       "value": 2.7,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 3.2,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "material": "white"
+    },
+    {
+     "shape": "box",
+     "name": "beam1",
+     "x": [
+      {
+       "value": 16.6,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 19.4,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "y": [
+      {
+       "value": 11.05,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 11.35,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "z": [
+      {
+       "value": 2.7,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 3.2,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "material": "white"
+    },
+    {
+     "shape": "prism",
+     "name": "column",
+     "polygon_xy": [
+      [
+       {
+        "value": 17.85,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       },
+       {
+        "value": 10.85,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       }
+      ],
+      [
+       {
+        "value": 18.15,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       },
+       {
+        "value": 10.85,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       }
+      ],
+      [
+       {
+        "value": 18.15,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       },
+       {
+        "value": 11.15,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       }
+      ],
+      [
+       {
+        "value": 17.85,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       },
+       {
+        "value": 11.15,
+        "unit": "m",
+        "tol": null,
+        "status": "estimated",
+        "evidence": [],
+        "method": "テスト用の値（架空の棟）",
+        "note": ""
+       }
+      ]
+     ],
+     "z": [
+      {
+       "value": 0.0,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      },
+      {
+       "value": 2.7,
+       "unit": "m",
+       "tol": null,
+       "status": "estimated",
+       "evidence": [],
+       "method": "テスト用の値（架空の棟）",
+       "note": ""
+      }
+     ],
+     "material": "concrete"
+    }
+   ]
   }
  ],
  "photos": [],

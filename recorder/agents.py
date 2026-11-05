@@ -176,16 +176,23 @@ def step_task(step: str, building_id: str, photos_folder: str | None = None, cwd
                  f"（両端が入らない面は目印で 2 枚をつなぐ）。決まらない面は unknown と requests。出力 {out}/kazoe_<面id>.json。",
         "sokuryo": f"{head} 入力：{out}/kazoe_*.json、物差し台帳 data/rulers.json、足元（PLATEAU）data/site/tempaku.json。"
                    "`photos rectify`（複数面は --roi）→ `photos measure`（片端ずつの面は `photos stitch`）で階高・柱間隔を m に。"
-                   f"必ず 2 つ目の物差しで検算し差 % を method に。出力 {out}/sokuryo_<面id>.json（正面化画像は out/rectified/）。",
-        "sekkei": f"{head} 入力：{out}/kansatsu_*・kazoe_*・sokuryo_*.json と out/photos/shiwake_{b}.json。"
+                   f"必ず 2 つ目の物差しで検算し差 % を method に。最後に登録と面の展開：棟 JSON が無ければ `recorder new {b} --from-site`、"
+                   f"正面化した写真を `photos compare`（--px-per-m に測った縮尺）→ `photos register`（平らでない写真は `photos register-chain {j}`）、"
+                   f"`recorder coverage {j}` で {out}/coverage_<面>_photo.png（設計係の製図板）を出す。"
+                   f"出力 {out}/sokuryo_<面id>.json（正面化画像は out/rectified/、registered・not_registered・face_photo 付き）。",
+        "sekkei": f"{head} 入力：{out}/kansatsu_*・kazoe_*・sokuryo_*.json、out/photos/shiwake_{b}.json、"
+                  f"面の写真 {out}/coverage_<面>_photo.png と {out}/coverage.json（製図板。px を数えて m に）。"
                   f"{design} を新しく作り（形は既存の scripts/design_*.py、土台は recorder.skeleton.from_site_cli(\"{b}\")＝"
                   f"`recorder new {b} --from-site` と同じ物）、実行して {j} を出す。JSON を手で書かない。"
                   f"部品は手順書「生成器の教訓」の語彙（見本 tests/fixtures/parts_building.json）、屋上は `recorder photos roof {j}`。"
-                  f"`recorder validate {j}` → `recorder run {j} --fast` が通るまで。寸法の無い物は塊にせず requests。"
+                  f"語彙に無い形は composite で組む。観察票の 1 m 以上の物で写真に写っている物は 1 枚からでも estimated で必ず置く"
+                  f"（tol は値の 20〜30%、根拠の写真 id）。写っていない面は仮説か unknown と requests、部品は仮説で作らない。"
+                  f"`recorder validate {j}` → `recorder run {j} --fast` が通るまで。"
                   f"出力 {out}/sekkei_summary.json（measured/estimated/unknown の件数と requests）。",
         "kenshu": f"{head} 入力：{j}、{design}、{out}/ の生成物、data/photos/registry.json。"
-                  f"未登録の写真は `photos compare` → `photos register` で登録し、`recorder recheck {j} --fast` → "
-                  f"`recorder photoproj {j} --fast` → 検収 C（屋上は航空写真）でずれと意味の不足を見る。"
+                  f"写真の登録と面の展開は測量係が済ませている。`recorder recheck {j} --fast` から始め、測量係が登録できなかった写真・"
+                  f"後から届いた写真だけ `photos register-chain` か `photos compare` → `photos register` で登録し直して "
+                  f"`recorder photoproj {j} --fast` → 検収 C（屋上は航空写真）でずれと意味の不足を見る。写真にあって模型に無い 1 m 以上の物は自分で足す。"
                   f"直すのは {design} だけ（再実行 → validate → recheck）。2 回で収束しなければ止めて撮影依頼。"
                   f"最後に `recorder coverage {j}`。出力 {out}/kenshu_<写真id>.json と {out}/kenshu_summary.json（面ごとの合否・直した値・requests）。",
     }

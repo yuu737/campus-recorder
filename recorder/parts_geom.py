@@ -822,11 +822,127 @@ def curved_glass(pt: dict, face: dict | None, V=plain, tag="curved_glass") -> li
     return out
 
 
+# --- 組み立て部品（composite）：語彙に無い形を、箱・くさび・円柱・柱体・円弧の壁の組み合わせで書く ------------
+# {"type": "composite", "name": "デッキ", "face": "f0", "along": m, "evidence": [...], "status": "estimated", "method": "…",
+#  "tol": 0.3, "primitives": [{"shape": "box", "s": [0, 12], "d": [-2.0, 0], "z": [6.8, 7.1]}, …]}
+# 座標：face があれば面の座標（s＝面に沿って along からの m、d＝面の法線・外向き正、z＝棟の z=0 からの m）。
+#       face が無ければ世界座標（x, y, z。鍵は x / y / polygon_xy でも s / d / polygon_sd でもよい）。
+# 形（shape）：
+#   box       s:[s0,s1] d:[d0,d1] z:[z0,z1]
+#   wedge     box と同じ範囲の三角柱。rise（"+s"/"-s"/"+d"/"-d"）の向きに z0 から z1 へ上がる。t があれば厚さ t の斜めの板（斜路）
+#   cylinder  at:[s,d] r z:[z0,z1]（seg：分割数、既定 16）
+#   prism     polygon_sd:[[s,d],…] z:[z0,z1]
+#   arc_wall  center:[s,d] r（壁の中心線の半径） deg:[a0,a1]（0°＝+s、90°＝+d） z:[z0,z1] t（厚さ）
+# 各形に material（素材の名前か asset:<id>、既定 concrete。"tile" は面の仕上げ）と cut: true（壁から彫る。置かない）。
+# 寸法は Measurement（根拠付き）か、composite 全体に 1 つの status / evidence / method / tol を付けて裸の数（どちらも validate が通る）。
+COMPOSITE_SHAPES = ("box", "wedge", "cylinder", "prism", "arc_wall")
+COMPOSITE_RISE = ("+s", "-s", "+d", "-d")
+COMPOSITE_ALIASES = {"x": "s", "y": "d", "polygon_xy": "polygon_sd"}
+
+
+def composite_prim_norm(pr: dict) -> dict:
+    """世界座標の別名（x / y / polygon_xy）を s / d / polygon_sd に揃えた写し。"""
+    return {COMPOSITE_ALIASES.get(k, k): v for k, v in pr.items()}
+
+
+def composite(pt: dict, face: dict | None, V=plain, tag="composite"):
+    """組み立て部品。返り値 (彫る素片の並び, 置く素片の並び)。寸法が unknown の素片はその素片だけ置かない（V に記録）。"""
+    if pt.get("status") == "unknown":
+        V(None, None, f"{tag}（{pt.get('name', '')}）", "status が unknown。置かなかった")
+        return [], []
+    A = float(V(pt.get("along"), 0.0)) if face is not None else 0.0
+    cuts, out = [], []
+    for i, raw in enumerate(pt.get("primitives") or []):
+        pr = composite_prim_norm(raw)
+        sh = pr.get("shape")
+        nm = str(pr.get("name") or f"{i}_{sh}")
+        where = f"{tag}.primitives[{i}:{sh}]"
+
+        def num(m, what):
+            v = V(m, None, f"{where} の {what}", f"{what} が unknown。この素片を置かなかった")
+            return None if v is None else float(v)
+
+        def rng(key):
+            r = pr.get(key)
+            if not isinstance(r, (list, tuple)) or len(r) != 2:
+                return None
+            a, b = num(r[0], key), num(r[1], key)
+            return None if a is None or b is None else (min(a, b), max(a, b))
+
+        z = rng("z")
+        mat = pr.get("material", "concrete")
+        got: list[dict] = []
+        if z is None:
+            pass
+        elif sh == "box":
+            s, d = rng("s"), rng("d")
+            if s and d:
+                got = [rect_prism(nm, A + s[0], A + s[1], d[0], d[1], z[0], z[1], mat)]
+        elif sh == "wedge":
+            s, d = rng("s"), rng("d")
+            rise = pr.get("rise", "+s")
+            t = num(pr["t"], "t") if "t" in pr else None
+            if s and d and rise in COMPOSITE_RISE:
+                lo, hi = (s if rise[1] == "s" else d)
+                up = rise[0] == "+"                    # + は hi 側が高い
+                z0, z1 = z
+                if t is None:
+                    sec = [(lo, z0), (hi, z0), (hi, z1)] if up else [(lo, z0), (hi, z0), (lo, z1)]
+                elif up:
+                    sec = [(lo, z0), (hi, z1 - t), (hi, z1), (lo, z0 + t)]
+                else:
+                    sec = [(lo, z1 - t), (hi, z0), (hi, z0 + t), (lo, z1)]
+                if rise[1] == "s":
+                    got = [P("ext_a", nm, [(A + a, zz) for a, zz in sec], d[0], d[1], mat)]
+                else:
+                    got = [P("ext_n", nm, sec, A + s[0], A + s[1], mat)]
+        elif sh == "cylinder":
+            at, r = pr.get("at"), num(pr.get("r"), "r")
+            if isinstance(at, (list, tuple)) and len(at) == 2 and r:
+                cs, cd = num(at[0], "at"), num(at[1], "at")
+                if cs is not None and cd is not None:
+                    got = [P("prism", nm, circle_pts(A + cs, cd, r, int(pr.get("seg", 16))), z[0], z[1], mat)]
+        elif sh == "prism":
+            pts = []
+            for q in pr.get("polygon_sd") or []:
+                a, b = num(q[0], "polygon_sd"), num(q[1], "polygon_sd")
+                if a is None or b is None:
+                    pts = []
+                    break
+                pts.append((A + a, b))
+            if len(pts) >= 3:
+                got = [P("prism", nm, ccw_pts(pts), z[0], z[1], mat)]
+        elif sh == "arc_wall":
+            c, r, t, dg = pr.get("center"), num(pr.get("r"), "r"), num(pr.get("t"), "t"), rng("deg")
+            if isinstance(c, (list, tuple)) and len(c) == 2 and r and t and dg:
+                cs, cd = num(c[0], "center"), num(c[1], "center")
+                if cs is not None and cd is not None:
+                    a0, a1 = math.radians(dg[0]), math.radians(dg[1])
+                    seg = max(2, math.ceil(abs(dg[1] - dg[0]) / 10.0))
+                    ths = [a0 + (a1 - a0) * k / seg for k in range(seg + 1)]
+                    ri, ro = r - t / 2, r + t / 2
+
+                    def at_(th, rr):
+                        return (A + cs + rr * math.cos(th), cd + rr * math.sin(th))
+
+                    got = [P("prism", f"{nm}_{k}", ccw_pts([at_(ths[k], ro), at_(ths[k + 1], ro), at_(ths[k + 1], ri), at_(ths[k], ri)]),
+                             z[0], z[1], mat) for k in range(seg)]
+        if not got:
+            continue
+        if pr.get("cut"):
+            for g in got:
+                g["mat"] = None
+            cuts += got
+        else:
+            out += got
+    return cuts, out
+
+
 # --- 部品の type → 形 ------------------------------------------------------------
 
 FACE_PART_TYPES = ("stair_switchback", "porch", "steps", "rail", "ceiling_beams", "louver", "patch", "curved_glass")
 WORLD_PART_TYPES = ("column", "rooftop_units", "vestibule", "pergola", "bridge")
-FLEX_PART_TYPES = ("planter", "nameplate")          # face＋along か x,y（か polygon）
+FLEX_PART_TYPES = ("planter", "nameplate", "composite")   # face＋along か x,y（か polygon。composite は face 無しで世界座標）
 ALL_PART_TYPES = FACE_PART_TYPES + WORLD_PART_TYPES + FLEX_PART_TYPES
 FACE_FUNCS = {"steps": steps, "ceiling_beams": ceiling_beams, "louver": louver, "patch": patch, "curved_glass": curved_glass,
               "planter": planter, "nameplate": nameplate}
@@ -834,9 +950,16 @@ FACE_FUNCS = {"steps": steps, "ceiling_beams": ceiling_beams, "louver": louver, 
 
 def part_prims(pt: dict, faces: dict, V=plain, tag: str | None = None):
     """新しい部品 1 つの形。返り値: (frame, cut, prims)。frame は面 id、"world"、または局所の線 {"from","to"}（渡り廊下）。
+    cut は彫る素片 1 つ（porch）か、素片の並び（composite の cut: true）か None。cut_list() で並びに揃える。
     対象外の type は None。"""
     t = pt.get("type")
     tag = tag or t
+    if t == "composite":
+        f = faces.get(pt.get("face")) if pt.get("face") else None
+        if pt.get("face") and not f:
+            return None
+        cuts, prims = composite(pt, f, V, tag)
+        return (pt["face"] if f else "world"), (cuts or None), prims
     if t in FLEX_PART_TYPES and not pt.get("face"):
         return "world", None, FACE_FUNCS[t](pt, None, V, tag)
     if t in FACE_PART_TYPES or t in FLEX_PART_TYPES:
@@ -868,6 +991,13 @@ def part_prims(pt: dict, faces: dict, V=plain, tag: str | None = None):
         fr, prims = bridge(pt, V, tag)
         return (fr or "world"), None, prims
     return None
+
+
+def cut_list(cut) -> list[dict]:
+    """part_prims の cut（None・素片 1 つ・並び）を並びに。"""
+    if not cut:
+        return []
+    return list(cut) if isinstance(cut, (list, tuple)) else [cut]
 
 
 # --- 座標の変換（立面図・平面図で、別の座標の部品を面に投影する） ----------------
