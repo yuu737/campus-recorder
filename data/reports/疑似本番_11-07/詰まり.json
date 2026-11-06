@@ -1,0 +1,26 @@
+{
+ "jams": [
+  {
+   "id": "J-001",
+   "at": "2026-11-07T08:34:55+09:00",
+   "building": "all",
+   "step": "0 出発点",
+   "agent": "(進行役)",
+   "kind": "tool_error",
+   "symptom": "trial_reset --zero が data/decisions.json を空の台帳にするが、data/vocab.json の全部の型と data/assets/catalog.json のアセットは決定 D-0001 を参照したまま。validate が全部の部品の型（composite・box など）とアセットを「決定 D-0001 が決定の台帳にありません」で拒否する状態になる",
+   "evidence": [
+    "python -m recorder validate tests/fixtures/parts_building.json → 部品 デッキ の型 composite: 決定 D-0001 が決定の台帳にありません ほか全部",
+    "scripts/trial_reset.py:264,301-305（decisions を [] にする）",
+    "data/vocab.json の decision: D-0001"
+   ],
+   "action": "decide",
+   "effect": "recorder agent decide --kind vocab で初期語彙を再承認（新しい id が D-0001 になり参照が戻った）。値・形への影響なし。by が shinko(fable) と記録される（--by が無い）",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "scripts/trial_reset.py（--zero の decisions の扱い）と recorder/decisions.py・__main__.py の agent decide",
+    "proposal": "--zero は初期語彙の承認（vocab.json が参照する決定）を残し、棟ごとの決定だけを空にする。agent decide に --by（代役のモデル名）を足す"
+   },
+   "status": "worked_around"
+  }
+ ]
+}

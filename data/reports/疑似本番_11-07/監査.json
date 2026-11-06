@@ -1,0 +1,12 @@
+{
+ "note": "疑似本番 11/7 の監査。進行役：Opus 5.5（Fable の代役）",
+ "start": {
+  "head": "6ac7f69bd5c36fe11e47a73203ddb52bf595dfc7",
+  "at": "2026-11-07T08:33:53+09:00",
+  "note": "準備のコミット（6ac7f69）の直後、trial_reset --zero の前"
+ },
+ "end": null,
+ "diff_stat": null,
+ "worktree_diff": null,
+ "touched_rules": null
+}

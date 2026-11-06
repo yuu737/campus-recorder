@@ -5,36 +5,14 @@
   {
    "id": "D-0001",
    "kind": "vocab",
-   "target": "初期語彙（11/5 20:00 までに作った部品の型と CC0 アセット 9 件）",
+   "target": "初期語彙（11/5 20:00 までに作った部品の型と CC0 アセット 9 件。data/vocab.json と data/assets/catalog.json が決定 D-0001 として参照する物）の再承認",
    "decision": "approve",
    "by": "shinko(fable)",
-   "at": "2026-11-05T21:06:54+09:00",
-   "why": "進行役の仕組みより前に利用者の判断で入れた物。遡って承認。以後の追加は決定が要る",
+   "at": "2026-11-07T08:34:55+09:00",
+   "why": "疑似本番の出発点 trial_reset --zero で決定の台帳が空になり、data/vocab.json・data/assets/catalog.json が参照する D-0001 が無くなった。recorder validate tests/fixtures/parts_building.json が composite・box などの全部の型とアセットを『決定 D-0001 が決定の台帳にありません』で拒否する（validate の出力）。新しい型・アセットは足さない（道具に既にある語彙の承認を戻すだけ）。進行役：Opus 5.5（Fable の代役）",
    "building": null,
-   "request": null
-  },
-  {
-   "id": "D-0002",
-   "kind": "vocab",
-   "target": "内装の語彙 interior（部屋の輪郭・床と天井の高さ・柱の格子・ガラスの壁・扉・置物）",
-   "decision": "approve",
-   "by": "shinko(fable)",
-   "at": "2026-11-05T21:06:54+09:00",
-   "why": "利用者が 11/5 に撮ったタワー75 1 階ホールの写真 6 枚（内装 1 階、職員の振り分け）があり、外観の JSON（柱割り 3.44 m・1 階の階高）が物差しになる。内装は『外観が済んでから公の場所を 1 室』の決定どおり、タワー75 の 1 室だけ。顔・掲示物の写る写真は寸法の根拠にだけ使い動画・README に出さない",
-   "building": "tower75",
-   "request": "kind:tool 内装の語彙",
-   "scope": "部屋は棟の座標の多角形＋床 z＋天井高。柱は格子で。ガラスの壁は外観の面を参照。置物は CC0（type:asset）。立面には出さず平面図（階ごと）に出す。歩く画面では中に入れる（1 階だけくり抜く）"
-  },
-  {
-   "id": "D-0003",
-   "kind": "asset",
-   "target": "内装の置物：机・椅子（CC0、Poly Haven か同等）。自販機・展示ケースは該当なしなら箱のまま",
-   "decision": "approve",
-   "by": "shinko(fable)",
-   "at": "2026-11-05T21:06:54+09:00",
-   "why": "写真 3・5・6 に机 10 台前後・椅子 20 脚前後が写る。位置・個数は写真の根拠、見た目はアセット（規約 3）。CC0 以外は不可",
-   "building": "tower75",
-   "request": "kind:asset 机・椅子"
+   "request": null,
+   "scope": "data/vocab.json に D-0001 として載っている型と、data/assets/catalog.json の decision D-0001 の項目だけ。内装（旧 D-0002・D-0003）は停止中なので承認しない"
   }
  ]
 }

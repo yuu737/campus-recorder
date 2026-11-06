@@ -1,0 +1,21 @@
+{
+ "decisions": [
+  {
+   "id": "K-001",
+   "at": "2026-11-07T08:34:55+09:00",
+   "building": "all",
+   "event": {
+    "kind": "vocab",
+    "why": "決定の台帳が空になり、語彙の台帳・CC0 の台帳が参照する D-0001 が無い",
+    "evidence": [
+     "recorder validate tests/fixtures/parts_building.json の出力（全部の型が D-0001 が無いで拒否）"
+    ]
+   },
+   "decision": "recorder agent decide --kind vocab --decision approve で初期語彙（型と CC0 アセット 9 件）を再承認。内装（旧 D-0002・D-0003）は停止中なので承認しない",
+   "reason": "新しい型・アセットを足すのではなく、道具に既にある語彙の承認を戻すだけ。これが無いと設計係の棟 JSON が 1 件も validate を通らない",
+   "result": "D-0001 approve。validate tests/fixtures/parts_building.json が OK（警告 1 は fixture の根拠 id）",
+   "rule": "--zero の後は、最初の係を呼ぶ前に validate を fixture で 1 回打ち、語彙の承認が残っているかを確かめる",
+   "record": "（全棟。pipeline の記録の前）"
+  }
+ ]
+}
