@@ -118,6 +118,14 @@ def run(building_json: Path, out: Path | None = None, fast: bool = False, skip_m
         if ok and poses:
             ok = step("overlay", do_overlay)
     report["ok"] = ok
+    # 進捗報告（out/<棟>/report.html）。段の状態は生成物の有無で決まるので、途中で止まっても出す。失敗しても run の合否は変えない
+    try:
+        from . import report as _report
+
+        rp = _report.run(building_json, out / "report.html")
+        report["progress_report"] = {"html": rp["html"], "stages": {k: v["status"] for k, v in rp["stages"].items()}}
+    except Exception as e:  # noqa: BLE001
+        report["progress_report"] = {"error": f"{type(e).__name__}: {e}"}
     report["seconds_total"] = round(time.time() - t_all, 2)
     (out / "run_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     return report

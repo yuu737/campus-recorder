@@ -56,3 +56,16 @@ def test_report_honbu_builds_page(tmp_path: Path):
         assert key in s["stages"]
     assert "<svg" in html and "measured" in html
     assert s["counts"]["photos"] > 0
+
+
+def test_refresh_report_in_pipeline_root(tmp_path: Path):
+    from recorder import agents
+    from recorder.schema import new_building, save_building
+
+    assert agents.refresh_report("nope", tmp_path) == {"skipped": "棟 JSON がまだ無い"}
+    j = tmp_path / "data" / "buildings" / "b1.json"
+    j.parent.mkdir(parents=True)
+    save_building(new_building("b1", "見本棟"), j)
+    r = agents.refresh_report("b1", tmp_path)
+    assert (tmp_path / "out" / "b1" / "report.html").exists(), r
+    assert r["stages"]["photos"] == "todo" and r["stages"]["walk"] == "todo"

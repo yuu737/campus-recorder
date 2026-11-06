@@ -433,6 +433,21 @@ def detect_events(building_id: str | None, cwd: str | Path = ".", now: str | Non
     return doc
 
 
+def refresh_report(building_id: str, cwd: Path) -> dict:
+    """進捗報告（out/<棟>/report.html）を今の生成物で出し直す。工程が 1 つ終わるごとに呼ぶので、段が todo → partial → done と埋まっていく。
+    棟 JSON が無い（まだ設計前）か失敗した時は理由を返すだけで、工程は止めない。"""
+    j = cwd / "data" / "buildings" / f"{building_id}.json"
+    if not j.exists():
+        return {"skipped": "棟 JSON がまだ無い"}
+    try:
+        from . import report as _report
+
+        r = _report.run(j, cwd / "out" / building_id / "report.html", root=cwd)
+        return {"html": r["html"], "stages": {k: v["status"] for k, v in r["stages"].items()}}
+    except Exception as e:  # noqa: BLE001
+        return {"error": f"{type(e).__name__}: {e}"}
+
+
 def _run_code_step(step: str, building_id: str, cwd: Path) -> dict:
     rec = {"agent": step_agent(step), "step": step, "model": "code", "task": step_command(step, building_id),
            "input_tokens": None, "output_tokens": None, "cost_usd": 0.0}
@@ -477,6 +492,8 @@ def run_pipeline(building_id: str, photos_folder: str | None = None, *, steps: l
             if not dry_run and (rec.get("stopped_by_limit") or rec.get("is_error")):
                 stopped = True
         results.append(rec)
+        if not dry_run:
+            rec["progress_report"] = refresh_report(building_id, cwd)
         if stopped:
             break
         ev = detect_events(building_id, cwd, after_step=s, write=not dry_run)

@@ -77,7 +77,7 @@ def _street_cam(mr: dict) -> str | None:
     return None
 
 
-def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None) -> dict:
+def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, root: Path = Path(".")) -> dict:
     bid = b["id"]
     recs = [r for r in index.get("photos", []) if r.get("building") == bid]
     by_id = {r["id"]: r for r in recs}
@@ -167,8 +167,8 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None) ->
 
     # 5. 歩ける 3D
     walk_img = None
-    for cand in (OUT_ROOT / f"web_look_after_{bid}_pc.png", OUT_ROOT / f"web_check_{bid}.jpg",
-                 OUT_ROOT / f"web_check_{bid}_street.png"):
+    for cand in (root / OUT_ROOT / f"web_look_after_{bid}_pc.png", root / OUT_ROOT / f"web_check_{bid}.jpg",
+                 root / OUT_ROOT / f"web_check_{bid}_street.png"):
         if cand.exists():
             walk_img = cand
             break
@@ -486,14 +486,16 @@ def render(d: dict, out_html: Path) -> str:
 
 # --- 入口 ---------------------------------------------------------------------------------
 
-def run(building_json: Path, out: Path | None = None) -> dict:
+def run(building_json: Path, out: Path | None = None, root: Path = Path(".")) -> dict:
+    """root はリポジトリの場所（API の pipeline は cwd を渡す）。索引・台帳・敷地・生成物は root の下から読む。"""
     b = load_building(building_json)
-    out_dir = OUT_ROOT / b["id"]
+    out_dir = root / OUT_ROOT / b["id"]
     out_html = out or (out_dir / "report.html")
-    index = load_index(INDEX_PATH) if INDEX_PATH.exists() else {"photos": []}
-    reg = R_.load_registry() if R_.REGISTRY_PATH.exists() else {"entries": [], "not_registered": []}
-    site = json.loads(WEB_SITE.read_text(encoding="utf-8")) if WEB_SITE.exists() else None
-    d = gather(b, index, reg, out_dir, site)
+    index_path, reg_path, site_path = root / INDEX_PATH, root / R_.REGISTRY_PATH, root / WEB_SITE
+    index = load_index(index_path) if index_path.exists() else {"photos": []}
+    reg = R_.load_registry(reg_path) if reg_path.exists() else {"entries": [], "not_registered": []}
+    site = json.loads(site_path.read_text(encoding="utf-8")) if site_path.exists() else None
+    d = gather(b, index, reg, out_dir, site, root)
     out_html.parent.mkdir(parents=True, exist_ok=True)
     out_html.write_text(render(d, out_html), encoding="utf-8")
     st = stage_status(d)
