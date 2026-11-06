@@ -200,6 +200,8 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--photos", default=None, help="登録を試す写真 id（カンマ区切り。頭だけでも可。省略で棟の未登録全部）")
     q.add_argument("--max", type=int, default=None, help="登録を試す未登録の写真の枚数の上限（登録済みは合わせの基準として全部入れる）")
     q.add_argument("--budget-min", type=float, default=None, help="照合の時間の上限（分）。超えたら途中で止め、同じコマンドで続きから")
+    q.add_argument("--features", choices=["rootsift", "aliked-lightglue"], default="rootsift",
+                   help="特徴点と照合の方式（既定 rootsift。aliked-lightglue は torch と lightglue が要る）")
     q.add_argument("--registry", default=None)
 
     q = psub.add_parser("landmarks", help="目印の登録の準備：棟 JSON から目印の一覧と面の絵、写真の升目の絵、目印係への依頼（out/<棟>/landmarks/）")
@@ -210,10 +212,17 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--photo", required=True)
     q.add_argument("--cells", required=True, help="升（カンマ区切り。例 C7,D3）")
+    q = psub.add_parser("windows", help="窓の箱を零ショットで自動検出（Grounding DINO tiny、Apache-2.0）→ out/<棟>/windows/<写真>.json と重ね画像。箱の 4 角は升＋寄りの升でも出す")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--photos", required=True, help="写真 id（カンマ区切り。頭だけでも可）")
+    q.add_argument("--box-threshold", type=float, default=None, help="箱のスコアの下限（既定 0.3）")
+    q.add_argument("--tiles", type=int, default=None, help="n×n の切り出しでも推論する（遠い・小さい窓。既定 1＝全体だけ）")
     q = psub.add_parser("pnp", help="目印の対応（picks JSON）から視点を解き、合否を出して台帳に登録する")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--picks", required=True, help='{"photo", "picks": [{"id", "cell", "sub"} | {"id", "u", "v"}]} の JSON')
     q.add_argument("--no-register", action="store_true")
+    q.add_argument("--method", default="cv2", choices=["cv2", "poselib", "poselib+geocalib"],
+                   help="解き方：cv2（従来）／poselib（PoseLib、線の対応 {id: <面>-V01, cells: [C3, C8]} も使う）／poselib+geocalib（GeoCalib の焦点と重力の向きを事前値に）")
     q = psub.add_parser("locate", help="模型合わせ：GPS を初期値に、写真 1 枚ごとに模型の縁が写真の縁に合う視点を探して登録する（重なり不要）")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--photos", default=None, help="試す写真 id（カンマ区切り。頭だけでも可。省略で棟の GPS 付き未登録全部）")
@@ -613,11 +622,22 @@ def _photos(a) -> int:
         for cell in [c.strip() for c in a.cells.split(",") if c.strip()]:
             print(landmarks.crop_image(img, cell, out / f"{rec['id']}_{cell.upper()}.jpg"))
         return 0
+    if a.photos_cmd == "windows":
+        from . import windows
+        from .schema import load_building
+
+        b = load_building(a.building)
+        for ph in [x.strip() for x in a.photos.split(",") if x.strip()]:
+            d = windows.detect(ph, box_threshold=a.box_threshold, tiles=a.tiles, building_id=b["id"])
+            print(f"{d['photo']}: 窓の箱 {d['n_after_nms']}（大きすぎ {sum(x['too_big'] for x in d['detections'])}）"
+                  f" {d['seconds']} s {d['device']} → {windows.cache_path(b['id'], d['photo'], d['params'])}")
+        return 0
     if a.photos_cmd == "pnp":
         from . import landmarks
 
         doc = json.loads(Path(a.picks).read_text(encoding="utf-8"))
-        res = landmarks.register_picks(Path(a.building), doc, write=not a.no_register)
+        res = landmarks.register_picks(Path(a.building), doc, write=not a.no_register, method=a.method)
+        landmarks.release_geocalib()
         print(json.dumps({k: v for k, v in res.items() if k != "camera"}, ensure_ascii=False, indent=1))
         if res.get("status") == "ok":
             c = res["camera"]
@@ -814,7 +834,7 @@ def _photos(a) -> int:
         rp = Path(a.registry) if a.registry else registry.REGISTRY_PATH
         reg = registry.load_registry(rp)
         res = sfm.register_sfm(Path(a.building), reg, photos=[p.strip() for p in a.photos.split(",")] if a.photos else None,
-                               max_n=a.max, budget_s=a.budget_min * 60 if a.budget_min else None)
+                               max_n=a.max, budget_s=a.budget_min * 60 if a.budget_min else None, features=a.features)
         if res.get("pending"):
             print(f"照合が途中です（残り {res['pending']} 組 / 全 {res['n_pairs']} 組）。同じコマンドで続きから回してください")
             return 2

@@ -61,9 +61,52 @@ def _v(m):
 def face_landmarks(b: dict, face_id: str) -> list[dict]:
     """1 つの面の目印：縦の線（面の端・柱型の左縁・部品の縁）× 横の線（地面・パラペット・一番下の窓の下端・一番上の窓の上端）。
     返り値 [{"id": "SW-03", "face", "name", "s", "z", "xyz": [x, y, z]}]（面の平面上の点）。"""
+    got = _face_verts_horz(b, face_id)
+    if got is None:
+        return []
+    fr, verts, horz, _ = got
+    seen = set()
+    out = []
+    for s, sname in sorted(verts):
+        for z, zname in horz:
+            key = (round(s, 2), round(z, 2))
+            if key in seen:
+                continue
+            seen.add(key)
+            P = plane_to_world(fr, s, z).reshape(3)
+            out.append({"id": f"{face_id}-{len(out) + 1:02d}", "face": face_id, "name": f"{sname} × {zname}",
+                        "s": round(s, 3), "z": round(z, 3), "xyz": [round(float(v), 3) for v in P]})
+    return out
+
+
+def face_line_marks(b: dict, face_id: str) -> list[dict]:
+    """1 つの面の「線」の目印（11/6 追加。PoseLib の点＋線の PnP 用）。
+    縦の線 `<面>-V01…`：面の端・柱型の左縁・部品の縁（点の目印と同じ縦線）の地面〜上端。
+    横の線 `<面>-H01…`：地面・パラペット上端・帯・窓の列の上下端（全段）の面の端〜端。
+    返り値 [{"id", "face", "kind": "line", "dir": "v"|"h", "name", "s"|"z", "xyz1", "xyz2"}]。
+    写真の中では線上のどこを指してもよい（端点でなくてよい）。点の目印の id（`<面>-NN`）とは V/H の字で区別する。"""
+    got = _face_verts_horz(b, face_id)
+    if got is None:
+        return []
+    fr, verts, _, hlines = got
+    g, top, L = fr["ground_offset"], fr["top_z"], fr["length_m"]
+    out = []
+    for k, (s, sname) in enumerate(sorted(verts)):
+        P1, P2 = plane_to_world(fr, s, g).reshape(3), plane_to_world(fr, s, top).reshape(3)
+        out.append({"id": f"{face_id}-V{k + 1:02d}", "face": face_id, "kind": "line", "dir": "v", "name": f"縦 {sname}",
+                    "s": round(s, 3), "xyz1": [round(float(v), 3) for v in P1], "xyz2": [round(float(v), 3) for v in P2]})
+    for k, (z, zname) in enumerate(hlines):
+        P1, P2 = plane_to_world(fr, 0.0, z).reshape(3), plane_to_world(fr, L, z).reshape(3)
+        out.append({"id": f"{face_id}-H{k + 1:02d}", "face": face_id, "kind": "line", "dir": "h", "name": f"横 {zname}",
+                    "z": round(z, 3), "xyz1": [round(float(v), 3) for v in P1], "xyz2": [round(float(v), 3) for v in P2]})
+    return out
+
+
+def _face_verts_horz(b: dict, face_id: str):
+    """面の frame・縦線（0.7 m 以内はまとめた物）・点に使う横線・線の目印に使う横線（全段）。面が無ければ None。"""
     f = next((f for f in b.get("faces", []) if f["id"] == face_id and f.get("from") and f.get("to")), None)
     if f is None:
-        return []
+        return None
     fr = face_rect_frame(b, f)
     xs, zs, _ = face_lines_detail(b, face_id)
     verts: list[tuple[float, str]] = []
@@ -91,29 +134,32 @@ def face_landmarks(b: dict, face_id: str) -> list[dict]:
             continue
         merged.append((s, sname))
     verts = merged
-    seen = set()
-    out = []
-    for s, sname in sorted(verts):
-        for z, zname in horz:
-            key = (round(s, 2), round(z, 2))
-            if key in seen:
-                continue
-            seen.add(key)
-            P = plane_to_world(fr, s, z).reshape(3)
-            out.append({"id": f"{face_id}-{len(out) + 1:02d}", "face": face_id, "name": f"{sname} × {zname}",
-                        "s": round(s, 3), "z": round(z, 3), "xyz": [round(float(v), 3) for v in P]})
-    return out
+    # 線の目印の横線：地面・上端・帯・窓の上下端（全段）。0.15 m 以内は 1 本に（帯と窓の下端が接する所）
+    hl = [(fr["ground_offset"], "地面"), (fr["top_z"], "上端（パラペット）")]
+    hl += [(float(l.m), l.name) for l in zs if l.in_plane and fr["ground_offset"] < l.m < fr["top_z"]
+           and (("窓" in l.name and (l.name.endswith("下端") or l.name.endswith("上端"))) or "帯" in l.name)]
+    hlines: list[tuple[float, str]] = []
+    for z, zname in sorted(hl):
+        if hlines and abs(z - hlines[-1][0]) < 0.15:
+            continue
+        hlines.append((z, zname))
+    return fr, verts, horz, hlines
 
 
-def catalog(b: dict) -> list[dict]:
+def catalog(b: dict, lines: bool = False) -> list[dict]:
+    """棟の目印の一覧（点）。lines=True で線の目印（face_line_marks）も足す。"""
     out = []
     for f in b.get("faces", []):
         out += face_landmarks(b, f["id"])
+        if lines:
+            out += face_line_marks(b, f["id"])
     return out
 
 
-def draw_face(b: dict, face_id: str, marks: list[dict], out_png: Path, ppm: int = ELEV_PPM) -> Path | None:
-    """面の立面の絵（柱割りの線・窓の横線・目印の番号）。写真と見比べて目印の id を選ぶための物。"""
+def draw_face(b: dict, face_id: str, marks: list[dict], out_png: Path, ppm: int = ELEV_PPM,
+              line_marks: list[dict] | None = None) -> Path | None:
+    """面の立面の絵（柱割りの線・窓の横線・目印の番号）。写真と見比べて目印の id を選ぶための物。
+    line_marks があれば線の目印の番号（縦線 V は上の余白、横線 H は右の余白）を青で書く。"""
     import cv2
 
     f = next((f for f in b.get("faces", []) if f["id"] == face_id), None)
@@ -122,7 +168,8 @@ def draw_face(b: dict, face_id: str, marks: list[dict], out_png: Path, ppm: int 
     fr = face_rect_frame(b, f)
     L, g, top = fr["length_m"], fr["ground_offset"], fr["top_z"]
     pad = 40
-    W, H = int(L * ppm) + 2 * pad, int((top - g) * ppm) + 2 * pad + 30
+    rpad = 40 if line_marks else 0
+    W, H = int(L * ppm) + 2 * pad + rpad, int((top - g) * ppm) + 2 * pad + 30
     img = np.full((H, W, 3), 255, np.uint8)
 
     def px(s, z):
@@ -141,6 +188,14 @@ def draw_face(b: dict, face_id: str, marks: list[dict], out_png: Path, ppm: int 
         cv2.circle(img, (u, v), 5, (0, 0, 230), -1)
         n = m["id"].split("-")[1]
         cv2.putText(img, n, (u + 4, v - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 180), 1, cv2.LINE_AA)
+    for m in line_marks or []:
+        n = m["id"].split("-")[-1]
+        if m["dir"] == "v":
+            u, _ = px(m["s"], top)
+            cv2.putText(img, n, (u - 10, pad - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 80, 0), 1, cv2.LINE_AA)
+        else:
+            _, v = px(L, m["z"])
+            cv2.putText(img, n, (int(pad + L * ppm) + 4, v + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 80, 0), 1, cv2.LINE_AA)
     cv2.putText(img, f"{b.get('id')} face {face_id}  from(left) -> to(right)  {L:.1f} m x {top - g:.1f} m", (pad, H - 8),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
     out_png.parent.mkdir(parents=True, exist_ok=True)
@@ -241,9 +296,30 @@ def focal_px_from_exif(rec: dict) -> float:
     return float(f35) / 36.0 * max(w, h)
 
 
-def solve(P3: np.ndarray, uv: np.ndarray, w: int, h: int, focal0: float, search_focal: bool = True) -> dict:
+SOLVE_METHODS = ("cv2", "poselib", "poselib+geocalib")
+GC_ANGLE_TOL_DEG = 10.0     # poselib+geocalib：解いた R の傾き・仰角が GeoCalib とこれ以上違う候補は落とす
+GC_FEW_POINTS = 4           # poselib+geocalib：対応（点＋線）がこれ以下なら傾き・仰角・焦点を固定して 方位と t の 4 自由度で解く
+
+
+def solve(P3: np.ndarray, uv: np.ndarray, w: int, h: int, focal0: float, search_focal: bool = True,
+          method: str = "cv2", lines: list[dict] | None = None, prior: dict | None = None) -> dict:
     """PnP。P3 (N,3) 世界、uv (N,2) 写真 px。焦点は focal0 の 0.85〜1.15 倍を探して再投影が最小の物。
-    返り値 {"R", "t", "focal", "reproj_px": 1 点ごと, "rms_px", "inliers": [...]}。"""
+    method："cv2"（従来。cv2.solvePnP SQPNP、6 点以上は RANSAC）／"poselib"（PoseLib の RANSAC＋refine。lines があれば点＋線）／
+    "poselib+geocalib"（prior＝GeoCalib の {"focal", "roll", "pitch"}（度、rotation_cv の向き）で焦点を絞り、
+    傾き・仰角が GC_ANGLE_TOL_DEG 以上違う候補を落とし、対応が GC_FEW_POINTS 以下なら 4 自由度で解く）。
+    lines：[{"X1", "X2"（3D の 2 点）, "x1", "x2"（写真の線上の 2 点 px）}]。cv2 では使わない。
+    返り値 {"R", "t", "focal", "reproj_px": 1 点ごと, "rms_px", "inliers": [...], "method", ...}。"""
+    if method not in SOLVE_METHODS:
+        raise ValueError(f"method は {SOLVE_METHODS} のどれか: {method!r}")
+    if method != "cv2":
+        return _solve_poselib(P3, uv, w, h, focal0, search_focal, lines or [], prior if method == "poselib+geocalib" else None)
+    out = _solve_cv2(P3, uv, w, h, focal0, search_focal)
+    if out:
+        out["method"] = "cv2"
+    return out
+
+
+def _solve_cv2(P3: np.ndarray, uv: np.ndarray, w: int, h: int, focal0: float, search_focal: bool = True) -> dict:
     import cv2
 
     P3 = np.asarray(P3, np.float64).reshape(-1, 3)
@@ -282,48 +358,362 @@ def solve(P3: np.ndarray, uv: np.ndarray, w: int, h: int, focal0: float, search_
     return best or {}
 
 
+# --- PoseLib（点・点＋線）と GeoCalib の事前値 -------------------------------------------------------
+
+def _project(R, t, f: float, w: int, h: int, P) -> tuple[np.ndarray, np.ndarray]:
+    X = np.asarray(P, float).reshape(-1, 3) @ np.asarray(R, float).T + np.asarray(t, float).reshape(3)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return np.c_[f * X[:, 0] / X[:, 2] + w / 2.0, f * X[:, 1] / X[:, 2] + h / 2.0], X[:, 2]
+
+
+def _line_dists(R, t, f: float, w: int, h: int, lines: list[dict]) -> np.ndarray:
+    """線ごとに、写真で指した 2 点から、3D の線を写した直線までの符号付きの距離（px）。(M, 2)。"""
+    out = np.zeros((len(lines), 2))
+    for k, ln in enumerate(lines):
+        q, _ = _project(R, t, f, w, h, np.array([ln["X1"], ln["X2"]], float))
+        d = q[1] - q[0]
+        n = np.array([-d[1], d[0]]) / max(1e-9, float(np.hypot(*d)))
+        out[k] = [(np.asarray(ln["x1"], float) - q[0]) @ n, (np.asarray(ln["x2"], float) - q[0]) @ n]
+    return out
+
+
+def _cand(R, t, f, w, h, P3, uv, lines, inl, line_inl, method, **extra) -> dict:
+    """解の候補を solve の返り値の形にする。rms は使われた点の誤差と、使われた線の 2 点の距離から。"""
+    R, t = np.asarray(R, float), np.asarray(t, float).reshape(3)
+    proj, depth = _project(R, t, f, w, h, P3)
+    err = np.linalg.norm(proj - uv, axis=1) if len(P3) else np.zeros(0)
+    ld = np.abs(_line_dists(R, t, f, w, h, lines)) if lines else np.zeros((0, 2))
+    res = np.r_[err[inl], ld[line_inl].ravel()] if (len(inl) or len(line_inl)) else np.array([np.inf])
+    rms = float(np.sqrt(np.mean(res ** 2)))
+    if len(P3) and np.any(depth[inl] <= 0):
+        rms = float("inf")                                   # 点がカメラの後ろ
+    return {"R": R, "t": t, "focal": float(f), "reproj_px": [round(float(e), 1) for e in err], "rms_px": round(rms, 2),
+            "inliers": [int(i) for i in inl], "line_inliers": [int(i) for i in line_inl],
+            "line_reproj_px": [round(float(v), 1) for v in ld.max(axis=1)] if len(ld) else [], "method": method, **extra}
+
+
+def _poselib_once(P3, uv, w, h, f, lines) -> dict | None:
+    import poselib
+
+    cam = {"model": "SIMPLE_PINHOLE", "width": int(w), "height": int(h), "params": [float(f), w / 2.0, h / 2.0]}
+    thr = MAX_REPROJ_FRAC * w
+    ropt = {"max_reproj_error": thr, "max_epipolar_error": thr, "seed": 0}
+    try:
+        if lines:
+            l1 = np.array([ln["x1"] for ln in lines], float); l2 = np.array([ln["x2"] for ln in lines], float)
+            L1 = np.array([ln["X1"] for ln in lines], float); L2 = np.array([ln["X2"] for ln in lines], float)
+            pose, info = poselib.estimate_absolute_pose_pnpl(uv.reshape(-1, 2), P3.reshape(-1, 3), l1, l2, L1, L2, cam, ropt, {})
+            line_inl = [i for i, ok in enumerate(info.get("inliers_lines", [True] * len(lines))) if ok]
+        else:
+            pose, info = poselib.estimate_absolute_pose(uv, P3, cam, ropt, {})
+            line_inl = []
+    except Exception:                                        # 点が足りない・縮退
+        return None
+    inl = [i for i, ok in enumerate(info.get("inliers", [])) if ok]
+    if len(inl) + len(line_inl) < 3:
+        return None
+    return _cand(pose.R, pose.t, f, w, h, P3, uv, lines, inl, line_inl, "poselib",
+                 ransac={"iterations": int(info.get("iterations", 0)), "refinements": int(info.get("refinements", 0))})
+
+
+def solve_4dof(P3, uv, w: int, h: int, f: float, roll: float, pitch: float, lines: list[dict] | None = None,
+               yaw_step: float = 2.0, iters: int = 30) -> dict | None:
+    """傾き・仰角（度、rotation_cv の向き）と焦点を固定し、方位と t（4 自由度）を解く。
+    方位を yaw_step 刻みで回し、各方位で t を線形の最小二乗（点：u'(r3·X + t3) = r1·X + t1、線：l·(R X + t) = 0）で出し、
+    再投影の二乗和が最小の方位から Gauss-Newton（数値微分、LM の減衰つき）で詰める。"""
+    from .locate import rotation_cv
+
+    P3 = np.asarray(P3, float).reshape(-1, 3)
+    uv = np.asarray(uv, float).reshape(-1, 2)
+    lines = lines or []
+    cx, cy = w / 2.0, h / 2.0
+    un, vn = (uv[:, 0] - cx) / f, (uv[:, 1] - cy) / f
+    lnorm = []
+    for ln in lines:
+        a = np.array([(ln["x1"][0] - cx) / f, (ln["x1"][1] - cy) / f, 1.0])
+        b = np.array([(ln["x2"][0] - cx) / f, (ln["x2"][1] - cy) / f, 1.0])
+        l = np.cross(a, b)
+        lnorm.append(l / max(1e-12, float(np.hypot(l[0], l[1]))))
+    if len(P3) * 2 + len(lines) * 2 < 4:
+        return None
+
+    def lin_t(R):
+        Y = P3 @ R.T
+        A, rhs = [], []
+        for k in range(len(P3)):
+            A.append([1.0, 0.0, -un[k]]); rhs.append(un[k] * Y[k, 2] - Y[k, 0])
+            A.append([0.0, 1.0, -vn[k]]); rhs.append(vn[k] * Y[k, 2] - Y[k, 1])
+        for ln, l in zip(lines, lnorm):
+            for X in (ln["X1"], ln["X2"]):
+                A.append(list(l)); rhs.append(-float(l @ (R @ np.asarray(X, float))))
+        t, *_ = np.linalg.lstsq(np.array(A), np.array(rhs), rcond=None)
+        return t
+
+    def resid(p):
+        R = rotation_cv(math.degrees(p[0]), pitch, roll)
+        t = p[1:]
+        r = []
+        if len(P3):
+            q, d = _project(R, t, f, w, h, P3)
+            if np.any(d <= 0.1):
+                return None
+            r.append((q - uv).ravel())
+        if lines:
+            r.append(_line_dists(R, t, f, w, h, lines).ravel())
+        return np.concatenate(r)
+
+    best = None
+    for yaw in np.arange(0.0, 360.0, yaw_step):
+        R = rotation_cv(float(yaw), pitch, roll)
+        t = lin_t(R)
+        p = np.r_[math.radians(yaw), t]
+        r = resid(p)
+        if r is None or not np.all(np.isfinite(r)):
+            continue
+        c = float(r @ r)
+        if best is None or c < best[0]:
+            best = (c, p)
+    if best is None:
+        return None
+    c, p = best
+    lam = 1e-3
+    for _ in range(iters):
+        r = resid(p)
+        if r is None:
+            break
+        J = np.zeros((len(r), 4))
+        for j, eps in enumerate((1e-5, 1e-4, 1e-4, 1e-4)):
+            dp = np.zeros(4); dp[j] = eps
+            r2 = resid(p + dp)
+            if r2 is None:
+                break
+            J[:, j] = (r2 - r) / eps
+        A = J.T @ J
+        step = np.linalg.solve(A + lam * np.diag(np.diag(A) + 1e-12), -J.T @ r)
+        r_new = resid(p + step)
+        if r_new is not None and float(r_new @ r_new) < float(r @ r):
+            p, lam = p + step, lam * 0.3
+            if np.linalg.norm(step) < 1e-8:
+                break
+        else:
+            lam *= 10
+            if lam > 1e8:
+                break
+    R = rotation_cv(math.degrees(p[0]), pitch, roll)
+    return _cand(R, p[1:], f, w, h, P3, uv, lines, list(range(len(P3))), list(range(len(lines))), "4dof",
+                 dof=4, fixed={"roll": roll, "pitch": pitch, "focal": f})
+
+
+def _angle_diff(a: float, b: float) -> float:
+    return abs((a - b + 180.0) % 360.0 - 180.0)
+
+
+def _solve_poselib(P3, uv, w, h, focal0, search_focal, lines, prior) -> dict:
+    """PoseLib で解く（prior があれば GeoCalib の焦点・傾き・仰角を使う）。返り値は solve と同じ形。"""
+    from .locate import angles_of
+
+    P3 = np.asarray(P3, np.float64).reshape(-1, 3)
+    uv = np.asarray(uv, np.float64).reshape(-1, 2)
+    n = len(P3) + len(lines)
+    if prior and prior.get("focal"):
+        focals = [focal0] + ([float(prior["focal"])] if abs(float(prior["focal"]) / focal0 - 1) > 0.01 else [])
+    else:
+        focals = list(focal0 * np.linspace(0.85, 1.15, 13)) if search_focal else [focal0]
+    cands, n_rejected = [], 0
+    for f in focals:
+        sols = []
+        if not (prior and n <= GC_FEW_POINTS):
+            c = _poselib_once(P3, uv, w, h, f, lines)
+            if c:
+                sols.append(c)
+        if prior:
+            kept = []
+            for c in sols:
+                _, pitch, roll = angles_of(c["R"])
+                c["gravity_diff_deg"] = {"roll": round(_angle_diff(roll, prior["roll"]), 1),
+                                         "pitch": round(_angle_diff(pitch, prior["pitch"]), 1)}
+                if max(c["gravity_diff_deg"].values()) <= GC_ANGLE_TOL_DEG:
+                    kept.append(c)
+                else:
+                    n_rejected += 1
+            sols = kept
+            if not sols:
+                c = solve_4dof(P3, uv, w, h, f, prior["roll"], prior["pitch"], lines)
+                if c and n > GC_FEW_POINTS:
+                    # 外れた対応を 1 回だけ外して解き直す（閾値は RANSAC と同じ）
+                    thr = MAX_REPROJ_FRAC * w
+                    keep = [i for i, e in enumerate(c["reproj_px"]) if e <= thr]
+                    lkeep = [i for i, e in enumerate(c["line_reproj_px"]) if e <= thr]
+                    if 3 <= len(keep) + len(lkeep) < n:
+                        c2 = solve_4dof(P3[keep], uv[keep], w, h, f, prior["roll"], prior["pitch"], [lines[i] for i in lkeep])
+                        if c2:
+                            c = _cand(c2["R"], c2["t"], f, w, h, P3, uv, lines, keep, lkeep, "4dof",
+                                      dof=4, fixed=c2["fixed"])
+                if c:
+                    sols.append(c)
+        for c in sols:
+            c["fac"] = float(f / focal0)
+            cands.append(c)
+    if not cands:
+        return {}
+    # 使われた対応の多い解を先に（4〜5 点では RANSAC が 3 点にぴたり合わせて 1 点を外した解の RMS が 0 になり、
+    # 焦点の探索でそれが選ばれて位置が数 m 狂った。本部棟の 4 点で中央値 2.7 m → この並べ方で cv2 並み）
+    nmax = max(len(c["inliers"]) + len(c.get("line_inliers", [])) for c in cands)
+    cands = [c for c in cands if len(c["inliers"]) + len(c.get("line_inliers", [])) == nmax]
+    best = min(cands, key=lambda c: c["rms_px"])
+    base_l = [c for c in cands if abs(c["fac"] - 1.0) < 1e-9]
+    base = min(base_l, key=lambda c: c["rms_px"]) if base_l else None
+    if base and best["rms_px"] >= 0.8 * base["rms_px"]:
+        best = base
+    best = dict(best)
+    best["method"] = ("poselib+geocalib" if prior else "poselib") + ("(4dof)" if best.get("dof") == 4 else "")
+    best["n_rejected_by_gravity"] = n_rejected
+    if prior:
+        best["prior"] = {k: prior.get(k) for k in ("focal", "roll", "pitch")}
+    return best
+
+
+# GeoCalib（Apache 2.0、https://github.com/cvg/GeoCalib）の出す傾き・仰角を rotation_cv の向きに直す符号。
+# 本部棟の登録済みの写真（台帳の R_cv を angles_of で読んだ値）と比べて決めた（docs/実験_登録の3条件_11-06.md）。
+GC_ROLL_SIGN = 1.0
+GC_PITCH_SIGN = 1.0
+_GC: dict = {}
+
+
+def geocalib_prior(rec: dict, building_id: str, out_dir: Path | None = None, use_cache: bool = True) -> dict | None:
+    """写真 1 枚から GeoCalib で焦点（px）と重力の向き（傾き・仰角、度）を出す。
+    結果は out/<棟>/landmarks/geocalib_<写真id>.json に保存し、2 回目からは読む。GeoCalib が無ければ None。"""
+    cache = (out_dir or Path("out") / building_id / "landmarks") / f"geocalib_{rec['id']}.json"
+    if use_cache and cache.exists():
+        d = json.loads(cache.read_text(encoding="utf-8"))
+        return _gc_doc_to_prior(d)
+    try:
+        import torch
+        from geocalib import GeoCalib
+    except ImportError:
+        return None
+    from .rectify import read_image
+
+    img = read_image(R_.photo_path(rec))
+    rgb = np.ascontiguousarray(img[:, :, ::-1]).astype(np.float32) / 255.0
+    ten = torch.from_numpy(rgb).permute(2, 0, 1)
+    res, dev = None, None
+    for dev in (["cuda"] if torch.cuda.is_available() else []) + ["cpu"]:
+        try:
+            if _GC.get("device") != dev:
+                release_geocalib()
+                _GC["model"] = GeoCalib().to(dev)
+                _GC["device"] = dev
+            res = _GC["model"].calibrate(ten.to(dev))
+            break
+        except RuntimeError:                                 # GPU の容量切れ等 → CPU で
+            release_geocalib()
+            continue
+    if res is None:
+        return None
+    cam, grav = res["camera"], res["gravity"]
+    fxy = cam.f[0].detach().cpu().numpy().astype(float)
+    rp = grav.rp[0].detach().cpu().numpy().astype(float)
+    unc = {k: float(res[k][0].detach().cpu()) for k in ("roll_uncertainty", "pitch_uncertainty", "focal_uncertainty")
+           if k in res and res[k] is not None}
+    h, w = img.shape[:2]
+    d = {"photo": rec["id"], "building": building_id, "image_size": [int(w), int(h)],
+         "focal_px": round(float(fxy.mean()), 2), "raw_roll_deg": round(math.degrees(rp[0]), 3),
+         "raw_pitch_deg": round(math.degrees(rp[1]), 3),
+         "uncertainty": {"roll_deg": round(math.degrees(unc["roll_uncertainty"]), 3) if "roll_uncertainty" in unc else None,
+                         "pitch_deg": round(math.degrees(unc["pitch_uncertainty"]), 3) if "pitch_uncertainty" in unc else None,
+                         "focal_px": round(unc["focal_uncertainty"], 2) if "focal_uncertainty" in unc else None},
+         "device": dev, "made_by": "recorder.landmarks.geocalib_prior（GeoCalib 1.0 pinhole、Apache 2.0）",
+         "made_at": datetime.now().isoformat(timespec="seconds"),
+         "note": "raw_* は GeoCalib の gravity.rp（度）そのまま。roll/pitch は GC_*_SIGN を掛けた rotation_cv の向き（読む時に計算）"}
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cache.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
+    return _gc_doc_to_prior(d)
+
+
+def _gc_doc_to_prior(d: dict) -> dict:
+    return {"focal": float(d["focal_px"]), "roll": GC_ROLL_SIGN * float(d["raw_roll_deg"]),
+            "pitch": GC_PITCH_SIGN * float(d["raw_pitch_deg"]), "uncertainty": d.get("uncertainty"), "image_size": d.get("image_size")}
+
+
+def release_geocalib() -> None:
+    """GeoCalib の模型を解放する（GPU を他の係と共有しているため、使い終わったら呼ぶ）。"""
+    m = _GC.pop("model", None)
+    _GC.pop("device", None)
+    if m is not None:
+        del m
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except ImportError:
+            pass
+
+
 def register_picks(building_json: Path, picks_doc: dict, index: dict | None = None, reg: dict | None = None,
-                   registry_path: Path | None = None, write: bool = True, by: str = "mejirushi") -> dict:
-    """対応（picks_doc = {"photo", "face"?, "picks": [{"id", "cell", "sub"?} | {"id", "u", "v"}]}）から視点を解き、合否を出して台帳に書く。
+                   registry_path: Path | None = None, write: bool = True, by: str = "mejirushi",
+                   method: str = "cv2", prior: dict | None = None, b: dict | None = None) -> dict:
+    """対応（picks_doc = {"photo", "face"?, "picks": [{"id", "cell", "sub"?} | {"id", "u", "v"} | {"id": "<面>-V01", "cells": ["C3", "C8"]}]}）
+    から視点を解き、合否を出して台帳に書く。線の対応は線上の 2 升（"cells"。要素は "C3" か {"cell", "sub"}、または "subs": [..] を併記）。
+    method は solve と同じ。"poselib+geocalib" で prior が無ければ geocalib_prior で出す（GeoCalib が無ければ "poselib" に落とす）。
     返り値 {"status": "ok"|"fail", "code", "reason", "camera", "check", "picks_px": [...]}。"""
-    b = load_building(building_json)
+    b = b or load_building(building_json)
     idx = index or load_index(INDEX_PATH)
     rec = R_.photo_record(picks_doc["photo"], idx)
     if rec is None:
         return {"status": "fail", "code": "no_photo", "reason": f"索引に無い: {picks_doc['photo']}"}
     w, h = int(rec["width"]), int(rec["height"])
-    cat = {m["id"]: m for m in catalog(b)}
+    cat = {m["id"]: m for m in catalog(b, lines=True)}
     P3, uv, used, problems = [], [], [], []
+    lines, used_lines = [], []
     for p in picks_doc.get("picks", []):
         m = cat.get(p.get("id"))
         if m is None:
             problems.append(f"目印 id が一覧に無い: {p.get('id')}")
             continue
         try:
+            if m.get("kind") == "line":
+                pts = _line_pick_px(p, w, h)
+                lines.append({"X1": m["xyz1"], "X2": m["xyz2"], "x1": pts[0], "x2": pts[1]})
+                used_lines.append({**p, "uv": [[round(x, 1) for x in q] for q in pts], "name": m["name"]})
+                continue
             u, v, how = pick_to_px(p, w, h)
-        except (ValueError, KeyError) as ex:
+        except (ValueError, KeyError, TypeError) as ex:
             problems.append(f"{p.get('id')}: {ex}")
             continue
         P3.append(m["xyz"])
         uv.append((u, v))
         used.append({**p, "u": round(u, 1), "v": round(v, 1), "how": how, "name": m["name"]})
-    if len(P3) < MIN_POINTS:
-        return _fail(rec, b, idx, reg, registry_path, write, "few_points", f"対応が {len(P3)} 点（{MIN_POINTS} 点要る）", problems)
-    # 散らばり：同じ面で縦の線 2 本以上・横の線 2 本以上、写真の中で幅・高さの 25 % 以上
-    ss = {round(cat[k["id"]]["s"], 1) for k in used}
-    zs = {round(cat[k["id"]]["z"], 1) for k in used}
-    uu = np.array([k["u"] for k in used]); vv = np.array([k["v"] for k in used])
+    if method == "cv2" and lines:
+        problems.append(f"線の対応 {len(lines)} 本は cv2 では使わない（--method poselib で使う）")
+        lines, used_lines = [], []
+    n_corr = len(P3) + len(lines)
+    if n_corr < MIN_POINTS:
+        return _fail(rec, b, idx, reg, registry_path, write, "few_points", f"対応が {n_corr} 点（{MIN_POINTS} 点要る。線は 1 本を 1 点と数える）", problems)
+    # 散らばり：同じ面で縦の線 2 本以上・横の線 2 本以上、写真の中で幅・高さの 25 % 以上（線は縦線なら s、横線なら z を数える）
+    ss = {round(cat[k["id"]]["s"], 1) for k in used} | {round(cat[k["id"]]["s"], 1) for k in used_lines if "s" in cat[k["id"]]}
+    zs = {round(cat[k["id"]]["z"], 1) for k in used} | {round(cat[k["id"]]["z"], 1) for k in used_lines if "z" in cat[k["id"]]}
+    uu = np.array([k["u"] for k in used] + [q[0] for k in used_lines for q in k["uv"]])
+    vv = np.array([k["v"] for k in used] + [q[1] for k in used_lines for q in k["uv"]])
     bw, bh = (uu.max() - uu.min()) / w, (vv.max() - vv.min()) / h
     if len(ss) < 2 or len(zs) < 2 or bw < MIN_BBOX_FRAC or bh < MIN_BBOX_FRAC:
         why = f"対応が偏っている（縦の線 {len(ss)} 本・横の線 {len(zs)} 本、写真の中の広がり 幅 {bw:.0%}・高さ {bh:.0%}。縦横 2 本以上・{MIN_BBOX_FRAC:.0%} 以上要る）"
         return _fail(rec, b, idx, reg, registry_path, write, "picks_degenerate", why, problems)
     focal0 = focal_px_from_exif(rec)
-    sol = solve(np.array(P3), np.array(uv), w, h, focal0)
+    if method == "poselib+geocalib" and prior is None:
+        prior = geocalib_prior(rec, b["id"])
+        if prior is None:
+            problems.append("GeoCalib が無いので poselib だけで解いた")
+            method = "poselib"
+    sol = solve(np.array(P3).reshape(-1, 3), np.array(uv).reshape(-1, 2), w, h, focal0, method=method, lines=lines, prior=prior)
     if not sol:
         return _fail(rec, b, idx, reg, registry_path, write, "pnp_failed", "PnP が解けない（点が一直線か、対応の取り違え）", problems)
-    for k, e in zip(used, sol["reproj_px"]):
+    for i, (k, e) in enumerate(zip(used, sol["reproj_px"])):
         k["reproj_px"] = e
-        k["inlier"] = used.index(k) in sol["inliers"]
+        k["inlier"] = i in sol["inliers"]
+    for i, k in enumerate(used_lines):
+        k["reproj_px"] = sol.get("line_reproj_px", [None] * len(used_lines))[i]
+        k["inlier"] = i in sol.get("line_inliers", [])
     Rm, t = sol["R"], sol["t"]
     C = (-Rm.T @ t).ravel()
     dem = None
@@ -340,10 +730,15 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
     height_ok = (MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT) or (hgt_face is not None and MIN_CAM_HEIGHT <= hgt_face <= MAX_CAM_HEIGHT)
     g_use = g if MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT or g_face is None else g_face
     cam = R_.camera_dict(Rm, t, sol["focal"], w, h, g_use)
-    check = {"n_points": len(P3), "n_inliers": len(sol["inliers"]), "rms_px": sol["rms_px"],
+    n_inl = len(sol["inliers"]) + len(sol.get("line_inliers", []))
+    check = {"n_points": len(P3), "n_lines": len(lines), "n_inliers": n_inl, "rms_px": sol["rms_px"], "solver": sol.get("method"),
              "rms_frac_w": round(sol["rms_px"] / w, 4), "focal_px": sol["focal"], "focal_vs_exif": round(sol["focal"] / focal0, 3),
              "camera_height_m": round(hgt, 2), "camera_height_face_m": None if hgt_face is None else round(hgt_face, 2),
              "ground_face": face_near, "warnings": []}
+    if prior:
+        check["gravity_prior"] = {k: (round(v, 2) if isinstance(v, float) else v) for k, v in prior.items() if k in ("focal", "roll", "pitch")}
+        check["gravity_diff_deg"] = sol.get("gravity_diff_deg")
+        check["n_rejected_by_gravity"] = sol.get("n_rejected_by_gravity")
     # 検算（係の指し方に依らない独立の物差し）：消失点の仰角、模型の線が写真の縁に乗る割合、線に直角な勾配
     edge_ok = True
     pitch_bad = False
@@ -369,8 +764,8 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
     status, code, reason = "ok", None, None
     if sol["rms_px"] > MAX_REPROJ_FRAC * w:
         status, code, reason = "fail", "reproj", f"再投影の RMS {sol['rms_px']} px（幅の {MAX_REPROJ_FRAC:.0%}＝{MAX_REPROJ_FRAC * w:.0f} px まで）"
-    elif len(sol["inliers"]) < MIN_INLIERS:
-        status, code, reason = "fail", "few_inliers", f"使われた対応が {len(sol['inliers'])} 点（{MIN_INLIERS} 点要る。外れた点を直すか足す）"
+    elif n_inl < MIN_INLIERS:
+        status, code, reason = "fail", "few_inliers", f"使われた対応が {n_inl} 点（{MIN_INLIERS} 点要る。外れた点を直すか足す）"
     elif not height_ok:
         status, code = "fail", "camera_height"
         reason = (f"カメラの高さが地面から {hgt:.1f} m（5m 標高）"
@@ -387,15 +782,17 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
     if status == "ok" and not vis:
         status, code, reason = "fail", "no_visible_face", "解いた視点から見える棟の面が無い"
     out = {"photo": rec["id"], "building": b["id"], "status": status, "code": code, "reason": reason,
-           "camera": cam, "check": check, "picks_px": used, "problems": problems, "visible_faces": vis}
+           "camera": cam, "check": check, "picks_px": used, "lines_px": used_lines, "problems": problems, "visible_faces": vis}
     if write:
         reg = reg or R_.load_registry(registry_path or R_.REGISTRY_PATH)
         if status == "ok":
             entry = {"photo": rec["id"], "building": b["id"], "face": rec.get("face") or picks_doc.get("face") or "(pose)",
                      "kind": "pose", "period": rec.get("period"), "file": rec.get("file"), "image_size": [w, h],
                      "camera": cam, "visible_faces": vis,
-                     "source": {"method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索）",
-                                "kind": "landmarks", "picks": used, "focal_source": "exif_35mm を初期値に探索"},
+                     "source": {"method": "landmarks：目印係が指した目印（面の角・柱型・部品の縁）の対応から PnP（"
+                                          + _METHOD_TEXT.get(method, method) + "）",
+                                "kind": "landmarks", "solver": sol.get("method"), "picks": used, "lines": used_lines,
+                                "focal_source": ("GeoCalib と EXIF の 2 候補" if prior else "exif_35mm を初期値に探索")},
                      "check": check, "registered_at": datetime.now().isoformat(timespec="seconds"), "registered_by": by}
             R_.upsert(reg, entry)
         else:
@@ -403,6 +800,75 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
             R_.note_not_registered(reg, b["id"], rec["id"], idx, reason or "", str(code), "landmarks")
         R_.save_registry(reg, registry_path or R_.REGISTRY_PATH)
     return out
+
+
+_METHOD_TEXT = {"cv2": "cv2.solvePnP、焦点は EXIF の 0.85〜1.15 倍を探索",
+                "poselib": "PoseLib の RANSAC＋refine（点、線があれば点＋線）、焦点は EXIF の 0.85〜1.15 倍を探索",
+                "poselib+geocalib": "PoseLib＋GeoCalib：焦点は GeoCalib と EXIF の 2 候補、傾き・仰角が GeoCalib と 10° 超違う解を落とす、対応 4 以下は 4 自由度"}
+
+
+def _line_pick_px(p: dict, w: int, h: int) -> list[tuple[float, float]]:
+    """線の対応 {"id", "cells": ["C3", "C8"] | [{"cell", "sub"}, ..], "subs"?: [..]} → 線上の 2 点（px）。"""
+    cells = p.get("cells") or []
+    if len(cells) != 2:
+        raise ValueError(f"線は線上の 2 升（cells）を指す: {cells!r}")
+    subs = p.get("subs") or [None, None]
+    out = []
+    for c, s in zip(cells, subs):
+        q = dict(c) if isinstance(c, dict) else {"cell": c}
+        if s and not q.get("sub"):
+            q["sub"] = s
+        u, v, _ = pick_to_px(q, w, h)
+        out.append((u, v))
+    if math.hypot(out[0][0] - out[1][0], out[0][1] - out[1][1]) < 1.0:
+        raise ValueError("線の 2 升が同じ所")
+    return out
+
+
+def draw_check(b: dict, res: dict, out_jpg: Path, long_side: int = 1600) -> Path | None:
+    """登録の重ね絵：写真に模型の面の線（緑の点）、指した対応（赤）、解いた視点で写した目印（水色）と線（水色の線）を描く。"""
+    import cv2
+
+    from .locate import model_points
+    from .rectify import read_image
+
+    cam = res.get("camera")
+    if not cam:
+        return None
+    rec = R_.photo_record(res["photo"])
+    img = read_image(R_.photo_path(rec))
+    h, w = img.shape[:2]
+    s = long_side / max(w, h)
+    small = cv2.resize(img, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
+    R, t, f = np.array(cam["R_cv"]), np.array(cam["t_cv"]), cam["focal_px"]
+    C = -R.T @ t
+    mp = model_points(b)
+    facing = np.einsum("fk,fk->f", C[None, :2] - mp["p0"], mp["n"]) > 0.3
+    q, d = _project(R, t, f, w, h, mp["P"])
+    for (uu, vv), ok in zip(q * s, facing[mp["face"]] & (d > 0.5)):
+        if ok and 0 <= uu < small.shape[1] and 0 <= vv < small.shape[0]:
+            cv2.circle(small, (int(uu), int(vv)), 2, (60, 220, 60), -1)
+    cat = {m["id"]: m for m in catalog(b, lines=True)}
+    for k in res.get("picks_px", []):
+        pu, pv = k["u"] * s, k["v"] * s
+        (ru, rv), = _project(R, t, f, w, h, [cat[k["id"]]["xyz"]])[0] * s
+        cv2.line(small, (int(pu), int(pv)), (int(ru), int(rv)), (0, 0, 255), 2)
+        cv2.circle(small, (int(pu), int(pv)), 7, (0, 0, 255), 2)
+        cv2.circle(small, (int(ru), int(rv)), 4, (255, 220, 0), -1)
+        cv2.putText(small, k["id"], (int(pu) + 8, int(pv) - 6), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
+    for k in res.get("lines_px", []):
+        m = cat[k["id"]]
+        q2, _ = _project(R, t, f, w, h, [m["xyz1"], m["xyz2"]])
+        cv2.line(small, tuple(int(x) for x in q2[0] * s), tuple(int(x) for x in q2[1] * s), (255, 220, 0), 2)
+        for a in k["uv"]:
+            cv2.circle(small, (int(a[0] * s), int(a[1] * s)), 7, (0, 0, 255), 2)
+    ck = res.get("check", {})
+    txt = f"{res['photo']} {res['status']} {ck.get('solver')} rms {ck.get('rms_px')}px h {ck.get('camera_height_m')}m edge {ck.get('edge_inlier')}/{ck.get('edge_grad')}"
+    cv2.putText(small, txt, (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 4, cv2.LINE_AA)
+    cv2.putText(small, txt, (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
+    out_jpg.parent.mkdir(parents=True, exist_ok=True)
+    cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 88])[1].tofile(str(out_jpg))
+    return out_jpg
 
 
 def _face_ground(b: dict, C) -> tuple[float | None, str | None]:
@@ -450,10 +916,13 @@ def prepare(building_json: Path, photos: list[str] | None = None, out_dir: Path 
     out = out_dir or Path("out") / b["id"] / "landmarks"
     out.mkdir(parents=True, exist_ok=True)
     cat = catalog(b)
-    (out / "landmarks.json").write_text(json.dumps({"building": b["id"], "landmarks": cat}, ensure_ascii=False, indent=1), encoding="utf-8")
+    lns = [m for m in catalog(b, lines=True) if m.get("kind") == "line"]
+    (out / "landmarks.json").write_text(json.dumps({"building": b["id"], "landmarks": cat, "lines": lns}, ensure_ascii=False, indent=1),
+                                        encoding="utf-8")
     faces = sorted({m["face"] for m in cat})
     for fid in faces:
-        draw_face(b, fid, [m for m in cat if m["face"] == fid], out / f"{fid}.png")
+        draw_face(b, fid, [m for m in cat if m["face"] == fid], out / f"{fid}.png",
+                  line_marks=[m for m in lns if m["face"] == fid])
     recs = [r for r in idx.get("photos", []) if r.get("building") == b["id"] and not r.get("interior")]
     if photos:
         recs = [r for r in recs if any(p in r["id"] for p in photos)]
