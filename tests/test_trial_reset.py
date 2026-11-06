@@ -27,6 +27,8 @@ def repo(tmp_path):
     _w(r / "scripts/design_b2.py", "# 他の棟")
     _w(r / "data/buildings/b1.json", '{"id": "b1"}')
     _w(r / "data/buildings/b2.json", '{"id": "b2"}')
+    _w(r / "data/reports/b1/kansatsu_f0.json", '{"前の結論": 1}')
+    _w(r / "data/reports/b2/kansatsu_f0.json", "{}")
     _w(r / "out/b1/kansatsu_f0.json", "{}")
     _w(r / "out/b1/recheck/x/summary.md", "前の検収")
     _w(r / "out/b1_dbg/a.txt", "作業の残り")
@@ -56,7 +58,7 @@ def test_reset_then_restore(repo):
     before = _snapshot(repo)
     r = tr.reset("b1", repo, stamp="t1")
     man = json.loads((repo / "trial/b1/t1/manifest.json").read_text(encoding="utf-8"))
-    assert set(man["moved"]) == {"scripts/design_b1.py", "data/buildings/b1.json", "out/b1", "out/b1_dbg",
+    assert set(man["moved"]) == {"scripts/design_b1.py", "data/buildings/b1.json", "data/reports/b1", "out/b1", "out/b1_dbg",
                                  "web/data/models/b1.glb", "out/photos/shiwake_b1.json", "out/rectified/20261103/P1_front.jpg"}
     assert r["registry"] == {"entries": 1, "not_registered": 1}
     # 残す物

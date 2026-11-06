@@ -19,3 +19,8 @@ packages = ["recorder"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = [
+    "blender: Blender 5.2（環境変数 BLENDER）を起動する。CI では外す",
+    "browser: headless の Edge / Chrome を起動する。CI では外す",
+    "gpu: torch・学習済みの重み（Depth Pro・ALIKED/LightGlue・GeoCalib）が要る。CI では外す",
+]

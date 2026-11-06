@@ -27,13 +27,14 @@ export function sunPosition(doy, t, lat, lon) {
   return { h, az };
 }
 
-// opt: { renderer, scene, camera, sun（旧の平行光。新では消す）, Q（URL 引数）, mobile, lat, lon, materials（後で使う素材） }
+// opt: { renderer, scene, camera, sun（旧の平行光。新では消す）, Q（URL 引数）, mobile, lat, lon, date, time, materials（後で使う素材） }
+// 日付・時刻・緯度経度の既定は data/daylight.json（site.json の daylight。Blender の描画と同じ物）。?t= ?d= で上書き
 export function setupLook(opt) {
   const { renderer, scene, camera, Q, mobile } = opt;
   const qnum = (k, d) => { const v = parseFloat(Q.get(k)); return Number.isFinite(v) ? v : d; };
-  const tq = (Q.get("t") || "10").split(":").map(Number);
-  const hour = (Number.isFinite(tq[0]) ? tq[0] : 10) + (Number.isFinite(tq[1]) ? tq[1] / 60 : 0);
-  const date = new Date((Q.get("d") || "2026-11-06") + "T00:00:00Z");
+  const tq = (Q.get("t") || opt.time || "13:30").split(":").map(Number);
+  const hour = (Number.isFinite(tq[0]) ? tq[0] : 13.5) + (Number.isFinite(tq[1]) ? tq[1] / 60 : 0);
+  const date = new Date((Q.get("d") || opt.date || "2026-11-06") + "T00:00:00Z");
   const doy = Math.round((date - Date.UTC(date.getUTCFullYear(), 0, 1)) / 864e5) + 1;
   const { h, az } = sunPosition(doy, hour, opt.lat, opt.lon);
   const hClamp = Math.max(h, 2 * D2R);                                  // 地平線の下では使わない（夕方の上限）

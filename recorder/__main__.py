@@ -8,7 +8,7 @@
                                                  公開データから敷地の土台を作る（OSM・航空写真・標高・PLATEAU・確認用の図）
   python -m recorder photos import <folder>     写真の EXIF を読んで索引 data/photos/index.json に足す
   python -m recorder photos rectify <写真> [--f35 26]  壁を正面に向け直し out/rectified/ に画像と根拠 JSON を出す
-  python -m recorder photos measure <front.jpg> [--known floor_pitch=3.99]
+  python -m recorder photos measure <front.jpg> [--known floor_pitch=3.99 | segment=0.698@85.3]
                                                  正面化画像から柱間隔・階高の候補を数える（既知の長さがあれば m に換算）
   python -m recorder photos stitch <A_front.jpg> <B_front.jpg> [--overlap-hint 左|右] [--pin "A:x=B:x"] [--out ...]
                                                  片端ずつの 2 枚を階高で揃えて横につなぐ（決まらなければ ambiguous）
@@ -58,6 +58,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("validate")
     p.add_argument("files", nargs="+")
     p.add_argument("--no-hypotheses", action="store_true", help="仮説を全部外した状態で検証する")
+    p.add_argument("--strict", action="store_true", help="警告（± の下限・採用値・根拠 id）もエラー扱いにする")
 
     p = sub.add_parser("draw")
     p.add_argument("file")
@@ -75,6 +76,11 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("unknowns")
     p.add_argument("file")
+
+    p = sub.add_parser("counts", help="値の件数と、独立した観察の件数（同じ状態・方法・根拠・値の種類を 1 つに束ねる）")
+    p.add_argument("files", nargs="+", help="棟 JSON（複数可）")
+    p.add_argument("--faces", action="store_true", help="面ごとの値と観察も出す")
+    p.add_argument("--top", type=int, default=10, help="複製の多い観察の上位いくつを出すか")
 
     p = sub.add_parser("run", help="validate → draw → model → overlay → run_report.json を 1 回で")
     p.add_argument("file")
@@ -143,7 +149,9 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--roi", default=None, help="注目する壁の範囲 x0,y0,x1,y1（画素か 0〜1 の割合）。1枚に複数の面があるときに判断役が指定")
     q = psub.add_parser("measure")
     q.add_argument("front_jpg", help="rectify が出した *_front.jpg")
-    q.add_argument("--known", default=None, help="既知の長さ 例: floor_pitch=3.99 / bay_pitch=5.3 / wall_width=47.7")
+    q.add_argument("--known", default=None,
+                   help="既知の長さ 例: floor_pitch=3.99 / bay_pitch=5.3 / wall_width=47.7。"
+                        "メジャーを写した区間は segment=<m>@<正面化画像の px>（例 segment=0.698@85.3。常に measured）")
     q.add_argument("--known-status", default="measured", choices=["measured", "estimated"])
     q = psub.add_parser("stitch", help="片端ずつ写した 2 枚の正面化画像を、階高を揃えて横につなぐ")
     q.add_argument("a_front", help="A（rectify が出した *_front.jpg）")
@@ -340,6 +348,12 @@ def main(argv: list[str] | None = None) -> int:
     if (sys.argv[1:] if argv is None else list(argv))[:1] == ["serve"]:
         return _serve.run_cli(ap.parse_args(argv))
 
+    # 仕分け係の当たり率（期間前の台帳の棟と比べる。11/6 追加。ここ 1 か所で引数と実行をまとめる）
+    from . import shiwake_eval as _shiwake_eval
+    _shiwake_eval.add_args(sub.add_parser("shiwake-eval", help="仕分け係の当たり率：仕分け係が確定した棟（面）と期間前の台帳の棟の一致・不一致・判定不能（out/shiwake_eval.json）"))
+    if (sys.argv[1:] if argv is None else list(argv))[:1] == ["shiwake-eval"]:
+        return _shiwake_eval.run_cli(ap.parse_args(argv))
+
     a = ap.parse_args(argv)
 
     if a.cmd == "agent":
@@ -439,13 +453,16 @@ def main(argv: list[str] | None = None) -> int:
                 b, dropped = schema.drop_hypotheses(b)
                 print(f"仮説を外して検証: {f}（{len(dropped)} 値を unknown に）")
             errs = schema.validate_building(b)
-            if errs:
+            warns = schema.warn_building(b)
+            if errs or (a.strict and warns):
                 bad += 1
-                print(f"NG {f}")
+                print(f"NG {f}  エラー {len(errs)}  警告 {len(warns)}{'（--strict でエラー扱い）' if a.strict and warns else ''}")
                 for e in errs:
                     print(f"   - {e}")
             else:
-                print(f"OK {f}")
+                print(f"OK {f}  警告 {len(warns)}")
+            for w in warns:
+                print(f"   ! {w}")
         return 1 if bad else 0
 
     if a.cmd == "hypotheses":
@@ -474,10 +491,33 @@ def main(argv: list[str] | None = None) -> int:
         r = runner.run(Path(a.file), Path(a.out) if a.out else None, a.fast, a.skip_model, a.blender)
         for st in r["steps"]:
             print(f"{'OK' if st['ok'] else 'NG'} {st['name']:<9} {st['seconds']}s  {st['error']}")
-        c = r["counts"]
-        print(f"measured {c['measured']} / estimated {c['estimated']} / unknown {c['unknown']}  撮影依頼 open {r['requests_open']}")
+        from .evidence import observations, observations_line
+
+        # 値は今まで通り run.count_statuses の数え方（status と value を持つ物）。観察はその値を (状態, 方法, 根拠, 種類) で束ねた数
+        o = observations(schema.load_building(a.file), values_only=True)
+        print(f"{observations_line(o)}  撮影依頼 open {r['requests_open']}")
         print(f"報告: {Path(r['out']) / 'run_report.json'}  合計 {r['seconds_total']}s")
         return 0 if r["ok"] else 1
+
+    if a.cmd == "counts":
+        from .evidence import OBS_NOTE, observations, observations_line
+
+        for f in a.files:
+            o = observations(schema.load_building(f), top=a.top)
+            print(f"{f}")
+            print(f"  {observations_line(o)}")
+            e = o["eyeball"]
+            print(f"  方法が「目視」だけの値 {e['values']}（観察 {e['observations']}）")
+            if a.faces:
+                for fid, t in o["faces"].items():
+                    print(f"    {fid:<8} 値 {t['values']:>4}　観察 {t['observations']:>3}")
+                print(f"    {'面の外':<8} 値 {o['other']['values']:>4}　観察 {o['other']['observations']:>3}")
+            for t in o["top_copies"]:
+                if t["copies"] < 2:
+                    break
+                print(f"    ×{t['copies']:<4} {t['status']:<9} {t['kind']}　方法「{t['method'] or '—'}」　根拠 {len(t['evidence'])} 件")
+        print(OBS_NOTE)
+        return 0
 
     if a.cmd == "unknowns":
         for u in schema.unknowns(schema.load_building(a.file)):
@@ -717,10 +757,11 @@ def _photos(a) -> int:
     if a.photos_cmd == "measure":
         from . import measure
 
-        known = None
-        if a.known:
-            k, v = a.known.split("=")
-            known = (k, float(v))
+        try:
+            known = measure.parse_known(a.known)
+        except ValueError as e:
+            print(f"--known が読めません: {e}")
+            return 2
         res = measure.measure_file(Path(a.front_jpg), known=known, known_status=a.known_status)
         if not res.ok:
             print(f"数えられません: {res.reason}")

@@ -1004,6 +1004,88 @@ b["history"].append(
              "スパンごとの彫り込みを 1 つに（角柱の後ろでガラスが続く）。3 階の窓の奥まり unknown（0.35）→ 0.55 m、4 階の小窓 unknown（0.35）→ 0.05 m（見上げの見込みの幅、2 枚）。"
              "入隅側の半スパンの 3 階の奥まったバルコニー（s 0〜2.95、z 10.19〜13.31）と 4 階の小窓（s 0.78〜2.99、z 15.29〜17.06）を glazing で足した（043304319 の角を E 面の平面へ戻した）"})
 
+
+# --- 審査員役の指摘（11/6）の整理。寸法の値は変えず、tol・method・evidence だけを揃える ------------------
+# 1. ± の下限：tol を物差しの許容（data/rulers.json：PLATEAU 3%、タイル 0.005/0.070、OSM 5%）× |value| 以上に広げる。
+#    2 本の物差しで検算した値は広い方の許容を使う（狭い方ではない）。広げた値には method に元の ± を書く。
+# 2. タイル 1 段 70 mm を縮尺に使った値：method に「種類は写真で未確認」と明記する。
+# 3. 根拠の置き場：out/honbu/ の係の報告（json・md、画像は除く）を data/reports/honbu/ に写し、evidence・method のパスを替える。
+import math, re, shutil
+from recorder.schema import rulers_of, ruler_ratios
+
+TIDY_BID = "honbu"
+TILE_NOTE = "タイルは JIS 二丁掛・小口の 70 mm と置いた。種類は写真で未確認"
+_RULER_NAME = {"plateau": "PLATEAU", "osm": "OSM", "tile": "タイル", "tape": "tape"}
+_OUT_RE = re.compile(rf"out/{TIDY_BID}/[^\s、。・）)（(：,;；\"*]+?\.(?:json|md)")
+
+
+def _tidy_walk(o, key=""):
+    """(鍵, dict) を全部。history の下は見ない。"""
+    if isinstance(o, dict):
+        yield key, o
+        for k, v in o.items():
+            if k not in ("history", "crs"):
+                yield from _tidy_walk(v, k)
+    elif isinstance(o, list):
+        for v in o:
+            yield from _tidy_walk(v, key)
+
+
+def _to_report(text):
+    """out/<棟>/<報告> を data/reports/<棟>/ に写し、パスを替えた文字列を返す（ファイルが無い・画像なら替えない）。"""
+    def rep(mt):
+        src = Path(mt.group(0))
+        if not src.is_file():
+            return mt.group(0)
+        dst = Path("data/reports") / TIDY_BID / src.relative_to(Path("out") / TIDY_BID)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src, dst)
+        return dst.as_posix()
+    return _OUT_RE.sub(rep, text)
+
+
+def tidy_for_review(b):
+    ratios = ruler_ratios()
+    seen, n_tol, n_tile, n_ev = set(), 0, 0, 0
+    for key, d in _tidy_walk(b):
+        if id(d) in seen:
+            continue
+        seen.add(id(d))
+        if isinstance(d.get("evidence"), list):
+            new = [_to_report(e) if isinstance(e, str) else e for e in d["evidence"]]
+            n_ev += sum(1 for x, y in zip(d["evidence"], new) if x != y)
+            d["evidence"] = new
+        if isinstance(d.get("method"), str):
+            d["method"] = _to_report(d["method"])
+        if not ("value" in d and "status" in d):
+            continue
+        meth = str(d.get("method") or "")
+        rs = rulers_of(d)
+        if "tile" in rs and ("70 mm" in meth or "70mm" in meth or "px/m" in meth) and TILE_NOTE not in meth:
+            d["method"] = meth = (meth.rstrip("。") + "。" if meth else "") + TILE_NOTE
+            n_tile += 1
+        v, tol = d.get("value"), d.get("tol")
+        if (d.get("unit", "m") != "m" or key == "ground_z" or d.get("status") == "unknown" or not rs
+                or isinstance(v, bool) or not isinstance(v, (int, float)) or not isinstance(tol, (int, float))):
+            continue
+        wide = max(rs, key=lambda k: ratios[k])
+        need = ratios[wide] * abs(float(v))
+        if tol < need - 1e-9:
+            d["tol"] = math.ceil(need * 100 - 1e-6) / 100
+            names = "・".join(f"{_RULER_NAME[k]} {ratios[k] * 100:.1f}%" for k in rs)
+            which = "の広い方" if len(rs) > 1 else ""
+            d["method"] = (meth.rstrip("。") + "。" if meth else "") + \
+                f"± は物差し（{names}）{which}の許容×値まで広げた（前 ±{tol:g} m、11/6 審査）"
+            n_tol += 1
+    b.setdefault("history", []).append(
+        {"at": "2026-11-06", "by": f"Claude（審査の指摘の整理, claude-opus-5-5）scripts/design_{TIDY_BID}.py",
+         "what": f"寸法の値は変えずに整理：± を物差しの許容×値まで広げた {n_tol} 件（2 本の物差しは広い方）、"
+                 f"タイル 70 mm の仮定を method に明記 {n_tile} 件、out/ の根拠を data/reports/{TIDY_BID}/ に写して差し替え {n_ev} 件"})
+    print(f"整理：± {n_tol} 件、タイル注記 {n_tile} 件、根拠のパス {n_ev} 件")
+
+
+tidy_for_review(b)
+
 errs = validate_building(b)
 print("validate:", errs or "OK")
 save_building(b, Path("data/buildings/honbu.json"))

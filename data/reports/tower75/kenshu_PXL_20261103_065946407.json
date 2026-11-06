@@ -1,0 +1,283 @@
+{
+ "face": "f20, f19（北北東）",
+ "photo": "PXL_20261103_065946407",
+ "made_by": "検収係（Claude, claude-opus-5-5）",
+ "made_at": "2026-11-04T04:38",
+ "rectified": "out/rectified/tower75_N/PXL_20261103_065946407_front.jpg",
+ "scale": {
+  "f20": "53.42 px/m（239.4 px/段）",
+  "f19": "50.97 px/m（228.4 px/段）"
+ },
+ "lines_given": [
+  "out/tower75/compare/lines_f20_065946407.json",
+  "out/tower75/compare/lines_f19_065946407.json"
+ ],
+ "role": "070003022 から書いた値の検算（別の位置から撮った 2 枚目）",
+ "pass": true,
+ "pass_note": "f20 は 31 線で最大 0.124 m（帯 z0・z7・z12、小窓 z10 上端）、f19 は 12 線で最大 0.103 m",
+ "lines": [
+  {
+   "what": "f20 柱型0右",
+   "diff_m": -0.001,
+   "action": "合格"
+  },
+  {
+   "what": "f20 柱型1左",
+   "diff_m": 0.003,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z0",
+   "diff_m": -0.123,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z0 下端",
+   "diff_m": -0.055,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z0 上端",
+   "diff_m": 0.007,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z1",
+   "diff_m": -0.073,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z1 下端",
+   "diff_m": -0.042,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z1 上端",
+   "diff_m": 0.001,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z2",
+   "diff_m": -0.023,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z2 下端",
+   "diff_m": -0.011,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z2 上端",
+   "diff_m": 0.032,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z3",
+   "diff_m": 0.008,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z3 下端",
+   "diff_m": 0.04,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z3 上端",
+   "diff_m": 0.063,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z4",
+   "diff_m": 0.03,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z4 下端",
+   "diff_m": 0.061,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z4 上端",
+   "diff_m": 0.085,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z5",
+   "diff_m": 0.08,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z6",
+   "diff_m": 0.074,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z7",
+   "diff_m": 0.124,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z8",
+   "diff_m": 0.08,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z9",
+   "diff_m": 0.018,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z10",
+   "diff_m": -0.035,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z10 下端",
+   "diff_m": -0.023,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z10 上端",
+   "diff_m": -0.111,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z11",
+   "diff_m": -0.06,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z12",
+   "diff_m": -0.122,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z12 下端",
+   "diff_m": -0.072,
+   "action": "合格"
+  },
+  {
+   "what": "f20 小窓 z12 上端",
+   "diff_m": -0.085,
+   "action": "合格"
+  },
+  {
+   "what": "f20 帯 z13.2",
+   "diff_m": 0.039,
+   "action": "合格"
+  },
+  {
+   "what": "f20 パラペット上端",
+   "diff_m": -0.011,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z6 下端",
+   "diff_m": 0.009,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z6 上端",
+   "diff_m": -0.023,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z7 下端",
+   "diff_m": 0.003,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z7 上端",
+   "diff_m": 0.049,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z8 下端",
+   "diff_m": -0.004,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z8 上端",
+   "diff_m": 0.003,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z9 下端",
+   "diff_m": -0.011,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z9 上端",
+   "diff_m": -0.063,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z10 下端",
+   "diff_m": -0.047,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z10 上端",
+   "diff_m": -0.001,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z11 下端",
+   "diff_m": 0.103,
+   "action": "合格"
+  },
+  {
+   "what": "f19 連窓 z11 上端",
+   "diff_m": 0.051,
+   "action": "合格"
+  }
+ ],
+ "pose": {
+  "file": "out/tower75/poses/PXL_20261103_065946407_pose.json",
+  "camera_xyz": [
+   49.15,
+   80.9,
+   0.78
+  ],
+  "dist_from_face_m": 35.02,
+  "note": "カメラ高 0.78 m、面まで 35.0 m（sokuryo_f20 の 34.7 m）"
+ },
+ "overlay": [
+  "out/tower75/overlay_PXL_20261103_065946407.png"
+ ],
+ "overlay_read": "北西の角の柱・脇の壁・柱型・連窓・ガラスの箱が重なる。角の柱の脇の壁寄りの縦帯が灰色の格子＝溝と分かり、ガラスから溝に直した（changed）。低い塊（北西の角の手前、ガラスの縦帯 2 本）は模型に無い（出と高さ unknown、requests）",
+ "changed": [
+  {
+   "field": "faces[f20/f18].windows[*].z_top",
+   "from": "帯＋2.38 m",
+   "to": "帯＋3.24 m（最上段 z12 は＋3.09 m）",
+   "why": "検収 A の 1 回目で 070003022 の z10・z12 の上端が +0.74/+0.66 m。設計で段の換算を誤っていた（0.53 段と読んだが 0.70 段）。065946407 の 4 段と 070003022 の 2 段の平均。最上段だけ 2 枚とも低い（+3.04/+3.13）",
+   "evidence": [
+    "PXL_20261103_070003022",
+    "PXL_20261103_065946407"
+   ]
+  },
+  {
+   "field": "faces[f20/f18].windows[*].z_bottom",
+   "from": "帯＋0.95 m",
+   "to": "帯＋0.98 m",
+   "why": "同じ 6 段の平均（0.89〜1.05）",
+   "evidence": [
+    "PXL_20261103_070003022",
+    "PXL_20261103_065946407"
+   ]
+  },
+  {
+   "field": "faces[f0].glazing（脇の壁寄りの 1 本）",
+   "from": "ガラス帯",
+   "to": "格子の縦溝（bands、depth −0.3 m）",
+   "why": "065946407 で灰色の格子に写る（070003022 では空が映って青い）。kansatsu_f20 の「縦溝 1 本＋ガラス帯 1 本」が正しかった",
+   "evidence": [
+    "PXL_20261103_065946407"
+   ]
+  }
+ ],
+ "requests": [
+  "北西の角を 45° から（低い塊）"
+ ]
+}

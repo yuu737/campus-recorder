@@ -98,7 +98,7 @@ def test_plan_counts_and_picks():
     assert p["time"].utcoffset().total_seconds() == 9 * 3600
     assert E.pick_best(pl["photos"]) is p
     txt = E.summary_text(pl)
-    assert "実測 measured **2**" in txt and "| S | 1 | 0 | 0 | 実測 |" in txt
+    assert "実測 measured **2**" in txt and "| S | 1 | 0 | 0 | 1 | 実測 |" in txt   # 観察の列（11/6 追加）
 
 
 def test_strip_gltf_extensions():

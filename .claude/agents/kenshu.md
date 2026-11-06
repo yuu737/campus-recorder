@@ -37,6 +37,6 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 止める時は部品を黙って消さず、`out/<棟id>/soten.json` に争点として書く：`{"items":[{"part","designer":"<設計係の根拠（写真 id・方法）>","protector":"<止める理由の番号と数字>","rule":"<当てはめた規則>","status":"open"}]}`。規則で決まる物は自分で決めて `status: "decided"`・`decision` を書く。決まらない物だけ `open` のまま残す（進行役が `recorder agent events` で拾う）。争点が無ければ `items: []`。
 
 ## 出力
-`out/<棟id>/kenshu_<写真id>.json`：`{"face","pass":true/false,"lines":[{"what","diff_m","action"}],"changed":[{"field","from","to","why"}],"requests":[]}`
+`data/reports/<棟id>/kenshu_<写真id>.json`：`{"face","pass":true/false,"lines":[{"what","diff_m","action"}],"changed":[{"field","from","to","why"}],"requests":[]}` と `data/reports/<棟id>/kenshu_summary.json`（面ごとの合否・直した値・requests）。out/ ではない（git に入り、棟 JSON の evidence・history からこのパスを指す）。道具が出す `out/<棟id>/recheck/`・`photoproj/`・重ね画像と争点 `out/<棟id>/soten.json` は今までどおり out/。
 ## 合格
 合格した面は全線 0.15 m 以内。直した値には根拠の写真 id がある。

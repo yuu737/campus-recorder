@@ -69,6 +69,7 @@ REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 from recorder import site  # noqa: E402  （地形：5m 標高の格子。numpy だけで動く関数を使う）
 from recorder import schema  # noqa: E402  （根拠の層：面・部品の状態。glb の extras に出す）
+from recorder import daylight  # noqa: E402  （太陽と空：data/daylight.json。歩く画面と同じ物を読む）
 
 ASSUMED: list[dict] = []
 UNKNOWN_COLOR = (0.62, 0.62, 0.62, 1.0)
@@ -1590,26 +1591,31 @@ def setup_scene(sketch: bool, fast: bool):
     if sketch:
         bg.inputs["Color"].default_value = (1, 1, 1, 1)
         bg.inputs["Strength"].default_value = 1.0
-    else:
+    # 太陽と空は data/daylight.json（歩く画面と同じ物）。位置は日付・時刻・緯度経度から recorder/daylight.py の式で
+    DL = daylight.load()
+    bl = DL.get("blender", {})
+    alt, az = daylight.sun_of(DL)
+    if not sketch:
         sky = nt.nodes.new("ShaderNodeTexSky")
         kinds = [e.identifier for e in sky.bl_rna.properties["sky_type"].enum_items]
         sky.sky_type = "MULTIPLE_SCATTERING" if "MULTIPLE_SCATTERING" in kinds else ("NISHITA" if "NISHITA" in kinds else kinds[0])
-        sky.sun_elevation = math.radians(42)
-        sky.sun_rotation = math.radians(145)
-        sky.sun_intensity = 0.25
-        sky.altitude = 50
+        sky.sun_elevation = math.radians(alt)
+        sky.sun_rotation = daylight.blender_sky_rotation(az)
+        sky.sun_intensity = float(bl.get("sky_sun_intensity", 0.25))
+        sky.altitude = float(bl.get("sky_altitude_m", 50))
         nt.links.new(sky.outputs["Color"], bg.inputs["Color"])
-        bg.inputs["Strength"].default_value = 0.035   # Nishita の空は物理単位で明るいので弱く（青かぶりを防ぐ）
+        bg.inputs["Strength"].default_value = float(bl.get("sky_strength", 0.035))   # 物理の空は明るいので弱く（青かぶりを防ぐ）
     nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
     for o in [o for o in sc.objects if o.type == "LIGHT"]:
         bpy.data.objects.remove(o, do_unlink=True)
     ld = bpy.data.lights.new("sun", "SUN")
-    ld.energy = 1.8 if sketch else 2.2
-    ld.angle = math.radians(2.5)
-    ld.color = (1.0, 0.97, 0.9)
+    ld.energy = float(bl.get("sun_energy_sketch", 1.8) if sketch else bl.get("sun_energy", 2.2))
+    ld.angle = math.radians(float(bl.get("sun_angle_deg", 2.5)))
+    ld.color = tuple(bl.get("sun_color", (1.0, 0.97, 0.9)))
     sun = bpy.data.objects.new("sun", ld)
     sc.collection.objects.link(sun)
-    sun.rotation_euler = (math.radians(48), 0, math.radians(-35))   # 光が南西から北東へ向かう（午後の太陽）
+    sun.rotation_euler = daylight.blender_sun_euler(alt, az)
+    sc["daylight"] = json.dumps({"date": DL["date"], "time": DL["time"], "sun_alt_deg": round(alt, 2), "sun_az_deg": round(az, 2)})
     sc.render.use_freestyle = sketch
     sc.render.line_thickness = 2.0
     vl = bpy.context.view_layer
@@ -2005,6 +2011,9 @@ def main():
     untag_face_materials(info["body"], face_saved)
     for o, i, m in restore:                               # 描画用の素材に戻してから .blend を保存
         o.material_slots[i].material = m
+    _sun = bpy.context.scene.objects.get("sun")           # 検収の描画で面ごとに回した太陽を data/daylight.json の向きに戻して保存
+    if _sun:
+        _sun.rotation_euler = daylight.blender_sun_euler(*daylight.sun_of(daylight.load()))
     bpy.ops.wm.save_as_mainfile(filepath=str(out / f"{b['id']}.blend"))
 
     (out / "model_report.json").write_text(json.dumps({
@@ -2013,6 +2022,7 @@ def main():
         "web_bake": {"seconds": round(bake_s, 2), "materials": bake_log,
                      "note": "glb に出ない手続き的な模様を、周期の板に焼いた画像（tex/）。描画用の素材はそのまま"},
         "web_cameras": web_cams,
+        "daylight": json.loads(bpy.context.scene.get("daylight", "null")),   # 描画に使った太陽（data/daylight.json から）
         "interior": [{"room": rid, "floor_z": round(z0, 3), "ceiling_z": round(z1, 3),
                       "cavity": [[round(x, 3), round(y, 3)] for x, y in cav],
                       "cut_volume_est_m3": round(abs(_interior_mod().area(cav)) * (z1 - z0), 2),

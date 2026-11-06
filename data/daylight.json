@@ -1,0 +1,23 @@
+{
+ "schema": "campus-recorder/daylight/1",
+ "note": "太陽と空の設定。Blender の描画（recorder/blender_build.py の setup_scene）と歩く画面（site export-web → web/data/site.json の daylight → web/look.js）が同じこのファイルを読む。太陽の位置は日付・時刻・緯度経度から同じ式（recorder/daylight.py と look.js の sunPosition）で計算する。見た目の調整値で、測った光ではない",
+ "date": "2026-11-06",
+ "time": "13:30",
+ "time_note": "日本時間。11/7 に 10:00（歩く画面の既定、方位 152°）と方位 215°（Blender）の食い違いをなくすため、南西の面と南西からの街路の視点が日なたになる午後に揃えた（方位 約 212°・高さ 約 31°）。歩く画面は ?t=・?d= で変えられる",
+ "lat": 35.1355,
+ "lon": 136.9755,
+ "lat_lon_note": "座標の原点（EPSG:6675 VII 系、CLAUDE.md）と同じ",
+ "blender": {
+  "sun_energy": 2.2,
+  "sun_energy_sketch": 1.8,
+  "sun_angle_deg": 2.5,
+  "sun_color": [1.0, 0.97, 0.9],
+  "sky_strength": 0.035,
+  "sky_sun_intensity": 0.25,
+  "sky_altitude_m": 50,
+  "note": "空は物理の空（Multiple scattering／Nishita）。物理単位で明るいので強さを弱くしている（青かぶりを防ぐ）。検収用の四面図は面ごとに太陽を回す（blender_build の検収の描画。ここの向きは使わない）"
+ },
+ "web": {
+  "note": "露出・太陽の強さ・空の濁りなど歩く画面だけの調整値は web/look.js にある（?exp= ?sun= ?turb= で上書き）。ここから読むのは日付・時刻・緯度経度だけ"
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "made_by": "数え係（opus, claude-opus-5-5）",
+ "made_at": "2026-11-04T04:25",
+ "building": "tower75",
+ "face": "f19",
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261103_065946407",
+   "PXL_20261103_070003022"
+  ],
+  "visible": 11,
+  "visible_status": "measured",
+  "method": "連窓はガラスの箱の下から 11 段が 2 枚で一致（凹部の面の縮尺で z2〜z12 の各階に 1 本）。z0・z1 と基壇は木で隠れる"
+ },
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "method": "列ではなく各階 1 本の連窓（5 枚割）"
+ },
+ "crown_rows": {
+  "value": 3,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261103_065946407",
+   "PXL_20261103_070003022"
+  ],
+  "method": "ガラスの箱は z≈12.6〜15.6（脇の壁の縮尺、箱が前へ出るぶん少し高めに出る）"
+ },
+ "exceptions": [
+  "凹部の奥の壁には白い帯が無い",
+  "両脇の柱型は脇の壁の笠木より約 1.7 段高い"
+ ],
+ "requests": [
+  "北の芝生の木の無い所（または沈んだ広場の中）から凹部の下半分を正面で：連窓の全段数と足元"
+ ]
+}

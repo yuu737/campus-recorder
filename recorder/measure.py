@@ -4,7 +4,7 @@
     1. 壁の範囲（wall_box）を切り出し、縦のエッジの強さを列ごとに、横のエッジの強さを行ごとに足す（プロファイル）
     2. プロファイルの自己相関から、一番強い繰り返しの周期（画素）を求める＝柱間隔・階高
     3. 周期に合う山（エッジの位置）を拾い、本数を数える
-    4. 既知の長さが1つあれば（メジャー、PLATEAU の高さ など）画素→m に換算する。無ければ画素のまま
+    4. 既知の長さが1つあれば（メジャーを写した区間、PLATEAU の高さ など）画素→m に換算する。無ければ画素のまま
 
 出てくる物は「候補」。何階建てか・スパン数が本当に合っているかは、判断役（Claude か人）が画像を見て採否を決める。
 換算の根拠は result["scale"] に残す（何を・何 m と置いたか）。
@@ -241,10 +241,12 @@ def _count(peaks: list[float], period: float) -> int:
 
 
 def measure(img: np.ndarray, wall_box: list[float] | None = None,
-            known: tuple[str, float] | None = None, known_status: str = "measured") -> MeasureResult:
+            known: tuple | None = None, known_status: str = "measured") -> MeasureResult:
     """正面化した画像から柱間隔と階高の候補を出す。
 
     known: ("floor_pitch" | "bay_pitch" | "wall_height" | "wall_width", m)。1つあれば画素→m に換算する。
+           ("segment", m, px) はメジャーを写した区間（正面化画像で読んだ px と、その区間の m）。
+           物差し台帳の tape_measure。縮尺は m÷px、status は measured に固定する。
     known_status: その長さの出どころ（メジャーなら measured、PLATEAU の高さなどなら estimated）。
     """
     import cv2
@@ -275,9 +277,14 @@ def measure(img: np.ndarray, wall_box: list[float] | None = None,
         res.ratio_bay_over_floor = round(res.bays.period_px / res.floors.period_px, 3)
 
     if known:
-        what, m = known
-        px = {"floor_pitch": res.floors.period_px, "bay_pitch": res.bays.period_px,
-              "wall_height": float(h), "wall_width": float(w)}.get(what)
+        what, m = known[0], known[1]
+        if what == "segment":
+            # メジャーの区間：画素は判断役が正面化画像で読んだ値。周期には依らない
+            px = float(known[2]) if len(known) > 2 and known[2] else None
+            what, known_status = "tape_measure", "measured"
+        else:
+            px = {"floor_pitch": res.floors.period_px, "bay_pitch": res.bays.period_px,
+                  "wall_height": float(h), "wall_width": float(w)}.get(what)
         if px:
             mpp = m / px
             res.scale = {"what": what, "px": px, "m": m, "m_per_px": mpp, "status": known_status}
@@ -291,8 +298,33 @@ def measure(img: np.ndarray, wall_box: list[float] | None = None,
     return res
 
 
+def parse_known(text: str | None) -> tuple | None:
+    """`--known` の文字列を読む。
+
+    "floor_pitch=3.99" → ("floor_pitch", 3.99)（bay_pitch・wall_height・wall_width も同じ）
+    "segment=0.698@85.3" → ("segment", 0.698, 85.3)（メジャーの区間 0.698 m が正面化画像で 85.3 px）
+    """
+    if not text:
+        return None
+    k, _, v = text.partition("=")
+    k = k.strip()
+    if not v:
+        raise ValueError(f"--known は 名前=値 で書きます: {text}")
+    if k == "segment":
+        m, sep, px = v.partition("@")
+        if not sep:
+            raise ValueError(f"segment は 区間の m@画素 で書きます（例 segment=0.698@85.3）: {text}")
+        m, px = float(m), float(px)
+        if m <= 0 or px <= 0:
+            raise ValueError(f"segment の m と画素は正の数: {text}")
+        return ("segment", m, px)
+    if k not in ("floor_pitch", "bay_pitch", "wall_height", "wall_width"):
+        raise ValueError(f"--known の名前が分かりません: {k}（floor_pitch・bay_pitch・wall_height・wall_width・segment）")
+    return (k, float(v))
+
+
 def measure_file(front_jpg: Path, front_json: Path | None = None, out_json: Path | None = None,
-                 known: tuple[str, float] | None = None, known_status: str = "measured") -> MeasureResult:
+                 known: tuple | None = None, known_status: str = "measured") -> MeasureResult:
     from .rectify import read_image
 
     img = read_image(front_jpg)

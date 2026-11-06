@@ -4,7 +4,8 @@
   python -I -X utf8 scripts/trial_reset.py <棟id> --restore    最新の退避を戻す（試走の結果は同じ場所の after/ へ）
   python -I -X utf8 scripts/trial_reset.py <棟id> --clear-building   索引の building も空にする（台帳由来 source の物は残す）
 
-退避する物：scripts/design_<id>.py、data/buildings/<id>.json、out/<id>/（丸ごと）、out/<id>_*（作業の残り）、
+退避する物：scripts/design_<id>.py、data/buildings/<id>.json、data/reports/<id>/（係の報告。11/7 に追加。残すと係が前の結論を読める）、
+out/<id>/（丸ごと）、out/<id>_*（作業の残り）、
 out/rectified/<id>_*、out/rectified/*/<その棟の写真id>_front*、out/photos/shiwake_<id>*.json、web/data/models/<id>.glb、
 data/photos/registry.json のその棟の entries と not_registered、data/photos/index.json のその棟の写真の face / faces。
 残す物：道具、係の定義、手順書、data/site/tempaku.json、data/rulers.json、data/assets、他の棟、out/site/。
@@ -34,7 +35,7 @@ def _photo_ids(index: dict, bid: str) -> list[str]:
 def targets(bid: str, root: Path, photo_ids: list[str]) -> list[str]:
     """退避の対象（今ある物だけ。root からの相対パス）。"""
     cand: list[Path] = [root / "scripts" / f"design_{bid}.py", root / "data/buildings" / f"{bid}.json",
-                        root / "out" / bid, root / "web/data/models" / f"{bid}.glb"]
+                        root / "data/reports" / bid, root / "out" / bid, root / "web/data/models" / f"{bid}.glb"]
     out = root / "out"
     if out.is_dir():
         cand += sorted(out.glob(f"{bid}_*"))

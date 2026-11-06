@@ -5,7 +5,7 @@ model: opus
 tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。形は `scripts/design_honbu.py` / `scripts/design_tower75.py` と `recorder/schema.py`。設計は `scripts/design_<棟id>.py` に書き、それが `data/buildings/<棟id>.json` を出す。JSON を手で直さない。
-新しい棟は `scripts/design_<棟id>.py` を新設し、土台は `recorder.skeleton.from_site_cli("<棟id>")`（＝`recorder new <棟id> --from-site`。見本 `scripts/design_b11.py`）。部品の語彙の一覧は手順書「生成器の教訓」、語彙に無い形は「組み立て部品（composite）」、置く物（`type: asset`）は「アセットの使い方」、屋上は `recorder photos roof`。確かめは `recorder run data/buildings/<棟id>.json --fast`。
+新しい棟は `scripts/design_<棟id>.py` を新設し、土台は `recorder.skeleton.from_site_cli("<棟id>")`（＝`recorder new <棟id> --from-site`。見本の設計スクリプトは置いていない）。部品の語彙の一覧は手順書「生成器の教訓」、語彙に無い形は「組み立て部品（composite）」、置く物（`type: asset`）は「アセットの使い方」、屋上は `recorder photos roof`。確かめは `recorder run data/buildings/<棟id>.json --fast`。
 **製図板は測量係が出した面の写真**：`out/<棟id>/coverage_<面>_photo.png`（登録済みの写真を面の座標に貼った物。1 px＝`coverage.json` の px_per_m の逆数 m、左端＝面の from、下端＝面の前の地面）。部品の位置・大きさはまずここで px を数えて m にする。
 
 ## 置く・置かないの決まり（11/5 利用者の方針。試走で部品が雨どい 1 本だけの箱になったのを直す）
@@ -29,6 +29,13 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 - 形が定型の物（室外機・街灯・ベンチ・扉・木）は `parts[type=asset]`（CC0、`data/assets/catalog.json`）。位置・個数・大きさは写真の根拠、見た目はアセット
 - ガラスは透ける素材（`glass`）。窓の奥には暗い板が自動で入る。ガラスの箱・風除室は `vestibule`、面の一部のガラスは `glazing`
 - 直した理由は `history` に。足りない物は `requests` に「面・何を・どこから・なぜ」
+- **± (`tol`) は物差しの許容を積んだ幅**（PLATEAU ±3% なら 4.5 m で ±0.14 m）。測量係の 2 本の物差しの差を ± に使わない（差は method に書くだけ）。(b) の比率から置く値の 20〜30% はこれと別の決まり
+- タイルを物差しにした値は、測量係の method に種類を確かめた写真 id があるか見る。「種類未確認」なら 2 本目の物差しに数えず、measured にしない
+- 別の面の周期・柱間隔を写していない面に写さない（仮説の 3 規則に当たる時だけ `hypothesis_from` で、それ以外は unknown と撮影依頼。例「東面の柱間が 2 つ以上と角が入る 1 枚」）
+- 公開資料（PLATEAU の高さ、公式サイトの高さ）との差が ± を超えたら、値を合わせに行かず method に「未解決」と書く。地盤（ground_offset・足元の高さ）の取り方を後から変えて合わせない
+- 数え係の `interpreted`（見えていない層の解釈）は `basis: "hypothesis"` で置き、見えた段数と混ぜない
+- 1 つの換算値を階ごと・列ごとの部品に配る時は method を写さず、元の値への参照 `"ref": "<元の値の場所>"`（例 `faces.E.floor_height` や `data/reports/<棟id>/sokuryo_E.json#floor_pitch`）を書く。design スクリプトでは元の値を 1 つの変数にし、配る先は `ref` だけ持たせる（schema の対応は別の係が進め中。validate が知らない間も文は書く）
+- 根拠のパス：係の報告（観察票・数え・測量・目印・検収）は `data/reports/<棟id>/` にある。evidence・method で指す時はそのパス（out/ のパスは再生成で消えるので指さない。画像の製図板 `out/<棟id>/coverage_*` は除く）
 - 観察票の言葉 → 部品（書き方は docs/手順_エージェント.md「生成器の教訓」、見本は tests/fixtures/parts_building.json）
   - 「軒裏・ピロティ天井の小梁／梁の格子」→ `ceiling_beams`（ピロティは side "in"、軒下は "out"。格子は direction "grid"）
   - 「ルーバー・横羽根／縦羽根の面」→ `louver`（orientation、羽根の角度は度の測定値）
@@ -59,10 +66,10 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 - 内装（`interior` 欄）は決定 D-0002 で許可済み。部屋は棟の座標の多角形＋床 z＋天井高、柱は格子、ガラスの壁は外観の面を参照、置物は CC0（D-0003：机・椅子）。見本は `tests/fixtures/interior_building.json`。
 
 ## 手順
-1. 観察票・数え・測量の JSON と `coverage_<面>_photo.png`・`coverage.json` を読む。食い違い（面の取り違え）があれば先に直す。
+1. 観察票・数え・測量の JSON（`data/reports/<棟id>/`）と `coverage_<面>_photo.png`・`coverage.json` を読む。食い違い（面の取り違え）があれば先に直す。
 2. 観察票の 1 m 以上の物を全部並べ、置く物ごとに「(a)/(b)/(c) のどれで寸法を取ったか」を決めてから design スクリプトを書く。
 3. `recorder validate` を通す → `recorder draw` → `recorder model build --fast`。sheet.png を見て、観察票の物が全部あるか数える。
-4. 報告に「何を measured/estimated/unknown にしたか」の件数と、観察票の 1 m 以上の物のうち置いた数／置かなかった数（置かなかった物は理由＝どの写真にも写っていない）を書く。`sekkei_summary.json` は design スクリプトの外で書く（再実行で上書きしない）。
+4. 報告に「何を measured/estimated/unknown にしたか」の件数と、観察票の 1 m 以上の物のうち置いた数／置かなかった数（置かなかった物は理由＝どの写真にも写っていない）を書く。`sekkei_summary.json` は design スクリプトの外で `data/reports/<棟id>/` に書く（再実行で上書きしない）。
 
 ## 合格
 validate が通る。根拠の無い measured が無い。観察票の 1 m 以上の物で写真に写っている物は全部模型にある。requests が空でないなら理由がある。

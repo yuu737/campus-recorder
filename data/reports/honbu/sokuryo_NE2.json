@@ -1,0 +1,161 @@
+{
+  "schema": "sokuryo/1",
+  "made_by": "測量係（Claude, claude-opus-5-5）",
+  "made_at": "2026-11-04T04:02",
+  "building": "honbu",
+  "face": "NE2",
+  "floor_pitch": {
+    "value": 4.16,
+    "unit": "m",
+    "tol": 0.1,
+    "status": "estimated",
+    "evidence": [
+      "PXL_20261103_043129358",
+      "PXL_20261103_080431748"
+    ],
+    "method": "外階段の同じ側の踊り場の手すりの上端の間隔（折り返し階段で 1 階分）。N2：右 3→右 2＝1028 px、左 b→左 a＝1007 px、平均 1018 px。手すり壁のタイル 1 段 17.14 px（縦の自己相関 2 段 34.28、横の周期 28.9 との比 1.69）＝70 mm → 244.7 px/m → 4.16 m。N4：右 3→右 2＝1014 px、タイル 17.21 px → 245.9 px/m → 4.12 m。検算：東面（塊 B）の階高 4.25 m と −2.1%、南西面 4.22 m と −1.4%。手すりの高さが踊り場ごとにそろっている前提なので estimated"
+  },
+  "half_landing_step": {
+    "value": 2.08,
+    "unit": "m",
+    "status": "estimated",
+    "evidence": [
+      "PXL_20261103_043129358"
+    ],
+    "method": "左右交互の手すりの上端の間隔 492・536・471 px（右 1→左 a の 429 px は最下段の壁の上端で除外）÷ 244.7"
+  },
+  "bay_pitch": {
+    "value": null,
+    "unit": "m",
+    "status": "unknown",
+    "evidence": [
+      "PXL_20261103_043129358",
+      "PXL_20261103_080431748"
+    ],
+    "method": "箱に柱型・窓が無い"
+  },
+  "box": {
+    "height_above_front_ground": {
+      "value": 17.6,
+      "unit": "m",
+      "tol": 0.3,
+      "status": "estimated",
+      "evidence": [
+        "PXL_20261103_043129358",
+        "PXL_20261103_080431748"
+      ],
+      "method": "箱の正面（手すり壁より奥の面）のタイル 1 段 12.40〜12.50 px（右の縦の帯 x 3060〜3380 と上端の帯、N2・N4 とも、横の周期との比 1.68）→ 177.1〜177.9 px/m。笠木の上端→箱の足元（室外機の裏）：N2 3114 px＝17.58 m、N4 3123 px＝17.56 m。手すり壁の縮尺で読むと 12.7 m になるが、面が違うので使わない"
+    },
+    "width_lower_bound": {
+      "value": 8.5,
+      "unit": "m",
+      "status": "estimated",
+      "evidence": [
+        "PXL_20261103_043129358",
+        "PXL_20261103_080431748"
+      ],
+      "method": "箱の右（西）の縁から、左の縁を隠す出口の箱の右の縁まで。N2 1509 px÷177.1＝8.52 m、N4 1403 px÷177.9＝7.89 m（N4 の方が出口の箱が大きく隠す）。左の縁はどの写真でも見えないので『8.5 m 以上』。PLATEAU の NE2 8.5 m と矛盾しない"
+    },
+    "check_vs_blockB": "東面の塊 B のパラペットは ground_z から約 19.2 m（sokuryo_E）。箱の上端が塊 B と同じ高さなら、北端の前の地面は ground_z より約 1.6 m 高い。地面の高さは未確認（5 m 標高で確かめられる）"
+  },
+  "stair": {
+    "length_along_face": {
+      "value": 10.4,
+      "unit": "m",
+      "tol": 0.15,
+      "status": "estimated",
+      "evidence": [
+        "PXL_20261103_043129358",
+        "PXL_20261103_080431748"
+      ],
+      "method": "左 a の踊り場の左端→右の踊り場の右端（手すり壁の面）。N2 2542 px÷244.7＝10.39 m、N4 2560 px÷245.9＝10.41 m（差 0.2%）"
+    },
+    "depth": {
+      "value": null,
+      "unit": "m",
+      "status": "unknown",
+      "evidence": [],
+      "method": "正面の写真だけ。箱と手すり壁の縮尺の比 0.726 から奥行きがあることは分かるが、カメラの距離が無いので m にできない"
+    },
+    "landing_a_parapet_over_others": {
+      "value": "約 1.4 倍",
+      "status": "estimated",
+      "evidence": [
+        "PXL_20261103_043129358"
+      ],
+      "method": "左 a 2300→2796＝496 px、左 b 1293→1645＝352 px"
+    }
+  },
+  "scale": {
+    "ruler": "tile_course",
+    "photo": "PXL_20261103_043129358",
+    "px_per_m": 244.7,
+    "check_ruler": "南西面・東面の階高 4.22〜4.25 m（踊り場の 1 階分の間隔に当てる）",
+    "diff_pct": -1.4,
+    "plane_note": "1 枚の正面化画像の中に奥行きの違う平行な面が 2 つある（手すり壁 17.1 px/段、箱 12.4 px/段）。長さは必ず同じ面のタイルで割った",
+    "plateau_check": {
+      "result": "箱の幅は 8.5 m 以上（PLATEAU NE2 8.5 m と矛盾しない）。PLATEAU の N_jog1・N_jog2 の引っ込みは箱の右に見えない",
+      "diff_pct": null
+    }
+  },
+  "rectified": "out/rectified/honbu_NE2/043129358/PXL_20261103_043129358_front.jpg",
+  "rectified_all": [
+    {
+      "path": "out/rectified/honbu_NE2/043129358/PXL_20261103_043129358_front.jpg",
+      "roi": "0.15,0.13,0.78,0.88",
+      "residual_deg": [
+        0.26,
+        0.35
+      ],
+      "use": "主"
+    },
+    {
+      "path": "out/rectified/honbu_NE2/080431748/PXL_20261103_080431748_front.jpg",
+      "roi": "0.10,0.08,0.88,0.70",
+      "residual_deg": [
+        0.22,
+        0.28
+      ],
+      "use": "2 枚目（夕方）"
+    },
+    {
+      "path": "out/rectified/honbu_NE2/043123901/PXL_20261103_043123901_front.jpg",
+      "roi": "0.08,0.12,0.66,0.85",
+      "residual_deg": [
+        0.23,
+        0.33
+      ],
+      "use": "数えの確認だけ"
+    },
+    {
+      "path": "out/rectified/honbu_NE2/043136840/PXL_20261103_043136840_front.jpg",
+      "roi": "0.22,0.10,0.76,0.85",
+      "residual_deg": [
+        0.24,
+        1.09
+      ],
+      "use": "縦の傾きが 1° を超えるので値に使わない"
+    }
+  ],
+  "unknowns": [
+    {
+      "what": "外階段の奥行き",
+      "why": "正面しか無い"
+    },
+    {
+      "what": "箱の左（東）の縁と東面の北端の角の関係",
+      "why": "出口の箱に隠れる"
+    },
+    {
+      "what": "北端の前の地面の高さ",
+      "why": "地面の物差しが無い"
+    }
+  ],
+  "requests": [
+    "外階段の奥行き：東側の道路（P123 の位置）か西側（体育館側）から、外階段を真横に近く見た 1 枚",
+    "北端の段差（PLATEAU の N_jog1/N_jog2）：北西の道路の北の端から箱の西側の面が見える 1 枚"
+  ],
+  "questions": [
+    "設計係へ：parts『北端の階段塔』の上端 18.5 m と踊り場 z 4.6・8.4（目視）を、箱の上端＝前の地面＋17.6 m、踊り場は半階 2.08 m ごと（1 階分 4.16 m）に左右交互 5 つ、に差し替えるか。地面の高さが決まらないと絶対の z にできない"
+  ]
+}

@@ -15,6 +15,7 @@ status の決まり（CLAUDE.md の 1）
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -474,6 +475,53 @@ def _asset_materials(obj, where: str) -> list[str]:
     return errs
 
 
+# --- 依頼（requests）の宛先 ------------------------------------------------------------------
+# requests には職員への撮影依頼と、道具・係への作業依頼（語彙・欄・再計算・調べ物）が混ざる。
+# 各項目は任意の欄 to（"staff"＝職員に撮ってもらう／"tool"＝道具・係の作業）を持てる。
+# 無い物は文面から決める（request_to）。報告と職員の画面の「撮影依頼」は staff 宛てだけを数える。
+REQUEST_TO = ("staff", "tool")
+_REQ_TOOL_RE = re.compile(r"recorder/|scripts/|\.py\b|語彙|欄|調べ物|撮影でなく")
+_REQ_STAFF_RE = re.compile(r"撮|写真|枚")
+_REQ_ID_PATH_RE = re.compile(r"^[A-Za-z0-9_.\[\]:/-]+$")     # where が JSON の道（interior.rooms[x].floor など）
+_REQ_VIEW_RE = re.compile(r"から(?:[、（(]|$)|\d+\s*°|正面|真横|斜め")      # 「45° から」「正面で」など撮る向きの言い方
+
+
+def request_to(rq: dict) -> str:
+    """依頼の宛先。to が書いてあればそれ。次に既存の kind（agents.detect_events が使う）："tool"・"asset" → tool、
+    "photo" → staff。どちらも無ければ（kind が "data"・"check" も）文面から：
+    1. 何を（what）・どこから（where）にコードの場所・語彙・欄・調べ物、または where が JSON の道 → tool
+    2. what・where・why に「撮」「写真」「枚」 → staff
+    3. where が撮る場所（「…から」を含む）か、what が撮る向き（「45° から」「正面で」「真横」「斜め」） → staff
+       （「北東の角を 45° から」のように「撮る」と書かない撮影依頼があるため）
+    4. それ以外 → tool"""
+    to = rq.get("to")
+    if to in REQUEST_TO:
+        return to
+    kind = rq.get("kind")
+    if kind in ("tool", "asset"):
+        return "tool"
+    if kind == "photo":
+        return "staff"
+    what, where, why = (str(rq.get(k) or "") for k in ("what", "where", "why"))
+    if _REQ_TOOL_RE.search(what + "\n" + where) or (where and _REQ_ID_PATH_RE.match(where.strip())):
+        return "tool"
+    if _REQ_STAFF_RE.search("\n".join((what, where, why))):
+        return "staff"
+    if "から" in where or _REQ_VIEW_RE.search(what.strip()):
+        return "staff"
+    return "tool"
+
+
+def split_requests(b: dict, status: str | None = "open") -> dict[str, list[dict]]:
+    """requests を宛先で分ける {"staff": [...], "tool": [...]}。status=None なら全部（既定は open だけ）。"""
+    out: dict[str, list[dict]] = {"staff": [], "tool": []}
+    for rq in b.get("requests", []) or []:
+        if status is not None and (rq.get("status") or "open") != status:
+            continue
+        out[request_to(rq)].append(rq)
+    return out
+
+
 def validate_building(b: dict) -> list[str]:
     """規約違反の一覧を返す。空なら合格。"""
     errs: list[str] = []
@@ -589,6 +637,8 @@ def validate_building(b: dict) -> list[str]:
                 errs.append(f"{where}: {k} がありません（撮影依頼には面・何を・なぜ が必要）")
         if rq.get("face") and rq["face"] not in face_ids and rq["face"] != "*":
             errs.append(f"{where}: face={rq['face']} は faces にありません")
+        if "to" in rq and rq["to"] not in REQUEST_TO:
+            errs.append(f"{where}: to={rq['to']!r} は {' / '.join(REQUEST_TO)} のどちらか（職員への撮影依頼か、道具・係の作業か）")
 
     # 差し込み口：進行役の決定（語彙・アセットの許可）と内装の検証。モジュールが無ければ素通り
     import importlib
@@ -602,6 +652,205 @@ def validate_building(b: dict) -> list[str]:
             errs += list(_fn(b))
 
     return errs
+
+
+# --- 警告（審査員役の指摘 11/6。落とさずに知らせる。recorder validate --strict でエラー扱い） ----------
+# 1. ± の下限      物差し（PLATEAU・OSM・タイル・tape）の許容 × value より tol が小さい長さの値
+# 2. 採用値の照合  method の「採用 4.19 m」と value が 1% 以上違う
+# 3. 根拠 id の実在 写真の索引・plateau:bldg_…・osm:way|relation/<数字>・gsi:…・data/ のパス のどれでもない。
+#                  out/ のパスは git 管理外（コミットされない根拠）なのでまとめて 1 件
+ROOT = Path(__file__).resolve().parent.parent
+RULER_DEFAULT_RATIO = {"plateau": 0.03, "osm": 0.05, "tile": 0.005 / 0.070, "tape": 0.01}
+_RULER_WORDS = {"plateau": ("plateau",), "osm": ("osm",), "tile": ("タイル",), "tape": ("tape", "メジャー")}
+_RULER_LABEL = {"plateau": "PLATEAU", "osm": "OSM", "tile": "タイル", "tape": "tape"}
+_ADOPT_RE = re.compile(r"採用[^0-9]{0,6}")
+_ADOPT_NUM = re.compile(r"([0-9]+(?:\.[0-9]+)?)\s*(mm|px|つ|枚|か所|本|倍|%)?")
+_ADOPT_SKIP_UNITS = {"px", "つ", "枚", "か所", "本", "倍", "%"}     # 採用値でない数（画素・個数・割合）
+_OSM_RE = re.compile(r"^osm:(way|relation)/\d+$")
+ADOPT_TOL = 0.01
+_WARN_SKIP = {"history", "crs"}
+
+
+def ruler_ratios(root: Path | None = None) -> dict[str, float]:
+    """物差しごとの許容の割合。data/rulers.json（tol_ratio か tol/value）が優先、無ければ RULER_DEFAULT_RATIO。"""
+    out = dict(RULER_DEFAULT_RATIO)
+    try:
+        doc = json.loads(((root or ROOT) / "data" / "rulers.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return out
+    pick = {"plateau_wall": "plateau", "tile_course": "tile"}
+    for r in doc.get("rulers", []):
+        rid = r.get("id", "")
+        key = pick.get(rid) or ("osm" if rid.startswith("osm") else "tape" if rid.startswith("tape") else None)
+        if not key:
+            continue
+        if r.get("tol_ratio"):
+            out[key] = float(r["tol_ratio"])
+        elif r.get("tol") and r.get("value"):
+            out[key] = float(r["tol"]) / float(r["value"])
+    return out
+
+
+def load_photo_ids(root: Path | None = None) -> set[str]:
+    """写真の索引（data/photos/*.json）にある写真 id（id と photo の鍵）を全部。索引が無ければ空。"""
+    ids: set[str] = set()
+    for f in sorted(((root or ROOT) / "data" / "photos").glob("*.json")):
+        try:
+            doc = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        lists = [doc] if isinstance(doc, list) else [v for v in doc.values() if isinstance(v, list)] if isinstance(doc, dict) else []
+        for lst in lists:
+            for it in lst:
+                if isinstance(it, dict):
+                    ids.update(str(it[k]) for k in ("id", "photo") if isinstance(it.get(k), str))
+    return ids
+
+
+def _seg(i: int, v) -> str:
+    """場所の書き方：id のある物は id（faces[E]）、無ければ番号。"""
+    return v["id"] if isinstance(v, dict) and isinstance(v.get("id"), str) and v["id"] else str(i)
+
+
+def _walk_values(obj, where: str):
+    """(場所, 測定値 dict) を全部。history・crs の下は見ない。"""
+    if isinstance(obj, dict):
+        if "value" in obj and "status" in obj:
+            yield where, obj
+            return
+        for k, v in obj.items():
+            if k in _WARN_SKIP:
+                continue
+            yield from _walk_values(v, f"{where}.{k}" if where else k)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            yield from _walk_values(v, f"{where}[{_seg(i, v)}]")
+
+
+def rulers_of(m: dict) -> list[str]:
+    """method と evidence から縮尺の物差しを判定する（語の有無だけの簡単な規則）。"""
+    text = str(m.get("method") or "").lower()
+    ev = [str(e).lower() for e in m.get("evidence") or []]
+    out = []
+    for key, words in _RULER_WORDS.items():
+        if any(w.lower() in text for w in words) or any(e.startswith(key + ":") for e in ev):
+            out.append(key)
+    return out
+
+
+def warn_tol_floor(b: dict, ratios: dict[str, float] | None = None) -> list[str]:
+    """1. ± の下限。長さ（unit m、標高の ground_z は除く）で tol < 物差しの許容 × |value| なら警告。
+    物差しが複数あれば一番細かい物（割合の小さい物）を下限にする。tol が無い値は調べない。"""
+    ratios = ratios or ruler_ratios()
+    out: list[str] = []
+    for where, m in _walk_values(b, ""):
+        if m.get("unit", "m") != "m" or where.endswith("ground_z") or m.get("status") == "unknown":
+            continue
+        v, tol = m.get("value"), m.get("tol")
+        if not (isinstance(v, (int, float)) and isinstance(tol, (int, float))) or isinstance(v, bool):
+            continue
+        rs = rulers_of(m)
+        if not rs:
+            continue
+        key = min(rs, key=lambda k: ratios.get(k, 1.0))
+        floor = ratios[key] * abs(float(v))
+        if tol < floor - 1e-9:
+            out.append(f"{where}: ±{tol:g} m は物差し（{_RULER_LABEL[key]} {ratios[key] * 100:.1f}%）の下限 "
+                       f"±{floor:.3f} m より小さい（value {v:g} m）")
+    return out
+
+
+def adopted_values(method: str, unit: str = "m") -> list[float]:
+    """method の「採用 4.19 m」「採用は平均 4.52」の採用値。採用の後ろ（句読点・括弧まで、20 字以内）で
+    最初の、画素・個数・割合でない数を取る（「採用 552.5 px」「採用は 2 つの平均 4.52 m」は 4.52 だけ）。mm は m に直す。"""
+    out: list[float] = []
+    for mt in _ADOPT_RE.finditer(method):
+        win = re.split(r"[。、，,（(；;]", method[mt.end():mt.end() + 20])[0]
+        for nm in _ADOPT_NUM.finditer(win):
+            u = nm.group(2)
+            if u in _ADOPT_SKIP_UNITS:
+                continue
+            out.append(float(nm.group(1)) * (0.001 if u == "mm" and unit == "m" else 1.0))
+            break
+    return out
+
+
+def warn_adopted(b: dict) -> list[str]:
+    """2. method に書いた採用値（「採用 4.19 m」「採用は平均 4.52」）と value が 1% 以上違えば警告。"""
+    out: list[str] = []
+    for where, m in _walk_values(b, ""):
+        v = m.get("value")
+        if not isinstance(v, (int, float)) or isinstance(v, bool):
+            continue
+        nums = adopted_values(str(m.get("method") or ""), m.get("unit", "m"))
+        if not nums:
+            continue
+        if not any(abs(n - float(v)) <= ADOPT_TOL * max(abs(float(v)), 1e-9) for n in nums):
+            out.append(f"{where}: method の採用値 {'・'.join(f'{n:g}' for n in nums)} と value {v:g} が 1% 以上違う")
+    return out
+
+
+def _walk_evidence(obj, where: str):
+    if isinstance(obj, dict):
+        ev = obj.get("evidence")
+        if isinstance(ev, list):
+            for e in ev:
+                yield where, e
+        for k, v in obj.items():
+            if k in _WARN_SKIP or k == "evidence":
+                continue
+            yield from _walk_evidence(v, f"{where}.{k}" if where else k)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            yield from _walk_evidence(v, f"{where}[{_seg(i, v)}]")
+
+
+def warn_evidence_ids(b: dict, photo_ids: set[str] | None = None, root: Path | None = None) -> list[str]:
+    """3. 根拠 id の実在。同じ id の警告は 1 件にまとめ、か所数と最初の場所を書く。
+    photo_ids が None なら索引から読む。索引が空（無い）なら PXL_ で始まる id は通す。"""
+    root = root or ROOT
+    if photo_ids is None:
+        photo_ids = load_photo_ids(root)
+    bad: dict[str, tuple[str, int, str]] = {}       # id → (理由, か所数, 最初の場所)
+    outs: dict[str, int] = {}
+
+    def note(e: str, why: str, where: str) -> None:
+        r, n, w = bad.get(e, (why, 0, where))
+        bad[e] = (r, n + 1, w)
+
+    for where, e in _walk_evidence(b, ""):
+        if not isinstance(e, str) or not e:
+            note(repr(e), "文字の id ではない", where)
+            continue
+        if e in photo_ids or (not photo_ids and e.startswith("PXL_")):
+            continue
+        if e.startswith("plateau:bldg_") or e.startswith("gsi:"):
+            continue
+        if e.startswith("osm:"):
+            if not _OSM_RE.match(e):
+                note(e, "OSM の id が osm:way/<数字> か osm:relation/<数字> ではない", where)
+            continue
+        if e.startswith("out/"):
+            outs[e] = outs.get(e, 0) + 1
+            continue
+        if e.startswith("data/"):
+            if not (root / e).exists():
+                note(e, "根拠のファイルがありません", where)
+            continue
+        note(e, "写真の索引・plateau:bldg_…・osm:…・gsi:…・data/ のパスのどれでもない", where)
+    out = [f"{w}: 根拠 {e} — {r}（{n} か所）" for e, (r, n, w) in bad.items()]
+    if outs:
+        missing = [p for p in outs if not (root / p).exists()]
+        ex = "、".join(list(outs)[:3]) + (" ほか" if len(outs) > 3 else "")
+        out.append(f"out/ の根拠 {sum(outs.values())} か所（{len(outs)} ファイル、うち今ここに無い {len(missing)}）は "
+                   f"git 管理外でコミットされない根拠です（{ex}）。data/reports/ に移すか写真 id に置き換える")
+    return out
+
+
+def warn_building(b: dict, photo_ids: set[str] | None = None, root: Path | None = None) -> list[str]:
+    """警告の一覧（validate_building のエラーとは別。既存の棟を落とさない）。"""
+    return (warn_tol_floor(b, ruler_ratios(root)) + warn_adopted(b)
+            + warn_evidence_ids(b, photo_ids, root))
 
 
 def unknowns(b: dict) -> list[str]:

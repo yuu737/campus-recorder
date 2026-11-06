@@ -454,7 +454,9 @@ def elevation_svg(b: dict, face_id: str) -> str:
             labels.append((float(z.value), f"{op.get('name', '開口')} 上端", z))
     # 地面を基準に、下から上へ 14px 以上の間隔で積む（地面のラベルは動かさない）
     if g != 0.0:
-        labels.append((g, "地面（面の前）", g_m))
+        # 地形（5m 標高）から出した地面は推定の値（琥珀）。面の ground_offset が無い（unknown）からと赤にしない
+        g_lab = g_m if g_src != "terrain" else Measurement(g, status="estimated", method="国土地理院 5m 標高（面の前の帯の中央値）", evidence=[])
+        labels.append((g, "地面（面の前）", g_lab))
     else:
         labels.append((0.0, "地面", Measurement(0.0, status="measured", evidence=[])))
     labels.sort(key=lambda t: t[0])
@@ -477,12 +479,16 @@ def elevation_svg(b: dict, face_id: str) -> str:
     # 下の寸法（スパン）
     yb = y_ground + below + 28
     if bay_edges:
+        # 柱間の色は柱間（pitch）の根拠の段に従う（黒 measured／琥珀の破線 estimated）。
+        # 以前は赤に固定で、estimated の柱間が「未確定」に見えていた（bay_edges は pitch が known の時だけ）
+        sp_st, sp_tick = _style(pitch), f'stroke="{COL.get(pitch.status, COL["unknown"])}"'
+        sp_col = COL.get(pitch.status, COL["unknown"])
         for i in range(len(bay_edges) - 1):
             a, c = bay_edges[i], bay_edges[i + 1]
-            svg.line(X(a), yb, X(c), yb, 'stroke="#c8322b"', 0.8)
-            svg.line(X(a), yb - 4, X(a), yb + 4, 'stroke="#c8322b"', 0.8)
-            svg.text(X((a + c) / 2), yb - 5, f"{pitch.value:.2f}", 10, "#c8322b", "middle")
-        svg.line(X(bay_edges[-1]), yb - 4, X(bay_edges[-1]), yb + 4, 'stroke="#c8322b"', 0.8)
+            svg.line(X(a), yb, X(c), yb, f'data-status="{_esc(pitch.status)}" {sp_st}', 0.8)
+            svg.line(X(a), yb - 4, X(a), yb + 4, sp_tick, 0.8)
+            svg.text(X((a + c) / 2), yb - 5, f"{pitch.value:.2f}", 10, sp_col, "middle")
+        svg.line(X(bay_edges[-1]), yb - 4, X(bay_edges[-1]), yb + 4, sp_tick, 0.8)
         yb += 22
     svg.line(x0, yb, x0 + W, yb, 'stroke="#222"', 1)
     svg.line(x0, yb - 5, x0, yb + 5, 'stroke="#222"', 1)
@@ -496,7 +502,10 @@ def elevation_svg(b: dict, face_id: str) -> str:
 
     # 未確定の一覧と撮影依頼
     ylist = yb + 44
-    reqs = [r for r in b.get("requests", []) if r.get("face") in (face_id, "*") and r.get("status", "open") == "open"]
+    # 撮影のお願いは職員宛て（schema.request_to が staff）だけ。道具・係の作業は別の見出しで灰色に
+    by_to = schema.split_requests(b)
+    reqs = [r for r in by_to["staff"] if r.get("face") in (face_id, "*")]
+    tool_reqs = [r for r in by_to["tool"] if r.get("face") in (face_id, "*")]
     if not length_m.known:
         unknown_lines.insert(0, "面の長さ（length）")
     if not height_m.known:   # estimated は正規の値（未確定には入れない。琥珀の破線で描く）
@@ -513,6 +522,13 @@ def elevation_svg(b: dict, face_id: str) -> str:
         for r in reqs:
             where = f"（{r['where']}）" if r.get("where") else ""
             ylist += svg.text_lines(LEFT, ylist, _wrap(f"▶ {r.get('what', '')}{where}：{r.get('why', '')}", 11, text_w), 11, "#c8322b")
+    if tool_reqs:
+        ylist += 6
+        svg.text(LEFT, ylist, "道具の作業（撮影ではない）", 12, "#555", weight="bold")
+        ylist += 16
+        for r in tool_reqs:
+            where = f"（{r['where']}）" if r.get("where") else ""
+            ylist += svg.text_lines(LEFT, ylist, _wrap(f"・{r.get('what', '')}{where}", 11, text_w), 11, "#555")
 
     # 根拠の写真
     ev: list[str] = []

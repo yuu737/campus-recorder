@@ -25,8 +25,9 @@ from pathlib import Path
 
 from . import registry as R_
 from .drawing import COL as BASIS_COL
+from .evidence import OBS_NOTE
 from .photos import INDEX_PATH, load_index
-from .schema import evidence_summary, load_building, unknowns
+from .schema import evidence_summary, load_building, split_requests, unknowns
 
 OUT_ROOT = Path("out")
 WEB_SITE = Path("web/data/site.json")
@@ -119,6 +120,7 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
     from .evidence import plan, status_counts
     pl = plan(b, entries, index)
     counts = status_counts(b)
+    obs = pl["observations"]          # 値を (状態, 方法, 根拠, 値の種類) で束ねた「独立した観察」の数
     per_face = {}
     for p in pl["photos"]:
         fid = p["face"] or "—"
@@ -130,8 +132,10 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
     for f in b.get("faces", []):
         c = counts["faces"].get(f["id"], {})
         d = per_face.get(f["id"], {"photos": 0, "resid": [], "methods": {}})
+        fo = obs["faces"].get(f["id"]) or {"values": 0, "observations": 0}
         face_rows.append({"face": f["id"], "name": f.get("name") or f["id"], "measured": c.get("measured", 0),
                           "estimated": c.get("estimated", 0), "unknown": c.get("unknown", 0), "photos": d["photos"],
+                          "values": fo["values"], "observations": fo["observations"],
                           "resid": round(statistics.median(d["resid"]), 1) if d["resid"] else None})
     all_res = [q["resid"] for p in pl["photos"] for q in p["picks"] if q["inlier"] and q["resid"] is not None]
     methods = {}
@@ -140,6 +144,7 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
     evidence = {"registered": len(pl["photos"]), "methods": methods, "picks": len(all_res),
                 "resid_median": round(statistics.median(all_res), 1) if all_res else None,
                 "held": len(held), "total": counts["total"], "faces": face_rows,
+                "obs": {k: obs[k] for k in ("values", "observations", "by_status", "derived", "eyeball", "top_copies", "other")},
                 "images": [p for p in (out_dir / "evidence_three.png", out_dir / "evidence_photo.png") if p.exists()],
                 "rrd": out_dir / "evidence.rrd" if (out_dir / "evidence.rrd").exists() else None,
                 "photos": [{"id": p["photo"], "face": p["face"], "method": p["method"], "period": p["period"],
@@ -180,7 +185,9 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             "cam": _street_cam(mr)}
 
     # 6. まだ無い物
-    reqs = [r for r in b.get("requests", []) if (r.get("status") or "open") == "open"]
+    # 撮影依頼は職員宛て（to="staff"）だけ。道具・係の作業（語彙・欄・再計算）は tool_requests に分ける（schema.request_to）
+    by_to = split_requests(b)
+    reqs, tool_reqs = by_to["staff"], by_to["tool"]
     cov_path = out_dir / "coverage.json"
     cov = json.loads(cov_path.read_text(encoding="utf-8")) if cov_path.exists() else None
     cov_rows = []
@@ -190,7 +197,7 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             used = sum(p.get("used_m2", 0) for p in f.get("photos", []))
             cov_rows.append({"face": f["face"], "photos": len(f.get("photos", [])), "used_m2": round(used),
                              "ratio": round(used / frame, 2) if frame else None})
-    rest = {"requests": reqs, "unknowns": unknowns(b), "coverage": cov_rows,
+    rest = {"requests": reqs, "tool_requests": tool_reqs, "unknowns": unknowns(b), "coverage": cov_rows,
             "gray_faces": [e["face"] for e in elevs if e["state"] == "unknown"], "summary": es}
 
     return {"id": bid, "name": b.get("name") or bid, "campus": b.get("campus"), "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -218,8 +225,9 @@ def stage_status(d: dict) -> dict[str, tuple[str, str]]:
     w = d["walk"]
     s["walk"] = ("done" if w["on_site"] else "todo", f"色付きの棟 {w['colored']}、灰色の箱（PLATEAU）{w['gray']}")
     r = d["rest"]
-    s["rest"] = ("partial" if r["requests"] or r["unknowns"] else "done",
-                 f"撮影依頼 {len(r['requests'])} 件、未確定の値 {len(r['unknowns'])}、灰色の面 {len(r['gray_faces'])}")
+    tool_n = len(r.get("tool_requests") or [])
+    s["rest"] = ("partial" if r["requests"] or tool_n or r["unknowns"] else "done",
+                 f"撮影依頼 {len(r['requests'])} 件、道具の作業 {tool_n} 件、未確定の値 {len(r['unknowns'])}、灰色の面 {len(r['gray_faces'])}")
     return s
 
 
@@ -356,6 +364,7 @@ def render(d: dict, out_html: Path) -> str:
 <span class="chip m">実測<b>{tot.get('measured', 0)}</b></span>
 <span class="chip e">推定<b>{tot.get('estimated', 0)}</b></span>
 <span class="chip u">不明<b>{tot.get('unknown', 0)}</b></span>
+<span class="chip" title="{_e(OBS_NOTE)}">独立した観察<b>{d['evidence']['obs']['observations']}</b></span>
 <span class="chip">形がある面・部品<b>{round(es['shape_ratio'] * 100)}%</b></span>
 <span class="chip">撮影依頼<b>{len(d['rest']['requests'])}</b></span>
 </div></div></header>
@@ -430,11 +439,26 @@ def render(d: dict, out_html: Path) -> str:
         for im, cap in zip(v["images"], caps):
             parts.append(f"<figure>{_img(im, base, cap)}<figcaption>{_e(cap)}</figcaption></figure>")
         parts.append("</div>")
-    parts.append("<table><tr><th>面</th><th class='num'>実測</th><th class='num'>推定</th><th class='num'>不明</th><th class='num'>登録済みの写真</th><th class='num'>残差の中央値 px</th></tr>")
+    ob = v["obs"]
+    ob_by = ob["by_status"]
+    parts.append(f"<p>値 実測 {ob_by['measured']['values']}・推定 {ob_by['estimated']['values']}・不明 {ob_by['unknown']['values']}　｜　"
+                 f"<b>独立した観察</b> 実測 {ob_by['measured']['observations']}・推定 {ob_by['estimated']['observations']}・"
+                 f"不明 {ob_by['unknown']['observations']}（複製 {ob['derived']}。方法が「目視」だけの値 {ob['eyeball']['values']}・観察 "
+                 f"{ob['eyeball']['observations']}）</p>")
+    parts.append(f"<p class='small'>{_e(OBS_NOTE)}</p>")
+    parts.append("<table><tr><th>面</th><th class='num'>実測</th><th class='num'>推定</th><th class='num'>不明</th><th class='num'>観察</th><th class='num'>登録済みの写真</th><th class='num'>残差の中央値 px</th></tr>")
     for r in v["faces"]:
         parts.append(f"<tr><td>{_e(r['face'])}<span class='small'>　{_e(r['name'])}</span></td><td class='num'>{r['measured']}</td><td class='num'>{r['estimated']}</td>"
-                     f"<td class='num'>{r['unknown']}</td><td class='num'>{r['photos']}</td><td class='num'>{'—' if r['resid'] is None else r['resid']}</td></tr>")
+                     f"<td class='num'>{r['unknown']}</td><td class='num'>{r['observations']}</td><td class='num'>{r['photos']}</td><td class='num'>{'—' if r['resid'] is None else r['resid']}</td></tr>")
+    oth = ob["other"]["by_status"]
+    parts.append(f"<tr><td>面の外<span class='small'>　棟全体・塊・部品・内装</span></td><td class='num'>{oth['measured']['values']}</td>"
+                 f"<td class='num'>{oth['estimated']['values']}</td><td class='num'>{oth['unknown']['values']}</td>"
+                 f"<td class='num'>{ob['other']['observations']}</td><td class='num'></td><td class='num'></td></tr>")
     parts.append("</table>")
+    top = [t for t in ob["top_copies"] if t["copies"] >= 2][:5]
+    if top:
+        parts.append("<p class='small'>複製の多い観察：" + "／".join(
+            f"{_e(t['kind'])}「{_e(t['method'] or '—')}」×{t['copies']}" for t in top) + "</p>")
     meth = "・".join(f"{METHOD_JA.get(k, k)} {n}" for k, n in sorted(v["methods"].items(), key=lambda kv: -kv[1]))
     parts.append(f"<p class='small'>登録の方法：{_e(meth) or '—'}。目視や整合で保留にした登録 {v['held']} 件（台帳の <code>not_registered</code> に理由つき）。"
                  + (f"ビューアで開く：<code>rerun {_e(rel(v['rrd'], base))}</code>（Rerun は描くだけで、形も数字も棟 JSON の物）" if v["rrd"] else "") + "</p></section>")
@@ -471,12 +495,23 @@ def render(d: dict, out_html: Path) -> str:
     r = d["rest"]
     parts.append(head(6, "rest", "まだ無い物", "決めつけない。測れていない所は灰色のまま残し、次の職員はここから撮る"))
     if r["requests"]:
+        parts.append(f"<h3 style='font-size:16px;margin:18px 0 6px'>撮影依頼（職員へ） {len(r['requests'])} 件</h3>")
         parts.append("<table><tr><th>面</th><th>何を</th><th>どこから</th><th>なぜ</th></tr>")
         for q in r["requests"][:20]:
             parts.append(f"<tr><td>{_e(q.get('face'))}</td><td>{_e(q.get('what'))}</td><td class='small'>{_e(q.get('where'))}</td><td class='small'>{_e(q.get('why'))}</td></tr>")
         parts.append("</table>")
         if len(r["requests"]) > 20:
             parts.append(f"<p class='small'>ほか {len(r['requests']) - 20} 件</p>")
+    if r.get("tool_requests"):
+        tr = r["tool_requests"]
+        parts.append(f"<h3 style='font-size:16px;margin:18px 0 6px'>道具の作業 {len(tr)} 件</h3>"
+                     "<p class='small'>職員に撮ってもらう物ではなく、道具（recorder）や係が直す・調べる物（語彙・欄・再計算・調べ物）</p>")
+        parts.append("<table><tr><th>面</th><th>何を</th><th>どこを</th><th>なぜ</th></tr>")
+        for q in tr[:20]:
+            parts.append(f"<tr><td>{_e(q.get('face'))}</td><td>{_e(q.get('what'))}</td><td class='small'>{_e(q.get('where'))}</td><td class='small'>{_e(q.get('why'))}</td></tr>")
+        parts.append("</table>")
+        if len(tr) > 20:
+            parts.append(f"<p class='small'>ほか {len(tr) - 20} 件</p>")
     if r["coverage"]:
         parts.append("<h3 style='font-size:16px;margin:18px 0 6px'>面の写真の覆い</h3><table><tr><th>面</th><th class='num'>写真</th><th class='num'>使えた面積 m²</th><th class='num'>使えた割合</th></tr>")
         for c in r["coverage"]:
@@ -514,7 +549,10 @@ def run(building_json: Path, out: Path | None = None, root: Path = Path("."), sh
     summ = {"html": str(out_html), "made_by": "report（recorder）", "made_at": datetime.now().isoformat(timespec="seconds"),
             "stages": {k: {"status": s, "result": r} for k, (s, r) in st.items()},
             "counts": {"photos": d["photos"]["total"], "registered": d["evidence"]["registered"], **{k: d["evidence"]["total"].get(k, 0) for k in STATUS_JA},
-                       "requests": len(d["rest"]["requests"]), "unknowns": len(d["rest"]["unknowns"])}}
+                       "observations": {k: d["evidence"]["obs"]["by_status"][k]["observations"] for k in STATUS_JA},
+                       "derived": d["evidence"]["obs"]["derived"],
+                       "requests": len(d["rest"]["requests"]), "tool_requests": len(d["rest"]["tool_requests"]),
+                       "unknowns": len(d["rest"]["unknowns"])}}
     if shot_res is not None:
         summ["shots"] = shot_res
     (out_dir / "report.json").write_text(json.dumps(summ, ensure_ascii=False, indent=1), encoding="utf-8")

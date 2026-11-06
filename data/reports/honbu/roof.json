@@ -1,0 +1,395 @@
+{
+  "roof_edge_offset_candidates": [
+    {
+      "dx": -0.5,
+      "dy": -4.75,
+      "score": 14.642,
+      "rel": 1.0,
+      "confidence": 1.0
+    },
+    {
+      "dx": 0.5,
+      "dy": -5.25,
+      "score": 14.115,
+      "rel": 0.964,
+      "confidence": 0.949
+    },
+    {
+      "dx": 1.5,
+      "dy": -5.75,
+      "score": 12.857,
+      "rel": 0.878,
+      "confidence": 0.826
+    }
+  ],
+  "ambiguous": true,
+  "roof_edge_source": "auto",
+  "lean_m": [
+    -0.5,
+    -4.75
+  ],
+  "lean_abs_m": 4.78,
+  "lean_dir_deg": 186.0,
+  "lean_ratio": 0.2017,
+  "tall_parts_aerial": [
+    {
+      "id": "西角の階段塔（無窓・塊より高い）",
+      "top_z": 30.23,
+      "lean_m": [
+        -0.64,
+        -6.06
+      ],
+      "polygon": [
+        [
+          -38.31,
+          -6.65
+        ],
+        [
+          -41.69,
+          -13.07
+        ],
+        [
+          -47.44,
+          -10.04
+        ],
+        [
+          -44.07,
+          -3.62
+        ]
+      ]
+    }
+  ],
+  "lean_by_block": [
+    {
+      "id": "A",
+      "top_z": 23.68,
+      "lean_m": [
+        -0.5,
+        -4.75
+      ]
+    },
+    {
+      "id": "B",
+      "top_z": 19.2,
+      "lean_m": [
+        -0.41,
+        -3.85
+      ]
+    }
+  ],
+  "roof_polygon_aerial": [
+    [
+      [
+        -52.2,
+        -18.05
+      ],
+      [
+        -8.2,
+        -41.25
+      ],
+      [
+        -0.9,
+        -27.25
+      ],
+      [
+        -44.82,
+        -4.01
+      ]
+    ],
+    [
+      [
+        -44.73,
+        -3.11
+      ],
+      [
+        -33.31,
+        -9.15
+      ],
+      [
+        -19.01,
+        18.05
+      ],
+      [
+        -26.51,
+        22.05
+      ],
+      [
+        -27.81,
+        19.65
+      ],
+      [
+        -31.11,
+        21.35
+      ],
+      [
+        -41.21,
+        2.15
+      ],
+      [
+        -41.81,
+        2.45
+      ]
+    ]
+  ],
+  "units": [
+    {
+      "cx": -39.38,
+      "cy": -8.73,
+      "cx_aerial": -39.88,
+      "cy_aerial": -13.48,
+      "w": 12.03,
+      "d": 6.94,
+      "bbox_w": 11.58,
+      "bbox_d": 8.92,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 26.41,
+      "brightness": 117.4,
+      "contrast": -69.6,
+      "block": "A",
+      "note": "暗い（影か暗い物）",
+      "source": "auto"
+    },
+    {
+      "cx": -24.74,
+      "cy": -16.6,
+      "cx_aerial": -25.24,
+      "cy_aerial": -21.35,
+      "w": 3.52,
+      "d": 3.26,
+      "bbox_w": 4.16,
+      "bbox_d": 3.97,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 10.47,
+      "brightness": 139.6,
+      "contrast": -47.4,
+      "block": "A",
+      "note": "暗い（影か暗い物）",
+      "source": "auto"
+    },
+    {
+      "cx": -40.47,
+      "cy": -3.96,
+      "cx_aerial": -40.97,
+      "cy_aerial": -8.71,
+      "w": 3.01,
+      "d": 2.91,
+      "bbox_w": 4.12,
+      "bbox_d": 3.74,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 6.19,
+      "brightness": 133.1,
+      "contrast": -53.9,
+      "block": "A",
+      "note": "暗い（影か暗い物）",
+      "source": "auto",
+      "on_part": "西角の階段塔（無窓・塊より高い）",
+      "cx_if_on_part": -40.33,
+      "cy_if_on_part": -2.65
+    },
+    {
+      "cx": -40.03,
+      "cy": -6.14,
+      "cx_aerial": -40.53,
+      "cy_aerial": -10.89,
+      "w": 2.42,
+      "d": 3.07,
+      "bbox_w": 3.03,
+      "bbox_d": 3.52,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 4.04,
+      "brightness": 221.4,
+      "contrast": 34.4,
+      "block": "A",
+      "note": "明るい（白い箱か明るい屋根材）",
+      "source": "auto"
+    },
+    {
+      "cx": -43.91,
+      "cy": -10.99,
+      "cx_aerial": -44.41,
+      "cy_aerial": -15.74,
+      "w": 1.33,
+      "d": 2.76,
+      "bbox_w": 1.77,
+      "bbox_d": 3.27,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 3.57,
+      "brightness": 130.2,
+      "contrast": -56.8,
+      "block": "A",
+      "note": "暗い（影か暗い物）",
+      "source": "auto"
+    },
+    {
+      "cx": -44.03,
+      "cy": -4.07,
+      "cx_aerial": -44.53,
+      "cy_aerial": -8.82,
+      "w": 2.3,
+      "d": 1.09,
+      "bbox_w": 2.84,
+      "bbox_d": 1.54,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 2.14,
+      "brightness": 151.9,
+      "contrast": -35.1,
+      "block": "A",
+      "note": "暗い（影か暗い物）",
+      "source": "auto",
+      "on_part": "西角の階段塔（無窓・塊より高い）",
+      "cx_if_on_part": -43.89,
+      "cy_if_on_part": -2.76
+    },
+    {
+      "cx": -47.06,
+      "cy": -9.93,
+      "cx_aerial": -47.56,
+      "cy_aerial": -14.68,
+      "w": 1.38,
+      "d": 1.12,
+      "bbox_w": 1.75,
+      "bbox_d": 1.52,
+      "axis_u": [
+        0.8846,
+        -0.4664
+      ],
+      "area_m2": 1.43,
+      "brightness": 136.9,
+      "contrast": -50.1,
+      "block": "A",
+      "note": "暗い（影か暗い物）",
+      "source": "auto"
+    },
+    {
+      "cx": -30.14,
+      "cy": 22.07,
+      "cx_aerial": -30.55,
+      "cy_aerial": 18.22,
+      "w": 2.72,
+      "d": 1.84,
+      "bbox_w": 3.52,
+      "bbox_d": 2.2,
+      "axis_u": [
+        0.4653,
+        0.8851
+      ],
+      "area_m2": 4.28,
+      "brightness": 127.2,
+      "contrast": -54.1,
+      "block": "B",
+      "note": "暗い（影か暗い物）",
+      "source": "auto"
+    }
+  ],
+  "large_regions": [
+    {
+      "cx": -33.87,
+      "cy": 5.96,
+      "cx_aerial": -34.27,
+      "cy_aerial": 2.11,
+      "w": 32.06,
+      "d": 13.36,
+      "bbox_w": 28.95,
+      "bbox_d": 11.2,
+      "axis_u": [
+        0.4653,
+        0.8851
+      ],
+      "area_m2": 52.1,
+      "brightness": 117.8,
+      "contrast": -63.5,
+      "block": "B",
+      "note": "設備にしては大きい：影（高い塊・塔の影か）",
+      "source": "auto"
+    }
+  ],
+  "roof_brightness": [
+    {
+      "id": "A",
+      "roof_median": 187.0,
+      "roof_mad": 1.1,
+      "threshold": 22.0
+    },
+    {
+      "id": "B",
+      "roof_median": 181.3,
+      "roof_mad": 6.7,
+      "threshold": 23.3
+    }
+  ],
+  "warnings": [
+    "縁の候補の 1 位と 2 位が近い（ambiguous）。--roof-edge で縁の点を指すと決まる",
+    "低い建物でも 1 m 以上ずれる：写真の位置ずれか、低い建物の縁の読み違いの疑い"
+  ],
+  "px_per_m": 2.0502,
+  "height_m": 23.68,
+  "height_from": "parapet_top（z=0 が地面の棟座標）",
+  "check_low_building": {
+    "id": "osm-way-1304077542",
+    "plateau_height_m": 3.7,
+    "distance_m": 32.2,
+    "offset_m": [
+      1.0,
+      -1.0
+    ],
+    "offset_abs_m": 1.41,
+    "candidates": [
+      {
+        "dx": 1.0,
+        "dy": -1.0,
+        "score": 36.877,
+        "rel": 1.0,
+        "confidence": 1.0
+      },
+      {
+        "dx": 0.0,
+        "dy": -0.5,
+        "score": 29.539,
+        "rel": 0.801,
+        "confidence": 0.764
+      },
+      {
+        "dx": 2.0,
+        "dy": -1.5,
+        "score": 28.323,
+        "rel": 0.768,
+        "confidence": 0.725
+      }
+    ],
+    "ambiguous": false,
+    "ok": false,
+    "note": "低い建物でも 1 m 以上ずれる：写真の位置ずれか、低い建物の縁の読み違いの疑い"
+  },
+  "building": "honbu",
+  "source": "gsi aerial z18",
+  "aerial": "out/site/aerial_z18.png",
+  "made_by": "recorder.roof",
+  "made_at": "2026-11-04T11:41:00",
+  "method": "足元の形を ±6 m 平行移動して航空写真の勾配（辺に直交する成分）との重なりが最大の位置＝屋上の縁。設備は縁から 1 m 内側で屋根面の明るさの中央値から閾値以上違う連結成分。値は estimated として使う",
+  "existing_rooftop_parts": [
+    {
+      "name": "屋上の塔屋（エレベーター機械室か階段）",
+      "z1": 32.08,
+      "units_inside": [],
+      "note": "写真では中に設備が無い"
+    }
+  ]
+}

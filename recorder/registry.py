@@ -219,14 +219,60 @@ def poly_area(pts) -> float:
     return abs(sum(pts[i][0] * pts[(i + 1) % n][1] - pts[(i + 1) % n][0] * pts[i][1] for i in range(n))) / 2 if n >= 3 else 0.0
 
 
-def face_top(b: dict, f: dict) -> float:
-    def v(m):
-        if isinstance(m, (int, float)):
-            return float(m)
-        if isinstance(m, dict) and m.get("status") != "unknown" and m.get("value") is not None:
-            return float(m["value"])
+FACE_TOP_FALLBACK_M = 20.0     # 棟 JSON に上端の手がかりが 1 つも無い時だけの仮の値（警告を出す）
+_BLOCK_END_TOL_M = 0.5         # 面の両端が塊の頂点とこの距離以内なら、その塊の面と見なす（schema._face_top_values と同じ）
+
+
+def _mval(m) -> float | None:
+    """寸法項目（{value, status}）か数から値。unknown・値なしは None。"""
+    if isinstance(m, bool):
         return None
-    return v(f.get("top_z")) or v(b.get("parapet_top")) or 20.0
+    if isinstance(m, (int, float)):
+        return float(m)
+    if isinstance(m, dict) and m.get("status") != "unknown" and m.get("value") is not None:
+        try:
+            return float(m["value"])
+        except (TypeError, ValueError):
+            return None
+    return None
+
+
+def face_top_source(b: dict, f: dict) -> tuple[float, str]:
+    """面の上端の高さ（棟の z=0＝ground_z からの m）と、どこから引いたか。
+    優先：面の top_z → 面の両端を頂点に持つ塊（blocks）の top_z（複数なら高い方）→ 棟の parapet_top
+    → floor_count × floor_pitch → どれも無ければ 20 m（仮。警告を出す）。
+    高さは棟の z=0 からなので ground_z は足さない（parapet_top・塊の top_z と同じ基準）。"""
+    v = _mval(f.get("top_z"))
+    if v is not None:
+        return v, "face.top_z"
+    ends = [f.get("from"), f.get("to")]
+    if all(e and len(e) >= 2 for e in ends):
+        tops = []
+        for blk in b.get("blocks") or []:
+            pts = blk.get("polygon") or []
+            hit = all(any(abs(float(p[0]) - float(e[0])) < _BLOCK_END_TOL_M and abs(float(p[1]) - float(e[1])) < _BLOCK_END_TOL_M
+                          for p in pts) for e in ends)
+            t = _mval(blk.get("top_z")) if hit else None
+            if t is not None:
+                tops.append((t, blk.get("id")))
+        if tops:
+            t, bid = max(tops, key=lambda x: x[0])
+            return t, f"blocks[{bid}].top_z"
+    v = _mval(b.get("parapet_top"))
+    if v is not None:
+        return v, "parapet_top"
+    n, pitch = _mval(b.get("floor_count")), _mval(b.get("floor_pitch"))
+    if n is not None and pitch is not None and n > 0 and pitch > 0:
+        return n * pitch, "floor_count×floor_pitch"
+    import warnings
+    warnings.warn(f"棟 {b.get('id')} の面 {f.get('id')}：上端の高さ（面・塊の top_z、parapet_top、floor_count×floor_pitch）が無いので "
+                  f"仮に {FACE_TOP_FALLBACK_M:g} m で描きます。目印の高さはずれます", stacklevel=3)
+    return FACE_TOP_FALLBACK_M, "fallback"
+
+
+def face_top(b: dict, f: dict) -> float:
+    """面の上端の高さ（棟の z=0 からの m）。引き方は face_top_source。"""
+    return face_top_source(b, f)[0]
 
 
 # --- 写真の場所 -------------------------------------------------------------------------

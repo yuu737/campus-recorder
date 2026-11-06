@@ -8,7 +8,7 @@ tools: Bash, Read, Glob, Grep
 手順書「1 面を通す手順」3。
 
 ## 入力
-観察票（`kansatsu_<面>.json`）、その面の写真。
+観察票（`data/reports/<棟id>/kansatsu_<面>.json`）、その面の写真。
 
 ## 手順
 1. 両端が入る写真があればそれで数え、別の写真でもう 1 回数える。一致で確定。
@@ -18,8 +18,10 @@ tools: Bash, Read, Glob, Grep
 5. スパンに入れる物：同じ柱割りの区画だけを `bays` に数える。端の無窓の壁・幅の違う細いスパン・縦のシャフト・くぼみは `segments`（`[{"what","from":"左端から何スパン目の後","width_ratio":"柱間に対する比"}]`）に分けて書き、bays に混ぜない。
 6. 無地の壁（窓も柱型も無い）は数えない：`bays: {"not_applicable": true, "why": "無地"}`（unknown と区別する）。
 7. 無窓の面の階数は、同じ塊（観察票の blocks）の窓のある面の階数を `status: "estimated"`、method「同じ塊の <面> から」で書いてよい。観察票・前の係と数が食い違ったら、両方の数・写真 id・どちらを採ったか（理由）を `disagreement` に書く。
+8. 見えていない層（地面より下に沈んだ層、手前の物で隠れた段など）は解釈。`floors` には**写真で見えた段数だけ**を書き、解釈の分は別の項目 `interpreted`（`{"value","basis":"hypothesis","why","evidence"}`）に分ける。見えた数と足して 1 つの measured にしない。
+9. 別の面の柱間・列数を、写していない面に写さない。写っていない面は unknown にして撮影依頼（例「東面の柱間が 2 つ以上と角が入る 1 枚」）。
 
 ## 出力
-`out/<棟id>/kazoe_<面id>.json`：`{"bays": {"value", "status", "evidence": [写真id], "method"}, "floors": {...}, "segments": [], "exceptions": [], "disagreement": [], "requests": []}`
+`data/reports/<棟id>/kazoe_<面id>.json`（out/ ではない。git に入り、棟 JSON の evidence からこのパスを指す）：`{"bays": {"value", "status", "evidence": [写真id], "method"}, "floors": {...}, "interpreted": [], "segments": [], "exceptions": [], "disagreement": [], "requests": []}`
 ## 合格
-`measured` には写真 id が 2 枚以上、または 1 枚＋目印の対応の説明。
+`measured` には写真 id が 2 枚以上、または 1 枚＋目印の対応の説明。見えた段数と解釈（`interpreted`、仮説）が分かれている。

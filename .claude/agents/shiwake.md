@@ -5,7 +5,7 @@ model: opus
 tools: Bash, Read, Glob, Grep
 ---
 `.claude/agents/_共通.md` を守る。
-索引の `period`（before/during）と台帳由来の `building`（`source: "台帳(期間前)"`）は消さずに参考にする。面 id は `recorder new <id> --from-site` の土台と同じ足元の辺番号。索引へ書き戻すのは face / faces だけ。手順書「1 面を通す手順」2。
+索引の写真は期間中の物だけ（期間前の写真と分類台帳は使わない。11/7 に決定）。面 id は `recorder new <id> --from-site` の土台と同じ足元の辺番号。索引へ書き戻すのは face / faces だけ。手順書「1 面を通す手順」2。
 
 ## 入力
 索引 `data/photos/index.json`（`candidates` は参考）、`data/site/tempaku.json` の足元（面 id は足元の辺番号 `f0`〜）、一覧画像（無ければ自分で縮小して並べる）。
@@ -17,7 +17,6 @@ tools: Bash, Read, Glob, Grep
 3. 決められない物は `building: null` と理由。候補は `candidate` に残す。
 3b. **ピロティ・通り抜けの中から撮った写真**（天井と奥の壁が写る、外の面が写らない）は面にしない：`face: null`、`interior_views: true`、`candidate_faces` に近い面。観察係が `structures` に使う
 3c. 一直線に並ぶ細かい面（f4/f5 のように足元の辺が分かれているだけの物）は、写っている範囲の主の面を `face`、全部を `faces` に。境目が見えなければ両方を `faces` に入れて `confidence: mid`
-4. 過去の分類台帳（`D:\名城大学\写真資料_*\写真台帳.json`）がある写真は、台帳の値を `source: "台帳(期間前)"` 付きで参考にしてよいが、最後は目視で確定し、食い違いは `disagreement` に書く。
 
 ## 出力
 `out/photos/shiwake_<フォルダ>.json`：id ごとに `{"building","face","faces","interior_views","candidate_faces","confidence":"high|mid|low","evidence":"写っている物","source"}`。`faces` は面 id の並び（主の面を先頭）。索引への書き戻しは `face`・`faces`（と `interior_views`）だけ、`notes` には「仕分け係（opus）」と 1 行足す（他の人の notes は消さない）。他の棟の `out/` は書式の見本としてだけ見てよい（値は読まない）。

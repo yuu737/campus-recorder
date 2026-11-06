@@ -88,6 +88,21 @@ def test_tasks_cover_all_steps(tmp_path):
     for w in ("recheck", "photoproj", "register", "coverage", "検収 C"):
         assert w in by["kenshu"]["task"]
     assert by["web"]["command"] == "recorder site export-web --with-coverage" and by["seizu_final"]["agent"] == "seizu"
+    # 目印係は模型の後・検収の前。依頼文は升を指して道具（pnp）が登録する形
+    i = agents.PIPELINE_STEPS.index
+    assert i("seizu") < i("mejirushi") < i("kenshu")
+    m = by["mejirushi"]
+    assert m["kind"] == "agent" and m["system_files"][1] == ".claude/agents/mejirushi.md"
+    for w in ("recorder photos landmarks data/buildings/b1.json", "landmarks-crop", "data/reports/b1/mejirushi/picks_<写真id>.json",
+              "photos pnp data/buildings/b1.json --picks data/reports/b1/mejirushi/", "--check-jpg", "寸法", "registry.json"):
+        assert w in m["task"], w
+    # 係の報告 JSON の置き場は data/reports/<棟>/（画像と道具の出力は out/）
+    for st, w in (("kansatsu", "data/reports/b1/kansatsu_<面id>.json"), ("kazoe", "data/reports/b1/kazoe_<面id>.json"),
+                  ("sokuryo", "data/reports/b1/sokuryo_<面id>.json"), ("sekkei", "data/reports/b1/sekkei_summary.json"),
+                  ("kenshu", "data/reports/b1/kenshu_summary.json")):
+        assert w in by[st]["task"], (st, w)
+        assert f"out/b1/{w.rsplit('/', 1)[1]}" not in by[st]["task"]
+    assert "out/b1/coverage_<面>_photo.png" in by["sekkei"]["task"]
     # API の pipeline と同じ文（状態に依らない）
     r = agents.run_pipeline("b1", "data/photos/20261104", steps=["sekkei", "kenshu"], dry_run=True, cwd=tmp_path,
                             agents_dir=".claude/agents")
@@ -117,3 +132,68 @@ def test_log_appends(tmp_path):
     assert r3["record"] != r1["record"] and r3["steps"] == 1
     with pytest.raises(agents.AgentError):
         agents.log_step("b1", "nai", cwd=tmp_path)
+
+
+def test_log_mejirushi(tmp_path):
+    (tmp_path / "data/reports/b1/mejirushi").mkdir(parents=True)
+    (tmp_path / "data/reports/b1/mejirushi/picks_P1.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "out/b1/landmarks").mkdir(parents=True)
+    (tmp_path / "out/b1/landmarks/landmarks.json").write_text("{}", encoding="utf-8")
+    r = agents.log_step("b1", "mejirushi", model="opus", seconds=120, tokens=800, cwd=tmp_path)
+    add = r["added"]
+    assert add["agent"] == "mejirushi" and add["step"] == "mejirushi" and add["model"] == "claude-opus-5-5"
+    assert add["outputs"] == ["data/reports/b1/mejirushi/picks_P1.json"]
+    # 記録は out/ と data/reports/ の両方に同じ物
+    a = json.loads(open(r["record"], encoding="utf-8").read())
+    b = json.loads(open(r["report_record"], encoding="utf-8").read())
+    assert a == b and "data/reports/b1/pipeline_" in r["report_record"].replace("\\", "/")
+
+
+def test_pipeline_record_shape(tmp_path, monkeypatch):
+    """SDK を呼ばずに（_invoke をモック）、係ごとの実行記録の形だけ確かめる。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.delenv(agents.PRICES_ENV, raising=False)
+    answers = {"kansatsu": {"text": "\n# 観察票 3 面を書いた\n詳細…", "input_tokens": 1000, "output_tokens": 200,
+                            "cache_creation_input_tokens": None, "cache_read_input_tokens": 4000, "token_note": None,
+                            "cost_usd": 0.02, "turns": 3, "is_error": False, "stop": "success"},
+               "kazoe": {"text": "数えた", "input_tokens": None, "output_tokens": None,
+                         "token_note": "SDK の結果（usage・model_usage）に input_tokens・output_tokens が無いので null",
+                         "cost_usd": None, "turns": 1, "is_error": False, "stop": "success"}}
+    monkeypatch.setattr(agents, "_invoke", lambda spec, *a: answers[spec["name"]])
+    (tmp_path / "data/reports/b1").mkdir(parents=True)
+    (tmp_path / "data/reports/b1/kansatsu_f0.json").write_text("{}", encoding="utf-8")
+    prices = {"opus": {"input": 5.0, "output": 25.0}}
+    r = agents.run_pipeline("b1", steps=["kansatsu", "kazoe"], cwd=tmp_path, agents_dir=".claude/agents", prices=prices)
+    out = json.loads(open(r["record"], encoding="utf-8").read())
+    rep = json.loads(open(r["report_record"], encoding="utf-8").read())
+    assert out == rep and r["record"].replace("\\", "/").split("/")[-1] == r["report_record"].replace("\\", "/").split("/")[-1]
+    k, z = out["steps"]
+    for s in (k, z):
+        for key in ("agent", "model", "started_at", "ended_at", "seconds", "input_tokens", "output_tokens",
+                    "cost_usd_estimate", "summary", "note"):
+            assert key in s, key
+    assert k["agent"] == "kansatsu" and k["model"] == "claude-opus-5-5" and k["summary"] == "観察票 3 面を書いた"
+    assert k["outputs"] == ["data/reports/b1/kansatsu_f0.json"]
+    # 1000×5 + 200×25 + 4000×(5×0.1) = 12000 → 0.012 USD
+    assert k["cost_usd_estimate"] == pytest.approx(0.012) and k["cache_read_input_tokens"] == 4000
+    assert z["input_tokens"] is None and z["cost_usd_estimate"] is None
+    assert "無いので null" in z["note"] and "トークン数が取れない" in z["note"]
+    assert out["cost_usd_estimate"] == pytest.approx(0.012) and out["input_tokens_total"] == 1000
+    # 単価を渡さなければ見積もりは null と理由
+    r2 = agents.run_pipeline("b1", steps=["kansatsu"], cwd=tmp_path, agents_dir=".claude/agents")
+    s2 = r2["steps"][0]
+    assert s2["cost_usd_estimate"] is None and "単価が渡されていない" in s2["note"] and s2["cost_usd"] == 0.02
+
+
+def test_usage_tokens_from_model_usage():
+    toks, note = agents._usage_tokens(None, {"claude-opus-5-5": {"inputTokens": 7, "outputTokens": 3, "cacheReadInputTokens": 0,
+                                                                  "cacheCreationInputTokens": 2}})
+    assert toks == {"input_tokens": 7, "output_tokens": 3, "cache_creation_input_tokens": 2, "cache_read_input_tokens": 0} and note is None
+    toks, note = agents._usage_tokens({}, None)
+    assert toks["input_tokens"] is None and "input_tokens" in note
+
+
+def test_pipeline_dry_run_mejirushi(tmp_path):
+    r = agents.run_pipeline("b1", steps=["seizu", "mejirushi", "kenshu"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    assert [s["agent"] for s in r["steps"]] == ["seizu", "mejirushi", "kenshu"]
+    assert r["steps"][1]["task"] == agents.step_task("mejirushi", "b1") and r["steps"][1]["model"] == "claude-opus-5-5"

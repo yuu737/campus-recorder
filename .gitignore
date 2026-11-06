@@ -38,3 +38,9 @@ web/data/
 
 # 単眼の深さのモデルの重み（recorder/depth.py。取得 URL はそのファイルに）
 /checkpoints/
+
+# 係の報告 JSON（data/reports/<棟>/）は git に入れる。画像は入れない（絵は out/ で再生成）
+data/reports/**/*.png
+data/reports/**/*.jpg
+data/reports/**/*.jpeg
+data/reports/**/*.webp

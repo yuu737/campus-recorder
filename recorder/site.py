@@ -24,6 +24,7 @@ import io
 import json
 import math
 import re
+import sys
 import time
 import warnings
 import zipfile
@@ -1157,6 +1158,16 @@ def _small_jpg(src: Path, dst: Path, px: int) -> None:
         im.save(dst, "JPEG", quality=85)
 
 
+def _daylight_for_web() -> dict | None:
+    """data/daylight.json（Blender と同じ太陽と空の設定）を site.json の daylight に。無ければ None（画面は既定値で動く）。"""
+    from recorder import daylight
+    try:
+        return daylight.for_web()
+    except (OSError, ValueError, KeyError) as e:
+        print(f"[warn] daylight: {e}", file=sys.stderr)
+        return None
+
+
 def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: int = 2, margin_m: float = 120.0,
                with_coverage: bool = False, out_root: Path | None = None) -> dict:
     """Web 3D 用に web/data/site.json を書く。土台（PLATEAU の箱）・地面（5m 標高を均し、ground_offset の帯を上書きし、step_m 間隔に間引き）・
@@ -1272,6 +1283,7 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
         "designed": designed,
         "sources": doc.get("sources"),
         "env": wa["env"],
+        "daylight": _daylight_for_web(),
         "ground_tex": wa["ground_tex"],
         "ground_note": "地面の 3 段：地表の種類は OSM（estimated）、建物まわりの段差は棟 JSON の ground_offset、残りは 5 m 標高を均した面",
     }

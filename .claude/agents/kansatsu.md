@@ -20,6 +20,6 @@ tools: Bash, Read, Glob, Grep
 5. 数えられない物は null と理由。寸法（m）は絶対に書かない。
 
 ## 出力
-`out/<棟id>/kansatsu_<面id>.json` と `out/<棟id>/kansatsu.md`。
+`data/reports/<棟id>/kansatsu_<面id>.json` と `data/reports/<棟id>/kansatsu.md`（out/ ではない。git に入り、数え係・設計係が読み、棟 JSON の evidence からこのパスを指す。切り出した画像は out/ のまま）。
 ## 合格
 各面に `source_photos`（id）がある。写真に写っている 1 m 以上の物が全部 `parts` か `structures` にある。null には理由がある。寸法が 1 つも無い。

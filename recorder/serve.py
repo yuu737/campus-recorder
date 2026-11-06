@@ -10,7 +10,9 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
     POST /api/campus               {"university", "campus_name"} 敷地 JSON が無ければ campus_init
     POST /api/photos               multipart：写真（photos）＋ assignments（JSON 文字列）→ 保存 → 取り込み → 振り分け
     POST /api/start                {"buildings": [...], "dry_run": false} 棟ごとに run_pipeline を別スレッドで
-    GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態
+    GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
+                                   counts.requests は職員宛ての撮影依頼だけ（to="staff"）、counts.tool_requests は
+                                   道具・係の作業。どちらも棟 JSON から今の値で数え直す（report.json が古くても正しい）
 
 写真は data/photos/<今日 YYYYMMDD>/<棟 id>/ に置く（git 管理外）。索引 data/photos/index.json に入る。
 サーバはリポジトリ直下を cwd にして起動する（敷地 JSON・索引の道は cwd からの相対で読まれるため）。
@@ -300,6 +302,18 @@ def _run_public(st: dict | None) -> dict | None:
     return {k: st.get(k) for k in keys if k in st}
 
 
+def request_counts(root: Path, bid: str) -> dict | None:
+    """棟 JSON の open の依頼を宛先で数える {"requests": 職員への撮影依頼, "tool_requests": 道具の作業, "photo_requests": [...]}。
+    職員の画面の「あなた待ち」は staff 宛てだけ。棟 JSON が無ければ None。"""
+    from .schema import split_requests
+    b = _jload(root / "data" / "buildings" / f"{bid}.json")
+    if not isinstance(b, dict):
+        return None
+    by = split_requests(b)
+    return {"requests": len(by["staff"]), "tool_requests": len(by["tool"]),
+            "photo_requests": [{k: r.get(k) for k in ("face", "what", "where", "why")} for r in by["staff"]]}
+
+
 def api_progress(root: Path, buildings: list[str] | None) -> dict:
     if not buildings:
         buildings = list(RUNS) + [t for t in api_site(root)["targets"] if t not in RUNS]
@@ -309,6 +323,10 @@ def api_progress(root: Path, buildings: list[str] | None) -> dict:
             continue
         rep = _jload(root / "out" / b / "report.json")
         report = {"stages": rep.get("stages"), "counts": rep.get("counts")} if isinstance(rep, dict) else None
+        rc = request_counts(root, b)
+        if report is not None and rc is not None:
+            report["counts"] = {**(report["counts"] or {}), "requests": rc["requests"], "tool_requests": rc["tool_requests"]}
+            report["photo_requests"] = rc["photo_requests"]
         with _runs_lock:
             run = _run_public(RUNS.get(b))
         out[b] = {"report": report, "run": run}

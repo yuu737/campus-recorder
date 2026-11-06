@@ -25,9 +25,9 @@ tools: Bash, Read, Glob, Grep, Write
    - 柱型の番号は端から数える。写真に端が無い時は、玄関・外階段・看板など一意の物の脇の柱型から数え、数えた根拠を notes に書く。
 3. 各目印の升（例 `C7`。境目は `C7.5`＝C7 と C8 の境、`C+7`＝C と D の境）を書き出し、`recorder photos landmarks-crop <棟JSON> --photo <写真id> --cells C7,D3,...` で寄りの絵（升を各側に 0.25 升広げた 1.5 升四方）を出して読み、寄りの升（例 `F4`）を決める。角が升の線上なら `F4.5` のように半分の位置で書く。
    - 建物の足元（壁と地面・段の境）が写っていれば、地面の線 `<面>-G01`（段・基壇の上端は `<面>-G02…`）を 1 本入れる。上端の目印だけでは高さが決まらない。足元が隠れていれば入れない（推して描かない）。
-4. `out/<棟id>/landmarks/picks_<写真id>.json` を書く：
+4. `data/reports/<棟id>/mejirushi/picks_<写真id>.json` を書く（out/ ではない。git に入り、登録の根拠としてこのパスを指す。`landmarks/` の絵は道具の出力なので out/ のまま）：
    `{"photo": "<写真id>", "face": "<面id>", "picks": [{"id": "SW-13", "cell": "C7", "sub": "F4"}, ...], "notes": "柱型は西の端から数えた。..."}`
-5. `recorder photos pnp <棟JSON> --picks <その JSON> --check-jpg` を実行し、結果と重ね画像（`check_<写真id>.jpg`、不合格でも出る）を読む。沈んだ広場の前から撮った写真は picks に `"ground": "plaza"`（面の前の地面で高さの門を見る）。
+5. `recorder photos pnp <棟JSON> --picks data/reports/<棟id>/mejirushi/picks_<写真id>.json --check-jpg` を実行し、結果と重ね画像（`check_<写真id>.jpg`、不合格でも出る）を読む。沈んだ広場の前から撮った写真は picks に `"ground": "plaza"`（面の前の地面で高さの門を見る）。
    - `ok`：終わり。報告に位置・高さ・再投影の RMS・警告を書く。
    - `reproj`（残差が大きい）：`picks_px` の `reproj_px` が大きい点を疑う（取り違え＝隣の柱型か、別の窓の列）。1 回だけ直して再実行。それでも駄目なら止めて、どの点が怪しいかを書く。
    - `few_points`／`pnp_failed`：点を足す（別の面の角でもよい。`landmarks.json` の 3D は世界座標なので面をまたいで混ぜてよい）。
