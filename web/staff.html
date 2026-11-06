@@ -3,165 +3,202 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>写真の振り分け</title>
+<title>キャンパスを記録する</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #ffffff; --fg: #1f1f1f; --muted: #5f6368; --line: #dadce0; --soft: #f8f9fa;
-    --blue: #0b57d0; --blue-soft: #e8f0fe; --warn: #b3261e; --ok: #146c2e;
-    --radius: 12px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--bg); color: var(--fg);
-    font-family: "Google Sans", "Segoe UI", "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif; font-size: 15px; }
-  header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); }
-  header h1 { font-size: 20px; font-weight: 500; margin: 0; flex: 1; }
-  header .count { color: var(--muted); font-size: 14px; }
-  main { padding: 16px 20px 120px; max-width: 1200px; margin: 0 auto; }
-  .notice { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
-
-  /* ドロップ枠 */
-  #drop { border: 2px dashed var(--line); border-radius: var(--radius); min-height: 360px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center;
-    transition: background .15s, border-color .15s; cursor: pointer; }
-  #drop.over { background: var(--blue-soft); border-color: var(--blue); }
-  #drop.compact { min-height: 0; padding: 14px; flex-direction: row; justify-content: flex-start; gap: 14px; text-align: left; }
-  #drop.compact .cloud { width: 36px; height: 36px; }
-  #drop .cloud { width: 150px; height: 150px; }
-  #drop p { margin: 0; color: var(--fg); }
-  #drop p b { font-weight: 600; }
-  #drop .hint { color: var(--muted); font-size: 13px; }
-  .btn { border: 0; border-radius: 999px; padding: 10px 24px; font-size: 15px; cursor: pointer; font-family: inherit; }
-  .btn.primary { background: var(--blue); color: #fff; font-weight: 600; }
-  .btn.primary:disabled { background: #a8c0ea; cursor: not-allowed; }
-  .btn.ghost { background: transparent; color: var(--blue); border: 1px solid var(--line); }
-  .btn.ghost:hover { background: var(--blue-soft); }
-  input[type=file] { display: none; }
-
-  /* 一括の操作 */
-  #bulk { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
-    padding: 10px 0; margin: 12px 0; display: none; align-items: center; gap: 8px; flex-wrap: wrap; }
-  #bulk.on { display: flex; }
-  #bulk .sel { color: var(--muted); font-size: 14px; margin-right: auto; }
-  .field { display: inline-flex; align-items: center; gap: 6px; }
-  .field input[type=text], .field input[type=number] { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 15px; font-family: inherit; }
-  .field input[type=text] { width: 180px; }
-  .field input[type=number] { width: 72px; }
-  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
-  .seg button { border: 0; background: transparent; padding: 7px 14px; font-size: 14px; cursor: pointer; font-family: inherit; color: var(--fg); }
-  .seg button.on { background: var(--blue-soft); color: var(--blue); font-weight: 600; }
-
-  /* 写真の升 */
-  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
-  .card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
-  .card.sel { outline: 3px solid var(--blue); outline-offset: -3px; }
-  .card.bad { border-color: var(--warn); }
-  .card .img { position: relative; aspect-ratio: 4 / 3; background: var(--soft); cursor: pointer; }
-  .card .img img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card .img .check { position: absolute; left: 8px; top: 8px; width: 24px; height: 24px; border-radius: 50%;
-    background: rgba(255,255,255,.95); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--blue); }
-  .card.sel .img .check { background: var(--blue); color: #fff; border-color: var(--blue); }
-  .card .img .name { position: absolute; right: 0; bottom: 0; left: 0; padding: 4px 8px; font-size: 11px; color: #fff;
-    background: linear-gradient(transparent, rgba(0,0,0,.6)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .card .body { padding: 10px; display: grid; gap: 8px; }
-  .card input[type=text], .card input[type=number] { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 15px; font-family: inherit; }
-  .card input.unknown { border-color: #e8a317; }
-  .card .row { display: flex; gap: 8px; align-items: center; }
-  .card .row .seg { flex: 1; }
-  .card .row .seg button { flex: 1; }
-  .card .floor { display: none; }
-  .card.interior .floor { display: block; }
-  .card .msg { font-size: 12px; color: var(--warn); min-height: 1em; }
-  .card .msg.ok { color: var(--ok); }
-
-  /* 下の帯 */
-  footer { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg); border-top: 1px solid var(--line);
-    padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-  footer .status { flex: 1; color: var(--muted); font-size: 14px; }
-  footer .status b { color: var(--fg); }
-  footer .status .warn { color: var(--warn); }
-  footer code { background: var(--soft); padding: 2px 6px; border-radius: 6px; font-size: 13px; }
-
-  @media (max-width: 600px) {
-    header { padding: 12px 16px; } main { padding: 12px 16px 140px; }
-    #grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .card .body { padding: 8px; } .card input[type=text], .card input[type=number] { font-size: 14px; padding: 7px 8px; }
-    #drop { min-height: 280px; } #drop .cloud { width: 110px; height: 110px; }
-    .field input[type=text] { width: 140px; }
-    footer { padding: 10px 16px; }
-  }
+/* 見た目の基準：報告ページ（recorder report）と同じ。骨格と部品はデジタル庁デザインシステム、段取りは Vercel の Import、
+   棟の一覧の行は Linear、写真を落とす枠と並びは Luma の capture ページ。根拠の 3 色は立面図と同じ（黒・琥珀・赤）。 */
+:root{--ink:#1a1a1a;--ink2:#595959;--ink3:#767676;--line:#d9d9d9;--line2:#b3b3b3;--bg:#fff;--bg2:#f5f5f7;--accent:#0017c1;--accent2:#e8ebff;
+--measured:#222;--estimated:#b07a10;--unknown:#c8322b;--done:#1f7a3f;--partial:#b07a10;--todo:#8c8c8c;--wait:#c8322b;--focus:#fbbd3a}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg2);color:var(--ink);font-family:"Noto Sans JP","Noto Sans","Yu Gothic UI","Hiragino Sans",sans-serif;font-size:16px;line-height:1.7;font-feature-settings:"palt"}
+a{color:var(--accent)}button,input{font:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+header.top{background:var(--bg);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:baseline;gap:18px;padding:16px 24px;flex-wrap:wrap}
+header.top .kicker{color:var(--ink3);font-size:13px;letter-spacing:.04em}
+header.top h1{font-size:22px;margin:0;font-weight:700}
+header.top .links{margin-left:auto;font-size:14px;display:flex;gap:16px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;padding:24px 0 80px;align-items:start}
+.panel{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:18px}
+.panel h2{display:flex;align-items:center;gap:10px;font-size:18px;margin:0 0 4px}
+.panel h2 .n{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;font-size:13px;font-weight:700}
+.panel h2 .state{margin-left:auto;font-size:12px;font-weight:400;padding:1px 9px;border-radius:999px;color:#fff;background:var(--todo)}
+.panel h2 .state.done{background:var(--done)}.panel h2 .state.partial{background:var(--partial)}
+.panel .sub{color:var(--ink2);font-size:14px;margin:0 0 14px}
+label.f{display:block;font-size:13px;color:var(--ink2);font-weight:700;margin:10px 0 4px}
+input[type=text],input[type=number]{width:100%;border:1px solid var(--line2);border-radius:6px;padding:8px 10px;background:#fff;color:var(--ink)}
+input:focus{outline:2px solid var(--focus);outline-offset:1px;border-color:var(--ink)}
+input.unknown{border-color:var(--estimated);background:#fff8e8}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{border-left:3px solid var(--line2);padding:4px 12px;color:var(--ink2);font-size:14px;margin:12px 0 0}
+.note.warn{border-color:var(--unknown)}
+.cmd{display:block;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-family:ui-monospace,Consolas,monospace;font-size:13px;word-break:break-all;margin-top:8px;user-select:all}
+.btn{border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:6px;padding:8px 16px;cursor:pointer;font-weight:700;font-size:15px;line-height:1.4}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ghost{border-color:var(--line2);font-weight:400}
+.btn:disabled{opacity:.45;cursor:default}.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+#drop{border:2px dashed var(--line2);border-radius:10px;padding:34px 20px;text-align:center;background:#fff;cursor:pointer;transition:background .15s,border-color .15s}
+#drop.over{border-color:var(--accent);background:var(--accent2)}
+#drop.compact{padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+#drop.compact .hint,#drop.compact .big{display:none}
+#drop .big{font-size:17px;font-weight:700;margin:10px 0 2px}#drop .hint{color:var(--ink3);font-size:13px;margin:0}
+#drop p{margin:6px 0}#file{display:none}
+#bulk{display:none;align-items:center;gap:10px;flex-wrap:wrap;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:14px}
+#bulk.on{display:flex}#bulk .field{flex:1 1 180px;min-width:160px}#bulk input[type=text]{width:100%}
+#bulk input[type=number]{width:72px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:#fff;padding:6px 12px;cursor:pointer;color:var(--ink2);font-size:14px}
+.seg button.on{background:var(--ink);color:#fff}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;margin-top:14px}
+.card{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.card.sel{outline:3px solid var(--accent);outline-offset:-1px}
+.card.bad{border-color:var(--unknown)}
+.card .img{position:relative;aspect-ratio:4/3;background:var(--bg2);cursor:pointer}
+.card .img img{width:100%;height:100%;object-fit:cover;display:block}
+.card .check{position:absolute;top:6px;left:6px;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid var(--line2);color:transparent;text-align:center;line-height:20px;font-size:13px}
+.card.sel .check{background:var(--accent);border-color:var(--accent);color:#fff}
+.card .name{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);color:#fff;font-size:11px;padding:2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .body{padding:8px;display:grid;gap:6px}
+.card .body input[type=text]{padding:6px 8px;font-size:14px}
+.card .floor{display:none;padding:6px 8px;font-size:14px}.card.interior .floor{display:block}
+.card .seg button{padding:4px 10px;font-size:13px}
+.card .msg{font-size:12px;color:var(--ink3);min-height:1.4em}.card .msg.ok{color:var(--done)}.card.bad .msg{color:var(--unknown)}
+.go{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.go .status{flex:1 1 240px;font-size:14px;color:var(--ink2)}.go .status b{color:var(--ink)}.go .warn{color:var(--unknown)}
+/* 進捗 */
+.prog{position:sticky;top:16px}
+.prog .row{display:grid;grid-template-columns:1fr auto;gap:4px 10px;padding:12px 0;border-top:1px solid var(--line)}
+.prog .row:first-of-type{border-top:0}
+.prog .name{font-weight:700;font-size:15px}.prog .name a{color:var(--ink);text-decoration:none}.prog .name a:hover{text-decoration:underline}
+.prog .id{color:var(--ink3);font-size:12px;font-weight:400;margin-left:6px}
+.prog .dots{display:flex;gap:4px;align-items:center}
+.prog .dots i{width:14px;height:6px;border-radius:3px;background:var(--line)}
+.prog .dots i.done{background:var(--done)}.prog .dots i.partial{background:var(--partial)}.prog .dots i.wait{background:var(--wait)}
+.prog .last{grid-column:1/-1;color:var(--ink2);font-size:13px;line-height:1.5}
+.prog .wait{display:inline-block;background:#fdecec;color:var(--wait);font-size:12px;border-radius:999px;padding:0 8px;font-weight:700}
+.prog .ok{display:inline-block;background:#e6f4ea;color:var(--done);font-size:12px;border-radius:999px;padding:0 8px;font-weight:700}
+.prog .gray{color:var(--ink3);font-size:13px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin-top:10px}
+.legend i{display:inline-block;width:14px;height:6px;border-radius:3px;background:var(--line);vertical-align:middle;margin-right:3px}
+.legend i.done{background:var(--done)}.legend i.partial{background:var(--partial)}.legend i.wait{background:var(--wait)}
+@media(max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}.prog{position:static}}
+@media(max-width:560px){.wrap{padding:0 14px}.two{grid-template-columns:1fr}#grid{grid-template-columns:repeat(2,minmax(0,1fr))}header.top .links{margin-left:0}}
 </style>
 </head>
 <body>
-<header>
-  <h1>写真の振り分け</h1>
-  <span class="count" id="count"></span>
-</header>
+<header class="top"><div class="wrap">
+  <div><div class="kicker">campus-recorder　職員の画面</div><h1>キャンパスを記録する</h1></div>
+  <div class="links"><a href="index.html">受験生が歩く画面</a><a href="#progress">進捗</a></div>
+</div></header>
+
+<div class="wrap layout">
 <main>
-  <p class="notice">写真はこの端末から出ません（アップロードしません）。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
+  <section class="panel" id="p1">
+    <h2><span class="n">1</span>大学とキャンパス<span class="state" id="s1">確認中</span></h2>
+    <p class="sub">名前を入れるだけ。棟の一覧は地図（OpenStreetMap）から、地面の高さは国土地理院から用意します。</p>
+    <div class="two">
+      <div><label class="f" for="univ">大学名</label><input type="text" id="univ" placeholder="例：名城大学" autocomplete="organization"></div>
+      <div><label class="f" for="campus">キャンパス名</label><input type="text" id="campus" placeholder="例：天白キャンパス"></div>
+    </div>
+    <div id="siteNote" class="note">敷地の準備を確かめています…</div>
+  </section>
 
-  <div id="drop">
-    <svg class="cloud" viewBox="0 0 160 160" aria-hidden="true">
-      <defs><linearGradient id="g" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#34a853"/><stop offset="1" stop-color="#9ecbff"/></linearGradient></defs>
-      <path d="M44 122c-16 0-28-12-28-27 0-14 10-25 24-27 4-18 20-32 40-32 18 0 33 11 38 27 16 1 28 14 28 29 0 16-13 30-30 30H44z" fill="url(#g)" stroke="#1f1f1f" stroke-width="1.5"/>
-      <path d="M80 112V72M80 72l-16 16M80 72l16 16" fill="none" stroke="#1f1f1f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <button class="btn primary" id="browse" type="button">参照</button>
-    <p>または、写真をここに<b>ドラッグ</b>して入れます</p>
-    <p class="hint">同じ棟の写真をまとめて入れると、一括で棟を付けられます</p>
-    <input type="file" id="file" multiple accept="image/*">
-  </div>
+  <section class="panel" id="p2">
+    <h2><span class="n">2</span>棟ごとに写真を入れる<span class="state" id="s2">未</span></h2>
+    <p class="sub">写真はこの端末から出ません。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
+    <div id="drop">
+      <button class="btn primary" id="browse" type="button">写真を選ぶ</button>
+      <p class="big">または、写真をここにドラッグ</p>
+      <p class="hint">同じ棟の写真をまとめて入れると、一括で棟を付けられます。内装の写真は何階かが必要です。</p>
+      <input type="file" id="file" multiple accept="image/*">
+    </div>
+    <div id="bulk">
+      <span><b id="nsel">0</b> 枚を選択中</span>
+      <button class="btn ghost" type="button" id="selAll">全部選ぶ</button>
+      <button class="btn ghost" type="button" id="selNone">外す</button>
+      <span class="field"><input type="text" id="bulkBuilding" list="buildings" placeholder="棟の名前（候補が出ます）"></span>
+      <span class="seg" id="bulkKind"><button type="button" data-k="ext" class="on">外観</button><button type="button" data-k="int">内装</button></span>
+      <span id="bulkFloorWrap" style="display:none">階 <input type="number" id="bulkFloor" min="-3" max="99" step="1"></span>
+      <button class="btn primary" type="button" id="apply">選んだ写真に付ける</button>
+    </div>
+    <div id="grid"></div>
+    <datalist id="buildings"></datalist>
+  </section>
 
-  <div id="bulk">
-    <span class="sel"><span id="nsel">0</span> 枚を選択中</span>
-    <button class="btn ghost" type="button" id="selAll">全部選ぶ</button>
-    <button class="btn ghost" type="button" id="selNone">選択を外す</button>
-    <span class="field"><input type="text" id="bulkBuilding" list="buildings" placeholder="棟の名前（候補が出ます）"></span>
-    <span class="seg" id="bulkKind"><button type="button" data-k="ext" class="on">外観</button><button type="button" data-k="int">内装</button></span>
-    <span class="field" id="bulkFloorWrap" style="display:none">階 <input type="number" id="bulkFloor" min="-3" max="99" step="1"></span>
-    <button class="btn primary" type="button" id="apply">選んだ写真に付ける</button>
-  </div>
-
-  <div id="grid"></div>
-  <datalist id="buildings"></datalist>
+  <section class="panel" id="p3">
+    <h2><span class="n">3</span>記録を始める<span class="state" id="s3">未</span></h2>
+    <p class="sub">ここから先は係の Claude とコードが進めます。写真が足りない面は、決めつけずに「どの面を、どこから」の撮影依頼として右の進捗に戻ります。</p>
+    <div class="go">
+      <div class="status" id="status">写真を入れてください。</div>
+      <button class="btn primary" id="export" type="button" disabled>振り分けを書き出す</button>
+    </div>
+    <div class="note" id="nextNote">書き出した <code>assignments.json</code> を、このリポジトリで次のように取り込みます（画面から直接始める仕組みは準備中）。
+      <span class="cmd" id="cmd">recorder photos assign --from assignments.json</span></div>
+  </section>
 </main>
-<footer>
-  <div class="status" id="status">写真を入れてください。</div>
-  <button class="btn primary" id="export" type="button" disabled>書き出し</button>
-</footer>
+
+<aside class="panel prog" id="progress">
+  <h2>進捗</h2>
+  <p class="sub">棟ごとに 6 段：写真 → 立面図 → 証拠 → 模型 → 歩ける 3D → まだ無い物。棟の名前を押すと報告のページ。</p>
+  <div id="rows"><div class="gray">読み込み中…</div></div>
+  <div class="legend"><span><i class="done"></i>済</span><span><i class="partial"></i>途中</span><span><i></i>未</span><span><i class="wait"></i>あなた待ち（撮影依頼）</span></div>
+</aside>
+</div>
 
 <script>
 (() => {
   const $ = s => document.querySelector(s);
-  const items = [];            // {file, thumb, building, interior, floor, sel, el}
-  let names = new Map();       // 表示名 → id
-  let idByLower = new Map();   // 小文字の表示名／id → id
+  const items = [];            // {file, thumb, building, buildingText, known, interior, floor, sel, ready, el}
+  let names = new Map(), idByLower = new Map();
+  const STAGES = ["photos", "elev", "evidence", "model", "walk", "rest"];
+  const STAGE_JA = {photos: "写真", elev: "立面図", evidence: "証拠", model: "模型", walk: "歩ける 3D", rest: "まだ無い物"};
+  // 報告（out/<棟>/report.json）はリポジトリ直下から配信した時だけ読める（.claude/launch.json の root、8766）
+  const ROOT = location.pathname.includes("/web/") ? "../" : null;
 
-  // --- 棟の候補（歩く画面の site.json から。無ければ手入力だけ）
-  async function loadBuildings() {
-    const dl = $("#buildings");
-    try {
-      const d = await (await fetch("data/site.json", {cache: "no-store"})).json();
-      const all = [];
-      const seen = new Set();
-      const push = (id, name) => { if (!id || seen.has(id)) return; seen.add(id); all.push({id, name: name || id}); };
-      const targets = (d.scope && d.scope.targets) || [];
-      const designed = d.designed || {};
-      targets.forEach(id => push(id, (designed[id] || {}).name || ((d.boxes || []).find(b => b.id === id) || {}).name));
-      Object.values(designed).forEach(b => push(b.id, b.name));
-      (d.boxes || []).forEach(b => push(b.id, b.name));
-      all.forEach(b => {
-        names.set(b.name, b.id);
-        idByLower.set(b.name.toLowerCase(), b.id);
-        idByLower.set(b.id.toLowerCase(), b.id);
-        const o = document.createElement("option");
-        o.value = b.name; o.label = b.name === b.id ? "（名前なし）" : b.id;
-        dl.appendChild(o);
-      });
-    } catch (e) {
-      $("#status").textContent = "棟の一覧を読めませんでした。棟の名前は手で入れてください（後で id に直します）。";
+  // --- 1. 大学とキャンパス
+  const univ = $("#univ"), campus = $("#campus");
+  try { univ.value = localStorage.getItem("cr.univ") || ""; campus.value = localStorage.getItem("cr.campus") || ""; } catch (e) {}
+  [univ, campus].forEach(i => i.addEventListener("input", () => {
+    try { localStorage.setItem("cr.univ", univ.value); localStorage.setItem("cr.campus", campus.value); } catch (e) {}
+    paintSite();
+  }));
+  let site = null;
+  function slugOf(s) { return (s || "campus").normalize("NFKC").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "campus"; }
+  function paintSite() {
+    const n = $("#siteNote"), st = $("#s1");
+    if (site) {
+      const nb = Object.keys(site.designed || {}).length, nx = (site.boxes || []).length;
+      n.className = "note";
+      n.innerHTML = `敷地の準備は済んでいます（キャンパス <b>${site.campus || "—"}</b>、根拠付きの棟 ${nb}、地図の箱 ${nx}）。`;
+      st.textContent = "済"; st.className = "state done";
+      if (!univ.value && site.university) univ.value = site.university;
+    } else {
+      n.className = "note warn";
+      n.innerHTML = `敷地の準備がまだです。大学名とキャンパス名を入れたら、このリポジトリで次を実行します。` +
+        `<span class="cmd">recorder campus init ${slugOf(campus.value || univ.value)} --university "${univ.value || "大学名"}" --campus-name "${campus.value || "キャンパス名"}"</span>`;
+      st.textContent = "未"; st.className = "state";
     }
   }
 
+  async function loadBuildings() {
+    const dl = $("#buildings");
+    try {
+      site = await (await fetch("data/site.json", {cache: "no-store"})).json();
+      const all = [], seen = new Set();
+      const push = (id, name) => { if (!id || seen.has(id)) return; seen.add(id); all.push({id, name: name || id}); };
+      const designed = site.designed || {};
+      ((site.scope && site.scope.targets) || []).forEach(id => push(id, (designed[id] || {}).name || ((site.boxes || []).find(b => b.id === id) || {}).name));
+      Object.values(designed).forEach(b => push(b.id, b.name));
+      (site.boxes || []).forEach(b => push(b.id, b.name));
+      all.forEach(b => {
+        names.set(b.name, b.id); idByLower.set(b.name.toLowerCase(), b.id); idByLower.set(b.id.toLowerCase(), b.id);
+        const o = document.createElement("option"); o.value = b.name; o.label = b.name === b.id ? "（名前なし）" : b.id; dl.appendChild(o);
+      });
+    } catch (e) { site = null; }
+    paintSite();
+  }
   const resolve = text => {
     const t = (text || "").trim();
     if (!t) return {id: "", known: false};
@@ -169,44 +206,35 @@
     return id ? {id, known: true} : {id: t, known: false};
   };
 
-  // --- 縮小表示
+  // --- 2. 写真
   function thumbOf(file) {
     return new Promise(res => {
-      const url = URL.createObjectURL(file);
-      const img = new Image();
+      const url = URL.createObjectURL(file), img = new Image();
       img.onload = () => {
         const w = 480, h = Math.round(480 * img.height / img.width) || 360;
         const c = document.createElement("canvas"); c.width = w; c.height = h;
-        c.getContext("2d").drawImage(img, 0, 0, w, h);
-        URL.revokeObjectURL(url);
+        c.getContext("2d").drawImage(img, 0, 0, w, h); URL.revokeObjectURL(url);
         res(c.toDataURL("image/jpeg", 0.75));
       };
       img.onerror = () => { URL.revokeObjectURL(url); res(""); };
       img.src = url;
     });
   }
-
-  // --- 升
   function card(it) {
     const el = document.createElement("div"); el.className = "card";
     el.innerHTML = `
       <div class="img"><img alt=""><span class="check">✓</span><span class="name"></span></div>
       <div class="body">
         <input type="text" list="buildings" placeholder="棟の名前" autocomplete="off">
-        <div class="row">
-          <span class="seg"><button type="button" data-k="ext" class="on">外観</button><button type="button" data-k="int">内装</button></span>
-        </div>
+        <span class="seg"><button type="button" data-k="ext" class="on">外観</button><button type="button" data-k="int">内装</button></span>
         <input type="number" class="floor" placeholder="何階か（必須）" min="-3" max="99" step="1">
         <div class="msg"></div>
       </div>`;
-    el.querySelector("img").src = it.thumb;
-    el.querySelector(".name").textContent = it.file;
+    el.querySelector("img").src = it.thumb; el.querySelector(".name").textContent = it.file;
     el.querySelector(".img").addEventListener("click", () => { it.sel = !it.sel; el.classList.toggle("sel", it.sel); refresh(); });
     const bIn = el.querySelector("input[type=text]");
     bIn.addEventListener("input", () => { it.buildingText = bIn.value; validate(it); refresh(); });
-    el.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => {
-      it.interior = b.dataset.k === "int"; paint(it); validate(it); refresh();
-    }));
+    el.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => { it.interior = b.dataset.k === "int"; paint(it); validate(it); refresh(); }));
     const fIn = el.querySelector(".floor");
     fIn.addEventListener("input", () => { it.floor = fIn.value === "" ? null : Number(fIn.value); validate(it); refresh(); });
     it.el = el; paint(it); validate(it);
@@ -222,43 +250,39 @@
   function validate(it) {
     const r = resolve(it.buildingText);
     it.building = r.id; it.known = r.known;
-    const bIn = it.el.querySelector("input[type=text]");
-    bIn.classList.toggle("unknown", !!r.id && !r.known);
+    it.el.querySelector("input[type=text]").classList.toggle("unknown", !!r.id && !r.known);
     const msg = it.el.querySelector(".msg");
     let bad = false, text = "", ok = false;
     if (!r.id) { text = "棟を入れてください"; bad = true; }
     else if (it.interior && (it.floor == null || !Number.isInteger(it.floor))) { text = "内装は何階かが必要です"; bad = true; }
-    else if (!r.known) { text = "一覧に無い名前です（そのまま書き出し、後で確かめます）"; }
+    else if (!r.known) { text = "一覧に無い名前（そのまま書き出し、後で確かめます）"; }
     else { text = it.interior ? `内装 ${it.floor} 階` : "外観"; ok = true; }
     msg.textContent = text; msg.classList.toggle("ok", ok);
     it.el.classList.toggle("bad", bad);
     it.ready = !bad;
   }
-
   function refresh() {
     const n = items.length, ready = items.filter(i => i.ready).length, nsel = items.filter(i => i.sel).length;
-    $("#count").textContent = n ? `${n} 枚` : "";
     $("#nsel").textContent = nsel;
     $("#bulk").classList.toggle("on", n > 0);
     $("#drop").classList.toggle("compact", n > 0);
+    const s2 = $("#s2");
+    s2.textContent = n ? (ready === n ? "済" : "途中") : "未"; s2.className = "state " + (n ? (ready === n ? "done" : "partial") : "");
     const st = $("#status");
     if (!n) st.textContent = "写真を入れてください。";
     else {
       const missing = n - ready;
-      st.innerHTML = `<b>${ready}</b> / ${n} 枚に棟が付きました` +
-        (missing ? `。<span class="warn">${missing} 枚は棟か階が足りません</span>` : "。書き出すと <code>assignments.json</code> が保存されます");
+      st.innerHTML = `<b>${ready}</b> / ${n} 枚に棟が付きました` + (missing ? `。<span class="warn">${missing} 枚は棟か階が足りません</span>` : "");
     }
     $("#export").disabled = ready === 0;
   }
-
   async function addFiles(files) {
     const list = Array.from(files).filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|heic|webp)$/i.test(f.name));
-    const have = new Set(items.map(i => i.file));
-    const grid = $("#grid");
+    const have = new Set(items.map(i => i.file)), grid = $("#grid");
     let done = 0;
     for (const f of list) {
       if (have.has(f.name)) continue;
-      const it = {file: f.name, thumb: "", building: "", buildingText: "", interior: false, floor: null, sel: false, ready: false};
+      const it = {file: f.name, thumb: "", building: "", buildingText: "", known: false, interior: false, floor: null, sel: false, ready: false};
       it.thumb = await thumbOf(f);
       items.push(it); grid.appendChild(card(it));
       done++; $("#status").textContent = `読み込み中 ${done} / ${list.length}`;
@@ -266,8 +290,6 @@
     }
     refresh();
   }
-
-  // --- ドロップ枠
   const drop = $("#drop"), fileIn = $("#file");
   $("#browse").addEventListener("click", e => { e.stopPropagation(); fileIn.click(); });
   drop.addEventListener("click", () => fileIn.click());
@@ -278,7 +300,6 @@
   document.addEventListener("dragover", e => e.preventDefault());
   document.addEventListener("drop", e => { e.preventDefault(); if (!drop.contains(e.target)) addFiles(e.dataTransfer.files); });
 
-  // --- 一括
   $("#selAll").addEventListener("click", () => { items.forEach(i => { i.sel = true; i.el.classList.add("sel"); }); refresh(); });
   $("#selNone").addEventListener("click", () => { items.forEach(i => { i.sel = false; i.el.classList.remove("sel"); }); refresh(); });
   let bulkInterior = false;
@@ -288,36 +309,57 @@
     $("#bulkFloorWrap").style.display = bulkInterior ? "" : "none";
   }));
   $("#apply").addEventListener("click", () => {
-    const text = $("#bulkBuilding").value, fl = $("#bulkFloor").value;
-    const targets = items.filter(i => i.sel);
+    const text = $("#bulkBuilding").value, fl = $("#bulkFloor").value, targets = items.filter(i => i.sel);
     if (!targets.length) { $("#status").textContent = "先に写真を選んでください（写真をタップ）。"; return; }
     targets.forEach(i => {
       if (text.trim()) i.buildingText = text;
-      i.interior = bulkInterior;
-      if (bulkInterior && fl !== "") i.floor = Number(fl);
-      if (!bulkInterior) i.floor = null;
-      paint(i); validate(i);
-      i.sel = false; i.el.classList.remove("sel");
+      i.interior = bulkInterior; i.floor = bulkInterior && fl !== "" ? Number(fl) : (bulkInterior ? i.floor : null);
+      paint(i); validate(i); i.sel = false; i.el.classList.remove("sel");
     });
     refresh();
   });
 
-  // --- 書き出し
+  // --- 3. 書き出し（形は recorder photos assign --from と同じ）
   $("#export").addEventListener("click", () => {
     const rows = items.filter(i => i.ready).map(i => ({
-      file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null,
-      building_text: i.buildingText.trim(), known: i.known
+      file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null, building_text: i.buildingText.trim(), known: i.known
     }));
     const blob = new Blob([JSON.stringify(rows, null, 1)], {type: "application/json"});
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
-    a.download = "assignments.json"; a.click();
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "assignments.json"; a.click();
     const skipped = items.length - rows.length;
-    $("#status").innerHTML = `<b>${rows.length}</b> 枚を <code>assignments.json</code> に書き出しました` +
-      (skipped ? `（棟か階の無い ${skipped} 枚は入れていません）` : "") +
-      `。これを <code>recorder photos assign --from assignments.json</code> に渡してください。`;
+    $("#status").innerHTML = `<b>${rows.length}</b> 枚を <code>assignments.json</code> に書き出しました` + (skipped ? `（棟か階の無い ${skipped} 枚は入れていません）` : "") + "。";
+    $("#s3").textContent = "済"; $("#s3").className = "state done";
   });
 
-  loadBuildings().then(refresh);
+  // --- 進捗（out/<棟>/report.json。無ければ「記録なし」）
+  async function loadProgress() {
+    const rows = $("#rows");
+    const ids = [], seen = new Set();
+    const push = id => { if (id && !seen.has(id)) { seen.add(id); ids.push(id); } };
+    if (site) { ((site.scope && site.scope.targets) || []).forEach(push); Object.keys(site.designed || {}).forEach(push); }
+    if (!ids.length) { rows.innerHTML = `<div class="gray">棟がまだありません。</div>`; return; }
+    const html = [];
+    for (const id of ids) {
+      const name = (site.designed && site.designed[id] && site.designed[id].name) || [...names].find(([n, i]) => i === id)?.[0] || id;
+      let rep = null;
+      if (ROOT) { try { const r = await fetch(`${ROOT}out/${id}/report.json`, {cache: "no-store"}); if (r.ok) rep = await r.json(); } catch (e) {} }
+      const st = rep ? rep.stages : null;
+      const waits = rep ? (rep.counts.requests || 0) : 0;
+      const dots = STAGES.map(k => `<i class="${st ? st[k].status : ""}" title="${STAGE_JA[k]}：${st ? st[k].result : "記録なし"}"></i>`).join("");
+      let last = "記録なし";
+      if (st) {
+        const cur = STAGES.filter(k => st[k].status !== "todo").pop() || "photos";
+        last = `${STAGE_JA[cur]}：${st[cur].result}`;
+      }
+      const link = ROOT && rep ? `<a href="${ROOT}out/${id}/report.html">${name}</a>` : name;
+      html.push(`<div class="row"><div class="name">${link}<span class="id">${id}</span></div><div class="dots">${dots}</div>
+        <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}</div></div>`);
+    }
+    if (!ROOT) html.push(`<div class="gray" style="margin-top:8px">進捗を読むには、リポジトリ直下から配信した URL（…/web/staff.html）で開いてください。</div>`);
+    rows.innerHTML = html.join("");
+  }
+
+  loadBuildings().then(() => { refresh(); loadProgress(); });
 })();
 </script>
 </body>
