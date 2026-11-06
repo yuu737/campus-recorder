@@ -320,6 +320,12 @@ def main(argv: list[str] | None = None) -> int:
     if (sys.argv[1:] if argv is None else list(argv))[:1] == ["evidence"]:
         return _evidence.run_cli(ap.parse_args(argv))
 
+    # 進捗報告（棟ごとに 1 ページの HTML。11/6 追加。ここ 1 か所で引数と実行をまとめる）
+    from . import report as _report
+    _report.add_args(sub.add_parser("report", help="進捗報告：写真 → 立面図 → 証拠 → 模型 → 歩ける 3D → まだ無い物 を 1 ページに（out/<棟>/report.html）"))
+    if (sys.argv[1:] if argv is None else list(argv))[:1] == ["report"]:
+        return _report.run_cli(ap.parse_args(argv))
+
     a = ap.parse_args(argv)
 
     if a.cmd == "agent":
