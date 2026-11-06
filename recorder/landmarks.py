@@ -4,7 +4,7 @@
     1. 棟 JSON から目印の一覧を出す（面ごと：面の端・柱型の左縁・部品の縁 × 地面・パラペット・一番下の窓の下端・一番上の窓の上端）。
        `out/<棟>/landmarks/<面>.png`（番号付きの立面の絵）と `landmarks.json`（id・名前・3D）。
     2. 写真に 10×10 の升目（列 A〜J・行 1〜10）を引いた絵 `<写真>_grid.jpg` を出す。目印係（係か人）が「目印 id → 升」を指す。
-    3. 升を 1.25 倍に広げて切り出し、10×10 の升目を引いた寄りの絵 `<写真>_<升>.jpg` を出す。係が寄りの升を指す（幅の約 1.5 %）。
+    3. 升を各側に 0.25 升広げた 1.5 升四方で切り出し、10×10 の升目を引いた寄りの絵 `<写真>_<升>.jpg` を出す。係が寄りの升を指す（幅の約 1.5 %）。
     4. 対応 4 点以上 → PnP（cv2.solvePnP、焦点は EXIF を初期値に探索）→ 再投影の残差・カメラ高さ・見える面で合否 → 台帳に kind "pose"。
 
 根拠（docs/日誌.md 11/6、本部棟の登録済み 17 枚）：対応の誤差が幅の 1.5 % なら位置の誤差の中央値 1.0 m（8 枚中 7 枚が 2 m 以内）、3 % で 1.5 m。
@@ -102,6 +102,51 @@ def face_line_marks(b: dict, face_id: str) -> list[dict]:
     return out
 
 
+GROUND_PART_TYPES = ("steps", "podium", "plaza_steps", "plinth", "terrace")   # 足元の段・基壇・広場の段（上端を地面の線に出す）
+
+
+def face_ground_marks(b: dict, face_id: str) -> list[dict]:
+    """1 つの面の「地面の線」の目印（11/7 追加。上端の目印だけでは高さが決まらないため）。
+    `<面>-G01`：面の足元（面の前の地面＝ground_offset。省略は棟の z=0）の面の端〜端。ground_offset が unknown と書かれた面は出さない。
+    `<面>-G02…`：棟 JSON の parts のうち、その面の段・基壇（GROUND_PART_TYPES）の上端の線（along〜along+width、
+    高さは z0（無ければ面の足元）＋count×rise、または height）。値が unknown の部品は出さない。
+    返り値は face_line_marks と同じ形（"kind": "line", "dir": "h", "ground": True）。"""
+    f = next((f for f in b.get("faces", []) if f["id"] == face_id and f.get("from") and f.get("to")), None)
+    if f is None:
+        return []
+    fr = face_rect_frame(b, f)
+    g, L = fr["ground_offset"], fr["length_m"]
+    out: list[dict] = []
+
+    def add(s0, s1, z, name, src):
+        P1, P2 = plane_to_world(fr, s0, z).reshape(3), plane_to_world(fr, s1, z).reshape(3)
+        out.append({"id": f"{face_id}-G{len(out) + 1:02d}", "face": face_id, "kind": "line", "dir": "h", "ground": True,
+                    "name": f"地面 {name}", "z": round(z, 3), "s0": round(s0, 3), "s1": round(s1, 3), "source": src,
+                    "xyz1": [round(float(v), 3) for v in P1], "xyz2": [round(float(v), 3) for v in P2]})
+
+    go = f.get("ground_offset")
+    if not (isinstance(go, dict) and (go.get("status") == "unknown" or go.get("value") is None)):
+        add(0.0, L, g, "面の足元" + ("（面の前の地面 ground_offset）" if go is not None else "（棟の z=0）"), "faces.ground_offset")
+    for i, pt in enumerate(b.get("parts") or []):
+        if pt.get("type") not in GROUND_PART_TYPES or pt.get("face") != face_id:
+            continue
+        a, wd = _v(pt.get("along")), _v(pt.get("width"))
+        z0 = _v(pt.get("z0")) if pt.get("z0") is not None else g
+        cnt, rise, hgt = _v(pt.get("count")), _v(pt.get("rise")), _v(pt.get("height"))
+        top = None
+        if z0 is not None and cnt is not None and rise is not None:
+            top = z0 + cnt * rise
+        elif z0 is not None and hgt is not None:
+            top = z0 + hgt
+        if a is None or wd is None or top is None:
+            continue
+        s0, s1 = max(0.0, a), min(L, a + wd)
+        if s1 - s0 < 0.3:
+            continue
+        add(s0, s1, top, f"{pt.get('name') or pt['type']} の上端", f"parts[{i}]")
+    return out
+
+
 def _face_verts_horz(b: dict, face_id: str):
     """面の frame・縦線（0.7 m 以内はまとめた物）・点に使う横線・線の目印に使う横線（全段）。面が無ければ None。"""
     f = next((f for f in b.get("faces", []) if f["id"] == face_id and f.get("from") and f.get("to")), None)
@@ -147,12 +192,13 @@ def _face_verts_horz(b: dict, face_id: str):
 
 
 def catalog(b: dict, lines: bool = False) -> list[dict]:
-    """棟の目印の一覧（点）。lines=True で線の目印（face_line_marks）も足す。"""
+    """棟の目印の一覧（点）。lines=True で線の目印（face_line_marks）と地面の線（face_ground_marks、`<面>-G01…`）も足す。"""
     out = []
     for f in b.get("faces", []):
         out += face_landmarks(b, f["id"])
         if lines:
             out += face_line_marks(b, f["id"])
+            out += face_ground_marks(b, f["id"])
     return out
 
 
@@ -188,19 +234,54 @@ def draw_face(b: dict, face_id: str, marks: list[dict], out_png: Path, ppm: int 
         cv2.circle(img, (u, v), 5, (0, 0, 230), -1)
         n = m["id"].split("-")[1]
         cv2.putText(img, n, (u + 4, v - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 180), 1, cv2.LINE_AA)
+    jp_labels = []
     for m in line_marks or []:
         n = m["id"].split("-")[-1]
+        if m.get("ground"):
+            s0, s1 = m.get("s0", 0.0), m.get("s1", L)
+            p1, p2 = px(s0, m["z"]), px(s1, m["z"])
+            p1, p2 = (p1[0], p1[1] + 3), (p2[0], p2[1] + 3)          # 面の枠の線と重ならないよう少し下に
+            cv2.line(img, p1, p2, (150, 200, 230), 3)
+            if m.get("source") == "faces.ground_offset":
+                jp_labels.append((f"地面 {n}", (p1[0] + 2, p1[1] + 2)))           # 足元は線の下
+            else:
+                jp_labels.append((f"段 {n}", (p1[0] + 2, p1[1] - 20)))            # 段の上端は線の上
+            continue
         if m["dir"] == "v":
             u, _ = px(m["s"], top)
             cv2.putText(img, n, (u - 10, pad - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 80, 0), 1, cv2.LINE_AA)
         else:
             _, v = px(L, m["z"])
             cv2.putText(img, n, (int(pad + L * ppm) + 4, v + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (200, 80, 0), 1, cv2.LINE_AA)
+    if jp_labels:
+        img = _put_jp(img, jp_labels, (40, 110, 170))
     cv2.putText(img, f"{b.get('id')} face {face_id}  from(left) -> to(right)  {L:.1f} m x {top - g:.1f} m", (pad, H - 8),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
     out_png.parent.mkdir(parents=True, exist_ok=True)
     cv2.imencode(".png", img)[1].tofile(str(out_png))
     return out_png
+
+
+def _put_jp(img: np.ndarray, labels: list[tuple[str, tuple[int, int]]], bgr=(40, 110, 170), size: int = 13) -> np.ndarray:
+    """日本語の文字を書く（cv2 は日本語を書けないので PIL。字体が無ければ ASCII の G01 等だけ）。"""
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        return img
+    font = None
+    for name in ("YuGothM.ttc", "meiryo.ttc", "msgothic.ttc", "NotoSansCJK-Regular.ttc"):
+        try:
+            font = ImageFont.truetype(name, size)
+            break
+        except OSError:
+            continue
+    pil = Image.fromarray(img[:, :, ::-1].copy())
+    d = ImageDraw.Draw(pil)
+    for text, xy in labels:
+        if font is None:
+            text = text.split()[-1]
+        d.text(xy, text, fill=(bgr[2], bgr[1], bgr[0]), font=font or ImageFont.load_default())
+    return np.ascontiguousarray(np.array(pil)[:, :, ::-1])
 
 
 # --- 升目と寄り ------------------------------------------------------------------------------
@@ -225,15 +306,23 @@ def _grid_overlay(img: np.ndarray, label_prefix: str = "") -> np.ndarray:
     return out
 
 
-def parse_cell(cell: str) -> tuple[int, int]:
-    """"C7" → (列 2, 行 6)。"""
-    m = re.match(r"^\s*([A-Ja-j])\s*(\d{1,2})\s*$", cell or "")
+def parse_cell(cell: str) -> tuple[float, float]:
+    """"C7" → (列 2, 行 6)。升の半分の位置も書ける（11/7）：
+    "F3.5" → 行の半分（F3 と F4 の境）＝(5, 2.5)、"F+3" か "F.5 3" → 列の半分（F と G の境）＝(5.5, 2)。
+    小数の升は「その位置を中心にした 1 升」として扱う（cell_rect・寄りの切り出しも同じ）。整数の升は従来と同じ int。"""
+    m = re.match(r"^\s*([A-Ja-j])\s*(\+|\.5)?\s*(\d{1,2}(?:\.\d+)?)\s*$", cell or "")
     if not m:
-        raise ValueError(f"升の書き方が違う: {cell!r}（例 C7）")
-    col = COLS.index(m.group(1).upper())
-    row = int(m.group(2)) - 1
-    if not 0 <= row < GRID_N:
-        raise ValueError(f"行は 1〜{GRID_N}: {cell!r}")
+        raise ValueError(f"升の書き方が違う: {cell!r}（例 C7、行の半分 C7.5、列の半分 C+7）")
+    col = COLS.index(m.group(1).upper()) + (0.5 if m.group(2) else 0)
+    rv = float(m.group(3))
+    row = int(rv) - 1 if rv.is_integer() else rv - 1
+    if rv.is_integer() and not m.group(2):
+        if not 0 <= row < GRID_N:
+            raise ValueError(f"行は 1〜{GRID_N}: {cell!r}")
+        return col, row
+    # 小数：升の中心が写真の枠の中（端の半升まで）
+    if not (-0.5 <= row <= GRID_N - 0.5 and col <= GRID_N - 0.5):
+        raise ValueError(f"升の位置が枠の外: {cell!r}（行 0.5〜{GRID_N}.5、列は J まで）")
     return col, row
 
 
@@ -254,7 +343,7 @@ def pick_to_px(pick: dict, w: int, h: int) -> tuple[float, float, str]:
     x0, y0, x1, y1 = cell_rect(pick["cell"], w, h, expand=0.0)
     if pick.get("sub"):
         cx0, cy0, cx1, cy1 = cell_rect(pick["cell"], w, h, expand=CROP_EXPAND)
-        sc, sr = parse_cell(pick["sub"])
+        sc, sr = parse_cell(pick["sub"])                     # 寄りの升も小数を許す（"E3.5"＝寄りの E3 と E4 の境）
         u = cx0 + (sc + 0.5) * (cx1 - cx0) / GRID_N
         v = cy0 + (sr + 0.5) * (cy1 - cy0) / GRID_N
         return u, v, "cell+sub"
@@ -653,7 +742,7 @@ def release_geocalib() -> None:
 def register_picks(building_json: Path, picks_doc: dict, index: dict | None = None, reg: dict | None = None,
                    registry_path: Path | None = None, write: bool = True, by: str = "mejirushi",
                    method: str = "cv2", prior: dict | None = None, b: dict | None = None) -> dict:
-    """対応（picks_doc = {"photo", "face"?, "picks": [{"id", "cell", "sub"?} | {"id", "u", "v"} | {"id": "<面>-V01", "cells": ["C3", "C8"]}]}）
+    """対応（picks_doc = {"photo", "face"?, "ground"?（カメラの高さの基準の地面。ground_reference）, "picks": [{"id", "cell", "sub"?} | {"id", "u", "v"} | {"id": "<面>-V01", "cells": ["C3", "C8"]}]}）
     から視点を解き、合否を出して台帳に書く。線の対応は線上の 2 升（"cells"。要素は "C3" か {"cell", "sub"}、または "subs": [..] を併記）。
     method は solve と同じ。"poselib+geocalib" で prior が無ければ geocalib_prior で出す（GeoCalib が無ければ "poselib" に落とす）。
     返り値 {"status": "ok"|"fail", "code", "reason", "camera", "check", "picks_px": [...]}。"""
@@ -727,14 +816,22 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
     hgt = float(C[2] - g)
     g_face, face_near = _face_ground(b, C)
     hgt_face = None if g_face is None else float(C[2] - g_face)
-    height_ok = (MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT) or (hgt_face is not None and MIN_CAM_HEIGHT <= hgt_face <= MAX_CAM_HEIGHT)
-    g_use = g if MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT or g_face is None else g_face
+    gref = ground_reference(b, picks_doc.get("ground"), g, g_face, face_near, cat)
+    if gref.get("problem"):
+        problems.append(gref["problem"])
+    if gref["mode"] == "auto":
+        height_ok = (MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT) or (hgt_face is not None and MIN_CAM_HEIGHT <= hgt_face <= MAX_CAM_HEIGHT)
+        g_use = g if MIN_CAM_HEIGHT <= hgt <= MAX_CAM_HEIGHT or g_face is None else g_face
+    else:
+        g_use = gref["z"]
+        height_ok = MIN_CAM_HEIGHT <= float(C[2] - g_use) <= MAX_CAM_HEIGHT
+    gref["camera_height_m"] = round(float(C[2] - g_use), 2)
     cam = R_.camera_dict(Rm, t, sol["focal"], w, h, g_use)
     n_inl = len(sol["inliers"]) + len(sol.get("line_inliers", []))
     check = {"n_points": len(P3), "n_lines": len(lines), "n_inliers": n_inl, "rms_px": sol["rms_px"], "solver": sol.get("method"),
              "rms_frac_w": round(sol["rms_px"] / w, 4), "focal_px": sol["focal"], "focal_vs_exif": round(sol["focal"] / focal0, 3),
              "camera_height_m": round(hgt, 2), "camera_height_face_m": None if hgt_face is None else round(hgt_face, 2),
-             "ground_face": face_near, "warnings": []}
+             "ground_face": face_near, "ground_ref": gref, "warnings": []}
     if prior:
         check["gravity_prior"] = {k: (round(v, 2) if isinstance(v, float) else v) for k, v in prior.items() if k in ("focal", "roll", "pitch")}
         check["gravity_diff_deg"] = sol.get("gravity_diff_deg")
@@ -768,9 +865,13 @@ def register_picks(building_json: Path, picks_doc: dict, index: dict | None = No
         status, code, reason = "fail", "few_inliers", f"使われた対応が {n_inl} 点（{MIN_INLIERS} 点要る。外れた点を直すか足す）"
     elif not height_ok:
         status, code = "fail", "camera_height"
-        reason = (f"カメラの高さが地面から {hgt:.1f} m（5m 標高）"
-                  + (f"／{hgt_face:.1f} m（面 {face_near} の前の地面）" if hgt_face is not None else "")
-                  + f"（{MIN_CAM_HEIGHT}〜{MAX_CAM_HEIGHT} m の外）")
+        if gref["mode"] == "auto":
+            reason = (f"カメラの高さが地面から {hgt:.1f} m（5m 標高）"
+                      + (f"／{hgt_face:.1f} m（面 {face_near} の前の地面）" if hgt_face is not None else "")
+                      + f"（{MIN_CAM_HEIGHT}〜{MAX_CAM_HEIGHT} m の外）")
+        else:
+            reason = (f"カメラの高さが指定の地面（{gref['label']}）から {gref['camera_height_m']:.1f} m"
+                      f"（{MIN_CAM_HEIGHT}〜{MAX_CAM_HEIGHT} m の外）")
     elif pitch_bad:
         status, code = "fail", "pitch_check"
         reason = f"消失点の仰角 {check['tilt_from_vp']['pitch']}° と PnP の仰角 {check['pitch']}° が {PITCH_FAIL_DEG}° 以上違う（対応の取り違えか、点が一直線に近い）"
@@ -863,12 +964,52 @@ def draw_check(b: dict, res: dict, out_jpg: Path, long_side: int = 1600) -> Path
         for a in k["uv"]:
             cv2.circle(small, (int(a[0] * s), int(a[1] * s)), 7, (0, 0, 255), 2)
     ck = res.get("check", {})
-    txt = f"{res['photo']} {res['status']} {ck.get('solver')} rms {ck.get('rms_px')}px h {ck.get('camera_height_m')}m edge {ck.get('edge_inlier')}/{ck.get('edge_grad')}"
+    gr = ck.get("ground_ref") or {}
+    hs = f"h {ck.get('camera_height_m')}m" + (f" (ground {gr.get('spec')}: {gr.get('camera_height_m')}m)" if gr.get("mode") not in (None, "auto") else "")
+    txt = f"{res['photo']} {res['status']} {res.get('code') or ''} {ck.get('solver')} rms {ck.get('rms_px')}px {hs} edge {ck.get('edge_inlier')}/{ck.get('edge_grad')}"
     cv2.putText(small, txt, (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 4, cv2.LINE_AA)
     cv2.putText(small, txt, (10, 28), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
     out_jpg.parent.mkdir(parents=True, exist_ok=True)
     cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 88])[1].tofile(str(out_jpg))
     return out_jpg
+
+
+GROUND_MODES = ("auto", "dem", "face", "plaza")
+
+
+def ground_reference(b: dict, spec, g_dem: float, g_face: float | None, face_near: str | None,
+                     cat: dict | None = None) -> dict:
+    """カメラの高さの門（MIN_CAM_HEIGHT〜MAX_CAM_HEIGHT）の基準の地面を picks の "ground" で選ぶ（11/7）。
+    spec：省略・"auto"＝従来（5m 標高か、近い面の前の地面のどちらかで門に入れば通す）／"dem"＝5m 標高だけ／
+    "face" か "plaza"＝カメラに一番近い面の前の地面（faces[].ground_offset。沈んだ広場）だけ／"face:<面 id>"＝その面の ground_offset／
+    "<面>-Gnn"＝地面の線の目印の高さ（G01 は面の足元、G02… は段・基壇の上端）。
+    返り値 {"spec", "mode", "z"（棟の z=0 からの m。auto は None）, "label", "problem"?}。解けない指定は auto に落とし problem に書く。"""
+    if spec in (None, "", "auto"):
+        return {"spec": spec, "mode": "auto", "z": None, "label": "5m 標高か面の前の地面（従来）"}
+    sp = str(spec).strip()
+    if sp == "dem":
+        return {"spec": sp, "mode": "dem", "z": round(float(g_dem), 3), "label": "5m 標高"}
+    if sp in ("face", "plaza"):
+        if g_face is None:
+            return {"spec": sp, "mode": "auto", "z": None, "label": "5m 標高か面の前の地面（従来）",
+                    "problem": f"ground={sp!r}：カメラの前 {FACE_GROUND_DIST:.0f} m 以内に面が無いので従来の基準で見た"}
+        return {"spec": sp, "mode": "face", "z": round(float(g_face), 3), "label": f"面 {face_near} の前の地面（ground_offset）"}
+    if sp.startswith("face:"):
+        fid = sp.split(":", 1)[1].strip()
+        f = next((f for f in b.get("faces", []) if f["id"] == fid), None)
+        if f is None:
+            return {"spec": sp, "mode": "auto", "z": None, "label": "5m 標高か面の前の地面（従来）",
+                    "problem": f"ground={sp!r}：面 {fid} が無いので従来の基準で見た"}
+        return {"spec": sp, "mode": "face", "z": round(face_ground_offset(f), 3), "label": f"面 {fid} の前の地面（ground_offset）"}
+    if re.match(r"^.+-G\d{2}$", sp):
+        cat = cat if cat is not None else {m["id"]: m for m in catalog(b, lines=True)}
+        m = cat.get(sp)
+        if m is None or not m.get("ground"):
+            return {"spec": sp, "mode": "auto", "z": None, "label": "5m 標高か面の前の地面（従来）",
+                    "problem": f"ground={sp!r}：地面の線の目印に無いので従来の基準で見た"}
+        return {"spec": sp, "mode": "line", "z": round(float(m["z"]), 3), "label": f"{sp}（{m['name']}）"}
+    return {"spec": sp, "mode": "auto", "z": None, "label": "5m 標高か面の前の地面（従来）",
+            "problem": f"ground={sp!r} は分からない（auto / dem / face / plaza / face:<面> / <面>-G01 のどれか）。従来の基準で見た"}
 
 
 def _face_ground(b: dict, C) -> tuple[float | None, str | None]:

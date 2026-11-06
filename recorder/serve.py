@@ -145,7 +145,7 @@ def _place(data: bytes, dest: Path, stem: str, ext: str, taken_ids: set[str]) ->
 
 
 def api_photos(root: Path, files: list[tuple[str, bytes]], assignments: list[dict], day: str | None = None) -> dict:
-    """写真を data/photos/<日付>/<棟>/ に置き → import_photos（period during）→ assign_photos。"""
+    """写真を data/photos/<日付>/<棟>/ に置き → import_photos（期間は EXIF の撮影日時から）→ assign_photos。"""
     from . import photos, site
 
     day = day or time.strftime("%Y%m%d")
@@ -193,8 +193,17 @@ def api_photos(root: Path, files: list[tuple[str, bytes]], assignments: list[dic
         added_total = 0
         for folder in sorted({p[0] for p in placed}):
             _idx, added = photos.import_photos(photo_root / day / folder, sdoc, index_path=index_path,
-                                               root=photo_root, period="during")
+                                               root=photo_root, period=None)  # 期間は撮影日時（EXIF）から決める。期間前の写真を during にしない
             added_total += len(added)
+            # 撮影日時（EXIF）が無い写真だけ、受け取った日＝期間中とする（理由を残す）。日時がある物は EXIF で決まる
+            fix = [r for r in added if not r.get("period")]
+            if fix:
+                ids = {r["id"] for r in fix}
+                for r in _idx.get("photos", []):
+                    if r["id"] in ids and not r.get("period"):
+                        r["period"] = "during"
+                        r["period_note"] = "EXIF に撮影日時が無く、職員の画面から受け取った日（期間中）とした"
+                photos.save_index(_idx, index_path)
             _last_folder[folder] = (photos.PHOTO_DIR / day / folder).as_posix()
         rows = [{"id": f.stem, "building": a.get("building"), "interior": bool(a.get("interior")),
                  "floor": a.get("floor") if a.get("interior") else None}

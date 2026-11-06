@@ -79,7 +79,7 @@ def test_line_marks_catalog_and_ids():
     allm = LM.catalog(b, lines=True)
     lines = [m for m in allm if m.get("kind") == "line"]
     assert lines and [m for m in allm if m.get("kind") != "line"] == pts      # 点の一覧と id は変わらない
-    assert all(("-V" in m["id"]) or ("-H" in m["id"]) for m in lines)
+    assert all(("-V" in m["id"]) or ("-H" in m["id"]) or ("-G" in m["id"]) for m in lines)
     assert not ({m["id"] for m in lines} & {m["id"] for m in pts})
     assert {m["dir"] for m in lines} == {"v", "h"}
 

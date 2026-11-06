@@ -309,7 +309,10 @@ def period_of(taken_at: str | None) -> str | None:
     """撮影日時（"YYYY-MM-DDTHH:MM:SS"）から期間前 / 期間中を決める。日時が無ければ None。"""
     if not taken_at or len(taken_at) < 10:
         return None
-    t = taken_at.replace(" ", "T")
+    t = taken_at.strip().replace(" ", "T")
+    # EXIF の生の形（"2026:09:07 17:36:24"）が来ても日付の区切りを直してから比べる（文字列の比較なので ":" のままだと誤る）
+    if len(t) >= 10 and t[4] == ":" and t[7] == ":":
+        t = t[:4] + "-" + t[5:7] + "-" + t[8:]
     if len(t) == 10:
         t += "T00:00:00"
     return "before" if t < PERIOD_START else "during"
