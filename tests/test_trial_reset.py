@@ -108,6 +108,55 @@ def test_reset_then_restore(repo):
         tr.restore("b1", repo)
 
 
+def test_zero_moves_everything_and_keeps_staff_labels(repo):
+    """--zero：全部の棟の結果・登録台帳・進行役の決定・係の判断を退避し、写真と職員の振り分けだけを残す。何も消さない。"""
+    _w(repo / "data/site/tempaku.json", json.dumps({"scope": {"targets": ["b1", "b2"]}}))
+    _w(repo / "data/decisions.json", json.dumps({"schema": "d", "decisions": [{"id": "D-0001"}]}))
+    idx = json.loads((repo / "data/photos/index.json").read_text(encoding="utf-8"))
+    idx["photos"] += [
+        {"id": "S1", "file": "x/S1.jpg", "period": "during", "building": "b2", "assigned_by": "staff", "building_source": "staff",
+         "assigned_at": "t", "interior": True, "floor": "1", "face": None, "notes": "職員が振り分け（t）"},
+        {"id": "S2", "file": "x/S2.jpg", "period": "during", "building": "b1", "assigned_by": "shiwake", "staff_label": "どちらか",
+         "staff_choices": ["b1", "b2"], "face": "f1", "faces": ["f1"], "confidence": "mid",
+         "notes": "職員のフォルダ「どちらか」 | 仕分け係（opus）：奥に b1 の f1"}]
+    _w(repo / "data/photos/index.json", json.dumps(idx, ensure_ascii=False, indent=1))
+    before = _snapshot(repo)
+
+    r = tr.zero(repo, stamp="z1")
+    d = repo / "trial/zero/z1"
+    assert r["buildings"] == ["b1", "b2"]
+    # 消さずに退避：動かした物は全部 trial/zero/z1/files/ にあり、中身が同じ
+    for k, v in before.items():
+        if (repo / k).exists():
+            continue
+        assert (d / "files" / k).read_bytes() == v, k
+    for gone in ("scripts/design_b1.py", "scripts/design_b2.py", "data/buildings/b1.json", "data/buildings/b2.json",
+                 "data/reports/b1", "data/reports/b2", "out/b1", "out/b2", "out/rectified", "out/photos", "web/data/models/b1.glb"):
+        assert not (repo / gone).exists(), gone
+    for keep in ("out/site/aerial_z18.png", "data/rulers.json", "data/site/tempaku.json"):
+        assert (repo / keep).exists(), keep
+    # 台帳・決定は空に（元は before に写しがある）
+    assert json.loads((repo / "data/photos/registry.json").read_text(encoding="utf-8"))["entries"] == []
+    assert json.loads((d / "registry_before.json").read_text(encoding="utf-8")) == json.loads(before["data/photos/registry.json"])
+    assert json.loads((repo / "data/decisions.json").read_text(encoding="utf-8"))["decisions"] == []
+    assert json.loads((d / "decisions_before.json").read_text(encoding="utf-8"))["decisions"] == [{"id": "D-0001"}]
+    assert json.loads((d / "index_before.json").read_text(encoding="utf-8")) == idx
+    # 索引：職員の振り分けだけ棟が残る。面・係のメモ・確からしさは消える
+    now = {p["id"]: p for p in json.loads((repo / "data/photos/index.json").read_text(encoding="utf-8"))["photos"]}
+    assert now["S1"]["building"] == "b2" and now["S1"]["interior"] is True and now["S1"]["interior_views"] is True
+    assert now["S1"]["notes"] == "職員が振り分け（t）"
+    # 職員が候補だけ示し、前の仕分け係が候補から選んだ棟は「職員の振り分けの代わり」として残す（面・確からしさは消す）
+    assert now["S2"]["building"] == "b1" and now["S2"]["building_source"] == "prior_sort"
+    assert now["S2"]["face"] is None and "faces" not in now["S2"] and "confidence" not in now["S2"]
+    assert now["S2"]["staff_choices"] == ["b1", "b2"] and now["S2"]["notes"] == "職員のフォルダ「どちらか」"
+    # 取り込みの時に付いた棟（係がまだ触っていない・職員の候補も無い）は「職員の振り分けの代わり」として残す。面とメモは消す
+    assert now["P1"]["building"] == "b1" and now["P1"]["building_source"] == "intake_proxy"
+    assert now["P1"]["face"] is None and "faces" not in now["P1"] and "notes" not in now["P1"]
+    assert now["P3"]["building"] is None                                       # 棟が無かった物は空のまま
+    with pytest.raises(FileExistsError):                                        # 同じ日時の退避を上書きしない
+        tr.zero(repo, stamp="z1")
+
+
 def test_clear_building_keeps_ledger(repo):
     tr.reset("b1", repo, stamp="t1", clear_building=True)
     idx = {p["id"]: p for p in json.loads((repo / "data/photos/index.json").read_text(encoding="utf-8"))["photos"]}

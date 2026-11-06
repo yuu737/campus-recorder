@@ -83,6 +83,16 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin-top:10px}
 .legend i{display:inline-block;width:14px;height:6px;border-radius:3px;background:var(--line);vertical-align:middle;margin-right:3px}
 .legend i.done{background:var(--done)}.legend i.partial{background:var(--partial)}.legend i.wait{background:var(--wait)}
+/* 確かめてほしい写真 */
+.ck{display:grid;grid-template-columns:200px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.ck:first-child{border-top:0}
+.ck img{width:200px;height:150px;object-fit:cover;border-radius:6px;background:var(--line)}
+.ck .q{font-size:14px;line-height:1.6}.ck .q b{font-size:15px}
+.ck .why{font-size:13px;color:var(--ink2);margin:4px 0}
+.ck .acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.ck .acts select{padding:5px 8px;font-size:14px}
+.ck .done{color:var(--done);font-weight:700}
+@media(max-width:560px){.ck{grid-template-columns:1fr}.ck img{width:100%;height:auto}}
 @media(max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}.prog{position:static}}
 @media(max-width:560px){.wrap{padding:0 14px}.two{grid-template-columns:1fr}#grid{grid-template-columns:repeat(2,minmax(0,1fr))}header.top .links{margin-left:0}}
 </style>
@@ -136,6 +146,12 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     </div>
     <div class="note" id="nextNote">書き出した <code>assignments.json</code> を、このリポジトリで次のように取り込みます（画面から直接始める仕組みは準備中）。
       <span class="cmd" id="cmd">recorder photos assign --from assignments.json</span></div>
+  </section>
+
+  <section class="panel" id="p4">
+    <h2><span class="n">4</span>確かめてほしい写真<span class="state" id="s4">なし</span></h2>
+    <p class="sub">係の Claude が寸法の根拠に使いたい写真のうち、どの棟・どの面かに自信が無い物（確からしさ low）や、仕分けと合わない物だけをお見せします。合っていれば「合っている」、違えば正しい面を選んで「直す」。確かめるまで、その写真は寸法の確かな根拠（measured）に使いません。</p>
+    <div id="confirmList"><div class="gray">係が寸法を出すと、ここに出ます。</div></div>
   </section>
 </main>
 
@@ -370,10 +386,51 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     } catch (e) { st.innerHTML = `<span class="warn">止まりました：${esc(e.message)}</span>`; }
     btn.disabled = false;
   }
+  // --- 4. 確かめてほしい写真（根拠の門。/api/confirm）
+  const PROBLEM_JA = {low_unconfirmed: "どの面か自信が無い（low）", other_face: "仕分けた面と、寸法を使う面が違う",
+    no_face: "面が決まっていない", other_building: "仕分けた棟が違う", no_building: "棟が決まっていない"};
+  async function loadConfirm() {
+    if (!SERVER) return;
+    const box = $("#confirmList");
+    let r; try { r = await api("/api/confirm"); } catch (e) { return; }
+    if (!r.ok) return;
+    const html = []; let n = 0;
+    for (const [bid, d] of Object.entries(r.j.buildings || {})) {
+      for (const it of d.items || []) {
+        n++;
+        const pick = (d.faces || []).includes(it.face) ? it.face : ((it.value_faces || [])[0] || it.face);   // 面の一覧に無い面なら寸法を使いたい面
+        const opts = (d.faces || []).map(f => `<option value="${esc(f)}"${f === pick ? " selected" : ""}>${esc(f)}</option>`).join("");
+        html.push(`<div class="ck" data-photo="${esc(it.photo)}">
+          ${it.url ? `<img loading="lazy" src="${esc(it.url)}" alt="">` : `<div></div>`}
+          <div><div class="q"><b>${esc(d.name || bid)}</b> の <b>${esc(it.face || "（面なし）")}</b> 面の写真ですか？
+            <span class="gray">確からしさ ${esc(it.confidence || "—")}</span>
+            ${(it.value_faces || []).length ? `<br><span class="gray">寸法を使いたい面：${esc(it.value_faces.join("・"))}</span>` : ""}</div>
+            <div class="why">${esc((it.problems || []).map(p => PROBLEM_JA[p] || p).join("・"))}。寸法の根拠：${esc((it.used_at || []).slice(0, 2).join("、"))}${(it.used_at || []).length > 2 ? " ほか" : ""}</div>
+            ${it.why ? `<div class="why">係の見立て：${esc(it.why)}</div>` : ""}
+            <div class="acts"><button class="btn primary" type="button" data-act="ok">合っている</button>
+              <select data-act="face">${opts}</select><button class="btn ghost" type="button" data-act="fix">この面に直す</button>
+              <span class="msg"></span></div></div></div>`);
+      }
+    }
+    $("#s4").textContent = n ? `${n} 枚` : "なし"; $("#s4").className = "state " + (n ? "partial" : "done");
+    box.innerHTML = n ? html.join("") : `<div class="gray">確かめてほしい写真はありません。</div>`;
+  }
+  $("#confirmList").addEventListener("click", async ev => {
+    const btn = ev.target.closest("button[data-act]"); if (!btn) return;
+    const row = btn.closest(".ck"), msg = row.querySelector(".msg");
+    const body = {photo: row.dataset.photo};
+    if (btn.dataset.act === "fix") body.face = row.querySelector("select").value;
+    msg.textContent = "書いています…";
+    const r = await api("/api/confirm", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+    msg.innerHTML = r.ok ? `<span class="done">${r.j.changed ? "直しました" : "確かめました"}</span>` : `<span class="warn">${esc(r.j.error || r.status)}</span>`;
+    if (r.ok) setTimeout(loadConfirm, 600);
+  });
+
   let pollTimer = null;
   async function poll() {
     clearTimeout(pollTimer);
     await loadProgress();
+    await loadConfirm();
     const running = Object.values(runs).some(r => r && r.state === "running");
     if (running) pollTimer = setTimeout(poll, 10000);
     else if (Object.keys(runs).length) { $("#s3").textContent = "済"; $("#s3").className = "state done"; }

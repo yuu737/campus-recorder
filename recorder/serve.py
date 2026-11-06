@@ -11,6 +11,8 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
     POST /api/photos               multipart：写真（photos）＋ assignments（JSON 文字列）→ 保存 → 取り込み → 振り分け
     POST /api/start                {"buildings": [...], "dry_run": false} 棟ごとに run_pipeline を別スレッドで
     GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
+    GET  /api/confirm?buildings=a,b    根拠の門で「確かめてほしい」と出た写真（棟ごと。out/<棟>/to_confirm.json も書く）と面の一覧
+    POST /api/confirm              {"photo", "building"?, "face"?} 職員が 1 枚を確かめる（棟・面が無ければ「合っている」）
                                    counts.requests は職員宛ての撮影依頼だけ（to="staff"）、counts.tool_requests は
                                    道具・係の作業。どちらも棟 JSON から今の値で数え直す（report.json が古くても正しい）
 
@@ -161,7 +163,8 @@ def api_photos(root: Path, files: list[tuple[str, bytes]], assignments: list[dic
     index_path = root / photos.INDEX_PATH
     warnings: list[dict] = []
     placed: list[tuple[str, Path, dict]] = []   # (棟フォルダ, 置いた道, 振り分け)
-    with _photos_lock:
+    from .ledger import lock as _ledger_lock   # 係のコマンド（別のプロセス）と索引の書き込みがぶつからないように（ledger.py）
+    with _photos_lock, _ledger_lock("ledger", label="serve 写真の受け付け"):
         idx = photos.load_index(index_path)
         taken = {str(p.get("id")) for p in idx.get("photos", [])}
         saved = reused = 0
@@ -336,6 +339,46 @@ def api_progress(root: Path, buildings: list[str] | None) -> dict:
 
 # --- HTTP ---------------------------------------------------------------------------------------
 
+def api_confirm_list(root: Path, buildings: list[str] | None) -> dict:
+    """根拠の門で「確かめてほしい」と出た写真（棟ごと）と、その棟の面の一覧。職員の画面の 4 の欄が読む。"""
+    from . import photos, schema
+    if buildings is None:
+        site = _jload(root / "web" / "data" / "site.json") or {}
+        buildings = list((site.get("scope") or {}).get("targets") or [])
+    out: dict = {}
+    for bid in buildings:
+        bp = root / "data" / "buildings" / f"{bid}.json"
+        if not bp.exists():
+            out[bid] = {"items": [], "faces": [], "note": "棟 JSON がまだ無い"}
+            continue
+        b = schema.load_building(bp)
+        res = photos.write_to_confirm(b, root)
+        items = []
+        for it in res["items"]:
+            f = str(it.get("file") or "")
+            items.append({**{k: it.get(k) for k in ("photo", "problems", "detail", "building", "face", "faces", "confidence",
+                                                     "used_at", "value_faces")},
+                          "url": f"/data/photos/{f}" if f else None,
+                          "why": (str(it.get("notes") or "").split(" | ")[-1])[:200]})
+        out[bid] = {"items": items, "faces": [fc.get("id") for fc in b.get("faces", []) if fc.get("id")],
+                    "name": b.get("name")}
+    return {"buildings": out}
+
+
+def api_confirm(root: Path, body: dict) -> dict:
+    """職員が 1 枚を確かめる：{"photo", "building"?, "face"?, "faces"?}。棟・面が無ければ「合っている」。"""
+    from . import photos
+    from .ledger import lock as _ledger_lock
+    pid = str(body.get("photo") or "")
+    if not pid:
+        raise ValueError("photo が要ります")
+    with _photos_lock, _ledger_lock("ledger", label=f"serve 確かめ {pid}"):
+        res = photos.confirm_photo(root / photos.INDEX_PATH, pid, by="staff", building=body.get("building"),
+                                   face=body.get("face"), faces=body.get("faces"))
+    log(f"職員が確かめた：{pid}（{'直した' if res['changed'] else '合っている'}）")
+    return {"photo": pid, "changed": res["changed"]}
+
+
 def _fix_text(s: str | None) -> str:
     """multipart のヘッダに生の UTF-8 で来た名前（ブラウザの既定）を読み直す。"""
     if not s:
@@ -438,6 +481,9 @@ class Handler(SimpleHTTPRequestHandler):
         if u.path == "/api/progress":
             b = [x.strip() for v in q.get("buildings", []) for x in v.split(",") if x.strip()]
             return self._json(200, api_progress(self.root, b or None))
+        if u.path == "/api/confirm":
+            b = [x.strip() for v in q.get("buildings", []) for x in v.split(",") if x.strip()]
+            return self._json(200, api_confirm_list(self.root, b or None))
         return self._json(404, {"error": "知らない API", "path": u.path})
 
     # POST
@@ -464,6 +510,8 @@ class Handler(SimpleHTTPRequestHandler):
             res = api_campus(self.root, body)
             log(f"敷地 {res['campus']}: {res['message']}")
             return self._json(200, res)
+        if u.path == "/api/confirm":
+            return self._json(200, api_confirm(self.root, body))
         return self._json(404, {"error": "知らない API", "path": u.path})
 
 

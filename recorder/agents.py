@@ -11,7 +11,7 @@ import os
 import re
 import time
 import warnings
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 MODEL_MAP = {"haiku": "claude-haiku-5-5", "sonnet": "claude-sonnet-5-5", "opus": "claude-opus-5-5",
@@ -263,12 +263,17 @@ def step_task(step: str, building_id: str, photos_folder: str | None = None, cwd
                    f"出力 {out}/satsuei_checks.json（写真 id ごとの usable・problems を 1 つにまとめる）と職員向け 3 行。",
         "shiwake": f"{head} 索引の写真のうち building が {b} の物と、building が null で candidates に {b} がある物を目視で面に分ける。"
                    f"面 id は足元の辺番号 f0〜（tempaku.json）。写真は期間中の物だけ（期間前の写真と分類台帳は使わない）。職員が振り分けた building は変えず、GPS との食い違いは disagreement に。"
-                   f"出力 out/photos/shiwake_{b}.json。索引へは face・faces だけを python で書き戻す（他の項目・他の棟は触らない）。",
+                   f"メジャー（巻き尺）を壁に当てた写真には ruler: \"tape_measure\" と ruler_note（どの面の何に当てたか・見える目盛りの範囲）を付ける。"
+                   f"出力 out/photos/shiwake_{b}.json（\"photos\": 写真 id → {{building, face, faces, interior_views, candidate_faces, confidence, evidence, ruler, ruler_note}}）。"
+                   f"索引へは `recorder photos set-face --from out/photos/shiwake_{b}.json --by \"仕分け係（<モデル>）\"` だけで書き戻す（索引のファイルを自分で書かない。他の棟と同時に回るので道具が鍵を持つ）。",
         "kansatsu": f"{head} 入力：out/photos/shiwake_{b}.json と索引の face、足元 data/site/tempaku.json、屋上 out/site/aerial_z18.png、"
                     f"あれば {j}。面ごとの観察票（比率と個数だけ。寸法は書かない）。出力 {rep}/kansatsu_<面id>.json と {rep}/kansatsu.md。",
         "kazoe": f"{head} 入力：{rep}/kansatsu_*.json とその面の写真。面ごとのスパン数・階数を 2 枚以上で突き合わせて確定する"
                  f"（両端が入らない面は目印で 2 枚をつなぐ）。決まらない面は unknown と requests。出力 {rep}/kazoe_<面id>.json。",
         "sokuryo": f"{head} 入力：{rep}/kazoe_*.json、物差し台帳 data/rulers.json、足元（PLATEAU）data/site/tempaku.json。"
+                   f"最初に `recorder photos list --building {b} --ruler tape_measure` でメジャーの写真を探す。あれば縮尺の先頭に使い、"
+                   "measured はメジャーと同じ正面化画像・同じ面の値だけ（別の面へ当てはめた値は仮定で estimated）、± に目盛りの読み取りと傾きを積み、"
+                   "2 か所目は検算だけ（差 % を method に）。無ければ PLATEAU 以下で換算して estimated、止めずに撮影依頼を 1 件だけ足す。"
                    "`photos rectify`（複数面は --roi）→ `photos measure`（片端ずつの面は `photos stitch`）で階高・柱間隔を m に。"
                    f"必ず 2 つ目の物差しで検算し差 % を method に。最後に登録と面の展開：棟 JSON が無ければ `recorder new {b} --from-site`、"
                    f"正面化した写真を `photos compare`（--px-per-m に測った縮尺）→ `photos register`（平らでない写真は `photos register-chain {j}`）、"
@@ -454,6 +459,18 @@ def _building_events(bid: str, cwd: Path, after_step: str | None) -> list[dict]:
     photo_reqs = [r for r in reqs if r.get("kind") == "photo"]
     if photo_reqs:
         ev.append({"kind": "human", "why": f"撮影の依頼（kind \"photo\"）が open で {len(photo_reqs)} 件あります", "evidence": {"requests": photo_reqs}})
+    # 根拠の門（11/7）：measured の根拠の写真のうち、仕分けと合わない・low で未確認の物 → 職員に確かめてもらう
+    if b:
+        try:
+            from . import schema as _schema
+            checks = _schema.evidence_checks(b, _schema.load_photo_records(cwd), cwd)
+        except Exception:  # noqa: BLE001  事件の検出は止めない
+            checks = []
+        if checks:
+            pids = sorted({c["photo"] for c in checks})
+            ev.append({"kind": "human", "why": f"measured の根拠の写真 {len(pids)} 枚を職員に確かめてもらう必要があります（根拠の門。"
+                                               f"職員の画面の「確かめてほしい写真」か recorder photos confirm。確かめるまで measured にしない）",
+                       "evidence": {"to_confirm": [{k: c.get(k) for k in ("photo", "problem", "detail", "used_at")} for c in checks]}})
 
     # 争点（規則で決まらない物）
     soten = (_jload(cwd / "out" / bid / "soten.json") or {}).get("items") or []
@@ -649,10 +666,37 @@ def run_pipeline(building_id: str, photos_folder: str | None = None, *, steps: l
     return summary
 
 
+def lock_waits(building_id: str, start: str | None, end: str | None, path: Path | None = None) -> dict:
+    """鍵を待った秒（out/.locks/waits.jsonl。ledger.py が書く）のうち、この棟のコマンド（label に棟 id が入る）で、
+    start〜end（ISO の時刻）の間に取れた物を、鍵の名前ごとに足す。{"ledger": 秒, "gpu": 秒, "n": 件数}"""
+    from .ledger import lock_dir
+    p = path or (lock_dir() / "waits.jsonl")
+    out: dict = {"ledger": 0.0, "gpu": 0.0, "n": 0}
+    if not p.exists():
+        return out
+    for line in p.read_text(encoding="utf-8").splitlines():
+        try:
+            w = json.loads(line)
+        except ValueError:
+            continue
+        at = str(w.get("at") or "")
+        if building_id not in str(w.get("label") or ""):
+            continue
+        if (start and at < start[:19]) or (end and at > end[:19]):
+            continue
+        out[w.get("lock", "?")] = round(out.get(w.get("lock", "?"), 0.0) + float(w.get("waited_s") or 0), 2)
+        out["n"] += 1
+    return out
+
+
 def log_step(building_id: str, step: str, *, model: str = "opus", seconds: float | None = None, tokens: int | None = None,
-             note: str = "", record: str | Path | None = None, new: bool = False, cwd: str | Path = ".") -> dict:
+             note: str = "", record: str | Path | None = None, new: bool = False, cwd: str | Path = ".",
+             started_at: str | None = None, ended_at: str | None = None, attempt: int | None = None,
+             result: str | None = None, tool_uses: int | None = None) -> dict:
     """サブエージェントの試走の 1 工程を、run_pipeline と同じ形の記録（out/<id>/pipeline_<日時>.json、runner "subagent"）に追記する。
-    record を省くと、同じ棟の runner "subagent" の最新の記録に足す（無いか new なら新しく作る）。"""
+    record を省くと、同じ棟の runner "subagent" の最新の記録に足す（無いか new なら新しく作る）。
+    11/7：始めと終わりの時刻・何回目か・結果・道具の回数と、その間にこの棟のコマンドが鍵を待った秒（lock_wait_s）も残す。
+    始めの時刻が無ければ、終わり − seconds とする。"""
     cwd = Path(cwd)
     if step not in PIPELINE_STEPS:
         raise AgentError(f"知らない工程: {step}。ある工程: {PIPELINE_STEPS}")
@@ -679,13 +723,29 @@ def log_step(building_id: str, step: str, *, model: str = "opus", seconds: float
         doc = json.loads(path.read_text(encoding="utf-8"))
     m = model.lower()
     agent = step_agent(step)
+    now = datetime.now()
+    end = ended_at or now.isoformat(timespec="seconds")
+    start = started_at
+    if start is None and seconds is not None:
+        try:
+            start = (datetime.fromisoformat(end) - timedelta(seconds=float(seconds))).isoformat(timespec="seconds")
+        except ValueError:
+            start = None
     rec = {"agent": agent, "step": step, "model": MODEL_MAP.get(m, m), "seconds": seconds, "tokens": tokens,
            "input_tokens": None, "output_tokens": None, "cost_usd": None, "cost_usd_estimate": None,
+           "started_at": start, "ended_at": end, "attempt": attempt, "result": result, "tool_uses": tool_uses,
+           "lock_wait_s": lock_waits(building_id, start, end),
            "outputs": _outputs(cwd, building_id, agent), "note": note,
-           "logged_at": datetime.now().isoformat(timespec="seconds")}
+           "logged_at": now.isoformat(timespec="seconds")}
     doc["steps"].append(rec)
     doc["seconds_total"] = round(sum(s.get("seconds") or 0 for s in doc["steps"]), 1)
     doc["tokens_total"] = sum(s.get("tokens") or 0 for s in doc["steps"])
+    doc["lock_wait_total_s"] = {k: round(sum((s.get("lock_wait_s") or {}).get(k, 0) for s in doc["steps"]), 2)
+                                for k in ("ledger", "gpu")}
+    starts = [s["started_at"] for s in doc["steps"] if s.get("started_at")]
+    ends = [s["ended_at"] for s in doc["steps"] if s.get("ended_at")]
+    if starts and ends:                                   # 経過時間（最初の工程の始め〜最後の工程の終わり）
+        doc["wall_seconds"] = round((datetime.fromisoformat(max(ends)) - datetime.fromisoformat(min(starts))).total_seconds(), 1)
     if path.parent.resolve() == out.resolve():
         # 既定の置き場なら data/reports/<棟>/ にも同じ名前で写す（git に入る記録）
         w = write_pipeline_record(building_id, doc, cwd, path.name)

@@ -46,9 +46,10 @@ def load_registry(path: Path = REGISTRY_PATH) -> dict:
 
 
 def save_registry(reg: dict, path: Path = REGISTRY_PATH) -> None:
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    """登録台帳を書く（一時ファイルに書いてから置き換える）。読む所から書く所までの鍵は呼ぶ側（CLI）が持つ（ledger.py）。"""
+    from .ledger import write_text_atomic
     reg["entries"].sort(key=lambda e: (e["building"], e["face"], e["photo"]))
-    Path(path).write_text(json.dumps(reg, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    write_text_atomic(path, json.dumps(reg, ensure_ascii=False, indent=1) + "\n")
 
 
 def upsert(reg: dict, entry: dict) -> None:

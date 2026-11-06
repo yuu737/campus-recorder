@@ -682,7 +682,9 @@ def run_blender(building_json: Path, spec: dict, rdir: Path, blender: str | None
     sp.write_text(json.dumps(spec, ensure_ascii=False), encoding="utf-8")
     cmd = [str(blender_path(blender)), "-b", "-P", str(HERE / "blender_build.py"), "--", str(building_json.resolve()),
            str(rdir.resolve()), f"--photoproj={sp.resolve()}"]
-    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    from .ledger import lock   # GPU は 1 枚（ledger.py）
+    with lock("gpu", label=f"photoproj {building_json.stem}"):
+        r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0 or "Traceback" in r.stdout or not (rdir / "pp_ids.json").exists():
         print(r.stdout[-4000:], r.stderr[-2000:], file=sys.stderr)
         raise SystemExit(f"Blender が失敗しました（終了コード {r.returncode}）")

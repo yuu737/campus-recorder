@@ -285,8 +285,9 @@ def load_index(path: Path = INDEX_PATH) -> dict:
 
 
 def save_index(idx: dict, path: Path = INDEX_PATH) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(idx, ensure_ascii=False, indent=1), encoding="utf-8")
+    """索引を書く（一時ファイルに書いてから置き換える）。読む所から書く所までの鍵は呼ぶ側（CLI・serve）が持つ（ledger.py）。"""
+    from .ledger import write_text_atomic
+    write_text_atomic(path, json.dumps(idx, ensure_ascii=False, indent=1))
 
 
 # --- 期間（期間前 / 期間中）と台帳 -----------------------------------------------------
@@ -539,6 +540,120 @@ def assign_photos(index_path: Path, assignments: list[dict], campus: str | None 
             out["assigned"] += 1
     save_index(idx, index_path)
     return out
+
+
+RULER_MARKS = {"tape_measure"}   # 索引の写真に付けられる物差しの印（data/rulers.json の id）。メジャーが壁に当てて写っている写真
+
+
+def set_faces(index_path: Path, doc: dict, by: str, now: str | None = None) -> dict:
+    """仕分け係の結果（out/photos/shiwake_*.json の "photos"：写真 id → {building, face, faces, interior_views,
+    candidate_faces, confidence, evidence}）を索引に書く。係が自分のスクリプトで索引を書かないための道具（11/7。
+    4 棟を同時に回すので、鍵は CLI が持つ。ledger.py）。
+
+    - 書くのは face・faces・interior_views・candidate_faces・confidence と notes の 1 行（「<by>：<evidence>」）。
+      メジャーが写っていれば ruler（"tape_measure"）と ruler_note（どこに当てたか・見える目盛りの範囲）も書く。
+    - 棟は、索引で棟が決まっていない（null）写真にだけ書き、assigned_by を "shiwake" にする。
+      職員の振り分けや、他の棟の仕分け係が先に決めた棟は変えない（skipped に理由）。staff_choices があればその中だけ。
+    - 職員が内装と決めた写真（interior: true）には面を書かない。
+    戻り値：{"set", "building_set", "skipped", "not_found"}"""
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    items = doc.get("photos", doc) if isinstance(doc, dict) else {}
+    idx = load_index(index_path)
+    by_id = {p["id"]: p for p in idx["photos"]}
+    out: dict = {"set": 0, "building_set": 0, "skipped": [], "not_found": []}
+    for pid, r in items.items():
+        if not isinstance(r, dict):
+            continue
+        p = by_id.get(pid)
+        if p is None:
+            out["not_found"].append(pid)
+            continue
+        b_new = r.get("building")
+        if p.get("building") and b_new and b_new != p["building"]:
+            out["skipped"].append({"id": pid, "reason": f"索引の棟は {p['building']}（{p.get('assigned_by') or '?'}）。{b_new} には変えない"})
+            continue
+        if not p.get("building") and b_new:
+            ch = p.get("staff_choices")
+            if ch and b_new not in ch:
+                out["skipped"].append({"id": pid, "reason": f"職員が示した棟 {ch} の外（{b_new}）"})
+                continue
+            p["building"], p["assigned_by"], p["assigned_at"] = b_new, "shiwake", now
+            out["building_set"] += 1
+        if p.get("interior") is True:
+            p["face"], p["interior_views"] = None, True
+        else:
+            for k in ("face", "faces", "interior_views", "candidate_faces"):
+                if k in r:
+                    p[k] = r[k]
+        if "confidence" in r:
+            p["confidence"] = r["confidence"]
+        if r.get("ruler"):                                 # 物差しの写った写真の印（今はメジャー tape_measure）
+            if r["ruler"] not in RULER_MARKS:
+                out["skipped"].append({"id": pid, "reason": f"物差しの印 {r['ruler']} は {sorted(RULER_MARKS)} にない（面は書いた）"})
+            else:
+                p["ruler"] = r["ruler"]
+                if r.get("ruler_note"):
+                    p["ruler_note"] = r["ruler_note"]
+        if r.get("evidence"):
+            note = f"{by}：{r['evidence']}"
+            p["notes"] = f"{p['notes']} | {note}" if p.get("notes") else note
+        out["set"] += 1
+    save_index(idx, index_path)
+    return out
+
+
+def write_to_confirm(b: dict, root: Path = Path(".")) -> dict:
+    """根拠の門で外れた写真（schema.evidence_checks）を out/<棟>/to_confirm.json に書く。職員の画面と事件の検出が読む。
+    問題 1 つの写真は 1 件、複数の問題がある写真は 1 件にまとめる。"""
+    from . import schema
+    checks = schema.evidence_checks(b, schema.load_photo_records(root), root)
+    by_photo: dict[str, dict] = {}
+    for it in checks:
+        cur = by_photo.setdefault(it["photo"], {**it, "problems": []})
+        cur["problems"].append(it["problem"])
+        for u in it["used_at"]:
+            if u not in cur["used_at"]:
+                cur["used_at"].append(u)
+        if it["detail"] not in cur["detail"]:
+            cur["detail"] = f"{cur['detail']}／{it['detail']}"
+    items = list(by_photo.values())
+    out = root / "out" / str(b.get("id")) / "to_confirm.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"building": b.get("id"), "made_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                               "note": "measured の根拠の写真のうち、仕分けと合わない物・確からしさ low で職員が確かめていない物。"
+                                       "職員が recorder photos confirm（職員の画面の「確かめてほしい写真」）で確かめるまで、measured の根拠にしない",
+                               "items": items}, ensure_ascii=False, indent=1), encoding="utf-8")
+    return {"path": str(out), "items": items}
+
+
+def confirm_photo(index_path: Path, pid: str, *, by: str = "staff", building: str | None = None,
+                  face: str | None = None, faces: list[str] | None = None, now: str | None = None) -> dict:
+    """職員が仕分けを確かめる（11/7。根拠の門 schema.evidence_checks で「確かめてほしい」と出た写真）。
+    棟・面を渡せば直してから確かめた印を付ける（直す前の値は confirm_change に残す）。渡さなければ「合っている」。
+    確かめた写真は確からしさ low でも measured の根拠に使える。戻り値：{"photo", "changed", "record"}"""
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    idx = load_index(index_path)
+    p = next((r for r in idx["photos"] if r.get("id") == pid), None)
+    if p is None:
+        raise KeyError(f"索引に無い写真: {pid}")
+    before = {k: p.get(k) for k in ("building", "face", "faces")}
+    if building is not None:
+        p["building"] = building or None
+        p["assigned_by"], p["assigned_at"] = by, now
+    if face is not None:
+        p["face"] = face or None
+        p["faces"] = faces if faces is not None else ([face] if face else [])
+    elif faces is not None:
+        p["faces"] = faces
+    after = {k: p.get(k) for k in ("building", "face", "faces")}
+    changed = before != after
+    p["confirmed_by"], p["confirmed_at"] = by, now
+    if changed:
+        p["confirm_change"] = {"from": before, "to": after, "at": now, "by": by}
+    note = f"{'職員が直して確かめた' if changed else '職員が確かめた'}（{now}）"
+    p["notes"] = f"{p['notes']} | {note}" if p.get("notes") else note
+    save_index(idx, index_path)
+    return {"photo": pid, "changed": changed, "record": p}
 
 
 # --- 職員がフォルダで振り分ける ---------------------------------------------------------

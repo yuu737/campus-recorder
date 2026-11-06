@@ -247,7 +247,16 @@ def _procs_with(mark: str, name: str) -> list[int]:
 @contextmanager
 def headless_browser(size: tuple[int, int], info: dict | None = None):
     """headless の Edge（無ければ Chrome）を窓なし・画面の外で立て、ページの CDP を渡す。抜ける時に必ず終了させ、
-    残りが無いことを確かめる（info に leftover_killed／leftover_after を書く）。"""
+    残りが無いことを確かめる（info に leftover_killed／leftover_after を書く）。
+    GPU は 1 枚なので、Blender と同じ鍵（ledger.lock("gpu")）を持って 1 つずつ走る。"""
+    from .ledger import lock
+    with lock("gpu", label="headless browser"):
+        with _headless_browser(size, info) as cdp:
+            yield cdp
+
+
+@contextmanager
+def _headless_browser(size: tuple[int, int], info: dict | None = None):
     exe = find_browser()
     if exe is None:
         raise FileNotFoundError("Edge も Chrome も無い")

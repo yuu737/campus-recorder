@@ -1287,7 +1287,8 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
         "ground_tex": wa["ground_tex"],
         "ground_note": "地面の 3 段：地表の種類は OSM（estimated）、建物まわりの段差は棟 JSON の ground_offset、残りは 5 m 標高を均した面",
     }
-    (data_dir / "site.json").write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    from .ledger import write_text_atomic   # 歩く画面が読んでいる間に半分だけの site.json を見せない
+    write_text_atomic(data_dir / "site.json", json.dumps(out, ensure_ascii=False, separators=(",", ":")))
     return {"path": data_dir / "site.json", "boxes": len(boxes), "models": list(models), "grid": (len(gx), len(gy)),
             "nan_filled": nan_ratio, "env": (wa["env"] or {}).get("url"), "tex": sorted(wa["ground_tex"]),
             "skipped": wa["skipped"], "mask": {k: v for k, v in gm["counts"].items()}, "overrides": overrides}

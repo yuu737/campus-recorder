@@ -17,8 +17,10 @@ tools: Bash, Read, Glob, Grep
 3. 決められない物は `building: null` と理由。候補は `candidate` に残す。
 3b. **ピロティ・通り抜けの中から撮った写真**（天井と奥の壁が写る、外の面が写らない）は面にしない：`face: null`、`interior_views: true`、`candidate_faces` に近い面。観察係が `structures` に使う
 3c. 一直線に並ぶ細かい面（f4/f5 のように足元の辺が分かれているだけの物）は、写っている範囲の主の面を `face`、全部を `faces` に。境目が見えなければ両方を `faces` に入れて `confidence: mid`
+3d. **メジャー（巻き尺）を壁に当てた写真**には印を付ける：`"ruler": "tape_measure"` と `"ruler_note"`（どの面の何に当てたか・見える目盛りの範囲。例「f1 の 2 階の柱型の幅に水平に。0〜120 cm が読める」）。面は当てた壁の面。職員のフォルダ名（`staff_label`）に「メジャー」とあれば手掛かりにするが、写っているかは目で確かめる。メジャーが写っていても手や顔が主なら印は付けず理由を書く（顔は提出物に出さない）。測量係はこの印で縮尺の写真を探す（無くても工程は進む）
 
 ## 出力
-`out/photos/shiwake_<フォルダ>.json`：id ごとに `{"building","face","faces","interior_views","candidate_faces","confidence":"high|mid|low","evidence":"写っている物","source"}`。`faces` は面 id の並び（主の面を先頭）。索引への書き戻しは `face`・`faces`（と `interior_views`）だけ、`notes` には「仕分け係（opus）」と 1 行足す（他の人の notes は消さない）。他の棟の `out/` は書式の見本としてだけ見てよい（値は読まない）。
+`out/photos/shiwake_<フォルダ>.json`：`{"made_by", "made_at", "photos": {写真 id: {"building","face","faces","interior_views","candidate_faces","confidence":"high|mid|low","evidence":"写っている物","source"}}}`（メジャーの写真は `"ruler"`・`"ruler_note"` も）。`faces` は面 id の並び（主の面を先頭）。
+索引への書き戻しは**道具のコマンドだけ**：`.venv/Scripts/python -I -X utf8 -m recorder photos set-face --from out/photos/shiwake_<フォルダ>.json --by "仕分け係（<モデル>）"`。face・faces・interior_views・candidate_faces・confidence と notes の 1 行を書き、棟は棟未定の写真にだけ書く（職員の振り分け・他の棟が決めた棟は変えず、出力の `skipped` に理由が出る）。**索引のファイルを自分のスクリプトで書かない**（4 棟を同時に回すので、道具が鍵を持って書く）。他の棟の `out/` は書式の見本としてだけ見てよい（値は読まない）。
 ## 合格
 同じ面の束の中に矛盾（鏡写しの面）が無い。low は必ず理由付き。

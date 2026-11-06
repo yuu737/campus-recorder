@@ -38,7 +38,9 @@ def build(building_json: Path, out_dir: Path | None = None, blender: str | None 
         lst = out / "cameras.txt"
         lst.write_text(chr(10).join(str(Path(c).resolve()) for c in cameras), encoding="utf-8")
         cmd.append(f"--cameras={lst.resolve()}")
-    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    from .ledger import lock   # GPU は 1 枚。Blender・headless の Edge は 1 つずつ（4 棟を同時に回すため。ledger.py）
+    with lock("gpu", label=f"model build {b['id']}{' --fast' if fast else ''}"):
+        r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     tail = [ln for ln in r.stdout.splitlines() if "Traceback" in ln or "Error" in ln or "模型" in ln or ln.startswith("  File")]
     if r.returncode != 0 or "Traceback" in r.stdout or not (out / "persp_shaded.png").exists():
         print(r.stdout[-3000:], file=sys.stderr)

@@ -847,10 +847,100 @@ def warn_evidence_ids(b: dict, photo_ids: set[str] | None = None, root: Path | N
     return out
 
 
-def warn_building(b: dict, photo_ids: set[str] | None = None, root: Path | None = None) -> list[str]:
+# 4. 根拠の門（11/7。模擬採点で 8 人全員が突いた「仕分けの誤りが根拠付きの measured として素通りする」への答え）
+#    measured の根拠に使った写真が、写真の索引で ①この棟に仕分けられているか ②値の面（faces[<id>] の下・"face" を持つ部品）
+#    に仕分けられているか ③仕分けの確からしさが low なら職員が確かめたか（confirmed_by）を照合する。
+#    外れた写真は「職員に確かめてもらう一覧」（evidence_checks）にもなる（recorder photos to-confirm）。
+def load_photo_records(root: Path | None = None) -> dict[str, dict]:
+    """写真の索引 data/photos/index.json の写真 id → 記録。無ければ空。"""
+    p = (root or ROOT) / "data" / "photos" / "index.json"
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {str(r["id"]): r for r in doc.get("photos", []) if isinstance(r, dict) and r.get("id")}
+
+
+def _walk_measured_ctx(obj, where: str, face: str | None):
+    """(場所, 面 id か None, 測定値) を、measured の値だけ返す。faces[<id>] の下と "face" を持つ dict は面を引き継ぐ。"""
+    if isinstance(obj, dict):
+        if "value" in obj and "status" in obj:
+            if obj.get("status") == "measured":
+                yield where, face, obj
+            return
+        f2 = obj.get("face") if isinstance(obj.get("face"), str) and obj.get("face") else face
+        for k, v in obj.items():
+            if k in _WARN_SKIP:
+                continue
+            if k == "faces" and isinstance(v, list) and not where:
+                for fc in v:
+                    if isinstance(fc, dict):
+                        yield from _walk_measured_ctx({kk: vv for kk, vv in fc.items() if kk not in ("id", "name")},
+                                                      f"faces[{fc.get('id')}]", fc.get("id"))
+                continue
+            yield from _walk_measured_ctx(v, f"{where}.{k}" if where else k, f2)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            yield from _walk_measured_ctx(v, f"{where}[{_seg(i, v)}]", face)
+
+
+def evidence_checks(b: dict, records: dict[str, dict] | None = None, root: Path | None = None) -> list[dict]:
+    """measured の根拠の写真のうち、仕分けと合わない物・確からしさ low で職員が確かめていない物。
+    1 件 = {"photo", "problem"（other_building／no_building／other_face／no_face／low_unconfirmed）, "detail",
+    "building", "face", "faces", "confidence", "used_at"（値の場所の一覧）, "value_faces"（値の面）}"""
+    records = load_photo_records(root) if records is None else records
+    bid = b.get("id")
+    found: dict[tuple[str, str], dict] = {}
+
+    def add(pid: str, problem: str, detail: str, where: str, vface: str | None, r: dict) -> None:
+        it = found.setdefault((pid, problem), {
+            "photo": pid, "problem": problem, "detail": detail, "building": r.get("building"), "face": r.get("face"),
+            "faces": r.get("faces"), "confidence": r.get("confidence"), "notes": r.get("notes"), "file": r.get("file"),
+            "used_at": [], "value_faces": []})
+        if where not in it["used_at"]:
+            it["used_at"].append(where)
+        if vface and vface not in it["value_faces"]:
+            it["value_faces"].append(vface)
+
+    for where, vface, m in _walk_measured_ctx(b, "", None):
+        for e in m.get("evidence") or []:
+            r = records.get(e) if isinstance(e, str) else None
+            if r is None:
+                continue                                   # 写真でない根拠（plateau・osm・data/…）は対象外
+            pb = r.get("building")
+            if pb is None:
+                add(e, "no_building", "棟が決まっていない写真", where, vface, r)
+                continue
+            if pb != bid:
+                add(e, "other_building", f"索引では棟 {pb}", where, vface, r)
+                continue
+            pf = {f for f in ([r.get("face")] + list(r.get("faces") or [])) if f}
+            if vface and not r.get("interior_views"):
+                if not pf:
+                    add(e, "no_face", "面が決まっていない写真", where, vface, r)
+                elif vface not in pf:
+                    add(e, "other_face", f"索引では面 {'・'.join(sorted(pf))}", where, vface, r)
+            if r.get("confidence") == "low" and not r.get("confirmed_by"):
+                add(e, "low_unconfirmed", "仕分けの確からしさ low で、職員の確認が無い", where, vface, r)
+    return list(found.values())
+
+
+def warn_evidence_sorting(b: dict, records: dict[str, dict] | None = None, root: Path | None = None) -> list[str]:
+    """4. 根拠の門の警告（--strict でエラー）。写真 1 枚・問題 1 種で 1 件にまとめる。"""
+    out = []
+    for it in evidence_checks(b, records, root):
+        w = it["used_at"]
+        vf = f"（値の面 {'・'.join(it['value_faces'])}）" if it["value_faces"] else ""
+        out.append(f"{w[0]}: measured の根拠の写真 {it['photo']} — {it['detail']}{vf}（{len(w)} か所）。"
+                   "仕分けを直すか職員に確かめてもらう（recorder photos to-confirm）まで、この写真を measured の根拠にしない")
+    return out
+
+
+def warn_building(b: dict, photo_ids: set[str] | None = None, root: Path | None = None,
+                  records: dict[str, dict] | None = None) -> list[str]:
     """警告の一覧（validate_building のエラーとは別。既存の棟を落とさない）。"""
     return (warn_tol_floor(b, ruler_ratios(root)) + warn_adopted(b)
-            + warn_evidence_ids(b, photo_ids, root))
+            + warn_evidence_ids(b, photo_ids, root) + warn_evidence_sorting(b, records, root))
 
 
 def unknowns(b: dict) -> list[str]:

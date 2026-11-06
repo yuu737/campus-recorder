@@ -135,9 +135,22 @@ def main(argv: list[str] | None = None) -> int:
                    help="期間前 / 期間中。省略すると撮影日が 2026-11-02 12:00 JST より前なら before")
     q.add_argument("--ledger", default=None, help="写真台帳.json。棟の候補を source 付きで入れる")
     q = psub.add_parser("list")
+    q.add_argument("--building", default=None, help="この棟の写真だけ")
+    q.add_argument("--ruler", default=None, help="物差しの印がある写真だけ（例 tape_measure。測量係がメジャーの写真を探す）")
     q = psub.add_parser("assign", help="shiwake の結果（assignments.json）を索引に書く")
     q.add_argument("--from", dest="from_json", required=True)
     q.add_argument("--campus", default=None)
+    q = psub.add_parser("set-face", help="仕分け係の結果（out/photos/shiwake_*.json）の面・棟を索引に書く（鍵付き。係は索引を自分で書かない）")
+    q.add_argument("--from", dest="from_json", required=True, help="out/photos/shiwake_<…>.json（\"photos\": 写真 id → {building, face, faces, …}）")
+    q.add_argument("--by", default="仕分け係", help="notes に残す書き手（例「仕分け係（opus）」）")
+    q = psub.add_parser("to-confirm", help="根拠の門：measured の根拠の写真のうち、仕分けと合わない・low で未確認の物（out/<棟>/to_confirm.json）")
+    q.add_argument("building", help="data/buildings/<id>.json")
+    q = psub.add_parser("confirm", help="職員が仕分けを確かめる（棟・面を渡せば直してから。渡さなければ「合っている」）")
+    q.add_argument("photo")
+    q.add_argument("--building", default=None)
+    q.add_argument("--face", default=None)
+    q.add_argument("--faces", default=None, help="複数の面（カンマ区切り。主の面を先頭）")
+    q.add_argument("--by", default="staff")
     q = psub.add_parser("folders", help="職員が data/photos/<日付>/<棟名>/ に手で分けた写真を索引に反映し、フォルダを棟 id に改名する")
     q.add_argument("folder", help="日付のフォルダ（例 data/photos/20261105）")
     q.add_argument("--campus", default=None)
@@ -312,6 +325,11 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--note", default="")
     q.add_argument("--record", default=None, help="追記する記録（省略で runner subagent の最新）")
     q.add_argument("--new", action="store_true", help="新しい記録を始める")
+    q.add_argument("--started-at", default=None, help="工程を始めた時刻（ISO、例 2026-11-07T09:12:03）")
+    q.add_argument("--ended-at", default=None, help="工程が終わった時刻（ISO）。省略で記録した時刻")
+    q.add_argument("--attempt", type=int, default=None, help="何回目か（やり直しで 2、3）")
+    q.add_argument("--result", default=None, choices=["ok", "retry", "skipped", "failed"], help="この回の結果")
+    q.add_argument("--tool-uses", type=int, default=None, help="係が使った道具の回数（Agent の結果の tool_uses）")
 
     p = sub.add_parser("vocab", help="語彙（部品の型）の台帳 data/vocab.json")
     vsub = p.add_subparsers(dest="vocab_cmd", required=True)
@@ -355,7 +373,35 @@ def main(argv: list[str] | None = None) -> int:
         return _shiwake_eval.run_cli(ap.parse_args(argv))
 
     a = ap.parse_args(argv)
+    need = _ledger_need(a)
+    if need:   # 鍵の待ちを棟ごとに数えるため、label にコマンドの引数（棟 id やパスが入る）を付ける
+        need = (need + " " + " ".join((sys.argv[1:] if argv is None else list(argv))[2:]))[:240].strip()
+        # 共有の台帳（写真の索引・登録台帳・site.json・決定・CC0 の台帳）を書くコマンドは、読む所から保存する所まで
+        # 鍵を持つ（4 棟を同時に回しても書き込みが消えない。ledger.py。審査のコードレビュー A7 の直し）
+        from . import ledger
+        with ledger.lock("ledger", label=need):
+            return _dispatch(a)
+    return _dispatch(a)
 
+
+# 鍵（ledger）が要るコマンド：(コマンド, サブコマンド)。サブコマンドが None の物はコマンド全体
+LEDGER_WRITERS = {
+    ("photos", "assign"), ("photos", "folders"), ("photos", "import"), ("photos", "set-face"), ("photos", "confirm"),
+    ("photos", "pnp"), ("photos", "locate"), ("photos", "landmarks"),
+    ("photos", "register"), ("photos", "register-chain"), ("photos", "register-sfm"),
+    ("site", "export-web"), ("site", "build"), ("site", "confirm"), ("campus", "init"),
+    ("agent", "decide"), ("assets", "fetch"),
+}
+
+
+def _ledger_need(a) -> str | None:
+    sub = {"photos": "photos_cmd", "site": "site_cmd", "campus": "campus_cmd", "agent": "agent_cmd",
+           "assets": "assets_cmd"}.get(a.cmd)
+    key = (a.cmd, getattr(a, sub, None) if sub else None)
+    return f"recorder {key[0]} {key[1]}" if key in LEDGER_WRITERS else None
+
+
+def _dispatch(a) -> int:
     if a.cmd == "agent":
         return _agent(a)
     if a.cmd == "vocab":
@@ -643,7 +689,8 @@ def _agent(a) -> int:
             res = agents.write_tasks(a.building, a.photos)
         elif a.agent_cmd == "log":
             res = agents.log_step(a.building, a.step, model=a.model, seconds=a.seconds, tokens=a.tokens, note=a.note,
-                                  record=a.record, new=a.new)
+                                  record=a.record, new=a.new, started_at=a.started_at, ended_at=a.ended_at,
+                                  attempt=a.attempt, result=a.result, tool_uses=a.tool_uses)
         else:
             steps = a.steps.split(",") if a.steps else None
             res = agents.run_pipeline(a.building, a.photos, steps=steps, dry_run=a.dry_run)
@@ -665,6 +712,23 @@ def _photos(a) -> int:
         assignments = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
         res = assign_photos(index_path=Path("data/photos/index.json"), assignments=assignments,
                             campus=a.campus or site.default_campus())
+        print(json.dumps(res, ensure_ascii=False, indent=1))
+        return 0
+    if a.photos_cmd == "to-confirm":
+        from .schema import load_building
+        res = photos.write_to_confirm(load_building(a.building), Path("."))
+        for it in res["items"]:
+            print(f"{it['photo']}: {it['detail']}（使われた所 {len(it['used_at'])}：{it['used_at'][0]}）")
+        print(f"確かめてほしい写真 {len(res['items'])} 枚 → {res['path']}")
+        return 0
+    if a.photos_cmd == "confirm":
+        fs = [x.strip() for x in a.faces.split(",") if x.strip()] if a.faces else None
+        res = photos.confirm_photo(photos.INDEX_PATH, a.photo, by=a.by, building=a.building, face=a.face, faces=fs)
+        print(json.dumps({k: v for k, v in res.items() if k != "record"}, ensure_ascii=False))
+        return 0
+    if a.photos_cmd == "set-face":
+        doc = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
+        res = photos.set_faces(photos.INDEX_PATH, doc, a.by)
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0
     if a.photos_cmd == "folders":
@@ -968,8 +1032,15 @@ def _photos(a) -> int:
         print(f"画像: {png}")
         return 0
     if a.photos_cmd == "list":
-        for r in photos.load_index()["photos"]:
-            print(photos.summary_line(r))
+        for r in photos.load_index(photos.INDEX_PATH)["photos"]:
+            if a.building and r.get("building") != a.building:
+                continue
+            if a.ruler and r.get("ruler") != a.ruler:
+                continue
+            line = photos.summary_line(r)
+            if r.get("ruler"):
+                line += f"  [物差し {r['ruler']}：{r.get('ruler_note') or ''}]"
+            print(line)
         return 0
     return 2
 

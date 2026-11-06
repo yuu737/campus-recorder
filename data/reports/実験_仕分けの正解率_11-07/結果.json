@@ -1,0 +1,1657 @@
+{
+ "made_at": "2026-11-07",
+ "made_by": "指揮役（Opus 5.5）。仕分けは Opus 3 人（盲検）",
+ "note": "棟と面を隠した 55 枚。正解は職員の振り分け（棟）と、PnP で視点を解いた登録（棟・主な面）。写真は git に入れない",
+ "rows": [
+  {
+   "id": "X01",
+   "photo": "PXL_20261105_061711714",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f8",
+    "confidence": "low",
+    "evidence": "高い塔で、窓の無いれんがの柱（f7）、その右に引っ込んだガラスの壁と頂部の吹き抜け（f8）、さらに右に小窓の列のある塊（f9 の脇）が並ぶ。北面（X06・X10）と 180° 回した並びなので南面と判断。主の面は引っ込んだガラス面 f8 にしたが、手前の柱 f7 も同じくらい大きく写っており迷う。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "P19e",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 3.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 29.4
+    },
+    {
+     "building": "b12",
+     "distance_m": 33.1
+    }
+   ],
+   "heading_deg_magnetic": 239.0
+  },
+  {
+   "id": "X02",
+   "photo": "PXL_20261105_074939442",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f17",
+    "confidence": "high",
+    "evidence": "入口の横に「共通講義棟」の表示、れんがの柱の列と大きな庇。東の広場（ベンチ・テーブル）から見た長い面が左（南南西）へ遠ざかっており、東南東向きの長い面 f17。"
+   },
+   "gps_nearest_building": "osm-way-1304077325",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "distance_m": 13.8
+    },
+    {
+     "building": "tower75",
+     "distance_m": 26.9
+    },
+    {
+     "building": "b10",
+     "distance_m": 29.3
+    }
+   ],
+   "heading_deg_magnetic": 164.0
+  },
+  {
+   "id": "X03",
+   "photo": "PXL_20261105_062246708",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f8",
+    "confidence": "low",
+    "evidence": "X01 と同じ南面を下の道路から見上げた写真（柱・引っ込んだガラス面・頂部の吹き抜け・右の塊の小窓）。足元の基壇と左の通路橋が写る。主の面は f8 としたが、画面の中央は柱 f7 で、f7 の可能性もある。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": "f16",
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 6.4
+    },
+    {
+     "building": "library",
+     "distance_m": 18.7
+    },
+    {
+     "building": "honbu",
+     "distance_m": 28.6
+    }
+   ],
+   "heading_deg_magnetic": 210.0
+  },
+  {
+   "id": "X04",
+   "photo": "PXL_20261103_043327622",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "NE",
+    "confidence": "high",
+    "evidence": "柱に「本部棟」の表示があり、車道が建物の下を抜けるピロティ。抜けた先の横断歩道と赤いコーンが X12（南南西側）の通路と同じで、こちらは日陰の側なので南翼の北北東向きの面 NE。左の階段が東へ上がる向きも X12 と合う。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "osm-way-1304077323",
+     "distance_m": 32.7
+    },
+    {
+     "building": "library",
+     "distance_m": 34.0
+    }
+   ],
+   "heading_deg_magnetic": 113.0
+  },
+  {
+   "id": "X05",
+   "photo": "PXL_20261105_071303445",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "other",
+    "face": null,
+    "confidence": "mid",
+    "evidence": "階段状の斜めの壁と丸い照明の並び、道路をまたぐコンクリートの梁が X13・X15 と同じ建物。4 棟のどれとも作りが違い（茶色のタイルに打ち放しのテラス）、タワー75 は右端の奥に写るだけなので主の被写体は 4 棟以外。"
+   },
+   "gps_nearest_building": "osm-way-1304077542",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 10.6
+    },
+    {
+     "building": "honbu",
+     "distance_m": 15.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 24.7
+    }
+   ],
+   "heading_deg_magnetic": 322.0
+  },
+  {
+   "id": "X06",
+   "photo": "PXL_20261105_060904811",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f19",
+   "claude": {
+    "building": "tower75",
+    "face": "f19",
+    "confidence": "low",
+    "evidence": "北の広場から見たタワー75。正面寄りに見えるのは北面で、頂部のガラスの箱の下に横長の窓の引っ込んだ部分（f19、両脇が P19w・P19e）、右に縦の細窓の多い西面が強く斜めに写る。北面のどの区切りが主かは、小窓の列のある塊 f20 とも迷う。左の白い升目の建物は 4 棟以外。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": "f13",
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 26.2
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 50.3
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 60.9
+    }
+   ],
+   "heading_deg_magnetic": 21.0
+  },
+  {
+   "id": "X07",
+   "photo": "PXL_20261103_043259125",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "E",
+   "claude": {
+    "building": "honbu",
+    "face": "E",
+    "confidence": "mid",
+    "evidence": "本部棟と同じ黄土色のれんが、2 階の高さのデッキ、入口とゴミ箱。X16 の 15 秒前で、スマホの方位の回り方（X16 との差 約 120°）から、内角から西の翼の東南東向きの面を北北西へ見た写真と判断。南翼の面とは最上階の窓の作りが違う。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "E",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.2
+    },
+    {
+     "building": "gym",
+     "distance_m": 33.3
+    },
+    {
+     "building": "b12",
+     "distance_m": 46.2
+    }
+   ],
+   "heading_deg_magnetic": 242.0
+  },
+  {
+   "id": "X08",
+   "photo": "PXL_20261105_061241221",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "W",
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "mid",
+    "evidence": "縦の細窓が 10 列ほど並ぶ塔の面が右へ遠ざかり、右手前から灰色の通路橋（MEI100th の幕）が塔の足元へつながる。北西から見た西面 W。手前の橋も大きく写っているが、主の建物は塔。"
+   },
+   "gps_nearest_building": "osm-way-1304077325",
+   "heading_face": "f13",
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "distance_m": 4.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 15.5
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 48.2
+    }
+   ],
+   "heading_deg_magnetic": 6.0
+  },
+  {
+   "id": "X09",
+   "photo": "PXL_20261105_061455930",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "W",
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "mid",
+    "evidence": "縦の細窓 10 列の長い面がほぼ正面に写り、足元に食堂のガラス戸と青い鉄骨の庇、左端に灰色の通路橋の端が付く。橋が北の端に付く西面と判断（方位を 180° 直すと東南東向きに見ていて西面の正面と合う）。右端の小窓の列は南面の端が横から見えている物と見たが、東面の可能性も残る。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": "f8",
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 0.0
+    },
+    {
+     "building": "honbu",
+     "distance_m": 35.3
+    },
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 37.9
+    }
+   ],
+   "heading_deg_magnetic": 298.0
+  },
+  {
+   "id": "X10",
+   "photo": "PXL_20261105_060927494",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f19",
+   "claude": {
+    "building": "tower75",
+    "face": "f19",
+    "confidence": "low",
+    "evidence": "X06 とほぼ同じ場所から見た北面（頂部のガラスの箱の下の引っ込んだ面 f19 と、右の小窓の列の塊）と、右へ強く遠ざかる西面。正面に近いのは北面。北面の区切りのうち f19 か f20 かで迷う。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": "f13",
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 19.6
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 40.9
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 53.6
+    }
+   ],
+   "heading_deg_magnetic": 358.0
+  },
+  {
+   "id": "X11",
+   "photo": "PXL_20261103_042830256",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "SW",
+   "claude": {
+    "building": "honbu",
+    "face": "SW",
+    "confidence": "high",
+    "evidence": "13:28 の強い日差しを正面に受ける面（南南西向き）に祝賀の垂れ幕と車道の抜けるピロティ。GPS も本部棟の南。南翼の南南西向きの面 SW。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "SE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 17.6
+    },
+    {
+     "building": "b12",
+     "distance_m": 52.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 66.0
+    }
+   ],
+   "heading_deg_magnetic": 281.0
+  },
+  {
+   "id": "X12",
+   "photo": "PXL_20261103_042844361",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "SW",
+   "claude": {
+    "building": "honbu",
+    "face": "SW",
+    "confidence": "high",
+    "evidence": "X11 と同じ日の当たる面を正面から。垂れ幕、通路の奥の横断歩道、右の赤れんがの階段と掲示板が写り、X04・X17（日陰の側）の通路の反対側。南南西向きの面 SW。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "SE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 17.6
+    },
+    {
+     "building": "b12",
+     "distance_m": 52.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 66.0
+    }
+   ],
+   "heading_deg_magnetic": 300.0
+  },
+  {
+   "id": "X13",
+   "photo": "PXL_20261105_071424391",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "other",
+    "face": null,
+    "confidence": "mid",
+    "evidence": "階段状の斜めの壁に丸い照明、頭上をコンクリートの梁が横切り、右にテラスの重なる棟と丸い穴の塀。茶色のタイルと打ち放しの作りで 4 棟のどれとも違う。GPS は 4 棟以外の b10 の近く。"
+   },
+   "gps_nearest_building": "b10",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b10",
+     "distance_m": 9.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 41.6
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 51.3
+    }
+   ],
+   "heading_deg_magnetic": 20.0
+  },
+  {
+   "id": "X14",
+   "photo": "PXL_20261105_071536516",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "other",
+    "face": null,
+    "confidence": "mid",
+    "evidence": "上に行くほど引っ込む横帯のテラスの棟、アンテナの立つ階段塔、左に白い縦ルーバーの部分とピロティ。X13・X15 と同じ作りの建物群で、4 棟のどれとも違う。"
+   },
+   "gps_nearest_building": "b10",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b10",
+     "distance_m": 9.2
+    },
+    {
+     "building": "b09",
+     "distance_m": 44.5
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 51.3
+    }
+   ],
+   "heading_deg_magnetic": 97.0
+  },
+  {
+   "id": "X15",
+   "photo": "PXL_20261105_071413956",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "other",
+    "face": null,
+    "confidence": "mid",
+    "evidence": "X13 と同じ階段状の壁と梁、中央に奥がガラス張りの中庭の切り欠き、右に打ち放しのバルコニーの棟、丸い穴の塀。4 棟以外の建物（GPS は b10 の近く）。"
+   },
+   "gps_nearest_building": "b10",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b10",
+     "distance_m": 9.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 41.6
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 51.3
+    }
+   ],
+   "heading_deg_magnetic": 14.0
+  },
+  {
+   "id": "X16",
+   "photo": "PXL_20261103_043314396",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "NE",
+    "confidence": "high",
+    "evidence": "本部棟の車道の抜けるピロティを日陰の側から見た写真で、奥に日の当たる南側の道と街が見える。右で西の翼が手前へ折れて来ており、L 字の内角に面した南翼の北北東向きの面 NE。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "osm-way-1304077323",
+     "distance_m": 32.7
+    }
+   ],
+   "heading_deg_magnetic": 124.0
+  },
+  {
+   "id": "X17",
+   "photo": "PXL_20261103_043334437",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "NE",
+    "confidence": "high",
+    "evidence": "柱に「本部棟」、左に東へ上がる赤れんがの大階段と掲示板、右に車道の抜ける通路。X12 の通路の反対側（日陰）で、南翼の北北東向きの面 NE。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "osm-way-1304077323",
+     "distance_m": 32.7
+    },
+    {
+     "building": "library",
+     "distance_m": 34.0
+    }
+   ],
+   "heading_deg_magnetic": 113.0
+  },
+  {
+   "id": "X18",
+   "photo": "PXL_20261103_044734408",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "NE",
+    "confidence": "mid",
+    "evidence": "X17 と同じ「本部棟」の柱・掲示板・左へ上がる大階段（上に別の棟のガラスの入口）。面は日陰で、通路の奥が日の当たる南側なので NE。GPS は本部棟の南を指しているが、日陰と階段の向きから北北東側と判断。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.0
+    },
+    {
+     "building": "b11",
+     "distance_m": 21.9
+    },
+    {
+     "building": "library",
+     "distance_m": 24.5
+    }
+   ],
+   "heading_deg_magnetic": 89.0
+  },
+  {
+   "id": "X19",
+   "photo": "PXL_20261105_060954729",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "low",
+    "evidence": "手前にれんがの擁壁と青い鉄骨の棚、右にタワー75。塔は左の細い北面（小窓の列）より右の縦細窓の多い西面が広く写るので W とした。X10 と同じ場所なので北面（f19）を主と見る見方もあり迷う。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 19.6
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 40.9
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 53.6
+    }
+   ],
+   "heading_deg_magnetic": 332.0
+  },
+  {
+   "id": "X20",
+   "photo": "PXL_20261103_043304319",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "E",
+   "claude": {
+    "building": "honbu",
+    "face": "E",
+    "confidence": "mid",
+    "evidence": "黄土色タイルの本部棟。2階の通路（れんがの手すり）の下に入口と ATM。左端で通路と別の翼が手前へ出てくる＝L字の内角が左にあるので、中庭から東面を見たと判断。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "NE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 33.3
+    }
+   ],
+   "heading_deg_magnetic": 226.0
+  },
+  {
+   "id": "X21",
+   "photo": "PXL_20261105_062254010",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f9",
+    "confidence": "mid",
+    "evidence": "2本の柱型の間にガラスのアトリウム、頂部は抜けた枠＝タワー75南面を西南西から斜めに見上げたもの。左に西側へ上る外階段。南の凹み f9 を主としたが、左の柱型の正面 f7 も大きく写る。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": "f16",
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 6.4
+    },
+    {
+     "building": "library",
+     "distance_m": 18.7
+    },
+    {
+     "building": "honbu",
+     "distance_m": 28.6
+    }
+   ],
+   "heading_deg_magnetic": 205.0
+  },
+  {
+   "id": "X22",
+   "photo": "PXL_20261105_061905208.MP",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "mid",
+    "evidence": "縦長の窓が均等に並ぶ面、階段の上の入口と青い鉄骨のひさし、右にエレベーター塔、左に渡り廊下。同じ入口廻りが X28（南西角）・X37（西南西から見て左端）で西側にあり、左奥の白い格子の別棟・右端の黄土色の棟の配置とも合うので西面。GPS（北側）は約40mずれと判断。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 19.3
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 38.0
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 50.6
+    }
+   ],
+   "heading_deg_magnetic": 324.0
+  },
+  {
+   "id": "X23",
+   "photo": "PXL_20261105_060842230",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f19",
+   "claude": {
+    "building": "tower75",
+    "face": "f20",
+    "confidence": "low",
+    "evidence": "手前左に白い格子の別棟、奥にタワー75。凹みに横長窓とガラスの頂部枠、細い柱型と小窓の広い面、右に縦窓2本組の低い翼＝北面の P19e・f19・P19w・f20・f0 の並びを北北東から見たもの（南面のアトリウムとは別の作り）。主の面は中央右の f20 としたが f19 とも取れる。"
+   },
+   "gps_nearest_building": "b10",
+   "heading_face": "f9",
+   "gps_candidates": [
+    {
+     "building": "b10",
+     "distance_m": 24.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 26.2
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 50.3
+    }
+   ],
+   "heading_deg_magnetic": 35.0
+  },
+  {
+   "id": "X24",
+   "photo": "PXL_20261105_061357582",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "W",
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "mid",
+    "evidence": "X22 と同じ構図（縦窓の列、階段上の入口、青いひさし、エレベーター塔、左の渡り廊下）を階段の下から正面に。西面。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": "f12",
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 17.8
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 38.8
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 52.0
+    }
+   ],
+   "heading_deg_magnetic": 322.0
+  },
+  {
+   "id": "X25",
+   "photo": "PXL_20261105_062307232",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f9",
+    "confidence": "high",
+    "evidence": "ガラスのアトリウムを2本の柱型が挟み、両脇に一段下がった縦窓2本組の翼、足元は道路（黄線）。南面の凹み f9 を正面から。GPS も南側で、方位は当日の 180° 反転で読むと北北東。"
+   },
+   "gps_nearest_building": "library",
+   "heading_face": "f16",
+   "gps_candidates": [
+    {
+     "building": "library",
+     "distance_m": 7.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "distance_m": 33.6
+    },
+    {
+     "building": "honbu",
+     "distance_m": 45.9
+    }
+   ],
+   "heading_deg_magnetic": 203.0
+  },
+  {
+   "id": "X26",
+   "photo": "PXL_20261105_062311895",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f9",
+    "confidence": "high",
+    "evidence": "X25 と同じアトリウム面を正面から（4秒後）。南面の凹み f9。"
+   },
+   "gps_nearest_building": "library",
+   "heading_face": "f16",
+   "gps_candidates": [
+    {
+     "building": "library",
+     "distance_m": 7.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "distance_m": 33.6
+    },
+    {
+     "building": "honbu",
+     "distance_m": 45.9
+    }
+   ],
+   "heading_deg_magnetic": 202.0
+  },
+  {
+   "id": "X27",
+   "photo": "PXL_20261103_042853166",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "SW",
+   "claude": {
+    "building": "honbu",
+    "face": "SW",
+    "confidence": "high",
+    "evidence": "「名城大学 本部」の銘板、右端にピロティの車路（構内への門）。13時半に日の当たる外側の長い面＝南西面。人名入りの垂れ幕が写る。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "SE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 17.6
+    },
+    {
+     "building": "b12",
+     "distance_m": 52.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 66.0
+    }
+   ],
+   "heading_deg_magnetic": 286.0
+  },
+  {
+   "id": "X28",
+   "photo": "PXL_20261105_061449185",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "W",
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "low",
+    "evidence": "西面（縦窓の列、青いひさし、ガラスの1階）を南西角の近くから見上げたもの。右半分は角を回った南西の翼 SW1。主の面は入口側の W とした。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": "f8",
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 0.0
+    },
+    {
+     "building": "honbu",
+     "distance_m": 35.3
+    },
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 37.9
+    }
+   ],
+   "heading_deg_magnetic": 301.0
+  },
+  {
+   "id": "X29",
+   "photo": "PXL_20261105_062300065",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f9",
+    "confidence": "high",
+    "evidence": "X25 と同じアトリウム面をやや左から。右の柱型の内側（f10）の小窓が見える。南面の凹み f9。"
+   },
+   "gps_nearest_building": "osm-way-1304081004",
+   "heading_face": "P19e",
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 6.4
+    },
+    {
+     "building": "library",
+     "distance_m": 18.7
+    },
+    {
+     "building": "honbu",
+     "distance_m": 28.6
+    }
+   ],
+   "heading_deg_magnetic": 220.0
+  },
+  {
+   "id": "X30",
+   "photo": "PXL_20261105_071529022",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f17",
+    "confidence": "low",
+    "evidence": "茶タイルと打放しの段々（テラス）状の棟、左に縦ひれの2階建てピロティ棟。タワー75・本部ではない。足元の舗装が X34 の広場と同じで、方位を当日の 180° 反転で読むと広場から西＝共通講義棟南の東面 f17。GPS は b10 の近くを指すので別棟（other）の可能性も残る。"
+   },
+   "gps_nearest_building": "b10",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b10",
+     "distance_m": 9.2
+    },
+    {
+     "building": "b09",
+     "distance_m": 44.5
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 51.3
+    }
+   ],
+   "heading_deg_magnetic": 93.0
+  },
+  {
+   "id": "X31",
+   "photo": "PXL_20261105_071548825",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f17",
+    "confidence": "low",
+    "evidence": "X30 と同じ棟（19秒後）のピロティ棟と段々の面を近くから。ピロティ越しにテーブルのある広場。GPS が約80m跳んでおり、判断は X30 と同じ理由・同じ不確かさ。"
+   },
+   "gps_nearest_building": "kyotsu-kita",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 1.6
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 9.3
+    },
+    {
+     "building": "osm-way-1304077563",
+     "distance_m": 83.4
+    }
+   ],
+   "heading_deg_magnetic": 80.0
+  },
+  {
+   "id": "X32",
+   "photo": "PXL_20261103_043320836",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "NE",
+    "confidence": "high",
+    "evidence": "「本部棟」の表示のある柱とピロティの車路を中庭側から見たもの。車路の先は構外の街並み、進入禁止の標識がこちら向き＝構内側。X27 の門の反対側＝北東面。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "osm-way-1304077323",
+     "distance_m": 32.7
+    }
+   ],
+   "heading_deg_magnetic": 120.0
+  },
+  {
+   "id": "X33",
+   "photo": "PXL_20261105_061418906",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "W",
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "mid",
+    "evidence": "階段の上の広場から、入口（ガラス扉・青いひさし）と縦窓の列を見上げ、左上に渡り廊下。X22・X24 と同じ西面。扉に掲示物が写る。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": "f8",
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 17.8
+    },
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 63.1
+    },
+    {
+     "building": "gym",
+     "distance_m": 79.0
+    }
+   ],
+   "heading_deg_magnetic": 300.0
+  },
+  {
+   "id": "X34",
+   "photo": "PXL_20261105_061034445",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "low",
+    "evidence": "階段の下から。右に渡り廊下の柱（100周年の看板）、奥にタワー75の縦窓2本組の低い翼と縦窓列の高い部分。西面を北西寄りから斜めに見たと判断。左は白い格子の別棟。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 23.9
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 46.3
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 57.6
+    }
+   ],
+   "heading_deg_magnetic": 338.0
+  },
+  {
+   "id": "X35",
+   "photo": "PXL_20261105_071316984",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": null,
+    "confidence": "low",
+    "evidence": "茶タイルの斜めの壁と三角の屋根形が連なる講義室風の棟、頭上をコンクリートの梁（渡り）が横切る。段床の講義室の形と GPS の北側候補から共通講義棟南と推定したが、どの面か（南面 f13/f15 か中庭側か）は決められない。"
+   },
+   "gps_nearest_building": "osm-way-1304077542",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 10.6
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 19.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 24.7
+    }
+   ],
+   "heading_deg_magnetic": 6.0
+  },
+  {
+   "id": "X36",
+   "photo": "PXL_20261103_044849371",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "E",
+    "confidence": "mid",
+    "evidence": "三菱UFJの ATM とガラス扉、れんがの柱＝X20 と同じ入口を正面から。X20 と同じく東面。扉に貼り紙が写る。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 16.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 18.8
+    },
+    {
+     "building": "library",
+     "distance_m": 27.8
+    }
+   ],
+   "heading_deg_magnetic": 223.0
+  },
+  {
+   "id": "X37",
+   "photo": "PXL_20261105_061704401",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f9",
+    "confidence": "mid",
+    "evidence": "アトリウム面（南面）を西南西の高い位置から斜めに。左に西面の足元（ガラスブロックと店舗のガラス）と外階段、右上に黄土色タイルの別棟の角。柱型の正面 f7 も大きい。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "P19e",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 3.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 29.4
+    },
+    {
+     "building": "b12",
+     "distance_m": 33.1
+    }
+   ],
+   "heading_deg_magnetic": 239.0
+  },
+  {
+   "id": "X38",
+   "photo": "PXL_20261105_061402813",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "W",
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "mid",
+    "evidence": "高層の茶タイル棟で、縦長の窓の列が約9本並ぶ面を正面から写している。左に MEIJO の幕の付いた渡り廊下と青い柱の屋根、手前にデッキへ上がる階段と Elevator の箱がある。X47/X49 と同じ西側のデッキなので W とした（GPS は北に出ていて中身と合わない）。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": "f12",
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 17.8
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 38.8
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 52.0
+    }
+   ],
+   "heading_deg_magnetic": 323.0
+  },
+  {
+   "id": "X39",
+   "photo": "PXL_20261103_042909968",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "SW",
+   "claude": {
+    "building": "honbu",
+    "face": "SW",
+    "confidence": "high",
+    "evidence": "「名城大学 本部」の玄関の表札、祝の垂れ幕、右端に車の通り抜けのピロティがある。13:29 の南西からの日が当たり、木の影が強く出ているので南西向きの面。GPS も SW 面の南側。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "SE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 14.7
+    },
+    {
+     "building": "b12",
+     "distance_m": 28.3
+    },
+    {
+     "building": "gym",
+     "distance_m": 44.5
+    }
+   ],
+   "heading_deg_magnetic": 300.0
+  },
+  {
+   "id": "X40",
+   "photo": "PXL_20261105_071434753",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f4",
+    "confidence": "low",
+    "evidence": "段々（ピラミッド形）のタイル壁、丸い壁灯、頭上のコンクリートの梁という、X50/X48 と同じ意匠の西向きの棟端。ただし X50（f12）と左右が反対で階段塔が左にあるので別の棟端で、f4 か f0 か決められない（時刻の順から近い f4 にした）。GPS（b10 付近）と方位は合わない。"
+   },
+   "gps_nearest_building": "b10",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b10",
+     "distance_m": 9.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 41.6
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 51.3
+    }
+   ],
+   "heading_deg_magnetic": 22.0
+  },
+  {
+   "id": "X41",
+   "photo": "PXL_20261103_043312297",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "NE",
+   "claude": {
+    "building": "honbu",
+    "face": "E",
+    "confidence": "low",
+    "evidence": "L 字の内側の入隅を、2階の手すり付きデッキが回り込む所を写している。左の翼（窪んだ窓の並び、左端に南の翼を抜ける通路）が NE 面で、右の翼（灰色の帯の窓、1階に店）が E 面。両方が同じくらい写っているが、GPS が E 面の正面に出ているので E にした（NE の可能性も同程度）。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "N_jog1",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "library",
+     "distance_m": 34.0
+    }
+   ],
+   "heading_deg_magnetic": 167.0
+  },
+  {
+   "id": "X42",
+   "photo": "PXL_20261105_060534782",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "E",
+    "confidence": "mid",
+    "evidence": "縦長の窓の列が並ぶ高層の面が左へ奥まり、低層部に張り出した茶色の帯とガラスブロックの窓がある。右手前の白い格子の棟が北側を隠している。X43（シャッターの面）と同じ低層部なので東面。"
+   },
+   "gps_nearest_building": "b09",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b09",
+     "distance_m": 4.6
+    },
+    {
+     "building": "lab1",
+     "distance_m": 50.5
+    },
+    {
+     "building": "osm-way-163518242",
+     "distance_m": 52.8
+    }
+   ],
+   "heading_deg_magnetic": 107.0
+  },
+  {
+   "id": "X43",
+   "photo": "PXL_20261105_060316957",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "E",
+    "confidence": "high",
+    "evidence": "真下から見上げた高層の面で、1階に車庫のシャッター（黄色の車止め）とピンクの扉、上にガラスブロックの窓がある。GPS は E 面の約 11m 東で、方位を 180° 直すと西向き。X54 でも同じシャッターの面が東面として写っている。"
+   },
+   "gps_nearest_building": "b09",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b09",
+     "distance_m": 0.5
+    },
+    {
+     "building": "kyotsu-higashi",
+     "distance_m": 16.8
+    },
+    {
+     "building": "osm-way-163518242",
+     "distance_m": 52.8
+    }
+   ],
+   "heading_deg_magnetic": 96.0
+  },
+  {
+   "id": "X44",
+   "photo": "PXL_20261105_061649102",
+   "truth_kind": "registered",
+   "truth_building": "tower75",
+   "truth_face": "f9",
+   "claude": {
+    "building": "tower75",
+    "face": "f7",
+    "confidence": "low",
+    "evidence": "南西のデッキ（赤いタイル、三角の換気口）から南側を見上げている。左から 2 本の窓の列の部分（SW1）、細いスリット、中央の窓の無い柱（f7）、頂部が抜けたガラスの凹み（f9）、細い窓の並ぶ壁（f10）と並び、X46 とちょうど左右反転なので南側の西半分。北西に西面の渡り廊下と青い柱が見える。主の面は中央の f7 とした。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "P19e",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 3.8
+    },
+    {
+     "building": "b12",
+     "distance_m": 33.1
+    },
+    {
+     "building": "osm-way-1304071078",
+     "distance_m": 113.5
+    }
+   ],
+   "heading_deg_magnetic": 227.0
+  },
+  {
+   "id": "X45",
+   "photo": "PXL_20261105_060552836",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "E",
+    "confidence": "mid",
+    "evidence": "X42 と同じ位置・18 秒後。縦長の窓の列の面が左に奥まり、右に細い窓の付いた狭い面と、白い格子の棟の階段の張り出しがある。手前は擁壁。低層部の帯が X42/X43 と同じなので東面。"
+   },
+   "gps_nearest_building": "b09",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "b09",
+     "distance_m": 4.6
+    },
+    {
+     "building": "lab1",
+     "distance_m": 50.5
+    },
+    {
+     "building": "osm-way-163518242",
+     "distance_m": 52.8
+    }
+   ],
+   "heading_deg_magnetic": 97.0
+  },
+  {
+   "id": "X46",
+   "photo": "PXL_20261105_062323658",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "f11",
+    "confidence": "low",
+    "evidence": "道路から南側を見上げている。左に細い窓が縦に並ぶ壁（f8）と頂部が抜けたガラスの凹み（f9）、中央に窓の無い太い柱（f11）、右に 2 本の窓の列とガラスブロックの部分（f13）、右端奥に東面のガラス屋根の渡り廊下。GPS も南側。主の面は中央の f11 とした（凹みの f9 の可能性もある）。"
+   },
+   "gps_nearest_building": "library",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "library",
+     "distance_m": 7.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "distance_m": 33.6
+    },
+    {
+     "building": "honbu",
+     "distance_m": 45.9
+    }
+   ],
+   "heading_deg_magnetic": 204.0
+  },
+  {
+   "id": "X47",
+   "photo": "PXL_20261105_061837232",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "high",
+    "evidence": "左に高層の面を斜めに見て、その足元のデッキ（赤いタイル）に沿って青い柱の屋根が奥へ続き、頭上を渡り廊下が右（西）へ渡っている。X49 と 1 秒違いの同じ場面で、デッキの右下に道路と横断歩道。西面に沿って南を見ている。"
+   },
+   "gps_nearest_building": "kyotsu-minami",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 19.3
+    },
+    {
+     "building": "osm-way-1304077324",
+     "distance_m": 38.0
+    },
+    {
+     "building": "kyotsu-kita",
+     "distance_m": 50.6
+    }
+   ],
+   "heading_deg_magnetic": 47.0
+  },
+  {
+   "id": "X48",
+   "photo": "PXL_20261105_071255844",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f13",
+    "confidence": "low",
+    "evidence": "段々のタイル壁（X50 と同じ丸い壁灯の組と鉄の階段）を左に、1階が列柱の長い面を右に見る角で、右の面の延びる先の遠くにタワー75 が見える。南の翼の南西角（左 f12・右 f13）と読み、右の f13 を主とした。GPS は合わず、方位は夕方の写真に共通の約 +90° のずれを直すと合う。"
+   },
+   "gps_nearest_building": "osm-way-1304077542",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 10.6
+    },
+    {
+     "building": "honbu",
+     "distance_m": 15.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 24.7
+    }
+   ],
+   "heading_deg_magnetic": 348.0
+  },
+  {
+   "id": "X49",
+   "photo": "PXL_20261105_061836600",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "W",
+    "confidence": "high",
+    "evidence": "X47 と同じ場面。左の高層の面は縦長の窓の列とガラスブロック、デッキの高さにガラスの扉。渡り廊下が右（西）へ出て、青い柱の屋根が南へ続く。GPS がタワー75 の北西角で、方位を 180° 直すと南西向き＝西面に沿った視線。"
+   },
+   "gps_nearest_building": "osm-way-1304077325",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "distance_m": 0.0
+    },
+    {
+     "building": "tower75",
+     "distance_m": 0.0
+    },
+    {
+     "building": "osm-way-1304077323",
+     "distance_m": 1.0
+    }
+   ],
+   "heading_deg_magnetic": 39.0
+  },
+  {
+   "id": "X50",
+   "photo": "PXL_20261105_071309389",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f12",
+    "confidence": "mid",
+    "evidence": "段々（ピラミッド形）のタイル壁を正面に見て、上端から頭上へコンクリートの梁が出ている。左の奥に同じ形の棟端が並んで遠ざかり（f4・f0）、右端に階段塔、その奥に本部らしい黄土色の格子の棟。くし形の共通講義棟南の西の棟端の一番南（f12）と読んだ。GPS は合わない。"
+   },
+   "gps_nearest_building": "osm-way-1304077542",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077542",
+     "distance_m": 10.6
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 19.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "distance_m": 24.7
+    }
+   ],
+   "heading_deg_magnetic": 7.0
+  },
+  {
+   "id": "X51",
+   "photo": "PXL_20261103_043342958",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": null,
+   "claude": {
+    "building": "honbu",
+    "face": "NE",
+    "confidence": "mid",
+    "evidence": "「本部棟」の札の付いたピロティの通路、2階のデッキの手すりに「入学センター」の文字、窪んだ窓の並び。通路の左の壁に掲示板があり、X55 の南西側から見た同じ通路（掲示板が東側）の裏から見ている。方位を +90° 直すと南南西向き＝NE 面を正面。左の高い壁は平面図に無い張り出しで説明できていない。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 8.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "distance_m": 25.8
+    },
+    {
+     "building": "osm-way-1304077323",
+     "distance_m": 32.7
+    }
+   ],
+   "heading_deg_magnetic": 122.0
+  },
+  {
+   "id": "X52",
+   "photo": "PXL_20261103_042900775",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "SW",
+   "claude": {
+    "building": "honbu",
+    "face": "SW",
+    "confidence": "high",
+    "evidence": "X39 と同じ南西面を少し離れて正面から。「本部」の表札、祝の垂れ幕 4 枚、右に車の通り抜けのピロティ、手前に横断歩道。日の当たり方と GPS も南西面。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "SE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 17.6
+    },
+    {
+     "building": "b12",
+     "distance_m": 52.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 66.0
+    }
+   ],
+   "heading_deg_magnetic": 295.0
+  },
+  {
+   "id": "X53",
+   "photo": "PXL_20261105_074849844",
+   "truth_kind": "staff",
+   "truth_building": "kyotsu-minami",
+   "truth_face": null,
+   "claude": {
+    "building": "kyotsu-minami",
+    "face": "f17",
+    "confidence": "mid",
+    "evidence": "右にピロティの上のガラスの箱とタイルの柱型が続く長い面が南西へ奥まり、左の奥にタワー75（北面と西面）が見える。広場のベンチと並木。面の延びる向きが f17 と同じで、タワーの見え方から撮影位置は棟の東側の広場。方位は約 +90° ずれ。"
+   },
+   "gps_nearest_building": "osm-way-1304077325",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "distance_m": 22.9
+    },
+    {
+     "building": "b10",
+     "distance_m": 31.4
+    },
+    {
+     "building": "tower75",
+     "distance_m": 36.2
+    }
+   ],
+   "heading_deg_magnetic": 141.0
+  },
+  {
+   "id": "X54",
+   "photo": "PXL_20261105_062637300",
+   "truth_kind": "staff",
+   "truth_building": "tower75",
+   "truth_face": null,
+   "claude": {
+    "building": "tower75",
+    "face": "f13",
+    "confidence": "low",
+    "evidence": "南東の道路の交差点から南東の角を見上げている。左が南側（細い窓の並ぶ壁・ガラスの凹み・2 本の窓の列の f13）、右が東面（窓の列、車庫のシャッター、ガラス屋根の渡り廊下）。方位を 180° 直すと北向きで南側の方が正面に近いので f13 とした（E の可能性もある）。GPS は北東角に出ていて合わない。"
+   },
+   "gps_nearest_building": "tower75",
+   "heading_face": null,
+   "gps_candidates": [
+    {
+     "building": "tower75",
+     "distance_m": 0.0
+    },
+    {
+     "building": "b09",
+     "distance_m": 12.7
+    },
+    {
+     "building": "osm-way-1304077322",
+     "distance_m": 24.4
+    }
+   ],
+   "heading_deg_magnetic": 178.0
+  },
+  {
+   "id": "X55",
+   "photo": "PXL_20261103_042822099",
+   "truth_kind": "registered",
+   "truth_building": "honbu",
+   "truth_face": "SW",
+   "claude": {
+    "building": "honbu",
+    "face": "SW",
+    "confidence": "high",
+    "evidence": "南西面の東寄り。左に祝の垂れ幕、右寄りに赤いタイルの階段が建物を抜ける通路のピロティ、強い日差しと木の影。GPS も南西面の南。"
+   },
+   "gps_nearest_building": "honbu",
+   "heading_face": "SE",
+   "gps_candidates": [
+    {
+     "building": "honbu",
+     "distance_m": 17.6
+    },
+    {
+     "building": "b12",
+     "distance_m": 52.8
+    },
+    {
+     "building": "gym",
+     "distance_m": 66.0
+    }
+   ],
+   "heading_deg_magnetic": 296.0
+  }
+ ]
+}
