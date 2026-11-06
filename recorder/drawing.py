@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import html
 import math
+import unicodedata
 from typing import Any
 
 from . import parts_geom, schema
@@ -67,6 +68,51 @@ def _esc(s: str) -> str:
     return html.escape(str(s), quote=True)
 
 
+def _text_w(s: str, size: float) -> float:
+    """文字列の幅の見積もり（px）。全角 1 文字 ≒ size×1.0、半角 ≒ size×0.55。"""
+    return sum(size * (1.0 if unicodedata.east_asian_width(c) in "WFA" else 0.55) for c in str(s))
+
+
+def _wrap(s: str, size: float, max_w: float) -> list[str]:
+    """max_w（px）に収まるように文字数で分ける。2 行目からは全角 1 字下げる。"""
+    lines: list[str] = []
+    cur, w = "", 0.0
+    for c in str(s):
+        cw = _text_w(c, size)
+        if cur and w + cw > max_w:
+            lines.append(cur)
+            cur, w = "　", size
+        cur += c
+        w += cw
+    if cur or not lines:
+        lines.append(cur)
+    return lines
+
+
+EV_SHOW = 2   # 根拠の写真番号は 2 つまで表示し、残りは「ほか N」に畳む（JSON は変えない）
+
+
+def _ev_short(ev: list[str]) -> str:
+    ev = [str(e) for e in ev]
+    if len(ev) <= EV_SHOW:
+        return ",".join(ev)
+    return ",".join(ev[:EV_SHOW]) + f" ほか{len(ev) - EV_SHOW}"
+
+
+def _short_label(m: Measurement) -> str:
+    """Measurement.label() と同じ表記で、根拠の写真番号だけ畳む（表示だけ）。"""
+    if not m.known:
+        return "未確定"
+    s = f"{m.value:.2f}" if isinstance(m.value, float) else str(m.value)
+    if m.tol:
+        s += f" ±{m.tol:g}"
+    if m.status == "estimated":
+        s += "（推定）"
+    if m.evidence:
+        s += " [" + _ev_short(m.evidence) + "]"
+    return s
+
+
 def _style(m: Measurement) -> str:
     st = m.status if m.status in COL else "unknown"
     extra = f' stroke-dasharray="{DASH[st]}"' if DASH[st] else ""
@@ -87,6 +133,17 @@ class _Svg:
             f'text-anchor="{anchor}" font-weight="{weight}" '
             f'font-family="\'Noto Sans JP\', \'Yu Gothic UI\', sans-serif">{_esc(s)}</text>'
         )
+
+    def text_lines(self, x: float, y: float, lines: list[str], size: int = 12, fill: str = "#222",
+                   lh: float = 14) -> float:
+        """複数行の文字（折り返し）。1 行なら text と同じ。使った高さ（px）を返す。"""
+        if len(lines) <= 1:
+            self.text(x, y, lines[0] if lines else "", size, fill)
+            return lh
+        spans = "".join(f'<tspan x="{x:.1f}" dy="{0 if i == 0 else lh:g}">{_esc(t)}</tspan>' for i, t in enumerate(lines))
+        self.add(f'<text x="{x:.1f}" y="{y:.1f}" font-size="{size}" fill="{fill}" text-anchor="start" font-weight="normal" '
+                 f'font-family="\'Noto Sans JP\', \'Yu Gothic UI\', sans-serif">{spans}</text>')
+        return lh * len(lines)
 
     def line(self, x1: float, y1: float, x2: float, y2: float, attrs: str, width: float = 1.0) -> None:
         self.add(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" {attrs} stroke-width="{width}"/>')
@@ -362,13 +419,18 @@ def elevation_svg(b: dict, face_id: str) -> str:
 
     # 右側の寸法ラベル（高さ順に並べ、重なりを避ける）
     # 仮説の面（schema.face_state が hypothesis）：壁の上に薄い斜線。出所を題名の下に書く
+    right_need = 0.0          # 右端の文字が切れない幅（px）
+    if g != 0.0:
+        right_need = x0 + W + 24 + _text_w("z=0（棟の基準）", 10) + 20
     if schema.face_state(b, fc)["state"] == "hypothesis":
         hyps = [(w, m.get("hypothesis") or {}) for w, f_, m in schema.iter_hypotheses(b) if f_ == face_id]
         src = sorted({f"{h.get('rule')}、{h.get('from')} から" for _, h in hyps})
         svg.add('<defs><pattern id="hyp" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">'
                 '<line x1="0" y1="0" x2="0" y2="10" stroke="#b07a10" stroke-width="1.2" stroke-opacity="0.35"/></pattern></defs>')
         svg.add(f'<rect data-hypothesis="{_esc(face_id)}" x="{x0:.1f}" y="{TOP:.1f}" width="{W:.1f}" height="{Hpx + below:.1f}" fill="url(#hyp)" stroke="none"/>')
-        svg.text(LEFT, 74, f"薄い斜線は仮説（{' / '.join(src)}）。写真で矛盾したら recorder hypotheses --drop で unknown に戻す", 11, "#b07a10")
+        hyp_txt = f"薄い斜線は仮説（{' / '.join(src)}）。写真で矛盾したら recorder hypotheses --drop で unknown に戻す"
+        svg.text(LEFT, 74, hyp_txt, 11, "#b07a10")
+        right_need = max(right_need, LEFT + _text_w(hyp_txt, 11) + 20)
     labels: list[tuple[float, str, Measurement]] = []
     if height_m.known:
         labels.append((float(height_m.value), "パラペット上端" if height_m.status == "measured" else "高さ", height_m))
@@ -403,7 +465,14 @@ def elevation_svg(b: dict, face_id: str) -> str:
         ty = min(y, last_y - 14)
         last_y = ty
         svg.line(x0 + W, y, xl - 6, ty, 'stroke="#999"', 0.5)
-        svg.text(xl, ty + 4, f"{z:.2f}　{name}　{m.label().split(' ', 1)[1] if ' ' in m.label() else ''}".rstrip(), 11, COL.get(m.status, "#222"))
+        lb = _short_label(m)
+        txt = f"{z:.2f}　{name}　{lb.split(' ', 1)[1] if ' ' in lb else ''}".rstrip()
+        svg.text(xl, ty + 4, txt, 11, COL.get(m.status, "#222"))
+        right_need = max(right_need, xl + _text_w(txt, 11) + 20)
+
+    # 図の幅：今までの幅（LEFT + 壁 + RIGHT_LABELS、最小 720）を最小に、右の注記が切れない分だけ広げる
+    total_w = math.ceil(max(LEFT + W + RIGHT_LABELS, 720, right_need))
+    text_w = total_w - LEFT - 20      # 下の一覧の 1 行の幅（これを超えたら折り返す）
 
     # 下の寸法（スパン）
     yb = y_ground + below + 28
@@ -420,7 +489,7 @@ def elevation_svg(b: dict, face_id: str) -> str:
     svg.line(x0 + W, yb - 5, x0 + W, yb + 5, 'stroke="#222"', 1)
     Ltxt = f"全長 {L:.1f} m" if length_m.known or length_m.status == "estimated" else "全長 未確定"
     if length_m.evidence:
-        Ltxt += "  [" + ",".join(length_m.evidence) + "]"
+        Ltxt += "  [" + _ev_short(length_m.evidence) + "]"
     if length_m.status == "estimated":
         Ltxt += "（推定）"
     svg.text(x0 + W / 2, yb + 16, Ltxt, 11, COL.get(length_m.status, "#222"), "middle")
@@ -438,15 +507,12 @@ def elevation_svg(b: dict, face_id: str) -> str:
         svg.text(LEFT, ylist, "未確定・撮影のお願い", 12, "#c8322b", weight="bold")
         ylist += 16
         for u in uniq:
-            svg.text(LEFT, ylist, f"・{u}", 11, "#c8322b")
-            ylist += 14
+            ylist += svg.text_lines(LEFT, ylist, _wrap(f"・{u}", 11, text_w), 11, "#c8322b")
         for n in notes:
-            svg.text(LEFT, ylist, f"・{n}", 11, "#b07a10")
-            ylist += 14
+            ylist += svg.text_lines(LEFT, ylist, _wrap(f"・{n}", 11, text_w), 11, "#b07a10")
         for r in reqs:
             where = f"（{r['where']}）" if r.get("where") else ""
-            svg.text(LEFT, ylist, f"▶ {r.get('what', '')}{where}：{r.get('why', '')}", 11, "#c8322b")
-            ylist += 14
+            ylist += svg.text_lines(LEFT, ylist, _wrap(f"▶ {r.get('what', '')}{where}：{r.get('why', '')}", 11, text_w), 11, "#c8322b")
 
     # 根拠の写真
     ev: list[str] = []
@@ -463,10 +529,8 @@ def elevation_svg(b: dict, face_id: str) -> str:
     ev = sorted(set(ev))
     if ev:
         ylist += 6
-        svg.text(LEFT, ylist, "根拠の写真: " + ", ".join(ev), 11, "#555")
-        ylist += 14
+        ylist += svg.text_lines(LEFT, ylist, _wrap("根拠の写真: " + ", ".join(ev), 11, text_w), 11, "#555")
 
-    total_w = max(LEFT + W + RIGHT_LABELS, 720)
     total_h = ylist + BOTTOM
     return svg.render(total_w, total_h)
 

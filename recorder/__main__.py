@@ -223,6 +223,8 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--no-register", action="store_true")
     q.add_argument("--method", default="cv2", choices=["cv2", "poselib", "poselib+geocalib"],
                    help="解き方：cv2（従来）／poselib（PoseLib、線の対応 {id: <面>-V01, cells: [C3, C8]} も使う）／poselib+geocalib（GeoCalib の焦点と重力の向きを事前値に）")
+    q.add_argument("--check-jpg", nargs="?", const="", default=None,
+                   help="合否に関わらず重ね画像を出す（既定 out/<棟>/landmarks/check_<写真id>.jpg。パスを書けばそこへ）")
     q = psub.add_parser("locate", help="模型合わせ：GPS を初期値に、写真 1 枚ごとに模型の縁が写真の縁に合う視点を探して登録する（重なり不要）")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--photos", default=None, help="試す写真 id（カンマ区切り。頭だけでも可。省略で棟の GPS 付き未登録全部）")
@@ -325,6 +327,18 @@ def main(argv: list[str] | None = None) -> int:
     _report.add_args(sub.add_parser("report", help="進捗報告：写真 → 立面図 → 証拠 → 模型 → 歩ける 3D → まだ無い物 を 1 ページに（out/<棟>/report.html）"))
     if (sys.argv[1:] if argv is None else list(argv))[:1] == ["report"]:
         return _report.run_cli(ap.parse_args(argv))
+
+    # 進捗報告の絵を道具で撮る（証拠ビューア・歩く画面。11/6 追加。ここ 1 か所で引数と実行をまとめる）
+    from . import shots as _shots
+    _shots.add_args(sub.add_parser("shots", help="進捗報告の絵を撮る：証拠ビューア（evidence_<種>.png）と歩く画面（walk.png）"))
+    if (sys.argv[1:] if argv is None else list(argv))[:1] == ["shots"]:
+        return _shots.run_cli(ap.parse_args(argv))
+
+    # 職員の画面の受付（ローカルのサーバ。11/6 追加。ここ 1 か所で引数と実行をまとめる）
+    from . import serve as _serve
+    _serve.add_args(sub.add_parser("serve", help="職員の画面 web/staff.html の受付：写真の取り込み → 振り分け → 棟ごとの pipeline の起動と進捗（既定 127.0.0.1:8766）"))
+    if (sys.argv[1:] if argv is None else list(argv))[:1] == ["serve"]:
+        return _serve.run_cli(ap.parse_args(argv))
 
     a = ap.parse_args(argv)
 
@@ -656,6 +670,13 @@ def _photos(a) -> int:
         res = landmarks.register_picks(Path(a.building), doc, write=not a.no_register, method=a.method)
         landmarks.release_geocalib()
         print(json.dumps({k: v for k, v in res.items() if k != "camera"}, ensure_ascii=False, indent=1))
+        if a.check_jpg is not None:
+            from .schema import load_building
+
+            bj = load_building(a.building)
+            cj = Path(a.check_jpg) if a.check_jpg else Path("out") / bj["id"] / "landmarks" / f"check_{res['photo']}.jpg"
+            got = landmarks.draw_check(bj, res, cj) if res.get("camera") else None
+            print(f"重ね画像: {got}" if got else f"重ね画像なし（解く前に止まった: {res.get('code')}）")
         if res.get("status") == "ok":
             c = res["camera"]
             print(f"登録: {res['photo']} 位置 {c['camera_xyz']} 高さ {c['camera_height_m']} m 焦点 {c['focal_px']:.0f} px 面 {[v['face'] for v in res['visible_faces']]}")

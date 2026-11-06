@@ -494,6 +494,14 @@ def run_pipeline(building_id: str, photos_folder: str | None = None, *, steps: l
         results.append(rec)
         if not dry_run:
             rec["progress_report"] = refresh_report(building_id, cwd)
+            if s == "web":
+                # 歩く画面が出た後に、報告の絵（証拠ビューア・歩く画面）を窓を出さずに裏で撮る（待たない）
+                try:
+                    from . import shots as _shots
+                    _shots.run_in_background(building_id)
+                    rec["shots"] = "background"
+                except Exception as e:  # noqa: BLE001
+                    rec["shots"] = f"skipped: {type(e).__name__}: {e}"
         if stopped:
             break
         ev = detect_events(building_id, cwd, after_step=s, write=not dry_run)

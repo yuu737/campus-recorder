@@ -24651,9 +24651,9 @@
   },
   {
    "id": "PXL_20261105_062856422",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：本部棟の 2 階の手すり付きの帯と 1 階のピロティ（下を道路が抜け、バスが入る）が奥に正面向きで写る。左の手前は図書館 f2 の南寄りの無地の壁（強い斜め）。主の被写体を奥の本部棟 NE とした",
    "file": "20261105/library-honbu/PXL_20261105_062856422.jpg",
    "taken_at": "2026-11-05T15:28:56",
    "period": "during",
@@ -24754,13 +24754,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062904581",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：本部棟 NE：2 階の連続した手すり壁の帯、上 3 層の窓、ピロティの下を道路が抜けてバスが入る、右端に赤い表示のガラス戸。棟 JSON の NE の写真 043312297 と同じ並び",
    "file": "20261105/library-honbu/PXL_20261105_062904581.jpg",
    "taken_at": "2026-11-05T15:29:04",
    "period": "during",
@@ -24847,13 +24853,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062912368",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：右半分に本部棟 NE のピロティ（柱・2 階の手すり壁の帯）とバス。左上に図書館 f2 の主入口の丸い庇と無地の壁が少し、手前に図書館へ上がる赤い扇形の階段",
    "file": "20261105/library-honbu/PXL_20261105_062912368.jpg",
    "taken_at": "2026-11-05T15:29:12",
    "period": "during",
@@ -24961,13 +24973,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062916256",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：右半分に本部棟 NE（2 階の手すり壁の帯・ピロティの柱・「入学…」の文字の窓）。手前の大半は図書館主入口へ上がる赤い扇形の階段、左上に図書館 f2 の庇。面として写るのは本部棟 NE",
    "file": "20261105/library-honbu/PXL_20261105_062916256.jpg",
    "taken_at": "2026-11-05T15:29:16",
    "period": "during",
@@ -25068,13 +25086,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062919435",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口：赤い階段の上に茶色の丸い庇（円柱 2 本）、その上のガラスの凹部と青い鉄骨の柱",
    "file": "20261105/library-honbu/PXL_20261105_062919435.jpg",
    "taken_at": "2026-11-05T15:29:19",
    "period": "during",
@@ -25182,13 +25206,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062927980",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口を正面から：赤い階段・丸い庇・ガラスの凹部・右の無地の張り出し",
    "file": "20261105/library-honbu/PXL_20261105_062927980.jpg",
    "taken_at": "2026-11-05T15:29:27",
    "period": "during",
@@ -25289,13 +25319,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062929449",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口：赤い階段・丸い庇・ガラスの凹部、右に階段沿いの斜めの手すり壁と 1 階の開口",
    "file": "20261105/library-honbu/PXL_20261105_062929449.jpg",
    "taken_at": "2026-11-05T15:29:29",
    "period": "during",
@@ -25403,13 +25439,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062930796",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館主入口の赤い階段と植え込みの擁壁が主。上端に f2 の丸い庇とガラスの凹部の下端だけ",
    "file": "20261105/library-honbu/PXL_20261105_062930796.jpg",
    "taken_at": "2026-11-05T15:29:30",
    "period": "during",
@@ -25517,13 +25559,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062931955",
-   "building": null,
+   "building": "library",
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：理由：壁面がほぼ写らない（赤い階段の脇と植え込みの擁壁の角、左に下る通路、奥に塔の上部）。階段は 062930796 から続く図書館主入口の物なので棟は library、面は f2 の前の外構",
    "file": "20261105/library-honbu/PXL_20261105_062931955.jpg",
    "taken_at": "2026-11-05T15:29:31",
    "period": "during",
@@ -25638,13 +25686,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "candidate_faces": [
+    "f2"
+   ],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_062946059",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口を階段の下から：丸い庇・ガラスの凹部、奥左にタワー 75。右手前の壁（縦樋付き）は隣の張り出しの角",
    "file": "20261105/library-honbu/PXL_20261105_062946059.jpg",
    "taken_at": "2026-11-05T15:29:46",
    "period": "during",
@@ -25738,13 +25792,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063029997",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：左は本部棟 NE を南東端から見通す：手前の無窓の煉瓦の壁（棟 JSON の『無窓の端の壁』）、奥へ凹んだ窓と手すりの列、壁沿いに上る階段と黒い扉。正面奥に E の翼が正面向き。棟 JSON の写真",
    "file": "20261105/library-honbu/PXL_20261105_063029997.jpg",
    "taken_at": "2026-11-05T15:30:29",
    "period": "during",
@@ -25831,13 +25891,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE",
+    "E"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063106256",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：右に図書館 f2 の北寄り：無地の壁に窓 1 つ、その下の軒と青い鉄骨の庇（012 の写真と同じ）。画面の大半はタワー 75 と手前の曲面の煉瓦の手すり壁",
    "file": "20261105/library-honbu/PXL_20261105_063106256.jpg",
    "taken_at": "2026-11-05T15:31:06",
    "period": "during",
@@ -25924,13 +25991,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063115879.MP",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の北寄り：無地の壁と窓、1 階のガラス（掲示の絵）、青い鉄骨の庇。棟 JSON の f2 の写真 075705849 と同じ",
    "file": "20261105/library-honbu/PXL_20261105_063115879.MP.jpg",
    "taken_at": "2026-11-05T15:31:15",
    "period": "during",
@@ -26024,13 +26097,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063405325",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：タワー側のデッキから図書館を北西から斜めに：左の長い面が f1（2〜4 段目の横長窓・最上段の小窓が 2 つずつ）、右に西の角を回った f2 の北寄り（無地の壁・縦の凹み）。デッキの青い鉄骨の庇",
    "file": "20261105/library-honbu/PXL_20261105_063405325.jpg",
    "taken_at": "2026-11-05T15:34:05",
    "period": "during",
@@ -26131,13 +26210,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063406464",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：タワー側のデッキから図書館を北西から斜めに：左の長い面が f1（2〜4 段目の横長窓・最上段の小窓が 2 つずつ）、右に西の角を回った f2 の北寄り（無地の壁・縦の凹み）。デッキの青い鉄骨の庇",
    "file": "20261105/library-honbu/PXL_20261105_063406464.jpg",
    "taken_at": "2026-11-05T15:34:06",
    "period": "during",
@@ -26245,13 +26331,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063412307",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：デッキの手すり越しに図書館 f1（横長窓と最上段の小窓 2 つずつの格子）と西の角の f2。手前にデッキから下の道路をまたぐ橋（下をトラックが通る）",
    "file": "20261105/library-honbu/PXL_20261105_063412307.jpg",
    "taken_at": "2026-11-05T15:34:12",
    "period": "during",
@@ -26352,13 +26445,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063413358",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：デッキの手すり越しに図書館 f1（横長窓と最上段の小窓 2 つずつの格子）と西の角の f2。手前にデッキから下の道路をまたぐ橋（下をトラックが通る）",
    "file": "20261105/library-honbu/PXL_20261105_063413358.jpg",
    "taken_at": "2026-11-05T15:34:13",
    "period": "during",
@@ -26459,13 +26559,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063417721",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：デッキの手すり越しに図書館 f1（横長窓と最上段の小窓 2 つずつの格子）と西の角の f2。手前にデッキから下の道路をまたぐ橋（下をトラックが通る）",
    "file": "20261105/library-honbu/PXL_20261105_063417721.jpg",
    "taken_at": "2026-11-05T15:34:17",
    "period": "during",
@@ -26566,13 +26673,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063418811",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：デッキの手すり越しに図書館 f1（横長窓と最上段の小窓 2 つずつの格子）と西の角の f2。手前にデッキから下の道路をまたぐ橋（下をトラックが通る）",
    "file": "20261105/library-honbu/PXL_20261105_063418811.jpg",
    "taken_at": "2026-11-05T15:34:18",
    "period": "during",
@@ -26680,13 +26794,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063420663",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：左に図書館の西の角：f1 の西端の 3 柱間と、角を回った f2 の北寄り（無地の壁と窓）。右奥に本部棟 NE（ピロティにバス）",
    "file": "20261105/library-honbu/PXL_20261105_063420663.jpg",
    "taken_at": "2026-11-05T15:34:20",
    "period": "during",
@@ -26780,13 +26901,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063431446",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：道路の交差点越しに本部棟：左の長い 4 層が NE（ピロティにバスが入る、中央に階段塔の頂部とアンテナ）、右手前の翼が E（北端に外階段と白い庇＝NE2 付近）。図書館は写らない",
    "file": "20261105/library-honbu/PXL_20261105_063431446.jpg",
    "taken_at": "2026-11-05T15:34:31",
    "period": "during",
@@ -26901,13 +27029,21 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE",
+    "E",
+    "NE2"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063439559",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 の西端と f2 の北寄り、デッキと橋（下にトラック）、奥に本部棟 NE とバス",
    "file": "20261105/library-honbu/PXL_20261105_063439559.jpg",
    "taken_at": "2026-11-05T15:34:39",
    "period": "during",
@@ -27015,13 +27151,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063449740",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：デッキから図書館 f1 をほぼ正面に：最上段の小窓が柱間ごとに 2、下 3 段の横長窓、右端の柱間の 1 階に凹んだガラスの入口。左端にタワー 75",
    "file": "20261105/library-honbu/PXL_20261105_063449740.jpg",
    "taken_at": "2026-11-05T15:34:49",
    "period": "during",
@@ -27136,13 +27279,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063455681",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 を正面に（063449740 より右寄り）：同じ窓の格子と右端の凹んだ入口、右に青い鉄骨の庇",
    "file": "20261105/library-honbu/PXL_20261105_063455681.jpg",
    "taken_at": "2026-11-05T15:34:55",
    "period": "during",
@@ -27250,13 +27399,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063509567",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 を西端から東へ見通す：凹んだ横長窓と手すり、柱型、西端の 1 階の曲面ガラス、デッキから下りる階段、左下に黄色の斜線の道路、左にタワー 75",
    "file": "20261105/library-honbu/PXL_20261105_063509567.jpg",
    "taken_at": "2026-11-05T15:35:09",
    "period": "during",
@@ -27399,13 +27554,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063510309",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 を西端から東へ見通す：凹んだ横長窓と手すり、柱型、西端の 1 階の曲面ガラス、デッキから下りる階段、左下に黄色の斜線の道路、左にタワー 75",
    "file": "20261105/library-honbu/PXL_20261105_063510309.jpg",
    "taken_at": "2026-11-05T15:35:10",
    "period": "during",
@@ -27548,13 +27709,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063514255",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 を西端から東へ見通す：凹んだ横長窓と手すり、柱型、西端の 1 階の曲面ガラス、デッキから下りる階段、左下に黄色の斜線の道路、左にタワー 75",
    "file": "20261105/library-honbu/PXL_20261105_063514255.jpg",
    "taken_at": "2026-11-05T15:35:14",
    "period": "during",
@@ -27662,13 +27829,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063516032",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 を西端から東へ見通す：凹んだ横長窓と手すり、柱型、西端の 1 階の曲面ガラス、デッキから下りる階段、左下に黄色の斜線の道路、左にタワー 75",
    "file": "20261105/library-honbu/PXL_20261105_063516032.jpg",
    "taken_at": "2026-11-05T15:35:16",
    "period": "during",
@@ -27769,13 +27942,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063517313",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 の西端の柱型（縦樋付き）と 1 階の曲面ガラス、最上段の小窓。右は 1 階の軒下の抜け（奥に広場と本部棟らしい建物・松）。f2 の壁は写らない",
    "file": "20261105/library-honbu/PXL_20261105_063517313.jpg",
    "taken_at": "2026-11-05T15:35:17",
    "period": "during",
@@ -27890,13 +28069,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063529987",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f1 の西端の柱間を正面から：最上段の小窓 2 つずつ、横長窓、1 階の凹んだガラスの入口（回転扉）、右に青い鉄骨の柱",
    "file": "20261105/library-honbu/PXL_20261105_063529987.jpg",
    "taken_at": "2026-11-05T15:35:29",
    "period": "during",
@@ -27990,13 +28175,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063540463",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の北寄り：青い鉄骨の柱の庇、1 階のガラスと掲示の絵、上の無地の壁と窓、下る斜路と手すり。棟 JSON の f2 の写真 075705849 と同じ",
    "file": "20261105/library-honbu/PXL_20261105_063540463.jpg",
    "taken_at": "2026-11-05T15:35:40",
    "period": "during",
@@ -28097,13 +28288,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063548675",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の北寄り：青い鉄骨の庇、1 階のガラスと掲示、館名の板、無地の壁と窓",
    "file": "20261105/library-honbu/PXL_20261105_063548675.jpg",
    "taken_at": "2026-11-05T15:35:48",
    "period": "during",
@@ -28197,13 +28394,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063611859.MP",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口：茶色の丸い庇、自動扉、上のガラスの凹部、左奥に赤い階段、右に掲示板。左上にタワー 75",
    "file": "20261105/library-honbu/PXL_20261105_063611859.MP.jpg",
    "taken_at": "2026-11-05T15:36:11",
    "period": "during",
@@ -28311,13 +28514,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063612628",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口を庇の下から：丸い庇と円柱、ガラスの凹部の格子、自動扉、左奥に赤い階段",
    "file": "20261105/library-honbu/PXL_20261105_063612628.jpg",
    "taken_at": "2026-11-05T15:36:12",
    "period": "during",
@@ -28411,13 +28620,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064353508",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館 f2 の主入口の北脇：松の植え込み、ガラスの凹部、青い鉄骨の柱、右に丸い庇と円柱",
    "file": "20261105/library-honbu/PXL_20261105_064353508.jpg",
    "taken_at": "2026-11-05T15:43:53",
    "period": "during",
@@ -28504,13 +28719,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064354855",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の主入口：茶色の丸い庇と 2 本の円柱、青い鉄骨の柱、入口上のガラスの吹き抜け。棟 JSON の f2 の写真（075639031・075718159）と同じ",
    "file": "20261105/library-honbu/PXL_20261105_064354855.jpg",
    "taken_at": "2026-11-05T15:43:54",
    "period": "during",
@@ -28611,13 +28832,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064407496",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館入口前の階段の上から見た本部棟：折れ曲がる 2 階の手すり壁とピロティ、下を道路が抜ける、『…学センター』の表示、柱に『本部棟』の札。右奥の入隅で向きが変わる面が E（北の翼の東側）",
    "file": "20261105/library-honbu/PXL_20261105_064407496.jpg",
    "taken_at": "2026-11-05T15:44:07",
    "period": "during",
@@ -28704,13 +28931,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE",
+    "E"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064419229",
    "building": null,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：棟を決められず（棟も面も決められない（地面だけ）。時刻から図書館入口前の広場の舗装と思われるが根拠にならない）",
    "file": "20261105/library-honbu/PXL_20261105_064419229.jpg",
    "taken_at": "2026-11-05T15:44:19",
    "period": "during",
@@ -28801,9 +29035,9 @@
   },
   {
    "id": "PXL_20261105_064431924",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "NE",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館側の歩道から本部棟の北東面ピロティの下（天井と柱、柱に『本部棟』の札）と、右の入隅の先の E 面（4 段の窓）。道路・宅配車は 064407496 と同じ",
    "file": "20261105/library-honbu/PXL_20261105_064431924.jpg",
    "taken_at": "2026-11-05T15:44:31",
    "period": "during",
@@ -28911,13 +29145,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "NE",
+    "E"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064508808",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の西の角（f2/f3 の角、白い縦格子の植え込みの柵と生垣）。正面に向く深い格子の面が f3（南南西）、左に遠のく細い縦長窓の面が f2（本部棟との路地側）。棟 JSON で図書館の西の角とされ",
    "file": "20261105/library-honbu/PXL_20261105_064508808.jpg",
    "taken_at": "2026-11-05T15:45:08",
    "period": "during",
@@ -29004,13 +29245,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064510192",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の西の角（f2/f3 の角、白い縦格子の植え込みの柵と生垣）。正面に向く深い格子の面が f3（南南西）、左に遠のく細い縦長窓の面が f2（本部棟との路地側）。棟 JSON で図書館の西の角とされ",
    "file": "20261105/library-honbu/PXL_20261105_064510192.jpg",
    "taken_at": "2026-11-05T15:45:10",
    "period": "during",
@@ -29111,13 +29359,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064514061",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の西の角（f2/f3 の角、白い縦格子の植え込みの柵と生垣）。正面に向く深い格子の面が f3（南南西）、左に遠のく細い縦長窓の面が f2（本部棟との路地側）。棟 JSON で図書館の西の角とされ",
    "file": "20261105/library-honbu/PXL_20261105_064514061.jpg",
    "taken_at": "2026-11-05T15:45:14",
    "period": "during",
@@ -29225,13 +29480,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064524057",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の西の角（f2/f3 の角、白い縦格子の植え込みの柵と生垣）。正面に向く深い格子の面が f3（南南西）、左に遠のく細い縦長窓の面が f2（本部棟との路地側）。棟 JSON で図書館の西の角とされ",
    "file": "20261105/library-honbu/PXL_20261105_064524057.jpg",
    "taken_at": "2026-11-05T15:45:24",
    "period": "during",
@@ -29304,13 +29566,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064525427",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の西の角（f2/f3 の角、白い縦格子の植え込みの柵と生垣）。正面に向く深い格子の面が f3（南南西）、左に遠のく細い縦長窓の面が f2（本部棟との路地側）。棟 JSON で図書館の西の角とされ",
    "file": "20261105/library-honbu/PXL_20261105_064525427.jpg",
    "taken_at": "2026-11-05T15:45:25",
    "period": "during",
@@ -29390,13 +29659,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064539230",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の西の角（f2/f3 の角、白い縦格子の植え込みの柵と生垣）。正面に向く深い格子の面が f3（南南西）、左に遠のく細い縦長窓の面が f2（本部棟との路地側）。棟 JSON で図書館の西の角とされ",
    "file": "20261105/library-honbu/PXL_20261105_064539230.jpg",
    "taken_at": "2026-11-05T15:45:39",
    "period": "during",
@@ -29504,13 +29780,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064600203",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "SW",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：南の広場から北を見る：左＝本部棟の南西面の東端（ピロティ・4 段の窓・ピロティへ上る煉瓦の階段）、中央に本部棟と図書館の間の路地の階段、右＝図書館の西の角（f3 正面・f2 斜め）と手前の低い煉瓦の張",
    "file": "20261105/library-honbu/PXL_20261105_064600203.jpg",
    "taken_at": "2026-11-05T15:46:00",
    "period": "during",
@@ -29583,13 +29866,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064601738",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "SW",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：本部棟の南西面（ピロティ、縦の垂れ幕、立て看板、ピロティへ上る階段）を東端寄りから。右に図書館の西の角（f3・f2）",
    "file": "20261105/library-honbu/PXL_20261105_064601738.jpg",
    "taken_at": "2026-11-05T15:46:01",
    "period": "during",
@@ -29669,13 +29958,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064609316",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "SW",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：本部棟の南西面を東端の柱から西へ斜めに：ピロティの柱の列、垂れ幕、広場の丸いベンチ",
    "file": "20261105/library-honbu/PXL_20261105_064609316.jpg",
    "taken_at": "2026-11-05T15:46:09",
    "period": "during",
@@ -29741,13 +30036,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064614185",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "SW",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：064609316 と同じ。右下にピロティへ上る煉瓦の階段",
    "file": "20261105/library-honbu/PXL_20261105_064614185.jpg",
    "taken_at": "2026-11-05T15:46:14",
    "period": "during",
@@ -29806,13 +30107,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064650120",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：南の広場から：中央奥の 5 段の建物＝図書館の南南西面 f3（最上段の小窓の列、手前に屋上緑化した 1 階分の張り出し）、背後にタワー。左＝本部棟の南西面の東端、右手前＝石積みと芝の付いた半地下の曲面",
    "file": "20261105/library-honbu/PXL_20261105_064650120.jpg",
    "taken_at": "2026-11-05T15:46:50",
    "period": "during",
@@ -29913,13 +30220,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_064700483",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：064650120 より左から：左＝本部棟の南西面、中央＝図書館 f3 と屋上緑化の張り出し、右＝半地下の曲面の建物と白い別棟。f3 は遠い",
    "file": "20261105/library-honbu/PXL_20261105_064700483.jpg",
    "taken_at": "2026-11-05T15:47:00",
    "period": "during",
@@ -30020,13 +30333,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f3"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_064721039",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "SW",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：南西から本部棟の南西面を東へ斜めに：ピロティ・階段・立て看板。右に図書館の前の低い煉瓦の張り出し（縦長窓 3 つ、屋上に植栽）と白い別棟",
    "file": "20261105/library-honbu/PXL_20261105_064721039.jpg",
    "taken_at": "2026-11-05T15:47:21",
    "period": "during",
@@ -30169,13 +30488,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064729729",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "honbu",
+   "face": "SW",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：064721039 と同じ位置から少し寄って：本部棟南西面のピロティの柱と階段、右に低い煉瓦の張り出し",
    "file": "20261105/library-honbu/PXL_20261105_064729729.jpg",
    "taken_at": "2026-11-05T15:47:29",
    "period": "during",
@@ -30318,13 +30643,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064744668",
-   "building": null,
+   "building": "honbu",
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：本部棟のピロティの下（梁の付いた天井、煉瓦タイルの柱、ピロティに上る階段とベンチ、ガラスの掲示ケース）。外の面は写らない",
    "file": "20261105/library-honbu/PXL_20261105_064744668.jpg",
    "taken_at": "2026-11-05T15:47:44",
    "period": "during",
@@ -30425,13 +30756,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "interior_views": true,
+   "candidate_faces": [
+    "SW"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064926962",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の南の角（f3/f0）の縦樋 2 本の角から東南東面 f0：角の縦の窓の列、2 階の高さの四角い張り出し（箱 1）。手前にコンクリートの擁壁と手すり。左の f3 はほぼ真横",
    "file": "20261105/library-honbu/PXL_20261105_064926962.jpg",
    "taken_at": "2026-11-05T15:49:26",
    "period": "during",
@@ -30497,13 +30835,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064937392.MP",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：064926962 と同じ角を少し左から。左手前の傾いた煉瓦の低い壁（f3 前の張り出しの東端と思われる）",
    "file": "20261105/library-honbu/PXL_20261105_064937392.MP.jpg",
    "taken_at": "2026-11-05T15:49:37",
    "period": "during",
@@ -30583,13 +30928,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064942113",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：南の角：右＝f0（角の窓の列・箱 1・ガラスの円筒の吹き抜けの端）、左に遠のく深い格子の長い面＝f3。箱とガラスが角の右にあるので東の角（f0 が左に来る 065122957）と鏡写しにならない",
    "file": "20261105/library-honbu/PXL_20261105_064942113.jpg",
    "taken_at": "2026-11-05T15:49:42",
    "period": "during",
@@ -30648,13 +31000,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064951872",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 の南寄り：角の窓の列、箱 1、右にガラスの円筒、下に階段の手すり",
    "file": "20261105/library-honbu/PXL_20261105_064951872.jpg",
    "taken_at": "2026-11-05T15:49:51",
    "period": "during",
@@ -30713,13 +31072,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065001701",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 の南寄りを見上げ：窓の列・箱 1・ガラスの円筒",
    "file": "20261105/library-honbu/PXL_20261105_065001701.jpg",
    "taken_at": "2026-11-05T15:50:01",
    "period": "during",
@@ -30806,13 +31171,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065016249",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 のガラスの円筒の吹き抜け（凹んだ枠）と右下の箱 2",
    "file": "20261105/library-honbu/PXL_20261105_065016249.jpg",
    "taken_at": "2026-11-05T15:50:16",
    "period": "during",
@@ -30892,13 +31263,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065027824",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 に沿って北を見る：左上にガラスの円筒、壁沿いの配管と半地下への階段、奥に道路と通路橋のある建物",
    "file": "20261105/library-honbu/PXL_20261105_065027824.jpg",
    "taken_at": "2026-11-05T15:50:27",
    "period": "during",
@@ -31034,13 +31411,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065035660",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 のガラスの円筒を正面から",
    "file": "20261105/library-honbu/PXL_20261105_065035660.jpg",
    "taken_at": "2026-11-05T15:50:35",
    "period": "during",
@@ -31127,13 +31510,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065036832",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0：左にガラスの円筒、右に箱 2、背後にタワー。棟 JSON の f0 の写真 075102006 と同じ並び",
    "file": "20261105/library-honbu/PXL_20261105_065036832.jpg",
    "taken_at": "2026-11-05T15:50:36",
    "period": "during",
@@ -31213,13 +31602,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065038217",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0：左に箱 1、右にガラスの円筒、手前に煉瓦の階段と手すり",
    "file": "20261105/library-honbu/PXL_20261105_065038217.jpg",
    "taken_at": "2026-11-05T15:50:38",
    "period": "during",
@@ -31306,13 +31701,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065101059",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 の全体：ガラスの円筒・箱 2・窓、手前の広い階段、右に自販機。075102006 とほぼ同じ構図",
    "file": "20261105/library-honbu/PXL_20261105_065101059.jpg",
    "taken_at": "2026-11-05T15:51:01",
    "period": "during",
@@ -31378,13 +31779,19 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065122957",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：図書館の東の角（f0/f1）：左＝f0（箱 2 と窓）、右に遠のく f1、カーブミラーと赤白の支柱、案内板、ごみ箱。棟 JSON の 075153504 と同じ角",
    "file": "20261105/library-honbu/PXL_20261105_065122957.jpg",
    "taken_at": "2026-11-05T15:51:22",
    "period": "during",
@@ -31499,13 +31906,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0",
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065125602",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：065122957 と同じ角を少し右から。f1 が道路沿いに遠のく",
    "file": "20261105/library-honbu/PXL_20261105_065125602.jpg",
    "taken_at": "2026-11-05T15:51:25",
    "period": "during",
@@ -31627,13 +32041,20 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0",
+    "f1"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065508197",
    "building": null,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：棟を決められず（どの建物の中か写っている物から決められない（図書館・本部棟の外装の深い格子や庇が写らず、仕上げは新しい）。前後の写真（図書館の東の角 065125602 の 4）",
    "file": "20261105/library-honbu/PXL_20261105_065508197.jpg",
    "taken_at": "2026-11-05T15:55:08",
    "period": "during",
@@ -31731,9 +32152,9 @@
   },
   {
    "id": "PXL_20261105_070904733",
-   "building": null,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）",
+   "building": "library",
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（opus、11/6）：f0 の全体を正面から（ガラスの円筒・箱 2・窓・手前の広い階段とごみ箱）。065101059 と同じ構図",
    "file": "20261105/library-honbu/PXL_20261105_070904733.jpg",
    "taken_at": "2026-11-05T16:09:04",
    "period": "during",
@@ -31841,7 +32262,13 @@
     "library",
     "honbu"
    ],
-   "interior": false
+   "interior": false,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-06T17:37:33",
+   "faces": [
+    "f0"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071033016.MP",

@@ -107,7 +107,7 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 
   <section class="panel" id="p2">
     <h2><span class="n">2</span>棟ごとに写真を入れる<span class="state" id="s2">未</span></h2>
-    <p class="sub">写真はこの端末から出ません。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
+    <p class="sub">写真はこの PC に置かれ、係の Claude（API）が読むためにだけ外部に送られます。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
     <div id="drop">
       <button class="btn primary" id="browse" type="button">写真を選ぶ</button>
       <p class="big">または、写真をここにドラッグ</p>
@@ -156,6 +156,9 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
   const STAGE_JA = {photos: "写真", elev: "立面図", evidence: "証拠", model: "模型", walk: "歩ける 3D", rest: "まだ無い物"};
   // 報告（out/<棟>/report.json）はリポジトリ直下から配信した時だけ読める（.claude/launch.json の root、8766）
   const ROOT = location.pathname.includes("/web/") ? "../" : null;
+  // recorder serve が配信している時だけ「サーバあり」（/api/site が答える）。無ければ従来どおり書き出し
+  let SERVER = null;             // /api/site の応答
+  const runs = {};               // 棟 id → pipeline の状態（/api/progress の run）
 
   // --- 1. 大学とキャンパス
   const univ = $("#univ"), campus = $("#campus");
@@ -177,7 +180,10 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     } else {
       n.className = "note warn";
       n.innerHTML = `敷地の準備がまだです。大学名とキャンパス名を入れたら、このリポジトリで次を実行します。` +
-        `<span class="cmd">recorder campus init ${slugOf(campus.value || univ.value)} --university "${univ.value || "大学名"}" --campus-name "${campus.value || "キャンパス名"}"</span>`;
+        `<span class="cmd">recorder campus init ${slugOf(campus.value || univ.value)} --university "${univ.value || "大学名"}" --campus-name "${campus.value || "キャンパス名"}"</span>` +
+        (SERVER ? `<div class="go" style="margin-top:8px"><button class="btn" type="button" id="campusInit">敷地を用意する</button><span class="status" id="campusMsg"></span></div>` : "");
+      const ci = $("#campusInit");
+      if (ci) ci.addEventListener("click", campusInit);
       st.textContent = "未"; st.className = "state";
     }
   }
@@ -282,7 +288,7 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     let done = 0;
     for (const f of list) {
       if (have.has(f.name)) continue;
-      const it = {file: f.name, thumb: "", building: "", buildingText: "", known: false, interior: false, floor: null, sel: false, ready: false};
+      const it = {file: f.name, blob: f, thumb: "", building: "", buildingText: "", known: false, interior: false, floor: null, sel: false, ready: false};
       it.thumb = await thumbOf(f);
       items.push(it); grid.appendChild(card(it));
       done++; $("#status").textContent = `読み込み中 ${done} / ${list.length}`;
@@ -319,8 +325,61 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     refresh();
   });
 
-  // --- 3. 書き出し（形は recorder photos assign --from と同じ）
+  // --- 3. 書き出し（形は recorder photos assign --from と同じ）。サーバありなら写真を送って記録を始める
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+  async function api(path, opt) {
+    const r = await fetch(path, Object.assign({cache: "no-store"}, opt || {}));
+    let j = null; try { j = await r.json(); } catch (e) {}
+    return {ok: r.ok, status: r.status, j: j || {}};
+  }
+  async function campusInit() {
+    const m = $("#campusMsg");
+    if (!univ.value.trim() || !campus.value.trim()) { m.innerHTML = `<span class="warn">大学名とキャンパス名を入れてください。</span>`; return; }
+    m.textContent = "用意しています…";
+    try {
+      const r = await api("/api/campus", {method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({university: univ.value.trim(), campus_name: campus.value.trim()})});
+      m.innerHTML = r.ok ? `${esc(r.j.message)}（<code>${esc(r.j.path)}</code>）` : `<span class="warn">${esc(r.j.error || r.status)}</span>`;
+    } catch (e) { m.innerHTML = `<span class="warn">サーバに届きません。</span>`; }
+  }
+  async function startRecording() {
+    const ready = items.filter(i => i.ready), st = $("#status"), btn = $("#export");
+    const rows = ready.map(i => ({file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null,
+      building_text: i.buildingText.trim(), known: i.known}));
+    const fd = new FormData();
+    ready.forEach(i => fd.append("photos", i.blob, i.file));
+    fd.append("assignments", JSON.stringify(rows));
+    btn.disabled = true;
+    st.textContent = `写真 ${ready.length} 枚をこの PC に置いています…`;
+    try {
+      const p = await api("/api/photos", {method: "POST", body: fd});
+      if (!p.ok) throw new Error(p.j.error || p.status);
+      const ws = (p.j.warnings || []).filter(w => w.warning).length;
+      const blds = p.j.buildings || [];
+      let msg = `<b>${p.j.saved + p.j.reused}</b> 枚を置き、振り分けました（棟 ${blds.length}）` + (ws ? `。<span class="warn">${ws} 枚は確かめが要ります</span>` : "");
+      if (!blds.length) { st.innerHTML = msg + "。起動できる棟がありません。"; btn.disabled = false; return; }
+      const s = await api("/api/start", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({buildings: blds})});
+      if (s.status === 409) msg += `。<span class="warn">${esc((s.j.busy || []).join("、"))} は係が作業中です。終わってからもう一度押してください</span>`;
+      else if (!s.ok) throw new Error(s.j.error || s.status);
+      else {
+        msg += `。係を起動しました（${esc(s.j.started.join("、"))}）` + (s.j.dry_run ? `。<span class="warn">API キーが無いので試し（dry-run）で動いています</span>` : "");
+        $("#s3").textContent = "進行中"; $("#s3").className = "state partial";
+      }
+      st.innerHTML = msg + "。";
+      poll();
+    } catch (e) { st.innerHTML = `<span class="warn">止まりました：${esc(e.message)}</span>`; }
+    btn.disabled = false;
+  }
+  let pollTimer = null;
+  async function poll() {
+    clearTimeout(pollTimer);
+    await loadProgress();
+    const running = Object.values(runs).some(r => r && r.state === "running");
+    if (running) pollTimer = setTimeout(poll, 10000);
+    else if (Object.keys(runs).length) { $("#s3").textContent = "済"; $("#s3").className = "state done"; }
+  }
   $("#export").addEventListener("click", () => {
+    if (SERVER) return startRecording();
     const rows = items.filter(i => i.ready).map(i => ({
       file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null, building_text: i.buildingText.trim(), known: i.known
     }));
@@ -337,20 +396,29 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     const ids = [], seen = new Set();
     const push = id => { if (id && !seen.has(id)) { seen.add(id); ids.push(id); } };
     if (site) { ((site.scope && site.scope.targets) || []).forEach(push); Object.keys(site.designed || {}).forEach(push); }
+    Object.keys(runs).forEach(push);
     if (!ids.length) { rows.innerHTML = `<div class="gray">棟がまだありません。</div>`; return; }
+    let prog = null;   // サーバありなら 1 回で全部の棟（report.json の stages・counts と pipeline の状態）
+    if (SERVER) { try { const r = await api(`/api/progress?buildings=${ids.map(encodeURIComponent).join(",")}`); if (r.ok) prog = r.j.buildings; } catch (e) {} }
+    if (prog) ids.forEach(id => { if (prog[id] && prog[id].run) runs[id] = prog[id].run; });
+    const RUN_JA = {running: "係が作業中", done: "係の工程が終わりました", stopped: "止まりました", error: "エラー"};
     const html = [];
     for (const id of ids) {
-      const name = (site.designed && site.designed[id] && site.designed[id].name) || [...names].find(([n, i]) => i === id)?.[0] || id;
+      const name = (site && site.designed && site.designed[id] && site.designed[id].name) || [...names].find(([n, i]) => i === id)?.[0] || id;
       let rep = null;
-      if (ROOT) { try { const r = await fetch(`${ROOT}out/${id}/report.json`, {cache: "no-store"}); if (r.ok) rep = await r.json(); } catch (e) {} }
-      const st = rep ? rep.stages : null;
-      const waits = rep ? (rep.counts.requests || 0) : 0;
-      const dots = STAGES.map(k => `<i class="${st ? st[k].status : ""}" title="${STAGE_JA[k]}：${st ? st[k].result : "記録なし"}"></i>`).join("");
+      if (prog) rep = prog[id] ? prog[id].report : null;
+      else if (ROOT) { try { const r = await fetch(`${ROOT}out/${id}/report.json`, {cache: "no-store"}); if (r.ok) rep = await r.json(); } catch (e) {} }
+      const st = rep && rep.stages ? rep.stages : null;
+      const waits = rep && rep.counts ? (rep.counts.requests || 0) : 0;
+      const dots = STAGES.map(k => `<i class="${st && st[k] ? st[k].status : ""}" title="${STAGE_JA[k]}：${st && st[k] ? st[k].result : "記録なし"}"></i>`).join("");
       let last = "記録なし";
       if (st) {
-        const cur = STAGES.filter(k => st[k].status !== "todo").pop() || "photos";
-        last = `${STAGE_JA[cur]}：${st[cur].result}`;
+        const cur = STAGES.filter(k => st[k] && st[k].status !== "todo").pop() || "photos";
+        last = `${STAGE_JA[cur]}：${st[cur] ? st[cur].result : "記録なし"}`;
       }
+      const run = runs[id];
+      if (run) last += ` <span class="${run.state === "running" || run.state === "done" ? "ok" : "wait"}">${RUN_JA[run.state] || esc(run.state)}` +
+        `${run.stopped_at ? `（${esc(run.stopped_at)}）` : ""}${run.dry_run ? "・試し" : ""}</span>`;
       const link = ROOT && rep ? `<a href="${ROOT}out/${id}/report.html">${name}</a>` : name;
       html.push(`<div class="row"><div class="name">${link}<span class="id">${id}</span></div><div class="dots">${dots}</div>
         <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}</div></div>`);
@@ -359,7 +427,17 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     rows.innerHTML = html.join("");
   }
 
-  loadBuildings().then(() => { refresh(); loadProgress(); });
+  function paintGo() {
+    if (!SERVER) return;
+    $("#export").textContent = "記録を始める";
+    $("#nextNote").innerHTML = `押すと、写真をこの PC の <code>data/photos/&lt;今日の日付&gt;/&lt;棟&gt;/</code> に置いて振り分け、棟ごとに係を起動します。右の進捗は係が動いている間 10 秒ごとに更新します。` +
+      (SERVER.api_key ? "" : `<br><span class="warn">API キー（ANTHROPIC_API_KEY）が無いので、係は試し（dry-run）で動きます。</span>`);
+  }
+  async function detectServer() {
+    try { const r = await fetch("/api/site", {cache: "no-store"}); if (r.ok) SERVER = await r.json(); } catch (e) { SERVER = null; }
+    paintGo();
+  }
+  detectServer().then(loadBuildings).then(() => { refresh(); return SERVER ? poll() : loadProgress(); });
 })();
 </script>
 </body>

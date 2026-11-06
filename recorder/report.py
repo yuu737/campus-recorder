@@ -1,10 +1,11 @@
 """進捗報告：棟ごとに 1 ページの HTML（out/<棟>/report.html）。手順書「進捗報告の見せ方」の 6 段をそのまま並べる。
 
   1. 写真（職員のスマホ写真と撮影係の返事）      索引 data/photos/index.json、out/<棟>/satsuei_checks.json
-  2. 立面図（根拠の色付き）                      out/<棟>/elev_<面>.svg（draw の生成物をそのまま埋める）
+  2. 立面図（先頭に四面図のシート＝形、続けて根拠の色付き立面＝どこまで信じてよいか）
+                                                 out/<棟>/sheet.png（model build）、out/<棟>/elev_<面>.svg（draw の生成物をそのまま埋める）
   3. 証拠（写真がどこに立ち、目印がどう対応したか） 台帳 registry.json、out/<棟>/evidence_*.png
   4. 模型（四面図・街路視点・検収の重ね）        out/<棟>/view_*.png、persp_street*.png、overlay_*.png、model_report.json
-  5. 地形に載せて歩く                            web/data/site.json、out/web_*.png
+  5. 地形に載せて歩く                            web/data/site.json、out/<棟>/walk.png（recorder shots）、out/web_*.png
   6. まだ無い物（灰色の面・撮影依頼・未確定の値） 棟 JSON の requests、schema.unknowns、coverage.json
 
 絵は全部 生成物。手で直した絵は使わない。数字は棟 JSON と台帳から数える（この道具は値を作らない）。
@@ -110,6 +111,7 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
         st = es["faces"].get(f["id"]) or {}
         elevs.append({"face": f["id"], "name": f.get("name") or f["id"], "svg": p if p.exists() else None,
                       "state": st.get("state", "unknown"), "values": st.get("values", 0), "measured": st.get("measured", 0)})
+    sheet = out_dir / "sheet.png" if (out_dir / "sheet.png").exists() else None
     order = {"measured": 0, "estimated": 1, "hypothesis": 2, "unknown": 3}
     elevs.sort(key=lambda d: (d["svg"] is None, order.get(d["state"], 9), -d["measured"]))
 
@@ -167,7 +169,7 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
 
     # 5. 歩ける 3D
     walk_img = None
-    for cand in (root / OUT_ROOT / f"web_look_after_{bid}_pc.png", root / OUT_ROOT / f"web_check_{bid}.jpg",
+    for cand in (out_dir / "walk.png", root / OUT_ROOT / f"web_look_after_{bid}_pc.png", root / OUT_ROOT / f"web_check_{bid}.jpg",
                  root / OUT_ROOT / f"web_check_{bid}_street.png"):
         if cand.exists():
             walk_img = cand
@@ -192,7 +194,7 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             "gray_faces": [e["face"] for e in elevs if e["state"] == "unknown"], "summary": es}
 
     return {"id": bid, "name": b.get("name") or bid, "campus": b.get("campus"), "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "photos": photos, "elev": elevs, "evidence": evidence, "model": model, "walk": walk, "rest": rest,
+            "photos": photos, "elev": elevs, "sheet": sheet, "evidence": evidence, "model": model, "walk": walk, "rest": rest,
             "summary": es, "history_n": len(b.get("history", []))}
 
 
@@ -298,7 +300,7 @@ h2 .n{color:var(--ink3);font-size:15px;font-weight:400;font-variant-numeric:tabu
 .status{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;color:#fff;vertical-align:middle;margin-left:6px}
 .status.done{background:var(--done)}.status.partial{background:var(--partial)}.status.todo{background:var(--todo)}
 figure{margin:0 0 20px}figcaption{color:var(--ink2);font-size:14px;line-height:1.6;margin-top:6px}
-.fig-wide{margin-left:-24px;margin-right:-24px}@media(min-width:1240px){.fig-wide{margin-left:0;margin-right:-120px}}
+.fig-wide{margin-left:-24px;margin-right:-24px}@media(min-width:1440px){.fig-wide{margin-left:0;margin-right:-120px}}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
@@ -397,7 +399,12 @@ def render(d: dict, out_html: Path) -> str:
     parts.append("<div class='facechips'>面ごとの枚数：" + " ".join(f"<span>{_e(k)} <b>{v}</b></span>" for k, v in p["faces"][:14]) + "</div></section>")
 
     # 2 立面図
-    parts.append(head(2, "elev", "立面図（根拠の色付き）", "黒＝実測（根拠の写真番号あり）、琥珀の破線＝推定（方法を書いた）、赤の破線＝不明（値は無い）"))
+    parts.append(head(2, "elev", "立面図", "四面図は形、色付き立面は どこまで信じてよいか"))
+    if d.get("sheet"):
+        parts.append(f"<figure class='fig-wide'>{_img(d['sheet'], base, '四面図・屋根伏せ・鳥瞰')}<figcaption>四面図・屋根伏せ・鳥瞰（棟 JSON から自動生成）。"
+                     "線＝JSON の値、仮置きの値は模型を立てるための置き値</figcaption></figure>")
+    parts.append("<h3 style='font-size:18px;margin:26px 0 2px'>面ごとの根拠（色付き立面）</h3>"
+                 "<p class='small' style='margin:0'>黒＝実測（根拠の写真番号あり）、琥珀の破線＝推定（方法を書いた）、赤の破線＝不明（値は無い）</p>")
     parts.append('<div class="legend"><span><i class="dot measured"></i>実測 measured</span><span><i class="dot estimated"></i>推定 estimated</span><span><i class="dot unknown"></i>不明 unknown</span></div>')
     shown = [e for e in d["elev"] if e["svg"] is not None]
     for e in shown[:2]:
@@ -486,9 +493,14 @@ def render(d: dict, out_html: Path) -> str:
 
 # --- 入口 ---------------------------------------------------------------------------------
 
-def run(building_json: Path, out: Path | None = None, root: Path = Path(".")) -> dict:
-    """root はリポジトリの場所（API の pipeline は cwd を渡す）。索引・台帳・敷地・生成物は root の下から読む。"""
+def run(building_json: Path, out: Path | None = None, root: Path = Path("."), shots: bool = False) -> dict:
+    """root はリポジトリの場所（API の pipeline は cwd を渡す）。索引・台帳・敷地・生成物は root の下から読む。
+    shots=True なら先に証拠ビューアと歩く画面の絵を撮る（recorder.shots。撮れなくても報告は出す）。"""
     b = load_building(building_json)
+    shot_res = None
+    if shots:
+        from .shots import all_shots
+        shot_res = all_shots(b["id"], building_json=building_json, root=root)
     out_dir = root / OUT_ROOT / b["id"]
     out_html = out or (out_dir / "report.html")
     index_path, reg_path, site_path = root / INDEX_PATH, root / R_.REGISTRY_PATH, root / WEB_SITE
@@ -503,6 +515,8 @@ def run(building_json: Path, out: Path | None = None, root: Path = Path(".")) ->
             "stages": {k: {"status": s, "result": r} for k, (s, r) in st.items()},
             "counts": {"photos": d["photos"]["total"], "registered": d["evidence"]["registered"], **{k: d["evidence"]["total"].get(k, 0) for k in STATUS_JA},
                        "requests": len(d["rest"]["requests"]), "unknowns": len(d["rest"]["unknowns"])}}
+    if shot_res is not None:
+        summ["shots"] = shot_res
     (out_dir / "report.json").write_text(json.dumps(summ, ensure_ascii=False, indent=1), encoding="utf-8")
     return summ
 
@@ -510,10 +524,14 @@ def run(building_json: Path, out: Path | None = None, root: Path = Path(".")) ->
 def add_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("file", help="棟 JSON（data/buildings/<棟>.json）")
     p.add_argument("--out", default=None, help="出力 HTML（既定 out/<棟>/report.html）")
+    p.add_argument("--shots", action="store_true", help="先に証拠ビューアと歩く画面の絵を撮る（recorder shots）")
 
 
 def run_cli(a: argparse.Namespace) -> int:
-    s = run(Path(a.file), Path(a.out) if a.out else None)
+    s = run(Path(a.file), Path(a.out) if a.out else None, shots=getattr(a, "shots", False))
+    if s.get("shots"):
+        from .shots import print_result
+        print_result(s["shots"])
     print(s["html"])
     for k, title, _ in STAGES:
         st = s["stages"][k]
