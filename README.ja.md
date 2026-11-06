@@ -81,6 +81,10 @@ flowchart LR
 | PoseLib（点＋線）や GeoCalib の重力の事前値は OpenCV の PnP に勝つか | **6 点以上あれば差なし**（3 条件とも中央値 0.41 m）。**GeoCalib は 3 点の時だけ効く**（0.43 m。無しだと最悪 33.5 m）。3 点＋線 2 本なら門を通る。本番のタワー75 では新たに通った写真は無く、1 枚増えた「合格」は目視で偽と分かった。既定は OpenCV のまま | [`docs/実験_登録の3条件_11-06.md`](docs/実験_登録の3条件_11-06.md) |
 | 零ショットの窓検出（Grounding DINO）で係の目印探しを肩代わりできるか | **一部。** 本部棟 F1 0.58（視点が怪しい 3 枚を除くと 0.67）、1 枚 1.6 秒。タワー75 は再現率ほぼ 0（窓の列を 1 本の帯と取る）。検出が模型の誤り 2 件を見つけた | [`docs/実験_窓の自動検出_11-06.md`](docs/実験_窓の自動検出_11-06.md) |
 | 学習済みの特徴点（ALIKED＋LightGlue）で一括復元の割れは直るか | **塊は減る（タワー75 で 7 → 2）が正しく乗った写真は 0。** 柄の同じ反対側の面を同じ所とつなぎ、合わせが 170〜178° 裏返る。誤った 12 枚を通してしまったので向きの門（30° 以内）を足した | [`docs/実験_一括復元の特徴点_11-06.md`](docs/実験_一括復元の特徴点_11-06.md) |
+| 線の目印（帯・窓の列・面の端）で、高さの散らばり不足で落ちた写真は救えるか | **一部。** 落ちた 11 枚に Claude の係 2 本が点＋線を指し、道具の合格 8。目視と整合で採ったのは **3 枚**（登録 32 → 35）。2 枚は上端の目印だけではカメラの高さが決まらず保留（16 秒差で同じ場所の 3 枚が 1.8／7.2／9.0 m に解けた）、1 枚は E 面の模型を直すまで保留 | [`docs/実験_登録の3条件_11-06.md`](docs/実験_登録の3条件_11-06.md)、`data/photos/registry.json` の `not_registered` |
+| 単眼の実寸の深さ（Depth Pro・Depth Anything V2）は第二の物差しになるか | **不可。** Depth Pro は真の距離の 0.43 倍（写真間の散らばり 27 %、遠いほど短い）。DA2-Small は 1.03 倍だが散らばり 54 %。台帳の視点の方が正しいことは柱の幅と塔の高さで確認。写真の中の相対の深さは 10 % 程度でそろうので、隠れた目印探しには使えるかもしれない | [`docs/実験_単眼の深さ_11-06.md`](docs/実験_単眼の深さ_11-06.md) |
+| 根拠を「しまう」だけでなく「見せる」ことはできるか | **可。** `recorder evidence` が Rerun の `.rrd` を出す：模型、登録済みの写真を解いた視点に、目印の対応と点ごとの再投影の残差、面ごとの measured／estimated／unknown の件数。デスクトップでも Web のビューアでも開ける | [`docs/実験_証拠ビューア_11-06.md`](docs/実験_証拠ビューア_11-06.md) |
+| 写真を貼らずに歩く画面の見た目を上げられるか | **予算内で可。** 敷地の緯度と時刻からの物理的な空、段階的な影、PC では接触影。全部 three.js 付属（MIT）。影の部品を束ねて描画命令 43k → 5.8k。FPS は前 → 後で PC 23.6 → 29.3、スマホ幅 34 → 62（headless の計測、本物のスマホではない）。旧の見た目は `?look=0` | [`docs/実験_歩く画面の見た目_11-06.md`](docs/実験_歩く画面の見た目_11-06.md) |
 
 ## セットアップと使い方
 
@@ -130,6 +134,7 @@ PC は WASD とドラッグ、スマホは左のスティックで移動・ド�
 - **CC0 の素材**（空・光・質感）。`{{TBD}}`：実際に使った物を列挙。
 - **CC0 アセット（Poly Haven / Kenney）**：一覧（出典 URL・ライセンス・SHA256）は `data/assets/catalog.json`。CC0-1.0 だけを入れます（CC-BY も入れない）。借りるのは見た目だけで、位置・個数・大きさは棟 JSON の根拠付きの値です。ファイルは `python -m recorder assets fetch` で `assets/` に取ります（リポジトリには入れない）。
 - **2026-11-06 に試した公開ライブラリ**（データではなくコードの依存。上の「試した事と結果」参照）：[PoseLib](https://github.com/PoseLib/PoseLib)（BSD-3）、[GeoCalib](https://github.com/cvg/GeoCalib)（Apache-2.0）、[Grounding DINO](https://github.com/IDEA-Research/GroundingDINO)（Hugging Face transformers 経由、Apache-2.0、`grounding-dino-tiny`）、[LightGlue](https://github.com/cvg/LightGlue)（Apache-2.0）＋ALIKED（BSD-3）。学習済みの重みはローカルのキャッシュに落ち、リポジトリには入れていません。SuperPoint・MASt3R/DUSt3R・VGGT の元の重みは非商用や独自の許諾のため使っていません。
+- **同じ日にほかに試した物**：[Rerun](https://github.com/rerun-io/rerun)（`rerun-sdk`、MIT/Apache-2.0、証拠ビューア）、[Depth Pro](https://github.com/apple/ml-depth-pro)（Apple のサンプルコード許諾。重みはリポジトリに入れない）と [Depth Anything V2 Metric Small](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf)（Apache-2.0、深さの実験）、three.js 付属の `Sky`・`CSM`・`GTAOPass`・`SMAAPass`（MIT、歩く画面）。
 - **名城大学の許可（2026-11-04、広報部門）**：公式サイトのキャンパス図・フロアガイドは「トレースして活用」の範囲で使用可、自分で撮った写真の公開可。条件は、研究・研究室に関する物（誰の・どんな研究室・研究内容が分かる写真）を撮らないこと。記録は `data/reference/index.json`。
   - 本作では自主ルールとして、図は建物の名称・有無・大まかな位置の確認にだけ使い、形・寸法は写真と PLATEAU・OSM から起こしています（根拠を写真に置くため）。図そのものはリポジトリに入れていません（`data/reference/` は git 管理外）。
 

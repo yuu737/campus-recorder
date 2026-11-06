@@ -33,6 +33,8 @@
   #evlegend { display:none; margin-top:4px; }
   .evmode #evlegend { display:block; }
   .sw.hyp { background:repeating-linear-gradient(45deg, #f2c94c 0 3px, #8a6d12 3px 5px); }
+  #fps { top:max(10px, env(safe-area-inset-top)); right:10px; font-variant-numeric:tabular-nums; display:none; white-space:pre; font-size:12px; }
+  .showfps #fps { display:block; }
   #loading { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:var(--bg); font-size:16px; z-index:5; }
 </style>
 <script type="importmap">
@@ -64,6 +66,7 @@
   </div>
 </div>
 <div id="card" class="panel"></div>
+<div id="fps" class="panel"></div>
 <div id="msg" class="panel">WASD とドラッグで歩く ／ 棟をクリックで札</div>
 <div id="stick"><div id="knob"></div></div>
 
@@ -78,13 +81,18 @@ import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 //   size=1400x1000           描画の大きさを固定（Blender の描画と同じ縦横比で比べる）
 //   ui=0                     札や案内を隠す
 //   exp=1 env=0.8 sun=2.2    露出・環境光（HDRI）の強さ・太陽の強さ
-//   tm=neutral|aces          トーンマッピング（既定 neutral＝Blender の Khronos PBR Neutral と同じ式）
+//   tm=neutral|aces|agx      トーンマッピング（旧の既定 neutral＝Blender の Khronos PBR Neutral と同じ式、新の既定 agx）
+//   look=0                   旧の見た目（HDRI の空＋平行光 1 枚）。既定は新（look.js：物理的な空・CSM の影・接触影・霞）
+//   t=10|16|10:30            新の見た目の時刻（日本時間、既定 10。日付は d=2026-11-06）。太陽の向きと空の色が変わる
+//   fps=1                    5 秒ごとの平均 FPS を右上に出す（window.__fps にも）
 const Q = new URLSearchParams(location.search);
 const qnum = (k, d) => { const v = parseFloat(Q.get(k)); return Number.isFinite(v) ? v : d; };
 const camQ = (Q.get("cam") || "").split(",").map(Number);
 const fixedCam = camQ.length === 6 && camQ.every(Number.isFinite) ? camQ : null;
 const sizeQ = (Q.get("size") || "").match(/^(\d+)x(\d+)$/);
 if (Q.get("ui") === "0") document.body.classList.add("noui");
+const LOOK = Q.get("look") !== "0";
+if (Q.get("fps") === "1") document.body.classList.add("showfps");
 
 const EYE = 1.6, SPEED = 5.0;
 const touchDevice = matchMedia("(pointer:coarse)").matches || "ontouchstart" in window;
@@ -136,6 +144,7 @@ async function loadEnv(env) {
   } catch (e) { console.error("HDRI 読み込み失敗", e); }
 }
 
+let lookFx = null;                                     // 新の見た目（look.js）。模型を読み終えてから作る
 function resize() {
   let w = innerWidth, h = innerHeight;
   if (sizeQ) {                                         // 決めた大きさ（画面に収まるよう縮める）
@@ -144,6 +153,7 @@ function resize() {
     canvas.style.width = w + "px"; canvas.style.height = h + "px";
   }
   renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  if (lookFx) lookFx.resize(w, h);
 }
 addEventListener("resize", resize); resize();
 
@@ -194,7 +204,7 @@ vec3 kindColor(int k, vec3 a, vec3 p) {    // 0 unknown 1 asphalt 2 paving 3 gra
   diffuseColor.rgb *= gc;`);
   };
 }
-const envReady = loadEnv(site.env);
+const envReady = LOOK ? Promise.resolve() : loadEnv(site.env);   // 新の見た目は HDRI を使わない（空は look.js が作る）
 const G = site.ground;
 // データは x=東, y=北, z=標高。three.js は (x, 標高, -北)。glb は最初から この向き。
 
@@ -314,6 +324,7 @@ function setEvidence(on) {
       o.material = o.userData.origMat;
     }
   });
+  if (lookFx) lookFx.prepare();
 }
 document.getElementById("evbtn").addEventListener("click", () => setEvidence(!evOn));
 // 室内の明かり：部屋の中（roomBoxes）にいる間だけ点ける半球光（天井に遮られて日が入らないので真っ暗にならないように）
@@ -490,13 +501,37 @@ function frame() {
   camera.rotation.set(pitch, yaw, 0);
   sunFollow(camera.position);
   roomLight.intensity = roomBoxes.some((bx) => bx.containsPoint(camera.position)) ? qnum("room", 1.6) : 0;
-  renderer.render(scene, camera);
+  if (lookFx) lookFx.render(); else renderer.render(scene, camera);
+  fpsTick();
   requestAnimationFrame(frame);
+}
+// FPS：5 秒ごとの平均（requestAnimationFrame の回数 ÷ 経過時間）。?fps=1 で右上に出す
+const fpsEl = document.getElementById("fps");
+const fpsM = { n: 0, t0: 0, windows: [] };
+function fpsTick() {
+  const now = performance.now();
+  if (!fpsM.t0) { fpsM.t0 = now; return; }
+  fpsM.n++;
+  if (now - fpsM.t0 < 5000) return;
+  const v = fpsM.n * 1000 / (now - fpsM.t0);
+  fpsM.windows.push(+v.toFixed(1)); fpsM.n = 0; fpsM.t0 = now;
+  const c = renderer.domElement;
+  fpsEl.textContent = `${v.toFixed(1)} FPS（5 秒平均）\n${c.width}×${c.height} px・${LOOK ? "新" : "旧"}` +
+    (lookFx && lookFx.info.cut.length ? `\n切った物：${lookFx.info.cut.join("、")}` : "");
+}
+window.__fps = fpsM;
+if (LOOK) {
+  try {
+    const { setupLook } = await import("./look.js");
+    lookFx = setupLook({ renderer, scene, camera, sun, Q, mobile: touchDevice || innerWidth < 768,
+                       lat: 35.1355, lon: 136.9755, materials: Object.values(EV_MAT), onResize: resize });
+    resize();
+  } catch (e) { console.error("新の見た目の準備に失敗（旧の見た目で続ける）", e); lookFx = null; sun.visible = sun.castShadow = true; loadEnv(site.env); }
 }
 await envReady;
 document.getElementById("loading").style.display = "none";
 frame();
-window.__campus = { dbg, camera, player, place, pick, centers, renderer, scene, sun, setEvidence };   // 動作確認用
+window.__campus = { dbg, camera, player, place, pick, centers, renderer, scene, sun, setEvidence, look: () => lookFx };   // 動作確認用
 </script>
 </body>
 </html>

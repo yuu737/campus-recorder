@@ -231,6 +231,11 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--no-register", action="store_true", help="台帳に書かない（結果と重ね画像だけ）")
     q.add_argument("--truth", action="store_true", help="登録済みの写真も試し、既知の視点との差を出す（台帳は書かない）")
     q.add_argument("--registry", default=None)
+    q = psub.add_parser("depth", help="写真 1 枚の深さ m（Depth Pro か Depth Anything V2 Small）→ out/<棟>/depth/。--eval で登録済みの写真で評価")
+    q.add_argument("building", help="棟 JSON")
+    q.add_argument("--photos", default=None, help="写真 id（カンマ区切り）")
+    q.add_argument("--model", default="depth_pro", choices=["depth_pro", "da2_small"])
+    q.add_argument("--eval", action="store_true", help="台帳の登録済みの写真全部で評価し out/experiments/depth_eval.json に書く")
     q = psub.add_parser("roof", help="航空写真（国土地理院 z18）で屋上の縁・倒れ込み・設備を読む")
     q.add_argument("building", help="棟 JSON")
     q.add_argument("--out-dir", default=None, help="roof.json・roof_aerial.png の出力先（省略時は out/<棟id>/）")
@@ -308,6 +313,12 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--kind", default=None, choices=["model", "texture", "hdri"])
     q = xsub.add_parser("fetch")
     q.add_argument("ids", nargs="*")
+
+    # 証拠ビューア（Rerun の .rrd。11/6 追加。ここ 1 か所で引数と実行をまとめる）
+    from . import evidence as _evidence
+    _evidence.add_args(sub.add_parser("evidence", help="写真の視点・目印の対応・再投影・根拠の件数を Rerun の .rrd に（out/<棟>/evidence.rrd）"))
+    if (sys.argv[1:] if argv is None else list(argv))[:1] == ["evidence"]:
+        return _evidence.run_cli(ap.parse_args(argv))
 
     a = ap.parse_args(argv)
 
@@ -855,6 +866,20 @@ def _photos(a) -> int:
         for pid, (code, why) in sorted(res["failed"].items()):
             print(f"  {pid[:40]:<40} {why}")
         print(f"台帳: {rp}")
+        return 0
+    if a.photos_cmd == "depth":
+        from . import depth
+        from .schema import load_building
+
+        bid = load_building(a.building)["id"]
+        if a.eval:
+            r = depth.evaluate([a.model])
+            m = r["models"][a.model]
+            print(f"{a.model}: {r['n_photos']} 枚 写真ごとの比の中央値 {m['grid']['photo_medians']} → {m['grid']['judge']}")
+        for ph in [x.strip() for x in (a.photos or "").split(",") if x.strip()]:
+            s = depth.predict(ph, a.model, bid)
+            print(f"{s['photo']}: 深さの中央値 {s['depth_m']['median']} m 焦点 {s['focal_px']} px（EXIF 比 {s['focal_ratio']}）"
+                  f" {s['seconds']} s {s['device']} → {s['npz']}")
         return 0
     if a.photos_cmd == "roof":
         from . import roof
