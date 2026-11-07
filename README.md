@@ -14,7 +14,7 @@ The repository was started on **2026-11-02** (first commit: 2026-11-02). All cod
 Only **photos taken during the period (11/3 to 11/5)** are used. During development (11/4 to 11/6) we also tried photos taken before the period as input data, as allowed by the official Q&A (Q2, Q3), but on 11/7 we decided not to use them and removed their records from the index and from the git history. See "Data and sources".
 `{{TBD}}`: confirm the Q&A wording before submission.
 
-Compared with the previous attempt: the author's earlier 3D model of the same campus took **one person about two months** (2026-08-20 to 10-31). This time, in the roughly six days of the event, 340 photos taken during the period become evidence-backed JSON for 3 buildings (main building, library, Tower 75). No code, dimensions, coordinates, models, images, or photos from the earlier work are used.
+Compared with the previous attempt: the author's earlier 3D model of the same campus took **one person about two months** (2026-08-20 to 10-31). This time, in the roughly six days of the event, 340 photos taken during the period become evidence-backed JSON for 4 buildings (main building, library, Tower 75, Kyotsu Lecture Building South). No code, dimensions, coordinates, models, images, or photos from the earlier work are used.
 
 ## Why
 
@@ -25,7 +25,7 @@ Compared with the previous attempt: the author's earlier 3D model of the same ca
 
 How this differs from scanning or AI generation: **it records, it does not generate.**
 - Every dimension is `measured` (with the ids of the photos it came from), `estimated` (the method and basis are written down), or `unknown` (value is null). A `measured` value with no evidence fails validation. Nothing is invented.
-- **What cannot be measured stays `unknown`, shown in gray, and the system returns a photo request** (as of 11/6: 44 unknown values, 83 photo requests), e.g. "the library's north-east face needs one photo that shows both ends of the wall, from the bottom of the slope". In a mock judging run (Claude as the judge, 4 rule variants × 2 rounds), this was the one point every judge praised.
+- **What cannot be measured stays `unknown`, shown in gray, and the system returns a photo request** (in the 11/7 dress rehearsal: 23 unknown values, 42 photo requests to staff), e.g. "the library's north-east face needs one photo that shows both ends of the wall, from the bottom of the slope". In a mock judging run (Claude as the judge, 4 rule variants × 2 rounds), this was the one point every judge praised.
 - The result sits on real map coordinates (JGD2011 / EPSG:6675), not in a free-floating scene.
 - One JSON file per building is the only source of truth. Drawings, the Blender model, and the photo overlays are all generated from it. Fix the JSON and everything is rebuilt.
 - Photos are never published. Only an index is kept in git.
@@ -79,14 +79,25 @@ Principle: **Claude judges, code measures.** Deterministic tools (`recorder`) re
 
 ## Results
 
-**Values as of 11/6, before pre-period photos and Building 11 were removed. They will be replaced after the 3 buildings are rebuilt from during-period photos only on 11/7.**
+**Values from the 11/7 dress rehearsal** (summary in Japanese: [`data/reports/疑似本番_11-07/結果.md`](data/reports/疑似本番_11-07/結果.md)).
+For the main building, the library and Tower 75, the previous results were set aside (`scripts/trial_reset.py --zero`) and each building was rebuilt from the photos and the building assignments only. Kyotsu Lecture Building South is the first building the tools and procedures built on the other three were applied to.
+The rehearsal ran the agents as Claude Code subagents; Opus 5.5 stood in as the coordinator (Fable is the coordinator in the real run).
 
-| Buildings with evidence-backed models | Photos used | `measured` values | `estimated` values | `unknown` values | Photo requests issued |
-|---|---|---|---|---|---|
-| 4 (main building, Tower 75, library, Building 11; the first three have photo-based `measured` values. Scope reduced to 3 buildings on 11/7) | 444 photos sorted to these 4 buildings (286 during the period, 158 before; the pre-period ones were removed on 11/7); 35 of them registered (camera solved, model overlaid; 2 of them pre-period) | 18 | 2,420 | 44 | 83 (79 still open) |
+| Building | Photos assigned to it | Photos with a solved camera | `measured` | `estimated` (of which hypothesis) | `unknown` | Share with a shape | Share with evidence | Open photo requests (to staff / to tools) |
+|---|---|---|---|---|---|---|---|---|
+| Main building | 88 | 36 | 5 | 458 (0) | 2 | 96.8 % | 1.1 % | 11 / 3 |
+| Library | 79 | 45 | 4 | 470 (4) | 2 | 100 % | 0.9 % | 7 / 5 |
+| Tower 75 | 131 | 89 | 6 | 1,294 (306) | 2 | 98.7 % | 0.5 % | 12 / 8 |
+| Kyotsu Lecture Bldg. South | 29 | 18 | 3 | 513 (78) | 17 | 89.3 % | 0.6 % | 12 / 5 |
+| Total | 327 | 188 | 18 | 2,735 (388) | 23 | | | 42 / 21 |
 
-Value counts grow with how finely the model is split (a band placed per floor and per column repeats one observation hundreds of times). **Excluding 2,010 copies, there are 472 independent observations**: counted by hand 11 / independent conversion 213 (5 of them `measured` lengths) / calculation or assumption 147 / by eye 65 / hypothesis 13 / unknown 23.
-Grouping is `python -I -X utf8 -m recorder counts data/buildings/*.json` (same status, method, evidence and value kind count as one). The split into conversion / calculation / by eye is a rough, mechanical split on the method text. Counted as values, "by eye" is 800: much of `estimated` is visual judgement (see "Honest limits").
+- **All 18 `measured` values are counts (floors, bays, units); there are no `measured` lengths.** None of the four buildings had a photo with a tape measure on the wall, so every scale went the `estimated` way, using a PLATEAU footprint edge or height as the reference length. Against a second ruler (tile courses, PLATEAU height, OSM edge) the difference is 0.1–5.5 %; Tower 75 differs from the OSM edges by −9 to −14 % and is left unresolved. Each building got one photo request for a tape-measure shot.
+- "Share with a shape" is the share of faces and parts that are not `unknown`; "share with evidence" is the share of values that are `measured` (procedure doc, "根拠の層"). The shape is almost complete, but only about 1 % of values have `measured` evidence.
+- Building assignments come from three sources: staff assignment (Tower 75: 102 photos, Kyotsu South: 29), the building set by the judging agent at intake on 11/3 (main building 61, library 27, Tower 75 29), and photos where staff only gave candidates ("library or main building") and an earlier sorting agent picked one (main building 15, library 52). The last two were not assigned by staff. This run's sorting agents assigned 12 more unassigned photos to the main building, and decided the face of every photo.
+- Value counts grow with how finely the model is split. **Excluding 1,521 copies, the independent observations are 18 `measured` / 1,232 `estimated` / 5 `unknown`** (`python -I -X utf8 -m recorder counts data/buildings/*.json`; same status, method, evidence and value kind count as one). No value has "by eye" as its only method.
+- Time: the four buildings ran in parallel; 7 h 52 min from the first agent (08:36) to the last report (16:28), including about 2 h 55 min stopped at the usage limit. The agents' times add up to 16 h 13 min, about 3.3 × the elapsed time without the stop.
+- Tokens (sum of each agent's final context size, a rough guide): about 13.3 M, 3.0–3.6 M per building. Cost will come from the SDK in the real API run and is not given here.
+- The rehearsal found 30 fixes for the real run, 23 still open. The largest: incident detection would stop the real pipeline on every building ("put this on the site" requests become vocabulary incidents; "stuck" after inspection is counted in individual lines). The full list is in the summary.
 
 ### What we tried, with numbers
 
@@ -149,7 +160,7 @@ Tests: `python -I -X utf8 -m pytest` (test files are in `tests/`).
 - **Photos taken before the period are not used (removed on 11/7).** During development (11/4 to 11/6) we tried 723 photos the author took before the period (2026-09-07 to 10-12), and the author's own classification ledger made at that time (which photo shows which building), as input data under the official Q&A (Q2, Q3). On 11/7 we decided that evidence comes only from photos taken during the period:
   - They were removed from the photo index, the registration ledger, and the building JSON (Building 11 was dropped from the scope because its only evidence was pre-period photos).
   - Their records were also removed from the git history. Where a photo name appeared in history, it is replaced with "期間前の写真（削除）" ("pre-period photo (removed)"). Commit dates and messages were not changed.
-  - The 3 building JSON files are rebuilt from during-period photos on 11/7. Until then, the main building's version still has values whose evidence was a pre-period photo, now named "期間前の写真（削除）" (`recorder validate` warns that the evidence is not in the index).
+  - In the 11/7 dress rehearsal the 3 building JSON files were set aside and rebuilt from during-period photos only (`scripts/trial_reset.py --zero`). None of the current 4 building JSON files has a value based on a pre-period photo (`recorder validate --strict`: 0 warnings for all 4).
   - Mentions of pre-period photos in `docs/日誌.md` and the experiment notes are records of the work at that time.
 - **PLATEAU** (MLIT Japan, Nagoya 2022): building footprints and heights, used only as a base and overwritten by photo evidence.
 - **OpenStreetMap** (roads, boundaries, building names). `{{TBD}}`: attribution text (ODbL).
@@ -164,9 +175,9 @@ Tests: `python -I -X utf8 -m pytest` (test files are in `tests/`).
 
 ## Honest limits
 
-- Many values are `estimated` (visual judgement with the method written down), not surveyed. Only dimensions with a measurable basis are `measured`. Of the 472 independent observations, 65 are by eye and 147 are calculations or assumptions.
-- Buildings with many `unknown` values stay gray boxes with photo requests. Some details are provisional: Tower 75's upper corner setbacks, recess depth, podium shape, and bridge height are not measured.
-- Of the main building, only one face is cross-checked with three photos; other faces are visual estimates.
+- Many values are `estimated` (converted from photo pixels and a reference length, from ratios, or by eye, with the method written down), not surveyed. Only dimensions with a measurable basis are `measured`. In the 11/7 dress rehearsal, 18 of the 1,255 independent observations are `measured`, and all of them are counts (floors, bays). With no tape-measure photo, every length is `estimated`.
+- `unknown` faces stay gray and hypothesis faces striped, with photo requests. Most of Tower 75's north and south faces and corners are hypotheses (same block, symmetry); the library's entrance canopy depth (f2) and the middle of f3, the wing junction on the main building's f5, and Kyotsu South's courtyard faces and four unphotographed faces wait for photos.
+- 17 faces across the 4 buildings pass the re-inspection (model lines within 0.15 m of photo edges): main building 4, library 2, Tower 75 6, Kyotsu South 5. The other faces are estimates from one or two photos, or wait for re-registration or new photos.
 - No collision detection in the viewer. No trees yet. Materials and lighting are a first pass.
 - Inspection works only for faces that could be rectified; oblique-only faces need rectification first.
 - Tool bugs found during use are kept in `docs/日誌.md`. `{{TBD}}`: final known-issues list.

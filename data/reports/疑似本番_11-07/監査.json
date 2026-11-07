@@ -5,8 +5,31 @@
   "at": "2026-11-07T08:33:53+09:00",
   "note": "準備のコミット（6ac7f69）の直後、trial_reset --zero の前"
  },
- "end": null,
- "diff_stat": null,
- "worktree_diff": null,
- "touched_rules": null
+ "end": {
+  "head": "da71ddbbb18a6439c06f51b6ee3fb4d2684aa2ad",
+  "at": "2026-11-07T16:29:53+09:00",
+  "note": "4 棟の最後のコミット（tower75）の直後。この後のコミットは記録（data/reports/疑似本番_11-07/）・tower75 の pipeline の web の 1 行・README だけ"
+ },
+ "diff_stat": {
+  "command": "git diff --stat 6ac7f69 -- recorder scripts tests web CLAUDE.md .claude/agents data/rulers.json data/vocab.json docs/手順_エージェント.md data/decisions.json",
+  "files": {
+   "data/decisions.json": "33 +-",
+   "scripts/design_honbu.py": "2168 +-（--zero で退避された旧版との差。新しい版は設計係・検収係が一から書いた）",
+   "scripts/design_kyotsu-minami.py": "1046 +（新規）",
+   "scripts/design_library.py": "1296 +-（同上）",
+   "scripts/design_tower75.py": "2142 +-（同上）"
+  },
+  "total": "5 files changed, 4377 insertions(+), 2308 deletions(-)"
+ },
+ "worktree_diff": "終わりの時点の作業ツリーの差分：data/reports/tower75/pipeline_20261107_084015.json（web の工程の 1 行）と、この記録のフォルダだけ。web/data/site.json・out/ は git 管理外",
+ "touched_rules": {
+  "value": false,
+  "files": [],
+  "note": "recorder/・tests/・web/（git の管理下）・CLAUDE.md・.claude/agents/・data/rulers.json・data/vocab.json・docs/手順_エージェント.md の差分は 0。scripts/ の差分は design_<棟>.py の 4 本だけで、手順で設計係・検収係が書く場所（道具のコードではない）。進行役は design スクリプトにも棟 JSON にも書いていない。data/decisions.json の差分は ①trial_reset --zero が台帳を空にした（手順 0 の 4）②recorder agent decide の 2 件（D-0001 初期語彙の再承認＝K-001、D-0002 ピロティの長机の却下＝K-008）だけ"
+ },
+ "notes": [
+  "設計係の棟 JSON の外の書き込み：共通講義棟南の目印係が棟 JSON の requests に 4 件を直接足した（design スクリプトの外、詰まり J-023）。検収係が design スクリプトに写したので、最終の棟 JSON は design スクリプトの生成物と一致",
+  "共有の台帳（索引・登録台帳・決定・敷地 JSON）を道具の外で書いた形跡は無い（係の報告と台帳の件数の推移で確認。索引 340 枚・登録は増える一方）",
+  "進行役は係の依頼文をそのまま渡した（先頭に「読まない物」の一文）。追加の指示を渡したのは決定を渡した 3 回だけ（K-005 図書館の設計係、K-015 共通講義棟南の検収係、使用量の上限からの再開 4 本）"
+ ]
 }

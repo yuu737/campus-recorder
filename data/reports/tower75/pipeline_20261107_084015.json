@@ -404,10 +404,34 @@
    "outputs": [],
    "note": "recorder run（本番）OK（model 96 s）。警告 1（f15 の ground_offset）。measured 6・estimated 1271・unknown 2、撮影依頼 open 26",
    "logged_at": "2026-11-07T16:26:21"
+  },
+  {
+   "agent": "seizu",
+   "step": "web",
+   "model": "code",
+   "seconds": 2.0,
+   "tokens": null,
+   "input_tokens": null,
+   "output_tokens": null,
+   "cost_usd": null,
+   "cost_usd_estimate": null,
+   "started_at": "2026-11-07T16:26:29",
+   "ended_at": "2026-11-07T16:26:31",
+   "attempt": 1,
+   "result": "ok",
+   "tool_uses": null,
+   "lock_wait_s": {
+    "ledger": 0.0,
+    "gpu": 0.0,
+    "n": 0
+   },
+   "outputs": [],
+   "note": "recorder site export-web --with-coverage（4 棟で 1 回の共通の書き出し。記録はこの列にだけ書く）：箱 75、模型 4 棟、地面格子 394×628",
+   "logged_at": "2026-11-07T16:26:39"
   }
  ],
  "stopped_early": false,
- "seconds_total": 15061.0,
+ "seconds_total": 15063.0,
  "cost_usd_estimate": null,
  "made_at": "2026-11-07T08:40:15",
  "tokens_total": 3263253,
@@ -415,5 +439,5 @@
   "ledger": 449.49,
   "gpu": 342.38
  },
- "wall_seconds": 28211.0
+ "wall_seconds": 28238.0
 }

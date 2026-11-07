@@ -616,6 +616,27 @@
     "proposal": "本番の API では SDK の usage（input・output・cache の各トークン）を呼び出しごとに足し、費用も出す。Claude Code の疑似本番の数字は目安として README に断り書き"
    },
    "status": "open"
+  },
+  {
+   "id": "J-030",
+   "at": "2026-11-07T16:28:03+09:00",
+   "building": "all",
+   "step": "5 終わり（report --shots）",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "recorder report --shots の証拠ビューア・歩く画面の絵が撮れない：「RuntimeError: headless の Edge が DevTools の口を開かなかった」。03:17 から残っていた headless の Edge 2 つ（probe の profile）を終了してから 1 回やり直しても同じ",
+   "evidence": [
+    "recorder report data/buildings/honbu.json --shots の出力（16:26・16:27 の 2 回）",
+    "Get-CimInstance msedge.exe --headless：PID 35768・20036（03:17:25 起動、probe_1sab5sip）を終了"
+   ],
+   "action": "skip",
+   "effect": "4 棟の報告は絵なし（evidence_*.png・walk.png が無い段は既存の生成物だけ）。報告の 6 段の結果は出ている",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/shots.py（CDP の起動）",
+    "proposal": "DevTools の口の待ちを長くし、--remote-debugging-port を固定でなく 0（自動）にして DevToolsActivePort を読む。起動に失敗した時の Edge の標準エラーを報告に残す。本番の前に 1 回 shots だけを試す"
+   },
+   "status": "open"
   }
  ]
 }
