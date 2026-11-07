@@ -249,17 +249,23 @@
   }
 
   function buildElev(A) {
+    // 最初に四面図・屋根伏せ・鳥瞰のシート（sheet.png、棟 JSON から自動生成）を全体で見せ、その後に面ごとの立面図 SVG を順に
     const w = el("div", "elevwrap"), tabs = el("div", "facetabs");
     const list = A.elev;
-    list.forEach(e => tabs.appendChild(el("span", "", esc(e.face))));
+    const items = (A.sheet ? [{src: A.sheet, face: "四面図", name: "四面図・屋根伏せ・鳥瞰（棟 JSON から自動生成）", sheet: true}] : [])
+      .concat(list.map(e => ({src: e.svg, face: e.face, name: e.name})));
+    items.forEach(e => tabs.appendChild(el("span", "", esc(e.face))));
     const host = el("div", "", ""); host.style.cssText = "position:absolute;inset:0 0 26px 0;display:flex;align-items:center;justify-content:center";
     w.append(host, tabs);
-    const tl = list.map((e, i) => [i / list.length, () => {
-      host.innerHTML = ""; const im = el("img"); im.src = u(e.svg); im.alt = ""; host.appendChild(im);
+    const SHEET = A.sheet ? 0.4 : 0;                      // シートに場面の 4 割
+    const at = i => (!A.sheet ? i / items.length : i === 0 ? 0 : SHEET + (1 - SHEET) * (i - 1) / Math.max(1, list.length));
+    const tl = items.map((e, i) => [at(i), () => {
+      host.innerHTML = ""; const im = el("img"); im.src = u(e.src); im.alt = ""; im.style.cssText = "max-width:100%;max-height:100%;object-fit:contain"; host.appendChild(im);
       tabs.querySelectorAll("span").forEach((s, j) => s.classList.toggle("on", j === i));
-      setFoot(`<b>${esc(e.face)}</b>　${esc(e.name || "")}　（根拠の色：実測・推定・不明）`);
+      setFoot(e.sheet ? `<b>四面図</b>　${esc(e.name)}　＝ 図面は全部、棟 JSON から道具が描く（手で直さない）`
+        : `<b>${esc(e.face)}</b>　${esc(e.name || "")}　（根拠の色：実測・推定・不明）`);
     }]);
-    return {el: w, foot: "", tl, dur: Math.max(6, Math.min(12, list.length * 1.1))};
+    return {el: w, foot: "", tl, dur: Math.max(8, Math.min(14, (A.sheet ? 4 : 0) + list.length * 1.1))};
   }
 
   function buildBoard(A) {
