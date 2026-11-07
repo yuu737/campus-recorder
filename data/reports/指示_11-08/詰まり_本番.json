@@ -1,0 +1,47 @@
+{
+ "about": "本番（API）の 1 回目：本部棟の追記（recorder agent continue honbu --photos メジャー/本部棟_honbu --max-usd 20）が 2 回止まり、人が resume を打った記録。形は data/reports/疑似本番_11-07/詰まり.json と同じ。1 回目の状態は trial/honbu_api_try1/ に退避（git 管理外）",
+ "jams": [
+  {
+   "id": "J-101",
+   "at": "2026-11-08T03:12:47+09:00",
+   "building": "honbu",
+   "step": "撮影係（satsuei）",
+   "agent": "satsuei (Haiku)",
+   "kind": "tool_error",
+   "symptom": "SDK の呼び出しが CLIJSONDecodeError: JSON message exceeded maximum buffer size of 1048576 bytes で落ちた。写真を Read した道具の結果が 1 通 1 MB を超えた",
+   "evidence": ["out/honbu/pipeline_state.json の stopped（reason crash）", "data/reports/honbu/pipeline_20261108_031149.json"],
+   "action": "fix_tool + 人が resume",
+   "effect": "値・形への影響なし。この呼び出しの費用は SDK から返らず、道具の合計に入っていない",
+   "fix_for_honban": {"target": "tool", "where": "recorder/agents.py の _invoke（ClaudeAgentOptions）", "proposal": "max_buffer_size を 32 MB に（SDK_MAX_BUFFER_SIZE）"},
+   "status": "fixed"
+  },
+  {
+   "id": "J-102",
+   "at": "2026-11-08T03:24:06+09:00",
+   "building": "honbu",
+   "step": "測量係（sokuryo）",
+   "agent": "sokuryo (Opus)",
+   "kind": "tool_error",
+   "symptom": "測量係が 1 回の呼び出しの手数の上限 30 に当たり ResultError: Reached maximum number of turns (30) で止まった。途中の結果（sokuryo_f6.json・sokuryo_chain_f6.json・sokuryo_tape_*.json）は残った。工程は止まり、人が resume を打つ必要があった",
+   "evidence": ["out/honbu/pipeline_state.json の stopped（reason crash, step sokuryo）", "data/reports/honbu/sokuryo_f6.json"],
+   "action": "fix_tool",
+   "effect": "値・形への影響なし（棟 JSON はまだ書かれていない）",
+   "fix_for_honban": {"target": "tool", "where": "recorder/agents.py（工程ループ・run_agent・係ごとの上限）", "proposal": "落ちた・手数の上限・予算の上限・429 で止まったら同じ会話の続きから自動で再開（工程ごとに 2 回まで、費用の上限の内、3 回目は止めて事件）。測量・設計・検収の Opus の max_turns を 30→60"},
+   "status": "fixing"
+  },
+  {
+   "id": "J-103",
+   "at": "2026-11-08T03:24:06+09:00",
+   "building": "honbu",
+   "step": "費用の記録",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "SDK は error の ResultMessage を返した後に例外を投げるが、道具は例外の時に結果を捨てていたため、止まった呼び出しの費用が spent_usd に入らず、棟の費用の上限（20 USD）の計算から漏れていた。道具の記録 0.48 USD に対し、API 画面の今月の使用額は 1.51 USD（差 1.03 USD が J-101・J-102 の取れなかった分）",
+   "evidence": ["out/honbu/pipeline_state.json の spent_usd 0.477008", "API 画面（利用者のスクリーンショット、2026-11-08 早朝）今月の使用額 $1.51"],
+   "action": "fix_tool",
+   "effect": "上限が実際より甘く効く恐れ。値・形への影響なし",
+   "fix_for_honban": {"target": "tool", "where": "recorder/agents.py の _invoke と run_agent の except", "proposal": "届いた ResultMessage を取っておき、例外の時もその費用・トークン数・手数を記録と spent_usd に入れる"},
+   "status": "fixed"
+  }
+ ]
+}

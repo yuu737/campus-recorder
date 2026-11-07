@@ -27,6 +27,17 @@ LIMITS = {
     "opus": {"max_turns": 30, "max_budget_usd": 4.0},
     "fable": {"max_turns": 20, "max_budget_usd": 6.0},      # 進行役。事件が起きた時だけ呼ぶ
 }
+# 係（工程）ごとの上書き（11/8、F13）。測量・設計・検収は写真を何枚も読むので手数 30 では足りず止まっていた → 60
+AGENT_LIMITS = {
+    "sokuryo": {"max_turns": 60},
+    "sekkei": {"max_turns": 60},
+    "kenshu": {"max_turns": 60},
+}
+
+
+def agent_limits(name: str, model: str) -> dict:
+    """係 1 回の上限：モデルの既定（LIMITS）に係ごとの上書き（AGENT_LIMITS）を重ねた物。"""
+    return {**LIMITS[model], **AGENT_LIMITS.get(name, {})}
 
 # 工程の順。seizu・seizu_final・web はコード（recorder.run / site.export_web を直接呼ぶ。API は使わない）
 # mejirushi（目印係）は模型ができた後（seizu の後）に、写真の視点を目印の対応で解いて登録する。検収係はその登録を使う
@@ -34,6 +45,8 @@ PIPELINE_STEPS = ["satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei"
                   "seizu_final", "web"]
 CODE_STEPS = {"seizu", "seizu_final", "web"}
 DEFAULT_MAX_USD = 20.0   # 棟ごとの費用の上限の既定（USD。CLI の --max-usd と職員の画面の既定。0 か None で上限なし）
+# SDK が CLI から受け取る 1 通の JSON の上限（既定 1 MB）。写真を Read した道具の結果は 1 MB を超えるので 32 MB に広げる
+SDK_MAX_BUFFER_SIZE = 32 * 1024 * 1024
 STEP_AGENT = {"seizu_final": "seizu", "web": "seizu"}     # 工程名 → 係の定義（記録の agent 名）
 
 
@@ -158,13 +171,17 @@ def _usage_tokens(usage: dict | None, model_usage: dict | None) -> tuple[dict, s
 
 class InvokeError(AgentError):
     """SDK の呼び出しが途中で落ちた。session_id（分かれば）を持つので、同じ会話の続きから再開できる。
-    rate_limited は 429・使用量の上限・混雑（529）の時 True（指数で待ってやり直す対象）。"""
+    rate_limited は 429・使用量の上限・混雑（529）の時 True（指数で待ってやり直す対象）。
+    result は落ちる前に SDK が ResultMessage を返していた時のその中身（費用・トークン数・turns。_invoke の返り値と同じ形）。
+    SDK は is_error の結果（max turns など）を yield してから例外を投げるので、その呼び出しの使用量を捨てないため。無ければ None。"""
 
-    def __init__(self, msg: str, *, session_id: str | None = None, rate_limited: bool = False, resets_at=None):
+    def __init__(self, msg: str, *, session_id: str | None = None, rate_limited: bool = False, resets_at=None,
+                 result: dict | None = None):
         super().__init__(msg)
         self.session_id = session_id
         self.rate_limited = rate_limited
         self.resets_at = resets_at
+        self.result = result
 
 
 _RATE_RE = re.compile(r"\b429\b|\b529\b|rate[_ ]?limit|overloaded|usage limit|5-hour limit|hit your .*limit", re.I)
@@ -188,9 +205,17 @@ def _invoke(spec: dict, task: str, cwd: Path, max_turns: int, max_budget_usd: fl
     opts = ClaudeAgentOptions(
         system_prompt=spec["system_prompt"], model=spec["model_id"], tools=spec["tools"], allowed_tools=spec["tools"],
         cwd=str(cwd), max_turns=max_turns, max_budget_usd=max_budget_usd, permission_mode="acceptEdits",
-        setting_sources=[], **kw,
+        setting_sources=[], max_buffer_size=SDK_MAX_BUFFER_SIZE, **kw,
     )
-    seen: dict = {"session_id": resume, "rejected": None}
+    seen: dict = {"session_id": resume, "rejected": None, "res": None, "text": ""}
+
+    def as_dict(res, text: str) -> dict:
+        toks, note = _usage_tokens(res.usage, getattr(res, "model_usage", None))
+        status = getattr(res, "api_error_status", None)
+        return {"text": res.result or text, **toks, "token_note": note,
+                "cost_usd": res.total_cost_usd, "turns": res.num_turns, "is_error": res.is_error,
+                "stop": res.terminal_reason or res.subtype, "session_id": res.session_id or seen["session_id"],
+                "api_error_status": status, "rate_limited": status in (429, 529) or bool(seen["rejected"])}
 
     async def go() -> dict:
         text, res = "", None
@@ -207,25 +232,23 @@ def _invoke(spec: dict, task: str, cwd: Path, max_turns: int, max_budget_usd: fl
                 t = "".join(b.text for b in m.content if isinstance(b, TextBlock))
                 if t:
                     text = t
+                    seen["text"] = t
             elif isinstance(m, ResultMessage):
                 res = m
+                seen["res"] = m          # この後に SDK が例外を投げても、費用・トークン数・turns を捨てない
         if res is None:
             raise InvokeError("結果が返りませんでした", session_id=seen["session_id"], rate_limited=bool(seen["rejected"]),
                               resets_at=seen["rejected"] if seen["rejected"] is not True else None)
-        toks, note = _usage_tokens(res.usage, getattr(res, "model_usage", None))
-        status = getattr(res, "api_error_status", None)
-        return {"text": res.result or text, **toks, "token_note": note,
-                "cost_usd": res.total_cost_usd, "turns": res.num_turns, "is_error": res.is_error,
-                "stop": res.terminal_reason or res.subtype, "session_id": res.session_id or seen["session_id"],
-                "api_error_status": status, "rate_limited": status in (429, 529) or bool(seen["rejected"])}
+        return as_dict(res, text)
 
     try:
         return asyncio.run(go())
     except InvokeError:
         raise
-    except Exception as e:  # noqa: BLE001  落ちた理由と会話の id を持って上へ
+    except Exception as e:  # noqa: BLE001  落ちた理由と会話の id（と、届いていた結果の使用量）を持って上へ
+        part = as_dict(seen["res"], seen["text"]) if seen["res"] is not None else None
         raise InvokeError(f"{type(e).__name__}: {e}", session_id=seen["session_id"],
-                          rate_limited=is_rate_limit(e) or bool(seen["rejected"])) from e
+                          rate_limited=is_rate_limit(e) or bool(seen["rejected"]), result=part) from e
 
 
 def load_prices(prices: dict | None = None) -> dict | None:
@@ -280,6 +303,46 @@ RETRY_BASE_S = 60.0      # 待ちは 60・120・240 秒（指数）
 _sleep = time.sleep      # 試験ではモックする
 RESUME_PROMPT = ("前の呼び出しは「{why}」で途中で止まりました。同じ依頼の続きから進めてください。"
                  "済んだ作業はやり直さず、出力のファイルを確かめてから足りない所だけ。依頼（もう一度）：{task}")
+# 係が自分で区切った印（上限の 8 割で途中の結果を保存して終える時、最後の返事の 1 行目に書く）。これがあれば工程は済んでいない
+CONTINUE_MARK = "【続きあり】"
+LIMITS_HEADER = ("【この呼び出しの上限】手数は {turns} 手まで。費用は {usd:.2f} USD まで（{left}）。{used}"
+                 "上限の 8 割（{t80} 手か {u80:.2f} USD）を使ったら、途中の結果をファイルに保存し、"
+                 "最後の返事の 1 行目を「" + CONTINUE_MARK + "」にして、残りの作業を箇条書きで書いて終える"
+                 "（自動の続きはその会話から始まる）。\n\n")
+
+
+def limits_header(max_turns: int, max_budget_usd: float, building_left_usd: float | None = None,
+                  used_turns: int | None = None, used_usd: float | None = None) -> str:
+    """依頼文の先頭に付ける、この呼び出しの上限（手数・費用・棟の残り）と 8 割で区切る決まり。続きの時は使った手数と費用も。"""
+    left = "棟の費用の上限なし" if building_left_usd is None else f"棟の残り {max(building_left_usd, 0.0):.2f} USD"
+    used = ""
+    if used_turns is not None or used_usd is not None:
+        used = (f"この工程でこれまでに使ったのは 手数 {int(used_turns or 0)} 手・費用 {float(used_usd or 0.0):.2f} USD。"
+                f"この呼び出しで使えるのは上の分（手数 {max_turns} 手・費用 {max_budget_usd:.2f} USD）。")
+    return LIMITS_HEADER.format(turns=max_turns, usd=max_budget_usd, left=left, used=used,
+                                t80=int(max_turns * 0.8), u80=max_budget_usd * 0.8)
+
+
+def _has_continue_mark(text: str | None) -> bool:
+    return any(ln.strip().lstrip("#*- ").startswith(CONTINUE_MARK) for ln in (text or "").splitlines())
+
+
+def _own_cost(reported, resumed_sid: str | None, out_sid: str | None, session_costs: dict) -> tuple[float | None, float | None]:
+    """SDK の total_cost_usd を、その呼び出し 1 回の分に直す。(この呼び出しの分, 差し引いた前の合計 or None)。
+    CLI は resume の時にその会話の費用の合計を書き起こしから戻すので、続きの呼び出しの total_cost_usd は会話の合計になる
+    （同梱の CLI の costLedger.restore）。会話ごとに見た合計（session_costs）を覚えておき、続きの時はその差を 1 回の分にする。
+    報告が前の合計より小さい時（戻されなかった）は、そのまま 1 回の分として合計に足す。"""
+    if reported is None:
+        return None, None
+    reported = float(reported)
+    prev = session_costs.get(resumed_sid) if resumed_sid else None
+    if prev is not None and reported >= prev - 1e-9:
+        own, total, sub = round(reported - prev, 6), reported, prev
+    else:
+        own, total, sub = reported, round((prev or 0.0) + reported, 6), None
+    for k in {resumed_sid, out_sid} - {None}:
+        session_costs[k] = total
+    return own, sub
 
 
 def _sum_or_none(vals) -> float | int | None:
@@ -289,50 +352,89 @@ def _sum_or_none(vals) -> float | int | None:
 
 def run_agent(name: str, task: str, *, cwd: str | Path = ".", dry_run: bool = False, agents_dir: str | Path | None = None,
               building_id: str | None = None, prices: dict | None = None, resume: str | None = None,
-              resume_why: str | None = None, max_budget_usd: float | None = None) -> dict:
+              resume_why: str | None = None, max_budget_usd: float | None = None,
+              building_left_usd: float | None = ..., used: dict | None = None, session_costs: dict | None = None) -> dict:
     """係を 1 回呼ぶ。429・使用量の上限・混雑は 60・120・240 秒待って同じ会話（session）の続きからやり直す（RETRY_MAX 回まで）。
     resume に前の session_id を渡すと、その会話の続きから始める（resume_why は止まった理由。続きの依頼文に入る）。
-    max_budget_usd は 1 回の上限（棟の費用の上限の残りで小さくする時）。記録には呼び出しごとの使用量（calls）と、その合計が入る。"""
+    max_budget_usd は 1 回の上限（棟の費用の上限の残りで小さくする時）。記録には呼び出しごとの使用量（calls）と、その合計が入る。
+    依頼文の先頭には、この呼び出しの上限（手数・費用・棟の残り）と「8 割で区切る」決まり（limits_header）を付ける。
+    building_left_usd は棟の残り（省けば max_budget_usd、None は上限なし）。used はこの工程で前の呼び出しが使った
+    {"turns", "usd"}（続きの依頼文に書く）。session_costs は会話ごとの SDK の費用の合計（続きの呼び出しの費用を 1 回分に直す。_own_cost）。
+    係が返事の 1 行目に CONTINUE_MARK を書いて区切った時は partial: True（工程は済んでいない）。"""
     cwd = Path(cwd)
     defs = load_agent_defs(agents_dir or cwd / DEFAULT_DIR)
     if name not in defs:
         raise AgentError(f"係 {name} は定義にありません。ある係: {', '.join(defs)}")
     spec = defs[name]
-    lim = dict(LIMITS[spec["model"]])
+    lim = agent_limits(name, spec["model"])
     if max_budget_usd is not None:
         lim["max_budget_usd"] = round(min(lim["max_budget_usd"], max_budget_usd), 4)
+    left = max_budget_usd if building_left_usd is ... else building_left_usd
+    used_turns = int((used or {}).get("turns") or 0)
+    used_usd = float((used or {}).get("usd") or 0.0)
     if dry_run:
         return {"dry_run": True, "agent": name, "model": spec["model_id"], "tools": spec["tools"], "task": task,
                 "max_turns": lim["max_turns"], "max_budget_usd": lim["max_budget_usd"], "system_prompt": spec["system_prompt"],
-                "resume": resume}
+                "resume": resume,
+                "limits_header": limits_header(lim["max_turns"], lim["max_budget_usd"], left,
+                                               used_turns if resume else None, used_usd if resume else None)}
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise AgentError("ANTHROPIC_API_KEY が環境変数にありません（リポジトリには書かない）。--dry-run なら呼ばずに内容だけ出せます")
     started, t0 = _now(), time.time()
     prc = load_prices(prices)
+    sc = session_costs if session_costs is not None else {}
     sid, why = resume, resume_why
     calls: list[dict] = []
     r: dict | None = None
     err: str | None = None
     rate_limited = False
+
+    def own(reported, used_sid, out_sid, row: dict) -> None:
+        """row の cost_usd を 1 回の分に直す（続きの呼び出しは会話の合計から前の合計を引く）。"""
+        c, sub = _own_cost(reported, used_sid, out_sid, sc)
+        row["cost_usd"] = c
+        if sub is not None:
+            row["cost_usd_sdk_total"] = reported
+            row["cost_note"] = f"SDK の total_cost_usd {reported} は会話の合計なので、前の合計 {sub} を引いた分"
+
     for i in range(RETRY_MAX + 1):
-        prompt = RESUME_PROMPT.format(why=why or "途中で止まった", task=task) if sid else task
+        resumed = sid
+        body = RESUME_PROMPT.format(why=why or "途中で止まった", task=task) if sid else task
+        spent_here = sum(c.get("cost_usd") or 0.0 for c in calls)
+        turns_here = sum(c.get("turns") or 0 for c in calls)
+        hdr = limits_header(lim["max_turns"], lim["max_budget_usd"], None if left is None else left - spent_here,
+                            used_turns + turns_here if sid else None, used_usd + spent_here if sid else None)
+        prompt = hdr + body
         at = _now()
         try:
             r = _invoke(spec, prompt, cwd, lim["max_turns"], lim["max_budget_usd"], **({"resume": sid} if sid else {}))
         except Exception as e:  # noqa: BLE001  落ちても記録を残す（resume で続ける）
             sid = getattr(e, "session_id", None) or sid
             rate_limited, err, r = is_rate_limit(e), f"{type(e).__name__}: {e}", None
-            calls.append({"at": at, "resume": prompt is not task, "session_id": sid, "error": err, "rate_limited": rate_limited,
-                          **{k: None for k in TOKEN_KEYS}, "cost_usd": None, "cost_usd_estimate": None,
-                          "note": "落ちた呼び出しは SDK が使用量を返さないので null"})
+            part = getattr(e, "result", None)
+            if isinstance(part, dict):      # 落ちる前に ResultMessage が届いていた（max turns など）：その使用量を記録と費用に入れる
+                toks = {k: part.get(k) for k in TOKEN_KEYS}
+                est, _n = estimate_cost(spec["model"], spec["model_id"], toks, prc)
+                row = {"at": at, "resume": bool(resumed), "session_id": sid, "error": err,
+                       "rate_limited": rate_limited, **toks, "cost_usd": None, "cost_usd_estimate": est,
+                       "turns": part.get("turns"), "sdk_stop": part.get("stop"),
+                       "note": "落ちた呼び出しだが、落ちる前に SDK の結果が届いていたので、その使用量・費用・turns を記録"}
+                own(part.get("cost_usd"), resumed, sid, row)
+                calls.append(row)
+            else:
+                calls.append({"at": at, "resume": bool(resumed), "session_id": sid, "error": err,
+                              "rate_limited": rate_limited, **{k: None for k in TOKEN_KEYS}, "cost_usd": None,
+                              "cost_usd_estimate": None, "note": "落ちた呼び出しは SDK が使用量を返さないので null"})
         else:
             sid = r.get("session_id") or sid
             toks = {k: r.get(k) for k in TOKEN_KEYS}
             est, _n = estimate_cost(spec["model"], spec["model_id"], toks, prc)
             rate_limited = bool(r.get("rate_limited")) and bool(r.get("is_error"))
             err = f"API {r.get('api_error_status')}" if rate_limited else None
-            calls.append({"at": at, "resume": prompt is not task, "session_id": sid, "error": err, "rate_limited": rate_limited,
-                          **toks, "cost_usd": r.get("cost_usd"), "cost_usd_estimate": est})
+            row = {"at": at, "resume": bool(resumed), "session_id": sid, "error": err, "rate_limited": rate_limited,
+                   **toks, "cost_usd": None, "cost_usd_estimate": est, "turns": r.get("turns")}
+            own(r.get("cost_usd"), resumed, sid, row)
+            calls.append(row)
         if not rate_limited or i == RETRY_MAX:
             break
         wait = RETRY_BASE_S * (2 ** i)
@@ -344,6 +446,7 @@ def run_agent(name: str, task: str, *, cwd: str | Path = ".", dry_run: bool = Fa
     r = r or {}
     stop = "rate_limit" if rate_limited else ("crash" if err else str(r.get("stop") or ""))
     toks = {k: _sum_or_none(c.get(k) for c in calls) for k in TOKEN_KEYS}
+    partial = bool(r) and not r.get("is_error") and not err and _has_continue_mark(r.get("text"))
     notes = []
     if r.get("token_note"):
         notes.append(r["token_note"])
@@ -355,15 +458,18 @@ def run_agent(name: str, task: str, *, cwd: str | Path = ".", dry_run: bool = Fa
     if len(calls) > 1:
         notes.append(f"呼び出し {len(calls)} 回（429・上限のやり直しを含む）の使用量の合計")
     if err:
-        notes.append(f"止まった：{err}" + (f"（{RETRY_MAX} 回やり直しても同じ。recorder agent resume で続ける）" if rate_limited else ""))
+        notes.append(f"止まった：{err}" + (f"（{RETRY_MAX} 回やり直しても同じ）" if rate_limited else ""))
+    if partial:
+        notes.append(f"係が {CONTINUE_MARK} で区切った（上限の 8 割。残りは返事の箇条書き）")
     return {"agent": name, "model": spec["model_id"], "started_at": started, "ended_at": ended, "seconds": seconds,
             "text": r.get("text", ""), "summary": summary_line(r.get("text")),
             "outputs": _outputs(cwd, bid, name), **toks,
-            "cost_usd": _sum_or_none(c.get("cost_usd") for c in calls), "cost_usd_estimate": est, "turns": r.get("turns"),
+            "cost_usd": _sum_or_none(c.get("cost_usd") for c in calls), "cost_usd_estimate": est,
+            "turns": r.get("turns") if r else (calls[-1].get("turns") if calls else None),
             "is_error": bool(r.get("is_error")) or bool(err),
             "stopped_by_limit": ("max" in stop) or ("budget" in stop), "stop": stop, "session_id": sid,
-            "rate_limited": rate_limited, "error": err, "calls": calls, "max_budget_usd": lim["max_budget_usd"],
-            "note": "。".join(notes)}
+            "rate_limited": rate_limited, "error": err, "calls": calls, "max_turns": lim["max_turns"],
+            "max_budget_usd": lim["max_budget_usd"], "partial": partial, "note": "。".join(notes)}
 
 
 def step_agent(step: str) -> str:
@@ -889,8 +995,30 @@ STATE_NAME = "pipeline_state.json"           # out/<棟>/pipeline_state.json（�
 CONTINUE_STEPS = ["satsuei", "shiwake", "sokuryo", "sekkei", "seizu", "kenshu", "seizu_final", "web"]
 STOP_REASONS = {"rate_limit": "429・使用量の上限（3 回待っても解けない）", "limit": "1 回の呼び出しの上限（turns・費用）",
                 "error": "係がエラーで終わった", "crash": "落ちた（例外・プロセスの終了）", "code": "コードの工程が失敗",
-                "max_usd": "棟の費用の上限", "event": "進行役か人を呼ぶ事件"}
-RESUME_SAME_SESSION = ("rate_limit", "limit", "crash")    # この理由で止まった工程は、同じ会話（session）の続きから
+                "max_usd": "棟の費用の上限", "event": "進行役か人を呼ぶ事件",
+                "partial": "係が上限の 8 割で区切った（残りあり）"}
+RESUME_SAME_SESSION = ("rate_limit", "limit", "crash", "partial")    # この理由で止まった工程は、同じ会話（session）の続きから
+# 自動の続き（11/8、F13）：この理由で止まった工程は、人の手を待たずに同じ会話の続きから自動で再開する（工程ごと・1 回の実行で 2 回まで）。
+# 3 回目に止まったら今まで通り止めて state に記録し、人を呼ぶ事件（pending_events の human）に出す。棟の費用の上限は再開の前に判定する
+AUTO_RESUME_REASONS = ("rate_limit", "limit", "crash", "partial")
+AUTO_RESUME_MAX = 2
+AUTO_RESUME_WAIT_S = RETRY_BASE_S * (2 ** RETRY_MAX)      # 429・混雑で止まった時は、自動で続ける前に 480 秒待つ
+AUTO_KIND_LABEL = {"max_turns": "手数の上限", "max_budget": "1 回の費用の上限", "rate_limit": "429・使用量の上限・混雑",
+                   "crash": "落ちた（例外）", "partial": "係が上限の 8 割で区切った"}
+
+
+def _auto_kind(rec: dict | None, stop: dict) -> str:
+    """自動の続きの理由の細かい種類（記録と README 用）：max_turns・max_budget・rate_limit・crash・partial。"""
+    if stop["reason"] in ("rate_limit", "partial"):
+        return stop["reason"]
+    rec = rec or {}
+    last = (rec.get("calls") or [{}])[-1]
+    txt = " ".join(str(x) for x in (rec.get("stop"), rec.get("error"), last.get("sdk_stop"), last.get("error")) if x).lower()
+    if "max_turns" in txt or "maximum number of turns" in txt:
+        return "max_turns"
+    if "budget" in txt:
+        return "max_budget"
+    return "crash"
 
 
 def continue_task(step: str, building_id: str, photos_folder: str | None = None, faces: list[str] | None = None) -> str:
@@ -973,6 +1101,7 @@ def _new_state(building_id: str, mode: str, photos: str | None, steps: list[str]
             "done": [], "status": "new", "current": None, "stopped": None, "sessions": {}, "attempts": {},
             "spent_usd": 0.0, "max_usd": max_usd, "record_name": f"pipeline_{datetime.now():%Y%m%d_%H%M%S}.json",
             "acknowledged_events": [], "results": [], "usage_calls": [], "pending_events": [],
+            "auto_resumes": {}, "session_costs": {},
             "runs": [{"kind": "start", "at": now}], "started_at": now, "updated_at": now}
 
 
@@ -990,8 +1119,13 @@ def _run_agent_step(state: dict, s: str, cwd: Path, *, dry_run: bool, agents_dir
     if remaining is not None and remaining <= 0 and not dry_run:
         return None, {"reason": "max_usd",
                       "why": f"棟の費用の上限 {cap} USD に達した（使った {state['spent_usd']:.4f} USD）。工程 {s} の前で止めた"}
+    used = None
+    if resume_sid:      # 続きの依頼文に書く「この工程でこれまでに使った手数と費用」（同じ会話の呼び出しの合計）
+        mine = [c for c in state.get("usage_calls") or [] if c.get("step") == s and c.get("session_id") == resume_sid]
+        used = {"turns": sum(c.get("turns") or 0 for c in mine), "usd": sum(c.get("cost_usd") or 0.0 for c in mine)}
     rec = run_agent(s, _task_for(state, s), cwd=cwd, dry_run=dry_run, agents_dir=agents_dir, building_id=state["building"],
-                    prices=prices, resume=resume_sid, resume_why=resume_why, max_budget_usd=remaining)
+                    prices=prices, resume=resume_sid, resume_why=resume_why, max_budget_usd=remaining,
+                    building_left_usd=remaining, used=used, session_costs=state.setdefault("session_costs", {}))
     rec["step"] = s
     if dry_run:
         return rec, None
@@ -1009,7 +1143,52 @@ def _run_agent_step(state: dict, s: str, cwd: Path, *, dry_run: bool, agents_dir
         return rec, {"reason": "crash", "why": rec.get("error")}
     if rec.get("is_error"):
         return rec, {"reason": "error", "why": rec.get("stop") or "is_error"}
+    if rec.get("partial"):
+        return rec, {"reason": "partial", "why": f"係が上限の 8 割で区切った（{summary_line(rec.get('text'), 200)}）"}
     return rec, None
+
+
+def _auto_resume_loop(state: dict, s: str, cwd: Path, rec, stop, recs: list, *, agents_dir, prices):
+    """工程が自動の続きの理由（AUTO_RESUME_REASONS）で止まった時、同じ会話の続きから自動で再開する（AUTO_RESUME_MAX 回まで）。
+    回数・理由は state["auto_resumes"][工程] に、再開の呼び出しの記録は recs に足す（費用は _run_agent_step が 1 回ずつ spent_usd に）。
+    使い切って止まった時は stop に auto_resumes を書き、人を呼ぶ事件を pending_events に足す。(最後の記録, 止まった理由 or None)。"""
+    run_no = len(state.get("runs") or []) - 1
+    log = state.setdefault("auto_resumes", {}).setdefault(s, [])
+    n = 0
+    while stop is not None and stop.get("reason") in AUTO_RESUME_REASONS:
+        if n >= AUTO_RESUME_MAX:
+            kinds = [e["kind"] for e in log if e.get("run") == run_no]
+            stop["auto_resumes"] = n
+            stop["why"] = (f"{stop.get('why')}（自動の続き {n} 回の後も止まった："
+                           f"{'・'.join(AUTO_KIND_LABEL.get(k, k) for k in kinds + [_auto_kind(rec, stop)])}）")
+            state["pending_events"] = list(state.get("pending_events") or []) + [{
+                "kind": "human", "call": EVENT_CALL["human"],
+                "why": f"工程 {s} が自動で {n} 回続けても止まった（{AUTO_KIND_LABEL.get(_auto_kind(rec, stop), stop['reason'])}）。"
+                       "上限か依頼を見直して recorder agent resume で続ける"}]
+            break
+        cap = state.get("max_usd")
+        if cap is not None and float(state.get("spent_usd") or 0.0) >= float(cap):     # 棟の費用の上限：続けない
+            stop = {"reason": "max_usd", "why": f"棟の費用の上限 {cap} USD に達した（使った {state['spent_usd']:.4f} USD）。"
+                                                f"工程 {s} は{AUTO_KIND_LABEL.get(_auto_kind(rec, stop), stop['reason'])}で止まったが自動で続けない"}
+            break
+        n += 1
+        kind = _auto_kind(rec, stop)
+        entry = {"n": n, "run": run_no, "at": _now(), "reason": stop["reason"], "kind": kind,
+                 "label": AUTO_KIND_LABEL.get(kind), "why": str(stop.get("why") or "")[:300],
+                 "session_id": state["sessions"].get(s)}
+        log.append(entry)
+        if stop["reason"] == "rate_limit":
+            entry["waited_s"] = AUTO_RESUME_WAIT_S
+            _sleep(AUTO_RESUME_WAIT_S)
+        _save_state(state, cwd)
+        why = f"自動の続き {n}/{AUTO_RESUME_MAX}。前は{AUTO_KIND_LABEL.get(kind, kind)}で止まった：{entry['why']}"
+        rec, stop = _run_agent_step(state, s, cwd, dry_run=False, agents_dir=agents_dir, prices=prices,
+                                    resume_sid=state["sessions"].get(s), resume_why=why)
+        if rec is not None:
+            rec["auto_resume"] = n
+            recs.append(rec)
+        entry["result"] = "ok" if stop is None else stop["reason"]
+    return rec, stop
 
 
 def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict:
@@ -1027,6 +1206,7 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
         if not dry_run:
             _save_state(state, cwd)       # ここで落ちれば、resume は current の工程を「落ちた」として同じ会話から続ける
         stop: dict | None = None
+        recs: list[dict] = []
         try:
             if s in CODE_STEPS:
                 if dry_run:
@@ -1035,13 +1215,20 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
                     rec = _run_code_step(s, b, cwd)
                     if not rec.get("ok"):
                         stop = {"reason": "code", "why": rec.get("summary")}
+                recs.append(rec)
             else:
                 rec, stop = _run_agent_step(state, s, cwd, dry_run=dry_run, agents_dir=agents_dir, prices=prices,
                                             resume_sid=resume_sid, resume_why=prev_stop.get("why") if resume_sid else None)
+                if rec is not None:
+                    recs.append(rec)
+                if not dry_run:     # 落ちた・手数や 1 回の費用の上限・429・係が区切った → 同じ会話の続きから自動で（2 回まで）
+                    rec, stop = _auto_resume_loop(state, s, cwd, rec, stop, recs, agents_dir=agents_dir, prices=prices)
         except Exception as e:  # noqa: BLE001  落ちても状態と記録を残して止める
             rec = {"agent": step_agent(s), "step": s, "error": f"{type(e).__name__}: {e}", "ended_at": _now()}
+            recs.append(rec)
             stop = {"reason": "crash", "why": rec["error"]}
-        if rec is not None:
+        if recs:
+            rec = recs[-1]
             if not dry_run:
                 rec["progress_report"] = refresh_report(b, cwd)
                 if s == "web" and not stop:
@@ -1052,7 +1239,7 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
                         rec["shots"] = "background"
                     except Exception as e:  # noqa: BLE001
                         rec["shots"] = f"skipped: {type(e).__name__}: {e}"
-            state["results"].append(rec)
+            state["results"].extend(recs)
         if stop is None:
             state["done"].append(s)
             cap = state.get("max_usd")
@@ -1083,6 +1270,8 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
                "stopped_early": state["stopped"] is not None, "stopped": state["stopped"], "done": state["done"],
                "spent_usd": state["spent_usd"], "max_usd": state["max_usd"], "pending_events": state["pending_events"],
                "runs": state["runs"], "started_at": state["started_at"], "ended_at": _now(), **_pipeline_totals(state["results"]),
+               "auto_resumes": state.get("auto_resumes") or {},
+               "auto_resumes_total": sum(len(v) for v in (state.get("auto_resumes") or {}).values()),
                "usage_calls": len(state["usage_calls"]),
                "usage_calls_total": {k: _sum_or_none(c.get(k) for c in state["usage_calls"]) for k in TOKEN_KEYS},
                "made_at": _now()}
@@ -1091,8 +1280,8 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
         summary.update(write_pipeline_record(b, summary, cwd, state["record_name"]))
         summary["state"] = str(state_path(b, cwd))
     else:
-        summary["state_preview"] = {k: state[k] for k in ("mode", "photos", "faces", "steps", "done", "status", "stopped",
-                                                          "sessions", "spent_usd", "max_usd", "record_name")}
+        summary["state_preview"] = {k: state.get(k) for k in ("mode", "photos", "faces", "steps", "done", "status", "stopped",
+                                                              "sessions", "spent_usd", "max_usd", "record_name")}
     return summary
 
 
@@ -1145,7 +1334,8 @@ def continue_pipeline(building_id: str, photos_folder: str | None = None, *, fac
 def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path = ".", agents_dir: str | Path | None = None,
                     prices: dict | None = None, max_usd: float | None = None) -> dict:
     """止まった所から続ける（out/<棟>/pipeline_state.json を読む）。
-    - 429・上限・落ちで止まった工程は、同じ会話（session_id）の続きから（RESUME_PROMPT）。
+    - 429・上限・落ちで止まった工程は、同じ会話（session_id）の続きから（RESUME_PROMPT）。工程の中では _drive が先に
+      自動の続きを AUTO_RESUME_MAX 回まで試すので、ここに来るのはそれでも止まった時（人を呼ぶ事件が pending_events に出る）。
     - 事件で止まった時は、その工程は済んでいるので次の工程から。止めた事件は「見て続けると決めた」として、同じ事件では止めない。
     - 費用の上限で止まった時は max_usd で上限を上げないと続けない。
     - 実行中のまま（status running）の状態は、落ちたと見て current の工程から。dry_run は状態を書かずに計画だけ返す。"""

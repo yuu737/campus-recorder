@@ -71,7 +71,11 @@ def test_pipeline_stops_on_limit(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
     monkeypatch.setattr(agents, "_invoke", lambda *a: {"text": "", "cost_usd": 4.0, "is_error": True, "stop": "error_max_budget_usd"})
     r = agents.run_pipeline("b1", steps=["shiwake", "kansatsu"], cwd=tmp_path, agents_dir=".claude/agents")
-    assert r["stopped_early"] and len(r["steps"]) == 1 and r["steps"][0]["stopped_by_limit"]
+    # 1 回の費用の上限 → 自動の続き 2 回 → 3 回目も止まったので止める（人を呼ぶ事件に出す）
+    assert r["stopped_early"] and len(r["steps"]) == 1 + agents.AUTO_RESUME_MAX and r["steps"][0]["stopped_by_limit"]
+    assert r["stopped"]["reason"] == "limit" and r["stopped"]["auto_resumes"] == agents.AUTO_RESUME_MAX
+    assert [e["kind"] for e in r["auto_resumes"]["shiwake"]] == ["max_budget", "max_budget"]
+    assert any(e["kind"] == "human" and "shiwake" in e["why"] for e in r["pending_events"])
 
 
 def test_tasks_cover_all_steps(tmp_path):
@@ -307,7 +311,8 @@ def test_retry_429_then_ok(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_agent("kazoe", "数える", cwd=tmp_path, agents_dir=".claude/agents", building_id="b1")
     assert waits == [60.0, 120.0] and len(r["calls"]) == 3 and r["session_id"] == "S1"
-    assert seen[0] == (None, "数える") and seen[1][0] == "S1" and "続きから" in seen[1][1] and "数える" in seen[1][1]
+    assert seen[0][0] is None and seen[0][1].endswith("\n\n数える") and "手数は 30 手まで" in seen[0][1]
+    assert seen[1][0] == "S1" and "続きから" in seen[1][1] and "数える" in seen[1][1]
     assert r["input_tokens"] == 100 and r["stop"] == "success" and not r["is_error"] and "呼び出し 3 回" in r["note"]
     assert agents.is_rate_limit(RuntimeError("You have hit your 5-hour limit")) and not agents.is_rate_limit(ValueError("x"))
 
@@ -328,10 +333,11 @@ def test_rate_limit_stop_and_resume(tmp_path, monkeypatch):
     r = agents.run_pipeline("b1", steps=["kansatsu", "kazoe", "sokuryo"], cwd=tmp_path, agents_dir=".claude/agents")
     assert r["stopped_early"] and r["stopped"]["reason"] == "rate_limit" and r["stopped"]["step"] == "kazoe"
     assert r["stopped"]["session_id"] == "KZ" and r["done"] == ["kansatsu"]
-    assert len([c for c in calls if c[0] == "kazoe"]) == agents.RETRY_MAX + 1
+    n_kz = (agents.RETRY_MAX + 1) * (1 + agents.AUTO_RESUME_MAX)       # やり直し 3 回 × 自動の続き 2 回の後に止まる
+    assert len([c for c in calls if c[0] == "kazoe"]) == n_kz
     st = agents.load_state("b1", tmp_path)
     assert st["status"] == "stopped" and st["sessions"] == {"kansatsu": "S-kansatsu", "kazoe": "KZ"}
-    assert len(st["usage_calls"]) == 1 + agents.RETRY_MAX + 1
+    assert len(st["usage_calls"]) == 1 + n_kz and [e["kind"] for e in st["auto_resumes"]["kazoe"]] == ["rate_limit"] * 2
     # dry_run の再開：計画だけ（状態は書かない）。止まった工程は同じ会話の続きから
     dr = agents.resume_pipeline("b1", dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
     assert [s["step"] for s in dr["steps"][-2:]] == ["kazoe", "sokuryo"] and dr["steps"][-2]["resume"] == "KZ"
@@ -344,9 +350,9 @@ def test_rate_limit_stop_and_resume(tmp_path, monkeypatch):
     assert calls == [("kazoe", "KZ"), ("sokuryo", None)]
     assert not r2["stopped_early"] and r2["done"] == ["kansatsu", "kazoe", "sokuryo"] and r2["record"] == r["record"]
     rec = json.loads(open(r2["record"], encoding="utf-8").read())
-    assert [s["step"] for s in rec["steps"]] == ["kansatsu", "kazoe", "kazoe", "sokuryo"]
+    assert [s["step"] for s in rec["steps"]] == ["kansatsu"] + ["kazoe"] * (2 + agents.AUTO_RESUME_MAX) + ["sokuryo"]
     assert [x["kind"] for x in rec["runs"]] == ["start", "resume"] and rec["runs"][1]["reason"] == "rate_limit"
-    assert rec["steps"][2]["attempt"] == 2
+    assert rec["steps"][-2]["attempt"] == 2 + agents.AUTO_RESUME_MAX
     assert agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")["nothing"]
 
 
@@ -467,3 +473,184 @@ def test_permission_none_is_settled(tmp_path, monkeypatch):
         p.write_text(json.dumps({"scope": {"targets": ["b1"]},
                                  "sources": {"campus_map": {"permission": {"status": status}}}}), encoding="utf-8")
         assert len(agents._site_events(tmp_path)) == n, status
+
+
+def test_invoke_reads_sdk_result_cost_and_usage(tmp_path, monkeypatch):
+    """_invoke が SDK の ResultMessage から total_cost_usd と usage を拾い、大きな道具の結果用に max_buffer_size を渡す。"""
+    import claude_agent_sdk as sdk
+
+    seen = {}
+
+    async def fake_query(prompt, options):
+        seen["buf"] = options.max_buffer_size
+        yield sdk.ResultMessage(subtype="success", duration_ms=1, duration_api_ms=1, is_error=False, num_turns=2,
+                                session_id="s1", total_cost_usd=0.123, result="ok",
+                                usage={"input_tokens": 100, "output_tokens": 20, "cache_creation_input_tokens": 5,
+                                       "cache_read_input_tokens": 7})
+
+    monkeypatch.setattr(sdk, "query", fake_query)
+    spec = {"system_prompt": "x", "model_id": "claude-haiku-5-5", "tools": ["Read"]}
+    r = agents._invoke(spec, "t", tmp_path, 3, 1.0)
+    assert seen["buf"] == agents.SDK_MAX_BUFFER_SIZE and agents.SDK_MAX_BUFFER_SIZE > 1048576
+    assert r["cost_usd"] == pytest.approx(0.123) and r["input_tokens"] == 100 and r["output_tokens"] == 20
+    assert r["token_note"] is None and r["session_id"] == "s1"
+    # 単価表が無くても、SDK の total_cost_usd が棟の使った額（spent_usd）に入る
+    assert agents._rec_cost({"cost_usd_estimate": None, "cost_usd": r["cost_usd"]}) == pytest.approx(0.123)
+
+
+def test_invoke_error_after_result_keeps_cost(tmp_path, monkeypatch):
+    """SDK は is_error の ResultMessage（max turns）を yield してから ResultError を投げる。その呼び出しの費用・トークン数・
+    turns を捨てず、記録の calls と cost に入れて棟の使った額（spent_usd）に足す。止まった理由は今まで通り記録し、会話の id は残す。"""
+    import claude_agent_sdk as sdk
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.delenv(agents.PRICES_ENV, raising=False)
+    msg = "Claude Code returned an error result: Reached maximum number of turns (30)"
+
+    async def fake_query(prompt, options):
+        yield sdk.ResultMessage(subtype="error_max_turns", duration_ms=1, duration_api_ms=1, is_error=True, num_turns=30,
+                                session_id="SK", total_cost_usd=1.25, result=None,
+                                usage={"input_tokens": 300, "output_tokens": 40})
+        raise sdk.ResultError(msg, data={"subtype": "error_max_turns", "is_error": True}, exit_code=1)
+
+    monkeypatch.setattr(sdk, "query", fake_query)
+    with pytest.raises(agents.InvokeError) as ei:
+        agents._invoke({"system_prompt": "x", "model_id": "claude-sonnet-5-5", "tools": ["Read"]}, "t", tmp_path, 30, 5.0)
+    assert ei.value.session_id == "SK" and ei.value.result["cost_usd"] == pytest.approx(1.25)
+    assert ei.value.result["turns"] == 30 and ei.value.result["stop"] == "error_max_turns"
+
+    r = agents.run_pipeline("b1", steps=["sokuryo"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=20.0)
+    rec = r["steps"][0]
+    st = agents.load_state("b1", tmp_path)
+    assert st["spent_usd"] == pytest.approx(1.25) and st["sessions"]["sokuryo"] == "SK"
+    c = st["usage_calls"][0]
+    assert c["cost_usd"] == pytest.approx(1.25) and c["input_tokens"] == 300 and c["turns"] == 30
+    assert "maximum number of turns" in c["error"] and c["sdk_stop"] == "error_max_turns"
+    assert rec["cost_usd"] == pytest.approx(1.25) and rec["turns"] == 30 and "maximum number of turns" in rec["error"]
+    assert rec["stop"] == "crash" and r["stopped_early"]
+    # 結果が届く前に落ちた時は今まで通り null
+    async def crash_query(prompt, options):
+        raise RuntimeError("boom")
+        yield  # noqa: unreachable（async generator にするため）
+
+    monkeypatch.setattr(sdk, "query", crash_query)
+    with pytest.raises(agents.InvokeError) as e2:
+        agents._invoke({"system_prompt": "x", "model_id": "claude-sonnet-5-5", "tools": ["Read"]}, "t", tmp_path, 30, 5.0)
+    assert e2.value.result is None
+
+
+# ---- 自動の続き（11/8、F13）：落ちた・手数の上限・1 回の費用の上限・429・係が区切った → 同じ会話の続きから自動で（2 回まで） ----
+def _max_turns_err(sid="SK", total=1.0, turns=60):
+    return agents.InvokeError("ResultError: Claude Code returned an error result: Reached maximum number of turns (60)",
+                              session_id=sid, result={"cost_usd": total, "turns": turns, "stop": "error_max_turns",
+                                                      "input_tokens": 100, "output_tokens": 10})
+
+
+def test_limits_per_agent():
+    for a in ("sokuryo", "sekkei", "kenshu"):
+        assert agents.agent_limits(a, "opus") == {"max_turns": 60, "max_budget_usd": 4.0}
+    assert agents.agent_limits("kansatsu", "opus")["max_turns"] == 30 and agents.agent_limits("satsuei", "haiku")["max_turns"] == 12
+
+
+def test_auto_resume_after_max_turns(tmp_path, monkeypatch):
+    """測量係が手数の上限で止まる → 人の手なしで同じ会話の続きから → 通る。費用は会話の合計から 1 回分に直して二重に数えない。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.delenv(agents.PRICES_ENV, raising=False)
+    seen = []
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        seen.append((spec["name"], resume, max_turns, task))
+        if spec["name"] == "sokuryo" and resume is None:
+            raise _max_turns_err(total=1.0)
+        if spec["name"] == "sokuryo":
+            return {**_ok(sid="SK"), "cost_usd": 1.6, "turns": 12}     # CLI は resume で会話の合計（1.0＋0.6）を返す
+        return _ok(sid="SS", cost=0.01)
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_pipeline("b1", steps=["sokuryo", "sekkei"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=20.0)
+    assert not r["stopped_early"] and r["done"] == ["sokuryo", "sekkei"]
+    assert [(n, s, t) for n, s, t, _ in seen] == [("sokuryo", None, 60), ("sokuryo", "SK", 60), ("sekkei", None, 60)]
+    t2 = seen[1][3]
+    assert "自動の続き 1/2" in t2 and "手数の上限" in t2 and "手数 60 手・費用 1.00 USD" in t2 and "棟の残り 19.00 USD" in t2
+    st = agents.load_state("b1", tmp_path)
+    assert st["spent_usd"] == pytest.approx(1.0 + 0.6 + 0.01)               # 1.6 を足して 2.6 にしない
+    assert [c["cost_usd"] for c in st["usage_calls"]] == pytest.approx([1.0, 0.6, 0.01])
+    assert st["usage_calls"][1]["cost_usd_sdk_total"] == pytest.approx(1.6)
+    a = st["auto_resumes"]["sokuryo"]
+    assert len(a) == 1 and a[0]["kind"] == "max_turns" and a[0]["result"] == "ok" and a[0]["session_id"] == "SK"
+    rec = json.loads(open(r["record"], encoding="utf-8").read())
+    assert rec["auto_resumes_total"] == 1 and rec["auto_resumes"]["sokuryo"][0]["label"] == "手数の上限"
+    assert [s.get("auto_resume") for s in rec["steps"]] == [None, 1, None]
+    # 戻されなかった（報告が前の合計より小さい）時は、そのまま 1 回の分
+    sc = {}
+    assert agents._own_cost(1.0, None, "X", sc) == (1.0, None)
+    assert agents._own_cost(0.3, "X", "X", sc) == (0.3, None) and sc["X"] == pytest.approx(1.3)
+
+
+def test_auto_resume_gives_up_after_three_stops(tmp_path, monkeypatch):
+    """3 回目に止まったら今まで通り止めて state に記録し、人を呼ぶ事件に出す。手で resume すれば同じ会話から。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.delenv(agents.PRICES_ENV, raising=False)
+    seen, total = [], {"v": 0.0}
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        seen.append(resume)
+        total["v"] += 0.5
+        raise _max_turns_err(sid="S", total=total["v"])          # 会話の合計 0.5・1.0・1.5
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_pipeline("b1", steps=["kenshu"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=20.0)
+    assert seen == [None, "S", "S"] and r["stopped_early"] and r["stopped"]["reason"] == "crash"
+    assert r["stopped"]["auto_resumes"] == 2 and "自動の続き 2 回" in r["stopped"]["why"]
+    assert r["spent_usd"] == pytest.approx(1.5)                              # 0.5＋1.0＋1.5＝3.0 にしない
+    st = agents.load_state("b1", tmp_path)
+    assert st["status"] == "stopped" and [e["result"] for e in st["auto_resumes"]["kenshu"]] == ["crash", "crash"]
+    ev = [e for e in st["pending_events"] if e["kind"] == "human"]
+    assert len(ev) == 1 and ev[0]["call"] == "human" and "kenshu" in ev[0]["why"]
+    seen.clear()
+    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: seen.append(resume) or {**_ok(sid="S"), "cost_usd": 1.7})
+    r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
+    assert seen == ["S"] and not r2["stopped_early"] and r2["spent_usd"] == pytest.approx(1.7)
+
+
+def test_auto_resume_respects_max_usd(tmp_path, monkeypatch):
+    """棟の費用の上限に届いていたら自動で続けない（今の上限の判定）。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.delenv(agents.PRICES_ENV, raising=False)
+    seen = []
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        seen.append(resume)
+        raise _max_turns_err(total=1.0)
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_pipeline("b1", steps=["sokuryo"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=1.0)
+    assert seen == [None] and r["stopped"]["reason"] == "max_usd" and r["spent_usd"] == pytest.approx(1.0)
+    assert "自動で続けない" in r["stopped"]["why"] and not r["auto_resumes"].get("sokuryo") and r["auto_resumes_total"] == 0
+
+
+def test_prompt_states_limits_and_partial_continues(tmp_path, monkeypatch):
+    """依頼文の先頭に手数・1 回の費用・棟の残りと 8 割で区切る決まりが入る（棟の名前は入れない）。
+    係が【続きあり】で区切ったら工程は済んでいないので、同じ会話の続きから自動で。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.delenv(agents.PRICES_ENV, raising=False)
+    seen = []
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        seen.append((resume, task, max_budget_usd))
+        if resume is None:
+            return {**_ok(sid="SP", cost=0.4), "turns": 48, "text": f"{agents.CONTINUE_MARK}\n- 面 f2 の検算が残り"}
+        return {**_ok(sid="SP"), "cost_usd": 0.5}
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_pipeline("zz9", steps=["sokuryo"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=3.0)
+    hdr = seen[0][1].split("\n\n")[0]
+    assert hdr.startswith("【この呼び出しの上限】手数は 60 手まで。費用は 3.00 USD まで（棟の残り 3.00 USD）")
+    assert "8 割（48 手か 2.40 USD）" in hdr and agents.CONTINUE_MARK in hdr and "自動の続きはその会話から" in hdr
+    assert "zz9" not in hdr and seen[0][2] == 3.0
+    assert not r["stopped_early"] and [s for s, _, _ in seen] == [None, "SP"]
+    h2 = seen[1][1].split("\n\n")[0]
+    assert "手数 48 手・費用 0.40 USD" in h2 and "棟の残り 2.60 USD" in h2 and "係が上限の 8 割で区切った" in seen[1][1]
+    assert r["auto_resumes"]["sokuryo"][0]["kind"] == "partial" and r["spent_usd"] == pytest.approx(0.5)
+    dr = agents.run_agent("sokuryo", "x", dry_run=True, max_budget_usd=2.0)
+    assert dr["max_turns"] == 60 and "費用は 2.00 USD まで" in dr["limits_header"]

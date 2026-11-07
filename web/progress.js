@@ -487,11 +487,13 @@
       $("#stage").innerHTML = `<div class="empty">${ART ? "見せられる生成物がまだありません。係が生成物を出すと、ここに本物の絵が順に出ます。" : "棟 id（?building=）が無いか、生成物の一覧を読めません。recorder serve から開いてください。"}</div>`;
       $("#sTitle").textContent = ""; $("#sDesc").textContent = ""; $("#sWho").textContent = ""; setFoot("");
       renderTop(null); renderNums(); renderLog(); renderFilm(null);
+      window.__replay = {scene: null, index: -1, count: 0, ended: true, empty: true};
       if (LIVE) nextTimer = setTimeout(() => show(0), 5000);
       return;
     }
     idx = ((i % avail.length) + avail.length) % avail.length;
     const sc = cur = avail[idx];
+    window.__replay = {scene: sc.key, index: idx, count: avail.length, ended: false};   // 録画の道具が読む印（scripts/record_replay.py）
     const info = stepInfo(sc.step);
     $("#sTitle").textContent = sc.title;
     $("#sDesc").textContent = sc.desc || firstSentence(info.line, sc.kw);
@@ -509,7 +511,7 @@
     if (!paused) nextTimer = setTimeout(next, dur);
   }
   function next() {
-    if (!LIVE && !LOOP && idx === avail.length - 1) { paused = true; return; }
+    if (!LIVE && !LOOP && idx === avail.length - 1) { paused = true; window.__replay = Object.assign({}, window.__replay, {ended: true}); return; }
     show(idx + 1);
   }
   document.addEventListener("keydown", e => {
