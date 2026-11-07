@@ -1,0 +1,86 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f2",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "西北西面 2（方位 298°）"
+ },
+ "where": "中庭 2 の奥（背骨の西面）。方位 298°（西北西向き）",
+ "source_photos": [
+  "PXL_20261105_071413956",
+  "PXL_20261105_071424391"
+ ],
+ "candidate_photos": [
+  "PXL_20261105_071400772.MP",
+  "PXL_20261105_071408553.MP"
+ ],
+ "best_photo": {
+  "front": "PXL_20261105_071413956"
+ },
+ "crops": [
+  "out/kyotsu-minami/kansatsu/cy2_413.jpg"
+ ],
+ "bays": {
+  "value": 1,
+  "note": "各階に横長の大きな窓が 1 つ（面のほぼ全幅、縦の桟で 5〜6 枚に分かれる）",
+  "from_photos": [
+   "PXL_20261105_071413956"
+  ]
+ },
+ "floors": {
+  "value": 5,
+  "seen": "窓の段 5（1 階は塀と木で下半分が隠れる）",
+  "from_photos": [
+   "PXL_20261105_071413956",
+   "PXL_20261105_071424391"
+  ]
+ },
+ "window_shape": "横長（面のほぼ全幅）。窓の下にガラスブロックの帯（腰）",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "柱型は無く、打ち放しの枠（両脇の縦の枠と各階の床の帯）だけ"
+ },
+ "bands": [
+  "各階の床の高さに打ち放しの帯",
+  "窓の下にガラスブロックの帯"
+ ],
+ "glazing": "各階の横長の窓（帯状の連続窓ではなく 1 つの窓）",
+ "corners": "両脇は f1・f3 との入隅（打ち放しの縦の枠）",
+ "base": "1 階は中庭 2 の塀と木で見えない",
+ "top": "打ち放しのパラペット（窓の無い帯）",
+ "exceptions": [],
+ "parts": [
+  {
+   "what": "各階の横長の窓＋下のガラスブロックの帯",
+   "vocab": "windows（count=1、横長）＋ spandrel（ガラスブロック。patch か material）",
+   "count": 5,
+   "where": "f2 全体",
+   "from_photos": [
+    "PXL_20261105_071413956"
+   ],
+   "ratio": "窓の高さは階高の半分強、ガラスブロックの帯は窓の高さの 1/4 前後（071413956、正面寄り）",
+   "note": null
+  }
+ ],
+ "structures_ref": [],
+ "differences_from_draft": [
+  "面の材料は打ち放し（他の面のタイルと違う）"
+ ],
+ "unknowns": [
+  {
+   "what": "1 階の作り",
+   "value": null,
+   "why": "塀と木で隠れる"
+  }
+ ],
+ "requests": [],
+ "not_in_index_faces": {
+  "photos": [],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

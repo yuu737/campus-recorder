@@ -1,0 +1,58 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f8",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f8.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中庭 1 の奥の出っ張りの正面（コア）。方位 298°",
+ "left_end": "左＝北（from の端）",
+ "bays": {
+  "value": 1,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ],
+  "method": "2 枚とも正面は全高のガラスの縦の筋 1 本（縦の桟で 3 枚）、両縁にベージュの縁。間に柱型・別の窓は無い（切り出し core_183_z.jpg・core_810_z.jpg）"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071413956",
+   "PXL_20261105_071424391"
+  ],
+  "method": "f8 自体には階の区切りが無いので、同じ塊（B_背骨の西）の f2 から（f2 は 071413956・071424391 で measured 5）。両脇の f6・f10 も 5 段（estimated）",
+  "ref": "data/reports/kyotsu-minami/kazoe_f2.json#floors",
+  "seen": "ガラスの横桟の区切りが 071334183 で 8 前後（下は木と塀）、071347810 で上から 6 つ。横桟の間隔は両脇の窓の段のほぼ半分で、段と揃わない",
+  "seen_evidence": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ]
+ },
+ "interpreted": [
+  {
+   "value": "階段室（踊り場ごとに横桟）",
+   "basis": "hypothesis",
+   "why": "ガラスの横桟の間隔が両脇の窓の段のほぼ半分で、段の高さと揃わない（観察票の解釈と同じ）",
+   "evidence": [
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ]
+  }
+ ],
+ "segments": [],
+ "exceptions": [
+  "頂部はタイルの箱で、両脇（f6・f10）の打ち放しのパラペットより高い。ガラスの筋は頂部の箱の下で止まる",
+  "1・2 階（入口の有無）は木と塀で見えない"
+ ],
+ "disagreement": [],
+ "requests": [],
+ "questions": []
+}

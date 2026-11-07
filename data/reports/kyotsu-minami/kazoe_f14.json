@@ -1,0 +1,48 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f14",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f14.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "南端の小さな段（南翼の南東の角の東の側面）。方位 118°",
+ "left_end": "左＝南（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "candidate_photos": [
+   "PXL_20261105_071033016.MP"
+  ],
+  "why": "確かにこの面が写っている写真が無い（観察票と同じ）",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "candidate_photos": [
+   "PXL_20261105_071033016.MP"
+  ],
+  "why": "同上",
+  "method": "数えていない"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f14",
+   "what": "南端（横断歩道の北）の地面から、南翼の南東の角の東の側面（f14）と背骨の南面（f15）が 1 枚に入るように",
+   "why": "写真が無い面。別の面の柱間・段はこの面に写さない"
+  }
+ ],
+ "questions": []
+}

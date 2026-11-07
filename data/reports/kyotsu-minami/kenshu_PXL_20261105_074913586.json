@@ -1,0 +1,170 @@
+{
+ "photo": "PXL_20261105_074913586",
+ "face": "f17",
+ "made_by": "検収係 kenshu（claude-opus-5-5）",
+ "made_at": "2026-11-07T16:55:00",
+ "recheck": {
+  "before": "out/kyotsu-minami/recheck/20261107_151014/summary.md",
+  "after": "out/kyotsu-minami/recheck/20261107_154918/summary.md"
+ },
+ "registration_note": "",
+ "pass": true,
+ "pass_note": "写真単位の合否（登録した面の線）。面の合否は kenshu_summary.json（面単位）",
+ "lines": [
+  {
+   "what": "塊B_北東の塔 端 70.3",
+   "axis": "x",
+   "json_m": 70.27,
+   "diff_m": 0.189,
+   "weak": false,
+   "action": "合否から外す：線は面の線（d=0）で比べるが、塔の正面は d=+0.13〜0.14（三角測量・塊の寄せ）。10 m 下から見ると +0.22〜0.26 上に写る（予測と一致）"
+  },
+  {
+   "what": "面の端L",
+   "axis": "x",
+   "json_m": 71.93,
+   "diff_m": 0.045,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "4 階の床の白い横帯（柱型・中） 下端",
+   "axis": "z",
+   "json_m": 12.12,
+   "diff_m": -0.032,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "4 階の床の白い横帯（柱型・中） 上端",
+   "axis": "z",
+   "json_m": 12.37,
+   "diff_m": -0.031,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "5 階の床の白い横帯（柱型・中） 下端",
+   "axis": "z",
+   "json_m": 16.4,
+   "diff_m": -0.037,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "5 階の床の白い横帯（柱型・中） 上端",
+   "axis": "z",
+   "json_m": 16.47,
+   "diff_m": 0.022,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "塊B_北東の塔 上端",
+   "axis": "z",
+   "json_m": 20.6,
+   "diff_m": 0.225,
+   "weak": false,
+   "action": "合否から外す：線は面の線（d=0）で比べるが、塔の正面は d=+0.13〜0.14（三角測量・塊の寄せ）。10 m 下から見ると +0.22〜0.26 上に写る（予測と一致）"
+  },
+  {
+   "what": "パラペット上端",
+   "axis": "z",
+   "json_m": 21.3,
+   "diff_m": 0.052,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_27.3 上端",
+   "axis": "z",
+   "json_m": 4.07,
+   "diff_m": -0.042,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_55.2 左端",
+   "axis": "x",
+   "json_m": 55.2,
+   "diff_m": 0.043,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_55.2 右端",
+   "axis": "x",
+   "json_m": 57.2,
+   "diff_m": -0.068,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_61.7 左端",
+   "axis": "x",
+   "json_m": 61.7,
+   "diff_m": 0.026,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_61.7 右端",
+   "axis": "x",
+   "json_m": 62.8,
+   "diff_m": 0.041,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品26（f17 の片持ちの大きな） eave 上端",
+   "axis": "z",
+   "json_m": 19.2,
+   "diff_m": -0.005,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品26（f17 の片持ちの大きな） eave 下端",
+   "axis": "z",
+   "json_m": 18.85,
+   "diff_m": 0.063,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品26（f17 の片持ちの大きな） eave 右端",
+   "axis": "x",
+   "json_m": 70.4,
+   "diff_m": 0.002,
+   "weak": false,
+   "action": "合格"
+  }
+ ],
+ "other_faces": [],
+ "changed": [],
+ "requests": [],
+ "summary_line": {
+  "n_lines": 18,
+  "n_found": 16,
+  "n_strong": 16,
+  "n_ng_counted": 0,
+  "worst_face": {
+   "what": "塊B_北東の塔 上端",
+   "diff_m": 0.225
+  },
+  "worst_parts": {
+   "what": "部品25（f17 の 1 階の柱廊） col_55.2 右端",
+   "diff_m": -0.068
+  },
+  "before": {
+   "worst_face": {
+    "what": "塊B_北東の塔 上端",
+    "diff_m": 0.407
+   },
+   "worst_parts": {
+    "what": "部品25（f17 の 1 階の柱廊） col_61.7 右端",
+    "diff_m": 0.241
+   }
+  }
+ }
+}

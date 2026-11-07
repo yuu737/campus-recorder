@@ -1,0 +1,46 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f2",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f2.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中庭 2 の奥（背骨の西面）。方位 298°",
+ "left_end": "左＝北（from の端）",
+ "bays": {
+  "value": 1,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_071413956",
+   "PXL_20261105_071424391"
+  ],
+  "method": "071413956（中庭 2 の口から正面寄り）で、面の両端の打ち放しの縦の枠の間に各階 1 つの横長の窓（縦の桟で 6 枚）。071424391 は面の南寄り（右の縦の枠と配管）と窓の右の数枚が写り、間に柱型が無いことが一致。1 スパン＝各階 1 窓",
+  "crops": [
+   "out/kyotsu-minami/kazoe/f2_956_z.jpg",
+   "out/kyotsu-minami/kazoe/f2_391_z.jpg"
+  ]
+ },
+ "floors": {
+  "value": 5,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_071413956",
+   "PXL_20261105_071424391"
+  ],
+  "method": "071413956 で窓の段 5（最下段は塀と木で上半分だけ）。071424391 で右寄りに 4 段、その下の 1 段が北翼の角の箱の下の通り抜けごしに見え、計 5。上はどちらも打ち放しのパラペットで、その上に段は無い"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  "各段の窓の下にガラスブロックの帯（腰）",
+  "最下段（1 階）は塀と木で下半分が隠れる"
+ ],
+ "disagreement": [],
+ "requests": [],
+ "questions": []
+}

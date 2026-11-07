@@ -1,0 +1,80 @@
+{
+ "building": "kyotsu-minami",
+ "made_by": "mejirushi（目印係・claude-opus-5-5）",
+ "made_at": "2026-11-07T15:08:43",
+ "method": "recorder photos pnp --method poselib（点＋線の対応。線は面の縦の端・窓の下端・地面の線）",
+ "registered": {
+  "PXL_20261105_071303445": {
+   "face": "f12",
+   "camera_xyz": [
+    -48.43,
+    65.36,
+    2.03
+   ],
+   "rms_px": 6.3,
+   "n_inliers": 6,
+   "camera_height_face_m": 2.03,
+   "camera_height_dem_m": -0.79,
+   "pitch": 11.4,
+   "pitch_vp": 11.57,
+   "focal_vs_exif": 1.15,
+   "edge_inlier": 0.221,
+   "warnings": []
+  },
+  "PXL_20261105_071413956": {
+   "face": "f2",
+   "camera_xyz": [
+    -15.31,
+    112.09,
+    6.23
+   ],
+   "rms_px": 25.61,
+   "n_inliers": 11,
+   "camera_height_face_m": 6.23,
+   "camera_height_dem_m": 4.69,
+   "pitch": 1.2,
+   "pitch_vp": 9.2,
+   "focal_vs_exif": 0.95,
+   "edge_inlier": 0.3,
+   "warnings": []
+  },
+  "PXL_20261105_071334183": {
+   "face": "f5",
+   "camera_xyz": [
+    -33.43,
+    88.6,
+    1.33
+   ],
+   "rms_px": 11.45,
+   "n_inliers": 10,
+   "camera_height_face_m": 1.33,
+   "camera_height_dem_m": -4.36,
+   "pitch": 9.9,
+   "pitch_vp": 11.36,
+   "focal_vs_exif": 1.075,
+   "edge_inlier": 0.268,
+   "warnings": []
+  }
+ },
+ "registered_doubt": {
+  "PXL_20261105_071413956": "高さ 6.2 m・仰角 1.2°（消失点 9.2°）。同じ道路の 2 枚と合わない。f2 に写すのは使えるが近い面はずれる恐れ"
+ },
+ "stopped": {
+  "PXL_20261105_071309389": "目印が足りない",
+  "PXL_20261105_071316984": "目印が足りない",
+  "PXL_20261105_071325894": "目印が足りない",
+  "PXL_20261105_071347810": "目印が足りない",
+  "PXL_20261105_071400772.MP": "目印が足りない",
+  "PXL_20261105_071408553.MP": "目印が足りない",
+  "PXL_20261105_071424391": "目印が足りない",
+  "PXL_20261105_071434753": "目印が足りない",
+  "PXL_20261105_071548825": "目印が足りない",
+  "PXL_20261105_074849844": "目印が足りない",
+  "PXL_20261105_075147867": "目印が足りない"
+ },
+ "picks_dir": "data/reports/kyotsu-minami/mejirushi/",
+ "requests_added": "棟 JSON の requests[17]〜[20]（tool：composite の角を目印に／check：西の道路の高さ・071413956 の高さ・f8 の頂部の箱）",
+ "questions": [
+  "西の道路の高さ（5m 標高から置いた 1.44〜1.96 m）と登録したカメラの高さ（面の足元から 1.3〜2.0 m）が食い違う。道路は模型の z=0 とほぼ同じ高さか"
+ ]
+}

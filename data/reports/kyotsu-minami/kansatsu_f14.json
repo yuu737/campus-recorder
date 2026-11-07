@@ -1,0 +1,63 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f14",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "東南東面 14（方位 118°）"
+ },
+ "where": "南端の小さな段（南翼の南東の角の東の側面）。方位 118°（東南東向き）",
+ "source_photos": [],
+ "candidate_photos": [
+  "PXL_20261105_071033016.MP"
+ ],
+ "best_photo": {},
+ "crops": [
+  "out/kyotsu-minami/kansatsu/se_016.jpg"
+ ],
+ "bays": {
+  "value": null,
+  "why": "確かに写っている写真が無い"
+ },
+ "floors": {
+  "value": null,
+  "why": "確かに写っている写真が無い"
+ },
+ "window_shape": "不明",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "見えない"
+ },
+ "bands": [],
+ "glazing": "不明",
+ "corners": "071033016 で南東の角の柱型の東側に濃い灰色の面が見え、これが f14 か f15 の一部かは決められない",
+ "base": "不明",
+ "top": "不明",
+ "exceptions": [],
+ "parts": [],
+ "structures_ref": [],
+ "differences_from_draft": [],
+ "unknowns": [
+  {
+   "what": "面の作り",
+   "value": null,
+   "why": "南のデッキからの 1 枚だけで、角度がほぼ真横"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f14・f15・f16",
+   "what": "南端（横断歩道の北）の背骨の南面と東の段を、地面の高さから両端が入るように",
+   "why": "南のデッキからの 1 枚（071033016.MP）だけ"
+  }
+ ],
+ "not_in_index_faces": {
+  "photos": [],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

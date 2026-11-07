@@ -1,0 +1,105 @@
+{
+ "schema": "sokuryo/1",
+ "building": "kyotsu-minami",
+ "face": "f19",
+ "made_by": "測量係 sokuryo（claude-opus-5-5）",
+ "made_at": "2026-11-07T10:54:50",
+ "where": "北面（北翼の北面と背骨の北端、北の広場側）。方位 28°。左＝東（from）",
+ "inputs": {
+  "kazoe": "data/reports/kyotsu-minami/kazoe_<面>.json",
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_<面>.json",
+  "rulers": "data/rulers.json",
+  "site": "data/site/tempaku.json（kyotsu-minami の足元、reference.plateau_height_m 25.9、plateau_base_z 47.13）",
+  "dem": "out/site/dem5a.npz（面の前の地面の標高を読むだけ）",
+  "building": "data/buildings/kyotsu-minami.json（recorder new kyotsu-minami --from-site で作った土台。測量係は中身を書いていない）",
+  "lines": "data/reports/kyotsu-minami/sokuryo_lines/lines_<写真>.json（compare に渡した原点）"
+ },
+ "tape_measure": {
+  "found": false,
+  "how": "recorder photos list --building kyotsu-minami --ruler tape_measure の結果 0 枚。PLATEAU 以下の物差しで estimated にした",
+  "request": "f17 の 1 階の幅の広い柱型にメジャーを沿えた 1 枚を撮影依頼に出した（sokuryo_f17.json の requests。同じ棟で 1 件だけ）"
+ },
+ "registered": [
+  "PXL_20261105_071536516",
+  "PXL_20261105_071529022",
+  "PXL_20261105_071527944",
+  "PXL_20261105_071509670",
+  "PXL_20261105_071517479"
+ ],
+ "registered_detail": {
+  "PXL_20261105_071536516": "plane（原点は北西の角−34.05 m）",
+  "PXL_20261105_071529022": "pose（鎖、via 071536516 ほか、0.92 px、解き直し済み）",
+  "PXL_20261105_071527944": "pose（鎖、1.74 px、解き直し済み）",
+  "PXL_20261105_071509670": "pose（鎖、1.77 px、解き直し済み）",
+  "PXL_20261105_071517479": "pose（鎖、10:38 の古い登録。地面の原点を直す前の 071536516 の登録から解いた物で高さが約 1 m ずれうる。解き直しは不合格）"
+ },
+ "not_registered": [
+  {
+   "photo": "PXL_20261105_071548825",
+   "why": "鎖：視点に合う対応点が 9 点（12 点未満）。東の端を下から見上げた写真"
+  },
+  {
+   "photo": "PXL_20261105_071517479",
+   "why": "原点を直した後の鎖の解き直しが不合格（3.2 px・対応が弱い）。古い登録が台帳に残っている"
+  }
+ ],
+ "face_photo": "out/kyotsu-minami/coverage_f19_photo.png",
+ "coverage": {
+  "coverage_pct": 98.6,
+  "frame_pct": 100.0,
+  "json": "out/kyotsu-minami/coverage.json",
+  "check": "out/kyotsu-minami/coverage_f19_check.png",
+  "note": "東の部分の前に北東のガラスの箱（S3、足元の外）と北の広場の木が写る。exclude していない"
+ },
+ "floor_pitch": {
+  "value": 4.03,
+  "unit": "m",
+  "status": "estimated",
+  "tol": 0.35,
+  "ref": "data/reports/kyotsu-minami/sokuryo_f13.json#floor_pitch",
+  "evidence": [
+   "PXL_20261105_071536516",
+   "PXL_20261105_071033016.MP"
+  ],
+  "method": "f13 の階高を移した（同じ階高と置いた・仮定）。071536516 の正面化（傾き 横 0.16° 縦 0.36°）で北翼の段の帯の間隔 459.8 px（photos measure 459.7・強さ 0.68）、タイル 1 段 7.67 px → 1 階分 59.95 段（f13 59.75、差 0.3%）",
+  "tol_breakdown": {
+   "f13 の階高の ±": 0.31,
+   "移す時の差": 0.04,
+   "合計": 0.35
+  }
+ },
+ "bay_pitch": {
+  "value": null,
+  "unit": "m",
+  "status": "unknown",
+  "evidence": [],
+  "method": "数え係で unknown（西部の窓の列の東寄りが木で隠れる）。測っていない",
+  "ref": "data/reports/kyotsu-minami/kazoe_f19.json#bays"
+ },
+ "scale": {
+  "ruler": "f13 の階高を移した（f19 の辺 34.05 m は物差しにしない）",
+  "px_per_m": {
+   "PXL_20261105_071536516": 114.05
+  },
+  "check_ruler": null,
+  "check_value": null,
+  "diff_pct": null,
+  "check_note": "f19 の辺 34.05 m を物差しにすると、西端（北西の角 x=6008 px）から東端までを、低い塊の東の縁 1980 px とすれば 34.05÷((6008−1980)÷459.8)＝3.89 m、塔の東の縁 2523 px とすれば 4.49 m で、f13 の 4.03 m と 3.5% と 11% 違う。東端は f18（1.9 m 奥）との段で、低い塊は奥の面に見える（白い帯の高さがずれる）。辺を物差しにせず、足元も動かさない。f19 だけの 2 本目の物差しは無い"
+ },
+ "rectified": [
+  "out/rectified/kyotsu-minami/f19_071536516/PXL_20261105_071536516_front.jpg"
+ ],
+ "rectified_other": [
+  "out/rectified/kyotsu-minami/f19_071529022/",
+  "out/rectified/kyotsu-minami/f19_071527944/",
+  "out/rectified/kyotsu-minami/f19_071517479/",
+  "out/rectified/kyotsu-minami/f19_071548825/",
+  "out/rectified/kyotsu-minami/f19_071509670/"
+ ],
+ "compare": [
+  "out/kyotsu-minami/compare/PXL_20261105_071536516_f19_compare.json"
+ ],
+ "origin_note": "横の原点＝面の始点（東端）＝北西の角 6008 px − 34.05 m×114.05＝2124.6 px（PLATEAU の辺の長さで置いた登録用の目安）。壁の足元 3412 px。高さの原点：compare の z_named に『パラペット上端』＝(z=0 の行) − 25.9 m×縮尺 を渡した。z=0 の行＝写真の壁の足元の行 + (面の前の地面 g)×縮尺（g は coverage と同じ 5m 標高の面の前の地面：f13 −0.71 m、f17 +0.22 m、f19 −1.03 m）。土台のパラペット 25.9 m は PLATEAU の最高高さで、自動の当てはめ（空の下の行に合わせる）だと地面が数 m ずれるため。設計係が ground_offset・上端を決めたら登録し直す",
+ "requests": [],
+ "questions": []
+}

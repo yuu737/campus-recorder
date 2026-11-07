@@ -1,0 +1,72 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f7",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "北北東面 7（方位 28°）"
+ },
+ "where": "中庭 1 の奥の出っ張りの北側面。方位 28°（北北東向き）",
+ "source_photos": [
+  "PXL_20261105_071347810"
+ ],
+ "candidate_photos": [
+  "PXL_20261105_071334183",
+  "PXL_20261105_071347810"
+ ],
+ "best_photo": {
+  "oblique": "PXL_20261105_071347810"
+ },
+ "crops": [
+  "out/kyotsu-minami/kansatsu/core_334.jpg",
+  "out/kyotsu-minami/kansatsu/core_347.jpg",
+  "out/kyotsu-minami/kansatsu/cy1_334.jpg"
+ ],
+ "bays": {
+  "value": null,
+  "why": "側面は道路から正面に見えない"
+ },
+ "floors": {
+  "value": null,
+  "why": "側面は見えない"
+ },
+ "window_shape": "071347810（北寄りから）でガラスの筋の左にベージュのパネルの縁が幅広く見え、これが f7 の側面と読める（確からしさ low）。窓は見えない",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "見えない"
+ },
+ "bands": [],
+ "glazing": "不明",
+ "corners": "f8 のガラスの筋の縁",
+ "base": "見えない",
+ "top": "コアの頂部のタイルの箱（f8 と同じ）",
+ "exceptions": [],
+ "parts": [],
+ "structures_ref": [],
+ "differences_from_draft": [],
+ "unknowns": [
+  {
+   "what": "側面の作り（窓の有無）",
+   "value": null,
+   "why": "071347810（北寄りから）でガラスの筋の左にベージュのパネルの縁が幅広く見え、これが f7 の側面と読める（確からしさ low）。窓は見えない"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f7",
+   "what": "中庭 1 の中から出っ張りの側面を斜めに",
+   "why": "道路からは側面がほぼ真横で見えない"
+  }
+ ],
+ "not_in_index_faces": {
+  "photos": [
+   "PXL_20261105_071347810"
+  ],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

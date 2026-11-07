@@ -1,0 +1,227 @@
+{
+ "photo": "PXL_20261105_074925492",
+ "face": "f17",
+ "made_by": "検収係 kenshu（claude-opus-5-5）",
+ "made_at": "2026-11-07T16:55:00",
+ "recheck": {
+  "before": "out/kyotsu-minami/recheck/20261107_151014/summary.md",
+  "after": "out/kyotsu-minami/recheck/20261107_154918/summary.md"
+ },
+ "registration_note": "",
+ "pass": false,
+ "pass_note": "写真単位の合否（登録した面の線）。面の合否は kenshu_summary.json（面単位）",
+ "lines": [
+  {
+   "what": "塊B_北東の塔 端 70.3",
+   "axis": "x",
+   "json_m": 70.27,
+   "diff_m": 0.176,
+   "weak": false,
+   "action": "合否から外す：線は面の線（d=0）で比べるが、塔の正面は d=+0.13〜0.14（三角測量・塊の寄せ）。10 m 下から見ると +0.22〜0.26 上に写る（予測と一致）"
+  },
+  {
+   "what": "面の端L",
+   "axis": "x",
+   "json_m": 71.93,
+   "diff_m": 0.056,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "2 階の床の白い横帯（柱型・中） 下端",
+   "axis": "z",
+   "json_m": 4.07,
+   "diff_m": -0.118,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "2 階の床の白い横帯（柱型・中） 上端",
+   "axis": "z",
+   "json_m": 4.3,
+   "diff_m": -0.013,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "3 階の床の白い横帯（柱型・中） 下端",
+   "axis": "z",
+   "json_m": 8.1,
+   "diff_m": -0.01,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "3 階の床の白い横帯（柱型・中） 上端",
+   "axis": "z",
+   "json_m": 8.32,
+   "diff_m": -0.048,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "4 階の床の白い横帯（柱型・中） 下端",
+   "axis": "z",
+   "json_m": 12.12,
+   "diff_m": 0.055,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "5 階の床の白い横帯（柱型・中） 下端",
+   "axis": "z",
+   "json_m": 16.4,
+   "diff_m": 0.056,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "5 階の床の白い横帯（柱型・中） 上端",
+   "axis": "z",
+   "json_m": 16.47,
+   "diff_m": -0.014,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "塊B_北東の塔 上端",
+   "axis": "z",
+   "json_m": 20.6,
+   "diff_m": 0.217,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "パラペット上端",
+   "axis": "z",
+   "json_m": 21.3,
+   "diff_m": -0.079,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_27.3 上端",
+   "axis": "z",
+   "json_m": 4.07,
+   "diff_m": -0.024,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_42.7 右端",
+   "axis": "x",
+   "json_m": 44.8,
+   "diff_m": 0.083,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_55.2 左端",
+   "axis": "x",
+   "json_m": 55.2,
+   "diff_m": -0.201,
+   "weak": false,
+   "action": "不合格（直していない：1 枚・斜め・比率の部品。面の判定は kenshu_summary.json）"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_55.2 右端",
+   "axis": "x",
+   "json_m": 57.2,
+   "diff_m": 0.095,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_61.7 左端",
+   "axis": "x",
+   "json_m": 61.7,
+   "diff_m": 0.012,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品25（f17 の 1 階の柱廊） col_61.7 右端",
+   "axis": "x",
+   "json_m": 62.8,
+   "diff_m": -0.131,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品26（f17 の片持ちの大きな） eave 上端",
+   "axis": "z",
+   "json_m": 19.2,
+   "diff_m": -0.058,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品26（f17 の片持ちの大きな） eave 下端",
+   "axis": "z",
+   "json_m": 18.85,
+   "diff_m": 0.015,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品26（f17 の片持ちの大きな） eave 右端",
+   "axis": "x",
+   "json_m": 70.4,
+   "diff_m": -0.101,
+   "weak": false,
+   "action": "合格"
+  }
+ ],
+ "other_faces": [],
+ "changed": [
+  {
+   "field": "parts[f17 の 1 階の柱廊].角柱 42.7〜44.5 の北の縁",
+   "from": 44.5,
+   "to": 44.8,
+   "why": "074925492 +0.38・074939442 +0.36・074949973 +0.14（平均 +0.29）→ 2 回目 +0.08・+0.06・−0.16"
+  },
+  {
+   "field": "parts[f17 の 1 階の柱廊].角柱 55.4〜57.0",
+   "from": "55.4〜57.0",
+   "to": "55.2〜57.2",
+   "why": "南の縁 074837587 −0.17・074903876 −0.12・074913586 −0.16・074925492 −0.40、北の縁 +0.36・+0.13・+0.29・+0.12 → 2 回目 南 平均 −0.05・北 +0.05"
+  },
+  {
+   "field": "parts[f17 の 1 階の柱廊].角柱 61.7〜62.6 の北の縁",
+   "from": 62.6,
+   "to": 62.8,
+   "why": "074837587 +0.29・074903876 +0.26・074913586 +0.24・074925492 +0.07・075128406 +0.11 → 2 回目 平均 −0.01"
+  },
+  {
+   "field": "parts[f17 の 1 階の柱廊].角柱 27.3〜29.3 の北の縁",
+   "from": 29.3,
+   "to": 29.5,
+   "why": "074939442 +0.19・075128406 +0.18 → 2 回目 −0.01・−0.02"
+  }
+ ],
+ "requests": [],
+ "summary_line": {
+  "n_lines": 22,
+  "n_found": 14,
+  "n_strong": 14,
+  "n_ng_counted": 1,
+  "worst_face": {
+   "what": "塊B_北東の塔 端 70.3",
+   "diff_m": 0.176
+  },
+  "worst_parts": {
+   "what": "部品25（f17 の 1 階の柱廊） col_55.2 左端",
+   "diff_m": -0.201
+  },
+  "before": {
+   "worst_face": {
+    "what": "面の端L",
+    "diff_m": 0.056
+   },
+   "worst_parts": {
+    "what": "部品25（f17 の 1 階の柱廊） col_55.4 左端",
+    "diff_m": -0.403
+   }
+  }
+ }
+}

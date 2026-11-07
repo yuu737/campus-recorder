@@ -1,0 +1,67 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f0",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f0.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "北翼の西端（西の道路沿い）。方位 298°",
+ "left_end": "左＝北（from の端）",
+ "bays": {
+  "value": null,
+  "not_applicable": true,
+  "status": "not_applicable",
+  "why": "無地（前面は窓も柱型も無いタイルの台形の壁）",
+  "evidence": [
+   "PXL_20261105_071424391",
+   "PXL_20261105_071434753"
+  ],
+  "method": "南半分（071424391）と北半分（071434753）の 2 枚で、前面の台形の壁に窓・柱型が無いことを確かめた。unknown ではない"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071536516",
+   "PXL_20261105_071529022"
+  ],
+  "method": "同じ塊の f19 から（観察票 blocks の B_翼の段・北翼。f19 西部は 071536516・071529022 の 2 枚で 1 階＋帯の段 4＝5、measured）",
+  "ref": "data/reports/kyotsu-minami/kazoe_f19.json#floors",
+  "seen": "前面の台形の壁には階が無い。壁の奥に北翼の段の手すりが 3 段に上がるのが見える（071434753）",
+  "seen_evidence": [
+   "PXL_20261105_071434753",
+   "PXL_20261105_071424391"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  "北端の外階段は台形の壁の内側を南へ上がる（071509670）。南端の斜めの上端の裏の階段は見えない（観察票と同じ）",
+  "奥の段は 3 つ（各段の上に手すり、071434753）。北翼の段の数は f19 の『3・4・5 階が順に東へ下がる』と合う"
+ ],
+ "disagreement": [],
+ "requests": [],
+ "questions": [],
+ "beams": {
+  "value": 3,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_071424391",
+   "PXL_20261105_071509670",
+   "PXL_20261105_071434753"
+  ],
+  "what": "西の道路の梁（S1）のうち f0 に載る本数",
+  "method": "載る所で 2 枚を対応させた。071424391（南端の道路から北東を見上げ）：南端の上の打ち放しの箱に載る 1 本・台形の平らな上端の北寄りに金属の三角の笠付きの 1 本・北の斜めの上端に笠付きの 1 本＝3。071509670（北端から道路沿いに南を見通す）：手前から 北の斜め（笠と投光器）・平らな上端・南端の箱 の 3 本で f0 が終わり、4 本目（投光器付き）は f4 の北端の箱へ向かう。071434753（正面寄り）も 3 本。観察票の 3（mid）と一致",
+  "crops": [
+   "out/kyotsu-minami/kazoe/f0_391_top.jpg",
+   "out/kyotsu-minami/kazoe/f0_753_top.jpg",
+   "out/kyotsu-minami/kazoe/beams_670.jpg",
+   "out/kyotsu-minami/kazoe/beams_670far.jpg"
+  ]
+ }
+}

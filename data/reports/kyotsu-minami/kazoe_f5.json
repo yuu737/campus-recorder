@@ -1,0 +1,65 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f5",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f5.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中翼の南面（中庭 1 の北側）。方位 208°",
+ "left_end": "左＝西（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071325894"
+  ],
+  "why": "道路から中庭 1 の口ごしに斜めでしか写らず、東寄りは赤い葉の木で隠れる",
+  "seen": "071334183 で 2 階の窓が西から 4 以上、1 階のガラスブロック 2〜3（手前）。071325894 は西端の角だけ",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071334183"
+  ],
+  "supporting": [
+   "PXL_20261105_071325894"
+  ],
+  "method": "071334183 で 1 階（ガラスブロック）＋凹みと帯 4（2 階の窓、3・4・5 階のバルコニー。上の段ほど東へ下がる）＝5（切り出し f5_183_z.jpg）。071325894 は西端の角を強い斜めで、段を数えられない。2 枚目で確かめていないので estimated",
+  "crops": [
+   "out/kyotsu-minami/kazoe/f5_183_z.jpg",
+   "out/kyotsu-minami/kazoe/f5_894_z.jpg"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [
+  {
+   "item": "floors",
+   "kansatsu": "1 階＋帯の段 3〜4（最上段は奥、071334183）",
+   "kazoe": "5（1 階＋帯の段 4）",
+   "photos": [
+    "PXL_20261105_071334183"
+   ],
+   "adopted": "kazoe の 5（estimated）",
+   "why": "拡大すると最上段（5 階）の凹みが 4 階の段の奥に分かれて見える。同じ作りの f13・f19（measured 5）とも合う"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f5",
+   "what": "中庭 1 の中から f5 を斜めに、西端の段の角と東端（f6 との入隅）が 1 枚に入るように。反対の角からもう 1 枚",
+   "why": "窓の列（スパン数）と段の確かめ"
+  }
+ ],
+ "questions": []
+}

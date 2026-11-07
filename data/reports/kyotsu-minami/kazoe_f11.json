@@ -1,0 +1,56 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f11",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f11.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "南翼の北面（中庭 1 の南側）。方位 28°",
+ "left_end": "左＝東（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071347810"
+  ],
+  "why": "道路から中庭 1 の口ごしに東寄りが強い斜めで写るだけ。下は赤い葉の木",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071347810"
+  ],
+  "seen": "071347810 で東寄り（f10 との入隅の近く）に帯の段 3〜4。下は木で隠れる。1 枚だけ",
+  "method": "見えた段は 3〜4 で確定できない（切り出し f11_810_z.jpg）"
+ },
+ "interpreted": [
+  {
+   "value": 5,
+   "basis": "hypothesis",
+   "why": "木で隠れた下の段を含めた全体の階数。同じ塊（B_翼の段・南翼）の f13 が measured 5、作り（帯と奥の窓、段）が同じ",
+   "evidence": [
+    "PXL_20261105_071347810",
+    "PXL_20261105_071033016.MP"
+   ]
+  }
+ ],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f11",
+   "what": "中庭 1 の中から f11 を斜めに、西端（通り抜けの上の箱）と東端（f10 との入隅）が 1 枚に入る位置で 1 枚、反対の角からもう 1 枚。1 階まで",
+   "why": "段と窓の列が木で隠れる"
+  }
+ ],
+ "questions": []
+}

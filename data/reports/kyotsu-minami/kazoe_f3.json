@@ -1,0 +1,53 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f3",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f3.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中翼の北面（中庭 2 の南側）。方位 28°",
+ "left_end": "左＝東（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071424391",
+   "PXL_20261105_071413956"
+  ],
+  "why": "道路から中庭 2 の口ごしに強い斜め（071413956 は西から、071424391 は東端を見上げ）で、窓の列が分かれて見えない",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071424391"
+  ],
+  "supporting": [
+   "PXL_20261105_071413956"
+  ],
+  "method": "071424391 で f2 との入隅の近く（東端）の縦の列に、1 階（ガラスブロック）＋帯の段 4（各段の上に凹み）＝5。入隅の隣の f2 の窓の段 5 と高さが揃う。071413956 は西から強い斜めで帯の段 4 以上（最上段は奥）。全段を 2 枚目で確かめていないので estimated",
+  "crops": [
+   "out/kyotsu-minami/kazoe/f3_391_z.jpg",
+   "out/kyotsu-minami/kazoe/f3_956_z.jpg"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f3",
+   "what": "中庭 2 の中から f3 を斜めに。西端の角（通り抜けの上の箱）と東端（f2 との入隅）が 1 枚に入る位置で 1 枚、反対の角からもう 1 枚",
+   "why": "窓の列と段を両端の入る 2 枚で数えるため"
+  }
+ ],
+ "questions": []
+}

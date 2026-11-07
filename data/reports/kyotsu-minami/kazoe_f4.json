@@ -1,0 +1,67 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f4",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f4.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中翼の西端（西の道路沿い）。方位 298°",
+ "left_end": "左＝北（from の端）",
+ "bays": {
+  "value": null,
+  "not_applicable": true,
+  "status": "not_applicable",
+  "why": "無地（前面は窓も柱型も無いタイルの台形の壁）",
+  "evidence": [
+   "PXL_20261105_071400772.MP",
+   "PXL_20261105_071408553.MP",
+   "PXL_20261105_071347810"
+  ],
+  "method": "北半分（071400772・071408553）と南半分（071347810）で前面に窓・柱型が無いことを確かめた"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071033016.MP",
+   "PXL_20261105_071536516"
+  ],
+  "method": "同じ塊の f13・f19 から（観察票 blocks の B_翼の段。南翼 f13・北翼 f19 はどちらも measured 5）。中翼そのものの面（f3・f5）は 1 枚ずつで 5 と読めた（estimated）",
+  "ref": "data/reports/kyotsu-minami/kazoe_f13.json#floors",
+  "seen": "前面の台形の壁に階は無い。奥に中翼の段が 3 つ（手すり付き、071408553・071400772）",
+  "seen_evidence": [
+   "PXL_20261105_071408553.MP",
+   "PXL_20261105_071400772.MP"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f4",
+   "what": "中翼の西端を道路の向かい（擁壁の上か道路の中ほど）から正面に、上の梁が全部と両端の箱が 1 枚に入るように",
+   "why": "f4 に載る梁の本数が決まらない（観察票の依頼と同じ）"
+  }
+ ],
+ "questions": [],
+ "beams": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071400772.MP",
+   "PXL_20261105_071509670",
+   "PXL_20261105_071309389"
+  ],
+  "what": "西の道路の梁（S1）のうち f4 に載る本数",
+  "seen": "071400772 で北端の上の打ち放しの箱に載る 1 本と台形の平らな上端に載る 1 本。071509670 で f0 の 3 本の先の 4 本目（投光器付き）が f4 の北端の箱へ向かう。071309389・071303445 では f12 の先（北）に 3〜5 本が重なって見える",
+  "why": "南半分の梁は写真どうしで同じ梁の対応が取れない（観察票と同じ）"
+ }
+}

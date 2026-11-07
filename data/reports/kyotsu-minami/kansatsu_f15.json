@@ -1,0 +1,151 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f15",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "南南西面 15（方位 208°）"
+ },
+ "where": "背骨の南面（南翼の南面より北に下がる）。方位 208°（南南西向き）",
+ "source_photos": [
+  "PXL_20261105_071033016.MP"
+ ],
+ "candidate_photos": [],
+ "best_photo": {
+  "front": "PXL_20261105_071033016.MP"
+ },
+ "crops": [
+  "out/kyotsu-minami/kansatsu/south_016.jpg",
+  "out/kyotsu-minami/kansatsu/se_016.jpg"
+ ],
+ "bays": {
+  "value": null,
+  "why": "1 枚だけで、下半分が木で隠れる"
+ },
+ "floors": {
+  "value": null,
+  "seen": "上の 2 段（4・5 階）だけ見える",
+  "from_photos": [
+   "PXL_20261105_071033016.MP"
+  ]
+ },
+ "window_shape": "5 階：打ち放しの張り出した箱に横長の窓（下にガラスブロックの帯）。4 階：横長の窓",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "1 枚だけ・木"
+ },
+ "bands": [
+  "5 階の箱の下端の打ち放しの帯",
+  "東の柱型に床の高さで白い横帯"
+ ],
+ "glazing": "無し",
+ "corners": "西：濃い灰色の高い塊（南翼の角の柱型との間）。東：全高のタイルの柱型（上端は笠木）。その東は f16 と東の塊の庇",
+ "base": "地面にタイルの枠の入口（人が歩いて入る。通り抜けか玄関か）と矢印の案内板（071033016）",
+ "top": "濃い灰色の塊の上に細い棒のアンテナ。打ち放しの部分の上はパラペット",
+ "exceptions": [
+  "濃い灰色の塊は周りの屋上より高い（塔屋と読める。解釈）"
+ ],
+ "parts": [
+  {
+   "what": "5 階の張り出した打ち放しの箱（横長の窓）",
+   "vocab": "composite（box、concrete）＋ windows",
+   "count": 1,
+   "where": "f15 の中ほど、5 階",
+   "from_photos": [
+    "PXL_20261105_071033016.MP"
+   ],
+   "ratio": "高さは 1 階分、出は小さい（目安）",
+   "note": null
+  },
+  {
+   "what": "全高のタイルの柱型（東端）",
+   "vocab": "composite（box、tile）",
+   "count": 1,
+   "where": "f15 の東端",
+   "from_photos": [
+    "PXL_20261105_071033016.MP"
+   ],
+   "ratio": "幅は f15 の 1/3 前後（目安）",
+   "note": null
+  },
+  {
+   "what": "濃い灰色の高い塊（塔屋と読める）",
+   "vocab": "blocks（塊）",
+   "count": 1,
+   "where": "f15 の西寄り（f14 との間）",
+   "from_photos": [
+    "PXL_20261105_071033016.MP"
+   ],
+   "ratio": "上端は周りの屋上より 1/2 階ほど高い（目安）",
+   "note": "S8_塔"
+  },
+  {
+   "what": "細い棒のアンテナ",
+   "vocab": "composite（cylinder）か asset",
+   "count": 1,
+   "where": "濃い灰色の塊の上",
+   "from_photos": [
+    "PXL_20261105_071033016.MP"
+   ],
+   "ratio": "塊の上に出る高さは 1 階分弱（目安）",
+   "note": null
+  },
+  {
+   "what": "1 階の入口（タイルの枠、奥へ通じる）",
+   "vocab": "openings か porch",
+   "count": 1,
+   "where": "f15 の 1 階",
+   "from_photos": [
+    "PXL_20261105_071033016.MP"
+   ],
+   "ratio": "高さは 1 階分（目安）",
+   "note": "奥へ抜けるかは見えない"
+  }
+ ],
+ "structures_ref": [
+  "S8_塔"
+ ],
+ "differences_from_draft": [
+  "仮の土台は 1 枚の壁。実際は灰色の高い塊・打ち放しの部分・タイルの柱型の 3 つに分かれる"
+ ],
+ "unknowns": [
+  {
+   "what": "1〜3 階の作り",
+   "value": null,
+   "why": "木で隠れる"
+  }
+ ],
+ "requests": [],
+ "not_in_index_faces": {
+  "photos": [],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [
+  {
+   "id": "S8_塔",
+   "what": "屋上より高い塊・柱型",
+   "faces": [
+    "f13",
+    "f15",
+    "f17",
+    "f19",
+    "f8"
+   ],
+   "from_photos": [
+    "PXL_20261105_071033016.MP",
+    "PXL_20261105_074837587",
+    "PXL_20261105_074913586",
+    "PXL_20261105_071536516",
+    "PXL_20261105_071548825",
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "shape": "(a) f15 の濃い灰色の塊（細いアンテナ）、(b) f19 東部のタイルの塔（板の付いたアンテナ）とその奥の濃い灰色の塊、(c) f17 北端のタイルの塔（庇より上）、(d) f13 東端のタイルの柱型、(e) 中庭 1 のコアの頂部のタイルの箱、(f) 071347810 で中庭 1 のコアの奥に見える窓の付いたタイルの高い塊とアンテナ 2 本（(a) と同じ塊かは決められない）",
+   "ratio": "どれも周りの屋上より 1/3〜1/2 階ほど高い（目安。正面化していない）",
+   "count": "5〜6"
+  }
+ ],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

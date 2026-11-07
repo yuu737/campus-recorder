@@ -1,0 +1,1143 @@
+{
+ "made_by": "satsuei（撮影係）claude-haiku-5-5",
+ "made_at": "2026-11-07T08:37:52+09:00",
+ "building": "kyotsu-minami",
+ "note": "棟 JSON（data/buildings/kyotsu-minami.json）が無く requests が無いので、依頼との照合はしない。壁は候補の方位（建物の重心の方向の逆）からの目安で、面の確定は目視。寸法・棟の確定はしない。",
+ "checked_total": 76,
+ "usable_total": 76,
+ "items": [
+  {
+   "id": "PXL_20261103_065946407",
+   "taken_at": "2026-11-03T15:59:46",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 78.5° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 78.5°）",
+   "gps_xy": [
+    20.7,
+    82.2
+   ],
+   "sharpness": 1128.2
+  },
+  {
+   "id": "PXL_20261103_070003022",
+   "taken_at": "2026-11-03T16:00:03",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 39.5°）",
+   "gps_xy": [
+    20.7,
+    82.2
+   ],
+   "sharpness": 976.4
+  },
+  {
+   "id": "PXL_20261103_070606125",
+   "taken_at": "2026-11-03T16:06:06",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南東側の壁（向き差 7.2°）",
+   "gps_xy": [
+    39.3,
+    55.4
+   ],
+   "sharpness": 1038.1
+  },
+  {
+   "id": "PXL_20261103_070619739",
+   "taken_at": "2026-11-03T16:06:19",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南東側の壁（向き差 26.8°）",
+   "gps_xy": [
+    39.3,
+    55.4
+   ],
+   "sharpness": 977.1
+  },
+  {
+   "id": "PXL_20261103_075639031",
+   "taken_at": "2026-11-03T16:56:39",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 21.5°）",
+   "gps_xy": [
+    -18.0,
+    -4.0
+   ],
+   "sharpness": 1019.1
+  },
+  {
+   "id": "PXL_20261103_075705849",
+   "taken_at": "2026-11-03T16:57:05",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 27.5°）",
+   "gps_xy": [
+    -18.0,
+    -4.0
+   ],
+   "sharpness": 808.0
+  },
+  {
+   "id": "PXL_20261103_075811786",
+   "taken_at": "2026-11-03T16:58:11",
+   "staff_building": null,
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 12.9°）",
+   "gps_xy": [
+    3.5,
+    -11.7
+   ],
+   "sharpness": 792.4
+  },
+  {
+   "id": "PXL_20261103_080423326",
+   "taken_at": "2026-11-03T17:04:23",
+   "staff_building": "honbu",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 2.1°）",
+   "gps_xy": [
+    -16.2,
+    10.8
+   ],
+   "sharpness": 463.2
+  },
+  {
+   "id": "PXL_20261103_080431748",
+   "taken_at": "2026-11-03T17:04:31",
+   "staff_building": "honbu",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 13.1°）",
+   "gps_xy": [
+    -16.2,
+    10.8
+   ],
+   "sharpness": 564.3
+  },
+  {
+   "id": "PXL_20261104_073547139",
+   "taken_at": "2026-11-04T16:35:47",
+   "staff_building": null,
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 22.7°）",
+   "gps_xy": [
+    4.3,
+    20.3
+   ],
+   "sharpness": 771.0
+  },
+  {
+   "id": "PXL_20261104_073618326",
+   "taken_at": "2026-11-04T16:36:18",
+   "staff_building": null,
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 18.3°）",
+   "gps_xy": [
+    4.3,
+    20.3
+   ],
+   "sharpness": 761.2
+  },
+  {
+   "id": "PXL_20261105_060854125",
+   "taken_at": "2026-11-05T15:08:54",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 71.8° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 71.8°）",
+   "gps_xy": [
+    45.7,
+    58.8
+   ],
+   "sharpness": 1152.3
+  },
+  {
+   "id": "PXL_20261105_060904811",
+   "taken_at": "2026-11-05T15:09:04",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 69.8° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 69.8°）",
+   "gps_xy": [
+    45.7,
+    58.8
+   ],
+   "sharpness": 1152.3
+  },
+  {
+   "id": "PXL_20261105_060915328",
+   "taken_at": "2026-11-05T15:09:15",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 64.9° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 64.9°）",
+   "gps_xy": [
+    43.2,
+    68.3
+   ],
+   "sharpness": 1196.8
+  },
+  {
+   "id": "PXL_20261105_060927494",
+   "taken_at": "2026-11-05T15:09:27",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 55.9° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 55.9°）",
+   "gps_xy": [
+    43.2,
+    68.3
+   ],
+   "sharpness": 2645.1
+  },
+  {
+   "id": "PXL_20261105_060950084",
+   "taken_at": "2026-11-05T15:09:50",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 36.9°）",
+   "gps_xy": [
+    43.2,
+    68.3
+   ],
+   "sharpness": 2754.7
+  },
+  {
+   "id": "PXL_20261105_060954729",
+   "taken_at": "2026-11-05T15:09:54",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 29.9°）",
+   "gps_xy": [
+    43.2,
+    68.3
+   ],
+   "sharpness": 2000.2
+  },
+  {
+   "id": "PXL_20261105_061002256",
+   "taken_at": "2026-11-05T15:10:02",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 34.9°）",
+   "gps_xy": [
+    43.2,
+    68.3
+   ],
+   "sharpness": 2889.4
+  },
+  {
+   "id": "PXL_20261105_061028255",
+   "taken_at": "2026-11-05T15:10:28",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 14.6°）",
+   "gps_xy": [
+    45.2,
+    62.8
+   ],
+   "sharpness": 1845.0
+  },
+  {
+   "id": "PXL_20261105_061034445",
+   "taken_at": "2026-11-05T15:10:34",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 30.6°）",
+   "gps_xy": [
+    45.2,
+    62.8
+   ],
+   "sharpness": 1574.5
+  },
+  {
+   "id": "PXL_20261105_061122585",
+   "taken_at": "2026-11-05T15:11:22",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南東側の壁（向き差 25.5°）",
+   "gps_xy": [
+    35.3,
+    62.2
+   ],
+   "sharpness": 1476.7
+  },
+  {
+   "id": "PXL_20261105_061247963",
+   "taken_at": "2026-11-05T15:12:47",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 44.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 1625.7
+  },
+  {
+   "id": "PXL_20261105_061255833",
+   "taken_at": "2026-11-05T15:12:55",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 23.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 990.9
+  },
+  {
+   "id": "PXL_20261105_061300605",
+   "taken_at": "2026-11-05T15:13:00",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 9.7°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 848.8
+  },
+  {
+   "id": "PXL_20261105_061341818",
+   "taken_at": "2026-11-05T15:13:41",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 24.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 1998.6
+  },
+  {
+   "id": "PXL_20261105_061357582",
+   "taken_at": "2026-11-05T15:13:57",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 22.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 1776.2
+  },
+  {
+   "id": "PXL_20261105_061402813",
+   "taken_at": "2026-11-05T15:14:02",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 23.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 2254.3
+  },
+  {
+   "id": "PXL_20261105_061410188",
+   "taken_at": "2026-11-05T15:14:10",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 17.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 2369.5
+  },
+  {
+   "id": "PXL_20261105_061418906",
+   "taken_at": "2026-11-05T15:14:18",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 0.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 1206.2
+  },
+  {
+   "id": "PXL_20261105_061423669",
+   "taken_at": "2026-11-05T15:14:23",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 37.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 927.5
+  },
+  {
+   "id": "PXL_20261105_061434917",
+   "taken_at": "2026-11-05T15:14:34",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 28.3°）",
+   "gps_xy": [
+    42.4,
+    70.5
+   ],
+   "sharpness": 1163.1
+  },
+  {
+   "id": "PXL_20261105_061836019",
+   "taken_at": "2026-11-05T15:18:36",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南東側の壁（向き差 27.6°）",
+   "gps_xy": [
+    39.1,
+    37.8
+   ],
+   "sharpness": 1496.3
+  },
+  {
+   "id": "PXL_20261105_061837232",
+   "taken_at": "2026-11-05T15:18:37",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 109.0° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 109.0°）",
+   "gps_xy": [
+    44.4,
+    71.1
+   ],
+   "sharpness": 1213.1
+  },
+  {
+   "id": "PXL_20261105_061905208.MP",
+   "taken_at": "2026-11-05T15:19:05",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 26.0°）",
+   "gps_xy": [
+    44.4,
+    71.1
+   ],
+   "sharpness": 2314.6
+  },
+  {
+   "id": "PXL_20261105_061908705",
+   "taken_at": "2026-11-05T15:19:08",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 12.0°）",
+   "gps_xy": [
+    44.4,
+    71.1
+   ],
+   "sharpness": 1958.8
+  },
+  {
+   "id": "PXL_20261105_061909489",
+   "taken_at": "2026-11-05T15:19:09",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 27.0°）",
+   "gps_xy": [
+    44.4,
+    71.1
+   ],
+   "sharpness": 2714.2
+  },
+  {
+   "id": "PXL_20261105_061910368",
+   "taken_at": "2026-11-05T15:19:10",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [
+    "建物の方向から 60.0° 外れている。建物が写っていない可能性",
+    "未仕分け。候補の 1 番目が kyotsu-minami（仕分けの確認待ち）"
+   ],
+   "matches_request": "建物の東側の壁（向き差 60.0°）",
+   "gps_xy": [
+    44.4,
+    71.1
+   ],
+   "sharpness": 2748.0
+  },
+  {
+   "id": "PXL_20261105_062840332",
+   "taken_at": "2026-11-05T15:28:40",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 26.4°）",
+   "gps_xy": [
+    4.6,
+    22.5
+   ],
+   "sharpness": 1129.7
+  },
+  {
+   "id": "PXL_20261105_063412307",
+   "taken_at": "2026-11-05T15:34:12",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 29.3°）",
+   "gps_xy": [
+    24.6,
+    13.8
+   ],
+   "sharpness": 617.9
+  },
+  {
+   "id": "PXL_20261105_063420663",
+   "taken_at": "2026-11-05T15:34:20",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 13.3°）",
+   "gps_xy": [
+    24.6,
+    13.8
+   ],
+   "sharpness": 1090.2
+  },
+  {
+   "id": "PXL_20261105_063514255",
+   "taken_at": "2026-11-05T15:35:14",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 9.5°）",
+   "gps_xy": [
+    27.9,
+    12.9
+   ],
+   "sharpness": 1033.7
+  },
+  {
+   "id": "PXL_20261105_063516032",
+   "taken_at": "2026-11-05T15:35:16",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 2.5°）",
+   "gps_xy": [
+    27.9,
+    12.9
+   ],
+   "sharpness": 1113.2
+  },
+  {
+   "id": "PXL_20261105_063529987",
+   "taken_at": "2026-11-05T15:35:29",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 12.5°）",
+   "gps_xy": [
+    27.9,
+    12.9
+   ],
+   "sharpness": 627.7
+  },
+  {
+   "id": "PXL_20261105_063540463",
+   "taken_at": "2026-11-05T15:35:40",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 14.5°）",
+   "gps_xy": [
+    27.9,
+    12.9
+   ],
+   "sharpness": 1218.9
+  },
+  {
+   "id": "PXL_20261105_063548675",
+   "taken_at": "2026-11-05T15:35:48",
+   "staff_building": "library",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 8.5°）",
+   "gps_xy": [
+    27.9,
+    12.9
+   ],
+   "sharpness": 1421.9
+  },
+  {
+   "id": "PXL_20261105_064431924",
+   "taken_at": "2026-11-05T15:44:31",
+   "staff_building": "honbu",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 2.3°）",
+   "gps_xy": [
+    -14.7,
+    1.9
+   ],
+   "sharpness": 1296.2
+  },
+  {
+   "id": "PXL_20261105_071033016.MP",
+   "taken_at": "2026-11-05T16:10:33",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    13.7,
+    -5.3
+   ],
+   "sharpness": 1436.3
+  },
+  {
+   "id": "PXL_20261105_071255844",
+   "taken_at": "2026-11-05T16:12:55",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 27.2°）",
+   "gps_xy": [
+    -3.3,
+    19.4
+   ],
+   "sharpness": 1303.6
+  },
+  {
+   "id": "PXL_20261105_071303445",
+   "taken_at": "2026-11-05T16:13:03",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 53.2° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南側の壁（向き差 53.2°）",
+   "gps_xy": [
+    -3.3,
+    19.4
+   ],
+   "sharpness": 1281.6
+  },
+  {
+   "id": "PXL_20261105_071309389",
+   "taken_at": "2026-11-05T16:13:09",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 8.2°）",
+   "gps_xy": [
+    -3.3,
+    19.4
+   ],
+   "sharpness": 1199.0
+  },
+  {
+   "id": "PXL_20261105_071316984",
+   "taken_at": "2026-11-05T16:13:16",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 9.2°）",
+   "gps_xy": [
+    -3.3,
+    19.4
+   ],
+   "sharpness": 1438.2
+  },
+  {
+   "id": "PXL_20261105_071325894",
+   "taken_at": "2026-11-05T16:13:25",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 18.8°）",
+   "gps_xy": [
+    -3.3,
+    19.4
+   ],
+   "sharpness": 1137.1
+  },
+  {
+   "id": "PXL_20261105_071334183",
+   "taken_at": "2026-11-05T16:13:34",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南側の壁（向き差 19.2°）",
+   "gps_xy": [
+    -3.3,
+    19.4
+   ],
+   "sharpness": 986.8
+  },
+  {
+   "id": "PXL_20261105_071347810",
+   "taken_at": "2026-11-05T16:13:47",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 63.9° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 63.9°）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1136.0
+  },
+  {
+   "id": "PXL_20261105_071400772.MP",
+   "taken_at": "2026-11-05T16:14:00",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 73.9° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 73.9°）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1049.6
+  },
+  {
+   "id": "PXL_20261105_071408553.MP",
+   "taken_at": "2026-11-05T16:14:08",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1202.3
+  },
+  {
+   "id": "PXL_20261105_071413956",
+   "taken_at": "2026-11-05T16:14:13",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 72.9° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 72.9°）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1059.1
+  },
+  {
+   "id": "PXL_20261105_071424391",
+   "taken_at": "2026-11-05T16:14:24",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 78.9° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 78.9°）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1263.8
+  },
+  {
+   "id": "PXL_20261105_071434753",
+   "taken_at": "2026-11-05T16:14:34",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 80.9° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 80.9°）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1133.2
+  },
+  {
+   "id": "PXL_20261105_071509670",
+   "taken_at": "2026-11-05T16:15:09",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1694.6
+  },
+  {
+   "id": "PXL_20261105_071517479",
+   "taken_at": "2026-11-05T16:15:17",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1386.5
+  },
+  {
+   "id": "PXL_20261105_071527944",
+   "taken_at": "2026-11-05T16:15:27",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1428.5
+  },
+  {
+   "id": "PXL_20261105_071529022",
+   "taken_at": "2026-11-05T16:15:29",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1825.1
+  },
+  {
+   "id": "PXL_20261105_071536516",
+   "taken_at": "2026-11-05T16:15:36",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    63.9,
+    60.3
+   ],
+   "sharpness": 1245.2
+  },
+  {
+   "id": "PXL_20261105_071548825",
+   "taken_at": "2026-11-05T16:15:48",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    29.1,
+    134.0
+   ],
+   "sharpness": 1318.2
+  },
+  {
+   "id": "PXL_20261105_074837587",
+   "taken_at": "2026-11-05T16:48:37",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    47.7,
+    77.3
+   ],
+   "sharpness": 972.9
+  },
+  {
+   "id": "PXL_20261105_074849844",
+   "taken_at": "2026-11-05T16:48:49",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    47.7,
+    77.3
+   ],
+   "sharpness": 876.0
+  },
+  {
+   "id": "PXL_20261105_074903876",
+   "taken_at": "2026-11-05T16:49:03",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    47.7,
+    77.3
+   ],
+   "sharpness": 1286.4
+  },
+  {
+   "id": "PXL_20261105_074913586",
+   "taken_at": "2026-11-05T16:49:13",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 106.0° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 106.0°）",
+   "gps_xy": [
+    45.4,
+    68.3
+   ],
+   "sharpness": 885.6
+  },
+  {
+   "id": "PXL_20261105_074925492",
+   "taken_at": "2026-11-05T16:49:25",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 89.0° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 89.0°）",
+   "gps_xy": [
+    45.4,
+    68.3
+   ],
+   "sharpness": 1065.5
+  },
+  {
+   "id": "PXL_20261105_074939442",
+   "taken_at": "2026-11-05T16:49:39",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    45.4,
+    68.3
+   ],
+   "sharpness": 1260.0
+  },
+  {
+   "id": "PXL_20261105_074949973",
+   "taken_at": "2026-11-05T16:49:49",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 95.0° 外れている。建物が写っていない可能性"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 95.0°）",
+   "gps_xy": [
+    45.4,
+    68.3
+   ],
+   "sharpness": 811.6
+  },
+  {
+   "id": "PXL_20261105_075121795",
+   "taken_at": "2026-11-05T16:51:21",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "kyotsu-minami の候補が出ず、どの壁か確かめられない",
+    "職員の仕分けは kyotsu-minami だが候補が出ない（仕分け係が確かめる）",
+    "候補の 1 番目が tower75（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の候補が出ない（この写真の 1 番目は別の棟）",
+   "gps_xy": [
+    55.2,
+    23.9
+   ],
+   "sharpness": 893.6
+  },
+  {
+   "id": "PXL_20261105_075128406",
+   "taken_at": "2026-11-05T16:51:28",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 66.0° 外れている。建物が写っていない可能性",
+    "候補の 1 番目が tower75（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 66.0°）",
+   "gps_xy": [
+    54.0,
+    38.1
+   ],
+   "sharpness": 1114.1
+  },
+  {
+   "id": "PXL_20261105_075147867",
+   "taken_at": "2026-11-05T16:51:47",
+   "staff_building": "kyotsu-minami",
+   "usable": true,
+   "problems": [
+    "建物の方向から 68.0° 外れている。建物が写っていない可能性",
+    "候補の 1 番目が tower75（仕分け係が確かめる）"
+   ],
+   "matches_request": "建物の南東側の壁（向き差 68.0°）",
+   "gps_xy": [
+    54.0,
+    38.1
+   ],
+   "sharpness": 1071.1
+  },
+  {
+   "id": "PXL_20261105_075519850",
+   "taken_at": "2026-11-05T16:55:19",
+   "staff_building": "tower75",
+   "usable": true,
+   "problems": [],
+   "matches_request": "建物の南東側の壁（向き差 15.2°）",
+   "gps_xy": [
+    53.7,
+    13.8
+   ],
+   "sharpness": 621.9
+  }
+ ],
+ "next_shots": [
+  {
+   "face": "建物の南側の壁（南面）",
+   "what": "端から端まで 1 枚。その後 2〜3 m ずつ横へ歩いて同じ面を 5 枚",
+   "where": "南側の道か広場の向こう側から。11/5 16:13・16:14 の写真は同じ地点で向きを変えただけ（歩いていない）"
+  },
+  {
+   "face": "建物の北側・西側の壁",
+   "what": "まだ 1 枚も無い。端から端まで入る全体 1 枚と、正面寄り 2 枚",
+   "where": "北側・西側の道か広場の向こう側から。木や柱が壁をふさがない所"
+  },
+  {
+   "face": "建物の東側の壁（南東の角を含む）",
+   "what": "東面の正面 1 枚と、南東の角で南面と東面が同時に入る 1〜2 枚（11/5 15:12〜15:19 は東面を向いているが職員の仕分けは tower75）",
+   "where": "南東の角の外側、少し下がった所から"
+  }
+ ],
+ "questions": [
+  "PXL_20261105_060834553〜061937 の職員仕分けは tower75 だが、候補の 1 番目は kyotsu-minami（向き差 0.3〜60°）。仕分け係が棟を確かめてほしい",
+  "PXL_20261103_065946407・070003022 は kyotsu-minami の重心が距離 0 m（カメラが建物の足元に入る）。候補の値が粗い可能性",
+  "11/5 16:13・16:14 の写真は同じ地点で向きを変えた物が多い。横に歩いた写真があるか職員に確かめてほしい"
+ ]
+}

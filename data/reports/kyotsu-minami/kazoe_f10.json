@@ -1,0 +1,74 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f10",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f10.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中庭 1 の奥、出っ張り（f8）の南脇の壁。方位 298°",
+ "left_end": "左＝北（from の端）",
+ "bays": {
+  "value": 1,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ],
+  "method": "2 枚ともガラスの筋（f8）の右（南）の打ち放しの壁に各階の窓が 1 つ（2×2 の格子＋下にガラスブロック、上に細い庇）で一致。ただし 2 枚とも索引の faces に f10 が無い（candidate_faces だけ）ので、根拠の門で measured にしない",
+  "gate": "仕分け係が face_reassignment（kansatsu_building.json）を索引に足し（recorder photos set-face）、low でなければ measured にできる",
+  "crops": [
+   "out/kyotsu-minami/kazoe/core_183_z.jpg",
+   "out/kyotsu-minami/kazoe/core_810_z.jpg"
+  ]
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071334183"
+  ],
+  "supporting": [
+   "PXL_20261105_071347810"
+  ],
+  "method": "071334183 で窓の段 4 がはっきり、5 段目（最下段）の窓の上端が塀の上にのぞく（切り出し core_183_low.jpg。南脇は室内の明かり）。最下段の高さは f2 の 1 階の段と揃う。071347810 は上の 3 段がはっきりで下は木。faces の門もあり estimated",
+  "crops": [
+   "out/kyotsu-minami/kazoe/core_183_low.jpg"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [
+  {
+   "item": "floors",
+   "kansatsu": "窓の段 4 つが見える（下の段は木と塀で隠れる）",
+   "kazoe": "5（4 段＋塀の上にのぞく 5 段目）",
+   "photos": [
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "adopted": "kazoe の 5（estimated）",
+   "why": "071334183 の拡大で、塀のすぐ上に 5 段目の窓の上端が見える。同じ塊の f2 も 5 段"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f10",
+   "what": "仕分け係へ：071334183・071347810 の faces に f10 を足すか確かめる（観察票 kansatsu_building.json の face_reassignment、confidence mid）",
+   "why": "足せば bays 1 を measured にできる（今は根拠の門で estimated）"
+  },
+  {
+   "kind": "photo",
+   "face": "f6〜f10",
+   "what": "中庭 1 の中に入り、奥の出っ張り（ガラスの筋）と両脇の壁が 1 枚に入るように、1 階まで",
+   "why": "最下段（1 階）が塀と木で隠れる"
+  }
+ ],
+ "questions": []
+}

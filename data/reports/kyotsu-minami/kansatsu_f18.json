@@ -1,0 +1,96 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f18",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "北北東面 21（方位 28°）"
+ },
+ "where": "北東の角の北面（f19 より南に下がる）。方位 28°（北北東向き）",
+ "source_photos": [],
+ "candidate_photos": [
+  "PXL_20261105_071509670",
+  "PXL_20261105_071517479",
+  "PXL_20261105_071529022",
+  "PXL_20261105_071536516",
+  "PXL_20261105_071548825"
+ ],
+ "best_photo": {},
+ "crops": [
+  "out/kyotsu-minami/kansatsu/ne_548.jpg"
+ ],
+ "bays": {
+  "value": null,
+  "why": "確かに写っている写真が無い"
+ },
+ "floors": {
+  "value": null,
+  "why": "確かに写っている写真が無い"
+ },
+ "window_shape": "不明",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "見えない"
+ },
+ "bands": [],
+ "glazing": "不明",
+ "corners": "前にピロティの上のガラスの箱（S3）が覆い、箱の下に北の入口（ガラスの扉）がある。入口が f19 の東寄りか f18 かは見えない",
+ "base": "不明",
+ "top": "不明",
+ "exceptions": [],
+ "parts": [],
+ "structures_ref": [
+  "S3_北東のピロティの上のガラスの箱"
+ ],
+ "differences_from_draft": [],
+ "unknowns": [
+  {
+   "what": "面の作り",
+   "value": null,
+   "why": "ガラスの箱に隠れ、確かに f18 が写っている写真が無い"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f18",
+   "what": "北東の角のガラスの箱の下（ピロティ）から、f18 の壁と f19 との段が分かる 1 枚",
+   "why": "箱に隠れて見えない"
+  }
+ ],
+ "not_in_index_faces": {
+  "photos": [],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [
+  {
+   "id": "S3_北東のピロティの上のガラスの箱",
+   "what": "北東の角の、柱で持ち上げた 1 層のガラスの箱",
+   "faces": [
+    "f19",
+    "f18",
+    "f17"
+   ],
+   "from_photos": [
+    "PXL_20261105_071548825",
+    "PXL_20261105_071536516",
+    "PXL_20261105_071529022",
+    "PXL_20261105_071517479",
+    "PXL_20261105_071509670",
+    "PXL_20261105_074837587",
+    "PXL_20261105_074849844",
+    "PXL_20261105_074903876",
+    "PXL_20261105_074913586"
+   ],
+   "shape": "打ち放しの柱（ピロティ）の上に、下にパネルの帯の付いたガラスの箱。北面と東の庭側の面は縦の桟の全面ガラス（北面 16 枚前後、東面 12〜14 枚）、北西の端の面はベージュの縦のひれと細い窓（のこぎり状、ひれ 5 前後）。屋上は背の高い縦格子の手すり（屋上テラス）。下は広場からの通り抜けで、北の入口（ガラスの扉）がある",
+   "ratio": "ガラスの部分の高さは本体の 1 階分弱、下のパネルの帯はその半分、ピロティの柱の高さは 1 階分強。屋上の手すりはガラスの部分の 1/3 前後（071548825・074837587、目安）",
+   "count": 1,
+   "pilotis_count": null,
+   "pilotis_why": "柱は 6 本以上見えるが、全部が入る写真が無い",
+   "note": "OSM osm-way-1304077324。PLATEAU の足元には入っていない。北の広場の向こうの棟につながるかは写真から決められない"
+  }
+ ],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

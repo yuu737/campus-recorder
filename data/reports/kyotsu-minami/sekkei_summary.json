@@ -1,0 +1,332 @@
+{
+ "schema": "sekkei/1",
+ "building": "kyotsu-minami",
+ "made_by": "設計係 sekkei（claude-opus-5-5）",
+ "made_at": "2026-11-07T15:40:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_*.json・kansatsu_building.json",
+  "kazoe": "data/reports/kyotsu-minami/kazoe_*.json",
+  "sokuryo": "data/reports/kyotsu-minami/sokuryo_f13.json・sokuryo_f17.json・sokuryo_f19.json",
+  "boards": "out/kyotsu-minami/coverage_f13_photo.png・coverage_f17_photo.png・coverage_f19_photo.png（px_per_m 40）",
+  "roof": "out/kyotsu-minami/roof.json（recorder photos roof --units）",
+  "shiwake": "out/photos/shiwake_kyotsu-minami.json"
+ },
+ "outputs": {
+  "design_script": "scripts/design_kyotsu-minami.py",
+  "building_json": "data/buildings/kyotsu-minami.json",
+  "run": "out/kyotsu-minami/run_report.json（validate OK 警告 0・draw OK・model --fast OK）",
+  "images": "out/kyotsu-minami/sheet.png・persp_shaded.png・persp_street.png"
+ },
+ "counts": {
+  "values": {
+   "measured": 3,
+   "estimated": 494,
+   "unknown": 17
+  },
+  "of_which_hypothesis": 103,
+  "measured_what": [
+   "floor_count 5（数え係、2 枚）",
+   "faces.f13.bays.count 8（数え係、2 枚）",
+   "faces.f2.bays.count 1（数え係、2 枚）"
+  ],
+  "unknown_what": "タイルの目地の幅（面ごとの materials.joint_w、測っていない）",
+  "independent_observations": {
+   "measured": 3,
+   "estimated": 494,
+   "unknown": 17
+  },
+  "blocks": 14,
+  "parts": 35,
+  "face_states": {
+   "f0": "estimated",
+   "f1": "hypothesis",
+   "f2": "estimated",
+   "f3": "hypothesis",
+   "f4": "estimated",
+   "f5": "hypothesis",
+   "f6": "estimated",
+   "f7": "unknown",
+   "f8": "estimated",
+   "f9": "unknown",
+   "f10": "estimated",
+   "f11": "hypothesis",
+   "f12": "estimated",
+   "f13": "estimated",
+   "f14": "unknown",
+   "f15": "unknown",
+   "f16": "unknown",
+   "f17": "estimated",
+   "f18": "unknown",
+   "f19": "estimated"
+  },
+  "state_counts": {
+   "measured": 0,
+   "estimated": 45,
+   "hypothesis": 4,
+   "unknown": 6
+  },
+  "shape_ratio": 0.891,
+  "evidence_ratio": 0.006
+ },
+ "observed_1m_objects": {
+  "placed": 29,
+  "not_placed": 9,
+  "placed_list": [
+   {
+    "what": "翼 3 本の段（3・4・5 階が東へ下がる）",
+    "how": "blocks（南翼 B_南翼_3〜5階：coverage_f13_photo の px＝(a)、北翼 B_北翼_3〜5階：coverage_f19_photo の px＝(a)、中翼 B_中翼_3〜5階：北翼からの仮説 same_block）"
+   },
+   {
+    "what": "1・2 階（低層）と背骨",
+    "how": "blocks B_低層・B_背骨（上端は coverage_f13_photo の帯の上端＝(a)）"
+   },
+   {
+    "what": "南東の角の全高の柱型（S8 d）",
+    "how": "block B_南東の柱型（幅・頂部は coverage_f13_photo＝(a)、奥行きは足元の辺）"
+   },
+   {
+    "what": "北面東寄りのタイルの塔＋アンテナ（S8 b）",
+    "how": "block B_北の塔（幅・頂部は coverage_f19_photo＝(a)、奥行きは比率＝(b)）、composite アンテナ（(a)＋比率）"
+   },
+   {
+    "what": "東面北端の塔（S8 c）",
+    "how": "block B_北東の塔（幅は coverage_f17_photo＝(a)、頂部は観察票の比＝(b)）"
+   },
+   {
+    "what": "中庭 1 のコアの頂部のタイルの箱（S8 e）",
+    "how": "composite（比率＝(b)）"
+   },
+   {
+    "what": "f13 の各階の帯と奥の窓（ガラスブロック）・1 階の扉",
+    "how": "bands（負の depth、(a)）＋composite の窓（bays の割り＝数え係 measured・測量係 estimated）"
+   },
+   {
+    "what": "f19 の各階の帯と奥の窓の面",
+    "how": "bands（負の depth、(a)。窓は列 unknown で置かない）"
+   },
+   {
+    "what": "中庭側の翼の面（f1・f3・f5・f11）の帯",
+    "how": "bands の仮説（same_block、f19・f13 から）"
+   },
+   {
+    "what": "1 階の前のタイルの低い壁（S7、f13・f19）",
+    "how": "composite（(a)）"
+   },
+   {
+    "what": "段のテラス・帯の上の手すり",
+    "how": "rail 10 本（f13・f19、(a)）"
+   },
+   {
+    "what": "西端の台形の階段の壁 3（f0・f4・f12）",
+    "how": "composite（box＋wedge、比率＝(b)、tol 25〜30%）"
+   },
+   {
+    "what": "外階段 2（f0・f12。f4 は向きが見えない）",
+    "how": "composite の wedge（t で斜めの板、(b)）"
+   },
+   {
+    "what": "段の箱（両端の低い箱）6",
+    "how": "composite（(b)）"
+   },
+   {
+    "what": "上の階の打ち放しの箱 5（f0 は南端だけ）",
+    "how": "composite（(b)）"
+   },
+   {
+    "what": "縦の配管 6（西端の両端）",
+    "how": "pipes（(b)）"
+   },
+   {
+    "what": "中庭の口の塀 2（S2）",
+    "how": "composite（(b)。穴は小さく置かない）"
+   },
+   {
+    "what": "f2 の各階の横長の窓＋ガラスブロックの帯",
+    "how": "bays count 1（数え係 measured）＋windows 5（比率＝(b)）"
+   },
+   {
+    "what": "f6・f10 の各階の窓＋ガラスブロックの腰",
+    "how": "bays count 1（estimated、根拠の門）＋windows 各 5（(b)）"
+   },
+   {
+    "what": "f8 の全高のガラスの筋と両縁のベージュのパネル",
+    "how": "glazing＋patch 2（(b)）"
+   },
+   {
+    "what": "f17 の柱型・細い窓・ガラスブロックの腰（柱型・中 6 本、柱型・北 5 本）",
+    "how": "composite（柱型の縁は coverage_f17_photo＝(a)）"
+   },
+   {
+    "what": "f17 の白い横帯 4",
+    "how": "bands（(a)）"
+   },
+   {
+    "what": "f17 のガラス帯 2 区画（2〜4 階）",
+    "how": "glazing 6（範囲・高さは (a)、引っ込みは (b)）"
+   },
+   {
+    "what": "f17 の 5 階のガラスブロックの列",
+    "how": "glazing（(a)、引っ込みは (b)）"
+   },
+   {
+    "what": "f17 の片持ちの大きな庇",
+    "how": "composite（出は面の写真での写り方から、厚さは (b)）"
+   },
+   {
+    "what": "f17 の 1 階の柱廊（S5）・タイルの角柱 5・入口のガラスの扉 2",
+    "how": "composite の cut＋box（柱と扉の位置は (a)、奥行きは (b)）"
+   },
+   {
+    "what": "北東のピロティの上のガラスの箱（S3）",
+    "how": "vestibule（平面は OSM osm-way-1304077324）＋composite（パネルの帯・屋上の手すり・東の辺の柱 4）（(b)）"
+   },
+   {
+    "what": "f15 の 5 階の張り出した箱と東端のタイルの柱型",
+    "how": "composite（071033016 の 1 枚、(b)）"
+   },
+   {
+    "what": "屋上の白い箱 2（東の塊の北寄り）",
+    "how": "rooftop_units（recorder photos roof --units、人が指した。倒れ込みは ambiguous で ±2 m）"
+   }
+  ],
+  "not_placed_list": [
+   {
+    "what": "西の道路の梁の列（S1）",
+    "why": "擁壁（敷地）と棟の 2 つに触れるので敷地 JSON の物。敷地に置く語彙が無いので requests（tool）に上げ、棟には置かない"
+   },
+   {
+    "what": "南の渡り（S4）",
+    "why": "2 つの棟に触れるので敷地 JSON の物。requests（tool）"
+   },
+   {
+    "what": "背骨の南の濃い灰色の高い塊（塔屋）とアンテナ（S8 a）、071347810 のコアの奥の高い塊とアンテナ 2 本（S8 f）",
+    "why": "071033016・071347810 に写るが平面の位置と輪郭が見えない（塊は輪郭が分からなければ作らない）。requests（photo f15）"
+   },
+   {
+    "what": "f19 東部の低めのタイルの塊",
+    "why": "coverage_f19_photo に写る（頂部 18.5 m）が、ガラスの箱の奥で面の線より前か奥か・どこまでが低いかが見えない。背骨の塊（21.3 m）の中に入る。requests（photo f18）"
+   },
+   {
+    "what": "f17 の南端のタイルの塊と柱型・南の区画（s 0〜18 m）",
+    "why": "075121795・074939442 の遠く斜めの 2 枚だけで製図板は未撮影。区画の大きさの比も取れない。requests（photo f17）"
+   },
+   {
+    "what": "翼の西端の中庭側の角の 1 階の抜け（S6、4 か所）",
+    "why": "上の箱は置いた。抜けは通り抜けか奥まった入口か・奥行きが見えないので彫っていない"
+   },
+   {
+    "what": "中庭側の段の角の打ち放しの袖壁（f1・f3・f5・f11）",
+    "why": "段の塊の角として形はある（素材の違いだけ）。中庭の中からの写真が無く位置を読めない"
+   },
+   {
+    "what": "f15 の 1 階の入口・f19 の北の入口（ガラスの扉）・f12 の門",
+    "why": "071033016・071548825・071255844 で木・ピロティの陰。大きさの比が取れない（門は 1 m 前後で小物扱い）"
+   },
+   {
+    "what": "ガラスの箱のピロティの柱（東の辺以外）・西の端の縦のひれ",
+    "why": "全部が入る写真が無い（観察票 pilotis_count null）。東の辺の 4 本だけ置いた"
+   }
+  ]
+ },
+ "decisions": [
+  "高さの基準：同じ床の印が coverage_f13_photo と coverage_f17_photo で同じ高さ、coverage_f19_photo で 1.04 m 低い。2 面が合う f13・f17 を採り、f19 の読みに +1.04 m（地面の取り方は変えていない。未解決として requests data）",
+  "西端の足元の線＝奥の建物の壁（f13・f19 の面の写真で 1・2 階の帯が西端まで届く）。台形の階段の壁はその外 1.2〜1.5 m（requests check）",
+  "中翼の段は北翼からの仮説（same_block）。段の位置（輪郭）も北翼の西端からの距離を写した",
+  "中庭 1 のコアの頂部の箱は塊にすると Blender の足し算が壊れたので composite にした",
+  "低層以外の塊は輪郭を 1〜13 cm 外へ広げた（同じ面が重なると EXACT の足し算・引き算が壊れた。値の ± より小さい寄せ）",
+  "f17 北東の塔の頂部は面の写真の 20.9 m を使わず観察票の比 22.7 m（3 枚で庇より上に出ている）",
+  "ガラスの箱（S3）は棟 JSON に置いた（写真でこの棟に付く、OSM で北の棟から 30 m 以上離れる。requests check）"
+ ],
+ "requests": [
+  {
+   "face": "f19",
+   "kind": "data",
+   "what": "f19 の面の写真（coverage_f19_photo.png）の足元を取り直す。同じ床の印が f13・f17 より 1.04 m 低く写る"
+  },
+  {
+   "face": "f13",
+   "kind": "data",
+   "what": "PLATEAU の高さ 25.9 m（頂部 73.03 m）の最高点がどの部品か（南東の柱型 23.85 m・北の塔 23.94 m・背骨の南の濃い灰色の塊）を航空写真で"
+  },
+  {
+   "face": "f17",
+   "kind": "photo",
+   "what": "東面の南の 0〜18 m（柱型・南の区画とガラス帯・南）を正面から（東の庭の南寄りから）"
+  },
+  {
+   "face": "f17",
+   "kind": "photo",
+   "what": "北端か南端から面に沿って横から、庇の出と厚さ、柱廊の奥行きが分かる 1 枚"
+  },
+  {
+   "face": "f19",
+   "kind": "photo",
+   "what": "北面の 1・2 階の窓の列を東端から西端まで（木より建物寄りから）"
+  },
+  {
+   "face": "f12",
+   "kind": "photo",
+   "what": "西の道路の向かい（擁壁の上）から各翼の西端を正面に、台形の壁の両端と奥の段が全部入るように（f0・f4・f12）"
+  },
+  {
+   "face": "f4",
+   "kind": "photo",
+   "what": "中翼の段（3・4・5 階の西の縁）を中庭 1 か 2 の中から斜めに、段の角が入るように"
+  },
+  {
+   "face": "f1",
+   "kind": "photo",
+   "what": "中庭 1・2 の中から両側の面（f1・f3・f5・f11）を斜めに、両端が入るように"
+  },
+  {
+   "face": "f8",
+   "kind": "photo",
+   "what": "中庭 1 の中に入り、奥のコア（ガラスの筋と頂部のタイルの箱）と両脇（f6〜f10）を正面から"
+  },
+  {
+   "face": "f15",
+   "kind": "photo",
+   "what": "南端（横断歩道の北）から背骨の南面と、その上の濃い灰色の塊（塔屋）とアンテナを両端が入るように"
+  },
+  {
+   "face": "f18",
+   "kind": "photo",
+   "what": "北東のガラスの箱の下から f18 の壁と f19 との段、ピロティの柱を全部"
+  },
+  {
+   "face": "f14",
+   "kind": "photo",
+   "what": "南東の柱型の東の側面（f14）と背骨の南端の東面（f16）を南東から"
+  },
+  {
+   "face": "f12",
+   "kind": "tool",
+   "what": "敷地に置く物：西の道路の上の打ち放しの梁の列（S1）。擁壁（敷地）と f0・f4・f12 の台形の壁の上端をつなぐ。本数は f12 で 3〜4、f0 で 3（数え係 measured）、道路沿いに 9〜11 本。梁の成は台形の壁の高さの 1/6〜1/8（071309389）"
+  },
+  {
+   "face": "f17",
+   "kind": "tool",
+   "what": "敷地に置く物：南の渡り（S4、OSM osm-way-1304077323）。f17 の南端と東の棟（osm-way-1304077325）をつなぐ柱の上の箱。床は 3 階の床前後（075121795・074939442、遠く斜め）"
+  },
+  {
+   "face": "f19",
+   "kind": "check",
+   "what": "北東のガラスの箱（S3）を棟 JSON に置いた。北の棟（共通講義棟北）につながらないか"
+  },
+  {
+   "face": "f0",
+   "kind": "check",
+   "what": "西端の足元の線（PLATEAU）は奥の建物の壁か、手前の台形の階段の壁か"
+  },
+  {
+   "face": "f13",
+   "kind": "tool",
+   "what": "観察票の面の名前の番号が id とずれる（f17＝「東南東面 18」など）。recorder new --from-site の名前の付け方"
+  }
+ ],
+ "requests_note": "17 件：photo 10・tool 3（敷地に置く物 2、面の名前 1）・data 2（f19 の高さの基準、PLATEAU の最高点）・check 2（ガラスの箱の置き場、西端の足元の線）。待たずに今ある語彙で置いた",
+ "questions": [
+  "f19 の面の写真の高さを 1.04 m 上げて f13・f17 に揃えた。測量係が f19 の足元（5m 標高 −1.03 m）を取り直すと、どちらが正しいか決まる",
+  "PLATEAU の高さ 25.9 m（頂部 73.03 m）は南東の柱型（23.85 m）・北の塔（23.94 m）より約 1 m 高い。最高点の部品が分からない（未解決）"
+ ]
+}

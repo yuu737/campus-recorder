@@ -1,0 +1,98 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f6",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "西北西面 6（方位 298°）"
+ },
+ "where": "中庭 1 の奥、出っ張りの北脇の壁。方位 298°（西北西向き）",
+ "source_photos": [
+  "PXL_20261105_071334183",
+  "PXL_20261105_071347810"
+ ],
+ "candidate_photos": [],
+ "best_photo": {
+  "front": "PXL_20261105_071334183"
+ },
+ "crops": [
+  "out/kyotsu-minami/kansatsu/core_334.jpg",
+  "out/kyotsu-minami/kansatsu/core_347.jpg",
+  "out/kyotsu-minami/kansatsu/cy1_334.jpg"
+ ],
+ "bays": {
+  "value": 1,
+  "note": "各階に窓 1 つ（コアのガラスの筋の左（北））",
+  "from_photos": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ],
+  "confidence": "mid（仕分けでは candidate_faces。face_reassignment を参照）"
+ },
+ "floors": {
+  "value": null,
+  "seen": "窓の段 4 つが見える。下の段は赤い葉の木と塀で隠れる",
+  "note": "背骨は f2 で 5 階",
+  "from_photos": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ]
+ },
+ "window_shape": "縦横が近い窓（上下 2 段の格子）＋窓の下にガラスブロックの帯（腰）。上に細い庇",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "柱型は無い（打ち放しの壁に窓が 1 つ）"
+ },
+ "bands": [
+  "窓の上に細い水切り（庇）"
+ ],
+ "glazing": "無し",
+ "corners": "ガラスの筋（f8）の出っ張りとの入隅",
+ "base": "中庭 1 の木と塀で見えない",
+ "top": "打ち放しのパラペット。コアのタイルの頂部より低い",
+ "exceptions": [],
+ "parts": [
+  {
+   "what": "各階の窓＋ガラスブロックの腰",
+   "vocab": "windows（count=1）＋ spandrel（ガラスブロック）",
+   "count": "見えた 4 段",
+   "where": "f6 の真ん中",
+   "from_photos": [
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "ratio": "窓の幅は面の幅の半分強（071334183、正面寄り・目安）",
+   "note": null
+  }
+ ],
+ "structures_ref": [],
+ "differences_from_draft": [
+  "面の材料は打ち放し（タイルではない）"
+ ],
+ "unknowns": [
+  {
+   "what": "1・2 階",
+   "value": null,
+   "why": "木と塀で隠れる"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f6〜f10",
+   "what": "中庭 1 の中に入り、奥の出っ張り（ガラスの縦長の筋）と両脇が入る 1 枚",
+   "why": "道路から遠く、両脇の壁と出っ張りの側面の境目が確かでない"
+  }
+ ],
+ "not_in_index_faces": {
+  "photos": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

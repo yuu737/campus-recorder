@@ -1,0 +1,56 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f18",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f18.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "北東の角の北面（f19 より南に下がる）。方位 28°",
+ "left_end": "左＝東（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "candidate_photos": [
+   "PXL_20261105_071509670",
+   "PXL_20261105_071517479",
+   "PXL_20261105_071529022",
+   "PXL_20261105_071536516",
+   "PXL_20261105_071548825"
+  ],
+  "why": "確かにこの面が写っている写真が無い（観察票と同じ）",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "candidate_photos": [
+   "PXL_20261105_071509670",
+   "PXL_20261105_071517479",
+   "PXL_20261105_071529022",
+   "PXL_20261105_071536516",
+   "PXL_20261105_071548825"
+  ],
+  "why": "同上",
+  "method": "数えていない"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f18",
+   "what": "北東のガラスの箱（S3）の下から、f18 の壁と f19 との段が分かる 1 枚",
+   "why": "写真が無い面。別の面の柱間・段はこの面に写さない"
+  }
+ ],
+ "questions": []
+}

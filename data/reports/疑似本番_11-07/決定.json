@@ -247,6 +247,25 @@
    "result": "honbu の工程 10（本番の run）へ進む",
    "rule": "K-013 と同じ。周期の形（同じ柱割りのくり返し）の面では、登録の横の原点が柱割りの倍数ずれていないかを検収係が重ね画像で確かめる",
    "record": "pipeline（honbu の runner subagent）"
+  },
+  {
+   "id": "K-015",
+   "at": "2026-11-07T15:54:52+09:00",
+   "building": "kyotsu-minami",
+   "event": {
+    "kind": "stuck",
+    "why": "再検収を 2 回回しても同じ線 276 本が直らない／soten.json の open 2 件（東の塊の屋上の高さ、北東のガラスの箱の高さ。rule の欄に止めた理由が入っていて事件の検出には出ない）",
+    "evidence": [
+     "recorder agent events kyotsu-minami",
+     "out/kyotsu-minami/soten.json（open 2）",
+     "data/reports/kyotsu-minami/kenshu_summary.json"
+    ]
+   },
+   "decision": "①線の 276 本は K-013 の規則（登録の偏り・斜め 1 枚・未登録の面は撮影と登録の直しの依頼）で検収係のやり直しはしない ②東の塊の屋上：設計係の主張（背骨は 1 つの塊で上端 21.3 m）を採る。f13 の製図板と f18 の 2 枚（+0.07・−0.01）が合い、反対は f17 の北端 1 か所の見えと航空写真の暗い帯の解釈。北端の食い違いは未解決として撮影依頼（f17 の端から横に、タワー75 から見下ろし）③ガラスの箱：部品は消さず比率の値のまま、1 方向の写真しか無いので撮影依頼（東の端から真横）。どちらも検収係に争点を decided にさせる",
+   "reason": "手順書 shinko.md の stuck の選択肢（どちらを採るか／撮影依頼）。②は 2 枚＋製図板 対 1 枚＋解釈。③は高さと奥行きが組で決まり 1 方向の写真では決まらない（争点の文）",
+   "result": "検収係（SendMessage、同じ係）が soten.json の open 2 件を decided に（値・design は変えず）。open 0。工程 10 へ",
+   "rule": "写真 2 枚以上と製図板が合う値と、1 枚の局所の見え＋航空写真の解釈が食い違う時は、前者を採り後者の場所を撮影依頼にする。高さと奥行きが組で決まる部品で 1 方向の写真しか無い時は、比率の値のまま撮影依頼",
+   "record": "pipeline（kyotsu-minami の runner subagent）"
   }
  ]
 }

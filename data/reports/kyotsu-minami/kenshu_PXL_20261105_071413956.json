@@ -1,0 +1,306 @@
+{
+ "photo": "PXL_20261105_071413956",
+ "face": "f2",
+ "made_by": "検収係 kenshu（claude-opus-5-5）",
+ "made_at": "2026-11-07T16:55:00",
+ "recheck": {
+  "before": "out/kyotsu-minami/recheck/20261107_151014/summary.md",
+  "after": "out/kyotsu-minami/recheck/20261107_154918/summary.md"
+ },
+ "registration_note": "目印の登録（11 点、25.6 px）。カメラ 6.23 m は手持ちと合わず、f2 は 4.03 m ごとに同じ窓が並ぶので 1 階分ずれた解の疑い。合否と値の根拠に使わない（目印係へ）",
+ "pass": false,
+ "pass_note": "写真単位の合否（登録した面の線）。面の合否は kenshu_summary.json（面単位）",
+ "lines": [
+  {
+   "what": "2 階の横長の窓 上端",
+   "axis": "z",
+   "json_m": 7.37,
+   "diff_m": -0.016,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "3 階の横長の窓 上端",
+   "axis": "z",
+   "json_m": 11.4,
+   "diff_m": 0.046,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "4 階の横長の窓 上端",
+   "axis": "z",
+   "json_m": 15.43,
+   "diff_m": 0.165,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "5 階の横長の窓 下端",
+   "axis": "z",
+   "json_m": 17.24,
+   "diff_m": -0.104,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "5 階の横長の窓 上端",
+   "axis": "z",
+   "json_m": 19.46,
+   "diff_m": -0.034,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "パラペット上端",
+   "axis": "z",
+   "json_m": 21.3,
+   "diff_m": -0.064,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "窓下パネル（1 階の横長の窓）下端",
+   "axis": "z",
+   "json_m": 0.57,
+   "diff_m": -0.113,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "窓下パネル（3 階の横長の窓）下端",
+   "axis": "z",
+   "json_m": 8.63,
+   "diff_m": 0.026,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "窓下パネル（4 階の横長の窓）下端",
+   "axis": "z",
+   "json_m": 12.66,
+   "diff_m": -0.019,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "窓下パネル（5 階の横長の窓）下端",
+   "axis": "z",
+   "json_m": 16.69,
+   "diff_m": -0.015,
+   "weak": false,
+   "action": "合格"
+  }
+ ],
+ "other_faces": [
+  {
+   "face": "f0",
+   "pass": false,
+   "n_lines": 22,
+   "n_found": 3,
+   "n_strong": 3,
+   "n_ng_counted": 2,
+   "worst_face": null,
+   "worst_parts": {
+    "what": "部品15（f0 の台形の階段の壁と） box_up_to 下端",
+    "diff_m": 0.324
+   },
+   "before": {
+    "worst_face": null,
+    "worst_parts": {
+     "what": "部品15（f0 の台形の階段の壁と） box_up_to 下端",
+     "diff_m": 0.324
+    }
+   },
+   "lines": [
+    {
+     "what": "部品15（f0 の台形の階段の壁と） box_low_to 右端",
+     "axis": "x",
+     "json_m": 20.23,
+     "diff_m": 0.067,
+     "weak": false,
+     "action": "合格"
+    },
+    {
+     "what": "部品15（f0 の台形の階段の壁と） wall_coping 上端",
+     "axis": "z",
+     "json_m": 9.35,
+     "diff_m": -0.022,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品15（f0 の台形の階段の壁と） box_up_to 上端",
+     "axis": "z",
+     "json_m": 8.7,
+     "diff_m": -0.056,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品15（f0 の台形の階段の壁と） box_up_to 下端",
+     "axis": "z",
+     "json_m": 4.2,
+     "diff_m": 0.324,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品15（f0 の台形の階段の壁と） box_low_from 下端",
+     "axis": "z",
+     "json_m": 1.96,
+     "diff_m": 0.202,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品22（中庭 2 の口の塀） front 左端",
+     "axis": "x",
+     "json_m": 20.23,
+     "diff_m": -0.206,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    }
+   ]
+  },
+  {
+   "face": "f1",
+   "pass": false,
+   "n_lines": 18,
+   "n_found": 0,
+   "n_strong": 0,
+   "n_ng_counted": 0,
+   "worst_face": null,
+   "worst_parts": null,
+   "before": {
+    "worst_face": null,
+    "worst_parts": null
+   },
+   "lines": []
+  },
+  {
+   "face": "f3",
+   "pass": false,
+   "n_lines": 18,
+   "n_found": 0,
+   "n_strong": 0,
+   "n_ng_counted": 0,
+   "worst_face": null,
+   "worst_parts": null,
+   "before": {
+    "worst_face": null,
+    "worst_parts": null
+   },
+   "lines": [
+    {
+     "what": "パラペット上端",
+     "axis": "z",
+     "json_m": 21.3,
+     "diff_m": 0.018,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    }
+   ]
+  },
+  {
+   "face": "f4",
+   "pass": false,
+   "n_lines": 6,
+   "n_found": 4,
+   "n_strong": 4,
+   "n_ng_counted": 3,
+   "worst_face": {
+    "what": "3 階のテラスの腰壁の上端の笠木 下端",
+    "diff_m": 0.353
+   },
+   "worst_parts": {
+    "what": "部品14（f4 の台形の階段の壁と） box_up_from 下端",
+    "diff_m": 0.174
+   },
+   "before": {
+    "worst_face": {
+     "what": "3 階のテラスの腰壁の上端の笠木 下端",
+     "diff_m": 0.353
+    },
+    "worst_parts": {
+     "what": "部品14（f4 の台形の階段の壁と） box_up_from 下端",
+     "diff_m": 0.174
+    }
+   },
+   "lines": [
+    {
+     "what": "3 階のテラスの腰壁の上端の笠木 下端",
+     "axis": "z",
+     "json_m": 9.0,
+     "diff_m": 0.353,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "3 階のテラスの腰壁の上端の笠木 上端",
+     "axis": "z",
+     "json_m": 9.2,
+     "diff_m": 0.153,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品14（f4 の台形の階段の壁と） wall_slope_from 上端",
+     "axis": "z",
+     "json_m": 9.2,
+     "diff_m": 0.148,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品14（f4 の台形の階段の壁と） box_up_from 上端",
+     "axis": "z",
+     "json_m": 8.7,
+     "diff_m": 0.026,
+     "weak": false,
+     "action": "合格"
+    },
+    {
+     "what": "部品14（f4 の台形の階段の壁と） box_up_from 下端",
+     "axis": "z",
+     "json_m": 4.2,
+     "diff_m": 0.174,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    }
+   ]
+  }
+ ],
+ "changed": [],
+ "requests": [
+  {
+   "to": "mejirushi",
+   "kind": "check",
+   "what": "繰り返さない目印（f0・f4 の階段の壁の上端、中庭 2 の口の塀の上端）を 1 つ足して解き直す。1 階（4.03 m）ずれた解の疑い（カメラ 6.23 m）"
+  }
+ ],
+ "summary_line": {
+  "n_lines": 19,
+  "n_found": 6,
+  "n_strong": 6,
+  "n_ng_counted": 1,
+  "worst_face": {
+   "what": "4 階の横長の窓 上端",
+   "diff_m": 0.165
+  },
+  "worst_parts": {
+   "what": "窓下パネル（3 階の横長の窓）下端",
+   "diff_m": 0.026
+  },
+  "before": {
+   "worst_face": {
+    "what": "4 階の横長の窓 上端",
+    "diff_m": 0.165
+   },
+   "worst_parts": {
+    "what": "窓下パネル（3 階の横長の窓）下端",
+    "diff_m": 0.026
+   }
+  }
+ }
+}

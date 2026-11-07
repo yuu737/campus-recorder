@@ -1,0 +1,52 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f16",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f16.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "背骨の南端の東面（東の塊の南端の切り欠き）。方位 118°",
+ "left_end": "左＝南（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "candidate_photos": [
+   "PXL_20261105_071033016.MP",
+   "PXL_20261105_074939442",
+   "PXL_20261105_075121795"
+  ],
+  "why": "確かにこの面が写っている写真が無い（観察票と同じ）",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "candidate_photos": [
+   "PXL_20261105_071033016.MP",
+   "PXL_20261105_074939442",
+   "PXL_20261105_075121795"
+  ],
+  "why": "同上",
+  "method": "数えていない"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f16",
+   "what": "東の庭の南端から、南の渡り（S4）の下をくぐった所で f16 を正面に、上端と下端が入るように",
+   "why": "写真が無い面。別の面の柱間・段はこの面に写さない"
+  }
+ ],
+ "questions": []
+}

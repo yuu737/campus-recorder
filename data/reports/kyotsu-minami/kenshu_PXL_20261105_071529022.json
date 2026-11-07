@@ -1,0 +1,717 @@
+{
+ "photo": "PXL_20261105_071529022",
+ "face": "f19",
+ "made_by": "検収係 kenshu（claude-opus-5-5）",
+ "made_at": "2026-11-07T16:55:00",
+ "recheck": {
+  "before": "out/kyotsu-minami/recheck/20261107_151014/summary.md",
+  "after": "out/kyotsu-minami/recheck/20261107_154918/summary.md"
+ },
+ "registration_note": "071536516 からの鎖。同じ高さの原点のずれ（約 1 m）。f19 の合否に使わない",
+ "pass": false,
+ "pass_note": "写真単位の合否（登録した面の線）。面の合否は kenshu_summary.json（面単位）",
+ "lines": [
+  {
+   "what": "面の端0",
+   "axis": "x",
+   "json_m": 0.0,
+   "diff_m": 0.218,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "塊B_北の塔 端 3.3",
+   "axis": "x",
+   "json_m": 3.33,
+   "diff_m": 0.162,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "塊B_北の塔 端 8.2",
+   "axis": "x",
+   "json_m": 8.17,
+   "diff_m": -0.072,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "塊B_北翼_4階 端 24.3",
+   "axis": "x",
+   "json_m": 24.251,
+   "diff_m": -0.025,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "塊B_北翼_3階 端 30.7",
+   "axis": "x",
+   "json_m": 30.69,
+   "diff_m": 0.09,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "面の端L",
+   "axis": "x",
+   "json_m": 34.05,
+   "diff_m": 0.005,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "1 階の窓の面の引っ込み 下端",
+   "axis": "z",
+   "json_m": 0.17,
+   "diff_m": 0.036,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "3 階の窓の面の引っ込み 下端",
+   "axis": "z",
+   "json_m": 9.14,
+   "diff_m": -0.438,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "3 階の窓の面の引っ込み 上端",
+   "axis": "z",
+   "json_m": 11.66,
+   "diff_m": -0.28,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "4 階の窓の面の引っ込み 上端",
+   "axis": "z",
+   "json_m": 15.71,
+   "diff_m": -0.279,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "5 階の窓の面の引っ込み 上端",
+   "axis": "z",
+   "json_m": 19.79,
+   "diff_m": 0.436,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "部品2（f19 の 1 階の前の） 0_box 上端",
+   "axis": "z",
+   "json_m": 0.36,
+   "diff_m": 0.008,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品2（f19 の 1 階の前の） 0_box 左端",
+   "axis": "x",
+   "json_m": 11.55,
+   "diff_m": -0.341,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "部品2（f19 の 1 階の前の） 0_box 右端",
+   "axis": "x",
+   "json_m": 33.3,
+   "diff_m": -0.012,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品8（f19 の 2 階の帯の） rail_bar 上端",
+   "axis": "z",
+   "json_m": 5.41,
+   "diff_m": 0.006,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品8（f19 の 2 階の帯の） rail_bar 下端",
+   "axis": "z",
+   "json_m": 5.366,
+   "diff_m": 0.049,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_bar 上端",
+   "axis": "z",
+   "json_m": 9.44,
+   "diff_m": 0.403,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_bar 下端",
+   "axis": "z",
+   "json_m": 9.396,
+   "diff_m": 0.446,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post0 左端",
+   "axis": "x",
+   "json_m": 8.028,
+   "diff_m": 0.065,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post1 左端",
+   "axis": "x",
+   "json_m": 9.513,
+   "diff_m": -0.192,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post1 右端",
+   "axis": "x",
+   "json_m": 9.557,
+   "diff_m": -0.147,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post2 左端",
+   "axis": "x",
+   "json_m": 10.999,
+   "diff_m": 0.042,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post2 右端",
+   "axis": "x",
+   "json_m": 11.043,
+   "diff_m": -0.002,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post3 左端",
+   "axis": "x",
+   "json_m": 12.484,
+   "diff_m": 0.03,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post3 右端",
+   "axis": "x",
+   "json_m": 12.528,
+   "diff_m": -0.014,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post4 左端",
+   "axis": "x",
+   "json_m": 13.969,
+   "diff_m": 0.007,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post4 右端",
+   "axis": "x",
+   "json_m": 14.013,
+   "diff_m": -0.004,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post5 左端",
+   "axis": "x",
+   "json_m": 15.454,
+   "diff_m": -0.103,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品9（f19 の 3 階の帯の） rail_post5 右端",
+   "axis": "x",
+   "json_m": 15.498,
+   "diff_m": 0.106,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品10（f19 の 4 階の帯の） rail_bar 上端",
+   "axis": "z",
+   "json_m": 13.51,
+   "diff_m": 0.45,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品10（f19 の 4 階の帯の） rail_post0 左端",
+   "axis": "x",
+   "json_m": 8.028,
+   "diff_m": 0.332,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品11（f19 の 5 階の帯の） rail_bar 上端",
+   "axis": "z",
+   "json_m": 17.61,
+   "diff_m": 0.322,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品11（f19 の 5 階の帯の） rail_bar 下端",
+   "axis": "z",
+   "json_m": 17.566,
+   "diff_m": 0.367,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品11（f19 の 5 階の帯の） rail_post0 左端",
+   "axis": "x",
+   "json_m": 8.028,
+   "diff_m": 0.302,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品11（f19 の 5 階の帯の） rail_post1 左端",
+   "axis": "x",
+   "json_m": 9.496,
+   "diff_m": -0.329,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品11（f19 の 5 階の帯の） rail_post1 右端",
+   "axis": "x",
+   "json_m": 9.54,
+   "diff_m": -0.373,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品12（f19 の屋上の帯の上の） rail_bar 上端",
+   "axis": "z",
+   "json_m": 21.61,
+   "diff_m": 0.113,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品12（f19 の屋上の帯の上の） rail_bar 下端",
+   "axis": "z",
+   "json_m": 21.566,
+   "diff_m": 0.057,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品12（f19 の屋上の帯の上の） rail_post0 左端",
+   "axis": "x",
+   "json_m": 8.028,
+   "diff_m": 0.386,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品12（f19 の屋上の帯の上の） rail_post1 左端",
+   "axis": "x",
+   "json_m": 9.467,
+   "diff_m": 0.276,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品12（f19 の屋上の帯の上の） rail_post1 右端",
+   "axis": "x",
+   "json_m": 9.511,
+   "diff_m": 0.232,
+   "weak": false,
+   "action": "合否から外す：手すり（0.3 m・細い棒）は縁が細く、帯の上端か別の縁を拾う。手すりの柱の位置は生成器が決める（参考）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_9 左端",
+   "axis": "x",
+   "json_m": 1.072,
+   "diff_m": -0.437,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_9 右端",
+   "axis": "x",
+   "json_m": 1.153,
+   "diff_m": 0.269,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_10 左端",
+   "axis": "x",
+   "json_m": 2.289,
+   "diff_m": -0.037,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_10 右端",
+   "axis": "x",
+   "json_m": 2.37,
+   "diff_m": -0.117,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_11 左端",
+   "axis": "x",
+   "json_m": 3.506,
+   "diff_m": 0.089,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_11 右端",
+   "axis": "x",
+   "json_m": 3.587,
+   "diff_m": 0.007,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_12 左端",
+   "axis": "x",
+   "json_m": 4.722,
+   "diff_m": -0.084,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_12 右端",
+   "axis": "x",
+   "json_m": 4.804,
+   "diff_m": 0.054,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_13 左端",
+   "axis": "x",
+   "json_m": 5.939,
+   "diff_m": -0.019,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_13 右端",
+   "axis": "x",
+   "json_m": 6.02,
+   "diff_m": -0.104,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion2_14 右端",
+   "axis": "x",
+   "json_m": 7.237,
+   "diff_m": 0.039,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） glass3 左端",
+   "axis": "x",
+   "json_m": 7.189,
+   "diff_m": 0.0,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） glass3 右端",
+   "axis": "x",
+   "json_m": 10.689,
+   "diff_m": 0.239,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion3_1 左端",
+   "axis": "x",
+   "json_m": 8.027,
+   "diff_m": 0.082,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品32（北東のピロティの上のガラ） mullion3_1 右端",
+   "axis": "x",
+   "json_m": 8.108,
+   "diff_m": 0.002,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品33（ガラスの箱の下のパネルの） roofrail_3 上端",
+   "axis": "z",
+   "json_m": 11.3,
+   "diff_m": 0.009,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品33（ガラスの箱の下のパネルの） roofrail_3 下端",
+   "axis": "z",
+   "json_m": 10.1,
+   "diff_m": -0.032,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品33（ガラスの箱の下のパネルの） roofrail_3 左端",
+   "axis": "x",
+   "json_m": 7.153,
+   "diff_m": -0.015,
+   "weak": false,
+   "action": "合格"
+  },
+  {
+   "what": "部品33（ガラスの箱の下のパネルの） roofrail_3 右端",
+   "axis": "x",
+   "json_m": 10.682,
+   "diff_m": -0.033,
+   "weak": true,
+   "action": "弱い縁（参考、合否に数えない）"
+  },
+  {
+   "what": "部品33（ガラスの箱の下のパネルの） roofrail_4 左端",
+   "axis": "x",
+   "json_m": 10.605,
+   "diff_m": 0.197,
+   "weak": false,
+   "action": "登録の注意で外す（registration_note）"
+  },
+  {
+   "what": "部品33（ガラスの箱の下のパネルの） roofrail_4 右端",
+   "axis": "x",
+   "json_m": 10.682,
+   "diff_m": 0.121,
+   "weak": false,
+   "action": "合格"
+  }
+ ],
+ "other_faces": [
+  {
+   "face": "f18",
+   "pass": false,
+   "n_lines": 20,
+   "n_found": 6,
+   "n_strong": 6,
+   "n_ng_counted": 5,
+   "worst_face": {
+    "what": "塊B_低層 上端",
+    "diff_m": 0.332
+   },
+   "worst_parts": {
+    "what": "部品32（北東のピロティの上のガラ） glass2 下端",
+    "diff_m": 0.338
+   },
+   "before": {
+    "worst_face": {
+     "what": "塊B_低層 上端",
+     "diff_m": 0.332
+    },
+    "worst_parts": {
+     "what": "部品32（北東のピロティの上のガラ） glass2 下端",
+     "diff_m": 0.338
+    }
+   },
+   "lines": [
+    {
+     "what": "面の端0",
+     "axis": "x",
+     "json_m": 0.0,
+     "diff_m": 0.337,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "塊B_低層 上端",
+     "axis": "z",
+     "json_m": 9.2,
+     "diff_m": 0.332,
+     "weak": false,
+     "action": "合否から外す：低層の上端の縁はこの面では背骨・塔の中に隠れる（写真に縁が無い所の線）"
+    },
+    {
+     "what": "パラペット上端",
+     "axis": "z",
+     "json_m": 21.3,
+     "diff_m": 0.04,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） glass2 上端",
+     "axis": "z",
+     "json_m": 9.8,
+     "diff_m": 0.182,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） glass2 下端",
+     "axis": "z",
+     "json_m": 6.2,
+     "diff_m": 0.338,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） transom2_0 上端",
+     "axis": "z",
+     "json_m": 6.26,
+     "diff_m": 0.258,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） transom2_1 下端",
+     "axis": "z",
+     "json_m": 9.74,
+     "diff_m": 0.232,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_1 右端",
+     "axis": "x",
+     "json_m": 0.737,
+     "diff_m": -0.209,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_2 左端",
+     "axis": "x",
+     "json_m": 1.873,
+     "diff_m": 0.1,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_2 右端",
+     "axis": "x",
+     "json_m": 1.954,
+     "diff_m": 0.019,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_3 左端",
+     "axis": "x",
+     "json_m": 3.09,
+     "diff_m": 0.029,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_3 右端",
+     "axis": "x",
+     "json_m": 3.171,
+     "diff_m": -0.053,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_4 左端",
+     "axis": "x",
+     "json_m": 4.306,
+     "diff_m": 0.113,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_4 右端",
+     "axis": "x",
+     "json_m": 4.388,
+     "diff_m": 0.032,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_5 左端",
+     "axis": "x",
+     "json_m": 5.523,
+     "diff_m": 0.072,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品32（北東のピロティの上のガラ） mullion2_5 右端",
+     "axis": "x",
+     "json_m": 5.604,
+     "diff_m": -0.009,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品33（ガラスの箱の下のパネルの） roofrail_2 上端",
+     "axis": "z",
+     "json_m": 11.3,
+     "diff_m": 0.03,
+     "weak": true,
+     "action": "弱い縁（参考、合否に数えない）"
+    },
+    {
+     "what": "部品33（ガラスの箱の下のパネルの） roofrail_2 下端",
+     "axis": "z",
+     "json_m": 10.1,
+     "diff_m": 0.208,
+     "weak": false,
+     "action": "登録の注意で外す（registration_note）"
+    }
+   ]
+  }
+ ],
+ "changed": [],
+ "requests": [
+  {
+   "to": "sokuryo",
+   "kind": "data",
+   "what": "071536516 の原点を直した後に鎖を解き直す"
+  }
+ ],
+ "summary_line": {
+  "n_lines": 116,
+  "n_found": 33,
+  "n_strong": 33,
+  "n_ng_counted": 7,
+  "worst_face": {
+   "what": "3 階の窓の面の引っ込み 下端",
+   "diff_m": -0.438
+  },
+  "worst_parts": {
+   "what": "部品10（f19 の 4 階の帯の） rail_bar 上端",
+   "diff_m": 0.45
+  },
+  "before": {
+   "worst_face": {
+    "what": "3 階の窓の面の引っ込み 下端",
+    "diff_m": -0.438
+   },
+   "worst_parts": {
+    "what": "部品10（f19 の 4 階の帯の） rail_bar 上端",
+    "diff_m": 0.45
+   }
+  }
+ }
+}

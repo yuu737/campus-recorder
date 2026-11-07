@@ -1,0 +1,46 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f7",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f7.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "中庭 1 の奥の出っ張りの北側面。方位 28°",
+ "left_end": "左＝東（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071347810"
+  ],
+  "why": "側面は道路からほぼ真横で、ベージュの縁しか見えない",
+  "method": "数えていない"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071347810"
+  ],
+  "why": "同上",
+  "method": "数えていない"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f7",
+   "what": "中庭 1 の中から出っ張りの北側面を正面に（窓の有無と段が分かる 1 枚）",
+   "why": "道路からは真横で写らない"
+  }
+ ],
+ "questions": []
+}

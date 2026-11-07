@@ -1,0 +1,65 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f1",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f1.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "北翼の南面（中庭 2 の北側）。方位 208°",
+ "left_end": "左＝西（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071413956",
+   "PXL_20261105_071408553.MP"
+  ],
+  "why": "道路から中庭 2 の口ごしに強い斜めでしか写らず、東寄り（f2 との入隅の近く）の窓が潰れて数えられない",
+  "seen": "071413956 で 2 階の窓が西から 6 前後、1 階のガラスブロックが 5 前後（東端は奥で潰れる）。071408553 は西寄りの 3 列だけ",
+  "method": "数えていない（両端が分かれて見える写真が無い）"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071413956"
+  ],
+  "supporting": [
+   "PXL_20261105_071408553.MP"
+  ],
+  "method": "071413956 の東端の近くの縦の列（切り出し f1_956_strip.jpg）で、1 階（ガラスブロック）の上に凹み 4 つ（2 階の窓、3・4・5 階のバルコニー）と帯（手すり壁）4 つを数えた＝5。071408553 は下の 3 段（1〜3 階）だけで上が枠の外。全段を 2 枚目で確かめていないので estimated",
+  "crops": [
+   "out/kyotsu-minami/kazoe/f1_956_z.jpg",
+   "out/kyotsu-minami/kazoe/f1_956_strip.jpg"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [
+  {
+   "item": "floors",
+   "kansatsu": "見えた段 3〜4（071413956、最上段は奥で見えにくい）",
+   "kazoe": "5（1 階＋帯の段 4）",
+   "photos": [
+    "PXL_20261105_071413956"
+   ],
+   "adopted": "kazoe の 5（estimated）",
+   "why": "全体の画では最上段が奥に潰れるが、東端の近くの縦の列を拡大すると 4 つの凹みと帯が分かれて数えられる。同じ作りの f19 西部（measured 5）とも合う"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f1",
+   "what": "中庭 2 の中（塀の内側）から f1 を斜めに。西端の段の角と東端（f2 との入隅）が 1 枚に入る位置で 1 枚、反対の角からもう 1 枚",
+   "why": "窓の列（スパン数）を両端の入る 2 枚で数えるため"
+  }
+ ],
+ "questions": []
+}

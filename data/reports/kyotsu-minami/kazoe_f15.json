@@ -1,0 +1,58 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f15",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f15.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "背骨の南面（南翼の南面より北に下がる）。方位 208°",
+ "left_end": "左＝西（from の端）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [
+   "PXL_20261105_071033016.MP"
+  ],
+  "why": "1 枚だけで、下が木で隠れる",
+  "seen": "5 階：打ち放しの張り出した箱に横長の窓 1。4 階：横長の窓 1（071033016）",
+  "method": "数えていない（2 枚目が無い）"
+ },
+ "floors": {
+  "value": 2,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071033016.MP"
+  ],
+  "method": "071033016 の 1 枚だけで、窓のある上の 2 段（4・5 階と読める）が見えた。下は木。見えた段だけを書く（切り出し f15_016_z.jpg）"
+ },
+ "interpreted": [
+  {
+   "value": 3,
+   "basis": "hypothesis",
+   "why": "木で隠れた下の段（1〜3 階）。隣の南翼 f13 と東の塊 f17 がどちらも measured 5 なので、見えた 2 段の下にもう 3 段と読む。見えた 2 と足して measured にしない",
+   "evidence": [
+    "PXL_20261105_071033016.MP"
+   ]
+  }
+ ],
+ "segments": [],
+ "exceptions": [
+  "濃い灰色の高い塊（細いアンテナ）は周りの屋上より高い",
+  "地面にタイルの枠の入口（071033016）"
+ ],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f15",
+   "what": "南端（横断歩道の北）の地面から背骨の南面を、木の幹の間から 1 階まで入るように 2 枚（少し横にずらして）",
+   "why": "1〜3 階が木で隠れ、写真が 1 枚だけ"
+  }
+ ],
+ "questions": []
+}

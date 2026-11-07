@@ -573,6 +573,49 @@
     "proposal": "周期の面では、面の端（角・妻）か唯一の部品（玄関・通り抜け）が写る対応を必須にし、無ければ「原点が曖昧」で not_registered にする。登録を外すコマンド（J-013）を足す"
    },
    "status": "open"
+  },
+  {
+   "id": "J-028",
+   "at": "2026-11-07T15:54:52+09:00",
+   "building": "kyotsu-minami",
+   "step": "kenshu",
+   "agent": "(道具)",
+   "kind": "stuck",
+   "symptom": "out/<棟>/soten.json の open の争点のうち rule の欄が埋まっている物は、agent events が「規則で決まった」と見て stuck に出さない。検収係は rule の欄に「止める理由 4。規則で決まらない」と書いたので、規則で決まらない open の争点 2 件が事件に出なかった",
+   "evidence": [
+    "out/kyotsu-minami/soten.json（status open・rule に止めた理由）",
+    "recorder/agents.py:477-480（undecided = open かつ rule が空）",
+    "recorder agent events kyotsu-minami（stuck は線の数だけ）"
+   ],
+   "action": "decide",
+   "effect": "進行役が soten.json を直接読んで決めた（K-015）。本番の進行役は事件の一覧しか見ないので見落とす",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/agents.py _building_events と検収係の定義（soten の書式）",
+    "proposal": "open の争点は rule の有無に関わらず stuck に出す（rule は decided の時だけ）。検収係の止めた理由は reason の欄に分ける"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-029",
+   "at": "2026-11-07T15:55:34+09:00",
+   "building": "all",
+   "step": "(記録)",
+   "agent": "(進行役)",
+   "kind": "other",
+   "symptom": "Claude Code の係の結果の使用量 subagent_tokens は、その係の最後の文脈の大きさで、使ったトークンの合計ではない。SendMessage で再開した回は前の回の文脈を含む（例：kyotsu-minami の検収の 2 回目は 15 秒・道具 2 回で 531941）。落ちた回（429）には使用量が出ない",
+   "evidence": [
+    "task-notification の usage（kyotsu-minami kenshu attempt 2：531941 tokens・tool_uses 2・15 s）",
+    "data/reports/<棟>/pipeline_*.json の attempt 2 の行"
+   ],
+   "action": "other",
+   "effect": "棟ごと・係ごとのトークンの合計は過大（再開分の二重計上）か不明（落ちた回）。結果のまとめでは「係の最後の文脈の大きさの合計」と断って出す",
+   "fix_for_honban": {
+    "target": "pipeline",
+    "where": "recorder/agents.py run_pipeline の記録",
+    "proposal": "本番の API では SDK の usage（input・output・cache の各トークン）を呼び出しごとに足し、費用も出す。Claude Code の疑似本番の数字は目安として README に断り書き"
+   },
+   "status": "open"
   }
  ]
 }

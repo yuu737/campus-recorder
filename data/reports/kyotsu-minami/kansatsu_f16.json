@@ -1,0 +1,82 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f16",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "東南東面 16（方位 118°）"
+ },
+ "where": "背骨の南端の東面（東の塊の南端の切り欠き）。方位 118°（東南東向き）",
+ "source_photos": [],
+ "candidate_photos": [
+  "PXL_20261105_071033016.MP",
+  "PXL_20261105_074939442",
+  "PXL_20261105_075121795"
+ ],
+ "best_photo": {},
+ "crops": [],
+ "bays": {
+  "value": null,
+  "why": "確かに写っている写真が無い"
+ },
+ "floors": {
+  "value": null,
+  "why": "確かに写っている写真が無い"
+ },
+ "window_shape": "不明",
+ "pier_window_ratio": {
+  "value": null,
+  "why": "見えない"
+ },
+ "bands": [],
+ "glazing": "不明",
+ "corners": "不明",
+ "base": "不明",
+ "top": "不明",
+ "exceptions": [],
+ "parts": [],
+ "structures_ref": [
+  "S4_南の渡り"
+ ],
+ "differences_from_draft": [],
+ "unknowns": [
+  {
+   "what": "面の作り",
+   "value": null,
+   "why": "074939442・075121795 の左端に遠く、南の渡りに隠れる"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f16",
+   "what": "東の庭の南端から、南の渡りの下ごしに f16 と f17 の南端の角を",
+   "why": "渡りと木に隠れる"
+  }
+ ],
+ "not_in_index_faces": {
+  "photos": [],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [
+  {
+   "id": "S4_南の渡り",
+   "what": "f17 の南端から東（南東）の別の棟へ延びる渡り（柱の上の箱）",
+   "faces": [
+    "f17",
+    "f16"
+   ],
+   "from_photos": [
+    "PXL_20261105_075121795",
+    "PXL_20261105_074939442"
+   ],
+   "shape": "下が打ち放しの太い柱、上が箱（先端にガラス）。f17 の南端のタイルの塊に取り付く",
+   "ratio": "床は 3 階の床の高さ前後（遠く斜め・目安）",
+   "count": 1,
+   "note": "OSM osm-way-1304077323（東の osm-way-1304077325 とつながる）。2 つの棟に触れるので敷地 JSON の物（sekkei の規則）。写真は遠く 2 枚だけ"
+  }
+ ],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

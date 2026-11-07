@@ -1,0 +1,139 @@
+{
+ "schema": "tower75-observation/1",
+ "building": "kyotsu-minami",
+ "face": "f8",
+ "made_by": "観察係 kansatsu（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:20:00",
+ "draft": {
+  "source": "out/kyotsu-minami/tmp/kyotsu-minami.json（recorder new kyotsu-minami --from-site --dir out/kyotsu-minami/tmp。data/buildings/ には書いていない）",
+  "face_name_in_draft": "西北西面 8（方位 298°）"
+ },
+ "where": "中庭 1 の奥の出っ張りの正面（コア）。方位 298°（西北西向き）",
+ "source_photos": [
+  "PXL_20261105_071334183",
+  "PXL_20261105_071347810"
+ ],
+ "candidate_photos": [],
+ "best_photo": {
+  "front": "PXL_20261105_071334183"
+ },
+ "crops": [
+  "out/kyotsu-minami/kansatsu/core_334.jpg",
+  "out/kyotsu-minami/kansatsu/core_347.jpg",
+  "out/kyotsu-minami/kansatsu/cy1_334.jpg"
+ ],
+ "bays": {
+  "value": 1,
+  "note": "全高のガラスの縦長の筋 1 本（縦の桟で 3 枚に分かれる）",
+  "from_photos": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ]
+ },
+ "floors": {
+  "value": null,
+  "seen": "ガラスの筋は横の桟で 6 段前後に分かれるが、両脇（f6・f10）の窓の段と揃わない（階段室の踊り場の高さと読める。解釈）",
+  "note": "両脇の窓は 4 段見える",
+  "from_photos": [
+   "PXL_20261105_071334183",
+   "PXL_20261105_071347810"
+  ]
+ },
+ "window_shape": "帯（縦長の全高のガラス。カーテンウォール）",
+ "pier_window_ratio": {
+  "value": "ベージュの縁:ガラス ≈ 1:4（071334183、正面寄り・目安）",
+  "why": "柱型の代わりに両縁のベージュのパネル"
+ },
+ "bands": [
+  "横の桟（ガラスの筋の中）"
+ ],
+ "glazing": "面の幅のほぼ全部が全高のガラス（両縁にベージュのパネル）",
+ "corners": "両縁はベージュのパネル。奥へ f7・f9 の側面",
+ "base": "1・2 階は赤い葉の木と塀で隠れる",
+ "top": "タイルの箱（頂部）。両脇の打ち放しのパラペットより高い。箱の高さは階高の 1 倍弱（071334183、目安）",
+ "exceptions": [
+  "頂部だけタイル。ガラスの筋は頂部の箱の下で止まる"
+ ],
+ "parts": [
+  {
+   "what": "全高のガラスの筋（縦長のカーテンウォール）",
+   "vocab": "glazing（各階 ledges なし）",
+   "count": 1,
+   "where": "f8 の幅いっぱい（両縁のベージュのパネルの間）",
+   "from_photos": [
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "ratio": "縦の桟で 3 枚、横の桟で 6 段前後",
+   "note": null
+  },
+  {
+   "what": "頂部のタイルの箱",
+   "vocab": "box（material tile）か composite",
+   "count": 1,
+   "where": "f8 の上（出っ張りの頂部）",
+   "from_photos": [
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "ratio": "高さは階高の 1 倍弱、両脇の壁の上端より上に出る（目安）",
+   "note": null
+  },
+  {
+   "what": "両縁のベージュのパネル",
+   "vocab": "patch（material：ベージュのパネル）",
+   "count": 2,
+   "where": "ガラスの筋の両縁（全高）",
+   "from_photos": [
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "ratio": "ガラスの 1/4 前後の幅",
+   "note": null
+  }
+ ],
+ "structures_ref": [
+  "S8_塔"
+ ],
+ "differences_from_draft": [
+  "仮の土台の f6〜f10 の出っ張りの形は写真と合う（正面がガラスの筋、両脇が打ち放しの壁）"
+ ],
+ "unknowns": [
+  {
+   "what": "1・2 階の作り（入口の有無）",
+   "value": null,
+   "why": "木と塀で隠れる"
+  }
+ ],
+ "requests": [],
+ "not_in_index_faces": {
+  "photos": [],
+  "note": "source_photos のうち索引の face/faces にこの面が無い写真。根拠の門に掛かるので face_reassignment（kansatsu_building.json）を見て仕分け係が足すまで measured の根拠にしない"
+ },
+ "structures": [
+  {
+   "id": "S8_塔",
+   "what": "屋上より高い塊・柱型",
+   "faces": [
+    "f13",
+    "f15",
+    "f17",
+    "f19",
+    "f8"
+   ],
+   "from_photos": [
+    "PXL_20261105_071033016.MP",
+    "PXL_20261105_074837587",
+    "PXL_20261105_074913586",
+    "PXL_20261105_071536516",
+    "PXL_20261105_071548825",
+    "PXL_20261105_071334183",
+    "PXL_20261105_071347810"
+   ],
+   "shape": "(a) f15 の濃い灰色の塊（細いアンテナ）、(b) f19 東部のタイルの塔（板の付いたアンテナ）とその奥の濃い灰色の塊、(c) f17 北端のタイルの塔（庇より上）、(d) f13 東端のタイルの柱型、(e) 中庭 1 のコアの頂部のタイルの箱、(f) 071347810 で中庭 1 のコアの奥に見える窓の付いたタイルの高い塊とアンテナ 2 本（(a) と同じ塊かは決められない）",
+   "ratio": "どれも周りの屋上より 1/3〜1/2 階ほど高い（目安。正面化していない）",
+   "count": "5〜6"
+  }
+ ],
+ "building_file": "data/reports/kyotsu-minami/kansatsu_building.json"
+}

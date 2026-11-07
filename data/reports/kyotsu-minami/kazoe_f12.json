@@ -1,0 +1,82 @@
+{
+ "schema": "kazoe/1",
+ "building": "kyotsu-minami",
+ "face": "f12",
+ "made_by": "数え係 kazoe（claude-opus-5-5）",
+ "made_at": "2026-11-07T09:55:00",
+ "inputs": {
+  "kansatsu": "data/reports/kyotsu-minami/kansatsu_f12.json",
+  "kansatsu_building": "data/reports/kyotsu-minami/kansatsu_building.json",
+  "index": "data/photos/index.json（building kyotsu-minami、period during）",
+  "crops": "out/kyotsu-minami/kazoe/（拡大の切り出し。画像は out/ だけ）"
+ },
+ "where": "南翼の西端（西の道路沿い）。方位 298°",
+ "left_end": "左＝北（from の端）",
+ "bays": {
+  "value": null,
+  "not_applicable": true,
+  "status": "not_applicable",
+  "why": "無地（前面は窓も柱型も無いタイルの台形の壁）",
+  "evidence": [
+   "PXL_20261105_071309389",
+   "PXL_20261105_071303445",
+   "PXL_20261105_071316984"
+  ],
+  "method": "正面寄り（071309389）と南から見通す 071303445 で、前面に窓・柱型が無いことを確かめた"
+ },
+ "floors": {
+  "value": 5,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071033016.MP",
+   "PXL_20261105_071255844"
+  ],
+  "method": "同じ塊の f13 から（南翼。f13 は 071033016・071255844 で measured 5）",
+  "ref": "data/reports/kyotsu-minami/kazoe_f13.json#floors",
+  "seen": "前面の台形の壁に階は無い。奥に南翼の段の手すりが 3 段（071309389）",
+  "seen_evidence": [
+   "PXL_20261105_071309389"
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  "南端の外階段は台形の壁の内側を北へ上がる。入口に鉄格子の門（071255844、観察票と同じ）"
+ ],
+ "disagreement": [
+  {
+   "item": "beams",
+   "kansatsu": "4（南西の箱 1・台形の上に笠付き 2・北の斜め 1。4 本目が f12 か f4 かは境目が近い、mid）",
+   "kazoe": "3",
+   "photos": [
+    "PXL_20261105_071303445",
+    "PXL_20261105_071309389"
+   ],
+   "adopted": "kazoe の 3（estimated）",
+   "why": "2 枚とも、4 本目の梁の端は f12 の北の斜めの上端の線より上に見え、その間に奥（f4）の壁か空が入る。f12 に載るなら端が斜めの線に接するはず。道路の向かいから正面の 1 枚で確かめたい"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f12",
+   "what": "南翼の西端を道路の向かい（擁壁の上）から正面に、梁が全部と北の斜めの端が 1 枚に入るように",
+   "why": "4 本目の梁が f12 の北の斜めに載るか f4 か（disagreement）"
+  }
+ ],
+ "questions": [],
+ "beams": {
+  "value": 3,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_071303445",
+   "PXL_20261105_071309389"
+  ],
+  "what": "西の道路の梁（S1）のうち f12 に載る本数",
+  "method": "載る所で 2 枚を対応させた。071303445（南端から北へ見通す）：南西の角の打ち放しの箱に載る 1 本（いちばん高い）・平らな上端の北寄りに笠付きの 1 本・北の斜めに笠付きの 1 本。4 本目の端は f12 の北の斜めの線より上（奥の f4 の壁と空の前）にあり、f12 に触れない。071309389（正面寄り）も同じ 3 本で、4 本目の笠は f12 の北の斜めの線より上に浮いて見える（＝もっと北の f4 側）。2 枚は一致するが、見上げの広角で輪郭の前後を読んだ判断なので estimated",
+  "crops": [
+   "out/kyotsu-minami/kazoe/beams_445.jpg",
+   "out/kyotsu-minami/kazoe/beams_445far.jpg"
+  ]
+ }
+}
