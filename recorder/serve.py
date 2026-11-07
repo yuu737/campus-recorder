@@ -674,7 +674,8 @@ def api_pipeline(root: Path, b: str) -> dict:
     st = None
     if isinstance(state, dict):
         st = {k: state.get(k) for k in ("mode", "status", "current", "done", "steps", "stopped", "spent_usd", "max_usd",
-                                        "started_at", "updated_at", "pending_events")}
+                                        "started_at", "updated_at", "pending_events",
+                                        "auto_resumes", "auto_resumes_total")}
     with _runs_lock:
         run = _run_public(RUNS.get(b))
     rec = None

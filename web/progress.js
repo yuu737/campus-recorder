@@ -449,6 +449,13 @@
       const cap = (st && st.max_usd) ?? (run && run.max_usd);
       cost = `費用 <b>${spent != null ? Number(spent).toFixed(2) : "—"}</b> / ${cap ? cap + " USD" : "上限なし"}`;
       if (run && run.dry_run) cost += "（係を呼ばない試し）";
+      const ar = (st && st.auto_resumes) || {};
+      const arAll = Object.values(ar).flat().filter(e => e && typeof e === "object");
+      if (arAll.length) {
+        const KJA = {max_turns: "手数の上限", max_budget: "1 回の費用の上限", rate_limit: "混雑", crash: "落ちた", partial: "係が区切った"};
+        const last = arAll[arAll.length - 1], k = last.kind || last.reason;
+        cost += `　<span title="同じ会話から自動で続けた回数">自動で再開 <b>${arAll.length}</b> 回（最後は${esc(KJA[k] || k || "理由不明")}）</span>`;
+      }
     } else if (scene) {
       const steps = ORDER, i = steps.indexOf(scene.step);
       stepTxt = `${i >= 0 ? `${i + 1}/${steps.length} ` : ""}${who(scene.step)}の工程の生成物`;
