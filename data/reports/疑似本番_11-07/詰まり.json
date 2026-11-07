@@ -636,7 +636,14 @@
     "where": "recorder/shots.py（CDP の起動）",
     "proposal": "DevTools の口の待ちを長くし、--remote-debugging-port を固定でなく 0（自動）にして DevToolsActivePort を読む。起動に失敗した時の Edge の標準エラーを報告に残す。本番の前に 1 回 shots だけを試す"
    },
-   "status": "open"
+   "status": "open",
+   "followup": {
+    "at": "2026-11-07T21:06:00+09:00〜21:11:00+09:00",
+    "what": "疑似本番の後に recorder shots を 4 棟に順に当てた（道具・データの変更なし）。4 棟とも evidence_{three,overview,photo}.png と walk.png が撮れた（16 枚、1 棟 約 50 秒）。Edge は 0.2 秒で DevTools の口を開いた",
+    "cause": "再現せず、特定していない。16:26 の記録では Edge のプロセス 15 個が残っていた（起動はしていた）ので、30 秒以内に口の番号を読めなかったか、親が先に抜けたかのどちらか",
+    "note": "疑似本番の生成は成功していて、撮れなかったのは画面を写す工程だけ。後から撮った絵の元は疑似本番の生成物のまま（棟 JSON・登録台帳・web/data は 16:28 以後変わっていない。本部棟は 16:26 の evidence.rrd、他 3 棟の evidence.rrd は変わっていないデータから 21:09〜21:11 に作った）。16:27 の report.html は作り直していない",
+    "status_after": "絵は揃った。道具の直し（標準エラーの記録・1 回のやり直し・待ち 60 秒）は本番前の課題として open のまま"
+   }
   }
  ]
 }

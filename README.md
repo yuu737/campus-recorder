@@ -28,7 +28,7 @@ How this differs from scanning or AI generation: **it records, it does not gener
 - **What cannot be measured stays `unknown`, shown in gray, and the system returns a photo request** (in the 11/7 dress rehearsal: 23 unknown values, 42 photo requests to staff), e.g. "the library's north-east face needs one photo that shows both ends of the wall, from the bottom of the slope". In a mock judging run (Claude as the judge, 4 rule variants × 2 rounds), this was the one point every judge praised.
 - The result sits on real map coordinates (JGD2011 / EPSG:6675), not in a free-floating scene.
 - One JSON file per building is the only source of truth. Drawings, the Blender model, and the photo overlays are all generated from it. Fix the JSON and everything is rebuilt.
-- Photos are never published. Only an index is kept in git.
+- All photos except any that would identify a research lab are included as reduced public copies (`data/photos/public/`). Posters, names, faces and license plates are covered with a gray box labelled with the reason, and the box and reason are recorded in the index (policy changed early on 11/8; until then only the index was committed). Original photos are not in git. In production only the walk-through is public; photos stay on the staff PC.
 
 ## How it works
 
@@ -97,6 +97,7 @@ The rehearsal ran the agents as Claude Code subagents; Opus 5.5 stood in as the 
 - Value counts grow with how finely the model is split. **Excluding 1,521 copies, the independent observations are 18 `measured` / 1,232 `estimated` / 5 `unknown`** (`python -I -X utf8 -m recorder counts data/buildings/*.json`; same status, method, evidence and value kind count as one). No value has "by eye" as its only method.
 - Time: the four buildings ran in parallel; 7 h 52 min from the first agent (08:36) to the last report (16:28), including about 2 h 55 min stopped at the usage limit. The agents' times add up to 16 h 13 min, about 3.3 × the elapsed time without the stop.
 - Tokens (sum of each agent's final context size, a rough guide): about 13.3 M, 3.0–3.6 M per building. Cost will come from the SDK in the real API run and is not given here.
+- The only thing the rehearsal did not produce was the report page's screenshots (3 evidence-viewer images and 1 walk-through image per building): headless Edge failed to open its DevTools port (J-030). Generation itself had finished; only the step that photographs the screen failed. After the rehearsal, at 21:06–21:11, the same tool was run unchanged and all 4 buildings' images were captured. They render the rehearsal's own outputs; no value was changed (see 結果.md, "報告の絵について").
 - The rehearsal found 30 fixes for the real run, 23 still open. The largest: incident detection would stop the real pipeline on every building ("put this on the site" requests become vocabulary incidents; "stuck" after inspection is counted in individual lines). The full list is in the summary.
 
 ### What we tried, with numbers
@@ -155,7 +156,7 @@ Tests: `python -I -X utf8 -m pytest` (test files are in `tests/`).
 
 - **Photos taken by the author** (340 in the index `data/photos/index.json`, all taken during the period).
   - During the period: 2026-11-03 to 11-05, 340 photos (124 / 16 / 200 per day; index field `period: "during"`).
-  - The photos themselves are **not in this repository** (not published; faces and license plates are kept out). Only the index JSON is committed. Evidence in building JSON points to photo ids, so the `period` is always traceable.
+  - The original photos are **not in this repository**. Instead, reduced public copies (long edge 1600 px, `data/photos/public/<folder>/<id>.jpg`, index field `public_file`) are included for every photo except any that would identify a research lab. Posters, names, phone numbers, faces and license plates are covered in the public copies with a gray box labelled with the reason (posters at the edge may be cropped instead); the boxes and reasons are kept in the index field `masks`. No blurring, pixelation or generative fill. The judgement that this satisfies the university's conditions (no recognisable posters; faces and plates excluded from published material) is the author's, not an individual approval by the university (`data/reference/index.json`, `permission.interpretations`). Evidence in building JSON points to photo ids, so the `period` is always traceable.
   - The image at the top (`docs/images/hero.png`) is cut from an overlay on one photo taken during the period, to a region with no people or hanging banners, with notices on a glass door blurred.
 - **Photos taken before the period are not used (removed on 11/7).** During development (11/4 to 11/6) we tried 723 photos the author took before the period (2026-09-07 to 10-12), and the author's own classification ledger made at that time (which photo shows which building), as input data under the official Q&A (Q2, Q3). On 11/7 we decided that evidence comes only from photos taken during the period:
   - They were removed from the photo index, the registration ledger, and the building JSON (Building 11 was dropped from the scope because its only evidence was pre-period photos).

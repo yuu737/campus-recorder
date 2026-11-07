@@ -37402,6 +37402,7145 @@
    "face": null,
    "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。面にしない",
    "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_060551716",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：黄色の小口タイルの柱型の側面にメジャーを水平に。左に道路（黄色の線）、右に 1 階のガラスと蔦。柱の幅 約 74 cm で『本部棟側面柱74.5cm』と同じ型の柱の側面と読んだ。low の理由：GPS が 35 m 南にずれ（撮影の最初の 1 枚）、どの柱かは写真で決まらない（f6 の前の柱の列と推定）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_060551716.jpg",
+   "taken_at": "2026-11-07T15:05:51",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1348722,
+    "lon": 136.9751417,
+    "alt": 80.59,
+    "x": -32.8,
+    "y": -69.6,
+    "hdop": null
+   },
+   "heading_deg": 38.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 747.9,
+    "brightness": 134.6,
+    "dark_ratio": 0.002,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.069,
+    "edge_touch_left": 0.157,
+    "edge_touch_right": 0.09,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 29.4,
+     "bearing_deg": 77.5,
+     "bearing_diff_deg": 47.5
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 41.0,
+     "bearing_deg": 4.7,
+     "bearing_diff_deg": 25.3
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 47.0,
+     "bearing_deg": 56.8,
+     "bearing_diff_deg": 26.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 59.4,
+     "bearing_deg": 330.0,
+     "bearing_diff_deg": 60.0
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 63.3,
+     "bearing_deg": 33.2,
+     "bearing_diff_deg": 3.2
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 79.2,
+     "bearing_deg": 345.1,
+     "bearing_diff_deg": 44.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 98.5,
+     "bearing_deg": 79.8,
+     "bearing_diff_deg": 49.8
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 99.0,
+     "bearing_deg": 7.4,
+     "bearing_diff_deg": 22.6
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 99.8,
+     "bearing_deg": 44.5,
+     "bearing_diff_deg": 14.5
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 116.8,
+     "bearing_deg": 60.6,
+     "bearing_diff_deg": 30.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 118.2,
+     "bearing_deg": 13.7,
+     "bearing_diff_deg": 16.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "f6 の前の柱型（正面玄関の柱と同じ型）の側面＝f6 に直交する面の幅に水平に。0〜約 74 cm が読め、0 の爪は柱の左の角に当たって写る。右端は柱の右の角（70 の後 3〜4 cm 付近、ケースの手前）。壁に平らに沿う。タイル 約 6.5 枚分（小口、段ごとに半枚ずれ）"
+  },
+  {
+   "id": "PXL_20261107_060821748",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：f6 の東のピロティ：中央の柱（照明付き）・赤い階段・奥に横断歩道。柱の前に『卒業アルバム用写真撮影のご案内』の立て看板（掲示物）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_060821748.jpg",
+   "taken_at": "2026-11-07T15:08:21",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353389,
+    "lon": 136.9750694,
+    "alt": 94.09,
+    "x": -39.3,
+    "y": -17.8,
+    "hdop": null
+   },
+   "heading_deg": 313.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1030.8,
+    "brightness": 113.2,
+    "dark_ratio": 0.016,
+    "bright_ratio": 0.002,
+    "edge_touch_top": 0.115,
+    "edge_touch_left": 0.165,
+    "edge_touch_right": 0.135,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 51.8,
+     "bearing_diff_deg": 106.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 20.8,
+     "bearing_deg": 301.7,
+     "bearing_diff_deg": 3.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 29.2,
+     "bearing_deg": 338.2,
+     "bearing_diff_deg": 33.2
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 69.5,
+     "bearing_deg": 298.0,
+     "bearing_diff_deg": 7.0
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 72.1,
+     "bearing_deg": 23.3,
+     "bearing_diff_deg": 78.3
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 76.1,
+     "bearing_deg": 312.0,
+     "bearing_diff_deg": 7.0
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 91.9,
+     "bearing_deg": 295.3,
+     "bearing_diff_deg": 9.7
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_060859460",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：f6 東のピロティの中央の柱（060821748 と同じ柱、立て看板が柱の前）。日陰で赤っぽく写るが同じ黄色の小口タイル。看板が下半分を占める（掲示物）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_060859460.jpg",
+   "taken_at": "2026-11-07T15:08:59",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353389,
+    "lon": 136.9750694,
+    "alt": 94.09,
+    "x": -39.3,
+    "y": -17.8,
+    "hdop": null
+   },
+   "heading_deg": 106.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 631.4,
+    "brightness": 122.3,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.017,
+    "edge_touch_left": 0.024,
+    "edge_touch_right": 0.043,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 51.8,
+     "bearing_diff_deg": 46.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 40.4,
+     "bearing_deg": 64.1,
+     "bearing_diff_deg": 33.9
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 41.4,
+     "bearing_deg": 99.0,
+     "bearing_diff_deg": 1.0
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 42.3,
+     "bearing_deg": 124.8,
+     "bearing_diff_deg": 26.8
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 63.7,
+     "bearing_deg": 133.4,
+     "bearing_diff_deg": 35.4
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 72.1,
+     "bearing_deg": 69.2,
+     "bearing_diff_deg": 28.8
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 80.2,
+     "bearing_deg": 46.8,
+     "bearing_diff_deg": 51.2
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 90.6,
+     "bearing_deg": 50.5,
+     "bearing_diff_deg": 47.5
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 104.8,
+     "bearing_deg": 85.8,
+     "bearing_diff_deg": 12.2
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 109.9,
+     "bearing_deg": 104.1,
+     "bearing_diff_deg": 6.1
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 115.7,
+     "bearing_deg": 59.6,
+     "bearing_diff_deg": 38.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "f6 東のピロティの柱の幅（f6 に平行な面）に水平に。0〜約 90 cm が読める。0 の爪は柱の左の角、右端は柱の右の角（80 台後半、ケースの手前）。見上げて撮っていて柱は台形に写る（メジャー自体は面に平ら）。タイル 約 8 枚分。※立て看板（掲示物）が大きく写るので提出物には使わない"
+  },
+  {
+   "id": "PXL_20261107_060952111",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：黄色の小口タイルの近写（目地は濃い灰色のざらついた物＝f6 の柱と同じ）。low の理由：周りが写らず、面は撮影の順（f6 のピロティ→正面の柱の間）と GPS（f6 の南）からの推定",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_060952111.jpg",
+   "taken_at": "2026-11-07T15:09:52",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1350278,
+    "lon": 136.975325,
+    "alt": 82.38,
+    "x": -16.0,
+    "y": -52.4,
+    "hdop": null
+   },
+   "heading_deg": 334.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 716.1,
+    "brightness": 125.6,
+    "dark_ratio": 0.001,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.014,
+    "edge_touch_left": 0.065,
+    "edge_touch_right": 0.027,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 17.9,
+     "bearing_deg": 344.9,
+     "bearing_diff_deg": 18.9
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 58.2,
+     "bearing_deg": 313.7,
+     "bearing_diff_deg": 12.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 70.9,
+     "bearing_deg": 333.1,
+     "bearing_diff_deg": 7.1
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 79.5,
+     "bearing_deg": 357.9,
+     "bearing_diff_deg": 31.9
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 97.3,
+     "bearing_deg": 8.7,
+     "bearing_diff_deg": 42.7
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 106.9,
+     "bearing_deg": 307.6,
+     "bearing_diff_deg": 18.4
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 116.8,
+     "bearing_deg": 316.7,
+     "bearing_diff_deg": 9.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "壁のタイル 1 枚の幅に水平に。0〜約 12 cm が読め、0 の爪をタイルの左の縁に当てる。タイル 1 枚＋目地 1 つにまたがる。平ら"
+  },
+  {
+   "id": "PXL_20261107_061002697",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：060952111 の 10 秒後の同じ壁の近写。low の理由は同じ（周りが写らない）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_061002697.jpg",
+   "taken_at": "2026-11-07T15:10:02",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1350278,
+    "lon": 136.975325,
+    "alt": 82.38,
+    "x": -16.0,
+    "y": -52.4,
+    "hdop": null
+   },
+   "heading_deg": 338.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 714.9,
+    "brightness": 129.1,
+    "dark_ratio": 0.001,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.019,
+    "edge_touch_left": 0.043,
+    "edge_touch_right": 0.032,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 17.9,
+     "bearing_deg": 344.9,
+     "bearing_diff_deg": 14.9
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 58.2,
+     "bearing_deg": 313.7,
+     "bearing_diff_deg": 16.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 70.9,
+     "bearing_deg": 333.1,
+     "bearing_diff_deg": 3.1
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 79.5,
+     "bearing_deg": 357.9,
+     "bearing_diff_deg": 27.9
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 97.3,
+     "bearing_deg": 8.7,
+     "bearing_diff_deg": 38.7
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 106.9,
+     "bearing_deg": 307.6,
+     "bearing_diff_deg": 22.4
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 116.8,
+     "bearing_deg": 316.7,
+     "bearing_diff_deg": 13.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "タイル 1 枚の幅に水平に。0〜10 cm が読め、0 の爪はタイルの左の縁、10 の所がタイルの右の縁の近く（ケースで隠れる）。タイル 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_061157041",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：正面玄関の前の柱型（黄色タイル）と『名城大学 本部』の石の銘板・ガラスの玄関。メジャーは無い（場所を示す 1 枚）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_061157041.jpg",
+   "taken_at": "2026-11-07T15:11:57",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.13535,
+    "lon": 136.9749306,
+    "alt": 89.59,
+    "x": -51.9,
+    "y": -16.5,
+    "hdop": null
+   },
+   "heading_deg": 337.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1179.3,
+    "brightness": 121.0,
+    "dark_ratio": 0.014,
+    "bright_ratio": 0.005,
+    "edge_touch_top": 0.055,
+    "edge_touch_left": 0.08,
+    "edge_touch_right": 0.099,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 2.9,
+     "bearing_deg": 72.2,
+     "bearing_diff_deg": 103.2
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 9.1,
+     "bearing_deg": 311.7,
+     "bearing_diff_deg": 17.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 23.0,
+     "bearing_deg": 350.3,
+     "bearing_diff_deg": 21.3
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 57.7,
+     "bearing_deg": 302.0,
+     "bearing_diff_deg": 27.0
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 66.0,
+     "bearing_deg": 317.8,
+     "bearing_diff_deg": 11.2
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 79.9,
+     "bearing_deg": 298.2,
+     "bearing_diff_deg": 30.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_061250800",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：『本部棟正面柱92cm』の右端の拡大（12 秒後、同じ柱の角の返しのタイルと奥のガラス・蔦）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_061250800.jpg",
+   "taken_at": "2026-11-07T15:12:50",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1353361,
+    "lon": 136.9749167,
+    "alt": 87.69,
+    "x": -53.2,
+    "y": -18.1,
+    "hdop": null
+   },
+   "heading_deg": 47.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 380.7,
+    "brightness": 129.3,
+    "dark_ratio": 0.002,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.141,
+    "edge_touch_left": 0.041,
+    "edge_touch_right": 0.003,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 4.9,
+     "bearing_deg": 69.8,
+     "bearing_diff_deg": 30.8
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 24.4,
+     "bearing_deg": 351.9,
+     "bearing_diff_deg": 47.1
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 54.3,
+     "bearing_deg": 68.3,
+     "bearing_diff_deg": 29.3
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 59.5,
+     "bearing_deg": 32.8,
+     "bearing_diff_deg": 6.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 78.9,
+     "bearing_deg": 29.4,
+     "bearing_diff_deg": 9.6
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 85.0,
+     "bearing_deg": 71.6,
+     "bearing_diff_deg": 32.6
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 89.5,
+     "bearing_deg": 52.3,
+     "bearing_diff_deg": 13.3
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 101.5,
+     "bearing_deg": 54.9,
+     "bearing_diff_deg": 15.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f6 正面玄関の柱型の正面の右の角を拡大。84〜92 cm が読める（0 の端は写らない。0 は『本部棟正面柱92cm』）。角に曲がりのタイル（役物）。平ら"
+  },
+  {
+   "id": "PXL_20261107_061520994",
+   "building": "honbu",
+   "face": "f0",
+   "notes": "仕分け係（Opus）：中庭側の 2 階のデッキの手すり壁（黄色タイル、灰色の線 1 本）が角で折れ、右に外階段・駐車禁止の標識・道路。奥に鉄骨トラスの屋根の大きな建物。low の理由：デッキは f0 と f8 の両方にあり、どちらの面か写真で決めきれない（f0 の南端の入隅と読んだ）。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_061520994.jpg",
+   "taken_at": "2026-11-07T15:15:20",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354472,
+    "lon": 136.9753528,
+    "alt": 94.69,
+    "x": -13.4,
+    "y": -5.8,
+    "hdop": null
+   },
+   "heading_deg": 106.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1432.0,
+    "brightness": 116.8,
+    "dark_ratio": 0.022,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.174,
+    "edge_touch_left": 0.122,
+    "edge_touch_right": 0.138,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 16.2,
+     "bearing_deg": 63.3,
+     "bearing_diff_deg": 34.7
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 24.0,
+     "bearing_deg": 118.1,
+     "bearing_diff_deg": 20.1
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 43.5,
+     "bearing_deg": 70.8,
+     "bearing_diff_deg": 27.2
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 78.2,
+     "bearing_deg": 92.4,
+     "bearing_diff_deg": 5.6
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 87.0,
+     "bearing_deg": 113.8,
+     "bearing_diff_deg": 15.8
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 87.2,
+     "bearing_deg": 58.1,
+     "bearing_diff_deg": 39.9
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 93.2,
+     "bearing_deg": 80.1,
+     "bearing_diff_deg": 17.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
+  },
+  {
+   "id": "PXL_20261107_061640829",
+   "building": "honbu",
+   "face": "f0",
+   "notes": "仕分け係（Opus）：『本部棟縦』の 17 秒後。同じ明るい灰色の目地と同じタイル。low の理由：GPS はタワー75 の西に飛んでいるが 17 秒で 50 m は動けないので本部棟の同じ壁と読んだ。周りは写らない",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_061640829.jpg",
+   "taken_at": "2026-11-07T15:16:40",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1358028,
+    "lon": 136.9756472,
+    "alt": 87.69,
+    "x": 13.5,
+    "y": 33.6,
+    "hdop": null
+   },
+   "heading_deg": 228.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 463.5,
+    "brightness": 147.5,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.01,
+    "edge_touch_left": 0.029,
+    "edge_touch_right": 0.013,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 6.2,
+     "bearing_deg": 164.2,
+     "bearing_diff_deg": 55.8
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 33.5,
+     "bearing_deg": 165.5,
+     "bearing_diff_deg": 54.5
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 34.1,
+     "bearing_deg": 224.3,
+     "bearing_diff_deg": 4.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 49.0,
+     "bearing_deg": 271.9,
+     "bearing_diff_deg": 51.9
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 73.7,
+     "bearing_deg": 252.0,
+     "bearing_diff_deg": 32.0
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 74.0,
+     "bearing_deg": 176.8,
+     "bearing_diff_deg": 43.2
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの段に縦に。0〜約 11 cm が読め、0 の爪はタイルの上端。タイル 約 1.5 段にまたがる。平ら"
+  },
+  {
+   "id": "PXL_20261107_061749039",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：庇の下の黄色タイルの壁に『名城大学附属図書館 MEIJO UNIVERSITY LIBRARY』の銘板と照明（f2 の北寄りの銘板の柱型）。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_061749039.jpg",
+   "taken_at": "2026-11-07T15:17:49",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354528,
+    "lon": 136.9755667,
+    "alt": 91.01,
+    "x": 6.1,
+    "y": -5.3,
+    "hdop": null
+   },
+   "heading_deg": 336.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 826.5,
+    "brightness": 120.9,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.0,
+    "edge_touch_left": 0.113,
+    "edge_touch_right": 0.099,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 40.4,
+     "bearing_diff_deg": 72.4
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 18.2,
+     "bearing_deg": 264.2,
+     "bearing_diff_deg": 63.8
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 36.3,
+     "bearing_deg": 327.8,
+     "bearing_diff_deg": 0.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 47.9,
+     "bearing_deg": 359.3,
+     "bearing_diff_deg": 31.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 60.0,
+     "bearing_deg": 301.7,
+     "bearing_diff_deg": 26.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:24",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_061857971",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：銘板の『名』の字の左下（同じ壁）",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_061857971.jpg",
+   "taken_at": "2026-11-07T15:18:57",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354528,
+    "lon": 136.9755667,
+    "alt": 91.01,
+    "x": 6.1,
+    "y": -5.3,
+    "hdop": null
+   },
+   "heading_deg": 290.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 466.9,
+    "brightness": 134.5,
+    "dark_ratio": 0.002,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.058,
+    "edge_touch_left": 0.025,
+    "edge_touch_right": 0.067,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 40.4,
+     "bearing_diff_deg": 118.4
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 18.2,
+     "bearing_deg": 264.2,
+     "bearing_diff_deg": 17.8
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 60.0,
+     "bearing_deg": 301.7,
+     "bearing_diff_deg": 19.7
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 60.8,
+     "bearing_deg": 276.9,
+     "bearing_diff_deg": 5.1
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 106.6,
+     "bearing_deg": 282.0,
+     "bearing_diff_deg": 0.0
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 109.4,
+     "bearing_deg": 291.9,
+     "bearing_diff_deg": 9.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:25",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f2 の銘板の壁のタイルの段に縦に。0〜約 10 cm が読め、0 の爪はタイルの上端（段の目地の下の縁）。タイル 約 1.5 段。平ら"
+  },
+  {
+   "id": "PXL_20261107_061900184",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：銘板の『名』の字の左下（同じ壁、3 秒後）",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_061900184.jpg",
+   "taken_at": "2026-11-07T15:19:00",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354528,
+    "lon": 136.9755667,
+    "alt": 91.01,
+    "x": 6.1,
+    "y": -5.3,
+    "hdop": null
+   },
+   "heading_deg": 222.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 992.3,
+    "brightness": 136.9,
+    "dark_ratio": 0.001,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.047,
+    "edge_touch_left": 0.17,
+    "edge_touch_right": 0.107,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 40.4,
+     "bearing_diff_deg": 173.6
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 7.1,
+     "bearing_deg": 134.9,
+     "bearing_diff_deg": 79.1
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 18.2,
+     "bearing_deg": 264.2,
+     "bearing_diff_deg": 50.2
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 34.5,
+     "bearing_deg": 166.6,
+     "bearing_diff_deg": 47.4
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 65.1,
+     "bearing_deg": 163.5,
+     "bearing_diff_deg": 50.5
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 116.9,
+     "bearing_deg": 223.2,
+     "bearing_diff_deg": 9.2
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:25",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f2 の銘板の壁のタイルの段に縦に。0〜約 11 cm が読め、0 の爪はタイルの上端。タイル 1 段＋目地＋次の段。平ら"
+  },
+  {
+   "id": "PXL_20261107_061936653",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：黄色の小口タイルと濃い灰色の目地の近写。銘板の壁（061900184）の 36 秒後で同じタイルと目地。mid：周りが写らない（GPS は 15 m 西にずれ）",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_061936653.jpg",
+   "taken_at": "2026-11-07T15:19:36",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354917,
+    "lon": 136.9754,
+    "alt": 94.8,
+    "x": -9.1,
+    "y": -0.9,
+    "hdop": null
+   },
+   "heading_deg": 131.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 619.7,
+    "brightness": 124.0,
+    "dark_ratio": 0.01,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.021,
+    "edge_touch_left": 0.054,
+    "edge_touch_right": 0.077,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 14.1,
+     "bearing_deg": 67.8,
+     "bearing_diff_deg": 55.2
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 22.5,
+     "bearing_deg": 125.7,
+     "bearing_diff_deg": 2.7
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 37.6,
+     "bearing_deg": 73.7,
+     "bearing_diff_deg": 49.3
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 38.3,
+     "bearing_deg": 154.1,
+     "bearing_diff_deg": 31.1
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 69.2,
+     "bearing_deg": 155.0,
+     "bearing_diff_deg": 32.0
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 74.0,
+     "bearing_deg": 95.8,
+     "bearing_diff_deg": 27.2
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 83.6,
+     "bearing_deg": 117.2,
+     "bearing_diff_deg": 5.8
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 88.6,
+     "bearing_deg": 82.1,
+     "bearing_diff_deg": 40.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:25",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "縦の目地にまたがって水平に。0〜約 4 cm が読め、0 の爪を左のタイルの右の縁に当て、目地を越えて右のタイルにかかる。目地の幅を読む 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_061944572.MP",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：同じ壁の近写（8 秒後）。mid の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_061944572.MP.jpg",
+   "taken_at": "2026-11-07T15:19:44",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354917,
+    "lon": 136.9754,
+    "alt": 94.8,
+    "x": -9.1,
+    "y": -0.9,
+    "hdop": null
+   },
+   "heading_deg": 159.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 646.0,
+    "brightness": 122.1,
+    "dark_ratio": 0.011,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.026,
+    "edge_touch_left": 0.127,
+    "edge_touch_right": 0.057,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 14.1,
+     "bearing_deg": 67.8,
+     "bearing_diff_deg": 83.2
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 15.0,
+     "bearing_deg": 247.2,
+     "bearing_diff_deg": 96.2
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 22.5,
+     "bearing_deg": 125.7,
+     "bearing_diff_deg": 25.3
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 38.3,
+     "bearing_deg": 154.1,
+     "bearing_diff_deg": 3.1
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 69.2,
+     "bearing_deg": 155.0,
+     "bearing_diff_deg": 4.0
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 83.6,
+     "bearing_deg": 117.2,
+     "bearing_diff_deg": 33.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:25",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "段の目地にまたがって縦に。0〜約 4 cm が読め、0 の爪を上のタイルの下の縁に当てる。目地の幅を読む 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_062004057",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：同じ壁の近写（20 秒後）。mid の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_062004057.jpg",
+   "taken_at": "2026-11-07T15:20:04",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354917,
+    "lon": 136.9754,
+    "alt": 94.8,
+    "x": -9.1,
+    "y": -0.9,
+    "hdop": null
+   },
+   "heading_deg": 148.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 399.9,
+    "brightness": 120.1,
+    "dark_ratio": 0.011,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.047,
+    "edge_touch_left": 0.064,
+    "edge_touch_right": 0.057,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 14.1,
+     "bearing_deg": 67.8,
+     "bearing_diff_deg": 72.2
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 15.0,
+     "bearing_deg": 247.2,
+     "bearing_diff_deg": 107.2
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 22.5,
+     "bearing_deg": 125.7,
+     "bearing_diff_deg": 14.3
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 38.3,
+     "bearing_deg": 154.1,
+     "bearing_diff_deg": 14.1
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 69.2,
+     "bearing_deg": 155.0,
+     "bearing_diff_deg": 15.0
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 83.6,
+     "bearing_deg": 117.2,
+     "bearing_diff_deg": 22.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:25",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "段の目地からタイルの高さに縦に。0〜約 5 cm が読め、0 の爪を上のタイルの下の縁に当てる。目地＋タイル 1 段の途中まで。平ら"
+  },
+  {
+   "id": "PXL_20261107_062051896",
+   "building": "library",
+   "face": "f1",
+   "notes": "仕分け係（Opus）：北西の広場から f1 の西の端：格子の窓、列 7・8 の凹みのガラス、列 9 の角の軒下と照明、赤い床。右に低い棟と青い鉄骨の屋根。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_062051896.jpg",
+   "taken_at": "2026-11-07T15:20:51",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9756722,
+    "alt": 94.8,
+    "x": 15.7,
+    "y": -7.7,
+    "hdop": null
+   },
+   "heading_deg": 357.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 430.9,
+    "brightness": 100.5,
+    "dark_ratio": 0.054,
+    "bright_ratio": 0.004,
+    "edge_touch_top": 0.008,
+    "edge_touch_left": 0.085,
+    "edge_touch_right": 0.034,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 0.0,
+     "bearing_deg": 146.6,
+     "bearing_diff_deg": 157.6
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 2.6,
+     "bearing_deg": 12.8,
+     "bearing_diff_deg": 23.8
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 21.5,
+     "bearing_deg": 55.9,
+     "bearing_diff_deg": 66.9
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 21.8,
+     "bearing_deg": 268.6,
+     "bearing_diff_deg": 80.4
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 43.5,
+     "bearing_deg": 320.6,
+     "bearing_diff_deg": 28.4
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 44.1,
+     "bearing_deg": 9.5,
+     "bearing_diff_deg": 20.5
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 50.1,
+     "bearing_deg": 23.1,
+     "bearing_diff_deg": 34.1
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 51.4,
+     "bearing_deg": 353.5,
+     "bearing_diff_deg": 4.5
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 69.6,
+     "bearing_deg": 299.7,
+     "bearing_diff_deg": 49.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:25",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_062057129",
+   "building": "library",
+   "face": "f1",
+   "notes": "仕分け係（Opus）：北西から f1 を斜めに：格子の窓が続き、右端に角の軒下（入口のガラス）。左に天窓。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_062057129.jpg",
+   "taken_at": "2026-11-07T15:20:57",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9756722,
+    "alt": 94.8,
+    "x": 15.7,
+    "y": -7.7,
+    "hdop": null
+   },
+   "heading_deg": 84.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 805.2,
+    "brightness": 103.5,
+    "dark_ratio": 0.06,
+    "bright_ratio": 0.002,
+    "edge_touch_top": 0.012,
+    "edge_touch_left": 0.069,
+    "edge_touch_right": 0.029,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 0.0,
+     "bearing_deg": 146.6,
+     "bearing_diff_deg": 70.6
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 2.6,
+     "bearing_deg": 12.8,
+     "bearing_diff_deg": 63.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 21.5,
+     "bearing_deg": 55.9,
+     "bearing_diff_deg": 20.1
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 44.1,
+     "bearing_deg": 9.5,
+     "bearing_diff_deg": 66.5
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 49.1,
+     "bearing_deg": 91.7,
+     "bearing_diff_deg": 15.7
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 50.1,
+     "bearing_deg": 23.1,
+     "bearing_diff_deg": 52.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 58.0,
+     "bearing_deg": 121.0,
+     "bearing_diff_deg": 45.0
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 64.4,
+     "bearing_deg": 75.6,
+     "bearing_diff_deg": 0.4
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 64.9,
+     "bearing_deg": 46.7,
+     "bearing_diff_deg": 29.3
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 113.5,
+     "bearing_deg": 89.6,
+     "bearing_diff_deg": 13.6
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:26",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_063005897",
+   "building": "library",
+   "face": "f1",
+   "notes": "仕分け係（Opus）：北西の角の軒下の柱（照明付き）を北から：左奥に風除室のガラス、右に斜路と青い鉄骨の屋根、奥に本部棟。照明の付いた側＝柱の北の面（f1 の側）。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063005897.jpg",
+   "taken_at": "2026-11-07T15:30:05",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354361,
+    "lon": 136.9757944,
+    "alt": 98.09,
+    "x": 26.8,
+    "y": -7.1,
+    "hdop": null
+   },
+   "heading_deg": 317.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 527.6,
+    "brightness": 99.2,
+    "dark_ratio": 0.077,
+    "bright_ratio": 0.043,
+    "edge_touch_top": 0.027,
+    "edge_touch_left": 0.045,
+    "edge_touch_right": 0.096,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 0.0,
+     "bearing_deg": 172.6,
+     "bearing_diff_deg": 136.4
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 4.6,
+     "bearing_deg": 339.1,
+     "bearing_diff_deg": 30.1
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 31.2,
+     "bearing_deg": 268.3,
+     "bearing_diff_deg": 40.7
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 50.6,
+     "bearing_deg": 312.3,
+     "bearing_diff_deg": 3.3
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 54.3,
+     "bearing_deg": 346.8,
+     "bearing_diff_deg": 37.8
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 79.1,
+     "bearing_deg": 296.2,
+     "bearing_diff_deg": 12.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 81.6,
+     "bearing_deg": 276.5,
+     "bearing_diff_deg": 32.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:26",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_063109753",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：北西の角の軒下の柱を西から（左に斜路の手すりと木、右に赤い広場と奥にタワー75）。063005897・063223985 で照明は北の面にあり、この面には照明が無いので西の面（f2 の側）と読んだ。mid：角の柱なので f1 も faces に",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063109753.jpg",
+   "taken_at": "2026-11-07T15:31:09",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353889,
+    "lon": 136.9754417,
+    "alt": 94.09,
+    "x": -5.3,
+    "y": -12.3,
+    "hdop": null
+   },
+   "heading_deg": 118.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 583.8,
+    "brightness": 122.2,
+    "dark_ratio": 0.002,
+    "bright_ratio": 0.009,
+    "edge_touch_top": 0.101,
+    "edge_touch_left": 0.142,
+    "edge_touch_right": 0.114,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 6.7,
+     "bearing_deg": 279.0,
+     "bearing_diff_deg": 169.0
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 7.4,
+     "bearing_deg": 47.4,
+     "bearing_diff_deg": 62.6
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 13.8,
+     "bearing_deg": 115.2,
+     "bearing_diff_deg": 5.2
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 26.5,
+     "bearing_deg": 152.4,
+     "bearing_diff_deg": 42.4
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 40.1,
+     "bearing_deg": 63.0,
+     "bearing_diff_deg": 47.0
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 57.6,
+     "bearing_deg": 153.9,
+     "bearing_diff_deg": 43.9
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 70.4,
+     "bearing_deg": 87.9,
+     "bearing_diff_deg": 22.1
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 77.4,
+     "bearing_deg": 112.2,
+     "bearing_diff_deg": 2.2
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 84.0,
+     "bearing_deg": 52.7,
+     "bearing_diff_deg": 57.3
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 85.8,
+     "bearing_deg": 76.0,
+     "bearing_diff_deg": 34.0
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:26",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "図書館北西の角の柱の西の面（f2 の側）の幅に水平に。0〜約 97 cm が読め、0 の爪は柱の左の角。右端は柱の右の角（90 台後半、ケースの手前。063113747・063149254 が右端の拡大）。壁に平らに沿う。タイル 約 8.5 枚分（小口）"
+  },
+  {
+   "id": "PXL_20261107_063113747",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：063109753 の右端の拡大（4 秒後）。角に曲がりのタイル（役物）、奥に赤い広場とタワー75",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063113747.jpg",
+   "taken_at": "2026-11-07T15:31:13",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353889,
+    "lon": 136.9754417,
+    "alt": 94.09,
+    "x": -5.3,
+    "y": -12.3,
+    "hdop": null
+   },
+   "heading_deg": 89.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 276.0,
+    "brightness": 128.3,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.046,
+    "edge_touch_left": 0.01,
+    "edge_touch_right": 0.156,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 7.4,
+     "bearing_deg": 47.4,
+     "bearing_diff_deg": 33.6
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 13.8,
+     "bearing_deg": 115.2,
+     "bearing_diff_deg": 34.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 40.1,
+     "bearing_deg": 63.0,
+     "bearing_diff_deg": 18.0
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 58.2,
+     "bearing_deg": 28.5,
+     "bearing_diff_deg": 52.5
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 64.3,
+     "bearing_deg": 36.9,
+     "bearing_diff_deg": 44.1
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 70.4,
+     "bearing_deg": 87.9,
+     "bearing_diff_deg": 6.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 77.4,
+     "bearing_deg": 112.2,
+     "bearing_diff_deg": 31.2
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 84.0,
+     "bearing_deg": 52.7,
+     "bearing_diff_deg": 28.3
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 85.8,
+     "bearing_deg": 76.0,
+     "bearing_diff_deg": 5.0
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:26",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "同じ柱の右の角を拡大。83〜98 cm が読める（0 の端は写らない。0 は 063109753）。角は 90 台後半に見える。平ら"
+  },
+  {
+   "id": "PXL_20261107_063149254",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：063109753 の右端の拡大（40 秒後、撮り直し）",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063149254.jpg",
+   "taken_at": "2026-11-07T15:31:49",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353889,
+    "lon": 136.9754417,
+    "alt": 94.09,
+    "x": -5.3,
+    "y": -12.3,
+    "hdop": null
+   },
+   "heading_deg": 78.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 270.2,
+    "brightness": 126.0,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.057,
+    "edge_touch_left": 0.013,
+    "edge_touch_right": 0.079,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 7.4,
+     "bearing_deg": 47.4,
+     "bearing_diff_deg": 22.6
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 13.8,
+     "bearing_deg": 115.2,
+     "bearing_diff_deg": 45.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 40.1,
+     "bearing_deg": 63.0,
+     "bearing_diff_deg": 7.0
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 58.2,
+     "bearing_deg": 28.5,
+     "bearing_diff_deg": 41.5
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 64.3,
+     "bearing_deg": 36.9,
+     "bearing_diff_deg": 33.1
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 70.4,
+     "bearing_deg": 87.9,
+     "bearing_diff_deg": 17.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 77.4,
+     "bearing_deg": 112.2,
+     "bearing_diff_deg": 42.2
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 84.0,
+     "bearing_deg": 52.7,
+     "bearing_diff_deg": 17.3
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 85.8,
+     "bearing_deg": 76.0,
+     "bearing_diff_deg": 6.0
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:26",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "同じ柱の右の角を拡大。84〜98 cm が読める（0 の端は写らない）。平ら"
+  },
+  {
+   "id": "PXL_20261107_063223985",
+   "building": "library",
+   "face": null,
+   "notes": "仕分け係（Opus）：北西の角の軒下の中から：天井、『附属図書館 LIBRARY』のガラスの扉、右に照明の付いた角の柱、奥に本部棟と青い鉄骨の屋根。外の面は写らない。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063223985.jpg",
+   "taken_at": "2026-11-07T15:32:23",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354444,
+    "lon": 136.9756639,
+    "alt": 90.09,
+    "x": 14.9,
+    "y": -6.2,
+    "hdop": null
+   },
+   "heading_deg": 165.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 712.8,
+    "brightness": 101.8,
+    "dark_ratio": 0.084,
+    "bright_ratio": 0.02,
+    "edge_touch_top": 0.013,
+    "edge_touch_left": 0.064,
+    "edge_touch_right": 0.128,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 0.0,
+     "bearing_deg": 146.9,
+     "bearing_diff_deg": 10.1
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 1.1,
+     "bearing_deg": 16.3,
+     "bearing_diff_deg": 140.7
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 36.8,
+     "bearing_deg": 175.9,
+     "bearing_diff_deg": 18.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 59.0,
+     "bearing_deg": 121.7,
+     "bearing_diff_deg": 35.3
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 65.3,
+     "bearing_deg": 169.5,
+     "bearing_diff_deg": 12.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:26",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f1",
+    "f2"
+   ],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_063305381",
+   "building": "library",
+   "face": "f1",
+   "notes": "仕分け係（Opus）：黄色の小口タイルの近写（濃い灰色の目地）。北西の角の柱を測った 1 分後。low の理由：周りが写らず、角のどちらの面か決まらない",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063305381.jpg",
+   "taken_at": "2026-11-07T15:33:05",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354444,
+    "lon": 136.9756639,
+    "alt": 90.09,
+    "x": 14.9,
+    "y": -6.2,
+    "hdop": null
+   },
+   "heading_deg": 14.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 928.9,
+    "brightness": 128.4,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.05,
+    "edge_touch_left": 0.066,
+    "edge_touch_right": 0.062,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 0.0,
+     "bearing_deg": 146.9,
+     "bearing_diff_deg": 140.9
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 1.1,
+     "bearing_deg": 16.3,
+     "bearing_diff_deg": 10.3
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 21.2,
+     "bearing_deg": 58.1,
+     "bearing_diff_deg": 52.1
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 43.1,
+     "bearing_deg": 10.7,
+     "bearing_diff_deg": 4.7
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 49.2,
+     "bearing_deg": 24.4,
+     "bearing_diff_deg": 18.4
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 49.8,
+     "bearing_deg": 353.9,
+     "bearing_diff_deg": 12.1
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 119.5,
+     "bearing_deg": 11.8,
+     "bearing_diff_deg": 5.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:27",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "タイル 1 枚の幅に水平に。0〜約 12 cm が読め、0 の爪はタイルの左の縁。タイル 1 枚＋目地 1 つ。平ら"
+  },
+  {
+   "id": "PXL_20261107_063318499",
+   "building": "library",
+   "face": "f1",
+   "notes": "仕分け係（Opus）：063305381 と同じ壁（13 秒後）。low の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_063318499.jpg",
+   "taken_at": "2026-11-07T15:33:18",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354444,
+    "lon": 136.9756639,
+    "alt": 90.09,
+    "x": 14.9,
+    "y": -6.2,
+    "hdop": null
+   },
+   "heading_deg": 45.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 522.3,
+    "brightness": 128.4,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.047,
+    "edge_touch_left": 0.051,
+    "edge_touch_right": 0.041,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 0.0,
+     "bearing_deg": 146.9,
+     "bearing_diff_deg": 109.9
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 1.1,
+     "bearing_deg": 16.3,
+     "bearing_diff_deg": 20.7
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 21.2,
+     "bearing_deg": 58.1,
+     "bearing_diff_deg": 21.1
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 43.1,
+     "bearing_deg": 10.7,
+     "bearing_diff_deg": 26.3
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 49.2,
+     "bearing_deg": 24.4,
+     "bearing_diff_deg": 12.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 49.8,
+     "bearing_deg": 353.9,
+     "bearing_diff_deg": 43.1
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 64.5,
+     "bearing_deg": 47.8,
+     "bearing_diff_deg": 10.8
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 65.0,
+     "bearing_deg": 76.7,
+     "bearing_diff_deg": 39.7
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 119.5,
+     "bearing_deg": 11.8,
+     "bearing_diff_deg": 25.2
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:27",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの高さに縦に。0〜約 7 cm が読め、0 の爪はタイルの上端（段の目地の下の縁）。タイル 1 段。平ら"
+  },
+  {
+   "id": "PXL_20261107_063437781",
+   "building": "kyotsu-minami",
+   "face": "f17",
+   "notes": "仕分け係（Opus）：東の庭側の 1 階：『共通講義棟南 SOUTH LECTURE HALL』の表示、ガラスの扉、照明の付いたタイルの柱型、上にガラスブロックの帯（f17 の中の区画）。扉の奥に貼り紙（GO Lions GO）。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/共通講義棟南_kyotsu-minami/PXL_20261107_063437781.jpg",
+   "taken_at": "2026-11-07T15:34:37",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1359333,
+    "lon": 136.9758861,
+    "alt": 90.09,
+    "x": 35.3,
+    "y": 48.0,
+    "hdop": null
+   },
+   "heading_deg": 243.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1258.1,
+    "brightness": 115.3,
+    "dark_ratio": 0.033,
+    "bright_ratio": 0.003,
+    "edge_touch_top": 0.269,
+    "edge_touch_left": 0.091,
+    "edge_touch_right": 0.126,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 110.0,
+     "bearing_diff_deg": 125.0
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 8.2,
+     "bearing_deg": 240.2,
+     "bearing_diff_deg": 5.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 8.6,
+     "bearing_deg": 151.5,
+     "bearing_diff_deg": 83.5
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 14.2,
+     "bearing_deg": 202.5,
+     "bearing_diff_deg": 32.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 22.2,
+     "bearing_deg": 321.0,
+     "bearing_diff_deg": 86.0
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 45.9,
+     "bearing_deg": 256.3,
+     "bearing_diff_deg": 21.3
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 51.1,
+     "bearing_deg": 184.2,
+     "bearing_diff_deg": 50.8
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 59.9,
+     "bearing_deg": 228.0,
+     "bearing_diff_deg": 7.0
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 68.7,
+     "bearing_deg": 262.9,
+     "bearing_diff_deg": 27.9
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 94.5,
+     "bearing_deg": 188.9,
+     "bearing_diff_deg": 46.1
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 99.5,
+     "bearing_deg": 248.6,
+     "bearing_diff_deg": 13.6
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:27",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_063536102",
+   "building": "kyotsu-minami",
+   "face": "f17",
+   "notes": "仕分け係（Opus）：割肌の横長タイル（下に平らな縁の段）。063437781 の 1 分後。mid：周りが写らない（柱型のタイル）",
+   "file": "D:/BuiltwithClaude/メジャー/共通講義棟南_kyotsu-minami/PXL_20261107_063536102.jpg",
+   "taken_at": "2026-11-07T15:35:36",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1360167,
+    "lon": 136.975925,
+    "alt": 88.19,
+    "x": 38.8,
+    "y": 57.2,
+    "hdop": null
+   },
+   "heading_deg": 320.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1443.4,
+    "brightness": 126.8,
+    "dark_ratio": 0.006,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.209,
+    "edge_touch_left": 0.112,
+    "edge_touch_right": 0.167,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 0.9,
+     "bearing_deg": 179.4,
+     "bearing_diff_deg": 132.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 20.9,
+     "bearing_deg": 309.9,
+     "bearing_diff_deg": 2.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:27",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "横長のタイル 1 枚の長さに水平に。0〜約 19 cm が読め、0 の爪はタイルの左の縁、右の縁がケースの所。タイル 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_063545712",
+   "building": "kyotsu-minami",
+   "face": "f17",
+   "notes": "仕分け係（Opus）：同じ壁（9 秒後）。mid の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/共通講義棟南_kyotsu-minami/PXL_20261107_063545712.jpg",
+   "taken_at": "2026-11-07T15:35:45",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1360167,
+    "lon": 136.975925,
+    "alt": 88.19,
+    "x": 38.8,
+    "y": 57.2,
+    "hdop": null
+   },
+   "heading_deg": 28.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 747.4,
+    "brightness": 132.7,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.014,
+    "edge_touch_left": 0.088,
+    "edge_touch_right": 0.192,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 0.9,
+     "bearing_deg": 179.4,
+     "bearing_diff_deg": 159.4
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 20.9,
+     "bearing_deg": 309.9,
+     "bearing_diff_deg": 70.1
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 52.5,
+     "bearing_deg": 1.9,
+     "bearing_diff_deg": 18.1
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 65.5,
+     "bearing_deg": 32.4,
+     "bearing_diff_deg": 12.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:27",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの高さに縦に。0〜約 5 cm が読め、0 の爪はタイルの上端（割肌の面の上）。割肌＋下の縁の段で 1 段。平ら"
+  },
+  {
+   "id": "PXL_20261107_063604964",
+   "building": "kyotsu-minami",
+   "face": "f17",
+   "notes": "仕分け係（Opus）：同じ所。左は平らなタイル、右は割肌のタイル（柱型の角か開口の脇の役物と見える）。左端は暗い開口。mid の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/共通講義棟南_kyotsu-minami/PXL_20261107_063604964.jpg",
+   "taken_at": "2026-11-07T15:36:04",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1360167,
+    "lon": 136.975925,
+    "alt": 88.19,
+    "x": 38.8,
+    "y": 57.2,
+    "hdop": null
+   },
+   "heading_deg": 7.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1140.4,
+    "brightness": 134.2,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.177,
+    "edge_touch_left": 0.0,
+    "edge_touch_right": 0.238,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 0.9,
+     "bearing_deg": 179.4,
+     "bearing_diff_deg": 179.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 20.9,
+     "bearing_deg": 309.9,
+     "bearing_diff_deg": 49.1
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 52.5,
+     "bearing_deg": 1.9,
+     "bearing_diff_deg": 2.9
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 65.5,
+     "bearing_deg": 32.4,
+     "bearing_diff_deg": 33.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "左の平らなタイルの段に縦に。0〜約 6 cm が読め、0 の爪はタイルの上端。平ら"
+  },
+  {
+   "id": "PXL_20261107_063617205",
+   "building": "kyotsu-minami",
+   "face": "f17",
+   "notes": "仕分け係（Opus）：同じ所。左に平らなタイル、右に割肌。左端は暗い開口。mid の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/共通講義棟南_kyotsu-minami/PXL_20261107_063617205.jpg",
+   "taken_at": "2026-11-07T15:36:17",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1360167,
+    "lon": 136.975925,
+    "alt": 88.19,
+    "x": 38.8,
+    "y": 57.2,
+    "hdop": null
+   },
+   "heading_deg": 329.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 661.5,
+    "brightness": 119.7,
+    "dark_ratio": 0.006,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.033,
+    "edge_touch_left": 0.0,
+    "edge_touch_right": 0.126,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 0.9,
+     "bearing_deg": 179.4,
+     "bearing_diff_deg": 141.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 20.9,
+     "bearing_deg": 309.9,
+     "bearing_diff_deg": 11.1
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 52.5,
+     "bearing_deg": 1.9,
+     "bearing_diff_deg": 40.9
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 65.5,
+     "bearing_deg": 32.4,
+     "bearing_diff_deg": 71.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "平らなタイル 1 枚の幅に水平に。0〜約 10 cm が読め、0 の爪はタイルの左の縁（開口の側）。右は縦の目地。平ら"
+  },
+  {
+   "id": "PXL_20261107_063717864",
+   "building": "tower75",
+   "face": "f4",
+   "notes": "仕分け係（Opus）：南西の低い塊：左の面に 1 階のガラスブロックの欄間と 4 枚の窓・縦の細いガラスの列、右の面に各階の深い開口と手すり。両面が奥で会う入隅（f5 のすき間）。mid：f4/f5 の境は見えない。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063717864.jpg",
+   "taken_at": "2026-11-07T15:37:17",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354778,
+    "lon": 136.9756472,
+    "alt": 94.09,
+    "x": 13.4,
+    "y": -2.5,
+    "hdop": null
+   },
+   "heading_deg": 262.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1448.6,
+    "brightness": 108.7,
+    "dark_ratio": 0.024,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.052,
+    "edge_touch_left": 0.039,
+    "edge_touch_right": 0.108,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 25.9,
+     "bearing_diff_deg": 131.9
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 1.9,
+     "bearing_deg": 148.3,
+     "bearing_diff_deg": 105.7
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 24.3,
+     "bearing_deg": 261.4,
+     "bearing_diff_deg": 7.4
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 65.1,
+     "bearing_deg": 297.4,
+     "bearing_diff_deg": 43.4
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 67.7,
+     "bearing_deg": 274.6,
+     "bearing_diff_deg": 20.6
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 113.0,
+     "bearing_deg": 280.1,
+     "bearing_diff_deg": 26.1
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 115.1,
+     "bearing_deg": 289.4,
+     "bearing_diff_deg": 35.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f4",
+    "f5",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_063723991",
+   "building": "tower75",
+   "face": "f4",
+   "notes": "仕分け係（Opus）：063717864 の撮り直し（指が写らない）。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063723991.jpg",
+   "taken_at": "2026-11-07T15:37:23",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354778,
+    "lon": 136.9756472,
+    "alt": 94.09,
+    "x": 13.4,
+    "y": -2.5,
+    "hdop": null
+   },
+   "heading_deg": 261.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1291.7,
+    "brightness": 105.4,
+    "dark_ratio": 0.021,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.016,
+    "edge_touch_left": 0.024,
+    "edge_touch_right": 0.09,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 25.9,
+     "bearing_diff_deg": 132.9
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 1.9,
+     "bearing_deg": 148.3,
+     "bearing_diff_deg": 104.7
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 24.3,
+     "bearing_deg": 261.4,
+     "bearing_diff_deg": 8.4
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 65.1,
+     "bearing_deg": 297.4,
+     "bearing_diff_deg": 44.4
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 67.7,
+     "bearing_deg": 274.6,
+     "bearing_diff_deg": 21.6
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 113.0,
+     "bearing_deg": 280.1,
+     "bearing_diff_deg": 27.1
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 115.1,
+     "bearing_deg": 289.4,
+     "bearing_diff_deg": 36.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f4",
+    "f5",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_063832147",
+   "building": "tower75",
+   "face": "f11",
+   "notes": "仕分け係（Opus）：南面を見上げ：中央に東の袖の無地の面 f11（白帯、下に灰色の太い帯）、左に吹き抜けのガラスと日よけ棚 f9、右に南東の低い塊の窓 f13。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063832147.jpg",
+   "taken_at": "2026-11-07T15:38:32",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9760972,
+    "alt": 84.06,
+    "x": 54.4,
+    "y": -7.8,
+    "hdop": null
+   },
+   "heading_deg": 289.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1369.4,
+    "brightness": 100.2,
+    "dark_ratio": 0.052,
+    "bright_ratio": 0.004,
+    "edge_touch_top": 0.001,
+    "edge_touch_left": 0.07,
+    "edge_touch_right": 0.123,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 2.5,
+     "bearing_deg": 354.8,
+     "bearing_diff_deg": 73.8
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 10.4,
+     "bearing_deg": 229.8,
+     "bearing_diff_deg": 51.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 28.8,
+     "bearing_deg": 298.5,
+     "bearing_diff_deg": 17.5
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 43.5,
+     "bearing_deg": 328.2,
+     "bearing_diff_deg": 47.2
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 47.1,
+     "bearing_deg": 344.1,
+     "bearing_diff_deg": 63.1
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 54.0,
+     "bearing_deg": 215.4,
+     "bearing_diff_deg": 65.6
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 56.7,
+     "bearing_deg": 269.4,
+     "bearing_diff_deg": 11.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 70.1,
+     "bearing_deg": 332.1,
+     "bearing_diff_deg": 51.1
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 73.8,
+     "bearing_deg": 300.1,
+     "bearing_diff_deg": 19.1
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 103.8,
+     "bearing_deg": 290.8,
+     "bearing_diff_deg": 9.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 109.1,
+     "bearing_deg": 275.5,
+     "bearing_diff_deg": 5.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f11",
+    "f9",
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_063833453",
+   "building": "tower75",
+   "face": "f11",
+   "notes": "仕分け係（Opus）：f11 の下の段：無地のタイル面と灰色の帯、下に送水口・非常電話の箱、左に f9 のガラス、右に窓と扉。メジャーは無い。箱に点検済証のシール（会社名・電話番号）",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063833453.jpg",
+   "taken_at": "2026-11-07T15:38:33",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9760972,
+    "alt": 84.06,
+    "x": 54.4,
+    "y": -7.8,
+    "hdop": null
+   },
+   "heading_deg": 295.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1853.5,
+    "brightness": 117.2,
+    "dark_ratio": 0.012,
+    "bright_ratio": 0.02,
+    "edge_touch_top": 0.232,
+    "edge_touch_left": 0.141,
+    "edge_touch_right": 0.235,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 2.5,
+     "bearing_deg": 354.8,
+     "bearing_diff_deg": 67.8
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 10.4,
+     "bearing_deg": 229.8,
+     "bearing_diff_deg": 57.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 28.8,
+     "bearing_deg": 298.5,
+     "bearing_diff_deg": 11.5
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 43.5,
+     "bearing_deg": 328.2,
+     "bearing_diff_deg": 41.2
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 47.1,
+     "bearing_deg": 344.1,
+     "bearing_diff_deg": 57.1
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 54.0,
+     "bearing_deg": 215.4,
+     "bearing_diff_deg": 71.6
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 56.7,
+     "bearing_deg": 269.4,
+     "bearing_diff_deg": 17.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 70.1,
+     "bearing_deg": 332.1,
+     "bearing_diff_deg": 45.1
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 73.8,
+     "bearing_deg": 300.1,
+     "bearing_diff_deg": 13.1
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 103.8,
+     "bearing_deg": 290.8,
+     "bearing_diff_deg": 3.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 109.1,
+     "bearing_deg": 275.5,
+     "bearing_diff_deg": 11.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f11",
+    "f9",
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_063908470",
+   "building": "tower75",
+   "face": "f11",
+   "notes": "仕分け係（Opus）：f11 の送水口の箱の上の段のタイル（063918088 の右端の拡大）。右に黒い縦の目地（シーリング）",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063908470.jpg",
+   "taken_at": "2026-11-07T15:39:08",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9760972,
+    "alt": 84.06,
+    "x": 54.4,
+    "y": -7.8,
+    "hdop": null
+   },
+   "heading_deg": 102.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 159.0,
+    "brightness": 111.3,
+    "dark_ratio": 0.033,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.178,
+    "edge_touch_left": 0.048,
+    "edge_touch_right": 0.048,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 2.5,
+     "bearing_deg": 354.8,
+     "bearing_diff_deg": 99.2
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 10.6,
+     "bearing_deg": 94.7,
+     "bearing_diff_deg": 0.7
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 20.1,
+     "bearing_deg": 144.3,
+     "bearing_diff_deg": 50.3
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 26.5,
+     "bearing_deg": 64.9,
+     "bearing_diff_deg": 29.1
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 75.0,
+     "bearing_deg": 89.3,
+     "bearing_diff_deg": 4.7
+    },
+    {
+     "building": "osm-way-1304077326",
+     "name": null,
+     "distance_m": 92.8,
+     "bearing_deg": 80.3,
+     "bearing_diff_deg": 13.7
+    },
+    {
+     "building": "b06",
+     "name": "6号館",
+     "distance_m": 99.7,
+     "bearing_deg": 86.1,
+     "bearing_diff_deg": 7.9
+    },
+    {
+     "building": "osm-way-1304078680",
+     "name": null,
+     "distance_m": 101.1,
+     "bearing_deg": 68.7,
+     "bearing_diff_deg": 25.3
+    },
+    {
+     "building": "lab4",
+     "name": "研究実験棟Ⅳ",
+     "distance_m": 113.7,
+     "bearing_deg": 122.6,
+     "bearing_diff_deg": 28.6
+    },
+    {
+     "building": "lab1",
+     "name": "研究実験棟Ⅰ",
+     "distance_m": 116.1,
+     "bearing_deg": 40.1,
+     "bearing_diff_deg": 53.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f11 の送水口の箱の上の段（割肌のタイル）に水平に。104〜119 cm が読め、右端は黒い縦の目地（シーリング）の手前（0 の端は写らない。0 は 063918088）。平ら"
+  },
+  {
+   "id": "PXL_20261107_063918088",
+   "building": "tower75",
+   "face": "f11",
+   "notes": "仕分け係（Opus）：f11 の下の段の送水口の箱（『送水口』『非常電話』の表示）とその上のタイルの段",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063918088.jpg",
+   "taken_at": "2026-11-07T15:39:18",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9760972,
+    "alt": 84.06,
+    "x": 54.4,
+    "y": -7.8,
+    "hdop": null
+   },
+   "heading_deg": 81.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1399.0,
+    "brightness": 121.1,
+    "dark_ratio": 0.004,
+    "bright_ratio": 0.005,
+    "edge_touch_top": 0.246,
+    "edge_touch_left": 0.258,
+    "edge_touch_right": 0.131,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 2.5,
+     "bearing_deg": 354.8,
+     "bearing_diff_deg": 78.2
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 10.6,
+     "bearing_deg": 94.7,
+     "bearing_diff_deg": 21.7
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 20.1,
+     "bearing_deg": 144.3,
+     "bearing_diff_deg": 71.3
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 26.5,
+     "bearing_deg": 64.9,
+     "bearing_diff_deg": 8.1
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 43.9,
+     "bearing_deg": 21.9,
+     "bearing_diff_deg": 51.1
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 75.0,
+     "bearing_deg": 89.3,
+     "bearing_diff_deg": 16.3
+    },
+    {
+     "building": "osm-way-1304077326",
+     "name": null,
+     "distance_m": 92.8,
+     "bearing_deg": 80.3,
+     "bearing_diff_deg": 7.3
+    },
+    {
+     "building": "b06",
+     "name": "6号館",
+     "distance_m": 99.7,
+     "bearing_deg": 86.1,
+     "bearing_diff_deg": 13.1
+    },
+    {
+     "building": "osm-way-1304078680",
+     "name": null,
+     "distance_m": 101.1,
+     "bearing_deg": 68.7,
+     "bearing_diff_deg": 4.3
+    },
+    {
+     "building": "lab4",
+     "name": "研究実験棟Ⅳ",
+     "distance_m": 113.7,
+     "bearing_deg": 122.6,
+     "bearing_diff_deg": 49.6
+    },
+    {
+     "building": "lab1",
+     "name": "研究実験棟Ⅰ",
+     "distance_m": 116.1,
+     "bearing_deg": 40.1,
+     "bearing_diff_deg": 32.9
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 116.2,
+     "bearing_deg": 13.9,
+     "bearing_diff_deg": 59.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f11 の送水口の箱のすぐ上の段のタイルに水平に、箱の左の縁の上から右の黒い縦の目地まで。0〜約 120 cm が読め、0 の爪は箱の左の縁の上に当たる（小さく写る）。割肌の横長タイル 約 4〜5 枚にまたがる。壁に平らに沿う"
+  },
+  {
+   "id": "PXL_20261107_063921808",
+   "building": "tower75",
+   "face": "f11",
+   "notes": "仕分け係（Opus）：063908470 と同じ所の拡大（13 秒後）",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_063921808.jpg",
+   "taken_at": "2026-11-07T15:39:21",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354306,
+    "lon": 136.9760972,
+    "alt": 84.06,
+    "x": 54.4,
+    "y": -7.8,
+    "hdop": null
+   },
+   "heading_deg": 82.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 248.5,
+    "brightness": 111.5,
+    "dark_ratio": 0.014,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.072,
+    "edge_touch_left": 0.103,
+    "edge_touch_right": 0.099,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 2.5,
+     "bearing_deg": 354.8,
+     "bearing_diff_deg": 79.2
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 10.6,
+     "bearing_deg": 94.7,
+     "bearing_diff_deg": 20.7
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 20.1,
+     "bearing_deg": 144.3,
+     "bearing_diff_deg": 70.3
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 26.5,
+     "bearing_deg": 64.9,
+     "bearing_diff_deg": 9.1
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 43.9,
+     "bearing_deg": 21.9,
+     "bearing_diff_deg": 52.1
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 75.0,
+     "bearing_deg": 89.3,
+     "bearing_diff_deg": 15.3
+    },
+    {
+     "building": "osm-way-1304077326",
+     "name": null,
+     "distance_m": 92.8,
+     "bearing_deg": 80.3,
+     "bearing_diff_deg": 6.3
+    },
+    {
+     "building": "b06",
+     "name": "6号館",
+     "distance_m": 99.7,
+     "bearing_deg": 86.1,
+     "bearing_diff_deg": 12.1
+    },
+    {
+     "building": "osm-way-1304078680",
+     "name": null,
+     "distance_m": 101.1,
+     "bearing_deg": 68.7,
+     "bearing_diff_deg": 5.3
+    },
+    {
+     "building": "lab4",
+     "name": "研究実験棟Ⅳ",
+     "distance_m": 113.7,
+     "bearing_deg": 122.6,
+     "bearing_diff_deg": 48.6
+    },
+    {
+     "building": "lab1",
+     "name": "研究実験棟Ⅰ",
+     "distance_m": 116.1,
+     "bearing_deg": 40.1,
+     "bearing_diff_deg": 33.9
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 116.2,
+     "bearing_deg": 13.9,
+     "bearing_diff_deg": 60.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:28",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "同じ段の右端の拡大。106〜119 cm が読め、右端は黒い縦の目地の手前（0 の端は写らない）。平ら"
+  },
+  {
+   "id": "PXL_20261107_064012566",
+   "building": "tower75",
+   "face": "f11",
+   "notes": "仕分け係（Opus）：送水口の箱の右上（同じ点検済証のシール）。mid：GPS は 7 m 南西にずれ",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_064012566.jpg",
+   "taken_at": "2026-11-07T15:40:12",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353694,
+    "lon": 136.97605,
+    "alt": 86.28,
+    "x": 50.1,
+    "y": -14.6,
+    "hdop": null
+   },
+   "heading_deg": 86.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 684.0,
+    "brightness": 104.5,
+    "dark_ratio": 0.017,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.296,
+    "edge_touch_left": 0.133,
+    "edge_touch_right": 0.16,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 2.4,
+     "bearing_deg": 235.4,
+     "bearing_diff_deg": 157.4
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 10.5,
+     "bearing_deg": 3.7,
+     "bearing_diff_deg": 74.3
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 17.3,
+     "bearing_deg": 77.7,
+     "bearing_diff_deg": 0.3
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 23.1,
+     "bearing_deg": 135.4,
+     "bearing_diff_deg": 57.4
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 33.2,
+     "bearing_deg": 60.7,
+     "bearing_diff_deg": 17.3
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 78.7,
+     "bearing_deg": 85.1,
+     "bearing_diff_deg": 7.1
+    },
+    {
+     "building": "osm-way-1304077326",
+     "name": null,
+     "distance_m": 98.7,
+     "bearing_deg": 77.2,
+     "bearing_diff_deg": 0.8
+    },
+    {
+     "building": "b06",
+     "name": "6号館",
+     "distance_m": 103.7,
+     "bearing_deg": 83.3,
+     "bearing_diff_deg": 5.3
+    },
+    {
+     "building": "osm-way-1304078680",
+     "name": null,
+     "distance_m": 107.5,
+     "bearing_deg": 66.5,
+     "bearing_diff_deg": 11.5
+    },
+    {
+     "building": "lab4",
+     "name": "研究実験棟Ⅳ",
+     "distance_m": 114.8,
+     "bearing_deg": 119.5,
+     "bearing_diff_deg": 41.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "f11 の箱の上の段のタイル 1 枚に水平に。0〜約 20 cm が読め、0 の爪は左の明るい目地、右端は黒い縦の目地（シーリング）の縁（19 付近）。タイル 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_064753028",
+   "building": null,
+   "face": null,
+   "notes": "仕分け係（Opus）：割肌の横長タイルと濃い縦の目地の近写（タワー75・共通講義棟南と同じ型）。棟を決めない理由：周りが写らず、GPS はタワー75 の南東の外（OSM の way 1304077322 の 2.8 m、9 号館 5.5 m、タワー75 は 11 m）で、範囲外の隣の棟の可能性がある。候補 tower75（f13 か f15）",
+   "file": "D:/BuiltwithClaude/メジャー/未定/PXL_20261107_064753028.jpg",
+   "taken_at": "2026-11-07T15:47:53",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354583,
+    "lon": 136.9763556,
+    "alt": 88.69,
+    "x": 78.0,
+    "y": -4.8,
+    "hdop": null
+   },
+   "heading_deg": 353.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 399.2,
+    "brightness": 114.7,
+    "dark_ratio": 0.006,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.217,
+    "edge_touch_left": 0.17,
+    "edge_touch_right": 0.067,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 2.8,
+     "bearing_deg": 221.9,
+     "bearing_diff_deg": 123.1
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 5.5,
+     "bearing_deg": 51.2,
+     "bearing_diff_deg": 66.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 11.4,
+     "bearing_deg": 310.2,
+     "bearing_diff_deg": 34.8
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 35.5,
+     "bearing_deg": 0.1,
+     "bearing_diff_deg": 15.1
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 53.6,
+     "bearing_deg": 322.8,
+     "bearing_diff_deg": 22.2
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 55.7,
+     "bearing_deg": 310.5,
+     "bearing_diff_deg": 34.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 85.5,
+     "bearing_deg": 321.0,
+     "bearing_diff_deg": 24.0
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 103.0,
+     "bearing_deg": 5.1,
+     "bearing_diff_deg": 20.1
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 118.2,
+     "bearing_deg": 343.2,
+     "bearing_diff_deg": 1.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f13",
+    "f14",
+    "f15"
+   ],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "縦の目地にまたがって水平に。0〜約 2 cm が読め、0 の爪を左のタイルの右の縁に当てる。目地の幅を読む 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_064808893",
+   "building": null,
+   "face": null,
+   "notes": "仕分け係（Opus）：割肌の横長タイルと濃い縦の目地の近写（タワー75・共通講義棟南と同じ型）。棟を決めない理由：周りが写らず、GPS はタワー75 の南東の外（OSM の way 1304077322 の 2.8 m、9 号館 5.5 m、タワー75 は 11 m）で、範囲外の隣の棟の可能性がある。候補 tower75（f13 か f15）",
+   "file": "D:/BuiltwithClaude/メジャー/未定/PXL_20261107_064808893.jpg",
+   "taken_at": "2026-11-07T15:48:08",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354583,
+    "lon": 136.9763556,
+    "alt": 88.69,
+    "x": 78.0,
+    "y": -4.8,
+    "hdop": null
+   },
+   "heading_deg": 338.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 586.2,
+    "brightness": 125.6,
+    "dark_ratio": 0.001,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.072,
+    "edge_touch_left": 0.088,
+    "edge_touch_right": 0.168,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 2.8,
+     "bearing_deg": 221.9,
+     "bearing_diff_deg": 108.1
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 11.4,
+     "bearing_deg": 310.2,
+     "bearing_diff_deg": 19.8
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 35.5,
+     "bearing_deg": 0.1,
+     "bearing_diff_deg": 30.1
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 49.0,
+     "bearing_deg": 285.1,
+     "bearing_diff_deg": 44.9
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 53.6,
+     "bearing_deg": 322.8,
+     "bearing_diff_deg": 7.2
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 55.7,
+     "bearing_deg": 310.5,
+     "bearing_diff_deg": 19.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 85.5,
+     "bearing_deg": 321.0,
+     "bearing_diff_deg": 9.0
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 103.0,
+     "bearing_deg": 5.1,
+     "bearing_diff_deg": 35.1
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 118.2,
+     "bearing_deg": 343.2,
+     "bearing_diff_deg": 13.2
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f13",
+    "f14",
+    "f15"
+   ],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "縦の目地の脇でタイルの段に縦に。0〜約 2 cm が読め、0 の爪は段の目地の下の縁。平ら"
+  },
+  {
+   "id": "PXL_20261107_070052168",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：南東から：左に f6（5 層、1 階はピロティ、赤い大階段と立て看板）、右端に別の棟。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070052168.jpg",
+   "taken_at": "2026-11-07T16:00:52",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1351333,
+    "lon": 136.9751972,
+    "alt": 81.0,
+    "x": -27.7,
+    "y": -40.6,
+    "hdop": null
+   },
+   "heading_deg": 251.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1702.2,
+    "brightness": 96.1,
+    "dark_ratio": 0.043,
+    "bright_ratio": 0.002,
+    "edge_touch_top": 0.06,
+    "edge_touch_left": 0.126,
+    "edge_touch_right": 0.109,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 41.9,
+     "bearing_deg": 313.3,
+     "bearing_diff_deg": 70.3
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 68.1,
+     "bearing_deg": 222.8,
+     "bearing_diff_deg": 20.2
+    },
+    {
+     "building": "osm-way-1304065520",
+     "name": null,
+     "distance_m": 100.8,
+     "bearing_deg": 238.1,
+     "bearing_diff_deg": 4.9
+    },
+    {
+     "building": "osm-way-1304065209",
+     "name": null,
+     "distance_m": 108.4,
+     "bearing_deg": 234.2,
+     "bearing_diff_deg": 8.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_070104248",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：南東の角：左に f6 のピロティと赤い大階段、右に小窓だけの妻面 f7。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070104248.jpg",
+   "taken_at": "2026-11-07T16:01:04",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1351333,
+    "lon": 136.9751972,
+    "alt": 81.0,
+    "x": -27.7,
+    "y": -40.6,
+    "hdop": null
+   },
+   "heading_deg": 241.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1542.3,
+    "brightness": 100.0,
+    "dark_ratio": 0.05,
+    "bright_ratio": 0.004,
+    "edge_touch_top": 0.016,
+    "edge_touch_left": 0.16,
+    "edge_touch_right": 0.056,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 68.1,
+     "bearing_deg": 222.8,
+     "bearing_diff_deg": 10.2
+    },
+    {
+     "building": "osm-way-1304065520",
+     "name": null,
+     "distance_m": 100.8,
+     "bearing_deg": 238.1,
+     "bearing_diff_deg": 5.1
+    },
+    {
+     "building": "osm-way-1304065209",
+     "name": null,
+     "distance_m": 108.4,
+     "bearing_deg": 234.2,
+     "bearing_diff_deg": 1.2
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_070120982",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：南東から f6 と赤い大階段、右に隣の棟の角。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070120982.jpg",
+   "taken_at": "2026-11-07T16:01:20",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1351333,
+    "lon": 136.9751972,
+    "alt": 81.0,
+    "x": -27.7,
+    "y": -40.6,
+    "hdop": null
+   },
+   "heading_deg": 255.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1534.1,
+    "brightness": 101.2,
+    "dark_ratio": 0.031,
+    "bright_ratio": 0.002,
+    "edge_touch_top": 0.049,
+    "edge_touch_left": 0.132,
+    "edge_touch_right": 0.217,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 41.9,
+     "bearing_deg": 313.3,
+     "bearing_diff_deg": 66.3
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 68.1,
+     "bearing_deg": 222.8,
+     "bearing_diff_deg": 24.2
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 90.6,
+     "bearing_deg": 306.4,
+     "bearing_diff_deg": 59.4
+    },
+    {
+     "building": "osm-way-1304065520",
+     "name": null,
+     "distance_m": 100.8,
+     "bearing_deg": 238.1,
+     "bearing_diff_deg": 8.9
+    },
+    {
+     "building": "osm-way-1304065209",
+     "name": null,
+     "distance_m": 108.4,
+     "bearing_deg": 234.2,
+     "bearing_diff_deg": 12.8
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 112.9,
+     "bearing_deg": 303.0,
+     "bearing_diff_deg": 56.0
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_070222878",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：南西の角：右に垂れ幕のある f6（玄関の凹みとピロティ）、左に小窓と室外機の妻面 f5、前に『止まれ』の道路。メジャーは無い（垂れ幕は小さく字は読めない）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070222878.jpg",
+   "taken_at": "2026-11-07T16:02:22",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1352083,
+    "lon": 136.9747222,
+    "alt": 92.59,
+    "x": -70.9,
+    "y": -32.2,
+    "hdop": null
+   },
+   "heading_deg": 332.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1261.5,
+    "brightness": 104.3,
+    "dark_ratio": 0.021,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.02,
+    "edge_touch_left": 0.102,
+    "edge_touch_right": 0.139,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 15.3,
+     "bearing_deg": 352.7,
+     "bearing_diff_deg": 28.7
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 41.2,
+     "bearing_deg": 8.4,
+     "bearing_diff_deg": 44.4
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 51.9,
+     "bearing_deg": 323.5,
+     "bearing_diff_deg": 0.5
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 68.9,
+     "bearing_deg": 336.7,
+     "bearing_diff_deg": 12.7
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 73.7,
+     "bearing_deg": 315.5,
+     "bearing_diff_deg": 8.5
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 99.7,
+     "bearing_deg": 32.9,
+     "bearing_diff_deg": 68.9
+    },
+    {
+     "building": "osm-way-1304065716",
+     "name": null,
+     "distance_m": 115.7,
+     "bearing_deg": 272.6,
+     "bearing_diff_deg": 51.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_070244019",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：070222878 より離れた南西から f6 と f5、街灯。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070244019.jpg",
+   "taken_at": "2026-11-07T16:02:44",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1352083,
+    "lon": 136.9747222,
+    "alt": 92.59,
+    "x": -70.9,
+    "y": -32.2,
+    "hdop": null
+   },
+   "heading_deg": 316.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1737.8,
+    "brightness": 96.1,
+    "dark_ratio": 0.047,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.121,
+    "edge_touch_left": 0.12,
+    "edge_touch_right": 0.107,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 15.3,
+     "bearing_deg": 352.7,
+     "bearing_diff_deg": 44.7
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 41.2,
+     "bearing_deg": 8.4,
+     "bearing_diff_deg": 60.4
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 51.9,
+     "bearing_deg": 323.5,
+     "bearing_diff_deg": 15.5
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 68.9,
+     "bearing_deg": 336.7,
+     "bearing_diff_deg": 28.7
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 73.7,
+     "bearing_deg": 315.5,
+     "bearing_diff_deg": 7.5
+    },
+    {
+     "building": "osm-way-1304065716",
+     "name": null,
+     "distance_m": 115.7,
+     "bearing_deg": 272.6,
+     "bearing_diff_deg": 35.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_070624995",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：f6 東のピロティの正面：柱型 3 本、照明、立て看板（掲示物）、赤い階段、奥に横断歩道。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070624995.jpg",
+   "taken_at": "2026-11-07T16:06:24",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1351917,
+    "lon": 136.9750556,
+    "alt": 87.69,
+    "x": -40.6,
+    "y": -34.1,
+    "hdop": null
+   },
+   "heading_deg": 285.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 873.1,
+    "brightness": 125.4,
+    "dark_ratio": 0.012,
+    "bright_ratio": 0.003,
+    "edge_touch_top": 0.079,
+    "edge_touch_left": 0.092,
+    "edge_touch_right": 0.096,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 27.6,
+     "bearing_deg": 317.9,
+     "bearing_diff_deg": 40.9
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 76.2,
+     "bearing_deg": 307.9,
+     "bearing_diff_deg": 30.9
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 86.7,
+     "bearing_deg": 319.9,
+     "bearing_diff_deg": 42.9
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 98.6,
+     "bearing_deg": 303.9,
+     "bearing_diff_deg": 26.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:29",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_070636833",
+   "building": "honbu",
+   "face": null,
+   "notes": "仕分け係（Opus）：f6 東のピロティの中から：天井の梁、柱（照明付き）、赤い大階段、右の壁に掲示板。外の面は写らない。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070636833.jpg",
+   "taken_at": "2026-11-07T16:06:36",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1352222,
+    "lon": 136.9751333,
+    "alt": 88.69,
+    "x": -33.5,
+    "y": -30.8,
+    "hdop": null
+   },
+   "heading_deg": 10.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1133.7,
+    "brightness": 131.2,
+    "dark_ratio": 0.006,
+    "bright_ratio": 0.017,
+    "edge_touch_top": 0.006,
+    "edge_touch_left": 0.095,
+    "edge_touch_right": 0.101,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 7.0,
+     "bearing_deg": 14.6,
+     "bearing_diff_deg": 12.6
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 43.2,
+     "bearing_deg": 337.7,
+     "bearing_diff_deg": 24.3
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 62.0,
+     "bearing_deg": 12.3,
+     "bearing_diff_deg": 10.3
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 81.4,
+     "bearing_deg": 18.4,
+     "bearing_diff_deg": 16.4
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 87.9,
+     "bearing_deg": 38.5,
+     "bearing_diff_deg": 36.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f6",
+    "f8"
+   ],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_070649704",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：ピロティの赤い大階段（070636833 の階段）の段の近写。low の理由：段は壁ではなく、どの面に属すかは撮影の順（f6 のピロティ）からの推定",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070649704.jpg",
+   "taken_at": "2026-11-07T16:06:49",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1352222,
+    "lon": 136.9751333,
+    "alt": 88.69,
+    "x": -33.5,
+    "y": -30.8,
+    "hdop": null
+   },
+   "heading_deg": 290.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 517.2,
+    "brightness": 132.8,
+    "dark_ratio": 0.0,
+    "bright_ratio": 0.005,
+    "edge_touch_top": 0.018,
+    "edge_touch_left": 0.016,
+    "edge_touch_right": 0.03,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 7.0,
+     "bearing_deg": 14.6,
+     "bearing_diff_deg": 92.6
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 32.1,
+     "bearing_deg": 310.0,
+     "bearing_diff_deg": 28.0
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 43.2,
+     "bearing_deg": 337.7,
+     "bearing_diff_deg": 55.7
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 80.7,
+     "bearing_deg": 303.5,
+     "bearing_diff_deg": 21.5
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 89.1,
+     "bearing_deg": 315.4,
+     "bearing_diff_deg": 33.4
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 102.9,
+     "bearing_deg": 300.3,
+     "bearing_diff_deg": 18.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "赤い階段の蹴上げ（段の高さ）に縦に。0 の爪を下の段の踏み面に当て、0〜約 23 cm が読める。段鼻のタイル（溝付き）を越えて上の段にかかる。メジャーは手で上から押さえ、段に沿う"
+  },
+  {
+   "id": "PXL_20261107_070718690",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：070649704 と同じ階段の別の段。low の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070718690.jpg",
+   "taken_at": "2026-11-07T16:07:18",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1352222,
+    "lon": 136.9751333,
+    "alt": 88.69,
+    "x": -33.5,
+    "y": -30.8,
+    "hdop": null
+   },
+   "heading_deg": 309.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 412.0,
+    "brightness": 127.9,
+    "dark_ratio": 0.0,
+    "bright_ratio": 0.009,
+    "edge_touch_top": 0.047,
+    "edge_touch_left": 0.015,
+    "edge_touch_right": 0.03,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 7.0,
+     "bearing_deg": 14.6,
+     "bearing_diff_deg": 73.6
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 32.1,
+     "bearing_deg": 310.0,
+     "bearing_diff_deg": 9.0
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 43.2,
+     "bearing_deg": 337.7,
+     "bearing_diff_deg": 36.7
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 80.7,
+     "bearing_deg": 303.5,
+     "bearing_diff_deg": 2.5
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 89.1,
+     "bearing_deg": 315.4,
+     "bearing_diff_deg": 14.4
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 102.9,
+     "bearing_deg": 300.3,
+     "bearing_diff_deg": 0.7
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "赤い階段の蹴上げに縦に。0 の爪を下の段に当て、0〜約 28 cm が読める（段鼻の上までかかる）。段に沿う"
+  },
+  {
+   "id": "PXL_20261107_070734913",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：同じ赤い階段の段鼻のタイル。low の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070734913.jpg",
+   "taken_at": "2026-11-07T16:07:34",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1352556,
+    "lon": 136.9752444,
+    "alt": 86.65,
+    "x": -23.3,
+    "y": -27.1,
+    "hdop": null
+   },
+   "heading_deg": 109.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 334.3,
+    "brightness": 138.5,
+    "dark_ratio": 0.0,
+    "bright_ratio": 0.007,
+    "edge_touch_top": 0.016,
+    "edge_touch_left": 0.024,
+    "edge_touch_right": 0.029,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 346.4,
+     "bearing_diff_deg": 114.6
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 23.1,
+     "bearing_deg": 91.8,
+     "bearing_diff_deg": 9.2
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 23.8,
+     "bearing_deg": 126.5,
+     "bearing_diff_deg": 25.5
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 26.7,
+     "bearing_deg": 48.7,
+     "bearing_diff_deg": 52.3
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 47.5,
+     "bearing_deg": 136.6,
+     "bearing_diff_deg": 35.6
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 63.4,
+     "bearing_deg": 59.7,
+     "bearing_diff_deg": 41.3
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 90.7,
+     "bearing_deg": 79.7,
+     "bearing_diff_deg": 21.3
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 93.0,
+     "bearing_deg": 101.4,
+     "bearing_diff_deg": 0.4
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 106.5,
+     "bearing_deg": 71.7,
+     "bearing_diff_deg": 29.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "段鼻のタイル（溝付きの役物）の長さに水平に。0〜約 22 cm が読め、0 の爪は段鼻のタイルの左の端。段鼻 1 枚分と次の目地。段鼻の角は丸く、メジャーは前の縁に沿う"
+  },
+  {
+   "id": "PXL_20261107_070751948",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：同じ赤い階段の段鼻、奥に広場のベンチと別の階段。low の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_070751948.jpg",
+   "taken_at": "2026-11-07T16:07:51",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1349028,
+    "lon": 136.9752917,
+    "alt": 80.8,
+    "x": -19.1,
+    "y": -66.2,
+    "hdop": null
+   },
+   "heading_deg": 178.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 362.7,
+    "brightness": 122.4,
+    "dark_ratio": 0.002,
+    "bright_ratio": 0.003,
+    "edge_touch_top": 0.031,
+    "edge_touch_left": 0.033,
+    "edge_touch_right": 0.056,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 17.0,
+     "bearing_deg": 108.7,
+     "bearing_diff_deg": 61.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "段鼻のタイル 1 枚の長さに水平に。0〜約 21 cm が読め、0 の爪は段鼻の左の端。腕が大きく写る（顔は無い）。段に沿う"
+  },
+  {
+   "id": "PXL_20261107_071903652",
+   "building": "tower75",
+   "face": "f13",
+   "notes": "仕分け係（Opus）：割肌の横長タイルと黒っぽい縦の目地。GPS は南東の低い塊 f13 の南 6 m、方位はそちら向き。mid：周りが写らない",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_071903652.jpg",
+   "taken_at": "2026-11-07T16:19:03",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1353889,
+    "lon": 136.9762167,
+    "alt": 85.69,
+    "x": 65.3,
+    "y": -12.5,
+    "hdop": null
+   },
+   "heading_deg": 28.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1061.0,
+    "brightness": 120.2,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.318,
+    "edge_touch_left": 0.214,
+    "edge_touch_right": 0.202,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 5.5,
+     "bearing_deg": 336.0,
+     "bearing_diff_deg": 44.0
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 6.1,
+     "bearing_deg": 70.1,
+     "bearing_diff_deg": 50.1
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 19.4,
+     "bearing_deg": 53.7,
+     "bearing_diff_deg": 33.7
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 44.3,
+     "bearing_deg": 11.3,
+     "bearing_diff_deg": 8.7
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 80.9,
+     "bearing_deg": 328.4,
+     "bearing_diff_deg": 51.6
+    },
+    {
+     "building": "lab1",
+     "name": "研究実験棟Ⅰ",
+     "distance_m": 114.0,
+     "bearing_deg": 35.3,
+     "bearing_diff_deg": 15.3
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 115.4,
+     "bearing_deg": 9.6,
+     "bearing_diff_deg": 10.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの段に縦に。0〜約 7 cm が読め、0 の爪はタイルの上端。割肌＋下の縁の段で 1 段と次の段の上。平ら"
+  },
+  {
+   "id": "PXL_20261107_071909079",
+   "building": "tower75",
+   "face": "f13",
+   "notes": "仕分け係（Opus）：071903652 と同じ所（6 秒後）。mid の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_071909079.jpg",
+   "taken_at": "2026-11-07T16:19:09",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1353889,
+    "lon": 136.9762167,
+    "alt": 85.69,
+    "x": 65.3,
+    "y": -12.5,
+    "hdop": null
+   },
+   "heading_deg": 28.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 610.3,
+    "brightness": 125.7,
+    "dark_ratio": 0.007,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.033,
+    "edge_touch_left": 0.175,
+    "edge_touch_right": 0.192,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 5.5,
+     "bearing_deg": 336.0,
+     "bearing_diff_deg": 44.0
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 6.1,
+     "bearing_deg": 70.1,
+     "bearing_diff_deg": 50.1
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 19.4,
+     "bearing_deg": 53.7,
+     "bearing_diff_deg": 33.7
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 44.3,
+     "bearing_deg": 11.3,
+     "bearing_diff_deg": 8.7
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 80.9,
+     "bearing_deg": 328.4,
+     "bearing_diff_deg": 51.6
+    },
+    {
+     "building": "lab1",
+     "name": "研究実験棟Ⅰ",
+     "distance_m": 114.0,
+     "bearing_deg": 35.3,
+     "bearing_diff_deg": 15.3
+    },
+    {
+     "building": "kyotsu-kita",
+     "name": "共通講義棟北",
+     "distance_m": 115.4,
+     "bearing_deg": 9.6,
+     "bearing_diff_deg": 10.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "縦の目地にまたがって水平に。0〜約 4 cm が読め、0 の爪を左のタイルの右の縁（縦の目地）に当てる。目地の幅を読む 1 枚。平ら"
+  },
+  {
+   "id": "PXL_20261107_071935256",
+   "building": "tower75",
+   "face": "f13",
+   "notes": "仕分け係（Opus）：071909079 の 26 秒後、同じ所で方位が東へ。割肌の横長タイルと縦の目地。low の理由：周りが写らず、南東の角の f13 か東の f14 か、隣の棟（OSM の way 1304077322）かも決められない",
+   "file": "D:/BuiltwithClaude/メジャー/タワー75_tower75/PXL_20261107_071935256.jpg",
+   "taken_at": "2026-11-07T16:19:35",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1353889,
+    "lon": 136.9762167,
+    "alt": 85.69,
+    "x": 65.3,
+    "y": -12.5,
+    "hdop": null
+   },
+   "heading_deg": 92.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 983.5,
+    "brightness": 118.2,
+    "dark_ratio": 0.006,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.323,
+    "edge_touch_left": 0.201,
+    "edge_touch_right": 0.212,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 6.1,
+     "bearing_deg": 70.1,
+     "bearing_diff_deg": 13.9
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 8.3,
+     "bearing_deg": 153.0,
+     "bearing_diff_deg": 69.0
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 19.4,
+     "bearing_deg": 53.7,
+     "bearing_diff_deg": 30.3
+    },
+    {
+     "building": "osm-way-163518242",
+     "name": null,
+     "distance_m": 63.6,
+     "bearing_deg": 85.7,
+     "bearing_diff_deg": 1.7
+    },
+    {
+     "building": "osm-way-1304077326",
+     "name": null,
+     "distance_m": 83.5,
+     "bearing_deg": 76.4,
+     "bearing_diff_deg": 7.6
+    },
+    {
+     "building": "b06",
+     "name": "6号館",
+     "distance_m": 88.5,
+     "bearing_deg": 83.4,
+     "bearing_diff_deg": 0.6
+    },
+    {
+     "building": "osm-way-1304078680",
+     "name": null,
+     "distance_m": 92.6,
+     "bearing_deg": 64.3,
+     "bearing_diff_deg": 19.7
+    },
+    {
+     "building": "lab4",
+     "name": "研究実験棟Ⅳ",
+     "distance_m": 101.8,
+     "bearing_deg": 123.5,
+     "bearing_diff_deg": 39.5
+    },
+    {
+     "building": "b13",
+     "name": "13号館",
+     "distance_m": 118.8,
+     "bearing_deg": 94.8,
+     "bearing_diff_deg": 10.8
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:30",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f13",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの段に縦に。0〜約 9 cm が読め、0 の爪はタイルの上端。約 2 段にまたがる。平ら"
+  },
+  {
+   "id": "PXL_20261107_075427676",
+   "building": "library",
+   "face": "f1",
+   "notes": "仕分け係（Opus）：黄色の小口タイルの近写。GPS は f1 の線の 1.4 m 北。mid：周りが写らない",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/PXL_20261107_075427676.jpg",
+   "taken_at": "2026-11-07T16:54:27",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354417,
+    "lon": 136.9758556,
+    "alt": 88.3,
+    "x": 32.4,
+    "y": -6.5,
+    "hdop": null
+   },
+   "heading_deg": 284.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 283.5,
+    "brightness": 137.3,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.034,
+    "edge_touch_left": 0.069,
+    "edge_touch_right": 0.041,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 1.2,
+     "bearing_deg": 187.2,
+     "bearing_diff_deg": 88.8
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 8.8,
+     "bearing_deg": 324.4,
+     "bearing_diff_deg": 48.4
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 36.5,
+     "bearing_deg": 267.9,
+     "bearing_diff_deg": 8.1
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 54.5,
+     "bearing_deg": 308.7,
+     "bearing_diff_deg": 32.7
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 83.8,
+     "bearing_deg": 294.5,
+     "bearing_diff_deg": 18.5
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 87.1,
+     "bearing_deg": 275.9,
+     "bearing_diff_deg": 0.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの段に縦に。0〜約 6.5 cm が読め、0 の爪はタイルの上端。タイル 1 段と目地。平ら"
+  },
+  {
+   "id": "PXL_20261107_075519944",
+   "building": "honbu",
+   "face": "f8",
+   "notes": "仕分け係（Opus）：中庭から f8：2 階のデッキの手すり壁、その下の車道の通り抜け、左に赤い大階段、進入禁止の標識。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_075519944.jpg",
+   "taken_at": "2026-11-07T16:55:19",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1354,
+    "lon": 136.9752917,
+    "alt": 86.55,
+    "x": -19.0,
+    "y": -11.1,
+    "hdop": null
+   },
+   "heading_deg": 139.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1746.9,
+    "brightness": 91.6,
+    "dark_ratio": 0.038,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.242,
+    "edge_touch_left": 0.121,
+    "edge_touch_right": 0.065,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 1.4,
+     "bearing_deg": 285.2,
+     "bearing_diff_deg": 154.2
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 20.7,
+     "bearing_deg": 60.5,
+     "bearing_diff_deg": 70.5
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 26.5,
+     "bearing_deg": 110.0,
+     "bearing_diff_deg": 21.0
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 32.2,
+     "bearing_deg": 141.3,
+     "bearing_diff_deg": 10.3
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 50.9,
+     "bearing_deg": 68.4,
+     "bearing_diff_deg": 62.6
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 61.0,
+     "bearing_deg": 146.1,
+     "bearing_diff_deg": 15.1
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 84.0,
+     "bearing_deg": 89.0,
+     "bearing_diff_deg": 42.0
+    },
+    {
+     "building": "kyotsu-higashi",
+     "name": "共通講義棟東",
+     "distance_m": 91.0,
+     "bearing_deg": 110.1,
+     "bearing_diff_deg": 20.9
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 99.2,
+     "bearing_deg": 78.1,
+     "bearing_diff_deg": 52.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "PXL_20261107_075558048",
+   "building": "honbu",
+   "face": null,
+   "notes": "仕分け係（Opus）：デッキの下の通り抜けの中から：天井の梁、柱、赤い大階段、左の壁に掲示板の枠。外の面は写らない。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_075558048.jpg",
+   "taken_at": "2026-11-07T16:55:58",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1355222,
+    "lon": 136.9754528,
+    "alt": 82.44,
+    "x": -4.3,
+    "y": 2.5,
+    "hdop": null
+   },
+   "heading_deg": 38.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 639.0,
+    "brightness": 102.1,
+    "dark_ratio": 0.008,
+    "bright_ratio": 0.004,
+    "edge_touch_top": 0.217,
+    "edge_touch_left": 0.113,
+    "edge_touch_right": 0.062,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 11.5,
+     "bearing_deg": 70.8,
+     "bearing_diff_deg": 40.8
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 32.0,
+     "bearing_deg": 75.6,
+     "bearing_diff_deg": 45.6
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 41.2,
+     "bearing_deg": 6.4,
+     "bearing_diff_deg": 23.6
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 44.7,
+     "bearing_deg": 35.9,
+     "bearing_diff_deg": 5.9
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 51.6,
+     "bearing_deg": 44.4,
+     "bearing_diff_deg": 14.4
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 75.3,
+     "bearing_deg": 59.4,
+     "bearing_diff_deg": 29.4
+    },
+    {
+     "building": "osm-way-1304077324",
+     "name": null,
+     "distance_m": 118.1,
+     "bearing_deg": 21.3,
+     "bearing_diff_deg": 8.7
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f8",
+    "f6"
+   ],
+   "confidence": "mid"
+  },
+  {
+   "id": "PXL_20261107_075614196",
+   "building": "honbu",
+   "face": "f8",
+   "notes": "仕分け係（Opus）：中庭から f8 のデッキと赤い大階段、下の通り抜けの柱と立て看板。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/PXL_20261107_075614196.jpg",
+   "taken_at": "2026-11-07T16:56:14",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354639,
+    "lon": 136.9752639,
+    "alt": 83.32,
+    "x": -21.5,
+    "y": -4.0,
+    "hdop": null
+   },
+   "heading_deg": 233.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 809.2,
+    "brightness": 99.7,
+    "dark_ratio": 0.067,
+    "bright_ratio": 0.002,
+    "edge_touch_top": 0.221,
+    "edge_touch_left": 0.069,
+    "edge_touch_right": 0.128,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 6.5,
+     "bearing_deg": 232.9,
+     "bearing_diff_deg": 7.9
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 33.5,
+     "bearing_deg": 279.0,
+     "bearing_diff_deg": 54.0
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 102.2,
+     "bearing_deg": 211.5,
+     "bearing_diff_deg": 13.5
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "図書館タイル横",
+   "building": "library",
+   "face": "f2",
+   "notes": "仕分け係（Opus）：銘板の『名』の字のすぐ下（f2 の銘板の壁）",
+   "file": "D:/BuiltwithClaude/メジャー/図書館_library/図書館タイル横.jpg",
+   "taken_at": "2026-11-07T15:18:17",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354528,
+    "lon": 136.9755667,
+    "alt": 91.01,
+    "x": 6.1,
+    "y": -5.3,
+    "hdop": null
+   },
+   "heading_deg": 301.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 913.6,
+    "brightness": 117.3,
+    "dark_ratio": 0.007,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.046,
+    "edge_touch_left": 0.081,
+    "edge_touch_right": 0.064,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 0.0,
+     "bearing_deg": 40.4,
+     "bearing_diff_deg": 107.4
+    },
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 18.2,
+     "bearing_deg": 264.2,
+     "bearing_diff_deg": 28.8
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 36.3,
+     "bearing_deg": 327.8,
+     "bearing_diff_deg": 34.8
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 60.0,
+     "bearing_deg": 301.7,
+     "bearing_diff_deg": 8.7
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 60.8,
+     "bearing_deg": 276.9,
+     "bearing_diff_deg": 16.1
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 106.6,
+     "bearing_deg": 282.0,
+     "bearing_diff_deg": 11.0
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 109.4,
+     "bearing_deg": 291.9,
+     "bearing_diff_deg": 1.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f2 の銘板の壁のタイルに水平に（『名』の字の下の段）。0〜約 28 cm が読め、0 の爪は左のタイルの縁。タイル 約 2.5 枚分＋目地 2 つにまたがる。平ら"
+  },
+  {
+   "id": "本部棟タイル横",
+   "building": "honbu",
+   "face": "f0",
+   "notes": "仕分け係（Opus）：黄色の小口タイルの近写（目地は明るい灰色）。061520994 のすぐ後に同じ所で撮影。low の理由：周りが写らず、中庭側のどの面か決まらない",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟タイル横.jpg",
+   "taken_at": "2026-11-07T15:15:59",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354472,
+    "lon": 136.9753528,
+    "alt": 94.69,
+    "x": -13.4,
+    "y": -5.8,
+    "hdop": null
+   },
+   "heading_deg": 197.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 387.0,
+    "brightness": 137.6,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.008,
+    "edge_touch_left": 0.018,
+    "edge_touch_right": 0.014,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 8.7,
+     "bearing_deg": 258.5,
+     "bearing_diff_deg": 69.5
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 34.6,
+     "bearing_deg": 148.5,
+     "bearing_diff_deg": 40.5
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 64.9,
+     "bearing_deg": 151.0,
+     "bearing_diff_deg": 38.0
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 104.8,
+     "bearing_deg": 215.7,
+     "bearing_diff_deg": 26.7
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "壁のタイル 1 枚の幅に水平に。0〜約 12 cm が読め、0 の爪はタイルの左の縁に当たる。タイル 1 枚＋目地 1 つ。平ら"
+  },
+  {
+   "id": "本部棟タイル隙間横1cm",
+   "building": "honbu",
+   "face": "f0",
+   "notes": "仕分け係（Opus）：黄色の小口タイルと明るい灰色の目地の近写（ぶれの疑い）。利用者のファイル名『本部棟』、GPS は f0 の線の上。low の理由：周りが写らない",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟タイル隙間横1cm.jpg",
+   "taken_at": "2026-11-07T16:21:10",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1355917,
+    "lon": 136.9752167,
+    "alt": 91.94,
+    "x": -25.8,
+    "y": 10.2,
+    "hdop": null
+   },
+   "heading_deg": 73.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 91.7,
+    "brightness": 113.8,
+    "dark_ratio": 0.002,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.007,
+    "edge_touch_left": 0.008,
+    "edge_touch_right": 0.02,
+    "blur_suspected": true
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 185.9,
+     "bearing_diff_deg": 120.9
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 21.8,
+     "bearing_deg": 15.1,
+     "bearing_diff_deg": 49.9
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 34.1,
+     "bearing_deg": 89.1,
+     "bearing_diff_deg": 24.1
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 41.1,
+     "bearing_deg": 22.3,
+     "bearing_diff_deg": 42.7
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 50.1,
+     "bearing_deg": 57.8,
+     "bearing_diff_deg": 7.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 51.8,
+     "bearing_deg": 85.0,
+     "bearing_diff_deg": 20.0
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 63.0,
+     "bearing_deg": 60.6,
+     "bearing_diff_deg": 4.4
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 92.3,
+     "bearing_deg": 68.5,
+     "bearing_diff_deg": 3.5
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 105.8,
+     "bearing_deg": 88.1,
+     "bearing_diff_deg": 23.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "縦の目地（タイルの横の隙間）にまたがって水平に。0〜4 cm が読め、0 の爪を左のタイルの右の縁に当て、目地を越えて右のタイルにかかる。目地の幅を読む 1 枚。平ら。ぶれの疑い（索引の checks）"
+  },
+  {
+   "id": "本部棟タイル隙間縦1cm",
+   "building": "honbu",
+   "face": "f0",
+   "notes": "仕分け係（Opus）：同じ壁（4 秒後）。右に幅の広い縦の目地（伸縮目地と見える）が写る。low の理由：周りが写らない",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟タイル隙間縦1cm.jpg",
+   "taken_at": "2026-11-07T16:21:14",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1355917,
+    "lon": 136.9752167,
+    "alt": 91.94,
+    "x": -25.8,
+    "y": 10.2,
+    "hdop": null
+   },
+   "heading_deg": 66.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 273.9,
+    "brightness": 133.6,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.025,
+    "edge_touch_left": 0.031,
+    "edge_touch_right": 0.014,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 0.0,
+     "bearing_deg": 185.9,
+     "bearing_diff_deg": 127.9
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 21.8,
+     "bearing_deg": 15.1,
+     "bearing_diff_deg": 42.9
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 34.1,
+     "bearing_deg": 89.1,
+     "bearing_diff_deg": 31.1
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 41.1,
+     "bearing_deg": 22.3,
+     "bearing_diff_deg": 35.7
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 50.1,
+     "bearing_deg": 57.8,
+     "bearing_diff_deg": 0.2
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 51.8,
+     "bearing_deg": 85.0,
+     "bearing_diff_deg": 27.0
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 63.0,
+     "bearing_deg": 60.6,
+     "bearing_diff_deg": 2.6
+    },
+    {
+     "building": "b10",
+     "name": "10号館",
+     "distance_m": 92.3,
+     "bearing_deg": 68.5,
+     "bearing_diff_deg": 10.5
+    },
+    {
+     "building": "b09",
+     "name": "9号館",
+     "distance_m": 105.8,
+     "bearing_deg": 88.1,
+     "bearing_diff_deg": 30.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:31",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "段の目地（上下の隙間）に縦に。0〜4 cm が読め、0 の爪を上のタイルの下の縁に当て、目地を越えて下のタイルにかかる。平ら。※右の太い縦の目地は 1 cm より太く見える（伸縮目地。タイル割りの計算から外す）"
+  },
+  {
+   "id": "本部棟側面柱",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：正面玄関の柱型の側面と『名城大学 本部』の銘板・蔦の植え込み・ガラス。メジャーは無い。柱は f6 の前に立ち、側面は f6 に直交（向きは決めきれず f5 も faces に）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟側面柱.jpg",
+   "taken_at": "2026-11-07T15:13:17",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1353361,
+    "lon": 136.9749167,
+    "alt": 87.69,
+    "x": -53.2,
+    "y": -18.1,
+    "hdop": null
+   },
+   "heading_deg": 339.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 1526.2,
+    "brightness": 111.5,
+    "dark_ratio": 0.014,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.062,
+    "edge_touch_left": 0.141,
+    "edge_touch_right": 0.125,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 4.9,
+     "bearing_deg": 69.8,
+     "bearing_diff_deg": 98.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 8.8,
+     "bearing_deg": 315.4,
+     "bearing_diff_deg": 15.6
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 24.4,
+     "bearing_deg": 351.9,
+     "bearing_diff_deg": 20.9
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 57.3,
+     "bearing_deg": 303.8,
+     "bearing_diff_deg": 27.2
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 66.3,
+     "bearing_deg": 319.4,
+     "bearing_diff_deg": 11.6
+    },
+    {
+     "building": "osm-way-1304065166",
+     "name": null,
+     "distance_m": 79.5,
+     "bearing_deg": 299.6,
+     "bearing_diff_deg": 31.4
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:32",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
+  },
+  {
+   "id": "本部棟側面柱74.5cm",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：正面玄関の柱型の側面（右に 1 階のガラス、左に木）。柱は f6 の前、測った面は f6 に直交。ファイル名『74.5cm』は利用者の読み",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟側面柱74.5cm.jpg",
+   "taken_at": "2026-11-07T15:14:00",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353361,
+    "lon": 136.9749167,
+    "alt": 87.69,
+    "x": -53.2,
+    "y": -18.1,
+    "hdop": null
+   },
+   "heading_deg": 44.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 471.0,
+    "brightness": 123.3,
+    "dark_ratio": 0.003,
+    "bright_ratio": 0.003,
+    "edge_touch_top": 0.075,
+    "edge_touch_left": 0.099,
+    "edge_touch_right": 0.097,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 4.9,
+     "bearing_deg": 69.8,
+     "bearing_diff_deg": 33.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 8.8,
+     "bearing_deg": 315.4,
+     "bearing_diff_deg": 80.6
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 24.4,
+     "bearing_deg": 351.9,
+     "bearing_diff_deg": 44.1
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 54.3,
+     "bearing_deg": 68.3,
+     "bearing_diff_deg": 32.3
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 54.3,
+     "bearing_deg": 97.3,
+     "bearing_diff_deg": 61.3
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 59.5,
+     "bearing_deg": 32.8,
+     "bearing_diff_deg": 3.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 78.9,
+     "bearing_deg": 29.4,
+     "bearing_diff_deg": 6.6
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 85.0,
+     "bearing_deg": 71.6,
+     "bearing_diff_deg": 35.6
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 89.5,
+     "bearing_deg": 52.3,
+     "bearing_diff_deg": 16.3
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 101.5,
+     "bearing_deg": 54.9,
+     "bearing_diff_deg": 18.9
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 118.7,
+     "bearing_deg": 86.1,
+     "bearing_diff_deg": 50.1
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:32",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "f6 正面玄関の柱型の側面（f6 に直交する面）の幅に水平に。0〜約 75 cm が読め、0 の爪は柱の左の角。右端は柱の右の角（『本部棟側面柱74.5cm拡大』が右端の拡大）。平ら。タイル 約 6.5 枚分"
+  },
+  {
+   "id": "本部棟側面柱74.5cm拡大",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：『本部棟側面柱74.5cm』の右端の拡大（4 秒後、同じ柱の角・ガラス・蔦）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟側面柱74.5cm拡大.jpg",
+   "taken_at": "2026-11-07T15:14:04",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353361,
+    "lon": 136.9749167,
+    "alt": 87.69,
+    "x": -53.2,
+    "y": -18.1,
+    "hdop": null
+   },
+   "heading_deg": 20.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 218.0,
+    "brightness": 136.1,
+    "dark_ratio": 0.015,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.017,
+    "edge_touch_left": 0.013,
+    "edge_touch_right": 0.047,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 4.9,
+     "bearing_deg": 69.8,
+     "bearing_diff_deg": 57.8
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 8.8,
+     "bearing_deg": 315.4,
+     "bearing_diff_deg": 56.6
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 24.4,
+     "bearing_deg": 351.9,
+     "bearing_diff_deg": 20.1
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 54.3,
+     "bearing_deg": 68.3,
+     "bearing_diff_deg": 56.3
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 59.5,
+     "bearing_deg": 32.8,
+     "bearing_diff_deg": 20.8
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 78.9,
+     "bearing_deg": 29.4,
+     "bearing_diff_deg": 17.4
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 89.5,
+     "bearing_deg": 52.3,
+     "bearing_diff_deg": 40.3
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 101.5,
+     "bearing_deg": 54.9,
+     "bearing_diff_deg": 42.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:32",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "ruler": "tape_measure",
+   "ruler_note": "f6 正面玄関の柱型の側面の右の角を拡大。61〜76 cm が読め、角は 74〜75 の間に見える（0 の端は写らない）。平ら"
+  },
+  {
+   "id": "本部棟正面",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：f6 の正面：5 層の格子、垂れ幕 4 本（人名が読める）、左に玄関、右に車道の通り抜け、前に横断歩道。GPS（中庭）は外れ。メジャーは無い。※垂れ幕に人名（掲示物）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟正面.jpg",
+   "taken_at": "2026-11-07T16:57:55",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353611,
+    "lon": 136.9754222,
+    "alt": 94.0,
+    "x": -7.1,
+    "y": -15.4,
+    "hdop": null
+   },
+   "heading_deg": 200.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 534.5,
+    "brightness": 112.0,
+    "dark_ratio": 0.029,
+    "bright_ratio": 0.004,
+    "edge_touch_top": 0.017,
+    "edge_touch_left": 0.059,
+    "edge_touch_right": 0.053,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 3.1,
+     "bearing_deg": 287.9,
+     "bearing_diff_deg": 95.9
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 14.0,
+     "bearing_deg": 110.0,
+     "bearing_diff_deg": 82.0
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 23.7,
+     "bearing_deg": 148.9,
+     "bearing_diff_deg": 43.1
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 54.6,
+     "bearing_deg": 151.7,
+     "bearing_diff_deg": 40.3
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 100.7,
+     "bearing_deg": 221.7,
+     "bearing_diff_deg": 29.7
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:32",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "本部棟正面柱",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：正面玄関の庇を支える柱型（左にもう 1 つの庇とガラス、右に玄関と銘板）。メジャーは無い",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟正面柱.jpg",
+   "taken_at": "2026-11-07T15:12:00",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.13535,
+    "lon": 136.9749306,
+    "alt": 89.59,
+    "x": -51.9,
+    "y": -16.5,
+    "hdop": null
+   },
+   "heading_deg": 1.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 831.6,
+    "brightness": 110.2,
+    "dark_ratio": 0.031,
+    "bright_ratio": 0.001,
+    "edge_touch_top": 0.183,
+    "edge_touch_left": 0.123,
+    "edge_touch_right": 0.104,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 2.9,
+     "bearing_deg": 72.2,
+     "bearing_diff_deg": 79.2
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 9.1,
+     "bearing_deg": 311.7,
+     "bearing_diff_deg": 41.3
+    },
+    {
+     "building": "gym",
+     "name": "新体育館",
+     "distance_m": 23.0,
+     "bearing_deg": 350.3,
+     "bearing_diff_deg": 2.7
+    },
+    {
+     "building": "osm-way-1304077542",
+     "name": null,
+     "distance_m": 57.5,
+     "bearing_deg": 32.6,
+     "bearing_diff_deg": 39.6
+    },
+    {
+     "building": "b14",
+     "name": "14号館",
+     "distance_m": 57.7,
+     "bearing_deg": 302.0,
+     "bearing_diff_deg": 51.0
+    },
+    {
+     "building": "osm-way-1304065595",
+     "name": null,
+     "distance_m": 66.0,
+     "bearing_deg": 317.8,
+     "bearing_diff_deg": 35.2
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 76.9,
+     "bearing_deg": 29.2,
+     "bearing_diff_deg": 36.2
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:32",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
+  },
+  {
+   "id": "本部棟正面柱92cm",
+   "building": "honbu",
+   "face": "f6",
+   "notes": "仕分け係（Opus）：正面玄関の柱型の正面（f6 に平行な面）。右にガラスの玄関と赤い床・蔦と白い玉砂利（061157041 と同じ場所）。ファイル名『92cm』は利用者の読み（測量係が目盛りで確かめる）",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟正面柱92cm.jpg",
+   "taken_at": "2026-11-07T15:12:38",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 4624,
+   "height": 3472,
+   "orientation": 1,
+   "focal_mm": 1.835,
+   "focal_35mm": 14.0,
+   "gps": {
+    "lat": 35.1353361,
+    "lon": 136.9749167,
+    "alt": 87.69,
+    "x": -53.2,
+    "y": -18.1,
+    "hdop": null
+   },
+   "heading_deg": 109.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 622.5,
+    "brightness": 144.7,
+    "dark_ratio": 0.025,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.028,
+    "edge_touch_left": 0.128,
+    "edge_touch_right": 0.078,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 4.9,
+     "bearing_deg": 69.8,
+     "bearing_diff_deg": 31.2
+    },
+    {
+     "building": "library",
+     "name": "名城大学付属図書館",
+     "distance_m": 54.3,
+     "bearing_deg": 97.3,
+     "bearing_diff_deg": 3.7
+    },
+    {
+     "building": "osm-way-1304081004",
+     "name": null,
+     "distance_m": 54.3,
+     "bearing_deg": 68.3,
+     "bearing_diff_deg": 32.7
+    },
+    {
+     "building": "b11",
+     "name": "11号館",
+     "distance_m": 54.4,
+     "bearing_deg": 119.1,
+     "bearing_diff_deg": 18.1
+    },
+    {
+     "building": "osm-way-163518234",
+     "name": null,
+     "distance_m": 72.4,
+     "bearing_deg": 128.1,
+     "bearing_diff_deg": 27.1
+    },
+    {
+     "building": "kyotsu-minami",
+     "name": "共通講義棟南",
+     "distance_m": 78.9,
+     "bearing_deg": 29.4,
+     "bearing_diff_deg": 71.6
+    },
+    {
+     "building": "tower75",
+     "name": "タワー75",
+     "distance_m": 85.0,
+     "bearing_deg": 71.6,
+     "bearing_diff_deg": 29.4
+    },
+    {
+     "building": "osm-way-1304077323",
+     "name": null,
+     "distance_m": 89.5,
+     "bearing_deg": 52.3,
+     "bearing_diff_deg": 48.7
+    },
+    {
+     "building": "osm-way-1304077325",
+     "name": null,
+     "distance_m": 101.5,
+     "bearing_deg": 54.9,
+     "bearing_diff_deg": 46.1
+    },
+    {
+     "building": "osm-way-1304077322",
+     "name": null,
+     "distance_m": 118.7,
+     "bearing_deg": 86.1,
+     "bearing_diff_deg": 14.9
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:32",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "ruler": "tape_measure",
+   "ruler_note": "f6 正面玄関の柱型の正面の幅に水平に。0〜約 92 cm が読め、0 の爪は柱の左の角に掛かって写る。右端は柱の右の角（061250800 が右端の拡大）。壁に平らに沿う。タイル 約 8.5 枚分（小口）"
+  },
+  {
+   "id": "本部棟縦",
+   "building": "honbu",
+   "face": "f0",
+   "notes": "仕分け係（Opus）：『本部棟タイル横』の 24 秒後の同じ壁。low の理由は同じ",
+   "file": "D:/BuiltwithClaude/メジャー/本部棟_honbu/本部棟縦.jpg",
+   "taken_at": "2026-11-07T15:16:23",
+   "period": "during",
+   "camera": {
+    "make": "Google",
+    "model": "Pixel 8a"
+   },
+   "width": 3472,
+   "height": 4624,
+   "orientation": 1,
+   "focal_mm": 5.43,
+   "focal_35mm": 25.0,
+   "gps": {
+    "lat": 35.1354472,
+    "lon": 136.9753528,
+    "alt": 94.69,
+    "x": -13.4,
+    "y": -5.8,
+    "hdop": null
+   },
+   "heading_deg": 238.0,
+   "heading_ref": "magnetic",
+   "checks": {
+    "has_gps": true,
+    "has_heading": true,
+    "has_focal": true,
+    "resolution_ok": true,
+    "sharpness": 431.8,
+    "brightness": 144.3,
+    "dark_ratio": 0.0,
+    "bright_ratio": 0.0,
+    "edge_touch_top": 0.014,
+    "edge_touch_left": 0.056,
+    "edge_touch_right": 0.026,
+    "blur_suspected": false
+   },
+   "candidates": [
+    {
+     "building": "honbu",
+     "name": "本部棟",
+     "distance_m": 8.7,
+     "bearing_deg": 258.5,
+     "bearing_diff_deg": 28.5
+    },
+    {
+     "building": "b12",
+     "name": "12号館",
+     "distance_m": 41.8,
+     "bearing_deg": 279.5,
+     "bearing_diff_deg": 49.5
+    },
+    {
+     "building": "osm-way-1304071078",
+     "name": null,
+     "distance_m": 104.8,
+     "bearing_deg": 215.7,
+     "bearing_diff_deg": 14.3
+    }
+   ],
+   "imported_at": "2026-11-07T22:04:33",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T22:18:24",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "ruler": "tape_measure",
+   "ruler_note": "タイルの高さに縦に。0〜約 9 cm が読め、0 の爪はタイルの上端。タイル 1 段＋目地 1 つ＋次の段の上にかかる。平ら"
   }
  ]
 }
