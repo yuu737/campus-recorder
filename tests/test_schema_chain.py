@@ -208,7 +208,9 @@ def test_buildings_stay_clean():
 
 # --- 追記（Fable の決定 11/8）：2 枚で一致した枚数・px_unit mm ---------------------------
 def test_count_confirmed_by_second_photo_is_zero():
-    c2 = {**COUNT, "confirmed_by": "PXL_20261103_043000000"}
+    # K-202：0 にするのは 1 枚ずつ数えた輪（counted: true と途中の印）だけ
+    c2 = {**COUNT, "confirmed_by": "PXL_20261103_043000000", "counted": True, "marks": [102.0, 140.2, 178.5],
+          "confirmed_marks": [55.0, 93.1, 131.4]}
     assert schema.chain_tol([c2], 5.46) == 0.0
     v = 5.46
     need = schema.chain_tol([TAPE, UNIFORM, c2], v)
@@ -233,3 +235,77 @@ def test_uniform_period_in_mm_passes():
     assert probs(mv(v, round(need + 0.001, 3), [TAPE, u2, COUNT])) == []
     p = probs(mv(v, 1.0, [TAPE, {**u2, "px_unit": "cm"}, COUNT]))
     assert any("px_unit" in x for x in p), p
+
+
+# --- F17（11/8）：本部棟 f6 の柱間の形で、count の輪の ±（tol 枚 × 周期）がどこで入る／入らないか ------------
+F6_TAPE = {"link": "tape", "photo": "本部棟正面柱92cm", "read": "5.4→86.2 cm", "n": 7, "what": "tile_pitch_h",
+           "value": 0.115429, "tol": 0.000715}
+F6_UNIFORM = {"link": "uniform_period", "photo": "PXL_20261103_042900775", "px": [16.02, 15.99, 16.04, 16.0],
+              "what": "正面化した f6 の中で横の周期が一様"}
+F6_COUNT = {"link": "count", "photo": "PXL_20261103_042900775", "n": 46, "what": "柱型の芯から芯のタイル枚数", "tol": 1}
+
+
+def test_f6_count_tol_times_period_is_stacked_without_second_photo():
+    v = 0.115429 * 46
+    base = schema.chain_tol([F6_TAPE, F6_UNIFORM], v)
+    got = schema.chain_tol([F6_TAPE, F6_UNIFORM, F6_COUNT], v)
+    # 数え違い ±1 枚 × その時の周期（value ÷ n ＝ tape の輪の周期）がそのまま足される
+    assert got - base == pytest.approx(1 * v / 46)
+    assert got - base == pytest.approx(0.115429, abs=1e-6)
+    assert got == pytest.approx(0.1566, abs=5e-4)
+    # tol 2 枚なら 2 倍
+    assert schema.chain_tol([F6_TAPE, F6_UNIFORM, {**F6_COUNT, "tol": 2}], v) - base == pytest.approx(2 * 0.115429, abs=1e-6)
+
+
+def test_f6_count_confirmed_by_drops_only_the_count_term_when_counted():
+    v = 0.115429 * 46
+    c2 = {**F6_COUNT, "confirmed_by": "PXL_20261103_042909968", "counted": True,
+          "method": "正面化した 4 階の帯で、柱型の芯から 1 枚ずつ目地に印を付けて数えた"}
+    got = schema.chain_tol([F6_TAPE, F6_UNIFORM, c2], v)
+    # 2 枚で一致・1 枚ずつ数えた枚数は count の項だけ 0、tape と一様の項は残る
+    assert got == pytest.approx(schema.chain_tol([F6_TAPE, F6_UNIFORM], v))
+    assert got == pytest.approx(0.0411, abs=5e-4)
+    # marks で印を残した形も同じ
+    c3 = {**F6_COUNT, "confirmed_by": "PXL_20261103_042909968", "counted": True, "marks": [760, 776, 792],
+          "confirmed_marks": [100, 118, 136]}
+    assert schema.chain_tol([F6_TAPE, F6_UNIFORM, c3], v) == pytest.approx(got)
+
+
+@pytest.mark.parametrize("extra", [
+    {},                                                    # 今の本部棟 f6 の形（px ÷ 周期の割り算）
+    {"counted": True},                                     # 印が無い
+    {"counted": True, "marks": [], "method": "  "},        # 印が空
+    {"marks": [760, 776], "method": "1 枚ずつ数えた"},       # counted: true が無い
+    {"counted": "yes", "marks": [760, 776], "confirmed_marks": [1, 2]},  # true でない
+    {"counted": True, "marks": [760, 776]},                # 2 枚目の印（confirmed_marks）が無い
+])
+def test_k202_confirmed_by_without_counting_still_stacks(extra):
+    v = 0.115429 * 46
+    c2 = {**F6_COUNT, "confirmed_by": "PXL_20261103_042909968", **extra}
+    got = schema.chain_tol([F6_TAPE, F6_UNIFORM, c2], v)
+    assert got == pytest.approx(schema.chain_tol([F6_TAPE, F6_UNIFORM, F6_COUNT], v))
+    assert got == pytest.approx(0.1566, abs=5e-4)
+
+
+def test_k202_validate_says_why_when_tol_too_small():
+    v = 5.30973
+    c2 = {**F6_COUNT, "confirmed_by": "PXL_20261103_042909968"}
+    p = probs(mv(v, 0.054, [F6_TAPE, F6_UNIFORM, c2]))
+    assert any("chain_tol 以上にする" in x and "K-202" in x and "counted: true" in x and "chain[2]" in x for x in p), p
+    # tol が足りていれば落ちない（confirmed_by が付いていること自体はエラーにしない）
+    assert probs(mv(v, 0.157, [F6_TAPE, F6_UNIFORM, c2])) == []
+    # 数えた印のある輪は今の tol で通り、理由の文も出ない
+    ok = {**c2, "counted": True, "marks": [760, 776, 792], "confirmed_marks": [100, 118, 136]}
+    assert probs(mv(v, 0.054, [F6_TAPE, F6_UNIFORM, ok])) == []
+
+
+def test_validate_walks_face_top_z_chain():
+    # F17：面の上端 faces[].top_z も検証の対象（前は見ていなかった）
+    b = json.loads((ROOT / "tests/fixtures/sample_building.json").read_text(encoding="utf-8"))
+    v = 22.66414
+    b["faces"][0]["top_z"] = mv(v, 0.227, [F6_TAPE, F6_UNIFORM, {**F6_COUNT, "confirmed_by": "PXL_20261103_042909968"},
+                                           {"link": "px_ratio", "photo": "PXL_20261103_042909968", "px": [3616.2, 847.2]}])
+    errs = schema.validate_building(b)
+    assert any(e.startswith("faces[") and ".top_z" in e and "K-202" in e for e in errs), errs
+    b["faces"][0]["top_z"]["tol"] = 0.702
+    assert schema.validate_building(b) == []

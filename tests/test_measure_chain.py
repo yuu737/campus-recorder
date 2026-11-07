@@ -256,20 +256,37 @@ def test_rescale_baseline_prefers_building_json(tmp_path):
     assert rs["baseline"] == "building_json" and rs["diff_pct"] == pytest.approx((5.428 - 5.5) / 5.5 * 100, abs=0.01)
 
 
+def _marks(n, x0=100.0, step=16.0):
+    """縁 2 つ＋区切り（n 枚なら n + 1 個の印）。"""
+    return [round(x0 + i * step, 2) for i in range(n + 1)]
+
+
+P2 = "PXL_20261103_042734715"
+
+
 def test_count_confirmed_by_second_photo(tmp_path, monkeypatch):
+    """K-202：2 枚で一致を 0 と見なすのは、2 枚とも 1 枚ずつ印を付けて数えた時だけ。"""
     from recorder import schema
 
     s = _pitch(tmp_path)
     uni = {"link": "uniform_period", "photo": F6, "px": [38.2, 38.3, 38.25]}
     one = measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni, count={"photo": F6, "n": 46})
+    # 印の無い数え（割り算など）の confirmed_by は書くが、数え違いは積んだまま
+    bare = measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni,
+                               count={"photo": F6, "n": 46, "confirmed_by": P2})
+    assert bare["chain"][-1]["confirmed_by"] == P2 and bare["tol"] == one["tol"]
+    assert any("K-202" in w for w in bare["warnings"])
+    # 2 枚とも印で数えて一致 → confirmed_by・counted・marks、数え違い 0
     two = measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni,
-                              count={"photo": F6, "n": 46, "confirmed_by": "PXL_20261103_042734715"})
+                              count={"photo": F6, "marks": _marks(46), "confirmed_by": P2,
+                                     "confirmed_marks": _marks(46, x0=40.0, step=18.4)})
     cl = two["chain"][-1]
-    assert cl["confirmed_by"] == "PXL_20261103_042734715" and "PXL_20261103_042734715" in two["evidence"]
+    assert cl["n"] == 46 and cl["counted"] is True and len(cl["marks"]) == 47 and len(cl["confirmed_marks"]) == 47
+    assert cl["confirmed_by"] == P2 and P2 in two["evidence"]
     assert measure.chain_tol([cl], two["value"]) == 0
     assert two["tol"] < one["tol"] and two["value"] == one["value"]
-    if hasattr(schema, "chain_problems"):
-        assert schema.chain_problems(schema.Measurement.from_json(two), "t") == []
+    assert "1 枚ずつ印を付けて数えた" in two["method"] and not two.get("warnings")
+    assert schema.chain_problems(schema.Measurement.from_json({k: v for k, v in two.items() if k != "warnings"}), "t") == []
     with pytest.raises(ValueError):
         measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni,
                             count={"photo": F6, "n": 46, "confirmed_by": F6})
@@ -277,11 +294,53 @@ def test_count_confirmed_by_second_photo(tmp_path, monkeypatch):
     monkeypatch.setenv("RECORDER_LOCK_DIR", str(tmp_path / "locks"))
     _pitch(rep)
     args = ["measure", "chain", "honbu", "--face", "f6", "--key", "bay_pitch", "--what", "tile_pitch_h",
-            "--count", "46", "--count-photo", F6, "--reports", str(rep)]
+            "--count-photo", F6, "--reports", str(rep), "--count-marks", *map(str, _marks(46))]
     assert cli.main(args + ["--count-photo2", F6]) == 2
-    assert cli.main(args + ["--count-photo2", "PXL_20261103_042734715"]) == 0
+    assert cli.main(args + ["--count-photo2", P2]) == 2            # 1 枚目を印で数えたのに 2 枚目に印が無い
+    assert cli.main(args + ["--count-photo2", P2, "--count-marks2", *map(str, _marks(46, 40.0, 18.4))]) == 0
     d = json.loads((rep / "honbu" / "sokuryo_chain_f6.json").read_text(encoding="utf-8"))
-    assert d["values"]["bay_pitch"]["chain"][-1]["confirmed_by"] == "PXL_20261103_042734715"
+    ln = d["values"]["bay_pitch"]["chain"][-1]
+    assert ln["confirmed_by"] == P2 and ln["counted"] is True
+    assert "warnings" not in d["values"]["bay_pitch"]
+
+
+def test_count_marks_counts_and_refuses_mismatch(tmp_path):
+    s = _pitch(tmp_path)
+    uni = {"link": "uniform_period", "photo": F6, "px": [38.2, 38.3, 38.25]}
+    # 枚数は印の間を数える（割り算ではない）。並びが逆でもよい
+    m = measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni,
+                            count={"photo": F6, "marks": list(reversed(_marks(24)))})
+    assert m["chain"][-1]["n"] == 24 and m["chain"][-1]["counted"] is True
+    # 渡した n と印の数が違えば断る
+    with pytest.raises(ValueError, match="違います"):
+        measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni,
+                            count={"photo": F6, "n": 25, "marks": _marks(24)})
+    # 印が 1 つ・同じ位置が 2 つ・2 枚目だけ印 → 断る
+    for bad in ({"photo": F6, "marks": [100.0]}, {"photo": F6, "marks": [100.0, 116.0, 116.0]},
+                {"photo": F6, "n": 24, "confirmed_by": P2, "confirmed_marks": _marks(24)}):
+        with pytest.raises(ValueError):
+            measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni, count=bad)
+    # 区切りの付け落とし（間が 2 倍）は警告
+    gap = _marks(24)
+    del gap[10]
+    w = measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni, count={"photo": F6, "marks": gap})
+    assert w["chain"][-1]["n"] == 23 and any("付け落とし" in x for x in w["warnings"])
+
+
+def test_count_marks_split_between_two_photos(tmp_path):
+    from recorder import schema
+
+    s = _pitch(tmp_path)
+    uni = {"link": "uniform_period", "photo": F6, "px": [38.2, 38.3, 38.25]}
+    m = measure.build_chain(building="honbu", face="f6", pitch=s, uniform=uni,
+                            count={"photo": F6, "marks": _marks(46), "confirmed_by": P2, "confirmed_marks": _marks(47, 40.0, 18.4)})
+    cl = m["chain"][-1]
+    # 割れたら confirmed_by は付けず、数え違いを積み、estimated を勧める
+    assert "confirmed_by" not in cl and cl["split"]["n"] == 47 and cl["split"]["photo"] == P2
+    assert measure.chain_tol([cl], m["value"]) == pytest.approx(m["value"] / 46)
+    assert any("割れた" in x and "estimated" in x for x in m["warnings"])
+    assert "47 枚で割れた" in m["method"]
+    assert schema.chain_problems(schema.Measurement.from_json({k: v for k, v in m.items() if k != "warnings"}), "t") == []
 
 
 def bond(width=2400, height=2400, h=16.0, v=9.4):

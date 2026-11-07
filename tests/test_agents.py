@@ -378,6 +378,67 @@ def test_resume_after_event(tmp_path, monkeypatch):
     assert not r2["stopped_early"] and r2["done"] == ["kansatsu", "kazoe", "sokuryo"]
 
 
+def test_resume_redo_from_with_decision(tmp_path, monkeypatch):
+    """F18：事件で止まった後、進行役の決定を渡して、同じ state・同じ記録のまま指定の工程から新しい会話でやり直す。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    _b(tmp_path, requests=[{"kind": "check", "what": "デッキは棟か敷地か", "status": "open", "to": "tool"}],
+       soten=[{"status": "open", "rule": "規則で決まらない"}])
+    seen = []
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        seen.append((spec["name"], resume, task))
+        return {**_ok(sid=f"S{len(seen)}-{spec['name']}"), "cost_usd": 0.5}
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    steps = ["kansatsu", "kazoe", "sokuryo"]
+    r = agents.run_pipeline("b1", steps=steps, cwd=tmp_path, agents_dir=".claude/agents")
+    assert r["stopped"]["reason"] == "event" and r["done"] == ["kansatsu"]
+    r = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")       # 事件を見て続けた → 最後まで
+    assert r["done"] == steps and agents.load_state("b1", tmp_path)["status"] == "done"
+    st0 = agents.load_state("b1", tmp_path)
+    old_sessions, rec_name = dict(st0["sessions"]), st0["record_name"]
+    assert st0["spent_usd"] == pytest.approx(1.5) and any(e["kind"] == "check" for e in st0["pending_events"])
+    # 決定のファイルの断り：無い・リポジトリの外・拡張子・知らない工程
+    for bad in ({"decision_file": "data/reports/無い.md"}, {"decision_file": "../x.md"},
+                {"redo_from": "mejirushi"}):
+        with pytest.raises(agents.AgentError):
+            agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents", **bad)
+    dec = tmp_path / "data/reports/指示/決定.md"
+    dec.parent.mkdir(parents=True)
+    dec.write_text("﻿数えからやり直す。\nf5 は estimated のまま、撮影依頼を 1 件。", encoding="utf-8")
+    (tmp_path / "data/reports/指示/決定.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(agents.AgentError):
+        agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents", decision_file="data/reports/指示/決定.json")
+    # dry_run：計画だけ（状態は書かない）
+    dr = agents.resume_pipeline("b1", dry_run=True, cwd=tmp_path, agents_dir=".claude/agents", redo_from="kazoe",
+                                decision_file="data/reports/指示/決定.md")
+    assert [s["step"] for s in dr["steps"][-2:]] == ["kazoe", "sokuryo"] and dr["steps"][-1]["resume"] is None
+    assert dr["steps"][-1]["task"].startswith("進行役の決定（data/reports/指示/決定.md）：\n数えからやり直す。")
+    assert agents.load_state("b1", tmp_path)["done"] == steps
+    seen.clear()
+    r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents", redo_from="kazoe",
+                                decision_file="data/reports/指示/決定.md")
+    assert [(n, res) for n, res, _t in seen] == [("kazoe", None), ("sokuryo", None)]      # 新しい会話で
+    head = agents.DECISION_HEAD.format(file="data/reports/指示/決定.md", text="数えからやり直す。\nf5 は estimated のまま、撮影依頼を 1 件。")
+    for _n, _r, t in seen:       # 前置き（予算）の後、依頼文の先頭に決定の全文
+        assert t.index("予算（") == 0 and ("\n\n" + head) in t and t.index(head) < t.index("対象の棟は b1")
+    st = agents.load_state("b1", tmp_path)
+    assert not r2["stopped_early"] and st["status"] == "done" and st["done"] == steps
+    assert st["record_name"] == rec_name and r2["record"].endswith(rec_name)
+    assert st["spent_usd"] == pytest.approx(2.5) and st["attempts"] == {"kansatsu": 1, "kazoe": 2, "sokuryo": 2}
+    assert st["sessions"]["kansatsu"] == old_sessions["kansatsu"] and st["sessions"]["kazoe"] != old_sessions["kazoe"]
+    assert st["redo"]["previous_sessions"] == {"kazoe": old_sessions["kazoe"], "sokuryo": old_sessions["sokuryo"]}
+    d = st["decisions"][-1]
+    assert d["file"] == "data/reports/指示/決定.md" and d["redo_from"] == "kazoe" and d["text"].startswith("数えから")
+    assert any(a.startswith("check|") for a in d["acknowledged"]) and any(a.startswith("check|") for a in st["acknowledged_events"])
+    assert st["runs"][-1]["kind"] == "resume" and st["runs"][-1]["redo_from"] == "kazoe"
+    assert st["runs"][-1]["decision_file"] == "data/reports/指示/決定.md"
+    rec = json.loads(open(r2["record"], encoding="utf-8").read())
+    assert [s["step"] for s in rec["steps"]] == steps + ["kazoe", "sokuryo"] and len(rec["runs"]) == 3
+    # 決定だけ（redo_from 無し）で最後まで済んだ記録は続ける所が無い
+    assert agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")["nothing"]
+
+
 def test_max_usd(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
     budgets = []

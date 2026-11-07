@@ -1109,11 +1109,39 @@ def continue_task(step: str, building_id: str, photos_folder: str | None = None,
     return base + note + extra
 
 
+DECISION_HEAD = "進行役の決定（{file}）：\n{text}\n\n"     # やり直す工程の依頼文の先頭（limits_header の後）に入る
+DECISION_SUFFIXES = (".md", ".txt")
+
+
 def _task_for(state: dict, step: str) -> str:
     if state.get("mode") == "continue":
-        return continue_task(step, state["building"], state.get("photos"), state.get("faces"),
+        base = continue_task(step, state["building"], state.get("photos"), state.get("faces"),
                              state.get("new_photos"), state.get("new_photos_tape"))
-    return step_task(step, state["building"], state.get("photos"))
+    else:
+        base = step_task(step, state["building"], state.get("photos"))
+    redo = state.get("redo") or {}
+    if redo.get("text") and step in (redo.get("steps") or []) and step not in CODE_STEPS:
+        return DECISION_HEAD.format(file=redo.get("file"), text=redo["text"].strip()) + base
+    return base
+
+
+def read_decision(decision_file: str, cwd: str | Path = ".") -> tuple[str, str]:
+    """進行役の決定のファイル（md か txt、リポジトリ＝cwd からの相対）を読む。(正規化した相対パス, 中身)。
+    リポジトリの外・無い・空・別の拡張子は AgentError。"""
+    root = Path(cwd).resolve()
+    p = (root / decision_file).resolve()
+    try:
+        rel = p.relative_to(root).as_posix()
+    except ValueError:
+        raise AgentError(f"決定のファイルはリポジトリの中の物だけ：{decision_file}") from None
+    if p.suffix.lower() not in DECISION_SUFFIXES:
+        raise AgentError(f"決定のファイルは md か txt だけ：{decision_file}")
+    if not p.is_file():
+        raise AgentError(f"決定のファイルがありません：{decision_file}")
+    text = p.read_text(encoding="utf-8-sig").strip()
+    if not text:
+        raise AgentError(f"決定のファイルが空です：{decision_file}")
+    return rel, text
 
 
 def state_path(building_id: str, cwd: str | Path = ".") -> Path:
@@ -1418,18 +1446,29 @@ def continue_pipeline(building_id: str, photos_folder: str | None = None, *, fac
 
 
 def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path = ".", agents_dir: str | Path | None = None,
-                    prices: dict | None = None, max_usd: float | None = None) -> dict:
+                    prices: dict | None = None, max_usd: float | None = None, redo_from: str | None = None,
+                    decision_file: str | None = None) -> dict:
     """止まった所から続ける（out/<棟>/pipeline_state.json を読む）。
     - 429・上限・落ちで止まった工程は、同じ会話（session_id）の続きから（RESUME_PROMPT）。工程の中では _drive が先に
       自動の続きを AUTO_RESUME_MAX 回まで試すので、ここに来るのはそれでも止まった時（人を呼ぶ事件が pending_events に出る）。
     - 事件で止まった時は、その工程は済んでいるので次の工程から。止めた事件は「見て続けると決めた」として、同じ事件では止めない。
     - 費用の上限で止まった時は max_usd で上限を上げないと続けない。
-    - 実行中のまま（status running）の状態は、落ちたと見て current の工程から。dry_run は状態を書かずに計画だけ返す。"""
+    - 実行中のまま（status running）の状態は、落ちたと見て current の工程から。dry_run は状態を書かずに計画だけ返す。
+    - redo_from（11/8、F18）：済んだ工程のうち、state の steps の順でその工程以降を done から外してやり直す（最後まで済んだ
+      状態でも可）。やり直す工程は前の会話を使わず新しい会話で（前の会話 id は redo.previous_sessions に残す）。
+    - decision_file：進行役の決定（md か txt、リポジトリからの相対）。state の decisions に {at, file, text の先頭, redo_from} を
+      足し、やり直す工程（redo_from が無ければ残りの工程）の依頼文の先頭（前置きの後）に全文を入れる（state の redo）。
+      pending_events のうち進行役が決める物（STOP_EVENTS か call が fable）は決定済みとして acknowledged_events に移す。
+    - 同じ state・同じ記録（record_name）に足し、runs に {kind: "resume", redo_from, decision_file} を残す。費用は積み上がる。"""
     cwd = Path(cwd)
     state = load_state(building_id, cwd)
     if not state:
         raise AgentError(f"再開する記録がありません（{state_path(building_id, cwd)}）。recorder agent pipeline か continue で始める")
-    if state.get("status") == "done":
+    steps = list(state.get("steps") or [])
+    if redo_from is not None and redo_from not in steps:
+        raise AgentError(f"やり直す工程 {redo_from} はこの記録の工程にありません。ある工程: {steps}")
+    dec = read_decision(decision_file, cwd) if decision_file else None
+    if state.get("status") == "done" and redo_from is None:
         return {"building": building_id, "nothing": "前の実行は最後まで済んでいます", "state": str(state_path(building_id, cwd)),
                 "done": state.get("done")}
     if state.get("status") == "running" and state.get("current"):
@@ -1444,8 +1483,29 @@ def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path 
                          "--max-usd で上げてから resume する")
     if st.get("reason") == "event":
         state["acknowledged_events"] = sorted(set(state.get("acknowledged_events") or []) | set(st.get("events") or []))
-    state["runs"].append({"kind": "resume", "at": _now(), "from_step": st.get("step"), "reason": st.get("reason"),
-                          "why": st.get("why"), "session_id": st.get("session_id")})
+    now = _now()
+    if redo_from is not None or dec is not None:
+        done = list(state.get("done") or [])
+        if redo_from is not None:
+            redo_steps = steps[steps.index(redo_from):]
+            state["done"] = [s for s in done if s not in redo_steps]
+            sessions = state.setdefault("sessions", {})
+            prev_sessions = {s: sessions.pop(s) for s in redo_steps if s in sessions}   # やり直す工程は新しい会話で
+        else:
+            redo_steps, prev_sessions = [s for s in steps if s not in done], {}
+        state["redo"] = {"from": redo_from, "steps": redo_steps, "at": now, "file": dec[0] if dec else None,
+                         "text": dec[1] if dec else None, "previous_sessions": prev_sessions}
+    if dec is not None:
+        moved = [e for e in state.get("pending_events") or []
+                 if isinstance(e, dict) and (e.get("kind") in STOP_EVENTS or e.get("call") == "fable")]
+        state["pending_events"] = [e for e in state.get("pending_events") or [] if e not in moved]
+        state["acknowledged_events"] = sorted(set(state.get("acknowledged_events") or []) | {_event_sig(e) for e in moved})
+        state.setdefault("decisions", []).append({
+            "at": now, "file": dec[0], "text": dec[1][:300], "chars": len(dec[1]), "redo_from": redo_from,
+            "steps": state["redo"]["steps"], "acknowledged": [_event_sig(e) for e in moved] + list(st.get("events") or [])})
+    state["runs"].append({"kind": "resume", "at": now, "from_step": st.get("step"), "reason": st.get("reason"),
+                          "why": st.get("why"), "session_id": st.get("session_id"), "redo_from": redo_from,
+                          "decision_file": dec[0] if dec else None})
     return _drive(state, cwd, dry_run=dry_run, agents_dir=agents_dir, prices=prices)
 
 

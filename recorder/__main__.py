@@ -334,6 +334,8 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("building")
     q.add_argument("--dry-run", action="store_true")
     q.add_argument("--max-usd", type=float, default=None, help="費用の上限を上げて続ける時（USD）")
+    q.add_argument("--redo-from", default=None, help="この工程から（state の steps の順で以降を）新しい会話でやり直す")
+    q.add_argument("--decision", default=None, help="進行役の決定（md か txt、リポジトリからの相対）。やり直す工程の依頼文の先頭に入る")
     q = asub.add_parser("continue", help="追記：前回の棟 JSON を保ち、新しい写真で 撮影→仕分け→関係する面の測量・設計・検収→製図・web")
     q.add_argument("building")
     q.add_argument("--photos", default=None, help="新しい写真のフォルダ（省略で索引に取り込み済みの物）")
@@ -752,7 +754,8 @@ def _agent(a) -> int:
                                   record=a.record, new=a.new, started_at=a.started_at, ended_at=a.ended_at,
                                   attempt=a.attempt, result=a.result, tool_uses=a.tool_uses)
         elif a.agent_cmd == "resume":
-            res = agents.resume_pipeline(a.building, dry_run=a.dry_run, max_usd=a.max_usd)
+            res = agents.resume_pipeline(a.building, dry_run=a.dry_run, max_usd=a.max_usd, redo_from=a.redo_from,
+                                         decision_file=a.decision)
         elif a.agent_cmd == "continue":
             res = agents.continue_pipeline(a.building, a.photos, faces=a.faces.split(",") if a.faces else None,
                                            steps=a.steps.split(",") if a.steps else None, dry_run=a.dry_run, max_usd=(a.max_usd or None))

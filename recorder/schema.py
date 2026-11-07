@@ -171,6 +171,30 @@ def _posnum(x) -> bool:
     return isinstance(x, (int, float)) and not isinstance(x, bool) and x > 0
 
 
+COUNT_NOT_COUNTED_WHY = ("confirmed_by があっても数え違い ±tol 枚 × 周期を積んだ（K-202：2 枚で一致を 0 と見なすのは 1 枚ずつ数えた輪だけ。"
+                         "輪に counted: true と数えた途中の印（marks：縁と区切りの px の列と 2 枚目の confirmed_marks、または method に数え方）が要る。"
+                         "px ÷ 周期の割り算で出した枚数は数えたことにならない）")
+
+
+def count_is_counted(link: dict) -> bool:
+    """K-202：count の輪が「1 枚ずつ数えた」物か。counted: true と、途中の印の両方。
+    印は ①marks（1 枚目の縁と区切りの px）と confirmed_marks（2 枚目の同じ印）が両方とも空でない列、か ②method に数え方の文。"""
+    if link.get("counted") is not True:
+        return False
+    def _marks(k):
+        v = link.get(k)
+        return isinstance(v, list) and len(v) > 0
+    method = link.get("method")
+    return (_marks("marks") and _marks("confirmed_marks")) or (isinstance(method, str) and bool(method.strip()))
+
+
+def ignored_confirmations(chain: list) -> list[int]:
+    """confirmed_by があるのに数えた印が無く、数え違いを積んだ count の輪の番号（K-202）。"""
+    return [i for i, ln in enumerate(chain or []) if isinstance(ln, dict) and ln.get("link") == "count"
+            and isinstance(ln.get("confirmed_by"), str) and ln["confirmed_by"].strip()
+            and ln["confirmed_by"].strip() != str(ln.get("photo") or "").strip() and not count_is_counted(ln)]
+
+
 def link_rel(link: dict) -> tuple[float | None, str | None]:
     """1 つの輪が値に与える相対の誤差（割合）と、読めない時の理由。式は chain_tol の docstring。"""
     k = link.get("link")
@@ -197,7 +221,9 @@ def link_rel(link: dict) -> tuple[float | None, str | None]:
                 return None, "count の輪の confirmed_by は 2 枚目の写真 id です（2 枚で一致した枚数は数え違いを 0 と見なす）"
             if cb.strip() == str(link.get("photo") or "").strip():
                 return None, "count の輪の confirmed_by が photo と同じ写真です（2 枚で一致した枚数は数え違いを 0 と見なす（根拠に 2 枚目の id）。別の写真で数える）"
-            return 0.0, None
+            if count_is_counted(link):
+                return 0.0, None
+            # K-202：1 枚ずつ数えた印が無い（px ÷ 周期の割り算など）→ confirmed_by があっても ±tol 枚 × 周期を積む
         return float(t) / float(n), None
     if link.get("px_unit", "px") not in PX_UNITS:
         return None, f"{k} の輪の px_unit は {' / '.join(PX_UNITS)} です（{link.get('px_unit')}）"
@@ -227,6 +253,9 @@ def chain_tol(chain: list, value) -> float:
         count           tol ÷ n（tol は数え違いの枚数、既定 1）。値 = 周期 × n なので ±tol × 周期 と同じ。
                         輪に confirmed_by（photo と別の写真 id）があり、その写真でも同じ枚数を数えた時は 0
                         （2 枚で一致した枚数は数え違いを 0 と見なす。根拠に 2 枚目の id）。
+                        ただし K-202：0 にするのは輪に counted: true と数えた途中の印（marks と 2 枚目の confirmed_marks、
+                        か method）がある時だけ。
+                        無ければ（px ÷ 周期の割り算で出した枚数など）confirmed_by があっても tol ÷ n を積む。
         px の欄          px_unit "mm"（2 枚目のメジャーの読み）も可。比とばらつきしか使わないので式は同じ。
         px_ratio        px_tol ÷ a + px_tol ÷ b（px = [a, b]、比 a/b、px_tol は既定 1 px）。
         uniform_period  (最大 − 最小) ÷ 2 ÷ 平均（px = 場所ごとの周期）。周期のばらつきの半幅を比で移す。
@@ -302,14 +331,18 @@ def chain_problems(m: "Measurement", where: str) -> list[str]:
     if not isinstance(m.tol, (int, float)) or isinstance(m.tol, bool):
         out.append(f"{where}: measured に ± (tol) がありません（鎖から積むと ±{need:.4g}）")
     elif m.tol < need - CHAIN_TOL_SLACK:
-        out.append(f"{where}: ±{m.tol:g} は鎖から積んだ ±{need:.4g} より小さい（chain_tol 以上にする）")
+        msg = f"{where}: ±{m.tol:g} は鎖から積んだ ±{need:.4g} より小さい（chain_tol 以上にする）"
+        ign = ignored_confirmations(ch)
+        if ign:
+            msg += f"。chain[{', '.join(map(str, ign))}]：{COUNT_NOT_COUNTED_WHY}"
+        out.append(msg)
     return out
 
 
 # --- 棟 JSON の中で Measurement が入る場所 ---------------------------------
 # 「どの鍵が測定値か」をここに列挙する。検証と図面生成はこの表を見る。
 MEASUREMENT_KEYS_BUILDING = ("ground_z", "parapet_top", "floor_count", "floor_pitch")
-MEASUREMENT_KEYS_FACE = ("length", "ground_offset")
+MEASUREMENT_KEYS_FACE = ("length", "ground_offset", "top_z")   # top_z：面の上端（F17 で検証の対象に足した）
 MEASUREMENT_KEYS_BAYS = ("count", "pitch", "pier_width", "end_margin", "margin_from", "margin_to")
 MEASUREMENT_KEYS_LEVEL = ("z",)
 MEASUREMENT_KEYS_WINDOW = ("z_bottom", "z_top", "width", "recess")

@@ -17,7 +17,8 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
                                    （data/buildings/<棟>.json）がある棟は追記（agents.continue_pipeline、前回の値を保って
                                    新しい写真の分だけ育てる）、無い棟は run_pipeline。max_usd は棟ごとの費用の上限
                                    （省けば agents.DEFAULT_MAX_USD＝20 USD、0 で上限なし）
-    POST /api/resume               {"building", "max_usd"?} 止まった棟を agents.resume_pipeline で続ける（別スレッド。11/8、F15）。
+    POST /api/resume               {"building", "max_usd"?, "redo_from"?, "decision_file"?} 止まった棟を agents.resume_pipeline で
+                                   続ける（別スレッド。11/8、F15）。redo_from・decision_file（data/reports/ の下）は F18。
                                    このサーバで作業中・キーが無い・状態が無い・止まっていない時は断る（409、理由の文）。
                                    費用の上限で止まった棟は、使った額より大きい max_usd が要る
     GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
@@ -484,7 +485,8 @@ def _worker(root: Path, bid: str) -> None:
     st = RUNS[bid]
     try:
         if st.get("mode") == "resume":     # 止まった所から続ける（11/8、F15。CLI の recorder agent resume と同じ関数）
-            res = agents.resume_pipeline(bid, dry_run=False, cwd=root, max_usd=st.get("resume_max_usd"))
+            res = agents.resume_pipeline(bid, dry_run=False, cwd=root, max_usd=st.get("resume_max_usd"),
+                                         redo_from=st.get("redo_from"), decision_file=st.get("decision_file"))
         elif st.get("mode") == "continue":   # 棟 JSON がある棟は追記（11/8、K-106。T3 の continue_pipeline）
             res = agents.continue_pipeline(bid, st.get("photos_folder"), dry_run=st["dry_run"], cwd=root, max_usd=st.get("max_usd"))
         else:
@@ -614,7 +616,8 @@ def resume_check(root: Path, b: str, run: dict | None) -> dict | None:
 
 
 def api_resume(root: Path, body: dict) -> dict:
-    """POST /api/resume {"building", "max_usd"?}：止まった棟を agents.resume_pipeline で続ける（別スレッド）。
+    """POST /api/resume {"building", "max_usd"?, "redo_from"?, "decision_file"?}：止まった棟を agents.resume_pipeline で続ける（別スレッド）。
+    redo_from は済んだ工程からのやり直し（最後まで済んだ記録も可）、decision_file は進行役の決定（data/reports/ の下の md か txt）。
     断る時：このサーバで動いている（Busy＝409）・キーが無い・状態が無い・止まっていない・費用の上限で止まったのに
     使った額より大きい上限が無い（Refused＝409、理由の文）。"""
     b = str(body.get("building") or "").strip()
@@ -622,6 +625,7 @@ def api_resume(root: Path, body: dict) -> dict:
         raise ValueError(f"棟 id ではない名前: {b!r}")
     mu = body.get("max_usd")
     max_usd = None if mu in (None, "") else float(mu)
+    redo_from, decision_file = _resume_redo_args(root, b, body)
     with _runs_lock:
         prev = RUNS.get(b)
         if (prev or {}).get("state") == "running":
@@ -629,7 +633,9 @@ def api_resume(root: Path, body: dict) -> dict:
         chk = resume_check(root, b, prev)
         if chk is None:
             raise Refused("no_state", f"続ける記録がありません（out/{b}/pipeline_state.json が無い）。先に「記録を始める」で起動してください")
-        if chk["code"] == "need_max_usd":
+        if chk["code"] == "done" and redo_from and chk["api_key"]:     # 最後まで済んだ記録も、工程を指せばやり直せる
+            pass
+        elif chk["code"] == "need_max_usd":
             if max_usd is None or max_usd <= chk["spent_usd"]:
                 raise Refused("need_max_usd", chk["why"])
         elif not chk["ok"]:
@@ -640,13 +646,42 @@ def api_resume(root: Path, body: dict) -> dict:
         st = {"building": b, "state": "running", "started_at": _now(), "finished_at": None, "dry_run": False,
               "mode": "resume", "max_usd": max_usd if max_usd is not None else chk["max_usd"], "resume_max_usd": max_usd,
               "resumed_from": {"step": chk["step"], "reason": chk["reason"]},
+              "redo_from": redo_from, "decision_file": decision_file,
               "photos_folder": None, "last_step": None, "stopped_at": None, "error": None,
               "record": f"out/{b}/serve_{stamp}.json"}
         RUNS[b] = st
     _record(root, b, st)
     threading.Thread(target=_worker, args=(root, b), name=f"pipeline-{b}", daemon=True).start()
-    log(f"pipeline {b} 続きから（{chk['step']} の {chk['reason']} から" + (f"、上限 {max_usd} USD" if max_usd is not None else "") + "）")
-    return {"started": b, "resumed_from": st["resumed_from"], "max_usd": st["max_usd"], "record": st["record"]}
+    log(f"pipeline {b} 続きから（{chk['step']} の {chk['reason']} から" + (f"、上限 {max_usd} USD" if max_usd is not None else "")
+        + (f"、{redo_from} からやり直し" if redo_from else "") + (f"、決定 {decision_file}" if decision_file else "") + "）")
+    return {"started": b, "resumed_from": st["resumed_from"], "max_usd": st["max_usd"], "record": st["record"],
+            "redo_from": redo_from, "decision_file": decision_file}
+
+
+DECISION_DIR = "data/reports/"      # 画面から渡せる進行役の決定のファイルの置き場（リポジトリの中のここの下だけ）
+
+
+def _resume_redo_args(root: Path, b: str, body: dict) -> tuple[str | None, str | None]:
+    """POST /api/resume の任意の redo_from・decision_file を確かめる（ValueError＝400）。
+    redo_from は棟の state の steps にある工程。decision_file は data/reports/ の下の md か txt（リポジトリからの相対）。"""
+    from . import agents
+
+    redo_from = str(body.get("redo_from") or "").strip() or None
+    decision_file = str(body.get("decision_file") or "").strip().replace("\\", "/") or None
+    if redo_from is not None:
+        state = agents.load_state(b, root)
+        steps = (state or {}).get("steps") or []
+        if redo_from not in steps:
+            raise ValueError(f"やり直す工程 {redo_from!r} はこの棟の記録の工程にありません（ある工程: {steps}）")
+    if decision_file is not None:
+        try:
+            rel, _text = agents.read_decision(decision_file, root)
+        except agents.AgentError as e:
+            raise ValueError(str(e)) from None
+        if not rel.startswith(DECISION_DIR):
+            raise ValueError(f"決定のファイルは {DECISION_DIR} の下の物だけ受けます：{decision_file}")
+        decision_file = rel
+    return redo_from, decision_file
 
 
 def _run_public(st: dict | None) -> dict | None:

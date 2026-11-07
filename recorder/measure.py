@@ -368,6 +368,7 @@ def draw_overlay(img: np.ndarray, res: MeasureResult) -> np.ndarray:
 #   recorder measure uniform <正面化.jpg> --what tile_pitch_h --photo <写真id> --face f6 [--parts 4]
 #       正面化した面を 3〜4 か所に分け、それぞれで周期（px）を取る。ばらつきが 3 % 以下なら uniform_period の輪。
 #   recorder measure chain <棟> --face f6 --key bay_pitch --what tile_pitch_h --count 24 --count-photo <id> --count-what "…"
+#       [--count-marks <px> … --count-photo2 <id> --count-marks2 <px> …]（K-202：1 枚ずつ付けた印で数え、2 枚が一致した時だけ confirmed_by）
 #       [--uniform <uniform.json>] [--ratio 180 910 --ratio-photo <id> --ratio-what "…"]
 #       周期 × 枚数（× px の比）で値を出し、鎖・tol・measured_kind・前の値との差（縮尺の付け替え）を
 #       data/reports/<棟>/sokuryo_chain_<面>.json に書く。棟 JSON は書かない（写すのは設計係）。
@@ -769,6 +770,79 @@ def _prev_value(building: str, face: str, key: str, reports: Path | None) -> dic
             "baseline": "sokuryo_json"}
 
 
+MARK_GAP_WARN = 1.5     # 区切りの間が中央値の 1.5 倍を超えたら「区切りの付け落とし（2 枚を 1 枚と数えた）かも」と警告
+
+
+def count_from_marks(marks, label: str = "marks") -> tuple[int, list[str]]:
+    """K-201・K-202：正面化画像の上で 1 枚ずつ付けた印（縁 2 つ＋区切りの px）から枚数を数える。
+    枚数 = 印の数 − 1（割り算ではなく、印と印の間を数える）。印は正の数・重なり無し（並べ替える）。
+    間が中央値の MARK_GAP_WARN 倍を超える所があれば警告（区切りの付け落とし）。"""
+    if not isinstance(marks, (list, tuple)) or len(marks) < 2:
+        raise ValueError(f"{label} は縁 2 つ＋区切りの px の列です（2 つ以上）")
+    try:
+        xs = sorted(float(x) for x in marks)
+    except (TypeError, ValueError):
+        raise ValueError(f"{label} は数の列です: {marks}") from None
+    gaps = [b - a for a, b in zip(xs, xs[1:])]
+    if xs[0] < 0 or min(gaps) <= 0:
+        raise ValueError(f"{label} に負の数か同じ位置が 2 つあります: {marks}")
+    med = sorted(gaps)[len(gaps) // 2]
+    warns = [f"{label}：{xs[i]:g}→{xs[i + 1]:g} px の間が {g:.1f} px で、間の中央値 {med:.1f} px の {g / med:.2f} 倍"
+             f"（区切りの付け落としかも。見直す）" for i, g in enumerate(gaps) if g > MARK_GAP_WARN * med]
+    return len(gaps), warns
+
+
+def count_link(count: dict) -> tuple[dict, list[str]]:
+    """count の輪を作る。count：{"photo","n"?,"what","tol","marks"?,"confirmed_by"?,"confirmed_marks"?}。
+    - marks があれば枚数は印から道具が数え（counted: true）、渡された n と違えば断る（ValueError）。
+    - 2 枚目（confirmed_by）は confirmed_marks を持たせ、2 枚の枚数が一致した時だけ confirmed_by を付ける。
+      割れたら付けず、数え違いの ± を積んだまま、notes に「estimated を勧める」文を返す。
+    - 1 枚目を印で数えたのに 2 枚目に印が無い confirmed_by は断る（数えていない 2 枚目で ± を 0 にしない。K-202）。
+      印の無い数え（割り算など）の confirmed_by はそのまま書く（schema が ± を積む）。"""
+    notes: list[str] = []
+    marks = count.get("marks")
+    n = count.get("n")
+    if marks is not None:
+        got, w = count_from_marks(marks, "marks")
+        notes += w
+        if n is not None and int(n) != got:
+            raise ValueError(f"渡された枚数 {n} と印から数えた枚数 {got}（印 {len(marks)} 個）が違います。印か枚数を見直す")
+        n = got
+    if n is None:
+        raise ValueError("枚数（n）か印（marks）が要ります")
+    n = int(n)
+    if n <= 0:
+        raise ValueError(f"枚数は正の整数: {n}")
+    cl = {"link": "count", "photo": count["photo"], "n": n, "what": count.get("what", ""), "tol": count.get("tol", 1)}
+    if marks is not None:
+        cl["counted"] = True
+        cl["marks"] = [round(float(x), 2) for x in sorted(float(x) for x in marks)]
+    cb, cm = count.get("confirmed_by"), count.get("confirmed_marks")
+    if cm is not None and not cb:
+        raise ValueError("confirmed_marks（2 枚目の印）には confirmed_by（2 枚目の写真 id）が要ります")
+    if cb:
+        if cb == count["photo"]:
+            raise ValueError(f"2 枚目の数えの写真が 1 枚目と同じです: {count['photo']}")
+        if marks is not None and cm is None:
+            raise ValueError("1 枚目を印で数えた時は、2 枚目（confirmed_by）にも印（confirmed_marks）が要ります（K-202）")
+        if cm is not None:
+            if marks is None:
+                raise ValueError("2 枚目に印（confirmed_marks）があるなら 1 枚目にも印（marks）が要ります（K-202）")
+            n2, w2 = count_from_marks(cm, "confirmed_marks")
+            notes += w2
+            if n2 == n:
+                cl["confirmed_by"] = cb
+                cl["confirmed_marks"] = [round(float(x), 2) for x in sorted(float(x) for x in cm)]
+            else:
+                cl["split"] = {"photo": cb, "n": n2, "marks": [round(float(x), 2) for x in sorted(float(x) for x in cm)]}
+                notes.append(f"2 枚の枚数が割れた（{count['photo']} で {n} 枚、{cb} で {n2} 枚）。confirmed_by は付けず、"
+                             f"数え違い ±{cl['tol']:g} 枚 × 周期を積んだ。数え直して一致しなければ、この値は estimated にする（割れた枚数を method に書く）")
+        else:
+            cl["confirmed_by"] = cb      # 印の無い数え：schema（K-202）が数え違いを積む
+            notes.append(f"confirmed_by {cb} は書いたが、1 枚ずつ数えた印が無いので数え違い ±{cl['tol']:g} 枚 × 周期は積んだまま（K-202）")
+    return cl, notes
+
+
 def build_chain(*, building: str, face: str, pitch: dict, count: dict | None = None, uniform: dict | None = None,
                 ratios: list[dict] | None = None, unit: str = "m", ratio_from_h: dict | None = None) -> dict:
     """周期 × 枚数 × px の比 で値を出し、第 1 部「鎖の書き方」の形で返す。
@@ -788,6 +862,8 @@ def build_chain(*, building: str, face: str, pitch: dict, count: dict | None = N
         raise ValueError("周期の値がありません（measure tape を先に）")
     tl = dict(pitch["link"])
     chain: list[dict] = [tl]
+    notes: list[str] = []
+    cl: dict | None = None
     value = float(tl["value"])
     if pitch["building"] != building:
         chain.append({"link": "claim", "what": f"利用者の申告：{pitch['building']} と {building} は同じタイル（確かめていない。"
@@ -808,14 +884,10 @@ def build_chain(*, building: str, face: str, pitch: dict, count: dict | None = N
             chain.append(uniform)
         else:
             chain.append({"link": "assume", "what": f"{face} の中で周期が一様と置いた（自己相関もメジャーの検算も無い）"})
-        n = int(count["n"])
-        if n <= 0:
-            raise ValueError(f"枚数は正の整数: {n}")
-        cl = {"link": "count", "photo": count["photo"], "n": n, "what": count.get("what", ""), "tol": count.get("tol", 1)}
-        if count.get("confirmed_by"):
-            if count["confirmed_by"] == count["photo"]:
-                raise ValueError(f"2 枚目の数えの写真が 1 枚目と同じです: {count['photo']}")
-            cl["confirmed_by"] = count["confirmed_by"]
+        count = dict(count)
+        cl, notes = count_link(count)
+        n = cl["n"]
+        count["n"] = n
         chain.append(cl)
         value *= n
     if ratio_from_h:
@@ -854,8 +926,13 @@ def build_chain(*, building: str, face: str, pitch: dict, count: dict | None = N
              "claim": "申告", "assume": "仮定"}
     parts = [f"タイルの周期 {tl['value']} m（メジャー {tl['photo']}：{tl['read']}、{tl['n']} 枚）"]
     if count:
-        again = f"、{count['confirmed_by']} でも同じ枚数" if count.get("confirmed_by") else ""
-        parts.append(f"× {count['n']} 枚（{count['photo']} で数えた{('：' + count['what']) if count.get('what') else ''}{again}）")
+        how = "で 1 枚ずつ印を付けて数えた" if cl and cl.get("counted") else "で数えた"
+        again = ""
+        if cl and cl.get("confirmed_by"):
+            again = f"、{cl['confirmed_by']} でも同じ枚数" + ("（印で数えた）" if cl.get("confirmed_marks") else "")
+        elif cl and cl.get("split"):
+            again = f"、{cl['split']['photo']} では {cl['split']['n']} 枚で割れた"
+        parts.append(f"× {count['n']} 枚（{count['photo']} {how}{('：' + count['what']) if count.get('what') else ''}{again}）")
     if ratio_from_h:
         q = ratio_from_h
         parts.append(f"× 縦 {q['n_v']} 段 {q['v_px']:.2f} px ÷ 横 {q['n_h']} 枚 {q['h_px']:.2f} px × {q['n_h']}/{q['n_v']}"
@@ -871,6 +948,8 @@ def build_chain(*, building: str, face: str, pitch: dict, count: dict | None = N
     if measured:
         m["measured_kind"] = "direct" if len(chain) == 1 and chain[0]["link"] == "tape" else "chain"
     m.update({"evidence": ev, "method": method, "chain": chain})
+    if notes:
+        m["warnings"] = notes      # 書き出す前に外す（write_chain が値の外の warnings に置く）。棟 JSON の値には入れない
     return m
 
 
@@ -886,7 +965,8 @@ def rescale_record(m: dict, prev: dict | None) -> dict | None:
 
 def write_chain(building: str, face: str, key: str, m: dict, *, rescale: dict | None = None, scale: dict | None = None,
                 reports: Path | None = None) -> Path:
-    """data/reports/<棟>/sokuryo_chain_<面>.json の values[key] に書く（他の鍵は残す）。"""
+    """data/reports/<棟>/sokuryo_chain_<面>.json の values[key] に書く（他の鍵は残す）。
+    m の warnings（数えの印の警告・2 枚の割れ）は値から外して warnings[key] に置く。"""
     from datetime import datetime
 
     p = _reports(reports) / building / f"sokuryo_chain_{face}.json"
@@ -894,7 +974,13 @@ def write_chain(building: str, face: str, key: str, m: dict, *, rescale: dict | 
         d = json.loads(p.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         d = {"schema": "sokuryo-chain/1", "building": building, "face": face, "values": {}, "rescale": {}, "scale": {}}
+    m = dict(m)
+    warns = m.pop("warnings", None)
     d.setdefault("values", {})[key] = m
+    if warns:
+        d.setdefault("warnings", {})[key] = warns
+    else:
+        d.setdefault("warnings", {}).pop(key, None)
     if rescale:
         d.setdefault("rescale", {})[key] = rescale
     else:
@@ -945,7 +1031,12 @@ def add_args(p) -> None:
     q.add_argument("--pitch-from", default=None, help="別の棟の周期を使う（その棟にメジャー写真が無い時だけ。estimated・申告の輪）")
     q.add_argument("--count", type=int, default=None)
     q.add_argument("--count-photo", default=None)
-    q.add_argument("--count-photo2", default=None, help="2 枚目の写真で同じ枚数を数えた時の写真 id（数え違いの ± を 0 に）")
+    q.add_argument("--count-photo2", default=None,
+                   help="2 枚目の写真 id。--count-marks2 で 2 枚目も印で数え、枚数が一致した時だけ confirmed_by（数え違いの ± を 0 に。K-202）")
+    q.add_argument("--count-marks", type=float, nargs="+", default=None, metavar="PX",
+                   help="1 枚目の正面化画像の上で 1 枚ずつ付けた印（縁 2 つ＋区切りの px）。枚数は印から数える（counted: true）")
+    q.add_argument("--count-marks2", type=float, nargs="+", default=None, metavar="PX",
+                   help="2 枚目（--count-photo2）の正面化画像の上の印。1 枚目と同じ枚数の時だけ confirmed_by")
     q.add_argument("--count-what", default="")
     q.add_argument("--count-tol", type=float, default=1)
     q.add_argument("--uniform", default=None, help="measure uniform の結果 JSON")
@@ -1029,16 +1120,20 @@ def _cli_chain(a, reports: Path | None) -> int:
         print(f"{src} に {a.what} のメジャーの読みがありません（measure tape を先に。無ければ PLATEAU で estimated）")
         return 1
     count = None
-    if a.count is not None:
+    if a.count is not None or a.count_marks:
         if not a.count_photo:
-            print("--count には --count-photo（数えた写真 id）が要ります")
+            print("--count・--count-marks には --count-photo（数えた写真 id）が要ります")
             return 2
         if a.count_photo2 and a.count_photo2 == a.count_photo:
             print("--count-photo2 は --count-photo と別の写真にします（同じ写真で 2 回数えても確かめにならない）")
             return 2
         count = {"photo": a.count_photo, "n": a.count, "what": a.count_what, "tol": a.count_tol}
+        if a.count_marks:
+            count["marks"] = a.count_marks
         if a.count_photo2:
             count["confirmed_by"] = a.count_photo2
+        if a.count_marks2:
+            count["confirmed_marks"] = a.count_marks2
     uni, scale = None, None
     if a.uniform:
         u = json.loads(Path(a.uniform).read_text(encoding="utf-8"))
@@ -1065,6 +1160,8 @@ def _cli_chain(a, reports: Path | None) -> int:
     p = write_chain(a.building, a.face, a.key, m, rescale=rs, scale=scale, reports=reports)
     kind = f"・{m['measured_kind']}" if m.get("measured_kind") else ""
     print(f"{a.building} {a.face} {a.key} = {m['value']} m ± {m['tol']}（{m['status']}{kind}）→ {p}")
+    for w in m.get("warnings") or []:
+        print("警告：" + w)
     if rs:
         print(f"縮尺の付け替え：前の値 {rs['prev_value']} m（{rs['prev_status']}、{rs['baseline']}：{rs['ref']}）から {rs['diff_pct']:+.2f} %")
     return 0

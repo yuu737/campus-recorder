@@ -429,9 +429,11 @@ def _write_state(root, bid, **kw):
     p.write_text(json.dumps(st, ensure_ascii=False), encoding="utf-8")
 
 
-def _fake_resume(monkeypatch, calls, gate=None, result=None):
-    def fake(bid, *, dry_run=False, cwd=".", agents_dir=None, prices=None, max_usd=None):
+def _fake_resume(monkeypatch, calls, gate=None, result=None, redo=None):
+    def fake(bid, *, dry_run=False, cwd=".", agents_dir=None, prices=None, max_usd=None, redo_from=None, decision_file=None):
         calls.append((bid, dry_run, str(cwd), max_usd))
+        if redo is not None:
+            redo.append((redo_from, decision_file))
         if gate is not None:
             gate.wait(10)
         return result or {"building": bid, "steps": [{"step": "shiwake"}, {"step": "sokuryo"}], "stopped_early": False}
@@ -531,6 +533,41 @@ def test_resume_after_max_usd_needs_a_higher_cap(srv, monkeypatch):
     assert st == 200 and j["max_usd"] == 8
     _wait_run(base, "honbu")
     assert calls == [("honbu", False, str(root.resolve()), 8.0)]
+
+
+def test_resume_with_redo_from_and_decision_file(srv, monkeypatch):
+    """F18：redo_from・decision_file を resume_pipeline に渡す。決定は data/reports/ の下の md・txt だけ、工程は state の steps だけ。"""
+    base, root = srv
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-not-a-key")
+    calls, redo = [], []
+    _fake_resume(monkeypatch, calls, redo=redo)
+    _write_state(root, "b1", stopped={"step": "shiwake", "reason": "event", "why": "争点", "label": "事件"})
+    d = root / "data" / "reports" / "指示"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "決定.md").write_text("測量からやり直す。f5 は estimated のまま。", encoding="utf-8")
+    (root / "data" / "other.md").write_text("x", encoding="utf-8")
+    (d / "決定.json").write_text("{}", encoding="utf-8")
+    for bad in ({"redo_from": "kenshu"},                                  # state の steps に無い工程
+                {"decision_file": "data/other.md"},                       # data/reports/ の外
+                {"decision_file": "data/reports/指示/決定.json"},          # md・txt でない
+                {"decision_file": "data/reports/指示/無い.md"},            # 無い
+                {"decision_file": "data/reports/../../../x.md"}):         # リポジトリの外
+        st, j = _post(base + "/api/resume", json.dumps({"building": "b1", **bad}).encode())
+        assert st == 400, bad
+    assert calls == []
+    st, j = _post(base + "/api/resume", json.dumps({"building": "b1", "redo_from": "shiwake",
+                                                    "decision_file": "data\\reports\\指示\\決定.md"}).encode())
+    assert st == 200 and j["redo_from"] == "shiwake" and j["decision_file"] == "data/reports/指示/決定.md"
+    _wait_run(base, "b1")
+    assert redo == [("shiwake", "data/reports/指示/決定.md")]
+    # 最後まで済んだ記録：redo_from があればやり直せる（無ければ今まで通り done で断る）
+    _write_state(root, "b1", status="done", stopped=None, done=["satsuei", "shiwake", "sokuryo"])
+    st, j = _post(base + "/api/resume", json.dumps({"building": "b1"}).encode())
+    assert st == 409 and j["code"] == "done"
+    st, j = _post(base + "/api/resume", json.dumps({"building": "b1", "redo_from": "sokuryo"}).encode())
+    assert st == 200
+    _wait_run(base, "b1")
+    assert redo[-1] == ("sokuryo", None) and len(calls) == 2
 
 
 def test_progress_counts_unused_staff_photos_for_buildings_with_json(srv):
