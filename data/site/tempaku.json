@@ -3,6 +3,10 @@
  "campus": "tempaku",
  "university": "名城大学",
  "campus_name": "天白キャンパス",
+ "photo_policy": {
+  "period_start": "2026-11-02T12:00:00",
+  "note": "Built with Claude: Japan 2026 の期間（11/2 12:00 JST〜）より前の撮影は before（使わない）。photos.period_start_of が読む"
+ },
  "crs": {
   "epsg": 6675,
   "origin_lat": 35.1355,
@@ -14852,6 +14856,263 @@
    "q": "青い手すりの低い棟はどれか",
    "status": "open",
    "answer": null
+  }
+ ],
+ "objects": {
+  "schema": "campus-recorder/site-objects/1",
+  "note": "敷地の物（K-107）。2 棟以上に触れる物・棟の間の物。値の決まりは棟 JSON と同じ（measured／estimated／unknown、根拠は写真 id）。型は bridge・deck・steps・asset（recorder/site_objects.py）。bridge の ends[].z は棟の z=0 からの m、それ以外の高さは標高 m",
+  "items": [
+   {
+    "id": "bridge-library-tower75",
+    "type": "bridge",
+    "name": "通路橋（図書館の北西 f1 とタワー75 の南西 f4 の間、構内の道をまたぐ）",
+    "evidence": [
+     "PXL_20261105_063412307",
+     "PXL_20261105_063439559",
+     "PXL_20261103_075517975",
+     "PXL_20261103_070409570",
+     "PXL_20261103_070422004",
+     "PXL_20261105_062246708"
+    ],
+    "seen": "道（OSM way/163508476 の構内道路）をまたぐ 1 本の橋。床は煉瓦色の舗装、両側にタイルの腰壁＋コンクリートの笠木＋金属の手すり、下面はコンクリートの桁と横の梁が並ぶ。下を車（ワゴン・トラック）が通る（070409570・063412307）。図書館の側は青い鉄骨の庇のある甲板に段差なしで続き（063412307・063439559）、タワー75 の側は西のデッキの南西の端に付く（070409570・070422004）。観察票 data/reports/library/kansatsu_f1.json structures[1] と data/reports/tower75/kansatsu_summary.json の S2 は同じ橋（両方の写真で同じ道・同じ桁）",
+    "ends": [
+     {
+      "building": "library",
+      "face": "f1",
+      "along0": {
+       "value": 41.53,
+       "unit": "m",
+       "tol": 0.4,
+       "status": "estimated",
+       "evidence": [
+        "osm:way/1304081004",
+        "PXL_20261105_063412307",
+        "PXL_20261103_075517975"
+       ],
+       "method": "OSM の甲板と通路橋の多角形 way/1304081004 の頂点 (24.01, −3.44) を f1 に投影（面からのずれ 0.01 m）。± は端の幅 7.9 m の 5 %（OSM の目安）",
+       "note": ""
+      },
+      "along1": {
+       "value": 49.42,
+       "unit": "m",
+       "tol": 0.4,
+       "status": "estimated",
+       "evidence": [
+        "osm:way/1304081004",
+        "PXL_20261105_063412307",
+        "PXL_20261105_063439559"
+       ],
+       "method": "f1 の終点（北西の角 (17.05, 0.27)）。063412307・063439559 で橋の西の腰壁は一直線に甲板の北西へ届く。甲板（敷地の別の依頼）がさらに西へ広がるので、橋と甲板の境は角で切った",
+       "note": ""
+      },
+      "z": {
+       "value": 6.6,
+       "unit": "m",
+       "tol": 1.39,
+       "status": "estimated",
+       "evidence": [
+        "PXL_20261105_063412307",
+        "PXL_20261105_063439559"
+       ],
+       "method": "図書館の甲板の床（棟 JSON の parts『北西の角の軒下の風除室』z0 と同じ値）。橋の床は甲板と段差なしで続く（063412307・063439559）",
+       "note": "",
+       "ref": "library:design_library.DECK_Z"
+      }
+     },
+     {
+      "building": "tower75",
+      "face": "f4",
+      "along0": {
+       "value": 0.0,
+       "unit": "m",
+       "tol": 0.3,
+       "status": "estimated",
+       "evidence": [
+        "osm:way/1304081004",
+        "PXL_20261103_070409570",
+        "PXL_20261103_070422004"
+       ],
+       "method": "f4 の始点（南西の角 (25.98, 12.77)）＝ way/1304081004 の頂点。± は f4 の 5 %",
+       "note": ""
+      },
+      "along1": {
+       "value": 5.98,
+       "unit": "m",
+       "tol": 0.3,
+       "status": "estimated",
+       "evidence": [
+        "osm:way/1304081004",
+        "PXL_20261103_070409570",
+        "PXL_20261103_070422004"
+       ],
+       "method": "f4 の終点 (31.28, 9.99)＝ way/1304081004 の頂点。橋は f4 の幅いっぱいに付く（070409570）。± は f4 の 5 %",
+       "note": ""
+      },
+      "z": {
+       "value": 7.23,
+       "unit": "m",
+       "tol": 2.7,
+       "status": "estimated",
+       "evidence": [
+        "PXL_20261103_070409570",
+        "PXL_20261103_070422004"
+       ],
+       "method": "タワー75 の 1F（西のデッキの床）。観察票 S2『橋の床はデッキ階と同じ高さ』（070409570・070422004）",
+       "note": "",
+       "ref": "tower75:levels[1F].z"
+      }
+     }
+    ],
+    "floor_z": {
+     "value": 48.76,
+     "unit": "m",
+     "tol": 1.5,
+     "status": "estimated",
+     "evidence": [
+      "PXL_20261105_063412307",
+      "PXL_20261105_063439559",
+      "PXL_20261103_070409570",
+      "PXL_20261103_070422004"
+     ],
+     "method": "両端の床の標高（図書館 41.67＋6.6＝48.27 ±1.71、タワー75 42.9＋7.23＝50.13 ±2.88。± は端の z と ground_z ±1.0 の二乗和）を ± の逆二乗で重み付けた平均。写真では橋の床は両側の甲板・デッキと段差なしで続く（観察票 2 枚）ので床を 1 枚の高さで置いた。坂か水平かは写真で決めていない。± はタワー75 の端の値まで届く幅（1.37）を丸めた",
+     "note": ""
+    },
+    "parapet_height": {
+     "value": null,
+     "unit": "m",
+     "tol": null,
+     "status": "unknown",
+     "evidence": [],
+     "method": "",
+     "note": "腰壁＋笠木＋手すりの高さ。写真に物差しが無い（撮影依頼 1）"
+    },
+    "beam_depth": {
+     "value": null,
+     "unit": "m",
+     "tol": null,
+     "status": "unknown",
+     "evidence": [],
+     "method": "",
+     "note": "桁の厚さ（床の上から桁の下まで）。斜めの写真だけで正面化していない（撮影依頼 2）"
+    },
+    "floor_material": "brick",
+    "parapet_material": "tile",
+    "requests": [
+     {
+      "kind": "photo",
+      "what": "通路橋の腰壁の内側にメジャーを床から笠木の上まで当てて 1 枚（目盛りの 0 と上端が写るように）",
+      "where": "通路橋の上（図書館とタワー75 の間）",
+      "why": "parapet_height が unknown。物差しが無い",
+      "status": "open",
+      "by": "T6",
+      "to": "staff"
+     },
+     {
+      "kind": "photo",
+      "what": "道から通路橋の側面を真横から 1 枚（両端の棟の角が 1 枚に入るように）と、桁の下面を見上げる 1 枚",
+      "where": "通路橋の下の構内道路（OSM way/163508476）の歩道の東と西",
+      "why": "beam_depth が unknown。側面を正面化して腰壁と桁の比を読む（腰壁のメジャーと組む）",
+      "status": "open",
+      "by": "T6",
+      "to": "staff"
+     },
+     {
+      "kind": "data",
+      "what": "両端の床の標高が 1.86 m 違う（図書館の甲板 48.27、タワー75 の 1F 50.13）。写真では橋の床は両側と段差なしで続く。どちらかの棟の値を直す",
+      "where": "data/buildings/library.json（design_library.DECK_Z）と tower75.json（levels 1F）",
+      "why": "± の中では合う（敷地の検収 site objects check）が、差が大きい。図書館の甲板から撮った組の視点の高さの食い違い（library.json の requests の check）とも関係する",
+      "status": "open",
+      "by": "T6",
+      "to": "tool"
+     },
+     {
+      "kind": "check",
+      "what": "図書館の側の端の along1（北西の角で切った）。橋の西の縁が甲板の西の縁まで続くか",
+      "where": "objects の甲板（library.json の requests の『甲板』）を置く時に一緒に",
+      "why": "OSM は甲板と通路橋を 1 つの多角形にしていて境が無い",
+      "status": "open",
+      "by": "T6"
+     }
+    ],
+    "refs": [
+     "data/buildings/library.json requests『敷地に置く物：通路橋』",
+     "data/buildings/tower75.json requests『南西のデッキの橋 S2』",
+     "data/reports/疑似本番_11-07/決定.json K-005"
+    ],
+    "made_by": "T6（Opus）",
+    "made_at": "2026-11-08"
+   }
+  ]
+ },
+ "requests": [
+  {
+   "id": "plateau-f693ff16-tower75",
+   "status": "open",
+   "action": "request",
+   "fix_in": "site",
+   "buildings": [
+    "tower75"
+   ],
+   "box": "bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1",
+   "box_height_m": 69.5,
+   "held_by": "osm-way-1304077323",
+   "what": "PLATEAU の箱 bldg_f693ff16（高さ 69.5 m、敷地 JSON では osm-way-1304077323）はtower75 の輪郭と 0.0% しか重ならない（footprint 0.0%（0.0 m²）、faces 0.0%（0.0 m²）、blocks 0.0%（0.0 m²）。結ぶ目安 70%）。結ばず、灰色の箱のまま",
+   "ask": "タワー75 の西面 f2・f3 の外（OSM way/1304077323、x 9〜39 m・y 31〜51 m）に何が立っているか（塔の一部の柱・庇・吹き抜けの枠か、別の低い物か）が分かる写真を、西の通路から f2・f3 と一緒に足元から頂部まで 2 枚以上。高さが塔と同じなら塔の塊として棟 JSON に足す（sekkei）、低ければ PLATEAU の 69.5 m は塔の高さの付け違いとして箱を外す（進行役）",
+   "why": "F5 の残り：歩く画面でタワー75 の横に立つ 69.5 m の箱（OSM way/1304077323、OSM は 1 階）。tower75 の観察・設計の記録（kansatsu_summary・sekkei_summary）は『塔の高さに当たる値が塔の足元の外の部品（西面 f2・f3 の外、普通無壁舎）に付いている』と書く。棟 JSON の輪郭（footprint・面・塊）とは 0 % で、辺を接するだけ",
+   "overlap": {
+    "box_area_m2": 183.2,
+    "by": {
+     "footprint": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.0
+     },
+     "faces": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.0
+     },
+     "blocks": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.0
+     }
+    },
+    "best": 0.0
+   },
+   "evidence": [
+    "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
+   ],
+   "by": "直す係 F6",
+   "at": "2026-11-08T00:18:52"
+  },
+  {
+   "id": "plateau-2e2a316f-bridge-library-tower75",
+   "status": "open",
+   "action": "request",
+   "fix_in": "site",
+   "buildings": [
+    "library",
+    "tower75"
+   ],
+   "box": "bldg_2e2a316f-4471-4381-b071-ff0488fe8422",
+   "box_height_m": 24.2,
+   "held_by": "osm-way-1304081004",
+   "what": "PLATEAU の箱 bldg_2e2a316f（高さ 24.2 m、敷地 JSON では osm-way-1304081004）はbridge-library-tower75 の輪郭と 16.7% しか重ならない（object 16.7%（105.7 m²）。結ぶ目安 70%）。結ばず、灰色の箱のまま",
+   "ask": "図書館の北西の甲板（OSM way/1304081004 から通路橋を除いた部分、f1・f2 の北西の角の外、約 528 m²）を敷地の物 deck として起こすための写真：甲板の上から縁の角と床の高さが分かる物、下（構内の道・西の広場）から庇・柱の高さが分かる物を各 2 枚。甲板が起きれば箱を replaced_by で外せる（24.2 m が何の上端か、写真で確かめる）",
+   "why": "F5 の残り：図書館の正面入口 f2 を隠す 24.2 m の箱（OSM way/1304081004、OSM は 1 階）。library の観察票（kansatsu_f1・f2）はこの多角形を甲板と通路橋と書く。棟の輪郭には library 0.0 %・tower75 0.0 %（0.1 m²）で、敷地の物は通路橋だけ（甲板はまだ敷地の物に無い）",
+   "overlap": {
+    "box_area_m2": 633.4,
+    "by": {
+     "object": {
+      "inside_ratio": 0.167,
+      "overlap_m2": 105.7
+     }
+    },
+    "best": 0.167
+   },
+   "evidence": [
+    "plateau:bldg_2e2a316f-4471-4381-b071-ff0488fe8422"
+   ],
+   "by": "直す係 F6",
+   "at": "2026-11-08T00:18:53"
   }
  ]
 }

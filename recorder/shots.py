@@ -255,58 +255,82 @@ def headless_browser(size: tuple[int, int], info: dict | None = None):
             yield cdp
 
 
-@contextmanager
-def _headless_browser(size: tuple[int, int], info: dict | None = None):
-    exe = find_browser()
-    if exe is None:
-        raise FileNotFoundError("Edge も Chrome も無い")
-    info = info if info is not None else {}
+DEVTOOLS_WAIT_S = 60.0     # DevTools の口（DevToolsActivePort と /json/list）を待つ上限（秒）。J-030 で 30 → 60
+LAUNCH_TRIES = 2           # 口が開かなければ、新しいプロファイルでもう 1 回だけ立て直す（J-030）
+STDERR_TAIL = 1500         # 報告に残す標準エラーの末尾（文字）
+
+
+class LaunchFail(RuntimeError):
+    """headless の Edge が DevTools の口を開かなかった（1 回分）。"""
+
+
+def _stderr_tail(errf: Path | None, n: int = STDERR_TAIL) -> str:
+    try:
+        return errf.read_bytes().decode("utf-8", "replace")[-n:].strip() if errf and errf.exists() else ""
+    except OSError:
+        return ""
+
+
+def _launch(exe: Path, size: tuple[int, int], wait: float, h: dict) -> str:
+    """専用のプロファイルで Edge を立て、ページの WebSocket の URL を返す。標準エラーはプロファイルの外のファイルへ
+    （h["errf"]。報告に残すため）。口が開かなければ LaunchFail（片付けは呼ぶ側。h に proc・prof・errf を入れておく）。"""
     prof = Path(tempfile.mkdtemp(prefix="recorder_shot_"))
+    errf = prof.parent / f"{prof.name}.stderr.txt"
+    h.update(prof=prof, errf=errf)
     cmd = [str(exe), "--headless=new", "--no-first-run", "--no-default-browser-check", "--hide-scrollbars",
            "--disable-extensions", "--mute-audio", "--ignore-gpu-blocklist", f"--user-data-dir={prof}",
            f"--window-size={size[0]},{size[1]}", "--window-position=-32000,-32000",
            "--remote-debugging-port=0", "--remote-allow-origins=*", "about:blank"]
-    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL,
-                            creationflags=NO_WINDOW)
-    cdp = None
-    try:
-        port_file = prof / "DevToolsActivePort"
-        t0 = time.time()
-        port = None
-        while port is None:
-            try:                                  # Edge が書いている途中は読めない（PermissionError）・空のことがある
-                txt = port_file.read_text().split()
-                port = int(txt[0]) if txt else None
-            except (OSError, ValueError):
-                port = None
-            if port is None:
-                if proc.poll() is not None or time.time() - t0 > 30:
-                    raise RuntimeError("headless の Edge が DevTools の口を開かなかった")
-                time.sleep(0.1)
-        ws = None
-        while ws is None and time.time() - t0 < 30:
+    with open(errf, "wb") as eh:
+        h["proc"] = proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=eh, stdin=subprocess.DEVNULL,
+                                            creationflags=NO_WINDOW)
+    port_file = prof / "DevToolsActivePort"
+    t0 = time.time()
+    port = None
+    while port is None:
+        try:                                  # Edge が書いている途中は読めない（PermissionError）・空のことがある
+            txt = port_file.read_text().split()
+            port = int(txt[0]) if txt else None
+        except (OSError, ValueError):
+            port = None
+        if port is None:
+            if proc.poll() is not None:
+                raise LaunchFail(f"Edge が口を開く前に終わった（終了コード {proc.returncode}、{time.time() - t0:.1f} 秒）")
+            if time.time() - t0 > wait:
+                raise LaunchFail(f"{wait:.0f} 秒待っても DevToolsActivePort が書かれない")
+            time.sleep(0.1)
+    ws, last = None, ""
+    while ws is None:
+        try:
             with urllib.request.urlopen(f"http://127.0.0.1:{port}/json/list", timeout=5) as r:
                 pages = [t for t in json.loads(r.read()) if t.get("type") == "page"]
             ws = pages[0]["webSocketDebuggerUrl"] if pages else None
-            if ws is None:
-                time.sleep(0.2)
-        cdp = CDP(ws)
-        cdp.call("Page.enable")
-        cdp.call("Emulation.setDeviceMetricsOverride", {"width": size[0], "height": size[1], "deviceScaleFactor": 1, "mobile": False})
-        yield cdp
-    finally:
-        if cdp is not None:
-            try:
-                cdp.call("Browser.close", timeout=5)
-            except Exception:  # noqa: BLE001 — 閉じる時に口が切れるのは正常
-                pass
-            cdp.close()
+        except (OSError, ValueError) as e:
+            last = f"{type(e).__name__}: {e}"
+        if ws is None:
+            if proc.poll() is not None or time.time() - t0 > wait:
+                raise LaunchFail(f"口（{port}）にページが出ない（{time.time() - t0:.0f} 秒{'、' + last if last else ''}）")
+            time.sleep(0.2)
+    return ws
+
+
+def _stop(exe: Path, h: dict, info: dict, cdp=None) -> None:
+    """Edge を閉じ、同じプロファイルの印を持つ msedge.exe が残っていれば止め、プロファイルと標準エラーのファイルを消す。"""
+    if cdp is not None:
+        try:
+            cdp.call("Browser.close", timeout=5)
+        except Exception:  # noqa: BLE001 — 閉じる時に口が切れるのは正常
+            pass
+        cdp.close()
+    proc, prof = h.get("proc"), h.get("prof")
+    if proc is not None:
         try:
             proc.wait(timeout=15)
         except subprocess.TimeoutExpired:
             proc.kill()
             proc.wait(timeout=10)
         time.sleep(0.5)
+    if prof is not None:
         left = _procs_with(prof.name, exe.name)
         for pid in left:
             _run(["taskkill", "/F", "/T", "/PID", str(pid)], timeout=30)
@@ -315,6 +339,52 @@ def _headless_browser(size: tuple[int, int], info: dict | None = None):
         info["leftover_killed"] = info.get("leftover_killed", 0) + len(left)
         info["leftover_after"] = info.get("leftover_after", 0) + len(_procs_with(prof.name, exe.name))
         shutil.rmtree(prof, ignore_errors=True)
+    if h.get("errf") is not None:
+        h["stderr_tail"] = _stderr_tail(h["errf"])
+        try:
+            h["errf"].unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
+@contextmanager
+def _headless_browser(size: tuple[int, int], info: dict | None = None):
+    """口が開かなければ（J-030）、その回の標準エラーの末尾・終了コードを info["launch_errors"] に残し、新しいプロファイルで
+    もう 1 回だけ立て直す。2 回とも駄目なら、標準エラーの末尾を付けた RuntimeError（呼ぶ側が報告の errors に書く）。"""
+    exe = find_browser()
+    if exe is None:
+        raise FileNotFoundError("Edge も Chrome も無い")
+    info = info if info is not None else {}
+    h: dict = {}
+    ws = None
+    for k in range(1, LAUNCH_TRIES + 1):
+        h = {}
+        t0 = time.time()
+        try:
+            ws = _launch(exe, size, DEVTOOLS_WAIT_S, h)
+            break
+        except LaunchFail as e:
+            proc = h.get("proc")
+            rec = {"try": k, "reason": str(e), "exit_code": proc.poll() if proc is not None else None,
+                   "seconds": round(time.time() - t0, 1), "profile": h["prof"].name if h.get("prof") else None}
+            _stop(exe, h, info)                       # 標準エラーは止めてから読む（書き終わっている）
+            rec["stderr"] = h.pop("stderr_tail", "")
+            info.setdefault("launch_errors", []).append(rec)
+        except BaseException:
+            _stop(exe, h, info)
+            raise
+    if ws is None:
+        last = info["launch_errors"][-1]
+        raise RuntimeError(f"headless の Edge が DevTools の口を開かなかった（{LAUNCH_TRIES} 回、毎回新しいプロファイル。"
+                           f"最後：{last['reason']}。標準エラーの末尾：{last['stderr'] or '（空）'}）")
+    cdp = None
+    try:
+        cdp = CDP(ws)
+        cdp.call("Page.enable")
+        cdp.call("Emulation.setDeviceMetricsOverride", {"width": size[0], "height": size[1], "deviceScaleFactor": 1, "mobile": False})
+        yield cdp
+    finally:
+        _stop(exe, h, info, cdp)
 
 
 def capture(cdp: CDP, url: str, png: Path, ready_js: str | None = None, ready_timeout: float = 60.0,
@@ -419,6 +489,7 @@ def evidence_shots(building_id: str, out_dir: Path | None = None, building_json:
             return res
     tmp = Path(tempfile.mkdtemp(prefix="recorder_rrd_"))
     srv = None
+    info: dict = {}            # Edge の起動の記録（launch_errors・leftover_*）。失敗で抜けても報告に残す（J-030）
     try:
         data = strip_blueprint(exe, rrd, tmp / "data.rrd")
         if data is None:
@@ -427,7 +498,6 @@ def evidence_shots(building_id: str, out_dir: Path | None = None, building_json:
         for k, rbl in rbls.items():
             shutil.copyfile(rbl, tmp / rbl.name)
         srv, port = serve(tmp)
-        info: dict = {}
         with rerun_web() as wp:
             for k, rbl in rbls.items():
                 png = out_dir / f"evidence_{k}.png"
@@ -448,10 +518,10 @@ def evidence_shots(building_id: str, out_dir: Path | None = None, building_json:
                             res["shots"][k] = {"png": str(png), "size": _png_size(png), "seconds": round(time.time() - t0, 1), "tries": n}
                             break
                         res["errors"][k] = f"画面が出る前に撮れた（{n} 回、最後の待ち {settle} 秒）"
-        res.update(info)
     except Exception as e:  # noqa: BLE001
         res["errors"]["evidence"] = f"{type(e).__name__}: {e}"
     finally:
+        res.update(info)
         if srv is not None:
             srv.shutdown()
             srv.server_close()
@@ -623,6 +693,8 @@ def print_result(res: dict) -> None:
             print(f"  撮れた {k}：{s['png']}  {s.get('size')}  {s.get('seconds')} 秒" + (f"  cam={s['cam']}（{s['cam_from']}）" if s.get("cam") else ""))
         for k, e in part.get("errors", {}).items():
             print(f"  撮れない {k}：{e}")
+        for le in part.get("launch_errors", []):
+            print(f"  Edge の起動 {le['try']} 回目：{le['reason']}" + (f"（標準エラー：{le['stderr'][-300:]}）" if le.get("stderr") else ""))
         if part.get("leftover_after"):
             print(f"  注意：headless の Edge が {part['leftover_after']} 個 残った")
 

@@ -45,7 +45,7 @@ def test_campus_init_makes_skeleton_and_does_not_overwrite(tmp_path):
     path, made = site.campus_init("x", "架空大学", "本キャンパス", (35.0, 136.0, 35.2, 136.2), data_site=tmp_path)
     assert made
     d = json.loads(path.read_text(encoding="utf-8"))
-    assert d["university"] == "架空大学" and d["buildings"] == [] and d["crs"]["epsg"] == 6675
+    assert d["university"] == "架空大学" and d["buildings"] == [] and d["crs"]["epsg"] == 6674   # 中心 東経136.1° は VI 系の原点（136.0°）に近い（11/8 F1：系は原点から選ぶ）
     assert d["crs"]["origin_lat"] == pytest.approx(35.1) and d["crs"]["origin_lon"] == pytest.approx(136.1)
     assert d["sources"]["campus_map"]["permission"]["status"] is None
     assert {"aliases", "scope", "name_links", "questions"} <= set(d)

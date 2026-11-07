@@ -669,9 +669,10 @@ def shift_views(deg: float) -> list[tuple[str, float, bool]]:
 
 
 def short_id(pid: str) -> str:
-    if pid.startswith("PXL_"):
-        return pid.split("_")[-1].split(".")[0]
-    return pid.split("_")[0]
+    """写真 id の短い名前（表示用）。機種に依らない（photos.short_name。Pixel は時刻の数字、他は id のまま）。
+    視点名・描画のファイル名には、写真どうしで重ならない short_names の結果を使う（photoproj の中）。"""
+    from .photos import short_name
+    return short_name(pid)
 
 
 def run_blender(building_json: Path, spec: dict, rdir: Path, blender: str | None = None) -> None:
@@ -715,6 +716,8 @@ def photoproj(building_json: Path, photos: list[str] | None = None, fast: bool =
     by_photo: dict = {}
     for e in ents:
         by_photo.setdefault(e["photo"], []).append(e)
+    from .photos import short_names
+    SN = short_names(by_photo)   # 視点名・描画の名前。写真どうしで重ならない（iPhone の IMG_… が全部同じ名前になる事故を防ぐ）
     cams, views_spec, pivots = {}, [], {}
     for pid, es in by_photo.items():
         cam = cam_from_entry(es[0])
@@ -726,12 +729,12 @@ def photoproj(building_json: Path, photos: list[str] | None = None, fast: bool =
             continue
         size = cam.size(scale)
         cams[pid] = (cam, size)
-        views_spec.append(blender_view(cam, size, short_id(pid)))
+        views_spec.append(blender_view(cam, size, SN[pid]))
         pv = pivot_of(es[0])
         if pv is not None:
             pivots[pid] = pv
             for tag, d, up in shift_views(shift_deg):
-                views_spec.append(blender_view(orbit(cam, pv, d, up), size, f"{short_id(pid)}__{tag}"))
+                views_spec.append(blender_view(orbit(cam, pv, d, up), size, f"{SN[pid]}__{tag}"))
     if not cams:
         raise SystemExit("貼れる写真がありません（登録に視点が無いか、写真が見つからない）")
     if reuse:
@@ -748,8 +751,8 @@ def photoproj(building_json: Path, photos: list[str] | None = None, fast: bool =
             warnings.append(f"{pid}: 写真の大きさが登録と違う {img.shape[1]}x{img.shape[0]}")
             continue
         small = cv2.resize(img, size, interpolation=cv2.INTER_AREA)
-        v = load_view(rdir, short_id(pid), cam, size)
-        ph = Photo(pid, short_id(pid), es, v, cv2.cvtColor(small, cv2.COLOR_BGR2GRAY).astype(np.float32), exclude_mask(es, size))
+        v = load_view(rdir, SN[pid], cam, size)
+        ph = Photo(pid, SN[pid], es, v, cv2.cvtColor(small, cv2.COLOR_BGR2GRAY).astype(np.float32), exclude_mask(es, size))
         P[pid] = ph
         # 投影の往復：描いた点を自分のカメラに投げ直すと、その画素の中心に戻るはず
         uu, vv, _ = project(cam, np.nan_to_num(v.P), size)

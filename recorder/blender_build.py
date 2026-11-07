@@ -9,6 +9,8 @@
     persp_shaded2.png  別の向きの鳥瞰（着色）
     view_A〜D.png      四面図（棟の一番長い面に正対した 4 方向、正射影の線画）
     view_top.png       屋根伏せ（真上の線画）
+    persp_street.png   街路の視点（歩く画面の「<棟>へ」と同じ立ち位置。決め方は recorder/street_view.py、根拠は
+                       model_report.json の web_cameras.street.standpoint）
     <id>.glb           Web ビューア用
     model_report.json  模型を作るときに置いた仮の値（JSON に無い物）。全部ここに出す
 
@@ -674,6 +676,17 @@ def street_camera_web(eye: Vector, target: Vector, lens: float, sensor_w: float,
     return {"eye": [round(eye.x, 3), round(eye.y, 3), round(z, 3)], "yaw_deg": round(yaw, 2), "pitch_deg": round(pitch, 2),
             "vfov_deg": round(vfov, 2), "lens_mm": lens, "sensor_w_mm": sensor_w, "resolution": [w, h],
             "aspect": round(w / h, 4), "query": f"cam={q}"}
+
+
+def street_standpoint(b: dict, height: float) -> dict | None:
+    """街路の視点の立ち位置を recorder/street_view.py で決める（登録台帳・敷地 JSON・PLATEAU・他の棟 JSON・5m 標高を読む）。"""
+    from recorder import street_view
+    dem = None
+    npz = REPO / "out" / "site" / "dem5a.npz"
+    if npz.exists():
+        dem = site.load_dem(npz)
+    return street_view.choose_standpoint(b, height, ground_at=(lambda x, y: site.dem_at(dem, x, y)) if dem else None,
+                                         **street_view.load_inputs(b, REPO))
 
 
 # --- 棟を組む -----------------------------------------------------------------------
@@ -1919,14 +1932,18 @@ def main():
     render(out / "persp_shaded.png")
     camera("persp3", persp_sw, look, lens=lens + 3)
     render(out / "persp_shaded2.png")
-    if faces:
-        mid = (p0 + p1) / 2
-        eye = mid + n0 * 38.0 + Vector((0, 0, 1.6))
-        cam = camera("street", eye, Vector((mid.x, mid.y, H * 0.45)), lens=16)
+    # 街路の視点（歩く画面の「<棟>へ」の立ち位置にもなる）。決め方は recorder/street_view.py（11/8 監査 B の 5）：
+    # 登録が一番多い面・登録のカメラの中央値の向き・max(38, 長さ×0.85, 高さ×0.9) m・目は 5m 標高＋1.6 m・他の足元を避ける
+    sv = street_standpoint(b, H)
+    if sv:
+        eye = Vector((sv["eye_xy"][0], sv["eye_xy"][1], sv["eye_z_rel"]))
+        tgt = Vector((sv["target_xy"][0], sv["target_xy"][1], H * 0.45))
+        cam = camera("street", eye, tgt, lens=16)
         render(out / "persp_street.png")
         sc = bpy.context.scene
-        web_cams["street"] = street_camera_web(eye, Vector((mid.x, mid.y, H * 0.45)), 16, cam.data.sensor_width,
+        web_cams["street"] = street_camera_web(eye, tgt, 16, cam.data.sensor_width,
                                                (sc.render.resolution_x, sc.render.resolution_y), val(b.get("ground_z"), 0.0))
+        web_cams["street"]["standpoint"] = sv["standpoint"]
     # 内装：部屋の中から見た描画（くり抜き・柱・ガラスの壁の確かめ用）。interior_<部屋 id>.png
     I_mod = _interior_mod() if info.get("rooms") else None
     for rid, cav, z0, z1 in info.get("rooms", []):

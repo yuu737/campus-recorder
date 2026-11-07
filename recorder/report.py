@@ -27,7 +27,7 @@ from . import registry as R_
 from .drawing import COL as BASIS_COL
 from .evidence import OBS_NOTE
 from .photos import INDEX_PATH, load_index
-from .schema import evidence_summary, load_building, split_requests, unknowns
+from .schema import evidence_summary, load_building, measured_kinds, split_requests
 
 OUT_ROOT = Path("out")
 WEB_SITE = Path("web/data/site.json")
@@ -79,6 +79,78 @@ def _street_cam(mr: dict) -> str | None:
     return None
 
 
+_SKIP_TOP = ("requests", "history")
+
+
+def status_values(b: dict) -> list[tuple[str, dict]]:
+    """status 付きの値を (読めるパス, 値の dict) で。evidence.status_counts と同じ数え方（requests・history は除き、
+    status を持つ dict は全部）。配列の要素に id があればパスに id を書く（faces[f0].height）。"""
+    out: list[tuple[str, dict]] = []
+
+    def walk(o, path: str) -> None:
+        if isinstance(o, dict):
+            if o.get("status") in STATUS_JA:
+                out.append((path, o))
+            for k, v in o.items():
+                walk(v, f"{path}.{k}" if path else k)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                key = v.get("id") if isinstance(v, dict) and isinstance(v.get("id"), str) else i
+                walk(v, f"{path}[{key}]")
+
+    for k, v in b.items():
+        if k not in _SKIP_TOP:
+            walk(v, k)
+    return out
+
+
+def unknown_paths(b: dict) -> list[str]:
+    """未確定の値（status が unknown）の場所。報告の counts.unknown と同じ物を数える（11/8 に揃えた。
+    以前は schema.unknowns の決まった鍵だけを見ていて、部品・塊の unknown を落とし「unknown 2・未確定の値 0」と食い違った）。"""
+    return [p for p, v in status_values(b) if v["status"] == "unknown"]
+
+
+def kenshu_faces(root: Path, bid: str) -> dict | None:
+    """検収係のまとめ（data/reports/<棟>/kenshu_summary.json）の面ごとの合否。無ければ None。
+    faces は {面: {pass, note}} と [{face, pass, …}] の 2 つの形がある。弱い合格は note の頭が「弱い合格」の物。"""
+    p = root / "data" / "reports" / bid / "kenshu_summary.json"
+    if not p.exists():
+        return None
+    try:
+        ks = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    faces = ks.get("faces") or {}
+    rows = [dict(v, face=k) for k, v in faces.items() if isinstance(v, dict)] if isinstance(faces, dict) else [v for v in faces if isinstance(v, dict)]
+    ok = [r["face"] for r in rows if r.get("pass") is True and not str(r.get("note") or "").startswith("弱い合格")]
+    weak = [r["face"] for r in rows if r.get("pass") is True and str(r.get("note") or "").startswith("弱い合格")]
+    ng = [r["face"] for r in rows if r.get("pass") is False]
+    none = [r["face"] for r in rows if r.get("pass") is None]
+    return {"pass": ok, "weak": weak, "fail": ng, "not_judged": none, "made_at": ks.get("made_at"),
+            "file": str(p.relative_to(root)) if p.is_relative_to(root) else str(p)}
+
+
+def latest_recheck_overlays(out_dir: Path) -> list[Path]:
+    """再検収（recorder photos recheck）の一番新しい回の重ねの絵。無ければ []。"""
+    rc = out_dir / "recheck"
+    if not rc.is_dir():
+        return []
+    for d in sorted((p for p in rc.iterdir() if p.is_dir()), reverse=True):
+        ims = sorted(d.glob("overlay_*.png"))
+        if ims:
+            return ims
+    return []
+
+
+def _resid_m(p: dict, q: dict) -> float | None:
+    """点の目印の残差 px を、目印までの距離で m に直す（残差 px × 距離 ÷ 焦点距離 px。元の写真の px で）。"""
+    if q.get("line") or q.get("resid") is None or q.get("xyz") is None or not p.get("focal") or not p.get("scale"):
+        return None
+    import numpy as np
+    dist = float(np.linalg.norm(np.asarray(q["xyz"], float) - np.asarray(p["C"], float)))
+    return q["resid"] * dist / (p["focal"] / p["scale"])
+
+
 def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, root: Path = Path(".")) -> dict:
     bid = b["id"]
     recs = [r for r in index.get("photos", []) if r.get("building") == bid]
@@ -124,25 +196,36 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
     per_face = {}
     for p in pl["photos"]:
         fid = p["face"] or "—"
-        d = per_face.setdefault(fid, {"photos": 0, "resid": [], "methods": {}})
+        d = per_face.setdefault(fid, {"photos": 0, "resid": [], "resid_m": [], "methods": {}})
         d["photos"] += 1
         d["methods"][p["method"]] = d["methods"].get(p["method"], 0) + 1
         d["resid"] += [q["resid"] for q in p["picks"] if q["inlier"] and q["resid"] is not None]
+        d["resid_m"] += [x for q in p["picks"] if q["inlier"] for x in [_resid_m(p, q)] if x is not None]
     face_rows = []
     for f in b.get("faces", []):
         c = counts["faces"].get(f["id"], {})
-        d = per_face.get(f["id"], {"photos": 0, "resid": [], "methods": {}})
+        d = per_face.get(f["id"], {"photos": 0, "resid": [], "resid_m": [], "methods": {}})
         fo = obs["faces"].get(f["id"]) or {"values": 0, "observations": 0}
         face_rows.append({"face": f["id"], "name": f.get("name") or f["id"], "measured": c.get("measured", 0),
                           "estimated": c.get("estimated", 0), "unknown": c.get("unknown", 0), "photos": d["photos"],
                           "values": fo["values"], "observations": fo["observations"],
-                          "resid": round(statistics.median(d["resid"]), 1) if d["resid"] else None})
+                          "resid": round(statistics.median(d["resid"]), 1) if d["resid"] else None,
+                          "resid_m": round(statistics.median(d["resid_m"]), 2) if d["resid_m"] else None,
+                          "picks": len(d["resid"])})
     all_res = [q["resid"] for p in pl["photos"] for q in p["picks"] if q["inlier"] and q["resid"] is not None]
+    all_res_m = [x for p in pl["photos"] for q in p["picks"] if q["inlier"] for x in [_resid_m(p, q)] if x is not None]
+    # 選んだ数字の横に全体を並べる（11/8 監査 C の 4）：面ごとの最良（点が 3 つ以上の面）と全体の中央値。px と m
+    best = min((r for r in face_rows if r["resid"] is not None and r["picks"] >= 3), key=lambda r: r["resid"], default=None)
+    resid = {"median_px": round(statistics.median(all_res), 1) if all_res else None,
+             "median_m": round(statistics.median(all_res_m), 2) if all_res_m else None,
+             "picks": len(all_res), "picks_m": len(all_res_m),
+             "best_face": None if best is None else {"face": best["face"], "median_px": best["resid"], "median_m": best["resid_m"], "picks": best["picks"]},
+             "note": "m は 残差 px × 目印までの距離 ÷ 焦点距離 px（点の目印だけ。線の目印は px だけ）"}
     methods = {}
     for p in pl["photos"]:
         methods[p["method"]] = methods.get(p["method"], 0) + 1
     evidence = {"registered": len(pl["photos"]), "methods": methods, "picks": len(all_res),
-                "resid_median": round(statistics.median(all_res), 1) if all_res else None,
+                "resid_median": round(statistics.median(all_res), 1) if all_res else None, "resid": resid,
                 "held": len(held), "total": counts["total"], "faces": face_rows,
                 "obs": {k: obs[k] for k in ("values", "observations", "by_status", "derived", "eyeball", "top_copies", "other")},
                 "images": [p for p in (out_dir / "evidence_three.png", out_dir / "evidence_photo.png") if p.exists()],
@@ -157,8 +240,9 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
     views = json.loads(views_path.read_text(encoding="utf-8")) if views_path.exists() else []
     views = [v for v in views if (out_dir / v["file"]).exists()]
     streets = sorted(out_dir.glob("persp_street*.png"))
-    overlays = sorted(out_dir.glob("overlay_v2_*.png")) or sorted(p for p in out_dir.glob("overlay_*.png")
-                                                                   if "_before" not in p.name and "edges" not in p.name)
+    overlays = (sorted(out_dir.glob("overlay_v2_*.png")) or sorted(p for p in out_dir.glob("overlay_*.png")
+                                                                    if "_before" not in p.name and "edges" not in p.name)
+                or latest_recheck_overlays(out_dir))
     mr_path = out_dir / "model_report.json"
     mr = json.loads(mr_path.read_text(encoding="utf-8")) if mr_path.exists() else {}
     assumed = []
@@ -169,8 +253,8 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             seen.add(key)
             assumed.append(a)
     model = {"glb": out_dir / f"{bid}.glb" if (out_dir / f"{bid}.glb").exists() else None, "views": views,
-             "streets": streets[:2], "overlays": overlays[:3], "height_m": mr.get("height_m"), "assumed": assumed,
-             "warnings": mr.get("warnings") or []}
+             "streets": streets[:2], "overlays": overlays[:3], "n_overlays": len(overlays), "height_m": mr.get("height_m"),
+             "assumed": assumed, "warnings": mr.get("warnings") or [], "kenshu": kenshu_faces(root, bid)}
 
     # 5. 歩ける 3D
     walk_img = None
@@ -197,12 +281,23 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             used = sum(p.get("used_m2", 0) for p in f.get("photos", []))
             cov_rows.append({"face": f["face"], "photos": len(f.get("photos", [])), "used_m2": round(used),
                              "ratio": round(used / frame, 2) if frame else None})
-    rest = {"requests": reqs, "tool_requests": tool_reqs, "unknowns": unknowns(b), "coverage": cov_rows,
+    rest = {"requests": reqs, "tool_requests": tool_reqs, "unknowns": unknown_paths(b), "coverage": cov_rows,
             "gray_faces": [e["face"] for e in elevs if e["state"] == "unknown"], "summary": es}
 
     return {"id": bid, "name": b.get("name") or bid, "campus": b.get("campus"), "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
             "photos": photos, "elev": elevs, "sheet": sheet, "evidence": evidence, "model": model, "walk": walk, "rest": rest,
             "summary": es, "history_n": len(b.get("history", []))}
+
+
+def _resid_more(r: dict | None) -> str:
+    """再投影の全体の m と、面ごとの最良（px・m）。選んだ数字だけを見せないため、全体と並べて書く。"""
+    if not r:
+        return ""
+    s = f"（約 {r['median_m']} m）" if r.get("median_m") is not None else ""
+    bf = r.get("best_face")
+    if bf:
+        s += f"、面ごとの最良 {bf['face']} {bf['median_px']} px" + (f"（約 {bf['median_m']} m）" if bf.get("median_m") is not None else "")
+    return s
 
 
 def stage_status(d: dict) -> dict[str, tuple[str, str]]:
@@ -218,10 +313,14 @@ def stage_status(d: dict) -> dict[str, tuple[str, str]]:
     v = d["evidence"]
     s["evidence"] = ("done" if v["registered"] >= 3 else "partial" if v["registered"] else "todo",
                      f"登録済みの写真 {v['registered']} 枚、目印の対応 {v['picks']} 点"
-                     + (f"、再投影の中央値 {v['resid_median']} px" if v["resid_median"] is not None else ""))
+                     + (f"、再投影の中央値 {v['resid_median']} px" if v["resid_median"] is not None else "")
+                     + _resid_more(v.get("resid")))
     m = d["model"]
+    ks = m.get("kenshu")
+    ks_txt = (f"、検収で合格した面 {len(ks['pass'])}" + (f"（ほか弱い合格 {len(ks['weak'])}）" if ks["weak"] else "")
+              + f"・不合格 {len(ks['fail'])}・判定せず {len(ks['not_judged'])}") if ks else ""
     s["model"] = ("done" if m["glb"] and m["overlays"] else "partial" if m["glb"] else "todo",
-                  (f"高さ {m['height_m']} m、" if m.get("height_m") else "") + f"仮置き {len(m['assumed'])} 件、検収の重ね {len(m['overlays'])} 枚")
+                  (f"高さ {m['height_m']} m、" if m.get("height_m") else "") + f"仮置き {len(m['assumed'])} 件、検収の重ね {m.get('n_overlays', len(m['overlays']))} 枚" + ks_txt)
     w = d["walk"]
     s["walk"] = ("done" if w["on_site"] else "todo", f"色付きの棟 {w['colored']}、灰色の箱（PLATEAU）{w['gray']}")
     r = d["rest"]
@@ -552,10 +651,20 @@ def run(building_json: Path, out: Path | None = None, root: Path = Path("."), sh
                        "observations": {k: d["evidence"]["obs"]["by_status"][k]["observations"] for k in STATUS_JA},
                        "derived": d["evidence"]["obs"]["derived"],
                        "requests": len(d["rest"]["requests"]), "tool_requests": len(d["rest"]["tool_requests"]),
-                       "unknowns": len(d["rest"]["unknowns"])}}
+                       "unknowns": len(d["rest"]["unknowns"]),
+                       "hypotheses": sum(v.get("basis") == "hypothesis" for _, v in status_values(b)),
+                       "measured_kinds": measured_kinds(b),
+                       "shape_ratio": d["summary"].get("shape_ratio"), "evidence_ratio": d["summary"].get("evidence_ratio"),
+                       "gray_faces": len(d["rest"]["gray_faces"]),
+                       "kenshu": d["model"].get("kenshu"),
+                       "resid": d["evidence"].get("resid")}}
+    # counts.unknown（値の状態）と counts.unknowns（未確定の値の一覧）は同じ物を数える。食い違えば報告に書く
+    if summ["counts"]["unknown"] != summ["counts"]["unknowns"]:
+        summ["warnings"] = [f"unknown {summ['counts']['unknown']} と未確定の値 {summ['counts']['unknowns']} が食い違う"]
     if shot_res is not None:
         summ["shots"] = shot_res
-    (out_dir / "report.json").write_text(json.dumps(summ, ensure_ascii=False, indent=1), encoding="utf-8")
+    # report.json は HTML の隣に書く（--out で一時フォルダに出したテストが本物の out/<棟>/report.json を上書きしないように。11/8）
+    (out_html.parent / "report.json").write_text(json.dumps(summ, ensure_ascii=False, indent=1), encoding="utf-8")
     return summ
 
 

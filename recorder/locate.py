@@ -632,7 +632,7 @@ def run(building_json: Path, photos: list[str] | None = None, max_n: int | None 
     if photos:
         recs = [r for r in recs if any(p in r["id"] for p in photos)]
     if not include_registered:
-        recs = [r for r in recs if r["id"] not in done]
+        recs = [r for r in recs if r["id"] not in done and r["id"] not in R_.excluded_ids(reg, b["id"])]   # photos exclude の写真は試さない
     recs = [r for r in recs if (r.get("gps") or {}).get("x") is not None]
     if max_n:
         recs = recs[:max_n]

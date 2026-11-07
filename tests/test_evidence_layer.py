@@ -79,12 +79,15 @@ def test_library_faces():
     p = ROOT / "data" / "buildings" / "library.json"
     if not p.exists():
         pytest.skip("図書館の JSON が無い")
-    s = schema.evidence_summary(json.loads(p.read_text(encoding="utf-8")))
+    # 11/8 F5：もとは「f0・f2 は unknown、f3 は仮説、shape_ratio < 1」を確かめていたが、それは 11/4 の図書館の JSON の事実
+    # （f0・f2 の写真が無かった頃）。疑似本番で f0・f2 も写真から estimated になり、本番（--zero）でも作り直される。
+    # 状態の分け方そのものは上の手作りの棟（fixture）で確かめているので、ここは本物の JSON で壊れない事だけを見る。
+    b = json.loads(p.read_text(encoding="utf-8"))
+    s = schema.evidence_summary(b)
     st = {k: v["state"] for k, v in s["faces"].items()}
-    assert st["f0"] == st["f2"] == "unknown"
-    assert st["f3"] == "hypothesis"          # f1 の対面として symmetry の仮説（scripts/design_library.py）
-    assert st["f1"] in ("measured", "estimated")
-    assert 0 < s["shape_ratio"] < 1 and 0 < s["evidence_ratio"] < 1
+    assert set(st) == {f["id"] for f in b["faces"]}
+    assert set(st.values()) <= {"measured", "estimated", "hypothesis", "unknown"}
+    assert 0 <= s["shape_ratio"] <= 1 and 0 <= s["evidence_ratio"] <= 1
 
 
 # --- glb の extras ---

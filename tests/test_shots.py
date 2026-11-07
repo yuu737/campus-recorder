@@ -124,3 +124,65 @@ def test_report_puts_sheet_first_in_stage2(tmp_path: Path, monkeypatch):
     assert sec.index("sheet.png") < sec.index("面ごとの根拠") < sec.index("<svg")
     assert "線＝JSON の値" in sec
     assert s["stages"]["elev"]["result"]                                      # 段の 1 行はそのまま
+
+
+# --- Edge の起動に失敗した時（J-030）：標準エラーを残す・新しいプロファイルで 1 回やり直す・待ち 60 秒 -------------
+
+def test_launch_wait_is_60s_and_two_tries():
+    assert S.DEVTOOLS_WAIT_S == 60.0 and S.LAUNCH_TRIES == 2
+
+
+def test_launch_failure_keeps_stderr_and_retries_with_new_profile(tmp_path: Path, monkeypatch):
+    """口を開かずに落ちる「ブラウザ」（Python に Edge の引数を渡すと、知らない引数で標準エラーに書いて終わる）。"""
+    import sys
+
+    monkeypatch.setenv("RECORDER_LOCK_DIR", str(tmp_path / "locks"))
+    monkeypatch.setattr(S, "find_browser", lambda: Path(sys.executable))
+    monkeypatch.setattr(S, "_procs_with", lambda mark, name: [])
+    monkeypatch.setattr(S, "DEVTOOLS_WAIT_S", 10.0)
+    info: dict = {}
+    with pytest.raises(RuntimeError, match="2 回") as ei:
+        with S.headless_browser((320, 240), info):
+            pass
+    errs = info["launch_errors"]
+    assert [e["try"] for e in errs] == [1, 2]
+    assert errs[0]["profile"] != errs[1]["profile"]                 # 毎回新しいプロファイル
+    assert all(e["exit_code"] not in (None, 0) for e in errs)
+    assert all("headless" in e["stderr"] for e in errs)             # 標準エラーの中身が残る
+    assert "標準エラーの末尾" in str(ei.value) and "headless" in str(ei.value)
+    import tempfile
+    left = [p for p in Path(tempfile.gettempdir()).glob("recorder_shot_*") if any(e["profile"] in p.name for e in errs)]
+    assert left == []                                                # プロファイルも標準エラーのファイルも消える
+
+
+def test_launch_recovers_on_second_try(tmp_path: Path, monkeypatch):
+    monkeypatch.setenv("RECORDER_LOCK_DIR", str(tmp_path / "locks"))
+    monkeypatch.setattr(S, "find_browser", lambda: Path("msedge.exe"))
+    monkeypatch.setattr(S, "_procs_with", lambda mark, name: [])
+    calls = []
+
+    def fake_launch(exe, size, wait, h):
+        calls.append(wait)
+        if len(calls) == 1:
+            raise S.LaunchFail("60 秒待っても DevToolsActivePort が書かれない")
+        return "ws://127.0.0.1:1/devtools/page/x"
+
+    class FakeCDP:
+        def __init__(self, ws):
+            self.ws, self.sent = ws, []
+
+        def call(self, method, params=None, timeout=60):
+            self.sent.append(method)
+            return {}
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(S, "_launch", fake_launch)
+    monkeypatch.setattr(S, "CDP", FakeCDP)
+    info: dict = {}
+    with S.headless_browser((320, 240), info) as cdp:
+        assert cdp.ws.startswith("ws://")
+    assert calls == [60.0, 60.0]
+    assert len(info["launch_errors"]) == 1 and info["launch_errors"][0]["reason"].startswith("60 秒")
+    assert "Browser.close" in cdp.sent

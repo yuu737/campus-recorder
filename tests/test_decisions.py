@@ -130,7 +130,7 @@ def test_add_item(env):
 def test_detect_events_marks_decided(tmp_path):
     from recorder import schema as sc
     b = sc.new_building("b1", "テスト棟")
-    b["requests"] = [{"kind": "tool", "status": "open", "what": "内装の語彙"},
+    b["requests"] = [{"kind": "tool", "status": "open", "what": "内装の語彙", "need": "vocab"},
                      {"kind": "asset", "status": "open", "what": "机・椅子"}]
     w(tmp_path / "data/buildings/b1.json", b)
     w(tmp_path / "data/assets/catalog.json", {"items": []})

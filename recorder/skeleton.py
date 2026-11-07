@@ -1,6 +1,7 @@
 """土台の棟 JSON を公開データから起こす（写真が届く前の「灰色の箱」）。
 
-PLATEAU の足元と高さ、5m 標高の地盤、面ごとの撮影依頼。値は全部 estimated（出どころ付き）か unknown。
+PLATEAU の足元と高さ（PLATEAU が無い市・無い棟は OSM の輪郭だけで、高さは unknown）、5m 標高の地盤、面ごとの撮影依頼。
+値は全部 estimated（出どころ付き）か unknown。キャンパス（campus）と原点（crs）は敷地 JSON から写す。
 写真が届いたら、設計者（Claude）が面ごとに bays / windows / parts を書き足していく。
 """
 
@@ -10,6 +11,7 @@ import json
 import math
 from pathlib import Path
 
+from . import geo
 from . import site as site_mod
 from .schema import Measurement, new_building
 
@@ -34,16 +36,22 @@ def from_site(site_id: str, site_doc: dict, plateau_doc: dict, dem=None, plateau
     b_site = next((b for b in site_doc["buildings"] if b["id"] == site_id), None)
     if b_site is None:
         raise KeyError(f"敷地に {site_id} がありません")
-    parts = {p["gml_id"]: p for p in plateau_doc["buildings"]}
-    ids = plateau_ids or b_site.get("plateau_parts") or []
-    b = new_building(site_id, b_site.get("name") or site_id)
+    plateau_doc = plateau_doc or {}
+    parts = {p["gml_id"]: p for p in plateau_doc.get("buildings") or []}
+    ids = [i for i in (plateau_ids or b_site.get("plateau_parts") or []) if i in parts]   # plateau.json に無い部品は使えない
+    b = new_building(site_id, b_site.get("name") or site_id, campus=site_doc.get("campus") or "unknown")
+    if geo._crs_of(site_doc):
+        b["crs"] = {**site_doc["crs"]}                 # 原点は敷地 JSON の物（名城の既定を写さない）
     b["site_id"] = site_id
     if not ids:
         # PLATEAU に無い棟：OSM の輪郭を仮の足元にする（航空写真の倒れ込みあり。写真で直す前提）
         ring = (b_site.get("footprint_osm") or [[]])[0]
         poly = _ccw([tuple(p) for p in ring]) if ring else []
+        method = ("PLATEAU に無いので OSM の輪郭（航空写真由来、高い棟は南へ倒れ込む）。写真で直す" if parts else
+                  "この市の PLATEAU を使っていない（plateau.json が無い）ので OSM の輪郭（OpenStreetMap、ODbL。航空写真由来、"
+                  "高い棟は南へ倒れ込む）。高さは unknown。写真で直す")
         b["footprint"] = {"status": "estimated", "evidence": [f"osm:{b_site.get('osm')}"], "polygon": [list(p) for p in poly],
-                          "method": "PLATEAU に無いので OSM の輪郭（航空写真由来、高い棟は南へ倒れ込む）。写真で直す"}
+                          "method": method}
         h = None
         evid_h = []
     else:
@@ -56,7 +64,7 @@ def from_site(site_id: str, site_doc: dict, plateau_doc: dict, dem=None, plateau
             u = max(u.geoms, key=lambda g: g.area)
         poly = _ccw([(round(x, 2), round(y, 2)) for x, y in list(u.exterior.simplify(0.3).coords)[:-1]])
         b["footprint"] = {"status": "estimated", "evidence": [f"plateau:{i}" for i in ids], "polygon": [list(p) for p in poly],
-                          "method": "PLATEAU 名古屋市 2022 版（2021 年測量）の LOD0 の足元形状"}
+                          "method": f"{plateau_label(plateau_doc)}の LOD0 の足元形状"}
         hs = [parts[i]["height_m"] for i in ids if i in parts and parts[i].get("height_m")]
         h = max(hs) if hs else None
         evid_h = [f"plateau:{i}" for i in ids]
@@ -89,13 +97,23 @@ def from_site(site_id: str, site_doc: dict, plateau_doc: dict, dem=None, plateau
     b["faces"] = faces
     b["requests"] = [{"face": f["id"], "what": "両端が入る1枚と、壁沿いの斜め1枚", "where": "", "why": "この面はまだ写真が無い（土台の灰色の箱）", "status": "open"}
                      for f in faces if Measurement.from_json(f["length"]).value >= 8.0]
-    b["history"] = [{"at": "", "by": "recorder new --from-site", "what": "PLATEAU と 5m 標高から土台を起こした。写真はまだ無い"}]
+    src = "PLATEAU" if ids else "OSM の輪郭"
+    b["history"] = [{"at": "", "by": "recorder new --from-site", "what": f"{src} と 5m 標高から土台を起こした。写真はまだ無い"}]
     return b
 
 
-def from_site_cli(site_id: str, plateau_ids: list[str] | None = None) -> dict:
-    site_doc = json.loads((site_mod.DATA_SITE / f"{site_mod.default_campus()}.json").read_text(encoding="utf-8"))
-    plateau_doc = json.loads((site_mod.DATA_SITE / "plateau.json").read_text(encoding="utf-8"))
+def plateau_label(plateau_doc: dict) -> str:
+    """足元の根拠の欄に書く PLATEAU の出典（plateau.json の label、無ければ source の「、」より前）。市や年度をコードに書かない。"""
+    lab = plateau_doc.get("label") or (plateau_doc.get("source") or "PLATEAU").split("、")[0]
+    return lab
+
+
+def from_site_cli(site_id: str, plateau_ids: list[str] | None = None, campus: str | None = None) -> dict:
+    """敷地 JSON（既定のキャンパス）から土台を起こす。plateau.json が無い市では OSM の輪郭だけで起こす（落ちない）。"""
+    site_doc = json.loads((site_mod.DATA_SITE / f"{campus or site_mod.default_campus()}.json").read_text(encoding="utf-8"))
+    geo.configure_from_site(site_doc)
+    pl_path = site_mod.DATA_SITE / "plateau.json"
+    plateau_doc = json.loads(pl_path.read_text(encoding="utf-8")) if pl_path.exists() else {"buildings": []}
     try:
         dem = site_mod.load_dem()
     except Exception:  # noqa: BLE001

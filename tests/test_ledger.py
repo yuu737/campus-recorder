@@ -118,8 +118,9 @@ def test_cli_commands_that_need_the_lock():
 
     from recorder.__main__ import _ledger_need
     assert _ledger_need(Namespace(cmd="photos", photos_cmd="set-face")) == "recorder photos set-face"
-    assert _ledger_need(Namespace(cmd="photos", photos_cmd="pnp"))
-    assert _ledger_need(Namespace(cmd="photos", photos_cmd="register-chain"))
+    # pnp・register-chain は全体の鍵を持たない（計算は鍵の外、registry.save_registry が鍵を取って差分で書く。11/8 J-012）
+    assert _ledger_need(Namespace(cmd="photos", photos_cmd="pnp")) is None
+    assert _ledger_need(Namespace(cmd="photos", photos_cmd="register-chain")) is None
     assert _ledger_need(Namespace(cmd="agent", agent_cmd="decide"))
     assert _ledger_need(Namespace(cmd="photos", photos_cmd="rectify")) is None
     assert _ledger_need(Namespace(cmd="validate")) is None

@@ -4,11 +4,11 @@ description: 観察係。面ごとに何があるか（列数・段数・窓の�
 model: opus
 tools: Bash, Read, Glob, Grep
 ---
-`.claude/agents/_共通.md` を守る。見本は `out/tower75_観察票.json`（schema `tower75-observation/1`）。
+`.claude/agents/_共通.md` を守る。観察票の見本ファイルは置いていない（形は下の「出力」。schema 名は `campus-recorder/observation/1`。別の棟の観察票があっても書式だけを見て、値は写さない）。
 屋上は航空写真 `out/site/aerial_z18.png`。観察票の言葉は設計係が部品の語彙に直す（sekkei.md の対応表）ので、部品の名前で書けると早い。手順書「観察票 → 設計」。
 
 ## 入力
-仕分け済みの写真（面ごと）、足元の辺（`data/site/tempaku.json`）、あれば仮の棟 JSON。仮の棟 JSON が無ければ `recorder new <棟id> --from-site --dir out/<棟id>/tmp` で一時の土台を作り、面 id と辺の長さの比べ先にする（`data/buildings/` には書かない）。
+仕分け済みの写真（面ごと）、足元の辺（依頼文の敷地 JSON `data/site/<campus>.json`）、あれば仮の棟 JSON。仮の棟 JSON が無ければ `recorder new <棟id> --from-site --dir out/<棟id>/tmp` で一時の土台を作り、面 id と辺の長さの比べ先にする（`data/buildings/` には書かない）。
 仕分け係が `interior_views` にした写真（ピロティ・通り抜けの中から撮った物）は面に付けず、観察票の `structures` とピロティの天井・奥の壁を見るのに使う。
 
 ## 手順

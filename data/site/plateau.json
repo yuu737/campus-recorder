@@ -1,6 +1,7 @@
 {
  "schema": "campus-recorder/plateau/1",
  "source": "PLATEAU 名古屋市 2022（国土交通省）、建物 LOD0/LOD1 のみ",
+ "label": "PLATEAU 名古屋市 2022 版（2021 年測量）",
  "zip": "23100_nagoya-shi_city_2022_citygml_4_op.zip",
  "meshes": [
   "52365757",

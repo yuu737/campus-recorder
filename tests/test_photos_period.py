@@ -10,12 +10,19 @@ import pytest
 from recorder import photos
 
 
+START = "2026-11-02T12:00:00"
+SITE = {"photo_policy": {"period_start": START}}   # 期間の決まりは敷地 JSON の photo_policy（11/8 F3）
+
+
 def test_period_of():
-    assert photos.period_of("2026-11-02T11:59:59") == "before"
-    assert photos.period_of("2026-11-02T12:00:00") == "during"
-    assert photos.period_of("2026-11-03T13:27:21") == "during"
-    assert photos.period_of("2026-09-07") == "before"
-    assert photos.period_of(None) is None
+    assert photos.period_of("2026-11-02T11:59:59", START) == "before"
+    assert photos.period_of("2026-11-02T12:00:00", START) == "during"
+    assert photos.period_of("2026-11-03T13:27:21", START) == "during"
+    assert photos.period_of("2026-09-07", START) == "before"
+    assert photos.period_of(None, START) is None
+    # 期間の決まりが無い（既定）：他の大学の手持ちの写真も消えない
+    assert photos.period_of("2026-09-07") == "during"
+    assert photos.period_start_of(SITE) == START and photos.period_start_of(None) is None
 
 
 @pytest.fixture(autouse=True)
@@ -52,7 +59,7 @@ def test_import_with_ledger_and_period(tmp_path):
          "takenAt": "2026:09:07 17:40:00"},
     ], ensure_ascii=False), encoding="utf-8")
     idx_path = tmp_path / "index.json"
-    idx, added = photos.import_photos(src, None, index_path=idx_path, root=tmp_path / "data",
+    idx, added = photos.import_photos(src, SITE, index_path=idx_path, root=tmp_path / "data",
                                       ledger=photos.load_ledger(ledger_path))
     assert len(added) == 2
     by = {r["id"]: r for r in idx["photos"]}
@@ -63,7 +70,7 @@ def test_import_with_ledger_and_period(tmp_path):
     assert b["building"] is None and b["ledger_subject"] == "15_LIONS_ARENA"
     assert Path(a["file"]).is_absolute() or ":" in a["file"] or a["file"].startswith("/")   # フォルダ外は絶対パス
     # period を指定すると優先
-    idx2, _ = photos.import_photos(src, None, index_path=tmp_path / "i2.json", root=tmp_path / "data",
+    idx2, _ = photos.import_photos(src, SITE, index_path=tmp_path / "i2.json", root=tmp_path / "data",
                                    period="during", ledger=photos.load_ledger(ledger_path))
     assert {r["period"] for r in idx2["photos"]} == {"during"}
     counts = photos.period_counts(idx)
@@ -91,5 +98,5 @@ def test_committed_index_existing_records_intact():
         return
     rows = [r for r in json.loads(p.read_text(encoding="utf-8"))["photos"] if str(r.get("file", "")).startswith("2026110")]
     assert len(rows) >= 124
-    assert all(photos.period_of(r["taken_at"]) == "during" for r in rows)
+    assert all(photos.period_of(r["taken_at"], START) == "during" for r in rows)
     assert all(r.get("period") == "during" for r in rows)

@@ -16,6 +16,12 @@
      "interior": false, "floor": null,     # 内装の時だけ floor（int）
      "assigned_at": "2026-11-05T10:00:00"}
 
+写真 id（11/8、F3）：
+    ファイル名の幹（拡張子を除いた名前）をそのまま id にする。機種に依らない（Pixel の PXL_…、iPhone の IMG_0001、
+    Galaxy の 20261107_150551、利用者が付けた日本語名）。索引に同じ id があれば、内容の sha256 で同じ写真か確かめ、
+    違う写真なら `<幹>_<sha256 の先頭 8 文字>` にして分ける（iPhone の IMG_0001 は職員・端末ごとに重なるため）。
+    既にある id は変えない（棟 JSON・台帳が参照している）。新しい記録には `sha256` を持たせる。
+
 決まり：
     GPS と方位から「どの棟のどの面か」を**候補**として並べるだけで、確定しない。
     候補は、カメラ位置から 120 m 以内で、向いている方向 ±45° に足元がある棟。
@@ -23,9 +29,12 @@
 
 from __future__ import annotations
 
+import copy
+import hashlib
 import json
 import math
 import re
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -153,16 +162,39 @@ def quick_checks(path: Path, info: dict) -> dict:
 
 # --- 棟の候補 -----------------------------------------------------------------------
 
-DECLINATION_DEG = -8.0   # 名古屋付近の磁気偏角（磁北は真北の約8°西）。スマホの方位は磁北基準が多い
+DECLINATION_DEG = -8.0   # 緯度経度も敷地の値も無い時だけの既定（名古屋付近。磁北は真北の約 8° 西）
 
 
-def true_heading(info: dict) -> float | None:
-    """EXIF の方位を真北基準に直す。磁北基準なら偏角を足す。"""
+def declination_gsi(lat: float, lon: float) -> float:
+    """磁気偏角（度。西偏を負）の概算。国土地理院の 2020.0 年値の概算式（二次式）。
+    D = 8°15.822′ + 18.462′Δφ − 7.726′Δλ + 0.007′Δφ² − 0.007′ΔφΔλ − 0.655′Δλ²（Δφ = φ − 37°、Δλ = λ − 138°、D は西偏）。
+    日本の中で −5°（沖縄）〜 −10°（北海道）。精度は 0.1〜0.3° 程度で、棟の候補（目安）には足りる。"""
+    dp, dl = lat - 37.0, lon - 138.0
+    d_min = 495.822 + 18.462 * dp - 7.726 * dl + 0.007 * dp * dp - 0.007 * dp * dl - 0.655 * dl * dl
+    return round(-d_min / 60.0, 2)
+
+
+def declination_for(info: dict | None = None, site_doc: dict | None = None) -> float:
+    """方位を真北に直す偏角。順に：敷地 JSON の declination_deg → 写真の GPS の緯度経度 → 敷地の原点 → 既定。"""
+    sd = site_doc or {}
+    if sd.get("declination_deg") is not None:
+        return float(sd["declination_deg"])
+    g = (info or {}).get("gps") or {}
+    if g.get("lat") is not None and g.get("lon") is not None:
+        return declination_gsi(float(g["lat"]), float(g["lon"]))
+    o = sd.get("crs") if isinstance(sd.get("crs"), dict) else sd
+    if o.get("origin_lat") is not None and o.get("origin_lon") is not None:
+        return declination_gsi(float(o["origin_lat"]), float(o["origin_lon"]))
+    return DECLINATION_DEG
+
+
+def true_heading(info: dict, site_doc: dict | None = None) -> float | None:
+    """EXIF の方位を真北基準に直す。磁北基準なら偏角（declination_for）を足す。"""
     hd = info.get("heading_deg")
     if hd is None:
         return None
     if info.get("heading_ref", "magnetic") == "magnetic":
-        hd = hd + DECLINATION_DEG
+        hd = hd + declination_for(info, site_doc)
     return hd % 360
 
 
@@ -195,7 +227,7 @@ def building_candidates(info: dict, site: dict, max_dist: float = 120.0, half_fo
     from shapely.geometry import MultiPolygon, Point, Polygon
 
     cam = Point(info["gps"]["x"], info["gps"]["y"])
-    heading = true_heading(info)
+    heading = true_heading(info, site)
     hf = half_fov if half_fov is not None else half_fov_deg(info)
     out = []
     for b in site.get("buildings", []):
@@ -292,7 +324,14 @@ def save_index(idx: dict, path: Path = INDEX_PATH) -> None:
 
 # --- 期間（期間前 / 期間中）と台帳 -----------------------------------------------------
 
-PERIOD_START = "2026-11-02T12:00:00"   # ハッカソン開始（JST）。撮影日時はスマホの現地時刻なのでそのまま比べる
+# 期間の決まりは敷地 JSON の任意の項目 `photo_policy.period_start`（例 "2026-11-02T12:00:00"、撮影日時はスマホの
+# 現地時刻なのでそのまま比べる）。無ければ「期間の決まり無し」で全部 during（11/8、監査 A 22）。
+PERIOD_START = "2026-11-02T12:00:00"   # 名城（ハッカソンの開始）の値。参考で、既定には使わない
+
+
+def period_start_of(site_doc: dict | None) -> str | None:
+    """敷地 JSON の photo_policy.period_start（無ければ None＝期間の決まり無し）。"""
+    return (((site_doc or {}).get("photo_policy")) or {}).get("period_start") or None
 LEDGER_SOURCE = "台帳(期間前)"
 
 def campus_aliases(campus: str | None = None) -> dict[str, str]:
@@ -306,17 +345,20 @@ def campus_aliases(campus: str | None = None) -> dict[str, str]:
         return {}
 
 
-def period_of(taken_at: str | None) -> str | None:
-    """撮影日時（"YYYY-MM-DDTHH:MM:SS"）から期間前 / 期間中を決める。日時が無ければ None。"""
+def period_of(taken_at: str | None, start: str | None = None) -> str | None:
+    """撮影日時（"YYYY-MM-DDTHH:MM:SS"）から期間前 / 期間中を決める。日時が無ければ None。
+    start（期間の始まり。period_start_of）が無ければ期間の決まり無しで during。"""
     if not taken_at or len(taken_at) < 10:
         return None
+    if not start:
+        return "during"
     t = taken_at.strip().replace(" ", "T")
     # EXIF の生の形（"2026:09:07 17:36:24"）が来ても日付の区切りを直してから比べる（文字列の比較なので ":" のままだと誤る）
     if len(t) >= 10 and t[4] == ":" and t[7] == ":":
         t = t[:4] + "-" + t[5:7] + "-" + t[8:]
     if len(t) == 10:
         t += "T00:00:00"
-    return "before" if t < PERIOD_START else "during"
+    return "before" if t < start else "during"
 
 
 def _norm_date(s: str | None) -> str | None:
@@ -375,28 +417,176 @@ def _iter_images(folder: Path, ledger: dict[str, dict] | None = None):
             yield f
 
 
+# --- 写真 id（機種に依らない）と短い名前 -----------------------------------------------------
+
+ID_HASH_LEN = 8          # id が重なった時に付ける sha256 の先頭の文字数
+
+
+def file_sha256(path: Path) -> str:
+    """写真の中身の sha256（16 進）。同じ名前の別の写真を見分けるのに使う。"""
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _same_photo(rec: dict, sha: str, rel: str, info: dict, root: Path) -> bool:
+    """索引の記録 rec と、今の写真（sha・rel・EXIF）が同じ写真か。
+    記録に sha256 があればそれで決める。無ければ（11/8 より前の記録）同じ file か、元の写真の sha256 を計算して比べる。
+    元の写真が見つからない時は、撮影日時（秒まで）・機種・大きさが全部そろう時だけ同じとみなす。"""
+    if rec.get("sha256"):
+        return rec["sha256"] == sha
+    if rec.get("file") and rec["file"] == rel:
+        return True
+    old = source_path(rec, root)
+    if rec.get("file") and old.is_file():
+        try:
+            return file_sha256(old) == sha
+        except OSError:
+            pass
+    cam = rec.get("camera") or {}
+    return bool(info.get("taken_at")) and rec.get("taken_at") == info["taken_at"] \
+        and cam.get("model") == info.get("model") \
+        and (rec.get("width"), rec.get("height")) == (info.get("width"), info.get("height"))
+
+
+def resolve_photo_id(stem: str, by_id: dict, sha: str, rel: str, info: dict, root: Path) -> tuple[str, dict | None]:
+    """写真 id を決める。幹（stem）が索引に無いか、同じ写真ならそのまま。別の写真なら `<幹>_<sha256 の先頭 8>`。
+    返り値 (id, 重なりの記録 or None)。接尾辞つきの id が既にあれば、それは同じ中身の写真（名前に hash が入っている）。"""
+    rec = by_id.get(stem)
+    if rec is None or _same_photo(rec, sha, rel, info, root):
+        return stem, None
+    return f"{stem}_{sha[:ID_HASH_LEN]}", {"stem": stem, "other_file": rec.get("file"),
+                                            "why": "同じ名前の別の写真が索引にあるので、中身の sha256 の頭を付けた"}
+
+
+_SHORT_PIXEL = re.compile(r"^PXL_\d{8}_(\d+)")
+
+
+def short_name(pid: str, ascii_only: bool = False, max_bytes: int = 40) -> str:
+    """写真 id の短い名前（Blender の視点名・描画のファイル名・rerun の名前）。機種に依らない。
+    - Pixel の PXL_<日付>_<時刻ミリ秒>… は時刻の数字（前からの形。既にある出力の名前と合う）
+    - それ以外（IMG_0001・20261107_150551・日本語名）は id をそのまま（ファイル名に使えない文字は - に）
+    - ascii_only（rerun の名前）：英数字と _ 以外を落とし、落とした時は id の sha1 の頭 6 文字を付ける
+    - max_bytes（UTF-8）を超えたら切って sha1 の頭 6 文字を付ける
+    一意にするのは short_names（同じ短い名前になった写真には sha1 の頭を付ける）。"""
+    pid = str(pid)
+    tag = hashlib.sha1(pid.encode("utf-8")).hexdigest()[:6]
+    m = _SHORT_PIXEL.match(pid)
+    if m:
+        return m[1]
+    if ascii_only:
+        s = re.sub(r"[^A-Za-z0-9_]+", "", pid).strip("_")
+        if s != pid:
+            s = f"{s}_{tag}" if s else f"photo_{tag}"
+    else:
+        s = re.sub(r'[\\/:*?"<>|\s.]+', "-", pid).strip("-") or f"photo_{tag}"
+    if len(s.encode("utf-8")) > max_bytes:
+        cut = s
+        while len(cut.encode("utf-8")) > max_bytes - 7:
+            cut = cut[:-1]
+        s = f"{cut}_{tag}"
+    return s
+
+
+def short_names(pids, ascii_only: bool = False) -> dict[str, str]:
+    """写真 id の並び → 短い名前（重ならない）。同じ短い名前になる写真が 2 枚以上あれば、全部に sha1 の頭 6 文字を付ける
+    （並びの順に依らず同じ名前になる）。"""
+    ids = list(dict.fromkeys(str(p) for p in pids))
+    base = {p: short_name(p, ascii_only) for p in ids}
+    count: dict[str, int] = {}
+    for v in base.values():
+        count[v] = count.get(v, 0) + 1
+    out = {}
+    for p in ids:
+        v = base[p]
+        if count[v] > 1:
+            v = f"{v}_{hashlib.sha1(p.encode('utf-8')).hexdigest()[:6]}"
+        out[p] = v
+    return out
+
+
+# --- 索引の差分だけを鍵の中で書く ---------------------------------------------------------------
+
+_DROP = object()
+
+
+def record_diff(before: dict | None, after: dict) -> dict:
+    """1 件の記録の変わった項目だけ（消えた項目は _DROP）。"""
+    before = before or {}
+    d = {k: copy.deepcopy(v) for k, v in after.items() if k not in before or before[k] != v}
+    d.update({k: _DROP for k in before if k not in after})
+    return d
+
+
+def _apply_diff(rec: dict, diff: dict) -> None:
+    for k, v in diff.items():
+        if v is _DROP:
+            rec.pop(k, None)
+        elif k == "masks":   # 縮小版・公開が書くのは自動（by auto）の箱だけ。人・係の箱は今の索引の物を残す
+            rec["masks"] = [m for m in v or [] if m.get("by") == "auto"] + \
+                [m for m in rec.get("masks") or [] if m.get("by") != "auto"]
+        else:
+            rec[k] = v
+
+
+def patch_index(index_path: Path, diffs: dict[str, dict], label: str = "photos patch") -> dict:
+    """鍵（ledger）を取って索引を読み直し、id ごとの差分だけ書く。重い仕事（顔の検出・縮小）は呼ぶ側が鍵の外で済ませる
+    （11/8 監査 B 3、J-012 の再発を防ぐ。registry.save_registry と同じ形）。返り値は書いた後の索引。"""
+    from .ledger import lock
+    diffs = {k: v for k, v in diffs.items() if v}
+    with lock("ledger", label=label):
+        idx = load_index(index_path)
+        by_id = {p["id"]: p for p in idx["photos"]}
+        for pid, d in diffs.items():
+            if pid in by_id:
+                _apply_diff(by_id[pid], d)
+        if diffs:
+            save_index(idx, index_path)
+    return idx
+
+
 def import_photos(folder: Path, site: dict | None = None, index_path: Path = INDEX_PATH,
                   root: Path = PHOTO_DIR, period: str | None = None,
-                  ledger: dict[str, dict] | None = None) -> tuple[dict, list[dict]]:
-    """フォルダ（下位フォルダも）の写真を索引に足す。既にある id は EXIF と checks だけ更新し、人が入れた building / face は残す。
+                  ledger: dict[str, dict] | None = None, send: bool = True) -> tuple[dict, list[dict]]:
+    """フォルダ（下位フォルダも）の写真を索引に足す。既にある id（同じ写真）は EXIF と checks だけ更新し、人が入れた
+    building / face は残す。同じ名前の別の写真は `<幹>_<sha256 の先頭 8>` の id にして分ける（resolve_photo_id、
+    記録に id_collision を残す）。
 
-    period: "before" / "during"。省略すると撮影日時（EXIF、無ければ台帳、ファイル名）から決める。
+    鍵：EXIF・sha256・縮小版（顔の検出）は鍵の外で済ませ、最後に鍵（ledger）を取って索引を読み直し、差分だけ書く。
+
+    send: 係に見せる縮小版 `send_file`（索引のあるフォルダの send/<id>.jpg、長辺 1600 px、顔に灰色の箱）を作る（11/8、K-104）。
+    元の写真は読むだけ。箱は索引の masks に by "auto" で残す。顔のモデルが無ければ箱なしで作り、rec["send_warning"] に残す。
+
+    period: "before" / "during"。省略すると撮影日時（EXIF、無ければ台帳、ファイル名）と敷地 JSON の
+    photo_policy.period_start から決める（決まりが無ければ during）。
     ledger: load_ledger の結果。台帳にある写真には building / face の候補を source 付きで入れる。
     フォルダ外の絶対パスの写真は file に絶対パスで書く（data/photos/ にはコピーしない）。"""
     if period not in (None, "before", "during"):
         raise ValueError("period は before か during")
-    idx = load_index(index_path)
-    by_id = {p["id"]: p for p in idx["photos"]}
-    added = []
+    start = period_start_of(site)
+    snap = load_index(index_path)
+    by_id = {p["id"]: p for p in snap["photos"]}
+    new: dict[str, dict] = {}       # 今回足す記録（id → 記録）
+    bases: dict[str, dict] = {}     # 既にある記録の、手を付ける前の写し
     for f in _iter_images(Path(folder), ledger):
         info = read_exif(f)
-        pid = f.stem
+        try:
+            sha = file_sha256(f)
+        except OSError as e:
+            info["error"] = info.get("error") or f"読めない: {e}"
+            sha = ""
         try:
             rel = str(f.relative_to(root)).replace("\\", "/")
         except ValueError:
             rel = str(f.resolve()).replace("\\", "/")
+        pid, coll = resolve_photo_id(f.stem, by_id, sha, rel, info, Path(root)) if sha else (f.stem, None)
         row = (ledger or {}).get(f.relative_to(folder).as_posix())
-        rec = by_id.get(pid) or {"id": pid, "building": None, "face": None, "notes": ""}
+        old = by_id.get(pid)
+        if old is not None and pid not in new and pid not in bases:
+            bases[pid] = copy.deepcopy(old)
+        rec = old if old is not None else {"id": pid, "building": None, "face": None, "notes": ""}
         taken = info["taken_at"] or (_norm_date(row.get("takenAt")) if row else None)
         if taken is None:
             m = re.search(r"(20\d{2})(\d{2})(\d{2})", f.name)
@@ -407,7 +597,7 @@ def import_photos(folder: Path, site: dict | None = None, index_path: Path = IND
         rec.update({
             "file": rel,
             "taken_at": info["taken_at"] or taken,
-            "period": period or period_of(taken),
+            "period": period or period_of(taken, start),
             "camera": {"make": info["make"], "model": info["model"]},
             "width": info["width"], "height": info["height"], "orientation": info["orientation"],
             "focal_mm": info["focal_mm"], "focal_35mm": info["focal_35mm"],
@@ -416,6 +606,10 @@ def import_photos(folder: Path, site: dict | None = None, index_path: Path = IND
             "candidates": building_candidates(info, site) if site else [],
             "imported_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         })
+        if sha:
+            rec["sha256"] = sha
+        if coll:
+            rec["id_collision"] = coll
         if row:
             lf = ledger_fields(row)
             rec["ledger_subject"], rec["ledger"] = lf["ledger_subject"], lf["ledger"]
@@ -427,19 +621,70 @@ def import_photos(folder: Path, site: dict | None = None, index_path: Path = IND
             rec["source"] = LEDGER_SOURCE
         if info["error"]:
             rec["error"] = info["error"]
-        if pid not in by_id:
-            idx["photos"].append(rec)
+        if send and not info["error"]:
+            make_send_for(rec, f, Path(index_path).parent, root)
+        if old is None:
+            new[pid] = rec
             by_id[pid] = rec
+    diffs = {pid: record_diff(base, by_id[pid]) for pid, base in bases.items()}
+
+    # ここから鍵の中：読み直して差分だけ書く（鍵の外にいる間に他の道具が書いた項目を消さない）
+    from .ledger import lock
+    added: list[dict] = []
+    with lock("ledger", label=f"photos import {Path(folder).name}"):
+        idx = load_index(index_path)
+        cur = {p["id"]: p for p in idx["photos"]}
+        for pid, d in diffs.items():
+            if pid in cur:
+                _apply_diff(cur[pid], d)
+        for pid, rec in new.items():
+            ex = cur.get(pid)
+            if ex is not None and ex.get("sha256") and rec.get("sha256") and ex["sha256"] != rec["sha256"]:
+                # 鍵の外にいる間に、同じ名前の別の写真が入った：接尾辞の id に付け替える
+                nid = f"{pid}_{rec['sha256'][:ID_HASH_LEN]}"
+                _rename_send(rec, nid, Path(index_path).parent, Path(root))
+                rec["id_collision"] = {"stem": pid, "other_file": ex.get("file"),
+                                       "why": "同じ名前の別の写真が索引にあるので、中身の sha256 の頭を付けた"}
+                rec["id"] = pid = nid
+                ex = cur.get(pid)
+            if ex is not None:   # 同じ写真が先に入っていた：人の値は残し、取り込みの値だけ足す
+                d = record_diff({"id": pid, "building": None, "face": None, "notes": ""}, rec)
+                for k in ("building", "face", "notes"):
+                    if ex.get(k):
+                        d.pop(k, None)
+                _apply_diff(ex, d)
+                continue
+            idx["photos"].append(rec)
+            cur[pid] = rec
             added.append(rec)
-    save_index(idx, index_path)
+        save_index(idx, index_path)
+    for r in added:
+        if r.get("id_collision"):
+            print(f"写真 id の重なり：{r['id_collision']['stem']} は別の写真（{r['id_collision']['other_file']}）が使っているので "
+                  f"{r['id']} にした（{r['file']}）", file=sys.stderr)
     return idx, added
 
 
-def period_counts(idx: dict) -> dict:
-    """索引の件数（期間別、棟別、台帳あり）。"""
+def _rename_send(rec: dict, nid: str, send_root: Path, photo_root: Path) -> None:
+    """縮小版のファイル名を新しい id に合わせる。"""
+    if not rec.get("send_file"):
+        return
+    old = source_path({"file": rec["send_file"]}, photo_root)
+    dst = Path(send_root) / SEND_DIRNAME / f"{nid}.jpg"
+    try:
+        if old.exists():
+            old.replace(dst)
+        rec["send_file"] = _rel_or_abs(dst, photo_root)
+    except OSError:
+        rec.pop("send_file", None)
+        rec["send_warning"] = "縮小版の名前を付け替えられなかった（photos send で作り直す）"
+
+
+def period_counts(idx: dict, start: str | None = None) -> dict:
+    """索引の件数（期間別、棟別、台帳あり）。記録に period が無ければ撮影日時と start（period_start_of）から。"""
     out: dict[str, Any] = {"before": 0, "during": 0, "unknown": 0, "ledger": 0, "by_building": {}}
     for r in idx["photos"]:
-        pr = r.get("period") or period_of(r.get("taken_at")) or "unknown"
+        pr = r.get("period") or period_of(r.get("taken_at"), start) or "unknown"
         out[pr] += 1
         out["ledger"] += 1 if r.get("ledger") else 0
         k = f"{pr}/{r.get('building')}"
@@ -545,7 +790,7 @@ def assign_photos(index_path: Path, assignments: list[dict], campus: str | None 
 RULER_MARKS = {"tape_measure"}   # 索引の写真に付けられる物差しの印（data/rulers.json の id）。メジャーが壁に当てて写っている写真
 
 
-def set_faces(index_path: Path, doc: dict, by: str, now: str | None = None) -> dict:
+def set_faces(index_path: Path, doc: dict, by: str, now: str | None = None, building: str | None = None) -> dict:
     """仕分け係の結果（out/photos/shiwake_*.json の "photos"：写真 id → {building, face, faces, interior_views,
     candidate_faces, confidence, evidence}）を索引に書く。係が自分のスクリプトで索引を書かないための道具（11/7。
     4 棟を同時に回すので、鍵は CLI が持つ。ledger.py）。
@@ -555,12 +800,16 @@ def set_faces(index_path: Path, doc: dict, by: str, now: str | None = None) -> d
     - 棟は、索引で棟が決まっていない（null）写真にだけ書き、assigned_by を "shiwake" にする。
       職員の振り分けや、他の棟の仕分け係が先に決めた棟は変えない（skipped に理由）。staff_choices があればその中だけ。
     - 職員が内装と決めた写真（interior: true）には面を書かない。
-    戻り値：{"set", "building_set", "skipped", "not_found"}"""
+    - J-004（11/8）：行の building が null の時は、呼び出した棟（引数 building、無ければ出力の "building"）の写真として扱う。
+      索引の棟がそれと違う写真は face・faces も書かない（skipped）。呼び出した棟が分からない時は従来どおり書き、warnings に残す。
+    - 職員がメジャーの枠から送った写真（ruler_by "staff"）の職員のメモは ruler_note_staff に残し、係の ruler_note はその後ろに足す（K-102）。
+    戻り値：{"set", "building_set", "skipped", "not_found", "warnings"}"""
     now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
     items = doc.get("photos", doc) if isinstance(doc, dict) else {}
+    target = building or (doc.get("building") if isinstance(doc, dict) and isinstance(doc.get("building"), str) else None)
     idx = load_index(index_path)
     by_id = {p["id"]: p for p in idx["photos"]}
-    out: dict = {"set": 0, "building_set": 0, "skipped": [], "not_found": []}
+    out: dict = {"set": 0, "building_set": 0, "skipped": [], "not_found": [], "warnings": []}
     for pid, r in items.items():
         if not isinstance(r, dict):
             continue
@@ -572,6 +821,12 @@ def set_faces(index_path: Path, doc: dict, by: str, now: str | None = None) -> d
         if p.get("building") and b_new and b_new != p["building"]:
             out["skipped"].append({"id": pid, "reason": f"索引の棟は {p['building']}（{p.get('assigned_by') or '?'}）。{b_new} には変えない"})
             continue
+        if b_new is None and p.get("building"):
+            if target and target != p["building"]:
+                out["skipped"].append({"id": pid, "reason": f"行の棟が null で、呼び出した棟 {target} と索引の棟 {p['building']} が違う。面を書かない（J-004）"})
+                continue
+            if not target:
+                out["warnings"].append({"id": pid, "warning": f"行の棟が null で呼び出した棟も無い。索引の棟 {p['building']} の写真として面を書いた（--building を付けてください）"})
         if not p.get("building") and b_new:
             ch = p.get("staff_choices")
             if ch and b_new not in ch:
@@ -593,7 +848,8 @@ def set_faces(index_path: Path, doc: dict, by: str, now: str | None = None) -> d
             else:
                 p["ruler"] = r["ruler"]
                 if r.get("ruler_note"):
-                    p["ruler_note"] = r["ruler_note"]
+                    staff_note = p.get("ruler_note_staff")
+                    p["ruler_note"] = f"職員：{staff_note} ／ 係：{r['ruler_note']}" if staff_note else r["ruler_note"]
         if r.get("evidence"):
             note = f"{by}：{r['evidence']}"
             p["notes"] = f"{p['notes']} | {note}" if p.get("notes") else note
@@ -790,3 +1046,475 @@ def assign_from_folders(day_dir: Path, index_path: Path = INDEX_PATH, campus: st
             report["paths_updated"] += 1
     save_index(idx, index_path)
     return report
+
+
+# --- 11/8（T4）：係に見せる縮小版・relink・メジャーの枠・保護係の升 ----------------------------------------
+
+SEND_DIRNAME = "send"
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def source_path(rec: dict, photo_root: Path = PHOTO_DIR) -> Path:
+    """索引の file → 元の写真の道（絶対ならそのまま、相対なら photo_root から）。"""
+    f = Path(str(rec.get("file") or ""))
+    return f if f.is_absolute() else Path(photo_root) / f
+
+
+def _rel_or_abs(f: Path, root: Path) -> str:
+    try:
+        return f.resolve().relative_to(Path(root).resolve()).as_posix()
+    except ValueError:
+        return f.resolve().as_posix()
+
+
+def make_send_for(rec: dict, src: Path, send_root: Path, photo_root: Path, force: bool = False) -> dict | None:
+    """1 枚の send_file を作り、rec に send_file・auto_mask・masks（by auto だけ置き換え）を書く（索引の保存は呼ぶ側）。
+    既に作ってあれば（ファイルがあり auto_mask の記録もある）何もしない。失敗しても取り込みは止めない。"""
+    from . import privacy
+
+    dst = Path(send_root) / SEND_DIRNAME / f"{rec['id']}.jpg"
+    if not force and dst.exists() and rec.get("auto_mask") and rec.get("send_file"):
+        return None
+    others = [m for m in rec.get("masks") or [] if m.get("by") != "auto"]
+    try:
+        res = privacy.make_send(Path(src), dst, extra_masks=others)
+    except Exception as e:  # noqa: BLE001
+        rec["send_warning"] = f"縮小版を作れません：{type(e).__name__}: {e}"
+        return None
+    rec["send_file"] = _rel_or_abs(dst, photo_root)
+    rec["auto_mask"] = res["auto_mask"]
+    rec["masks"] = res["masks"] + others
+    if res["warnings"]:
+        rec["send_warning"] = " / ".join(res["warnings"])
+    else:
+        rec.pop("send_warning", None)
+    return res
+
+
+def make_sends(index_path: Path = INDEX_PATH, ids: list[str] | None = None, force: bool = False,
+               photo_root: Path | None = None) -> dict:
+    """索引の写真の send_file を作る（無い物だけ。--force で全部）。取り込み済みの写真に後から作る道具。
+    縮小と顔の検出は鍵の外。最後に鍵を取って索引を読み直し、変わった項目だけ書く（patch_index）。"""
+    photo_root = Path(photo_root or Path(index_path).parent)
+    idx = load_index(index_path)
+    out: dict = {"made": 0, "kept": 0, "missing": [], "faces": 0, "warnings": []}
+    diffs: dict[str, dict] = {}
+    for rec in idx["photos"]:
+        if ids and not any(rec["id"].startswith(i) for i in ids):
+            continue
+        src = source_path(rec, photo_root)
+        if not src.exists():
+            out["missing"].append(rec["id"])
+            continue
+        base = copy.deepcopy(rec)
+        res = make_send_for(rec, src, Path(index_path).parent, photo_root, force=force)
+        diffs[rec["id"]] = record_diff(base, rec)
+        if res is None:
+            out["kept"] += 1
+            if rec.get("send_warning"):
+                out["warnings"].append(rec["send_warning"])
+            continue
+        out["made"] += 1
+        out["faces"] += len(res["masks"])
+        out["warnings"] += res["warnings"]
+    patch_index(index_path, diffs, label="photos send")
+    return out
+
+
+def photo_folder(rec: dict, repo_root: Path | None = None) -> str:
+    """写真の「元のフォルダ」（公開版・保護係の置き場の名前）。相対の file はその親、リポジトリの中の絶対パスは
+    リポジトリからの相対の親（例 メジャー/本部棟_honbu）、それ以外は親の名前。"""
+    f = Path(str(rec.get("file") or ""))
+    if not f.is_absolute():
+        parent = f.parent.as_posix()
+        return parent if parent not in ("", ".") else "_"
+    try:
+        return f.parent.resolve().relative_to(Path(repo_root or REPO_ROOT).resolve()).as_posix()
+    except ValueError:
+        return f.parent.name or "_"
+
+
+def _default_aliases(campus: str | None) -> dict[str, str]:
+    """別名表（campus が無ければ既定のキャンパス）。敷地 JSON が無ければ空。"""
+    if campus is None:
+        try:
+            campus = site.default_campus()
+        except Exception:  # noqa: BLE001
+            return {}
+    return campus_aliases(campus)
+
+
+def _image_size(f: Path) -> tuple[int, int] | None:
+    from PIL import Image
+
+    try:
+        with Image.open(f) as im:
+            return im.size
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def relink(folder: Path, index_path: Path = INDEX_PATH, *, assign_from_folder: bool = False,
+           campus: str | None = None, aliases: dict[str, str] | None = None, photo_root: Path | None = None,
+           now: str | None = None, dry_run: bool = False) -> dict:
+    """索引で file が見つからない写真を、folder の下から名前で探してパスを付け直す（K-105）。
+
+    - 名前は file の basename（無ければ id ＋拡張子）。同じ名前が 2 つ以上あれば決めずに ambiguous。
+      索引に幅・高さがあれば、見つけた写真の幅・高さと合うかを見る（違えば mismatch、付け直さない）。
+    - assign_from_folder：写真が入っているフォルダ名（例 本部棟_honbu）を別名表で棟 id にし、職員の申告
+      （assigned_by "staff"、building_source "staff_folder"）として書く。既に職員の振り分けがあれば変えない
+      （違えば conflicts）。仕分け係の棟と違えば職員の棟にし、前の面は棟が変わったので消す（changed に残す）。
+      フォルダ名から棟が 1 つに決まらなければ書かない（undecided）。folder の下の写真は file が切れていなくても対象。
+    戻り値：{"relinked", "ambiguous", "mismatch", "still_missing", "assigned", "unchanged", "conflicts", "changed", "undecided"}"""
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    folder = Path(folder)
+    photo_root = Path(photo_root or Path(index_path).parent)
+    if aliases is None:
+        aliases = _default_aliases(campus)
+    found: dict[str, list[Path]] = {}
+    for f in sorted(folder.rglob("*")):
+        if f.is_file() and f.suffix.lower() in EXTS:
+            found.setdefault(f.name.lower(), []).append(f)
+    idx = load_index(index_path)
+    rep: dict = {"folder": folder.as_posix(), "relinked": [], "ambiguous": [], "mismatch": [], "still_missing": [],
+                 "assigned": [], "unchanged": 0, "conflicts": [], "changed": [], "undecided": [], "dry_run": dry_run}
+    here: dict[str, Path] = {}   # 写真 id → folder の下の道（assign の対象）
+    for rec in idx["photos"]:
+        cur = source_path(rec, photo_root)
+        names = [Path(str(rec.get("file") or "")).name.lower()] if rec.get("file") else []
+        names += [f"{rec['id']}{e}".lower() for e in sorted(EXTS)]
+        hits: list[Path] = []
+        for n in names:
+            if n and n in found:
+                hits = found[n]
+                break
+        if cur.exists():
+            try:
+                cur.resolve().relative_to(folder.resolve())
+                here[rec["id"]] = cur
+            except ValueError:
+                pass
+            continue
+        if not hits:
+            rep["still_missing"].append(rec["id"])
+            continue
+        if len(hits) > 1:
+            rep["ambiguous"].append({"id": rec["id"], "candidates": [h.as_posix() for h in hits]})
+            continue
+        f = hits[0]
+        if rec.get("width") and rec.get("height"):
+            sz = _image_size(f)
+            if sz is not None and sorted(sz) != sorted((rec["width"], rec["height"])):
+                rep["mismatch"].append({"id": rec["id"], "file": f.as_posix(), "index": [rec["width"], rec["height"]], "found": list(sz)})
+                continue
+        new = _rel_or_abs(f, photo_root)
+        rep["relinked"].append({"id": rec["id"], "from": rec.get("file"), "to": new})
+        rec.setdefault("relinked_from", rec.get("file"))
+        rec["file"] = new
+        rec["relinked_at"] = now
+        here[rec["id"]] = f
+    if assign_from_folder:
+        by_id = {r["id"]: r for r in idx["photos"]}
+        for pid, f in here.items():
+            rec = by_id[pid]
+            bid, label = None, None
+            for d in [f.parent, *f.parent.parents]:
+                try:
+                    d.resolve().relative_to(folder.resolve())
+                except ValueError:
+                    break
+                ids = parse_folder_label(d.name, aliases)["ids"]
+                if len(ids) == 1:
+                    bid, label = ids[0], d.name
+                    break
+                if len(ids) > 1:
+                    label = d.name
+                    break
+            if bid is None:
+                rep["undecided"].append({"id": pid, "folder": f.parent.name})
+                continue
+            if rec.get("assigned_by") == "staff" and rec.get("building"):
+                if rec["building"] == bid:
+                    rep["unchanged"] += 1
+                else:
+                    rep["conflicts"].append({"id": pid, "index": rec["building"], "folder": bid, "note": "職員の振り分けがあるので変えない"})
+                continue
+            prev = {k: rec.get(k) for k in ("building", "assigned_by", "face", "faces")}
+            if prev["building"] and prev["building"] != bid:
+                rep["changed"].append({"id": pid, "from": prev, "to": bid})
+                rec["face"], rec["faces"] = None, []
+            rec["building"], rec["assigned_by"], rec["assigned_at"] = bid, "staff", now
+            rec["building_source"] = "staff_folder"
+            rec["staff_label"] = label
+            note = f"職員のフォルダ「{label}」から棟 {bid}（relink、{now}）"
+            rec["notes"] = f"{rec['notes']} / {note}" if rec.get("notes") else note
+            rep["assigned"].append(pid)
+    if not dry_run:
+        save_index(idx, index_path)
+    return rep
+
+
+def mark_tape(index_path: Path, ids: list[str], building: str, *, face: str | None = None, note: str | None = None,
+              campus: str | None = None, aliases: dict[str, str] | None = None, now: str | None = None) -> dict:
+    """メジャーの枠（K-102）：職員が送ったメジャーの写真に、職員の申告として棟（と面）と ruler を付ける。
+    棟は別名でもよい（敷地 JSON の aliases で id にする）。仕分け係は棟を変えず、面と ruler_note だけ足す（set_faces）。"""
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    if aliases is None:
+        aliases = _default_aliases(campus)
+    raw = str(building or "").strip()
+    bid = aliases.get(raw) or (raw if raw in set(aliases.values()) or (not aliases and raw) else None)
+    if not bid:
+        raise ValueError(f"棟の名前を id に直せません: {raw!r}")
+    idx = load_index(index_path)
+    by_id = {p["id"]: p for p in idx["photos"]}
+    out: dict = {"building": bid, "marked": [], "not_found": [], "changed": []}
+    for pid in ids:
+        p = by_id.get(pid)
+        if p is None:
+            out["not_found"].append(pid)
+            continue
+        if p.get("building") and p["building"] != bid:
+            out["changed"].append({"id": pid, "from": p["building"], "to": bid})
+            p["face"], p["faces"] = None, []
+        p["building"], p["assigned_by"], p["assigned_at"], p["building_source"] = bid, "staff", now, "staff_tape"
+        p["interior"], p["floor"] = False, None
+        p["ruler"], p["ruler_by"] = "tape_measure", "staff"
+        memo = str(note or "").strip()
+        p["ruler_note_staff"] = memo or None
+        p["ruler_note"] = memo or "職員がメジャーの枠から送った（メモなし）"
+        if face:
+            p["face_staff"] = face
+            if not p.get("face"):
+                p["face"], p["faces"] = face, [face]
+        n = f"職員がメジャーの枠から送った（{bid}{'・' + face if face else ''}、{now}）"
+        p["notes"] = f"{p['notes']} / {n}" if p.get("notes") else n
+        out["marked"].append(pid)
+    save_index(idx, index_path)
+    return out
+
+
+def set_masks(index_path: Path, doc: dict, *, by: str | None = None, now: str | None = None) -> dict:
+    """保護係（hogo、Haiku）か見直し（Sonnet）の升（out/photos/hogo_<フォルダ>.json）を索引に書く道具。
+
+    doc: {"pass": "hogo"|"review", "made_by", "photos": {写真 id: {"masks": [{"kind", "cells" | "box", "note"}],
+          "drop": ["C3:E5", ...]（見直しで外す升）, "crop": "A1:H10"（残す範囲）| null, "exclude": "理由" | null,
+          "include": true（見直しで除外を取り消す）, "ok": true}}}
+    - 同じ pass（hogo か review）の前の箱は置き換える（やり直しても増えない）。auto の箱はそのまま。
+    - exclude があれば public: false と public_reason（研究・研究室に関する物。塗りつぶしで済ませない）。
+    - kind は face / plate / poster / name / phone だけ。升の書き方が違う写真は errors に出し、その写真は書かない。"""
+    from . import privacy
+
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    by = by or str(doc.get("pass") or "hogo")
+    if by not in ("hogo", "review"):
+        raise ValueError(f"pass は hogo か review: {by!r}")
+    items = doc.get("photos") or {}
+    idx = load_index(index_path)
+    by_id = {p["id"]: p for p in idx["photos"]}
+    out: dict = {"pass": by, "photos": 0, "masks": 0, "dropped": 0, "crops": 0, "excluded": [], "errors": [], "not_found": []}
+    for pid, r in items.items():
+        p = by_id.get(pid)
+        if p is None:
+            out["not_found"].append(pid)
+            continue
+        if not isinstance(r, dict):
+            continue
+        new, bad = [], False
+        for m in r.get("masks") or []:
+            try:
+                kind = m.get("kind")
+                if kind not in privacy.KINDS:
+                    raise ValueError(f"kind は {sorted(privacy.KINDS)} のどれか: {kind!r}")
+                box = privacy.cells_to_box(m["cells"]) if m.get("cells") else privacy.norm_box(m["box"])
+                e = {"kind": kind, "box": box, "by": by}
+                if m.get("cells"):
+                    e["cells"] = m["cells"]
+                if m.get("note"):
+                    e["note"] = str(m["note"])[:200]
+                new.append(e)
+            except (KeyError, ValueError, TypeError, AttributeError) as ex:
+                out["errors"].append({"id": pid, "mask": m, "error": str(ex)})
+                bad = True
+        crop = None
+        if r.get("crop"):
+            try:
+                crop = privacy.cells_to_box(r["crop"])
+            except ValueError as ex:
+                out["errors"].append({"id": pid, "crop": r["crop"], "error": str(ex)})
+                bad = True
+        drops = set()
+        for c in r.get("drop") or []:
+            try:
+                drops.add(tuple(privacy.cells_to_box(c)))
+            except ValueError as ex:
+                out["errors"].append({"id": pid, "drop": c, "error": str(ex)})
+                bad = True
+        if bad:
+            continue
+        keep = []
+        for m in p.get("masks") or []:
+            if m.get("by") == by:
+                continue
+            if drops and m.get("by") != "auto" and tuple(m.get("box") or ()) in drops:
+                out["dropped"] += 1
+                continue
+            keep.append(m)
+        p["masks"] = keep + new
+        out["masks"] += len(new)
+        if crop is not None:
+            p["crop"] = {"box": crop, "cells": r["crop"], "by": by}
+            out["crops"] += 1
+        elif "crop" in r and by == "review":
+            p.pop("crop", None)
+        if r.get("exclude"):
+            p["public"], p["public_reason"] = False, str(r["exclude"])[:200]
+            out["excluded"].append(pid)
+        elif by == "review" and r.get("include") and p.get("public") is False:
+            p["public"], p["public_reason"] = None, None
+        p[by] = {"by": doc.get("made_by") or by, "at": now, "ok": bool(r.get("ok", True))}
+        out["photos"] += 1
+    save_index(idx, index_path)
+    return out
+
+
+def hogo_tasks(index_path: Path = INDEX_PATH, *, folder: str | None = None, ids: list[str] | None = None,
+               out_dir: Path = Path("out/photos/hogo"), photo_root: Path | None = None) -> dict:
+    """保護係に見せる升目の絵（send_file＝顔の箱つきの縮小版に 10×10 の升）と依頼の一覧を out/photos/hogo/ に出す。
+    send_file が無い写真は、元の写真から同じ縮小版を作って使う（索引は書かない）。"""
+    from . import privacy
+
+    photo_root = Path(photo_root or Path(index_path).parent)
+    idx = load_index(index_path)
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rows, missing = [], []
+    for rec in idx["photos"]:
+        if rec.get("period") == "before":
+            continue
+        if folder and photo_folder(rec) != folder:
+            continue
+        if ids and not any(rec["id"].startswith(i) for i in ids):
+            continue
+        send = source_path({"file": rec.get("send_file")}, photo_root) if rec.get("send_file") else None
+        if send is not None and send.exists():
+            im = privacy.load_oriented(send)
+        else:
+            src = source_path(rec, photo_root)
+            if not src.exists():
+                missing.append(rec["id"])
+                continue
+            big = privacy.load_oriented(src)
+            m, _ = privacy.auto_masks(big)
+            others = [x for x in rec.get("masks") or [] if x.get("by") != "auto"]
+            im = privacy.paint_masks(privacy.resize_long(big, privacy.SEND_LONG), m + others)
+        g = out_dir / f"{rec['id']}_grid.jpg"
+        privacy.save_jpeg(privacy.grid_image(im), g, 85)
+        rows.append({"photo": rec["id"], "folder": photo_folder(rec), "grid": g.as_posix(),
+                     "auto": [m["kind"] for m in rec.get("masks") or [] if m.get("by") == "auto"]})
+    name = re.sub(r"[^\w-]+", "_", folder or "all").strip("_") or "all"
+    doc = {"folder": folder, "made_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "photos": rows, "missing": missing,
+           "write_to": f"out/photos/hogo_{name}.json",
+           "note": "保護係（.claude/agents/hogo.md）が grid を見て升を指す。書き戻しは recorder photos masks --from <write_to>"}
+    tp = out_dir / f"tasks_{name}.json"
+    tp.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+    return {"tasks": tp.as_posix(), "n": len(rows), "missing": missing, "write_to": doc["write_to"]}
+
+
+# --- CLI（recorder/__main__.py は登録の 2 行だけ） -----------------------------------------------------
+
+T4_CMDS = ("relink", "send", "ruler-mark", "tape", "hogo-grid", "masks", "publish")
+# photos tape は measure tape（メジャーの目盛りから周期）と同じ名前で別の仕事だったので ruler-mark に改めた（11/8 F3）。
+# 古い名前は警告を出して同じ処理に流す。関数名 mark_tape は変えていない（serve.py の /api/tape が呼ぶ）。
+OLD_CMD_NAMES = {"tape": "ruler-mark"}
+
+
+def _add_ruler_mark_args(q) -> None:
+    q.add_argument("ids", nargs="+")
+    q.add_argument("--building", required=True)
+    q.add_argument("--face", default=None)
+    q.add_argument("--note", default=None, help="職員のメモ（どこに当てたか）")
+    q.add_argument("--campus", default=None)
+    q.add_argument("--index", default=None)
+
+
+def add_t4_args(psub) -> None:
+    q = psub.add_parser("relink", help="索引で file が切れた写真を、フォルダの下から名前で探して付け直す（K-105）")
+    q.add_argument("folder")
+    q.add_argument("--assign-from-folder", action="store_true", help="棟名のフォルダ（例 <棟名>_<棟id>）の写真に職員の申告として棟を書く（既に staff なら変えない）")
+    q.add_argument("--campus", default=None)
+    q.add_argument("--index", default=None, help="索引の場所（既定 data/photos/index.json。試す時は写しを渡す）")
+    q.add_argument("--dry-run", action="store_true", help="書かずに結果だけ出す")
+    q = psub.add_parser("send", help="係に見せる縮小版 send_file（顔に灰色の箱）を、まだ無い写真に作る（K-104）")
+    q.add_argument("--photos", default=None, help="写真 id（カンマ区切り。頭だけでも可）")
+    q.add_argument("--force", action="store_true")
+    q.add_argument("--index", default=None)
+    q = psub.add_parser("ruler-mark", help="メジャーの枠（K-102）：写真に職員の申告として棟・面と ruler: tape_measure の印を付ける"
+                                            "（メジャーの目盛りを読むのは measure tape）")
+    _add_ruler_mark_args(q)
+    q = psub.add_parser("tape", help="古い名前（ruler-mark を使う）")
+    _add_ruler_mark_args(q)
+    q = psub.add_parser("hogo-grid", help="保護係に見せる升目の絵と依頼の一覧（out/photos/hogo/）")
+    q.add_argument("--folder", default=None, help="元のフォルダ（例 <日付>/<棟id>）")
+    q.add_argument("--photos", default=None)
+    q.add_argument("--out", default="out/photos/hogo")
+    q.add_argument("--index", default=None)
+    q = psub.add_parser("masks", help="保護係・見直しの升（out/photos/hogo_<フォルダ>.json）を索引の masks に書く")
+    q.add_argument("--from", dest="from_json", required=True)
+    q.add_argument("--pass", dest="pass_", choices=["hogo", "review"], default=None)
+    q.add_argument("--index", default=None)
+    q = psub.add_parser("publish", help="提出用の公開版：研究室が分かる物以外を縮小し、箱を塗って data/photos/public/ に（K-103）")
+    q.add_argument("--photos", default=None)
+    q.add_argument("--out", default=None, help="出す場所（既定 索引のフォルダの public/）")
+    q.add_argument("--long", type=int, default=1600)
+    q.add_argument("--quality", type=int, default=80)
+    q.add_argument("--dry-run", action="store_true")
+    q.add_argument("--allow-unreviewed", action="store_true", help="保護係と見直しの両方を通っていない写真も出す（既定は出さない）")
+    q.add_argument("--index", default=None)
+
+
+def run_t4(a) -> int:
+    from .ledger import lock
+
+    index_path = Path(a.index) if getattr(a, "index", None) else INDEX_PATH
+    ids = [x.strip() for x in a.photos.split(",") if x.strip()] if getattr(a, "photos", None) else None
+    cmd = a.photos_cmd
+    if cmd in OLD_CMD_NAMES:
+        print(f"注意：photos {cmd} は古い名前です。photos {OLD_CMD_NAMES[cmd]} を使ってください（同じ処理をします）",
+              file=sys.stderr)
+        cmd = OLD_CMD_NAMES[cmd]
+    if cmd == "hogo-grid":
+        res = hogo_tasks(index_path, folder=a.folder, ids=ids, out_dir=Path(a.out))
+        print(json.dumps(res, ensure_ascii=False, indent=1))
+        return 0
+    # send・publish は縮小と顔の検出を鍵の外で回し、索引には鍵の中で差分だけ書く（各関数が鍵を取る。11/8 監査 B 3）
+    if cmd == "send":
+        res = make_sends(index_path, ids, force=a.force)
+        print(json.dumps({**res, "missing": res["missing"][:20], "n_missing": len(res["missing"])}, ensure_ascii=False, indent=1))
+        return 0
+    if cmd == "publish":
+        from . import publish
+
+        res = publish.publish(index_path, out_dir=Path(a.out) if a.out else None, ids=ids, long=a.long,
+                              quality=a.quality, dry_run=a.dry_run,
+                              allow_unreviewed=a.allow_unreviewed)
+        print(publish.summary_text(res))
+        return 0
+    with lock("ledger", label=f"recorder photos {cmd}"):
+        if cmd == "relink":
+            res = relink(Path(a.folder), index_path, assign_from_folder=a.assign_from_folder, campus=a.campus, dry_run=a.dry_run)
+            print(f"付け直し {len(res['relinked'])}・同名が複数 {len(res['ambiguous'])}・大きさ違い {len(res['mismatch'])}・"
+                  f"まだ無い {len(res['still_missing'])}" + (f"／棟を書いた {len(res['assigned'])}・同じ {res['unchanged']}・"
+                  f"職員と違う {len(res['conflicts'])}・棟が変わった {len(res['changed'])}・決まらない {len(res['undecided'])}"
+                  if a.assign_from_folder else "") + ("（dry-run：書いていない）" if a.dry_run else ""))
+            print(json.dumps({k: v for k, v in res.items() if k != "still_missing"}, ensure_ascii=False, indent=1))
+            return 0
+        if cmd == "ruler-mark":
+            res = mark_tape(index_path, a.ids, a.building, face=a.face, note=a.note, campus=a.campus)
+            print(json.dumps(res, ensure_ascii=False, indent=1))
+            return 0 if not res["not_found"] else 1
+        if cmd == "masks":
+            doc = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
+            res = set_masks(index_path, doc, by=a.pass_)
+            print(json.dumps(res, ensure_ascii=False, indent=1))
+            return 0 if not res["errors"] else 1
+    raise ValueError(cmd)

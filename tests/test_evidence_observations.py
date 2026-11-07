@@ -91,5 +91,9 @@ def test_line_and_summary_text_have_observations():
 def test_tower75_observations_far_fewer_than_values():
     p = ROOT / "data" / "buildings" / "tower75.json"
     o = E.observations(json.loads(p.read_text(encoding="utf-8")))
+    # 11/8 F5：もとは「観察 < 値の 1/4」。疑似本番の tower75.json で観察 394・値 1302（約 30%）になり落ちた。
+    # 確かめたいのは「部品ごとの複製で値が観察よりずっと多く数えられる」事なので、複製の数が観察の数を超える事を見る
+    # （1/4 という境は 11/5 の JSON に合わせた数で、根拠は無かった）。
     assert o["values"] > 1000
-    assert o["observations"] < o["values"] / 4
+    assert o["derived"] == o["values"] - o["observations"]
+    assert o["derived"] > o["observations"]

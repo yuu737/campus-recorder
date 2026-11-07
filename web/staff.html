@@ -93,6 +93,18 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 .ck .acts select{padding:5px 8px;font-size:14px}
 .ck .done{color:var(--done);font-weight:700}
 @media(max-width:560px){.ck{grid-template-columns:1fr}.ck img{width:100%;height:auto}}
+/* メジャーの枠（K-102） */
+#tape textarea{width:100%;border:1px solid var(--line2);border-radius:6px;padding:8px 10px;font:inherit;font-size:14px;min-height:64px}
+#tape .pick{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
+#tapeFile{display:none}#tapeThumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+#tapeThumbs img{width:84px;height:63px;object-fit:cover;border-radius:4px;background:var(--line)}
+/* 1 段目：敷地の作成・選択（11/8） */
+#siteForm{display:none;margin-top:12px}#siteForm.on{display:block}
+#siteForm .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#siteLog{font:12px/1.5 ui-monospace,Consolas,monospace;background:var(--bg2);border-radius:6px;padding:8px 10px;margin-top:8px;white-space:pre-wrap;display:none;max-height:180px;overflow:auto}
+#campusPick select,#maxUsd{padding:5px 8px;font-size:15px}
+.cant{font-size:13px;color:var(--ink2);margin:8px 0 0;padding-left:1.2em}
+@media(max-width:560px){#siteForm .three{grid-template-columns:1fr}}
 @media(max-width:980px){.layout{grid-template-columns:minmax(0,1fr)}.prog{position:static}}
 @media(max-width:560px){.wrap{padding:0 14px}.two{grid-template-columns:1fr}#grid{grid-template-columns:repeat(2,minmax(0,1fr))}header.top .links{margin-left:0}}
 </style>
@@ -107,22 +119,38 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 <main>
   <section class="panel" id="p1">
     <h2><span class="n">1</span>大学とキャンパス<span class="state" id="s1">確認中</span></h2>
-    <p class="sub">名前を入れるだけ。棟の一覧は地図（OpenStreetMap）から、地面の高さは国土地理院から用意します。</p>
+    <p class="sub">最初の 1 回だけ。大学名・キャンパス名と、キャンパスの範囲（または住所）を入れると、棟の一覧を地図（OpenStreetMap）から、航空写真と地面の高さを国土地理院から取ります。2 回目からは選ぶだけです。</p>
+    <div id="campusPick" class="go" style="display:none;margin-bottom:10px"><label class="f" for="campusSel" style="margin:0">使うキャンパス</label><select id="campusSel"></select><button class="btn ghost" type="button" id="campusNew">別のキャンパスを足す</button></div>
     <div class="two">
-      <div><label class="f" for="univ">大学名</label><input type="text" id="univ" placeholder="例：名城大学" autocomplete="organization"></div>
-      <div><label class="f" for="campus">キャンパス名</label><input type="text" id="campus" placeholder="例：天白キャンパス"></div>
+    <div><label class="f" for="univ">大学名</label><input type="text" id="univ" placeholder="例：○○大学" autocomplete="organization"></div>
+    <div><label class="f" for="campus">キャンパス名</label><input type="text" id="campus" placeholder="例：○○キャンパス"></div>
+    </div>
+    <div id="siteForm">
+    <div class="three">
+    <div><label class="f" for="slug">短い名前（英数字。フォルダ名になります）</label><input type="text" id="slug" placeholder="例：main-campus" autocomplete="off"></div>
+    <div><label class="f" for="bbox">範囲（南, 西, 北, 東 の緯度経度）</label><input type="text" id="bbox" placeholder="例：35.000, 137.000, 35.010, 137.012" autocomplete="off"></div>
+    <div><label class="f" for="addr">または住所・施設名</label><input type="text" id="addr" placeholder="例：○○市○○町 1-1 ○○大学" autocomplete="off"></div>
+    </div>
+    <div class="two" style="margin-top:8px">
+    <div><label class="f" for="osmRel">OpenStreetMap の敷地の番号（relation、分かれば）</label><input type="text" id="osmRel" placeholder="分からなければ空のまま" inputmode="numeric" autocomplete="off"></div>
+    <div><label class="f" for="osmWay">または敷地の線の番号（way、境界が 1 本の線の時）</label><input type="text" id="osmWay" placeholder="分からなければ空のまま" inputmode="numeric" autocomplete="off"></div>
+    </div>
+    <p class="hint">範囲は座標の原点（キャンパスの中心）を決めるのに使います。住所から引く時は OpenStreetMap の検索（Nominatim）を使います。Google の地図は使いません。</p>
     </div>
     <div id="siteNote" class="note">敷地の準備を確かめています…</div>
+    <div id="siteLog"></div>
   </section>
 
   <section class="panel" id="p2">
     <h2><span class="n">2</span>棟ごとに写真を入れる<span class="state" id="s2">未</span></h2>
-    <p class="sub">写真はこの PC に置かれ、係の Claude（API）が読むためにだけ外部に送られます。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
+    <p class="sub">スマホで撮った写真は、先にこの PC に移してください（Windows のスマホ連携・USB ケーブル・共有フォルダ）。棟ごとにフォルダを分けておくと、あとで棟を付けるのが速くなります。写真はこの PC に置かれ、係の Claude（API）が読むためにだけ外部に送られます。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
     <div id="drop">
-      <button class="btn primary" id="browse" type="button">写真を選ぶ</button>
-      <p class="big">または、写真をここにドラッグ</p>
-      <p class="hint">同じ棟の写真をまとめて入れると、一括で棟を付けられます。内装の写真は何階かが必要です。</p>
-      <input type="file" id="file" multiple accept="image/*">
+    <button class="btn primary" id="browseDir" type="button">写真のフォルダを選ぶ</button>
+    <button class="btn" id="browse" type="button">写真を選ぶ（複数可）</button>
+    <p class="big">または、フォルダや写真をここにドラッグ</p>
+    <p class="hint">同じ棟の写真をまとめて入れると、一括で棟を付けられます（フォルダ名に棟の名前があれば、その棟が先に入ります）。内装の写真は何階かが必要です。</p>
+    <input type="file" id="file" multiple accept="image/*">
+    <input type="file" id="dir" webkitdirectory multiple style="display:none">
     </div>
     <div id="bulk">
       <span><b id="nsel">0</b> 枚を選択中</span>
@@ -137,15 +165,42 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     <datalist id="buildings"></datalist>
   </section>
 
+  <section class="panel" id="tape">
+    <h2><span class="n">2b</span>メジャーの写真<span class="state" id="sT">任意</span></h2>
+    <p class="sub">壁にメジャーを当てて撮った写真はここから。0 の爪と両端の目盛りが写り、壁に平らに沿っている物が良い写真です。棟はあなたの申告として扱い、係は棟を変えません（面とメモの補足だけ足します）。</p>
+    <div class="two">
+      <div><label class="f" for="tapeBuilding">棟の名前（必須）</label><input type="text" id="tapeBuilding" list="buildings" placeholder="例：1 号館" autocomplete="off"></div>
+      <div><label class="f" for="tapeFace">面（分かれば。報告のページの面 id、例 f0）</label><input type="text" id="tapeFace" placeholder="分からなければ空のまま" autocomplete="off"></div>
+    </div>
+    <label class="f" for="tapeNote">メモ（どこに当てたか・何を測ったか）</label>
+    <textarea id="tapeNote" placeholder="例：正面の柱型の幅に水平に当てた。0〜92 cm。タイル 8 枚と少し"></textarea>
+    <div class="pick">
+      <button class="btn" type="button" id="tapeBrowse">メジャーの写真を選ぶ（PC のフォルダから）</button>
+      <span class="status" id="tapeSel">0 枚</span>
+      <button class="btn primary" type="button" id="tapeSend" disabled>メジャーの写真を送る</button>
+      <button class="btn ghost" type="button" id="tapeStart" style="display:none">この棟の係を起動する</button>
+      <input type="file" id="tapeFile" multiple accept="image/*">
+    </div>
+    <div id="tapeThumbs"></div>
+    <div class="note" id="tapeMsg">送ると、写真をこの PC の <code>data/photos/&lt;今日の日付&gt;/&lt;棟&gt;/</code> に置き、索引に「職員の申告の棟・メジャーの写真・あなたのメモ」を付けます。</div>
+  </section>
+
   <section class="panel" id="p3">
     <h2><span class="n">3</span>記録を始める<span class="state" id="s3">未</span></h2>
     <p class="sub">ここから先は係の Claude とコードが進めます。写真が足りない面は、決めつけずに「どの面を、どこから」の撮影依頼として右の進捗に戻ります。</p>
     <div class="go">
-      <div class="status" id="status">写真を入れてください。</div>
-      <button class="btn primary" id="export" type="button" disabled>振り分けを書き出す</button>
+    <div class="status" id="status">写真を入れてください。</div>
+    <span id="maxUsdWrap" style="display:none">費用の上限 <input type="number" id="maxUsd" min="0" step="1" style="width:6em"> USD／棟</span>
+    <button class="btn primary" id="export" type="button" disabled>振り分けを書き出す</button>
     </div>
-    <div class="note" id="nextNote">書き出した <code>assignments.json</code> を、このリポジトリで次のように取り込みます（画面から直接始める仕組みは準備中）。
-      <span class="cmd" id="cmd">recorder photos assign --from assignments.json</span></div>
+    <div class="note" id="nextNote">この画面はファイルとして開かれているので、写真を PC に置く・係を起動することはできません。振り分けを <code>assignments.json</code> に書き出し、写真を <code>data/photos/&lt;日付&gt;/&lt;棟&gt;/</code> に置いてから、このリポジトリで次を実行します。
+    <span class="cmd" id="cmd">recorder photos assign --from assignments.json</span>
+    ボタン 1 つで写真を置いて係を起動するには、リポジトリ直下で <code>recorder serve</code> を起動し、表示された URL で開き直してください。</div>
+    <ul class="cant" id="cantList">
+    <li>画面でまだできない事：止まった係の続き（<code>recorder agent resume &lt;棟&gt;</code>）と、作業中の係を止めるボタンはありません。</li>
+    <li>API キーありでこの画面から 1 棟を最後まで通した記録は、まだありません。</li>
+    <li>別の大学で敷地の取得から最後まで通した試しは、まだありません。</li>
+    </ul>
   </section>
 
   <section class="panel" id="p4">
@@ -185,23 +240,53 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
   }));
   let site = null;
   function slugOf(s) { return (s || "campus").normalize("NFKC").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "campus"; }
+  let addingCampus = false;
   function paintSite() {
-    const n = $("#siteNote"), st = $("#s1");
-    if (site) {
-      const nb = Object.keys(site.designed || {}).length, nx = (site.boxes || []).length;
-      n.className = "note";
-      n.innerHTML = `敷地の準備は済んでいます（キャンパス <b>${site.campus || "—"}</b>、根拠付きの棟 ${nb}、地図の箱 ${nx}）。`;
-      st.textContent = "済"; st.className = "state done";
-      if (!univ.value && site.university) univ.value = site.university;
-    } else {
-      n.className = "note warn";
-      n.innerHTML = `敷地の準備がまだです。大学名とキャンパス名を入れたら、このリポジトリで次を実行します。` +
-        `<span class="cmd">recorder campus init ${slugOf(campus.value || univ.value)} --university "${univ.value || "大学名"}" --campus-name "${campus.value || "キャンパス名"}"</span>` +
-        (SERVER ? `<div class="go" style="margin-top:8px"><button class="btn" type="button" id="campusInit">敷地を用意する</button><span class="status" id="campusMsg"></span></div>` : "");
-      const ci = $("#campusInit");
-      if (ci) ci.addEventListener("click", campusInit);
-      st.textContent = "未"; st.className = "state";
-    }
+  const n = $("#siteNote"), st = $("#s1"), form = $("#siteForm");
+  const sel = SERVER ? SERVER.selected : null, run = SERVER ? SERVER.site_run : null;
+  // 敷地の一覧（サーバあり）：2 つ以上なら選ぶ
+  if (SERVER) {
+  const cs = SERVER.campuses || [];
+  $("#campusPick").style.display = cs.length ? "" : "none";
+  const cSel = $("#campusSel");
+  cSel.innerHTML = cs.map(c => `<option value="${esc(c.campus)}"${sel && sel.campus === c.campus ? " selected" : ""}>${esc([c.university, c.campus_name].filter(Boolean).join(" ") || c.campus)}（${esc(c.campus)}）</option>`).join("");
+  if (sel && !addingCampus) { if (!univ.value && sel.university) univ.value = sel.university; if (!campus.value && sel.campus_name) campus.value = sel.campus_name; }
+  }
+  const running = run && run.state === "running";
+  if (SERVER && (addingCampus || !sel)) {
+  form.classList.add("on");
+  n.className = "note warn";
+  n.innerHTML = `${(SERVER.campuses || []).length ? "新しいキャンパスを足します。" : "この PC にはまだ敷地（キャンパスの土台）がありません。"}大学名・キャンパス名・短い名前と、範囲か住所を入れてください。` +
+  `<div class="go" style="margin-top:8px"><button class="btn primary" type="button" id="campusInit">敷地 JSON を作る</button><span class="status" id="campusMsg"></span></div>`;
+  $("#campusInit").addEventListener("click", campusInit);
+  st.textContent = "未"; st.className = "state";
+  } else if (SERVER && sel && (!sel.built || !SERVER.web_matches || running || (run && run.state === "error"))) {
+  form.classList.remove("on");
+  n.className = "note" + (run && run.state === "error" ? " warn" : "");
+  const what = !sel.built ? "地図（OpenStreetMap）の建物と境界、航空写真と 5 m 標高（国土地理院）をまだ取っていません。"
+  : "歩く画面の書き出しが、選んだキャンパスの物ではありません。";
+  n.innerHTML = running ? `敷地を取っています（${esc(run.step || "準備")}）。数分かかります。` :
+  (run && run.state === "error" ? `敷地の取得が止まりました：${esc(run.error)}` : `キャンパス <b>${esc(sel.campus)}</b>：${what}`) +
+  (running ? "" : `<div class="go" style="margin-top:8px"><button class="btn primary" type="button" id="siteBuild">地図と標高を取る</button><span class="status" id="siteMsg"></span></div>` +
+  `<div class="hint">PLATEAU（3D 都市モデル）は、その市の zip が敷地 JSON の <code>sources.plateau_zip</code> にある時だけ使います。無い市では地図の輪郭が土台になります。</div>`);
+  const b = $("#siteBuild"); if (b) b.addEventListener("click", siteBuild);
+  st.textContent = running ? "取得中" : "途中"; st.className = "state partial";
+  } else if (site) {
+  form.classList.remove("on");
+  const nb = Object.keys(site.designed || {}).length, nx = (site.boxes || []).length;
+  n.className = "note";
+  n.innerHTML = `敷地の準備は済んでいます（キャンパス <b>${esc(site.campus || "—")}</b>、根拠付きの棟 ${nb}、地図の箱 ${nx}）。`;
+  st.textContent = "済"; st.className = "state done";
+  if (!univ.value && site.university) univ.value = site.university;
+  } else {
+  n.className = "note warn";
+  n.innerHTML = `敷地の準備がまだです。リポジトリ直下で <code>recorder serve</code> を起動して開き直すと、この画面から作れます。コマンドで作るなら：` +
+  `<span class="cmd">recorder campus init ${esc(slugOf(campus.value || univ.value))} --university "${esc(univ.value || "大学名")}" --campus-name "${esc(campus.value || "キャンパス名")}" --bbox 南 西 北 東</span>` +
+  `<span class="cmd">recorder site build --campus ${esc(slugOf(campus.value || univ.value))}</span>`;
+  st.textContent = "未"; st.className = "state";
+  }
+  const lg = $("#siteLog");
+  if (run && (run.log || []).length) { lg.style.display = "block"; lg.textContent = run.log.join("\n"); } else lg.style.display = "none";
   }
 
   async function loadBuildings() {
@@ -303,8 +388,13 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     const have = new Set(items.map(i => i.file)), grid = $("#grid");
     let done = 0;
     for (const f of list) {
-      if (have.has(f.name)) continue;
-      const it = {file: f.name, blob: f, thumb: "", building: "", buildingText: "", known: false, interior: false, floor: null, sel: false, ready: false};
+    if (have.has(f.name)) continue;
+    // フォルダから選んだ写真は、親フォルダの名前が棟の一覧の名前・id と合えばその棟を先に入れる（合わなければ空のまま）
+    const rel = f.webkitRelativePath || f.relPath || "", parts = rel.split("/");
+    const parent = parts.length > 1 ? parts[parts.length - 2] : "";
+    let guess = "";
+    if (parent) { const t = parent.toLowerCase(); for (const [nm, id] of names) { if ((nm.length >= 2 && t.includes(nm.toLowerCase())) || t.split(/[_\s-]+/).includes(id.toLowerCase())) { guess = nm; break; } } }
+    const it = {file: f.name, blob: f, thumb: "", building: "", buildingText: guess, known: false, interior: false, floor: null, sel: false, ready: false};
       it.thumb = await thumbOf(f);
       items.push(it); grid.appendChild(card(it));
       done++; $("#status").textContent = `読み込み中 ${done} / ${list.length}`;
@@ -312,15 +402,33 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     }
     refresh();
   }
-  const drop = $("#drop"), fileIn = $("#file");
+  const drop = $("#drop"), fileIn = $("#file"), dirIn = $("#dir");
   $("#browse").addEventListener("click", e => { e.stopPropagation(); fileIn.click(); });
-  drop.addEventListener("click", () => fileIn.click());
+  $("#browseDir").addEventListener("click", e => { e.stopPropagation(); dirIn.click(); });
+  drop.addEventListener("click", () => dirIn.click());
   fileIn.addEventListener("change", () => { addFiles(fileIn.files); fileIn.value = ""; });
+  dirIn.addEventListener("change", () => { addFiles(dirIn.files); dirIn.value = ""; });
   ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
-  drop.addEventListener("drop", e => addFiles(e.dataTransfer.files));
+  // ドラッグ：フォルダごと落とした時は中の写真を全部（フォルダ名を棟の候補に）
+  async function dropped(dt) {
+  const entries = Array.from(dt.items || []).map(i => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  if (!entries.some(e => e.isDirectory)) return addFiles(dt.files);
+  const out = [];
+  const walk = (entry, path) => new Promise(res => {
+  if (entry.isFile) entry.file(f => { try { Object.defineProperty(f, "relPath", {value: path + f.name}); } catch (e) {} out.push(f); res(); }, () => res());
+  else if (entry.isDirectory) {
+  const rd = entry.createReader(), all = [];
+  const more = () => rd.readEntries(async es => { if (!es.length) { for (const x of all) await walk(x, path + entry.name + "/"); res(); } else { all.push(...es); more(); } }, () => res());
+  more();
+  } else res();
+  });
+  for (const e of entries) await walk(e, "");
+  return addFiles(out);
+  }
+  drop.addEventListener("drop", e => dropped(e.dataTransfer));
   document.addEventListener("dragover", e => e.preventDefault());
-  document.addEventListener("drop", e => { e.preventDefault(); if (!drop.contains(e.target)) addFiles(e.dataTransfer.files); });
+  document.addEventListener("drop", e => { e.preventDefault(); if (!drop.contains(e.target)) dropped(e.dataTransfer); });
 
   $("#selAll").addEventListener("click", () => { items.forEach(i => { i.sel = true; i.el.classList.add("sel"); }); refresh(); });
   $("#selNone").addEventListener("click", () => { items.forEach(i => { i.sel = false; i.el.classList.remove("sel"); }); refresh(); });
@@ -348,16 +456,47 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     let j = null; try { j = await r.json(); } catch (e) {}
     return {ok: r.ok, status: r.status, j: j || {}};
   }
-  async function campusInit() {
-    const m = $("#campusMsg");
-    if (!univ.value.trim() || !campus.value.trim()) { m.innerHTML = `<span class="warn">大学名とキャンパス名を入れてください。</span>`; return; }
-    m.textContent = "用意しています…";
-    try {
-      const r = await api("/api/campus", {method: "POST", headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({university: univ.value.trim(), campus_name: campus.value.trim()})});
-      m.innerHTML = r.ok ? `${esc(r.j.message)}（<code>${esc(r.j.path)}</code>）` : `<span class="warn">${esc(r.j.error || r.status)}</span>`;
-    } catch (e) { m.innerHTML = `<span class="warn">サーバに届きません。</span>`; }
+  async function refreshServer() {
+  try { const r = await fetch("/api/site", {cache: "no-store"}); if (r.ok) SERVER = await r.json(); } catch (e) {}
   }
+  async function campusInit() {
+  const m = $("#campusMsg");
+  if (!univ.value.trim() || !campus.value.trim()) { m.innerHTML = `<span class="warn">大学名とキャンパス名を入れてください。</span>`; return; }
+  if (!$("#bbox").value.trim() && !$("#addr").value.trim()) { m.innerHTML = `<span class="warn">範囲か住所を入れてください（座標の原点をキャンパスの中心に置くため）。</span>`; return; }
+  m.textContent = "作っています…";
+  try {
+  const r = await api("/api/campus", {method: "POST", headers: {"Content-Type": "application/json"},
+  body: JSON.stringify({university: univ.value.trim(), campus_name: campus.value.trim(), slug: $("#slug").value.trim(),
+  bbox: $("#bbox").value.trim() || null, address: $("#addr").value.trim() || null, osm_relation: $("#osmRel").value.trim() || null, osm_way: $("#osmWay").value.trim() || null})});
+  if (!r.ok) { m.innerHTML = `<span class="warn">${esc(r.j.error || r.status)}</span>`; return; }
+  addingCampus = false;
+  await refreshServer(); paintSite();
+  const m2 = $("#siteMsg"); if (m2) m2.innerHTML = `${esc(r.j.message)}（<code>${esc(r.j.path)}</code>）`;
+  } catch (e) { m.innerHTML = `<span class="warn">サーバに届きません。</span>`; }
+  }
+  async function siteBuild() {
+  const m = $("#siteMsg");
+  if (m) m.textContent = "始めています…";
+  const r = await api("/api/site/build", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({campus: (SERVER.selected || {}).campus})});
+  if (!r.ok) { if (m) m.innerHTML = `<span class="warn">${esc(r.j.error || r.status)}</span>`; return; }
+  pollSite();
+  }
+  let siteTimer = null;
+  async function pollSite() {
+  clearTimeout(siteTimer);
+  await refreshServer(); paintSite();
+  const run = SERVER && SERVER.site_run;
+  if (run && run.state === "running") siteTimer = setTimeout(pollSite, 4000);
+  else if (run && run.state === "done") { // 敷地が取れたら棟の一覧と進捗を読み直す
+  $("#buildings").innerHTML = ""; names = new Map(); idByLower = new Map();
+  await loadBuildings(); loadProgress();
+  }
+  }
+  $("#campusSel").addEventListener("change", async e => {
+  const r = await api("/api/campus/select", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({campus: e.target.value})});
+  if (r.ok) { addingCampus = false; univ.value = ""; campus.value = ""; await refreshServer(); paintSite(); }
+  });
+  $("#campusNew").addEventListener("click", () => { addingCampus = true; univ.value = ""; campus.value = ""; paintSite(); });
   async function startRecording() {
     const ready = items.filter(i => i.ready), st = $("#status"), btn = $("#export");
     const rows = ready.map(i => ({file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null,
@@ -374,11 +513,12 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
       const blds = p.j.buildings || [];
       let msg = `<b>${p.j.saved + p.j.reused}</b> 枚を置き、振り分けました（棟 ${blds.length}）` + (ws ? `。<span class="warn">${ws} 枚は確かめが要ります</span>` : "");
       if (!blds.length) { st.innerHTML = msg + "。起動できる棟がありません。"; btn.disabled = false; return; }
-      const s = await api("/api/start", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({buildings: blds})});
+      const s = await api("/api/start", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({buildings: blds, max_usd: maxUsd()})});
       if (s.status === 409) msg += `。<span class="warn">${esc((s.j.busy || []).join("、"))} は係が作業中です。終わってからもう一度押してください</span>`;
       else if (!s.ok) throw new Error(s.j.error || s.status);
       else {
-        msg += `。係を起動しました（${esc(s.j.started.join("、"))}）` + (s.j.dry_run ? `。<span class="warn">API キーが無いので試し（dry-run）で動いています</span>` : "");
+        const md = s.j.modes || {}, cont = s.j.started.filter(b => md[b] === "continue");
+msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.length ? `。うち ${esc(cont.join("、"))} は前回の記録に追記` : ""}。費用の上限 ${s.j.max_usd ? esc(s.j.max_usd) + " USD／棟" : "なし"}）` + (s.j.dry_run ? `。<span class="warn">この PC に API キーが無いので、係（Claude）を呼ばずに手順だけ確かめる試しで動いています（棟の記録は増えません）</span>` : "");
         $("#s3").textContent = "進行中"; $("#s3").className = "state partial";
       }
       st.innerHTML = msg + "。";
@@ -475,7 +615,7 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
       }
       const run = runs[id];
       if (run) last += ` <span class="${run.state === "running" || run.state === "done" ? "ok" : "wait"}">${RUN_JA[run.state] || esc(run.state)}` +
-        `${run.stopped_at ? `（${esc(run.stopped_at)}）` : ""}${run.dry_run ? "・試し" : ""}</span>`;
+        `${run.stopped_at ? `（${esc(run.stopped_at)}）` : ""}${run.continuing ? "・追記" : ""}${run.dry_run ? "・試し" : ""}</span>`;
       const link = ROOT && rep ? `<a href="${ROOT}out/${id}/report.html">${name}</a>` : name;
       html.push(`<div class="row"><div class="name">${link}<span class="id">${id}</span></div><div class="dots">${dots}</div>
         <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}</div></div>`);
@@ -484,15 +624,69 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     rows.innerHTML = html.join("");
   }
 
-  function paintGo() {
-    if (!SERVER) return;
-    $("#export").textContent = "記録を始める";
-    $("#nextNote").innerHTML = `押すと、写真をこの PC の <code>data/photos/&lt;今日の日付&gt;/&lt;棟&gt;/</code> に置いて振り分け、棟ごとに係を起動します。右の進捗は係が動いている間 10 秒ごとに更新します。` +
-      (SERVER.api_key ? "" : `<br><span class="warn">API キー（ANTHROPIC_API_KEY）が無いので、係は試し（dry-run）で動きます。</span>`);
+  // --- 2b. メジャーの枠（/api/tape。K-102）
+  let tapeFiles = [], tapeBid = null;
+  const tapeIn = $("#tapeFile");
+  function tapePaint() {
+    $("#tapeSel").textContent = `${tapeFiles.length} 枚`;
+    $("#tapeSend").disabled = !SERVER || !tapeFiles.length || !$("#tapeBuilding").value.trim();
+    const box = $("#tapeThumbs"); box.innerHTML = "";
+    tapeFiles.forEach(f => { const i = document.createElement("img"); i.alt = f.name; i.title = f.name; box.appendChild(i); thumbOf(f).then(u => { i.src = u; }); });
   }
+  $("#tapeBrowse").addEventListener("click", () => tapeIn.click());
+  tapeIn.addEventListener("change", () => {
+    const seen = new Set(tapeFiles.map(f => f.name));
+    Array.from(tapeIn.files).filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|heic|webp)$/i.test(f.name)).forEach(f => { if (!seen.has(f.name)) tapeFiles.push(f); });
+    tapeIn.value = ""; tapePaint();
+  });
+  $("#tapeBuilding").addEventListener("input", tapePaint);
+  $("#tapeSend").addEventListener("click", async () => {
+    const r0 = resolve($("#tapeBuilding").value), m = $("#tapeMsg"), btn = $("#tapeSend");
+    if (!r0.id) { m.innerHTML = `<span class="warn">棟の名前を入れてください。</span>`; return; }
+    const fd = new FormData();
+    tapeFiles.forEach(f => fd.append("photos", f, f.name));
+    fd.append("building", r0.id); fd.append("face", $("#tapeFace").value.trim()); fd.append("note", $("#tapeNote").value.trim());
+    btn.disabled = true; m.className = "note"; m.textContent = `メジャーの写真 ${tapeFiles.length} 枚を置いています…`;
+    try {
+      const r = await api("/api/tape", {method: "POST", body: fd});
+      if (!r.ok) throw new Error(r.j.error || r.status);
+      const t = r.j.tape || {};
+      tapeBid = t.building;
+      m.innerHTML = `<b>${(t.marked || []).length}</b> 枚を <b>${esc(t.building)}</b>${t.face ? ` の <b>${esc(t.face)}</b> 面` : ""} のメジャーの写真として記録しました。` +
+        `係が次に動く時、測量係がこの写真から寸法の物差しを読みます。` + ((r.j.warnings || []).length ? `<br><span class="warn">${(r.j.warnings || []).length} 件の確かめが要ります</span>` : "");
+      $("#sT").textContent = "済"; $("#sT").className = "state done";
+      $("#tapeStart").style.display = ""; tapeFiles = []; tapePaint();
+    } catch (e) { m.className = "note warn"; m.innerHTML = `止まりました：${esc(e.message)}`; }
+    btn.disabled = !tapeFiles.length;
+  });
+  $("#tapeStart").addEventListener("click", async () => {
+    if (!tapeBid) return;
+    const m = $("#tapeMsg");
+    const s = await api("/api/start", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({buildings: [tapeBid], max_usd: maxUsd()})});
+    m.innerHTML += s.status === 409 ? `<br><span class="warn">${esc(tapeBid)} は係が作業中です。終わってからもう一度押してください</span>`
+      : s.ok ? `<br>係を起動しました（${esc(tapeBid)}${s.j.modes && s.j.modes[tapeBid] === "continue" ? "、前回の記録に追記" : "、最初から"}）${s.j.dry_run ? "。API キーが無いので、係を呼ばずに手順だけ確かめる試しです" : ""}。` : `<br><span class="warn">${esc(s.j.error || s.status)}</span>`;
+    if (s.ok) poll();
+  });
+
+  function paintGo() {
+    if (!SERVER) {
+      $("#tapeMsg").innerHTML = `メジャーの枠は <code>recorder serve</code> で開いた時に使えます。サーバ無しなら、写真を取り込んだ後に次を実行します。` +
+        `<span class="cmd">recorder photos ruler-mark &lt;写真id …&gt; --building &lt;棟&gt; [--face &lt;面id&gt;] --note "どこに当てたか"</span>`;
+      return;
+    }
+    $("#export").textContent = "記録を始める";
+    $("#maxUsdWrap").style.display = "";
+    const mu = $("#maxUsd"); if (mu.value === "") mu.value = SERVER.max_usd_default != null ? SERVER.max_usd_default : 20;
+    $("#nextNote").innerHTML = `押すと、写真をこの PC の <code>data/photos/&lt;今日の日付&gt;/&lt;棟&gt;/</code> に置いて振り分け、棟ごとに係を起動します。右の進捗は係が動いている間 10 秒ごとに更新します。` +
+    `<br>もう記録がある棟（棟 JSON がある棟）は<b>追記</b>です：前回の記録を消さず、新しい写真が当たる面だけ係が見直します。記録が無い棟は最初から作ります。` +
+    `<br>費用の上限は棟ごとです（既定 ${esc(SERVER.max_usd_default)} USD、0 で上限なし）。上限に当たると係はそこで止まり、進捗に「止まりました」と出ます。` +
+    (SERVER.api_key ? "" : `<br><span class="warn">この PC に API キー（ANTHROPIC_API_KEY）が設定されていません。このまま押すと、写真の置き場と振り分けまでは本当に行い、係（Claude）は呼ばずに「手順だけ確かめる試し」で動きます（棟の記録は増えません）。</span>`);
+  }
+  function maxUsd() { const v = $("#maxUsd").value.trim(); return v === "" ? null : Number(v); }
   async function detectServer() {
-    try { const r = await fetch("/api/site", {cache: "no-store"}); if (r.ok) SERVER = await r.json(); } catch (e) { SERVER = null; }
-    paintGo();
+  try { const r = await fetch("/api/site", {cache: "no-store"}); if (r.ok) SERVER = await r.json(); } catch (e) { SERVER = null; }
+  paintGo();
+  if (SERVER && SERVER.site_run && SERVER.site_run.state === "running") pollSite();
   }
   detectServer().then(loadBuildings).then(() => { refresh(); return SERVER ? poll() : loadProgress(); });
 })();

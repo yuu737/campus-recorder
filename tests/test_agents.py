@@ -5,7 +5,7 @@ import pytest
 
 from recorder import agents
 
-AGENTS = {"satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "kenshu", "chizu", "shikichi", "shinko", "mejirushi"}
+AGENTS = {"satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "kenshu", "chizu", "shikichi", "shinko", "mejirushi", "hogo"}  # hogo：保護の係（K-104、T4）
 
 
 def test_load_defs():
@@ -197,3 +197,273 @@ def test_pipeline_dry_run_mejirushi(tmp_path):
     r = agents.run_pipeline("b1", steps=["seizu", "mejirushi", "kenshu"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
     assert [s["agent"] for s in r["steps"]] == ["seizu", "mejirushi", "kenshu"]
     assert r["steps"][1]["task"] == agents.step_task("mejirushi", "b1") and r["steps"][1]["model"] == "claude-opus-5-5"
+
+
+# ---- 11/8 T3：事件の検出の分け方・再開・追記・費用の上限 ----
+
+def test_tool_request_class():
+    c = agents.tool_request_class
+    assert c({"kind": "tool", "what": "敷地に置く物：通路橋", "why": "敷地に段を置く語彙がまだ無い"}) == "site"
+    assert c({"kind": "tool", "what": "registry の exclude を書く道具", "where": "recorder/registry.py"}) == "tool"
+    assert c({"kind": "tool", "what": "螺旋階段", "why": "部品の型に無く composite でも表せない"}) == "vocab"
+    assert c({"kind": "tool", "what": "何か", "need": "vocab"}) == "vocab"
+    assert c({"kind": "tool", "what": "敷地に置く物", "need": "tool_bug"}) == "tool"
+
+
+def _b(tmp_path, bid="b1", requests=(), soten=None):
+    (tmp_path / "data/buildings").mkdir(parents=True, exist_ok=True)
+    (tmp_path / f"data/buildings/{bid}.json").write_text(json.dumps({"id": bid, "requests": list(requests)}, ensure_ascii=False),
+                                                         encoding="utf-8")
+    if soten is not None:
+        (tmp_path / f"out/{bid}").mkdir(parents=True, exist_ok=True)
+        (tmp_path / f"out/{bid}/soten.json").write_text(json.dumps({"items": soten}, ensure_ascii=False), encoding="utf-8")
+
+
+def test_events_split_tool_check_soten(tmp_path):
+    reqs = [{"kind": "tool", "what": "敷地に置く物：大階段", "status": "open", "to": "tool"},
+            {"kind": "tool", "what": "photos exclude のコマンド", "where": "recorder/registry.py", "status": "open"},
+            {"kind": "tool", "what": "閉じた依頼", "why": "部品の型", "status": "closed"},
+            {"kind": "check", "what": "デッキは棟か敷地か", "status": "open", "to": "tool"},
+            {"kind": "check", "what": "扉の位置を確かめて", "status": "open", "to": "staff"},
+            {"kind": "photo", "what": "北面を撮る", "status": "open"}]
+    _b(tmp_path, requests=reqs, soten=[{"status": "open", "rule": "止める理由 4。規則で決まらない"},
+                                       {"status": "decided", "rule": "検収 C の 1"}])
+    d = agents.detect_events("b1", tmp_path, write=False)
+    s = d["summary"]
+    assert s["vocab"] == 0 and s["site"] == 1 and s["tool"] == 1 and s["check"] == 1 and s["stuck"] == 1
+    assert s["human"] == 2                                   # 職員宛ての check と撮影依頼
+    by = {e["kind"]: e for e in d["events"]}
+    assert by["site"]["call"] == "record" and by["tool"]["call"] == "record" and by["check"]["call"] == "fable"
+    assert "open のまま" in by["stuck"]["why"]               # rule が埋まっていても open は stuck（J-028）
+    # 止めるのは stuck だけ（site・tool・check は止めない）
+    assert [e["kind"] for e in agents._stop_events(d, [])] == ["stuck"]
+
+
+def _line(what, d, weak=False):
+    return {"what": what, "diff_m": d, "ok": abs(d) <= 0.15, "weak": weak}
+
+
+def test_face_ng_lines_groups():
+    # 写真 A1・A2 は根 A の組、B1 は根 B、C1 は根 C
+    roots = {"A1": "A", "A2": "A", "B1": "B", "C1": "C"}
+    summ = {"tol_m": 0.15, "photos": [
+        {"photo": "A1", "face": "f1", "lines": [_line("甲板", 0.5), _line("帯", 0.4), _line("縁", 0.9, weak=True), _line("一組", 0.6)]},
+        {"photo": "A2", "face": "f1", "lines": [_line("甲板", 0.6), _line("帯", 0.3), _line("一組", 0.6)]},
+        {"photo": "B1", "face": "f1", "lines": [_line("甲板", 0.05), _line("帯", 0.3)]},
+        {"photo": "C1", "face": "f1", "lines": [_line("甲板", 0.02), _line("帯", 0.02)]},
+    ]}
+    out = agents.face_ng_lines(summ, roots)
+    # 甲板：外れるのは 1 組（A）だけ → 数えない。帯：A と B の 2 組（3 組の過半）→ 数える。
+    # 縁：weak は数えない。一組：見ているのが 1 組だけ → 数えない
+    assert set(out) == {"f1"} and set(out["f1"]) == {"帯"}
+    assert out["f1"]["帯"]["groups"] == 3 and out["f1"]["帯"]["groups_ng"] == 2
+
+
+def test_stuck_by_face_and_kenshu_pass(tmp_path):
+    _b(tmp_path)
+    reg = {"entries": [{"photo": "P1", "building": "b1"}, {"photo": "P2", "building": "b1"},
+                       {"photo": "P3", "building": "b1", "via": ["P1", "P2"]}]}
+    (tmp_path / "data/photos").mkdir(parents=True)
+    (tmp_path / "data/photos/registry.json").write_text(json.dumps(reg), encoding="utf-8")
+    summ = {"tol_m": 0.15, "photos": [{"photo": p, "face": f, "lines": [_line("帯", 0.4)]}
+                                      for p in ("P1", "P2", "P3") for f in ("f1", "f2")]}
+    for name in ("20261107_100000", "20261107_110000"):
+        (tmp_path / f"out/b1/recheck/{name}").mkdir(parents=True)
+        (tmp_path / f"out/b1/recheck/{name}/summary.json").write_text(json.dumps(summ, ensure_ascii=False), encoding="utf-8")
+    d = agents.detect_events("b1", tmp_path, write=False)
+    st = [e for e in d["events"] if e["kind"] == "stuck"]
+    assert len(st) == 1 and set(st[0]["evidence"]["faces"]) == {"f1", "f2"} and "2 面" in st[0]["why"]
+    # 検収係が再検収の後に f1 を合格にした → f1 は数えない
+    (tmp_path / "data/reports/b1").mkdir(parents=True)
+    (tmp_path / "data/reports/b1/kenshu_summary.json").write_text(json.dumps(
+        {"made_at": "2026-11-07T12:00:00+09:00", "faces": {"f1": {"pass": True}, "f2": {"pass": False}}}), encoding="utf-8")
+    st = [e for e in agents.detect_events("b1", tmp_path, write=False)["events"] if e["kind"] == "stuck"]
+    assert set(st[0]["evidence"]["faces"]) == {"f2"} and st[0]["evidence"]["passed_by_kenshu"] == ["f1"]
+    # 検収の判定が再検収より古ければ使わない
+    (tmp_path / "data/reports/b1/kenshu_summary.json").write_text(json.dumps(
+        {"made_at": "2026-11-07T10:30:00", "faces": {"f1": {"pass": True}}}), encoding="utf-8")
+    st = [e for e in agents.detect_events("b1", tmp_path, write=False)["events"] if e["kind"] == "stuck"]
+    assert set(st[0]["evidence"]["faces"]) == {"f1", "f2"}
+
+
+def _ok(tokens=100, cost=0.01, sid="S"):
+    return {"text": "ok", "input_tokens": tokens, "output_tokens": 10, "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 50, "cost_usd": cost, "turns": 1, "is_error": False, "stop": "success", "session_id": sid}
+
+
+def test_retry_429_then_ok(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    waits, seen = [], []
+    monkeypatch.setattr(agents, "_sleep", waits.append)
+    n = {"i": 0}
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        seen.append((resume, task))
+        n["i"] += 1
+        if n["i"] <= 2:
+            raise agents.InvokeError("HTTP 429 rate_limit", session_id="S1", rate_limited=True)
+        return _ok(sid="S1")
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_agent("kazoe", "数える", cwd=tmp_path, agents_dir=".claude/agents", building_id="b1")
+    assert waits == [60.0, 120.0] and len(r["calls"]) == 3 and r["session_id"] == "S1"
+    assert seen[0] == (None, "数える") and seen[1][0] == "S1" and "続きから" in seen[1][1] and "数える" in seen[1][1]
+    assert r["input_tokens"] == 100 and r["stop"] == "success" and not r["is_error"] and "呼び出し 3 回" in r["note"]
+    assert agents.is_rate_limit(RuntimeError("You have hit your 5-hour limit")) and not agents.is_rate_limit(ValueError("x"))
+
+
+def test_rate_limit_stop_and_resume(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setattr(agents, "_sleep", lambda s: None)
+    calls = []
+    mode = {"fail": True}
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        calls.append((spec["name"], resume))
+        if spec["name"] == "kazoe" and mode["fail"]:
+            raise agents.InvokeError("429 Too Many Requests", session_id="KZ", rate_limited=True)
+        return _ok(sid=f"S-{spec['name']}")
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_pipeline("b1", steps=["kansatsu", "kazoe", "sokuryo"], cwd=tmp_path, agents_dir=".claude/agents")
+    assert r["stopped_early"] and r["stopped"]["reason"] == "rate_limit" and r["stopped"]["step"] == "kazoe"
+    assert r["stopped"]["session_id"] == "KZ" and r["done"] == ["kansatsu"]
+    assert len([c for c in calls if c[0] == "kazoe"]) == agents.RETRY_MAX + 1
+    st = agents.load_state("b1", tmp_path)
+    assert st["status"] == "stopped" and st["sessions"] == {"kansatsu": "S-kansatsu", "kazoe": "KZ"}
+    assert len(st["usage_calls"]) == 1 + agents.RETRY_MAX + 1
+    # dry_run の再開：計画だけ（状態は書かない）。止まった工程は同じ会話の続きから
+    dr = agents.resume_pipeline("b1", dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    assert [s["step"] for s in dr["steps"][-2:]] == ["kazoe", "sokuryo"] and dr["steps"][-2]["resume"] == "KZ"
+    assert dr["steps"][-1]["resume"] is None and dr["state_preview"]["done"] == ["kansatsu", "kazoe", "sokuryo"]
+    assert agents.load_state("b1", tmp_path)["status"] == "stopped"
+    # 本当の再開：同じ記録の名前に足す
+    mode["fail"] = False
+    calls.clear()
+    r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
+    assert calls == [("kazoe", "KZ"), ("sokuryo", None)]
+    assert not r2["stopped_early"] and r2["done"] == ["kansatsu", "kazoe", "sokuryo"] and r2["record"] == r["record"]
+    rec = json.loads(open(r2["record"], encoding="utf-8").read())
+    assert [s["step"] for s in rec["steps"]] == ["kansatsu", "kazoe", "kazoe", "sokuryo"]
+    assert [x["kind"] for x in rec["runs"]] == ["start", "resume"] and rec["runs"][1]["reason"] == "rate_limit"
+    assert rec["steps"][2]["attempt"] == 2
+    assert agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")["nothing"]
+
+
+def test_resume_after_crash_mid_step(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    st = agents._new_state("b1", "full", None, ["kansatsu", "kazoe"], None, None)
+    st.update(status="running", current="kazoe", done=["kansatsu"], sessions={"kazoe": "K9"})
+    agents._save_state(st, tmp_path)
+    seen = []
+    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: seen.append((spec["name"], resume)) or _ok())
+    r = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
+    assert seen == [("kazoe", "K9")] and r["runs"][-1]["reason"] == "crash" and r["done"] == ["kansatsu", "kazoe"]
+
+
+def test_resume_after_event(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    _b(tmp_path, soten=[{"status": "open", "rule": "規則で決まらない"}])
+    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: _ok())
+    r = agents.run_pipeline("b1", steps=["kansatsu", "kazoe", "sokuryo"], cwd=tmp_path, agents_dir=".claude/agents")
+    assert r["stopped"]["reason"] == "event" and r["stopped"]["step"] == "kansatsu" and r["done"] == ["kansatsu"]
+    # 進行役が見て続けると決めた → 同じ事件では止めない
+    r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
+    assert not r2["stopped_early"] and r2["done"] == ["kansatsu", "kazoe", "sokuryo"]
+
+
+def test_max_usd(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    budgets = []
+
+    def fake(spec, task, cwd, max_turns, max_budget_usd, resume=None):
+        budgets.append(max_budget_usd)
+        return _ok(cost=0.6)
+
+    monkeypatch.setattr(agents, "_invoke", fake)
+    r = agents.run_pipeline("b1", steps=["kansatsu", "kazoe", "sokuryo"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=1.0)
+    assert budgets == [1.0, 0.4]                 # 1 回の上限は棟の上限の残り
+    assert r["stopped"]["reason"] == "max_usd" and r["spent_usd"] == pytest.approx(1.2) and r["done"] == ["kansatsu", "kazoe"]
+    rec = json.loads(open(r["record"], encoding="utf-8").read())
+    assert rec["stopped"]["reason"] == "max_usd" and rec["usage_calls_total"]["input_tokens"] == 200
+    with pytest.raises(agents.AgentError):
+        agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
+    r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents", max_usd=5.0)
+    assert not r2["stopped_early"] and budgets[-1] == pytest.approx(3.8)
+
+
+def test_continue_dry_run(tmp_path):
+    with pytest.raises(agents.AgentError):
+        agents.continue_pipeline("b1", "メジャー/本部棟_honbu", dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    _b(tmp_path)
+    r = agents.continue_pipeline("b1", "メジャー/本部棟_honbu", faces=["f6"], dry_run=True, cwd=tmp_path,
+                                 agents_dir=".claude/agents")
+    assert [s["step"] for s in r["steps"]] == agents.CONTINUE_STEPS and r["mode"] == "continue"
+    by = {s["step"]: s for s in r["steps"]}
+    for st in ("satsuei", "shiwake", "sokuryo", "sekkei", "kenshu"):
+        t = by[st]["task"]
+        assert t.startswith(agents.step_task(st, "b1", "メジャー/本部棟_honbu")) and "【追記】" in t
+        assert "前の値と差を method" in t and "--zero にしない" in t and "面 f6" in t
+    assert "satsuei_answers.json" in by["satsuei"]["task"] and "answered" in by["sekkei"]["task"]
+    assert "recorder photos import メジャー/本部棟_honbu --period during" in by["satsuei"]["task"]
+    assert by["seizu"]["task"] == "recorder run data/buildings/b1.json --fast"
+    assert r["state_preview"]["mode"] == "continue" and r["state_preview"]["faces"] == ["f6"]
+    assert not (tmp_path / "out/b1/pipeline_state.json").exists()
+
+
+def test_continue_keeps_previous_state(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    _b(tmp_path)
+    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: _ok())
+    old = agents._new_state("b1", "full", None, ["kansatsu"], None, None)
+    old.update(status="stopped", record_name="pipeline_20261107_083839.json")
+    agents._save_state(old, tmp_path)
+    r = agents.continue_pipeline("b1", None, steps=["satsuei", "shiwake"], cwd=tmp_path, agents_dir=".claude/agents",
+                                 max_usd=2)
+    assert (tmp_path / "out/b1/pipeline_state_20261107_083839.json").exists()
+    st = agents.load_state("b1", tmp_path)
+    assert st["mode"] == "continue" and st["status"] == "done" and st["max_usd"] == 2 and r["runs"][0]["previous_state"]
+
+
+def test_continue_known_events_do_not_stop(tmp_path):
+    _b(tmp_path, requests=[{"kind": "asset", "what": "長机の見た目", "status": "open"}])
+    r = agents.continue_pipeline("b1", None, steps=["satsuei", "shiwake"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    assert not r["stopped_early"] and "アセット" in r["runs"][0]["known_events"][0]
+    # 最初からの pipeline では止まる
+    r2 = agents.run_pipeline("b1", steps=["satsuei", "shiwake"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    assert r2["stopped"]["reason"] == "event"
+
+
+def test_step_task_takes_campus_at_run_time(tmp_path, monkeypatch):
+    """依頼文に敷地 JSON の道と scope.targets を実行時に差し込む（名城の tempaku.json・4 棟を直書きしない。監査 A 12・13）。"""
+    (tmp_path / "data" / "site").mkdir(parents=True)
+    (tmp_path / "data" / "site" / "x-univ.json").write_text(json.dumps(
+        {"campus": "x-univ", "university": "X 大学", "scope": {"targets": ["a1", "b2"]}}, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.delenv(agents.CAMPUS_ENV, raising=False)
+    assert agents.campus_slug(tmp_path) == "x-univ"
+    for st in ("satsuei", "shiwake", "kansatsu", "sokuryo", "sekkei"):
+        t = agents.step_task(st, "a1", cwd=tmp_path)
+        assert "data/site/x-univ.json" in t and "a1・b2" in t and "tempaku" not in t and "名城" not in t
+    assert "--building a1" in agents.step_task("shiwake", "a1", cwd=tmp_path)
+    monkeypatch.setenv(agents.CAMPUS_ENV, "y-campus")    # recorder serve が画面で選んだ敷地
+    t = agents.step_task("kansatsu", "a1", cwd=tmp_path)
+    assert "data/site/y-campus.json" in t and "未設定" in t
+    monkeypatch.delenv(agents.CAMPUS_ENV)
+    (tmp_path / "data" / "site" / "x-univ.json").unlink()
+    t = agents.step_task("kansatsu", "a1", cwd=tmp_path)
+    assert "まだ決まっていない" in t and "推測しない" in t
+
+
+def test_continue_satsuei_mentions_relink():
+    t = agents.continue_task("satsuei", "b1", "メジャー/b1")
+    assert "photos relink <フォルダ> --assign-from-folder" in t
+
+
+def test_permission_none_is_settled(tmp_path, monkeypatch):
+    monkeypatch.delenv(agents.CAMPUS_ENV, raising=False)
+    p = tmp_path / "data" / "site" / "c.json"
+    p.parent.mkdir(parents=True)
+    for status, n in (("none", 0), ("granted", 0), (None, 1), ("asked", 1)):
+        p.write_text(json.dumps({"scope": {"targets": ["b1"]},
+                                 "sources": {"campus_map": {"permission": {"status": status}}}}), encoding="utf-8")
+        assert len(agents._site_events(tmp_path)) == n, status

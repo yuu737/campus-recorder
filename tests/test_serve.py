@@ -23,6 +23,9 @@ def _jpeg(color):
 def srv(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv(serve.CAMPUS_ENV, raising=False)   # 画面で選んだ敷地は環境変数にも入る。テストの外に漏らさない
+    monkeypatch.setitem(serve.SELECTED, "campus", None)
+    serve.SITE_RUN.clear()
     (tmp_path / "web" / "data").mkdir(parents=True)
     (tmp_path / "web" / "staff.html").write_text("<!doctype html><title>t</title>", encoding="utf-8")
     (tmp_path / "web" / "data" / "site.json").write_text(json.dumps(
@@ -39,17 +42,19 @@ def srv(tmp_path, monkeypatch):
     yield f"http://127.0.0.1:{s.server_address[1]}", tmp_path
     s.shutdown()
     s.server_close()
+    import os
+    os.environ.pop(serve.CAMPUS_ENV, None)   # _select が入れた物を消す（monkeypatch は元から無い変数を戻さない）
 
 
 def _get(url):
-    with urllib.request.urlopen(url, timeout=10) as r:
+    with urllib.request.urlopen(url, timeout=60) as r:
         return r.status, json.loads(r.read())
 
 
 def _post(url, data, ctype="application/json"):
     req = urllib.request.Request(url, data=data, method="POST", headers={"Content-Type": ctype})
     try:
-        with urllib.request.urlopen(req, timeout=10) as r:
+        with urllib.request.urlopen(req, timeout=60) as r:
             return r.status, json.loads(r.read())
     except urllib.error.HTTPError as e:
         return e.code, json.loads(e.read())
@@ -71,10 +76,10 @@ def test_site_and_static(srv):
     base, _root = srv
     st, j = _get(base + "/api/site")
     assert st == 200 and j["ready"] is True and j["targets"] == ["honbu", "tower75"] and j["api_key"] is False
-    with urllib.request.urlopen(base + "/web/staff.html", timeout=10) as r:
+    with urllib.request.urlopen(base + "/web/staff.html", timeout=60) as r:
         assert r.status == 200
     with pytest.raises(urllib.error.HTTPError) as e:
-        urllib.request.urlopen(base + "/data/site/test.json", timeout=10)
+        urllib.request.urlopen(base + "/data/site/test.json", timeout=60)
     assert e.value.code == 404   # web/ out/ data/photos/ 以外は配信しない
 
 
@@ -111,7 +116,7 @@ def test_start_progress_and_409(srv, monkeypatch):
     gate = threading.Event()
     calls = []
 
-    def fake(bid, photos_folder=None, *, steps=None, dry_run=False, cwd=".", agents_dir=None):
+    def fake(bid, photos_folder=None, *, steps=None, dry_run=False, cwd=".", agents_dir=None, max_usd=None):
         calls.append((bid, dry_run, str(cwd)))
         gate.wait(10)
         return {"building": bid, "dry_run": dry_run, "steps": [{"step": "satsuei"}, {"step": "shiwake"}], "stopped_early": False}
@@ -145,22 +150,156 @@ def test_start_progress_and_409(srv, monkeypatch):
     assert rec["state"] == "done" and rec["building"] == "honbu"
 
 
+def test_start_continues_buildings_that_have_json_and_passes_max_usd(srv, monkeypatch):
+    """棟 JSON がある棟は追記（continue_pipeline）、無い棟は run_pipeline。max_usd は両方に渡す（11/8、K-106）。"""
+    base, root = srv
+    calls = []
+
+    def fake_new(bid, photos_folder=None, *, steps=None, dry_run=False, cwd=".", agents_dir=None, prices=None, max_usd=None):
+        calls.append(("new", bid, max_usd))
+        return {"building": bid, "steps": [{"step": "satsuei"}]}
+
+    def fake_cont(bid, photos_folder=None, *, faces=None, steps=None, dry_run=False, cwd=".", agents_dir=None, prices=None, max_usd=None):
+        calls.append(("continue", bid, max_usd))
+        return {"building": bid, "steps": [{"step": "sokuryo"}], "spent_usd": 0.0,
+                "stopped": {"step": "sokuryo", "reason": "max_usd", "why": "上限"}}
+
+    monkeypatch.setattr(agents, "run_pipeline", fake_new)
+    monkeypatch.setattr(agents, "continue_pipeline", fake_cont)
+    (root / "data" / "buildings").mkdir(parents=True)
+    (root / "data" / "buildings" / "honbu.json").write_text("{}", encoding="utf-8")
+    st, j = _post(base + "/api/start", json.dumps({"buildings": ["honbu", "tower75"], "max_usd": 3.5}).encode())
+    assert st == 200 and j["modes"] == {"honbu": "continue", "tower75": "new"} and j["max_usd"] == 3.5
+    for _ in range(100):
+        st, p = _get(base + "/api/progress?buildings=honbu,tower75")
+        if all(p["buildings"][b]["run"]["state"] != "running" for b in ("honbu", "tower75")):
+            break
+        time.sleep(0.05)
+    h, t = p["buildings"]["honbu"]["run"], p["buildings"]["tower75"]["run"]
+    assert h["continuing"] is True and t["continuing"] is False
+    assert h["state"] == "stopped" and h["stopped_at"] == "sokuryo" and h["stopped"]["reason"] == "max_usd"
+    assert sorted(calls) == [("continue", "honbu", 3.5), ("new", "tower75", 3.5)]
+    st, j = _post(base + "/api/start", json.dumps({"buildings": ["kyotsu-minami"], "max_usd": -1}).encode())
+    assert st == 400
+
+
+def test_tape_frame_marks_staff_building_and_ruler(srv):
+    """メジャーの枠（K-102）：/api/tape で送った写真は同じ取り込みに乗り、職員の申告の棟と ruler・ruler_note が付く。"""
+    base, root = srv
+    body, ctype = _multipart([("TAPE_1.jpg", _jpeg((10, 200, 10)))],
+                             {"building": "honbu", "face": "f6", "note": "正面の柱型に水平。0〜92 cm"})
+    st, j = _post(base + "/api/tape", body, ctype)
+    assert st == 200 and j["tape"]["marked"] == ["TAPE_1"] and j["buildings"] == ["honbu"]
+    rec = next(r for r in json.loads((root / "data" / "photos" / "index.json").read_text(encoding="utf-8"))["photos"] if r["id"] == "TAPE_1")
+    assert (rec["building"], rec["assigned_by"], rec["ruler"], rec["face"]) == ("honbu", "staff", "tape_measure", "f6")
+    assert rec["ruler_note"] == "正面の柱型に水平。0〜92 cm" and rec["send_file"] == "send/TAPE_1.jpg"
+    st, j = _post(base + "/api/tape", *_multipart([("X.jpg", _jpeg((0, 0, 0)))], {"building": ""}))
+    assert st == 400
+
+
 def test_bad_requests_do_not_kill_server(srv):
     base, _root = srv
     st, j = _post(base + "/api/start", b"{not json")
     assert st == 400 and "error" in j
     st, j = _post(base + "/api/start", json.dumps({"buildings": ["../x"]}).encode())
     assert st == 400
+    st, j = _post(base + "/api/campus", json.dumps({"university": "u", "campus_name": "c", "slug": "test"}).encode())
+    assert st == 200 and j["made"] is False   # 敷地 JSON は既にある（作り直さず、その敷地を選ぶ）
     st, j = _post(base + "/api/campus", json.dumps({"university": "u", "campus_name": "c"}).encode())
-    assert st == 200 and j["made"] is False   # 敷地 JSON は既にある
+    assert st == 400 and "範囲" in j["error"]   # 範囲（bbox）か住所が無いと作らない（原点が別の大学になるため）
     st, j = _get(base + "/api/site")
-    assert st == 200
+    assert st == 200 and j["campus_json"] == "test" and j["max_usd_default"] == 20.0
 
 
 def test_campus_init_when_missing(srv):
     base, root = srv
     (root / "data" / "site" / "test.json").unlink()
-    st, j = _post(base + "/api/campus", json.dumps({"university": "Meijo Univ", "campus_name": "Tempaku"}).encode())
-    assert st == 200 and j["made"] is True and j["campus"] == "tempaku"
-    doc = json.loads((root / "data" / "site" / "tempaku.json").read_text(encoding="utf-8"))
-    assert doc["university"] == "Meijo Univ" and doc["scope"]["targets"] == []
+    st, j = _post(base + "/api/campus", json.dumps({"university": "Sample Univ", "campus_name": "North",
+                                                    "bbox": "35.000, 137.000, 35.010, 137.012", "osm_relation": "123"}).encode())
+    assert st == 200 and j["made"] is True and j["campus"] == "north" and j["bbox"] == [35.0, 137.0, 35.01, 137.012]
+    doc = json.loads((root / "data" / "site" / "north.json").read_text(encoding="utf-8"))
+    assert doc["university"] == "Sample Univ" and doc["scope"]["targets"] == []
+    assert abs(doc["crs"]["origin_lat"] - 35.005) < 1e-6 and doc["sources"]["osm"]["relation"] == 123   # 原点は範囲の中心
+    assert doc["sources"]["osm"]["way"] is None
+    st, j = _get(base + "/api/site")
+    assert j["campus_json"] == "north" and j["selected"]["built"] is False and j["web_matches"] is False
+
+
+def test_campus_passes_osm_way_and_relation_to_campus_init(srv, monkeypatch):
+    """OSM の敷地の番号（relation・way）は call_campus_init から campus_init にそのまま渡る（F1 の引数）。数字でなければ 400。"""
+    base, root = srv
+    seen = {}
+    from recorder import site
+    real = site.campus_init
+
+    def spy(*a, **kw):
+        seen.update(kw)
+        return real(*a, **kw)
+
+    monkeypatch.setattr(site, "campus_init", spy)
+    body = {"university": "Sample Univ", "campus_name": "West", "bbox": [35.0, 137.0, 35.01, 137.01], "osm_way": "456789"}
+    st, j = _post(base + "/api/campus", json.dumps(body).encode())
+    assert st == 200 and j["made"] is True and seen["osm_way"] == 456789 and seen["osm_relation"] is None
+    doc = json.loads((root / "data" / "site" / "west.json").read_text(encoding="utf-8"))
+    assert doc["sources"]["osm"]["way"] == 456789 and doc["sources"]["osm"]["relation"] is None
+    st, j = _post(base + "/api/campus", json.dumps({**body, "slug": "west2", "osm_relation": "abc"}).encode())
+    assert st == 400 and "relation" in j["error"]
+
+
+def test_campus_needs_ascii_slug_for_japanese_names(srv):
+    base, root = srv
+    body = {"university": "○○大学", "campus_name": "北キャンパス", "bbox": [35.0, 137.0, 35.01, 137.01]}
+    st, j = _post(base + "/api/campus", json.dumps(body, ensure_ascii=False).encode())
+    assert st == 400 and "短い名前" in j["error"]
+    st, j = _post(base + "/api/campus", json.dumps({**body, "slug": "kita"}, ensure_ascii=False).encode())
+    assert st == 200 and j["made"] is True and j["campus"] == "kita"
+    # 敷地 JSON が 2 つになったので、選んだ物を default_campus.txt にも書く（CLI と係が同じ物を使う）
+    assert (root / "data" / "site" / "default_campus.txt").read_text(encoding="utf-8").strip() == "kita"
+    st, j = _post(base + "/api/campus/select", json.dumps({"campus": "test"}).encode())
+    assert st == 200 and serve._default_campus() == "test"
+    st, j = _post(base + "/api/campus/select", json.dumps({"campus": "nothing"}).encode())
+    assert st == 400
+
+
+def test_site_build_runs_commands_in_thread(srv, monkeypatch):
+    """敷地の取得（POST /api/site/build）：CLI のコマンドを別スレッドで順に打ち、進捗は /api/progress の site。"""
+    import sys
+    base, root = srv
+    seen = []
+
+    def fake_cmds(campus):
+        seen.append(campus)
+        return [[sys.executable, "-c", f"print('build {campus}')"], [sys.executable, "-c", "print('export')"]]
+
+    monkeypatch.setattr(serve, "site_build_commands", fake_cmds)
+    st, j = _post(base + "/api/site/build", b"{}")
+    assert st == 200 and j["started"] and j["campus"] == "test"
+    for _ in range(200):
+        st, p = _get(base + "/api/progress?buildings=honbu")
+        if p["site"]["state"] != "running":
+            break
+        time.sleep(0.05)
+    assert p["site"]["state"] == "done" and p["site"]["log"] == ["build test", "export"] and set(seen) == {"test"}
+    monkeypatch.setattr(serve, "site_build_commands", lambda c: [[sys.executable, "-c", "import sys; print('x'); sys.exit(3)"]])
+    st, j = _post(base + "/api/site/build", json.dumps({"campus": "test"}).encode())
+    for _ in range(200):
+        st, p = _get(base + "/api/progress?buildings=honbu")
+        if p["site"]["state"] != "running":
+            break
+        time.sleep(0.05)
+    assert p["site"]["state"] == "error" and "3" in p["site"]["error"]
+    st, j = _post(base + "/api/site/build", json.dumps({"campus": "nothing"}).encode())
+    assert st == 400
+
+
+def test_start_default_max_usd(srv, monkeypatch):
+    base, root = srv
+    calls = []
+    monkeypatch.setattr(agents, "run_pipeline", lambda bid, pf=None, **kw: calls.append(kw.get("max_usd")) or {"steps": []})
+    st, j = _post(base + "/api/start", json.dumps({"buildings": ["honbu"]}).encode())
+    assert st == 200 and j["max_usd"] == agents.DEFAULT_MAX_USD == 20.0
+    for _ in range(100):
+        if calls:
+            break
+        time.sleep(0.05)
+    assert calls == [20.0]

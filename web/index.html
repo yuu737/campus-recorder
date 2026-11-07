@@ -436,18 +436,25 @@ function addJump(label, id, off) {
   const btn = document.createElement("button"); btn.textContent = label; btn.onclick = go; jump.appendChild(btn);
   return go;
 }
-const goHonbu = addJump("本部棟へ", "honbu", [-20, 37]);
-addJump("タワー75へ", "tower75", [10, 70]);
-// 面の前に立つ：mid＝面の中点（東, 北 m。棟 JSON の faces の from/to の中点）、bearing＝面の外向きの方位°、dist＝面からの距離 m
-function addJumpFace(label, mid, bearing, dist) {
-  const b = bearing * Math.PI / 180, dx = Math.sin(b) * dist, dz = -Math.cos(b) * dist;
-  const btn = document.createElement("button"); btn.textContent = label;
-  btn.onclick = () => place(mid[0] + dx, -mid[1] + dz, Math.atan2(dx, dz));   // 面の方を向く
-  jump.appendChild(btn);
+// 「<棟>へ」のボタンは敷地 JSON から作る（大学や棟の名前・座標はこのコードに書かない）。
+// 立つ位置は、道具が書き出した街路の視点（site.models[id].street、製図の model_report.json 由来）があればそれ、
+// 無ければ棟の大きさから南側に立つ既定。
+let goFirst = null;
+const jumpOrder = (site.scope && site.scope.targets) || Object.keys(site.models || {});
+for (const id of jumpOrder) {
+  const m = (site.models || {})[id]; if (!m || !centers[id]) continue;
+  const name = ((site.designed || {})[id] || {}).name || id;
+  let go;
+  if (m.street && Array.isArray(m.street.eye) && m.street.eye.length >= 2) {
+    const [sx, sn] = m.street.eye, yawDeg = Number(m.street.yaw_deg) || 0;
+    go = () => place(sx, -sn, -yawDeg * Math.PI / 180);     // x=東, y=北 → three.js は z=-北。yaw は北から時計回り
+    const btn = document.createElement("button"); btn.textContent = name + "へ"; btn.onclick = go; jump.appendChild(btn);
+  } else {
+    go = addJump(name + "へ", id, (s) => [0, s.z / 2 + 30]);
+  }
+  goFirst = goFirst || go;
 }
-addJumpFace("図書館へ", [7.79, -17.14], 298, 22);         // 西北西面 f2（正面入口）
-addJump("共通講義棟南へ", "kyotsu-minami", (s) => [-10, s.z / 2 + 30]);
-(goHonbu || (() => place(0, 0, 0)))();
+(goFirst || (() => place(0, 0, 0)))();
 let fixed = null;                                      // ?cam= の固定視点（three.js の座標）
 if (fixedCam) {
   const [x, n, z, yawDeg, pitchDeg] = fixedCam;

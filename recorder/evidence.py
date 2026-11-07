@@ -83,7 +83,11 @@ def method_of(e: dict) -> str:
 def entity_name(photo_id: str) -> str:
     """エンティティ名に使う写真の短い名前（ASCII の英数字と _ だけ。P223_本部棟… → P223）。"""
     s = re.sub(r"[^A-Za-z0-9_]+", "", photo_id).strip("_")
-    return s or "photo"
+    if s:
+        return s
+    # 英数字が 1 つも無い id（利用者が付けた日本語名など）は、全部 "photo" になって重なるので id の hash の頭を付ける（11/8 F3）
+    from .photos import short_name
+    return short_name(photo_id, ascii_only=True)
 
 
 def face_color(face_id: str, faces: list[str]) -> tuple[int, int, int]:

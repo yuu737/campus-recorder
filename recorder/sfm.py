@@ -621,7 +621,7 @@ def models_from_reconstructions(recs: list, name_to_key: dict[str, str]) -> list
 
 def collect(b: dict, index: dict, photos: list[str] | None, max_n: int | None, reg: dict) -> tuple[list[dict], dict]:
     """SfM に入れる写真：棟の写真全部（期間中・期間前。登録済みは合わせの基準として必ず入れる）。"""
-    recs = [r for r in index.get("photos", []) if r.get("building") == b["id"]]
+    recs = [r for r in index.get("photos", []) if r.get("building") == b["id"] and r["id"] not in R_.excluded_ids(reg, b["id"])]
     done = {e["photo"] for e in R_.entries_for(reg, b["id"])}
     skipped = {}
     out = []

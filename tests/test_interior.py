@@ -18,6 +18,26 @@ FIX = Path(__file__).parent / "fixtures" / "interior_building.json"
 FIX_CAT = Path(__file__).parent / "fixtures" / "assets_catalog.json"
 
 
+@pytest.fixture(autouse=True)
+def _own_decisions(tmp_path, monkeypatch):
+    """本物の data/decisions.json を読まない（11/8 F5）。
+
+    疑似本番の --zero で決定の台帳が作り直され、D-0002 の番号が別の決定（机の asset、deny）に使い回された。
+    このテストは内装の語彙の検証・形の計算を確かめる物で、台帳の今の中身は確かめない。語彙の台帳（data/vocab.json）
+    の写しと、そこに載った決定 id を全部 approve にした決定の台帳を一時フォルダに置いて差し替える。"""
+    from recorder import decisions
+
+    vocab = decisions.load_vocab()
+    ids = sorted({e["decision"] for e in vocab.get("types", []) if e.get("decision")})
+    (tmp_path / "vocab.json").write_text(json.dumps(vocab, ensure_ascii=False), encoding="utf-8")
+    (tmp_path / "decisions.json").write_text(json.dumps({
+        "schema": decisions.SCHEMA,
+        "decisions": [{"id": i, "kind": "vocab", "target": "test", "decision": "approve", "by": "test", "at": "2026-11-08",
+                       "why": "テスト用の台帳"} for i in ids]}, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(decisions, "DECISIONS", tmp_path / "decisions.json")
+    monkeypatch.setattr(decisions, "VOCAB", tmp_path / "vocab.json")
+
+
 def load() -> dict:
     return schema.load_building(FIX)
 

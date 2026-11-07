@@ -10,10 +10,14 @@
   python -m recorder photos rectify <写真> [--f35 26]  壁を正面に向け直し out/rectified/ に画像と根拠 JSON を出す
   python -m recorder photos measure <front.jpg> [--known floor_pitch=3.99 | segment=0.698@85.3]
                                                  正面化画像から柱間隔・階高の候補を数える（既知の長さがあれば m に換算）
+  python -m recorder measure tape|pitch|uniform|chain …
+                                                 メジャーの読みからタイルの周期と根拠の鎖（K-101。measure.py の末尾に使い方）
   python -m recorder photos stitch <A_front.jpg> <B_front.jpg> [--overlap-hint 左|右] [--pin "A:x=B:x"] [--out ...]
                                                  片端ずつの 2 枚を階高で揃えて横につなぐ（決まらなければ ambiguous）
   python -m recorder site confirm <id> <status> --by 名前 [--name 新しい名前] [--note ...]
                                                  職員の確認を敷地 JSON に書く
+  python -m recorder site link-box <棟|敷地の物> <箱id> --why 理由 [--ask 撮影依頼の文]
+                                                 PLATEAU の箱を棟に結ぶ（足元の 7 割以上が輪郭の中の時だけ。足りなければ撮影依頼）
   python -m recorder assets list                CC0 アセットの台帳（data/assets/catalog.json）と取得状況
   python -m recorder assets fetch [id ...]      台帳のアセットを assets/ に取る（差分だけ。sha256 を台帳に書く）
   python -m recorder photos register <写真id> --building <json> --face <面> [--from-rectify F --compare C] [--pose P]
@@ -81,6 +85,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("files", nargs="+", help="棟 JSON（複数可）")
     p.add_argument("--faces", action="store_true", help="面ごとの値と観察も出す")
     p.add_argument("--top", type=int, default=10, help="複製の多い観察の上位いくつを出すか")
+    p.add_argument("--json", action="store_true", help="JSON で出す（measured の直接／鎖／個数と観察の件数）")
 
     p = sub.add_parser("run", help="validate → draw → model → overlay → run_report.json を 1 回で")
     p.add_argument("file")
@@ -108,6 +113,18 @@ def main(argv: list[str] | None = None) -> int:
     q = ssub.add_parser("export-web", help="Web 3D 用に web/data/site.json と glb を書き出す")
     q.add_argument("--campus", default=None)
     q.add_argument("--with-coverage", action="store_true", help="out/<棟>/coverage.json の未撮影の範囲（灰色だけ。写真は出さない）を足す")
+    q.add_argument("--out", default=None, help="書き出し先（既定 web/。<out>/data/site.json に書く。試しは一時フォルダへ）")
+    q = ssub.add_parser("objects", help="敷地の物（objects：通路橋・甲板・段・置物）の検証・検収の数字・glb の書き出し")
+    q.add_argument("action", choices=["check", "export"])
+    q.add_argument("--campus", default=None)
+    q.add_argument("--out", default=None, help="export の書き出し先（<out>/data/models/site_objects.glb）。必須")
+    q = ssub.add_parser("link-box", help="PLATEAU の箱を棟（棟 JSON の輪郭）か敷地の物に結ぶ。重なりが 7 割未満なら結ばず撮影依頼")
+    q.add_argument("target", help="棟 id（data/buildings/<id>.json）か敷地の物の id（objects.items[].id）")
+    q.add_argument("box", help="PLATEAU の箱の gml_id（先頭の一部でよい。bldg_f693ff16 など）")
+    q.add_argument("--why", required=True, help="結ぶ理由（観察票・写真など）。敷地 JSON に残す")
+    q.add_argument("--by", default="recorder site link-box")
+    q.add_argument("--ask", default="", help="結べなかった時の撮影依頼の文")
+    q.add_argument("--campus", default=None)
     q = ssub.add_parser("confirm")
     q.add_argument("id")
     q.add_argument("status", choices=["confirmed", "renamed", "removed", "new"])
@@ -122,7 +139,10 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("slug")
     q.add_argument("--university", required=True)
     q.add_argument("--campus-name", required=True)
-    q.add_argument("--bbox", nargs=4, type=float, default=None, metavar=("LAT0", "LON0", "LAT1", "LON1"))
+    q.add_argument("--bbox", nargs=4, type=float, default=None, metavar=("LAT0", "LON0", "LAT1", "LON1"),
+                   help="キャンパスを囲む緯度経度。原点（中心）と平面直角座標系を決め、OSM の境界を探す範囲にもなる")
+    q.add_argument("--osm-relation", type=int, default=None, help="敷地の境界の OSM relation 番号（分かれば）")
+    q.add_argument("--osm-way", type=int, default=None, help="敷地の境界の OSM way 番号（境界が way 1 本の大学）")
     q = csub.add_parser("check", help="名前の対応・範囲・人に聞くこと・公式図の許可の未解決を一覧（問題があれば終了コード 1）")
     q.add_argument("slug", nargs="?", default=None)
 
@@ -132,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("folder")
     q.add_argument("--campus", default=None)
     q.add_argument("--period", choices=["before", "during"], default=None,
-                   help="期間前 / 期間中。省略すると撮影日が 2026-11-02 12:00 JST より前なら before")
+                   help="期間前 / 期間中。省略すると敷地 JSON の photo_policy.period_start（あれば）より前の撮影を before、決まりが無ければ during")
     q.add_argument("--ledger", default=None, help="写真台帳.json。棟の候補を source 付きで入れる")
     q = psub.add_parser("list")
     q.add_argument("--building", default=None, help="この棟の写真だけ")
@@ -143,6 +163,9 @@ def main(argv: list[str] | None = None) -> int:
     q = psub.add_parser("set-face", help="仕分け係の結果（out/photos/shiwake_*.json）の面・棟を索引に書く（鍵付き。係は索引を自分で書かない）")
     q.add_argument("--from", dest="from_json", required=True, help="out/photos/shiwake_<…>.json（\"photos\": 写真 id → {building, face, faces, …}）")
     q.add_argument("--by", default="仕分け係", help="notes に残す書き手（例「仕分け係（opus）」）")
+    q.add_argument("--building", default=None, help="呼び出した棟 id（行の棟が null の写真はこの棟の写真だけ書く。J-004。省略で出力の \"building\"）")
+    from . import photos as _photos_t4   # relink・send・tape・hogo-grid・masks・publish（11/8 T4）
+    _photos_t4.add_t4_args(psub)
     q = psub.add_parser("to-confirm", help="根拠の門：measured の根拠の写真のうち、仕分けと合わない・low で未確認の物（out/<棟>/to_confirm.json）")
     q.add_argument("building", help="data/buildings/<id>.json")
     q = psub.add_parser("confirm", help="職員が仕分けを確かめる（棟・面を渡せば直してから。渡さなければ「合っている」）")
@@ -224,6 +247,8 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--features", choices=["rootsift", "aliked-lightglue"], default="rootsift",
                    help="特徴点と照合の方式（既定 rootsift。aliked-lightglue は torch と lightglue が要る）")
     q.add_argument("--registry", default=None)
+    from . import registry as _registry      # photos unregister／exclude（11/8 J-013・J-027）
+    _registry.add_cli(psub)
 
     q = psub.add_parser("landmarks", help="目印の登録の準備：棟 JSON から目印の一覧と面の絵、写真の升目の絵、目印係への依頼（out/<棟>/landmarks/）")
     q.add_argument("building", help="棟 JSON")
@@ -301,6 +326,18 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--photos", default=None, help="取り込む写真フォルダ（省略で索引の既存の写真）")
     q.add_argument("--steps", default=None, help="カンマ区切り（既定: 全工程）")
     q.add_argument("--dry-run", action="store_true")
+    q.add_argument("--max-usd", type=float, default=20.0, help="棟ごとの費用の上限（USD、既定 20 = agents.DEFAULT_MAX_USD）。当たったら止めて記録。0 で上限なし")
+    q = asub.add_parser("resume", help="止まった pipeline・continue を out/<棟>/pipeline_state.json から続ける（429・上限・落ち・事件）")
+    q.add_argument("building")
+    q.add_argument("--dry-run", action="store_true")
+    q.add_argument("--max-usd", type=float, default=None, help="費用の上限を上げて続ける時（USD）")
+    q = asub.add_parser("continue", help="追記：前回の棟 JSON を保ち、新しい写真で 撮影→仕分け→関係する面の測量・設計・検収→製図・web")
+    q.add_argument("building")
+    q.add_argument("--photos", default=None, help="新しい写真のフォルダ（省略で索引に取り込み済みの物）")
+    q.add_argument("--faces", default=None, help="カンマ区切りの面 id（省略で撮影係の答えと仕分けで決まる面）")
+    q.add_argument("--steps", default=None, help="カンマ区切り（既定: 追記の工程）")
+    q.add_argument("--dry-run", action="store_true")
+    q.add_argument("--max-usd", type=float, default=20.0, help="棟ごとの費用の上限（USD、既定 20 = agents.DEFAULT_MAX_USD）。0 で上限なし")
     q = asub.add_parser("tasks", help="各工程の依頼文（係の定義のパス＋task）を out/<棟>/agent_tasks.json・.md に出す")
     q.add_argument("building")
     q.add_argument("--photos", default=None, help="取り込む写真フォルダ（pipeline と同じ値を渡す）")
@@ -372,6 +409,12 @@ def main(argv: list[str] | None = None) -> int:
     if (sys.argv[1:] if argv is None else list(argv))[:1] == ["shiwake-eval"]:
         return _shiwake_eval.run_cli(ap.parse_args(argv))
 
+    # 測量：メジャーからタイルの周期・面の周期の一様・根拠の鎖（K-101。11/8 追加。ここ 1 か所で引数と実行をまとめる）
+    from . import measure as _measure
+    _measure.add_args(sub.add_parser("measure", help="メジャーの読み → タイルの周期（tape）→ 面の周期の一様（uniform）→ 枚数で長さ（chain）。sokuryo_tape_*/sokuryo_chain_*.json"))
+    if (sys.argv[1:] if argv is None else list(argv))[:1] == ["measure"]:
+        return _measure.run_cli(ap.parse_args(argv))
+
     a = ap.parse_args(argv)
     need = _ledger_need(a)
     if need:   # 鍵の待ちを棟ごとに数えるため、label にコマンドの引数（棟 id やパスが入る）を付ける
@@ -386,10 +429,13 @@ def main(argv: list[str] | None = None) -> int:
 
 # 鍵（ledger）が要るコマンド：(コマンド, サブコマンド)。サブコマンドが None の物はコマンド全体
 LEDGER_WRITERS = {
-    ("photos", "assign"), ("photos", "folders"), ("photos", "import"), ("photos", "set-face"), ("photos", "confirm"),
-    ("photos", "pnp"), ("photos", "locate"), ("photos", "landmarks"),
-    ("photos", "register"), ("photos", "register-chain"), ("photos", "register-sfm"),
-    ("site", "export-web"), ("site", "build"), ("site", "confirm"), ("campus", "init"),
+    ("photos", "assign"), ("photos", "folders"), ("photos", "set-face"), ("photos", "confirm"),
+    ("photos", "locate"), ("photos", "landmarks"),
+    ("photos", "register"),
+    # photos import も入れない：EXIF・縮小・顔の検出は鍵の外、索引は import_photos が鍵を取って差分だけ書く（11/8 F3）
+    # pnp・register-chain・register-sfm・unregister・exclude は入れない：計算は鍵の外、登録台帳の書き込みは
+    # registry.save_registry が鍵を取って読み直し、差分だけ書く（11/8 J-012）
+    ("site", "export-web"), ("site", "build"), ("site", "confirm"), ("site", "link-box"), ("campus", "init"),
     ("agent", "decide"), ("assets", "fetch"),
 }
 
@@ -548,10 +594,21 @@ def _dispatch(a) -> int:
     if a.cmd == "counts":
         from .evidence import OBS_NOTE, observations, observations_line
 
+        if a.json:   # measured を直接（メジャーで直接読んだ区間）／鎖／個数に分ける（K-101）
+            import json as _json
+
+            rows = []
+            for f in a.files:
+                b = schema.load_building(f)
+                rows.append({"file": f, "measured_kinds": schema.measured_kinds(b), "observations": observations(b, top=a.top)})
+            print(_json.dumps(rows, ensure_ascii=False, indent=2, default=str))
+            return 0
         for f in a.files:
-            o = observations(schema.load_building(f), top=a.top)
+            b = schema.load_building(f)
+            o = observations(b, top=a.top)
             print(f"{f}")
             print(f"  {observations_line(o)}")
+            print(f"  {schema.measured_kinds_line(schema.measured_kinds(b))}")
             e = o["eyeball"]
             print(f"  方法が「目視」だけの値 {e['values']}（観察 {e['observations']}）")
             if a.faces:
@@ -691,9 +748,14 @@ def _agent(a) -> int:
             res = agents.log_step(a.building, a.step, model=a.model, seconds=a.seconds, tokens=a.tokens, note=a.note,
                                   record=a.record, new=a.new, started_at=a.started_at, ended_at=a.ended_at,
                                   attempt=a.attempt, result=a.result, tool_uses=a.tool_uses)
+        elif a.agent_cmd == "resume":
+            res = agents.resume_pipeline(a.building, dry_run=a.dry_run, max_usd=a.max_usd)
+        elif a.agent_cmd == "continue":
+            res = agents.continue_pipeline(a.building, a.photos, faces=a.faces.split(",") if a.faces else None,
+                                           steps=a.steps.split(",") if a.steps else None, dry_run=a.dry_run, max_usd=(a.max_usd or None))
         else:
             steps = a.steps.split(",") if a.steps else None
-            res = agents.run_pipeline(a.building, a.photos, steps=steps, dry_run=a.dry_run)
+            res = agents.run_pipeline(a.building, a.photos, steps=steps, dry_run=a.dry_run, max_usd=(a.max_usd or None))
     except agents.AgentError as e:
         print(f"エラー: {e}")
         return 1
@@ -706,6 +768,8 @@ def _photos(a) -> int:
 
     from . import photos, site
 
+    if a.photos_cmd in photos.T4_CMDS:   # 11/8 T4（鍵は photos.run_t4 が持つ）
+        return photos.run_t4(a)
     if a.photos_cmd == "assign":
         from .photos import assign_photos   # 別の係が作る
 
@@ -728,7 +792,7 @@ def _photos(a) -> int:
         return 0
     if a.photos_cmd == "set-face":
         doc = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
-        res = photos.set_faces(photos.INDEX_PATH, doc, a.by)
+        res = photos.set_faces(photos.INDEX_PATH, doc, a.by, building=a.building)
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0
     if a.photos_cmd == "folders":
@@ -757,6 +821,9 @@ def _photos(a) -> int:
         for cell in [c.strip() for c in a.cells.split(",") if c.strip()]:
             print(landmarks.crop_image(img, cell, out / f"{rec['id']}_{cell.upper()}.jpg"))
         return 0
+    if a.photos_cmd in ("unregister", "exclude"):
+        from . import registry
+        return registry.run_cli(a)
     if a.photos_cmd == "windows":
         from . import windows
         from .schema import load_building
@@ -799,7 +866,7 @@ def _photos(a) -> int:
         ledger = photos.load_ledger(Path(a.ledger)) if a.ledger else None
         idx, added = photos.import_photos(Path(a.folder), sdoc, period=a.period, ledger=ledger)
         print(f"索引: {photos.INDEX_PATH}  合計 {len(idx['photos'])} 枚（今回 {len(added)} 枚）")
-        print("  期間別:", {k: v for k, v in photos.period_counts(idx).items() if k != "by_building"})
+        print("  期間別:", {k: v for k, v in photos.period_counts(idx, photos.period_start_of(sdoc)).items() if k != "by_building"})
         for r in added:
             print("  " + photos.summary_line(r))
         return 0
@@ -1055,7 +1122,16 @@ def _site(a) -> int:
         a.campus = a.campus or site.default_campus()
         a.plateau = a.plateau or site.plateau_zip(a.campus)
         t = time.time()
-        osm = site.osm_site(site.fetch_osm())
+        try:   # 境界は敷地 JSON の sources.osm.relation / way（無ければ bbox_lonlat から探す）。原点と系も敷地 JSON
+            osm = site.osm_for_campus(a.campus)
+        except (ValueError, FileNotFoundError) as e:
+            print(f"エラー: {e}")
+            site.add_question(a.campus, f"OSM の敷地の境界が決まらない：{e}")
+            return 1
+        except OSError as e:   # requests の通信の失敗（Overpass の 502 など）。人に聞くことではないので questions に足さない
+            print(f"エラー: OSM（Overpass）に届かない・混んでいる：{e}。時間をおいて取り直す")
+            return 1
+        print(f"OSM: 境界 {osm['boundary_ref']}" + (f"（{osm['found_by']}）" if osm.get("found_by") else ""))
         print(f"OSM: 建物 {len(osm['buildings'])} 件、敷地境界 {len(osm['boundary'])} 面 ({time.time() - t:.0f}s)")
         meta = site.fetch_aerial(osm["boundary"])
         print(f"航空写真: {meta['width']}x{meta['height']} px、タイル {meta['tiles']} 枚 ({time.time() - t:.0f}s)")
@@ -1063,10 +1139,12 @@ def _site(a) -> int:
         print(f"標高: 格子 {dem['shape']}、{dem['z_min']:.1f}〜{dem['z_max']:.1f} m、欠け {dem['nan_ratio']:.1%} ({time.time() - t:.0f}s)")
         pl = None
         if not a.no_plateau and a.plateau and Path(a.plateau).exists():
-            pl = site.extract_plateau(a.plateau, osm["boundary"])
+            src0 = site.load_campus(a.campus).get("sources") or {}   # 出典の記述は敷地 JSON（同じ zip の時）か zip の名前から
+            same = bool(src0.get("plateau_zip")) and Path(src0["plateau_zip"]) == Path(a.plateau)
+            pl = site.extract_plateau(a.plateau, osm["boundary"], source=src0.get("plateau") if same else None)
             print(f"PLATEAU: 敷地内の建物 {len(pl['buildings'])} 件 ({time.time() - t:.0f}s)")
         else:
-            print("PLATEAU: 省略（zip が無いか --no-plateau）")
+            print("PLATEAU: 省略（zip が無いか --no-plateau）。土台は OSM の輪郭だけ（高さは unknown）")
         doc = site.build_site(a.campus, osm, pl)
         errs = site.validate_site(doc)
         named = sum(1 for b in doc["buildings"] if b["name"])
@@ -1078,8 +1156,45 @@ def _site(a) -> int:
         return 1 if errs else 0
 
     if a.site_cmd == "export-web":
-        r = site.export_web(a.campus or site.default_campus(), with_coverage=a.with_coverage)
+        r = site.export_web(a.campus or site.default_campus(), with_coverage=a.with_coverage,
+                            web_dir=Path(a.out) if a.out else None)
         print(f"Web 用: {r['path']}  箱 {r['boxes']} 件、模型 {r['models']}、地面格子 {r['grid']}（標高の欠けを近傍で埋めた割合 {r['nan_filled']:.1%}）")
+        return 0
+
+    if a.site_cmd == "objects":
+        from . import site_objects as so
+        doc = json.loads((site.DATA_SITE / f"{a.campus or site.default_campus()}.json").read_text(encoding="utf-8"))
+        bs = so.load_buildings(so.ends_buildings(doc))
+        errs, warns = so.validate_objects(doc, bs, so.load_catalog_ids())
+        for e in errs:
+            print("   - [誤り] " + e)
+        for w in warns:
+            print("   - [警告] " + w)
+        if a.action == "check":
+            for it in so.check_objects(doc, bs):
+                print(f"{'OK ' if it['ok'] else 'NG '} {it['what']}：差 {it['diff_m']:+.2f} m（± {it['tol_m']:.2f}）")
+            print(f"敷地の物 {len(so.objects_of(doc))} 件、誤り {len(errs)}、警告 {len(warns)}")
+            return 1 if errs else 0
+        if not a.out:
+            print("--out が要る（疑似本番の web/data/ は上書きしない）")
+            return 2
+        r = so.export_web_objects(doc, Path(a.out) / "data", bs)
+        print(f"glb: {r['glb']}（三角形 {r['tris']}）")
+        for s in r["skipped"]:
+            print("   - 描かない: " + s)
+        return 1 if r["errors"] else 0
+
+    if a.site_cmd == "link-box":
+        path = site.DATA_SITE / f"{a.campus or site.default_campus()}.json"
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        r = site.link_box(doc, a.target, a.box, a.why, a.by, ask=a.ask)
+        for k, v in r["overlap"]["by"].items():
+            print(f"   {k}: 箱の足元 {r['overlap']['box_area_m2']} m² のうち {v['overlap_m2']} m²（{v['inside_ratio']:.1%}）が {r['target']} の中")
+        path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+        msg = {"linked": f"結び付けた：{r['box']} → {r['target']} の plateau_parts（前は {r['held_by']}）",
+               "replaced": f"置き換えの印：{r['box']} は敷地の物 {r['target']} に置き換わった（export-web で描かない）",
+               "request": f"結ばない（一番大きい重なり {r['overlap']['best']:.1%} < {r['min_ratio']:.0%}）。撮影依頼 {r.get('request')} を敷地 JSON の requests に書いた"}
+        print(msg[r["outcome"]])
         return 0
 
     if a.site_cmd == "confirm":
@@ -1103,9 +1218,11 @@ def _campus(a) -> int:
     from . import site
 
     if a.campus_cmd == "init":
-        path, made = site.campus_init(a.slug, a.university, a.campus_name, tuple(a.bbox) if a.bbox else None)
+        path, made = site.campus_init(a.slug, a.university, a.campus_name, tuple(a.bbox) if a.bbox else None,
+                                      osm_relation=a.osm_relation, osm_way=a.osm_way)
         if made:
-            print(f"敷地 JSON の骨組みを作りました: {path}\n次：OSM の relation を sources.osm.relation に書き、`site build --campus {a.slug}` → aliases・name_links・scope を埋める")
+            print(f"敷地 JSON の骨組みを作りました: {path}\n次：`site build --campus {a.slug}`（OSM の境界は sources.osm.relation / way、"
+                  "無ければ bbox の中の大学を探す）→ aliases・name_links・scope を埋める")
             return 0
         print(f"既にあるので上書きしません: {path}")
         return 1

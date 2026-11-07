@@ -3,10 +3,10 @@
 使う資料（CLAUDE.md の 3）：
     OpenStreetMap（ODbL）     敷地境界と建物の輪郭・名前
     国土地理院                 航空写真（seamlessphoto）と 5m 標高（dem5a）
-    PLATEAU（名古屋市 2022）   建物の足元形状（LOD0）と高さ（LOD1）。土台にだけ使い、写真で上書きする
+    PLATEAU（ある市だけ）      建物の足元形状（LOD0）と高さ（LOD1）。土台にだけ使い、写真で上書きする。無い市は OSM の輪郭だけ
 
 出力：
-    data/site/cache/osm_raw.json      Overpass の生の返事（git 管理外）
+    data/site/cache/osm_raw_<campus>.json   Overpass の生の返事（キャンパスごと、git 管理外）
     data/site/plateau.json            敷地内の PLATEAU 建物（足元形状と高さ）
     data/site/<campus>.json           敷地 JSON（唯一の元データ。建物の名前と確認状態をここに持つ）
     out/site/aerial_z18.png + .json   航空写真の切り出しと位置の対応
@@ -37,7 +37,6 @@ import numpy as np
 from . import geo
 
 SITE_SCHEMA = "campus-recorder/site/1"
-OSM_RELATION_TEMPAKU = 18057087
 USER_AGENT = "campus-recorder/0.1 (Built with Claude Japan 2026)"
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 GSI_PHOTO = "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"
@@ -50,27 +49,185 @@ CONFIRM_STATUSES = ("unconfirmed", "confirmed", "renamed", "removed", "new")
 
 
 # --- OpenStreetMap -------------------------------------------------------------
+# 敷地の境界は敷地 JSON の sources.osm.relation か sources.osm.way（どちらも無ければ bbox_lonlat の中の
+# amenity=university / college を探す）。大学の番号はコードに書かない。生の返事のキャッシュはキャンパスごと。
 
-def fetch_osm(relation_id: int = OSM_RELATION_TEMPAKU, cache: Path | None = None) -> dict:
-    """敷地のリレーションと、その中の建物を Overpass から取る。cache があればそれを返す。"""
-    cache = cache or DATA_SITE / "cache" / "osm_raw.json"
-    if cache.exists():
-        return json.loads(cache.read_text(encoding="utf-8"))
+LEGACY_OSM_CACHE = "osm_raw.json"            # 11/7 までの 1 校用の名前。中身の境界が合う時だけ読む（書かない）
+LEGACY_OSM_GROUND_CACHE = "osm_ground_raw.json"
+
+
+def osm_cache_path(campus: str | None, key: str | None = None) -> Path:
+    """OSM の生の返事のキャッシュ（キャンパスごと）。campus が無ければ境界の番号で分ける。"""
+    tag = campus or (key or "unknown").replace("/", "-")
+    return DATA_SITE / "cache" / f"osm_raw_{tag}.json"
+
+
+def osm_ref(doc: dict) -> tuple[str, object]:
+    """敷地 JSON から OSM の境界の指し方を返す。("relation", id) / ("way", id) / ("bbox", (south, west, north, east))。
+    どれも無ければ ValueError。"""
+    o = ((doc or {}).get("sources") or {}).get("osm") or {}
+    for kind in ("relation", "way"):
+        v = o.get(kind)
+        if v not in (None, "", 0):
+            return kind, int(str(v).split("/")[-1])
+    bb = (doc or {}).get("bbox_lonlat")
+    if bb and len(bb) == 4 and all(v is not None for v in bb):
+        lat0, lon0, lat1, lon1 = (float(v) for v in bb)
+        return "bbox", (min(lat0, lat1), min(lon0, lon1), max(lat0, lat1), max(lon0, lon1))
+    raise ValueError("敷地 JSON に OSM の境界がありません。sources.osm.relation か sources.osm.way に番号を書くか、"
+                     "`campus init --bbox LAT0 LON0 LAT1 LON1` で範囲を決めてください")
+
+
+def _raw_has(raw: dict, kind: str, oid: int) -> bool:
+    return any(e.get("type") == kind and e.get("id") == oid for e in raw.get("elements", []))
+
+
+def _overpass(q: str) -> dict:
     import requests
 
+    for i in range(3):   # Overpass は混むと 429・502・504 を返す。少し待って 2 回まで取り直す
+        r = requests.post(OVERPASS_URL, data={"data": q}, headers={"User-Agent": USER_AGENT}, timeout=180)
+        if r.status_code in (429, 502, 503, 504) and i < 2:
+            print(f"[warn] Overpass {r.status_code}。{20 * (i + 1)} 秒待って取り直す", file=sys.stderr)
+            time.sleep(20 * (i + 1))
+            continue
+        r.raise_for_status()
+        return r.json()
+
+
+def _geom_lonlat_polys(el: dict):
+    """Overpass の out geom の要素 → 緯度経度の shapely 形（境界の候補選び・原点の中心用）。"""
+    from shapely.geometry import LineString, Polygon
+    from shapely.ops import polygonize, unary_union
+
+    if el["type"] == "way":
+        pts = [(p["lon"], p["lat"]) for p in el.get("geometry") or []]
+        return Polygon(pts).buffer(0) if len(pts) >= 4 else None
+    lines = [LineString([(p["lon"], p["lat"]) for p in m["geometry"]]) for m in el.get("members", [])
+             if m.get("type") == "way" and m.get("role") in ("outer", "") and m.get("geometry")]
+    polys = list(polygonize(unary_union(lines))) if lines else []
+    return unary_union(polys).buffer(0) if polys else None
+
+
+def find_campus_boundary(bbox: tuple[float, float, float, float]) -> dict:
+    """bbox（south, west, north, east）の中の amenity=university / college の way・relation から、
+    bbox の中心を含む物（無ければ bbox との重なりが一番大きい物）を選ぶ。返り値 {"type", "id", "name", "found_by"}。"""
+    from shapely.geometry import Point, box
+
+    s, w, n, e = bbox
+    bb = f"({s},{w},{n},{e})"
+    q = ("[out:json][timeout:120];("
+         f'way["amenity"~"^(university|college)$"]{bb};rel["amenity"~"^(university|college)$"]{bb};'
+         ");out geom;")
+    d = _overpass(q)
+    center = Point((w + e) / 2, (s + n) / 2)
+    area = box(w, s, e, n)
+    best, best_score = None, -1.0
+    for el in d.get("elements", []):
+        g = _geom_lonlat_polys(el)
+        if g is None or g.is_empty:
+            continue
+        share = g.intersection(area).area / max(area.area, 1e-12)
+        score = 2.0 + share if g.contains(center) else share
+        if score > best_score:
+            best, best_score = el, score
+    if best is None:
+        raise ValueError(f"bbox {list(bbox)} の中に amenity=university / college の境界が OSM にありません。"
+                         "sources.osm.relation か way に番号を書いてください")
+    tags = best.get("tags") or {}
+    return {"type": best["type"], "id": best["id"], "name": tags.get("name"),
+            "found_by": f"bbox {list(bbox)} の中の amenity={tags.get('amenity')}（bbox の中心を含む物を優先）"}
+
+
+def fetch_osm(relation_id: int | None = None, cache: Path | None = None, *, way_id: int | None = None,
+              bbox: tuple[float, float, float, float] | None = None, campus: str | None = None) -> dict:
+    """敷地の境界（relation か way。どちらも無ければ bbox から探す）と、その中の建物を Overpass から取る。
+    キャッシュ（data/site/cache/osm_raw_<campus>.json）があり、中身の境界が同じならそれを返す。"""
+    found = None
+    if relation_id is None and way_id is None:
+        if bbox is None:
+            raise ValueError("fetch_osm：relation_id・way_id・bbox のどれかが要ります（大学の番号の既定値はありません）")
+        c = cache or osm_cache_path(campus, "bbox")
+        if c.exists():
+            d = json.loads(c.read_text(encoding="utf-8"))
+            if d.get("_bbox") == [round(v, 6) for v in bbox] and d.get("_key"):
+                return d
+        found = find_campus_boundary(bbox)
+        if found["type"] == "relation":
+            relation_id = found["id"]
+        else:
+            way_id = found["id"]
+    kind, oid = ("relation", int(relation_id)) if relation_id is not None else ("way", int(way_id))
+    key = f"{kind}/{oid}"
+    cache = cache or osm_cache_path(campus, key)
+    for c in (cache, DATA_SITE / "cache" / LEGACY_OSM_CACHE):
+        if c.exists():
+            d = json.loads(c.read_text(encoding="utf-8"))
+            if d.get("_key") == key or (not d.get("_key") and _raw_has(d, kind, oid)):
+                return d
+    short = "rel" if kind == "relation" else "way"
     q = (
         "[out:json][timeout:120];"
-        f"rel({relation_id});out geom;"
-        f"rel({relation_id});map_to_area->.a;"
+        f"{short}({oid});out geom;"
+        f"{short}({oid});map_to_area->.a;"
         '(way["building"](area.a);rel["building"](area.a););out geom;'
     )
-    r = requests.post(OVERPASS_URL, data={"data": q}, headers={"User-Agent": USER_AGENT}, timeout=180)
-    r.raise_for_status()
-    d = r.json()
+    d = _overpass(q)
     d["_fetched_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    d["_key"] = key
+    if found:
+        d["_found_by"] = found["found_by"]
+        d["_bbox"] = [round(v, 6) for v in bbox]
     cache.parent.mkdir(parents=True, exist_ok=True)
     cache.write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
     return d
+
+
+def osm_boundary_center(raw: dict, ref: str | None = None) -> tuple[float, float]:
+    """生の返事の境界の中心（緯度, 経度）。原点が決まっていない大学の原点に使う。"""
+    el = _boundary_element(raw, ref)
+    g = _geom_lonlat_polys(el)
+    if g is None or g.is_empty:
+        raise ValueError(f"OSM の境界 {el['type']}/{el['id']} に形がありません")
+    c = g.centroid
+    return c.y, c.x
+
+
+def osm_for_campus(campus: str) -> dict:
+    """敷地 JSON の指定どおりに OSM を取り、原点と系を敷地 JSON に合わせ、osm_site の結果を返す。
+    敷地 JSON に crs が無ければ（campus init を bbox 無しで作った等）境界の中心を原点にして crs を敷地 JSON に書く。"""
+    path = campus_path(campus)
+    doc = load_campus(campus)
+    if not doc:
+        raise FileNotFoundError(f"敷地 JSON がありません: {path}。先に `recorder campus init` を")
+    kind, val = osm_ref(doc)
+    if kind == "relation":
+        raw = fetch_osm(val, campus=campus)
+    elif kind == "way":
+        raw = fetch_osm(way_id=val, campus=campus)
+    else:
+        raw = fetch_osm(bbox=val, campus=campus)
+    if not geo.configure_from_site(doc):
+        lat, lon = osm_boundary_center(raw)
+        doc["crs"] = geo.crs_for(lat, lon)
+        geo.configure_from_site(doc)
+        path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"[info] 原点を OSM の境界の中心（北緯{lat:.5f}° 東経{lon:.5f}°）、系を EPSG:{doc['crs']['epsg']} に決めて {path} に書きました",
+              file=sys.stderr)
+    return osm_site(raw)
+
+
+def add_question(campus: str, q: str, by: str = "recorder site build") -> None:
+    """敷地 JSON の questions に人に聞くことを足す（同じ文が open で既にあれば足さない）。"""
+    path = campus_path(campus)
+    doc = load_campus(campus)
+    if not doc:
+        return
+    qs = doc.setdefault("questions", [])
+    if any(x.get("q") == q and x.get("status") == "open" for x in qs):
+        return
+    qs.append({"q": q, "status": "open", "by": by, "at": time.strftime("%Y-%m-%dT%H:%M:%S")})
+    path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 def _ring_xy(geom: list[dict]) -> list[list[float]]:
@@ -94,14 +251,34 @@ def _osm_polygon(el: dict) -> list[list[list[float]]]:
     return [[list(c) for c in p.exterior.coords] for p in polys]
 
 
-def osm_site(raw: dict, relation_id: int = OSM_RELATION_TEMPAKU) -> dict:
-    """生の返事から、敷地境界と建物の一覧（名前付き）を作る。"""
-    rel = next(e for e in raw["elements"] if e["type"] == "relation" and e["id"] == relation_id)
+def _boundary_element(raw: dict, ref: str | int | None = None) -> dict:
+    """敷地の境界の要素。ref は "relation/123"・"way/456"・数（relation の番号。旧来の呼び方）。
+    無ければ生の返事の _key、それも無ければ（旧来のキャッシュ）先頭の building でない relation か way。"""
+    if isinstance(ref, int):
+        ref = f"relation/{ref}"
+    ref = ref or raw.get("_key")
+    els = raw.get("elements", [])
+    if ref:
+        kind, oid = ref.split("/")
+        el = next((e for e in els if e.get("type") == kind and e.get("id") == int(oid)), None)
+        if el is None:
+            raise ValueError(f"OSM の返事に敷地の境界 {ref} がありません（キャッシュが別の大学の物かもしれません）")
+        return el
+    el = next((e for e in els if e.get("type") in ("relation", "way") and "building" not in (e.get("tags") or {})), None)
+    if el is None:
+        raise ValueError("OSM の返事に敷地の境界（relation か way）がありません")
+    return el
+
+
+def osm_site(raw: dict, ref: str | int | None = None) -> dict:
+    """生の返事から、敷地境界と建物の一覧（名前付き）を作る。境界は relation でも way でもよい。"""
+    rel = _boundary_element(raw, ref)
     boundary = _osm_polygon(rel)
+    bkey = f"{rel['type']}/{rel['id']}"
     buildings = []
     for e in raw["elements"]:
         t = e.get("tags", {})
-        if "building" not in t:
+        if "building" not in t or f"{e['type']}/{e['id']}" == bkey:
             continue
         rings = _osm_polygon(e)
         if not rings:
@@ -114,7 +291,8 @@ def osm_site(raw: dict, relation_id: int = OSM_RELATION_TEMPAKU) -> dict:
             "rings": [[[round(x, 2), round(y, 2)] for x, y in r] for r in rings],
         })
     return {"boundary": [[[round(x, 2), round(y, 2)] for x, y in r] for r in boundary],
-            "buildings": buildings, "fetched_at": raw.get("_fetched_at")}
+            "buildings": buildings, "fetched_at": raw.get("_fetched_at"),
+            "boundary_ref": bkey, "found_by": raw.get("_found_by")}
 
 
 # --- OpenStreetMap：地表の種類（道・歩道・芝・駐車場）----------------------------------------
@@ -146,11 +324,18 @@ def ground_bbox_lonlat(x0: float, y0: float, x1: float, y1: float) -> tuple[floa
     return round(min(lat0, lat1), 6), round(min(lon0, lon1), 6), round(max(lat0, lat1), 6), round(max(lon0, lon1), 6)
 
 
-def fetch_osm_ground(bbox_xy: tuple[float, float, float, float], cache: Path | None = None) -> dict:
-    """道・歩道・芝・駐車場・木を Overpass から 1 回だけ取る（cache があればそれを返す）。bbox_xy は (x0, y0, x1, y1) m。"""
-    cache = cache or DATA_SITE / "cache" / "osm_ground_raw.json"
+def fetch_osm_ground(bbox_xy: tuple[float, float, float, float], cache: Path | None = None, campus: str | None = None) -> dict:
+    """道・歩道・芝・駐車場・木を Overpass から 1 回だけ取る（cache があればそれを返す）。bbox_xy は (x0, y0, x1, y1) m。
+    キャッシュはキャンパスごと（data/site/cache/osm_ground_raw_<campus>.json）。旧来の 1 校用の名前は bbox が同じ時だけ読む。"""
+    want = [round(float(v), 1) for v in bbox_xy]
+    cache = cache or DATA_SITE / "cache" / (f"osm_ground_raw_{campus}.json" if campus else LEGACY_OSM_GROUND_CACHE)
     if cache.exists():
         return json.loads(cache.read_text(encoding="utf-8"))
+    legacy = DATA_SITE / "cache" / LEGACY_OSM_GROUND_CACHE
+    if legacy.exists() and legacy != cache:
+        d = json.loads(legacy.read_text(encoding="utf-8"))
+        if d.get("_bbox_xy") == want:
+            return d
     import requests
 
     s, w, n, e = ground_bbox_lonlat(*bbox_xy)
@@ -583,8 +768,19 @@ def mesh3_of_lonlat(lon: float, lat: float) -> str:
     return f"{p:02d}{u:02d}{q}{v}{r}{w}"
 
 
-def extract_plateau(zip_path: str | Path, rings, out: Path | None = None) -> dict:
-    """PLATEAU の建物 GML から、敷地境界に重なる建物の足元形状（LOD0）と高さ（LOD1）を抜く。"""
+def plateau_label(zip_path: str | Path) -> str:
+    """PLATEAU の zip の名前（例 23100_nagoya-shi_city_2022_citygml_4_op.zip）から出典の短い名前を作る。
+    形が違えば zip の名前そのもの。市や年度をコードに書かない（監査 A の 20）。"""
+    name = Path(zip_path).name
+    m = re.match(r"^(\d{5})_([0-9a-z\-]+?)_city_(\d{4})_citygml", name)
+    if m:
+        return f"PLATEAU {m.group(2)}（市区町村コード {m.group(1)}）{m.group(3)} 年度版"
+    return f"PLATEAU（{name}）"
+
+
+def extract_plateau(zip_path: str | Path, rings, out: Path | None = None, source: str | None = None) -> dict:
+    """PLATEAU の建物 GML から、敷地境界に重なる建物の足元形状（LOD0）と高さ（LOD1）を抜く。
+    source は出典の記述（敷地 JSON の sources.plateau）。無ければ zip の名前から作る。"""
     from shapely.geometry import MultiPolygon, Polygon
 
     out = out or DATA_SITE / "plateau.json"
@@ -616,7 +812,8 @@ def extract_plateau(zip_path: str | Path, rings, out: Path | None = None) -> dic
                     found.append(b)
     out.parent.mkdir(parents=True, exist_ok=True)
     doc = {"schema": "campus-recorder/plateau/1",
-           "source": "PLATEAU 名古屋市 2022（国土交通省）、建物 LOD0/LOD1 のみ",
+           "source": source or f"{plateau_label(zip_path)}（国土交通省）、建物 LOD0/LOD1 のみ",
+           "label": (source or plateau_label(zip_path)).split("、")[0],
            "zip": Path(zip_path).name, "meshes": sorted(meshes), "files": files, "buildings": found}
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return doc
@@ -683,7 +880,13 @@ def campus_aliases(campus: str, data_site: Path | None = None) -> dict[str, str]
 
 def default_campus(data_site: Path | None = None) -> str:
     """既定のキャンパス。data/site/ の <campus>.json（plateau.json は除く）が 1 つだけならそれ。
-    複数なら default_campus.txt の中身。どちらでもなければエラー。"""
+    複数なら default_campus.txt の中身。どちらでもなければエラー。
+    環境変数 RECORDER_CAMPUS があれば最優先（職員の画面・係の依頼文が敷地を選ぶ時に使う）。"""
+    import os
+
+    env = (os.environ.get("RECORDER_CAMPUS") or "").strip()
+    if env:
+        return env
     d = data_site or DATA_SITE
     found = sorted(p.stem for p in d.glob("*.json") if p.name not in NON_CAMPUS_JSON) if d.exists() else []
     if len(found) == 1:
@@ -709,7 +912,8 @@ def _slug(name: str | None, osm: str, aliases: dict[str, str] | None = None) -> 
     return "osm-" + osm.replace("/", "-")
 
 
-CAMPUS_CARRY_KEYS = ("university", "campus_name", "aliases", "scope", "name_links", "questions")
+CAMPUS_CARRY_KEYS = ("university", "campus_name", "aliases", "scope", "name_links", "questions", "photo_policy", "declination_deg",
+                     "bbox_lonlat")
 
 
 def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = None) -> dict:
@@ -763,13 +967,29 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
             "confirmation": conf,
         })
     extra = [p["gml_id"] for p, _ in pl if p["gml_id"] not in used]
+    # 原点と系：敷地 JSON の crs が正（定数で上書きしない）。無ければ今の geo の値（osm_for_campus が境界の中心で決めた物）
+    if geo._crs_of(prev):
+        crs = prev["crs"]
+    else:
+        cur = geo.current()
+        crs = {"epsg": cur["epsg"], "origin_lat": cur["origin_lat"], "origin_lon": cur["origin_lon"],
+               "note": "原点からの m。x=東, y=北。z は標高 m"}
+    # OSM の出典：実際に取った境界（relation か way）を書く。無ければ前の敷地 JSON の値
+    prev_osm = (prev.get("sources") or {}).get("osm") or {}
+    ref = osm.get("boundary_ref")
+    osm_src = {ref.split("/")[0]: int(ref.split("/")[1])} if ref else {k: prev_osm[k] for k in ("relation", "way") if k in prev_osm}
+    osm_src.update({"license": prev_osm.get("license") or "ODbL", "fetched_at": osm.get("fetched_at")})
+    if osm.get("found_by"):
+        osm_src["found_by"] = osm["found_by"]
+    for k, v in prev_osm.items():
+        if k not in ("relation", "way") or not ref:
+            osm_src.setdefault(k, v)
     doc = {
         "schema": SITE_SCHEMA,
         "campus": campus,
-        "crs": {"epsg": geo.EPSG_PLANE, "origin_lat": geo.ORIGIN_LAT, "origin_lon": geo.ORIGIN_LON,
-                "note": "原点からの m。x=東, y=北。z は標高 m"},
+        "crs": crs,
         "boundary_osm": osm["boundary"],
-        "sources": {"osm": {"relation": OSM_RELATION_TEMPAKU, "license": "ODbL", "fetched_at": osm.get("fetched_at")},
+        "sources": {"osm": osm_src,
                     "plateau": (plateau or {}).get("source"),
                     "gsi": "国土地理院 航空写真・DEM5A"},
         "confirmation_statuses": list(CONFIRM_STATUSES),
@@ -784,6 +1004,9 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
         doc["sources"].setdefault(k, v)
     if prev.get("ground_osm"):
         doc["ground_osm"] = prev["ground_osm"]        # 地表の種類（OSM）は別に取った物。作り直しても引き継ぐ
+    for k, v in prev.items():                         # 他の欄（bbox_lonlat・objects など、係や職員が足した物）も引き継ぐ
+        doc.setdefault(k, v)
+    apply_plateau_links(doc)                          # site link-box で結んだ箱（plateau_links）を当て直す
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return doc
@@ -830,6 +1053,147 @@ def confirm(doc: dict, bid: str, status: str, by: str, name: str | None = None, 
             b["confirmation"] = c
             return b
     raise KeyError(f"建物がありません: {bid}")
+
+
+# --- PLATEAU の箱の結び付け（site link-box） ----------------------------------------------------
+# PLATEAU の箱は build_site が OSM の足元との重なりで棟に結ぶ。OSM で別の多角形になっている付属物（塔の外の部品・甲板）は
+# 棟 JSON の棟に結ばれず、歩く画面に灰色の箱として残る。ここでは「箱の足元の何割が棟の輪郭（または敷地の物）の中か」を数で出し、
+# 7 割以上なら結び付け、足りなければ結ばずに撮影依頼を敷地 JSON の requests に書く（決めつけない。11/8 F6）。
+
+PLATEAU_LINK_MIN = 0.70
+
+
+def _poly(ring):
+    from shapely.geometry import Polygon
+    p = Polygon(ring)
+    return p if p.is_valid else p.buffer(0)
+
+
+def outline_shapes(b: dict) -> dict:
+    """棟 JSON の輪郭：footprint.polygon・面の from を順につないだ輪郭・塊（blocks）の和。どれも原点からの m。"""
+    from shapely.ops import unary_union
+    out = {}
+    fp = (b.get("footprint") or {}).get("polygon")
+    if fp and len(fp) >= 3:
+        out["footprint"] = _poly(fp)
+    faces = b.get("faces") or []
+    faces = list(faces.values()) if isinstance(faces, dict) else faces
+    ring = [f["from"] for f in faces if f.get("from")]
+    if len(ring) >= 3:
+        out["faces"] = _poly(ring)
+    blocks = [_poly(bl["polygon"]) for bl in b.get("blocks") or [] if len(bl.get("polygon") or []) >= 3]
+    if blocks:
+        out["blocks"] = unary_union(blocks)
+    return out
+
+
+def object_shape(o: dict, buildings: dict):
+    """敷地の物の平面（橋は両端の面の区間を結んだ四角、甲板・段は polygon）。決まらなければ None。"""
+    from . import site_objects as so
+    if o.get("type") == "bridge":
+        q = so.bridge_quad(o, buildings)
+        return _poly(q) if q else None
+    pv = so._val(o.get("polygon"))
+    return _poly(pv) if pv and len(pv) >= 3 else None
+
+
+def plateau_box_overlap(box_ring, shapes: dict) -> dict:
+    """箱の足元のうち各輪郭の中にある割合（0〜1）。best は一番大きい物。"""
+    P = _poly(box_ring)
+    res = {"box_area_m2": round(P.area, 1), "by": {}}
+    for k, S in shapes.items():
+        i = P.intersection(S).area if S is not None else 0.0
+        res["by"][k] = {"inside_ratio": round(i / P.area, 3) if P.area else 0.0, "overlap_m2": round(i, 1)}
+    res["best"] = max((v["inside_ratio"] for v in res["by"].values()), default=0.0)
+    return res
+
+
+def _find_gid(doc: dict, box: str) -> str:
+    """箱 id（先頭の一部でよい。bldg_f693ff16 など）を、敷地 JSON に出てくる gml_id に広げる。"""
+    ids = {g for sb in doc.get("buildings", []) for g in sb.get("plateau_parts") or []} | set(doc.get("plateau_only") or [])
+    ids |= {lk["box"] for lk in doc.get("plateau_links") or []}
+    hit = sorted(g for g in ids if g == box or g.startswith(box))
+    if len(hit) != 1:
+        raise KeyError(f"PLATEAU の箱が 1 つに決まりません: {box}（候補 {hit[:5]}）")
+    return hit[0]
+
+
+def apply_plateau_links(doc: dict) -> None:
+    """plateau_links の building の結び付けを buildings[].plateau_parts に当てる（site build で作り直しても消えない）。"""
+    for lk in doc.get("plateau_links") or []:
+        if lk.get("kind") != "building":
+            continue
+        for sb in doc.get("buildings", []):
+            if sb["id"] != lk["target"] and lk["box"] in (sb.get("plateau_parts") or []):
+                sb["plateau_parts"] = [g for g in sb["plateau_parts"] if g != lk["box"]]
+            if sb["id"] == lk["target"] and lk["box"] not in (sb.get("plateau_parts") or []):
+                sb["plateau_parts"] = list(sb.get("plateau_parts") or []) + [lk["box"]]
+        if lk["box"] in (doc.get("plateau_only") or []):
+            doc["plateau_only"] = [g for g in doc["plateau_only"] if g != lk["box"]]
+
+
+def replaced_boxes(doc: dict) -> dict[str, str]:
+    """敷地の物に置き換わった箱 {gml_id: object id}。export-web はこの箱を描かない。"""
+    return {lk["box"]: lk["replaced_by"] for lk in doc.get("plateau_links") or [] if lk.get("kind") == "replaced"}
+
+
+def link_box(doc: dict, target: str, box: str, why: str, by: str, plateau: dict | None = None,
+             buildings_root: Path | None = None, ask: str = "", min_ratio: float = PLATEAU_LINK_MIN) -> dict:
+    """PLATEAU の箱 box を棟 target（棟 JSON の輪郭）か敷地の物 target（objects の id）に結ぶ。
+    箱の足元の min_ratio 以上が相手の中なら結ぶ（棟→plateau_parts、敷地の物→replaced_by）。足りなければ結ばず、
+    敷地 JSON の requests に撮影依頼（敷地の検収係の形）を書く。結果（重なりの数）を返す。"""
+    from . import site_objects as so
+    gid = _find_gid(doc, box)
+    if plateau is None:
+        plateau = json.loads((DATA_SITE / "plateau.json").read_text(encoding="utf-8"))
+    p = next((x for x in plateau["buildings"] if x["gml_id"] == gid), None)
+    if p is None:
+        raise KeyError(f"plateau.json に箱がありません: {gid}")
+    objs = {o["id"]: o for o in so.objects_of(doc)}
+    if target in objs:
+        o = objs[target]
+        bs = so.load_buildings(so.ends_buildings({"objects": {"items": [o]}}), buildings_root)
+        shapes = {"object": object_shape(o, bs)}
+        kind, b_ids = "replaced", sorted(bs)
+    else:
+        bs = so.load_buildings([target], buildings_root)
+        if target not in bs:
+            raise KeyError(f"棟 JSON も敷地の物も無い: {target}")
+        sid = bs[target].get("site_id") or target
+        if not any(sb["id"] == sid for sb in doc.get("buildings", [])):
+            raise KeyError(f"敷地 JSON の buildings に棟がありません: {sid}")
+        shapes = outline_shapes(bs[target])
+        kind, b_ids, target = "building", [sid], sid
+    ov = plateau_box_overlap(p["footprint"], shapes)
+    at = time.strftime("%Y-%m-%dT%H:%M:%S")
+    holder = next((sb["id"] for sb in doc.get("buildings", []) if gid in (sb.get("plateau_parts") or [])), None)
+    res = {"box": gid, "target": target, "kind": kind, "overlap": ov, "min_ratio": min_ratio,
+           "box_height_m": p.get("height_m"), "box_base_z": p.get("base_z"), "held_by": holder}
+    nums = "、".join(f"{k} {v['inside_ratio']:.1%}（{v['overlap_m2']} m²）" for k, v in ov["by"].items())
+    if ov["best"] >= min_ratio:
+        link = {"box": gid, "kind": kind, "target": target, "inside_ratio": ov["best"], "overlap": ov,
+                "why": why, "by": by, "at": at, "was_in": holder}
+        if kind == "replaced":
+            link["replaced_by"] = target
+        doc["plateau_links"] = [lk for lk in doc.get("plateau_links") or [] if lk["box"] != gid] + [link]
+        apply_plateau_links(doc)
+        if kind == "building":
+            sb = next(x for x in doc["buildings"] if x["id"] == target)
+            c = sb.setdefault("confirmation", {"status": "unconfirmed", "by": None, "at": None, "note": ""})
+            c["plateau_links"] = [x for x in c.get("plateau_links") or [] if x.get("box") != gid] + [
+                {"box": gid, "inside_ratio": ov["best"], "why": why, "by": by, "at": at}]
+        res["outcome"] = "linked" if kind == "building" else "replaced"
+        return res
+    rid = f"plateau-{gid[5:13]}-{target}"
+    req = {"id": rid, "status": "open", "action": "request", "fix_in": "site", "buildings": b_ids,
+           "box": gid, "box_height_m": p.get("height_m"), "held_by": holder,
+           "what": (f"PLATEAU の箱 {gid[:13]}（高さ {p.get('height_m')} m、敷地 JSON では {holder or 'どの棟にも無い'}）は"
+                    f"{target} の輪郭と {ov['best']:.1%} しか重ならない（{nums}。結ぶ目安 {min_ratio:.0%}）。結ばず、灰色の箱のまま"),
+           "ask": ask, "why": why, "overlap": ov, "evidence": [f"plateau:{gid}"], "by": by, "at": at}
+    doc["requests"] = [r for r in doc.get("requests") or [] if r.get("id") != rid] + [req]
+    res["outcome"] = "request"
+    res["request"] = rid
+    return res
 
 
 # --- 確認用の図 -----------------------------------------------------------------------
@@ -1061,10 +1425,22 @@ def apply_ground_overrides(X: np.ndarray, Y: np.ndarray, Z: np.ndarray, specs: l
     return Z, recs
 
 
-def _designed_buildings() -> list[dict]:
+def _site_building_ids(doc: dict) -> set[str]:
+    """敷地 JSON の棟 id（buildings・staff_additions・scope.targets）。"""
+    ids = {b.get("id") for b in (doc.get("buildings") or []) + (doc.get("staff_additions") or [])}
+    ids |= set((doc.get("scope") or {}).get("targets") or [])
+    return {i for i in ids if i}
+
+
+def _designed_buildings(site_ids: set[str] | None = None) -> list[dict]:
+    """data/buildings/*.json。site_ids を渡せば、その敷地の棟（site_id か id が敷地 JSON にある物）だけ。
+    別のキャンパスの棟が歩く画面に混ざらないように（監査 A の 10 の一部）。"""
     out = []
     for f in sorted((DATA_SITE.parent / "buildings").glob("*.json")):
-        out.append(json.loads(f.read_text(encoding="utf-8")))
+        b = json.loads(f.read_text(encoding="utf-8"))
+        if site_ids is not None and (b.get("site_id") or b.get("id")) not in site_ids:
+            continue
+        out.append(b)
     return out
 
 
@@ -1074,7 +1450,7 @@ def ensure_ground_osm(campus: str, bbox_xy: tuple[float, float, float, float]) -
     doc = json.loads(path.read_text(encoding="utf-8"))
     if doc.get("ground_osm"):
         return doc["ground_osm"]
-    go = osm_ground(fetch_osm_ground(bbox_xy))
+    go = osm_ground(fetch_osm_ground(bbox_xy, campus=campus))
     doc["ground_osm"] = go
     path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return go
@@ -1187,12 +1563,13 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
     (data_dir / "models").mkdir(parents=True, exist_ok=True)
     campus = campus or default_campus()
     doc = json.loads((DATA_SITE / f"{campus}.json").read_text(encoding="utf-8"))
+    geo.configure_from_site(doc)          # 原点と系はこの敷地 JSON（無ければ geo の既定と警告）
+    site_ids = _site_building_ids(doc)
     pl_path = DATA_SITE / "plateau.json"
     pl = {p["gml_id"]: p for p in json.loads(pl_path.read_text(encoding="utf-8"))["buildings"]} if pl_path.exists() else {}
 
     designed = {}
-    for f in sorted((DATA_SITE.parent / "buildings").glob("*.json")):
-        b = json.loads(f.read_text(encoding="utf-8"))
+    for b in _designed_buildings(site_ids):
         if not b.get("faces"):
             continue
         acc: dict = {}
@@ -1211,6 +1588,8 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
     models = {}
     boxes = []
     used_parts: set[str] = set()
+    replaced = replaced_boxes(doc)        # 敷地の物（通路橋・甲板）に置き換わった箱は描かない（site link-box の replaced_by）
+    used_parts.update(replaced)
     for sb in doc["buildings"]:
         if sb["confirmation"]["status"] == "removed":
             continue
@@ -1219,11 +1598,20 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
         if d and d["evidenced"] and glb.exists() and glb.stat().st_size > 10_000:
             shutil.copyfile(glb, data_dir / "models" / glb.name)
             models[d["id"]] = {"url": f"data/models/{glb.name}", "ground_z": d["ground_z"]}
+            # 街路の視点（製図の model_report.json の web_cameras.street）。歩く画面の「<棟>へ」の立ち位置に使う。
+            # 大学や棟に固有の座標を web のコードに書かないための持ち越しで、無ければ歩く画面が棟の大きさから決める
+            mr_path = OUT_SITE.parent / sb["id"] / "model_report.json"
+            try:
+                street = (json.loads(mr_path.read_text(encoding="utf-8")).get("web_cameras") or {}).get("street")
+            except (OSError, ValueError):
+                street = None
+            if street and street.get("query"):
+                models[d["id"]]["street"] = {k: street[k] for k in ("eye", "yaw_deg", "pitch_deg", "vfov_deg", "query") if k in street}
             used_parts.update(sb["plateau_parts"])
             continue
         for gid in sb["plateau_parts"]:
             p = pl.get(gid)
-            if not p:
+            if not p or gid in replaced:
                 continue
             used_parts.add(gid)
             boxes.append(_box(p, sb["id"], sb["name"], d))
@@ -1232,8 +1620,15 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
         if p and gid not in used_parts:
             boxes.append(_box(p, gid, None, None))
 
-    xs = [x for b in boxes for x, _ in b["footprint"]]
-    ys = [y for b in boxes for _, y in b["footprint"]]
+    pts = [p for b in boxes for p in b["footprint"]]
+    if not pts:
+        # PLATEAU が無い市：箱が無いので、範囲は敷地の境界と OSM の足元から
+        pts = [p for r in doc.get("boundary_osm") or [] for p in r]
+        pts += [p for sb in doc["buildings"] for r in sb.get("footprint_osm") or [] for p in r]
+    if not pts:
+        raise ValueError(f"敷地 {campus} に範囲を決める形（PLATEAU の箱・OSM の境界・足元）がありません。先に `site build` を")
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
     dem = load_dem()
     x0, x1 = min(xs) - margin_m, max(xs) + margin_m
     y0, y1 = min(ys) - margin_m, max(ys) + margin_m
@@ -1245,7 +1640,7 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
     GX, GY = np.meshgrid(gx1, gy1)
     Z, nan_ratio = fill_gaps(dem_sample(dem, GX, GY))   # 欠けを隣の有効値の平均で外から埋める（補間ではなく延長）
     Z = box_mean(Z, TERRAIN_SMOOTH_PX)
-    specs = [s for b in _designed_buildings() for s in ground_override_specs(b)]
+    specs = [s for b in _designed_buildings(site_ids) for s in ground_override_specs(b)]
     Z, overrides = apply_ground_overrides(GX, GY, Z, specs, z_ref=0.0)
     k = int(step_m)
     Z = Z[::k, ::k]
@@ -1254,7 +1649,7 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
     gosm = ensure_ground_osm(campus, (X0, Y0, X1, Y1))
     feet = [r for sb in doc["buildings"] if sb["confirmation"]["status"] != "removed" for r in sb.get("footprint_osm", [])]
     feet += [p["footprint"] for p in pl.values()]
-    feet += [b["footprint"]["polygon"] for b in _designed_buildings() if (b.get("footprint") or {}).get("polygon")]
+    feet += [b["footprint"]["polygon"] for b in _designed_buildings(site_ids) if (b.get("footprint") or {}).get("polygon")]
     gm = ground_mask(gosm, (X0, Y0, X1, Y1), feet)
     save_ground_mask_png(gm, data_dir / "ground_mask.png")
     OUT_SITE.mkdir(parents=True, exist_ok=True)
@@ -1268,11 +1663,15 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
                  "note": "画素の値＝種類の番号（行 0 が北）。道は OSM の中心線を width（無ければ標準幅）で太らせた。unknown は OSM に何も無い所"}
     (data_dir / "ground_mask.json").write_text(json.dumps(mask_info, ensure_ascii=False, indent=1), encoding="utf-8")
     wa = copy_web_assets(data_dir)
+    from . import site_objects            # 敷地の物（K-107：通路橋・甲板・段・置物）。glb を models に足す（標高そのもの、ground_z 0）
+    so = site_objects.export_web_objects(doc, data_dir)
+    if so["model"]:
+        models[site_objects.WEB_ID] = so["model"]
     out = {
-        "schema": "campus-recorder/web/1",
-        "campus": campus,
+        **web_header(doc, campus),
         "scope": doc.get("scope"),
-        "axes": "x=東, y=北, z=標高 m（原点 北緯35.1355° 東経136.9755°）。three.js 側で (x, z, -y) に並べ替える",
+        "axes": f"x=東, y=北, z=標高 m（原点 北緯{geo.ORIGIN_LAT}° 東経{geo.ORIGIN_LON}°）。three.js 側で (x, z, -y) に並べ替える",
+        "crs": {k: geo.current()[k] for k in ("epsg", "origin_lat", "origin_lon")},
         "ground": {"x0": float(gx[0]), "y0": float(gy[0]), "step": step_m, "nx": len(gx), "ny": len(gy),
                    "z": [round(float(v), 2) for v in Z.ravel()], "nan_ratio_filled": round(nan_ratio, 3),
                    "source": f"国土地理院 標高（DEM5A）を 1 m 格子で {TERRAIN_SMOOTH_PX} 画素の窓で均した面。道路の勾配を測った物ではない",
@@ -1286,12 +1685,20 @@ def export_web(campus: str | None = None, web_dir: Path | None = None, step_m: i
         "daylight": _daylight_for_web(),
         "ground_tex": wa["ground_tex"],
         "ground_note": "地面の 3 段：地表の種類は OSM（estimated）、建物まわりの段差は棟 JSON の ground_offset、残りは 5 m 標高を均した面",
+        "site_objects": so["summary"],
     }
     from .ledger import write_text_atomic   # 歩く画面が読んでいる間に半分だけの site.json を見せない
     write_text_atomic(data_dir / "site.json", json.dumps(out, ensure_ascii=False, separators=(",", ":")))
     return {"path": data_dir / "site.json", "boxes": len(boxes), "models": list(models), "grid": (len(gx), len(gy)),
             "nan_filled": nan_ratio, "env": (wa["env"] or {}).get("url"), "tex": sorted(wa["ground_tex"]),
-            "skipped": wa["skipped"], "mask": {k: v for k, v in gm["counts"].items()}, "overrides": overrides}
+            "skipped": wa["skipped"], "mask": {k: v for k, v in gm["counts"].items()}, "overrides": overrides,
+            "objects": {"count": so["summary"]["count"], "glb": so["glb"], "errors": so["errors"], "warnings": so["warnings"]}}
+
+
+def web_header(doc: dict, campus: str) -> dict:
+    """site.json の先頭：schema・campus と、敷地 JSON の大学名・キャンパス名（入口ページ hub.html の表示に使う）。"""
+    return {"schema": "campus-recorder/web/1", "campus": campus,
+            "university": doc.get("university"), "campus_name": doc.get("campus_name")}
 
 
 def coverage_layer(b: dict, ev: dict, cov_json: Path) -> dict | None:
@@ -1326,26 +1733,28 @@ def _box(p: dict, sid: str, name: str | None, d: dict | None) -> dict:
 # --- 立ち上げ：campus init / campus check ------------------------------------------------------
 
 def campus_init(slug: str, university: str, campus_name: str, bbox: tuple[float, float, float, float] | None = None,
-                data_site: Path | None = None) -> tuple[Path, bool]:
+                data_site: Path | None = None, osm_relation: int | None = None, osm_way: int | None = None) -> tuple[Path, bool]:
     """敷地 JSON の骨組みを作る。返り値 (パス, 新しく作ったか)。既にあれば上書きしない。
-    bbox は (lat0, lon0, lat1, lon1)。あれば原点をその中心にする（無ければ geo の既定の原点）。"""
+    bbox は (lat0, lon0, lat1, lon1)。あれば原点をその中心にし、平面直角座標系を原点に近い物から選ぶ。
+    無ければ原点と系は空（null）のまま。`site build` が OSM の境界の中心で決めて書く（名城の原点を黙って使わない）。"""
     path = campus_path(slug, data_site)
     if path.exists():
         return path, False
-    lat, lon = geo.ORIGIN_LAT, geo.ORIGIN_LON
     if bbox:
-        lat, lon = round((bbox[0] + bbox[2]) / 2, 6), round((bbox[1] + bbox[3]) / 2, 6)
+        crs = geo.crs_for((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
+    else:
+        crs = {"epsg": None, "zone": None, "origin_lat": None, "origin_lon": None,
+               "note": "原点と系は site build が OSM の境界の中心で決める（または --bbox で init）"}
     doc = {
         "schema": SITE_SCHEMA,
         "campus": slug,
         "university": university,
         "campus_name": campus_name,
-        "crs": {"epsg": geo.EPSG_PLANE, "origin_lat": lat, "origin_lon": lon,
-                "note": "原点からの m。x=東, y=北。z は標高 m"},
+        "crs": crs,
         "bbox_lonlat": list(bbox) if bbox else None,
         "boundary_osm": [],
         "sources": {
-            "osm": {"relation": None, "license": "ODbL", "fetched_at": None},
+            "osm": {"relation": osm_relation, "way": osm_way, "license": "ODbL", "fetched_at": None},
             "plateau": None,
             "plateau_zip": None,
             "gsi": "国土地理院 航空写真・DEM5A",
@@ -1367,6 +1776,9 @@ def campus_init(slug: str, university: str, campus_name: str, bbox: tuple[float,
     return path, True
 
 
+PERMISSION_RESOLVED = ("granted", "none")
+
+
 def campus_check(campus: str, data_site: Path | None = None, out: Path | None = None) -> dict:
     """立ち上げの未解決を集める。problems が空なら 0 件。out があれば JSON でも書く。"""
     doc = load_campus(campus, data_site)
@@ -1381,7 +1793,8 @@ def campus_check(campus: str, data_site: Path | None = None, out: Path | None = 
     res["questions_open"] = [q for q in doc.get("questions") or [] if q.get("status") == "open"]
     perm = (((doc.get("sources") or {}).get("campus_map")) or {}).get("permission") or {}
     res["campus_map_permission"] = perm.get("status")
-    res["permission_ok"] = perm.get("status") == "granted"
+    # granted（使ってよい）と none（公式図を使わないと決めた。OSM の名前だけで進める＝手順書）はどちらも解決済み
+    res["permission_ok"] = perm.get("status") in PERMISSION_RESOLVED
     n = (len(res["map_only"]) + len(res["footprint_only"]) + len(res["ambiguous"]) + len(res["targets_missing"])
          + len(res["questions_open"]) + (0 if res["permission_ok"] else 1))
     res["problem_count"] = n
@@ -1407,5 +1820,5 @@ def campus_check_lines(res: dict, limit: int = 8) -> list[str]:
         L.append(f"  人に聞くことが残っている（{len(res['questions_open'])}）：")
         L += [f"    - {q.get('q')}" for q in res["questions_open"]]
     if not res["permission_ok"]:
-        L.append(f"  公式図の許可が granted ではない（{res['campus_map_permission']}）")
+        L.append(f"  公式図の許可が未解決（{res['campus_map_permission']}）。許可があれば granted、使わないなら none と書く")
     return L

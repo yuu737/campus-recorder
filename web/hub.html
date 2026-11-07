@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>campus-recorder 入口</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1a1a1c; --sub:#595959; --line:#d8d8db; --bg:#f7f7f8; --card:#fff; --blue:#0017c1; --done:#1a7f37; --partial:#b45309; --none:#8e8e93; --warn:#fff4e5; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ink:#f2f2f2; --sub:#b8b8bc; --line:#3a3a3f; --bg:#1c1c1f; --card:#26262a; --blue:#9db2ff; --warn:#3a2f1e; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Noto Sans JP", system-ui, sans-serif; line-height:1.6; }
+  main { max-width:1100px; margin:0 auto; padding:24px 16px 48px; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .lead { color:var(--sub); margin:0 0 20px; font-size:14px; }
+  .notice { background:var(--warn); border:1px solid var(--line); border-radius:10px; padding:10px 14px; font-size:13px; margin-bottom:20px; display:none; }
+  .top { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:28px; }
+  .top a { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; }
+  .top a:hover { border-color:var(--blue); }
+  .top b { display:block; font-size:16px; }
+  .top span { color:var(--sub); font-size:13px; }
+  h2 { font-size:17px; margin:0 0 10px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  .card img { display:block; width:100%; aspect-ratio:1.4; object-fit:cover; background:#ddd; }
+  .card .body { padding:12px 14px 14px; }
+  .card h3 { margin:0 0 2px; font-size:16px; }
+  .card .id { color:var(--sub); font-size:12px; }
+  .stages { list-style:none; margin:10px 0; padding:0; font-size:13px; }
+  .stages li { display:flex; gap:8px; align-items:baseline; padding:2px 0; border-top:1px dashed var(--line); }
+  .stages li:first-child { border-top:0; }
+  .chip { flex:none; width:3.2em; text-align:center; border-radius:10px; font-size:11px; padding:0 6px; color:#fff; background:var(--none); }
+  .chip.done { background:var(--done); } .chip.partial { background:var(--partial); }
+  .stages .name { flex:none; width:6em; }
+  .stages .res { color:var(--sub); }
+  .links { display:flex; flex-wrap:wrap; gap:6px 12px; font-size:13px; }
+  .links a { color:var(--blue); }
+  .foot { color:var(--sub); font-size:12px; margin-top:28px; }
+  .empty { color:var(--sub); grid-column:1 / -1; }
+</style>
+</head>
+<body>
+<main>
+  <h1>campus-recorder 入口</h1>
+  <p class="lead" id="lead">職員が撮った写真から、根拠つきの図面・模型・歩ける 3D を起こす道具。ここから全部の画面に行けます。</p>
+  <div class="notice" id="notice"></div>
+
+  <div class="top">
+    <a href="staff.html"><b>職員の画面</b><span>写真を入れて記録を始める。進捗と「あなた待ち」</span></a>
+    <a href="index.html"><b>歩く画面（受験生向け）</b><span>棟と地形。WASD で歩く、「根拠で見る」で色分け</span></a>
+    <a href="index.html?boxes=0"><b>歩く画面（PLATEAU の箱なし）</b><span>未測の灰色の箱を消した状態で開く</span></a>
+  </div>
+
+  <h2>棟ごとの報告</h2>
+  <div class="grid" id="cards"></div>
+
+  <p class="foot">大学名・棟の名前・一覧は敷地 JSON（<code>web/data/site.json</code>、道具が書き出す物）から読む。報告・証拠の絵・模型の絵は <code>out/&lt;棟&gt;/</code> の生成物で、手で直していない。状態の色：緑＝済、橙＝途中、灰＝まだ。</p>
+</main>
+<script>
+// 入口ページ。大学や棟の名前はここに書かない：敷地 JSON の designed（id・name）から読む。
+// 開き方：recorder serve（または リポジトリ直下の配信）で /web/hub.html。file:// では JSON が読めないので案内だけ出す。
+const STAGE = [["photos","写真"],["elev","立面図"],["evidence","証拠"],["model","模型"],["walk","歩ける 3D"],["rest","まだ無い物"]];
+const OUT = "../out/";                                   // 報告の生成物（配信の根がリポジトリ直下の時）
+
+async function j(url) { try { const r = await fetch(url, {cache:"no-store"}); return r.ok ? await r.json() : null; } catch { return null; } }
+
+async function main() {
+  const notice = document.getElementById("notice");
+  if (location.protocol === "file:") {
+    notice.style.display = "block";
+    notice.textContent = "このページはサーバ経由で開いてください（例：recorder serve を起動して http://localhost:8767/web/hub.html）。file:// では敷地 JSON と報告が読めません。";
+  }
+  const site = await j("data/site.json");
+  if (!site) { if (notice.style.display !== "block") { notice.style.display = "block"; notice.textContent = "敷地 JSON（web/data/site.json）がありません。recorder site export-web で書き出してください。"; } return; }
+  const lead = document.getElementById("lead");
+  const campus = site.university ? `${site.university} ${site.campus_name || site.campus || ""}` : (site.campus_name || site.campus || "");
+  if (campus) lead.textContent = `${campus.trim()}。` + lead.textContent;
+  const designed = site.designed || {};
+  const ids = (site.scope && site.scope.targets) || Object.keys(designed);
+  const root = document.getElementById("cards");
+  if (!ids.length) {   // 新しい大学の立ち上げ直後：敷地 JSON はあるが棟がまだ 1 つも無い
+    root.innerHTML = `<p class="empty">棟はまだありません。職員の写真から起こします</p>`;
+    return;
+  }
+  for (const id of ids) {
+    const d = designed[id] || {};
+    const name = d.name || id;
+    const rep = await j(`${OUT}${id}/report.json`);
+    const mr = await j(`${OUT}${id}/model_report.json`);
+    const cam = mr && mr.web_cameras && mr.web_cameras.street && mr.web_cameras.street.query;
+    const card = document.createElement("div"); card.className = "card";
+    const stages = rep && rep.stages ? STAGE.map(([k, label]) => {
+      const s = rep.stages[k] || {}; const st = s.status || "none";
+      return `<li><span class="chip ${st}">${st === "done" ? "済" : st === "partial" ? "途中" : "まだ"}</span><span class="name">${label}</span><span class="res">${s.result || ""}</span></li>`;
+    }).join("") : `<li><span class="res">報告（out/${id}/report.json）がまだありません</span></li>`;
+    const c = (rep && rep.counts) || d.counts || {};
+    card.innerHTML = `
+      <a href="${OUT}${id}/report.html"><img src="${OUT}${id}/walk.png" alt="${name} の歩く画面" loading="lazy" onerror="this.onerror=null;this.src='${OUT}${id}/persp_street.png'"></a>
+      <div class="body">
+        <h3>${name}</h3>
+        <div class="id">${id}　写真 ${c.photos ?? "–"}・登録 ${c.registered ?? "–"}・measured ${c.measured ?? "–"}・estimated ${c.estimated ?? "–"}・unknown ${c.unknown ?? "–"}</div>
+        <ul class="stages">${stages}</ul>
+        <div class="links">
+          <a href="${OUT}${id}/report.html">報告（1 ページ）</a>
+          <a href="${OUT}${id}/evidence_three.png">証拠ビューア</a>
+          <a href="${OUT}${id}/evidence_photo.png">写真と目印</a>
+          <a href="${OUT}${id}/evidence_overview.png">俯瞰</a>
+          <a href="${OUT}${id}/sheet.png">四面図</a>
+          <a href="${OUT}${id}/plan.svg">平面図</a>
+          ${cam ? `<a href="index.html?${cam}">歩く画面でここへ</a>` : ""}
+        </div>
+      </div>`;
+    root.appendChild(card);
+  }
+}
+main();
+</script>
+</body>
+</html>

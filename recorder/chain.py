@@ -316,6 +316,12 @@ def register_via(photo_id: str, building_json: Path, via_ids: list[str], reg: di
         raise ChainFail("解いた視点から見える面が無い", "no_visible_face", stats)
     inl_obj = obj[sol["inliers"]]
     spread = np.ptp(inl_obj, axis=0)
+    inl_s: dict[str, list[float]] = {}         # 視点に合った点の面の上の位置 s（周期の面の原点の確かめ。registry.anchor_check、J-027）
+    for i, P in zip(sol["inliers"], inl_obj):
+        f_ = fmap.get(faces[i].split(":", 1)[1])
+        if f_ is not None and f_.get("from") and f_.get("to"):
+            p0, u_, _, _ = R_.face_frame(f_)
+            inl_s.setdefault(f_["id"], []).append(round(float((np.asarray(P[:2], float) - p0) @ u_), 2))
     entry = {
         "photo": rec["id"], "building": b["id"], "face": rec.get("face") or "(pose)", "kind": "pose",
         "period": rec.get("period"), "file": rec.get("file"), "image_size": [int(w), int(h)],
@@ -328,6 +334,7 @@ def register_via(photo_id: str, building_json: Path, via_ids: list[str], reg: di
                   "reproj_max_px": round(float(sol["err"].max()), 2), "n_points": n_in, "n_candidates": int(len(img)),
                   "inlier_ratio": round(n_in / len(img), 3), "inlier_box_frac": stats["inlier_box_frac"], "points_by_face": used_faces,
                   "points_spread_m": [round(float(v), 2) for v in spread],
+                  "inlier_s_by_face": {k: sorted(set(v)) for k, v in inl_s.items()},
                   "camera_height_m": cam["camera_height_m"], "via_stats": per_via},
         "registered_at": datetime.now().isoformat(timespec="seconds"),
         "registered_by": by,
@@ -364,7 +371,7 @@ def register_chain(building_json: Path, reg: dict, index: dict | None = None, ca
         reg_photos = {}
         for e in regd:
             reg_photos.setdefault(e["photo"], e)
-        todo = [r for r in recs if r["id"] not in done_ids]
+        todo = [r for r in recs if r["id"] not in done_ids and r["id"] not in R_.excluded_ids(reg, b["id"])]   # photos exclude の写真は試さない
         if not todo or not reg_photos:
             break
         scored = []

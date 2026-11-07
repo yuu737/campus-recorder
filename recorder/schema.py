@@ -10,6 +10,10 @@ status の決まり（CLAUDE.md の 1）
     measured   根拠（evidence）が1つ以上あり、value がある
     estimated  value があり、method か note に推定の仕方が書いてある。根拠は無くてもよい
     unknown    value は null。撮影依頼（requests）に理由を書く
+
+measured の長さ（個数でない値）は根拠の鎖 chain と measured_kind を持つ（K-101、11/8。下の「根拠の鎖」）。
+    {"value": 5.46, "unit": "m", "tol": 0.25, "status": "measured", "measured_kind": "chain",
+     "evidence": [...], "method": "...", "chain": [{"link": "tape", "photo": "…", "read": "0→91.0 cm", "n": 4}, …]}
 """
 
 from __future__ import annotations
@@ -33,6 +37,8 @@ class Measurement:
     evidence: list[str] = field(default_factory=list)
     method: str = ""
     note: str = ""
+    chain: list | None = None            # 根拠の鎖（K-101）。無い値は None
+    measured_kind: str | None = None     # measured の長さだけ：direct | chain
 
     @classmethod
     def from_json(cls, d: Any) -> "Measurement":
@@ -49,10 +55,12 @@ class Measurement:
             evidence=list(d.get("evidence", [])),
             method=d.get("method", ""),
             note=d.get("note", ""),
+            chain=d.get("chain"),
+            measured_kind=d.get("measured_kind"),
         )
 
     def to_json(self) -> dict:
-        return {
+        d = {
             "value": self.value,
             "unit": self.unit,
             "tol": self.tol,
@@ -61,6 +69,11 @@ class Measurement:
             "method": self.method,
             "note": self.note,
         }
+        if self.measured_kind is not None:
+            d["measured_kind"] = self.measured_kind
+        if self.chain is not None:
+            d["chain"] = self.chain
+        return d
 
     @property
     def known(self) -> bool:
@@ -97,7 +110,200 @@ class Measurement:
         else:  # unknown
             if self.value is not None:
                 out.append(f"{where}: unknown なのに value が入っています（値を消すか status を直す）")
+        out += chain_problems(self, where)
         return out
+
+
+# --- 根拠の鎖（K-101、11/8。docs/指示_11-08.md 第 1 部「鎖の書き方」）-------------------------------
+# measured の長さは、値に至る鎖の全部の輪が次の 4 種のどれかである時だけ measured：
+#   tape            メジャーの目盛りの読み（写真 id、read "0→91.0 cm"、またがった枚数 n）
+#   count           写真で数えた個数（写真 id、n、数え違い tol 枚。既定 ±1）
+#   px_ratio        同じ面を正面化した 1 枚の中の px の比（写真 id、px [分子, 分母]）
+#   uniform_period  正面化した面の全体で周期（px）が一様（写真 id、px [場所ごとの周期 …]）
+# これ以外の輪（eye 目視・claim 申告・plateau 公開資料・typical 典型値・assume 仮定 など）が 1 つでもあれば estimated。
+# measured_kind：鎖が tape 1 輪だけ → direct、それ以外 → chain。個数（COUNT_UNITS）は従来どおり evidence だけでよい。
+CHAIN_LINKS = ("tape", "count", "px_ratio", "uniform_period")
+MEASURED_KINDS = ("direct", "chain")
+COUNT_UNITS = ("階", "本", "枚", "台", "スパン", "段", "個", "列", "か所")
+LENGTH_UNITS = {"m": 1.0, "cm": 0.01, "mm": 0.001}
+TAPE_END_TOL_M = 0.005      # メジャーの読み：両端あわせて ±0.5 cm（区間の長さに対して）
+PX_UNITS = ("px", "mm")    # px の欄の単位。mm は 2 枚目のメジャーの読みを一様の根拠にする時（T2）。比だけ使うので単位は消える
+PX_READ_TOL = 1.0           # 正面化した画像の px の読み ±1 px
+COUNT_TOL_DEFAULT = 1       # 数え違い ±1 枚
+CHAIN_TOL_SLACK = 1e-6      # tol と chain_tol の比較の丸めの余裕
+_NUM_RE = re.compile(r"-?[0-9]+(?:\.[0-9]+)?")
+
+
+def is_count_unit(unit: str | None) -> bool:
+    """個数の値（階・本・枚・台・スパン・段・個・列・か所）か。"""
+    return (unit or "") in COUNT_UNITS
+
+
+def parse_tape_read(read) -> float | None:
+    """メジャーの読み → 区間の長さ（m）。"0→91.0 cm"・"12.0→103.5"・"91.0 cm"・"0→910 mm"。単位が無ければ cm。
+    数が 2 つなら差の絶対値、1 つならその数。読めなければ None。"""
+    if isinstance(read, (int, float)) and not isinstance(read, bool):
+        nums, text = [float(read)], ""
+    elif isinstance(read, str):
+        text = read.strip().lower().replace("−", "-").replace("->", "→")
+        nums = [float(x) for x in _NUM_RE.findall(text.replace("→", " ").replace("〜", " ").replace("~", " "))]
+    else:
+        return None
+    if not nums or len(nums) > 2:
+        return None
+    span = abs(nums[1] - nums[0]) if len(nums) == 2 else abs(nums[0])
+    unit = "mm" if "mm" in text else "cm" if "cm" in text else "m" if re.search(r"[0-9\s]m$", text) else "cm"
+    span *= LENGTH_UNITS[unit]
+    return span if span > 0 else None
+
+
+def _pos_nums(x) -> list[float] | None:
+    if not isinstance(x, list) or not x:
+        return None
+    try:
+        v = [float(t) for t in x if not isinstance(t, bool)]
+    except (TypeError, ValueError):
+        return None
+    return v if len(v) == len(x) and all(t > 0 for t in v) else None
+
+
+def _posnum(x) -> bool:
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and x > 0
+
+
+def link_rel(link: dict) -> tuple[float | None, str | None]:
+    """1 つの輪が値に与える相対の誤差（割合）と、読めない時の理由。式は chain_tol の docstring。"""
+    k = link.get("link")
+    if k == "tape":
+        n = link.get("n", 1)
+        if not _posnum(n):
+            return None, "tape の輪の n（またがった枚数）が正の数ではありません"
+        span = parse_tape_read(link.get("read"))
+        if span is None and _posnum(link.get("value")):
+            span = float(link["value"]) * float(n)        # read が無い時は周期 × n を区間と見なす
+        if span is None:
+            return None, "tape の輪の read（目盛りの読み \"0→91.0 cm\"）が読めません"
+        return TAPE_END_TOL_M / span, None
+    if k == "count":
+        n = link.get("n")
+        if not _posnum(n):
+            return None, "count の輪の n（数えた個数）が正の数ではありません"
+        t = link.get("tol", COUNT_TOL_DEFAULT)
+        if not isinstance(t, (int, float)) or isinstance(t, bool) or t < 0:
+            return None, "count の輪の tol（数え違いの枚数）が 0 以上の数ではありません"
+        if "confirmed_by" in link:     # 2 枚で一致した枚数は数え違いを 0 と見なす（根拠に 2 枚目の id）
+            cb = link.get("confirmed_by")
+            if not isinstance(cb, str) or not cb.strip():
+                return None, "count の輪の confirmed_by は 2 枚目の写真 id です（2 枚で一致した枚数は数え違いを 0 と見なす）"
+            if cb.strip() == str(link.get("photo") or "").strip():
+                return None, "count の輪の confirmed_by が photo と同じ写真です（2 枚で一致した枚数は数え違いを 0 と見なす（根拠に 2 枚目の id）。別の写真で数える）"
+            return 0.0, None
+        return float(t) / float(n), None
+    if link.get("px_unit", "px") not in PX_UNITS:
+        return None, f"{k} の輪の px_unit は {' / '.join(PX_UNITS)} です（{link.get('px_unit')}）"
+    if k == "px_ratio":
+        px = _pos_nums(link.get("px"))
+        if not px or len(px) != 2:
+            return None, "px_ratio の輪の px は [分子, 分母] の正の数 2 つです"
+        t = link.get("px_tol", PX_READ_TOL)
+        if not isinstance(t, (int, float)) or isinstance(t, bool) or t < 0:
+            return None, "px_ratio の輪の px_tol が 0 以上の数ではありません"
+        return float(t) / px[0] + float(t) / px[1], None
+    if k == "uniform_period":
+        px = _pos_nums(link.get("px"))
+        if not px or len(px) < 2:
+            return None, "uniform_period の輪の px は場所ごとの周期（正の数 2 つ以上）です"
+        mean = sum(px) / len(px)
+        return (max(px) - min(px)) / 2.0 / mean, None
+    return 0.0, None        # 4 種以外の輪（estimated の鎖だけに書ける）は ± を数えない
+
+
+def chain_tol(chain: list, value) -> float:
+    """鎖から積んだ ±（value と同じ単位）。各輪の相対の誤差を足して |value| に掛ける（輪ごとに積む＝足し算。二乗和にしない）。
+
+        tape            0.5 cm ÷ 区間の長さ（m）。区間 = read の差（例 "0→91.0 cm" なら 0.91 m）。
+                        周期 p = 区間 ÷ n に直すと ±(0.5 cm ÷ n)。値 = p × 枚数 に移すと |value| × 0.005 ÷ 区間。
+                        direct（tape 1 輪だけ、value = 区間）なら ±0.5 cm そのもの。read が無ければ 区間 = 輪の value × n。
+        count           tol ÷ n（tol は数え違いの枚数、既定 1）。値 = 周期 × n なので ±tol × 周期 と同じ。
+                        輪に confirmed_by（photo と別の写真 id）があり、その写真でも同じ枚数を数えた時は 0
+                        （2 枚で一致した枚数は数え違いを 0 と見なす。根拠に 2 枚目の id）。
+        px の欄          px_unit "mm"（2 枚目のメジャーの読み）も可。比とばらつきしか使わないので式は同じ。
+        px_ratio        px_tol ÷ a + px_tol ÷ b（px = [a, b]、比 a/b、px_tol は既定 1 px）。
+        uniform_period  (最大 − 最小) ÷ 2 ÷ 平均（px = 場所ごとの周期）。周期のばらつきの半幅を比で移す。
+
+        chain_tol = |value| × Σ（各輪の相対の誤差）
+
+    例：tape "0→91.0 cm"・n 4、uniform_period [38.1, 38.4, 38.2, 38.3]、count n 24（±1）、value 5.46 m
+        → 5.46 × (0.005/0.91 + 0.15/38.25 + 1/24) = 5.46 × (0.00549 + 0.00392 + 0.04167) ≈ ±0.279 m
+    4 種以外の輪は 0 と数える（その鎖は estimated でしか書けない）。4 種の輪が読めなければ inf。"""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return float("inf")
+    total = 0.0
+    for link in chain or []:
+        if not isinstance(link, dict):
+            return float("inf")
+        rel, _why = link_rel(link)
+        if rel is None:
+            return float("inf")
+        total += rel
+    return abs(float(value)) * total
+
+
+def expected_measured_kind(chain: list) -> str:
+    """鎖が tape 1 輪だけなら direct、それ以外は chain。"""
+    return "direct" if len(chain) == 1 and isinstance(chain[0], dict) and chain[0].get("link") == "tape" else "chain"
+
+
+def chain_problems(m: "Measurement", where: str) -> list[str]:
+    """鎖と measured_kind の検証（エラー）。
+    - measured：鎖の輪は 4 種だけ、各輪に写真 id、輪ごとの欄が読める、長さは tape の輪を含む、measured_kind が鎖と合う、
+      tol が有って tol >= chain_tol(chain, value)。
+    - estimated：鎖に 4 種以外の輪（eye・claim・plateau・typical・assume…）があってよい。measured_kind は書かない。
+    - 鎖の無い既存の measured の長さはここでは落とさず warn_chain で知らせる（--strict でエラー）。
+      既存の見本（tests/fixtures）を一度に落とさないため。個数（COUNT_UNITS）は従来どおり evidence だけでよい。"""
+    out: list[str] = []
+    ch = m.chain
+    if ch is not None and not (isinstance(ch, list) and all(isinstance(x, dict) for x in ch)):
+        return [f"{where}: chain は輪（dict）の並びにしてください"]
+    for i, link in enumerate(ch or []):
+        if not isinstance(link.get("link"), str) or not link.get("link"):
+            out.append(f"{where}.chain[{i}]: link（輪の種類）がありません")
+    if m.measured_kind is not None and m.status != "measured":
+        out.append(f"{where}: measured_kind は measured の値だけに書きます（今は {m.status}）")
+    if m.status != "measured" or out:
+        return out
+    count = is_count_unit(m.unit)
+    if m.measured_kind is not None and m.measured_kind not in MEASURED_KINDS:
+        out.append(f"{where}: measured_kind は direct か chain です（{m.measured_kind}）")
+    if not ch:
+        if m.measured_kind is not None and not count:
+            out.append(f"{where}: measured_kind={m.measured_kind} なのに鎖（chain）がありません")
+        return out
+    for i, link in enumerate(ch):
+        k = link.get("link")
+        if k not in CHAIN_LINKS:
+            out.append(f"{where}.chain[{i}]: 輪 {k} は measured に使えません（{' / '.join(CHAIN_LINKS)} 以外の輪があれば estimated）")
+            continue
+        if not isinstance(link.get("photo"), str) or not link["photo"].strip():
+            out.append(f"{where}.chain[{i}]: {k} の輪に写真 id（photo）がありません")
+        _rel, why = link_rel(link)
+        if why:
+            out.append(f"{where}.chain[{i}]: {why}")
+    if out or count:
+        return out                                   # 個数に鎖が書いてあれば輪の形だけ見る
+    if m.unit in LENGTH_UNITS and not any(link.get("link") == "tape" for link in ch):
+        out.append(f"{where}: measured の長さの鎖に tape（メジャーの読み）の輪がありません（縮尺の根拠が無い → estimated）")
+    want = expected_measured_kind(ch)
+    if m.measured_kind is None:
+        out.append(f"{where}: measured_kind がありません（この鎖なら {want}）")
+    elif m.measured_kind in MEASURED_KINDS and m.measured_kind != want:
+        out.append(f"{where}: measured_kind={m.measured_kind} は鎖と合いません（tape 1 輪だけなら direct、それ以外は chain → {want}）")
+    need = chain_tol(ch, m.value)
+    if not isinstance(m.tol, (int, float)) or isinstance(m.tol, bool):
+        out.append(f"{where}: measured に ± (tol) がありません（鎖から積むと ±{need:.4g}）")
+    elif m.tol < need - CHAIN_TOL_SLACK:
+        out.append(f"{where}: ±{m.tol:g} は鎖から積んだ ±{need:.4g} より小さい（chain_tol 以上にする）")
+    return out
 
 
 # --- 棟 JSON の中で Measurement が入る場所 ---------------------------------
@@ -796,8 +1002,13 @@ def _walk_evidence(obj, where: str):
         if isinstance(ev, list):
             for e in ev:
                 yield where, e
+        ch = obj.get("chain") if "value" in obj and "status" in obj else None
+        if isinstance(ch, list):                       # 根拠の鎖の輪の写真 id（K-101）
+            for i, link in enumerate(ch):
+                if isinstance(link, dict) and isinstance(link.get("photo"), str) and link["photo"]:
+                    yield f"{where}.chain[{i}]", link["photo"]
         for k, v in obj.items():
-            if k in _WARN_SKIP or k == "evidence":
+            if k in _WARN_SKIP or k in ("evidence", "chain"):
                 continue
             yield from _walk_evidence(v, f"{where}.{k}" if where else k)
     elif isinstance(obj, list):
@@ -936,11 +1147,47 @@ def warn_evidence_sorting(b: dict, records: dict[str, dict] | None = None, root:
     return out
 
 
+def warn_chain(b: dict) -> list[str]:
+    """5. 根拠の鎖（K-101）。鎖の無い measured（個数を除く）と、± の無い measured（個数を除く）を知らせる
+    （--strict でエラー）。鎖がある値の中身の検証は validate_building（Measurement.problems）のエラー。"""
+    out: list[str] = []
+    for where, m in _walk_values(b, ""):
+        if m.get("status") != "measured" or is_count_unit(m.get("unit", "m")) or m.get("chain"):
+            continue
+        out.append(f"{where}: measured の値に根拠の鎖（chain）がありません（K-101。鎖を書くか estimated にする）")
+        if not isinstance(m.get("tol"), (int, float)):
+            out.append(f"{where}: measured の値に ± (tol) がありません（K-101。個数でない measured は ± が要る）")
+    return out
+
+
+def measured_kinds(b: dict) -> dict:
+    """measured の値を「直接（direct）／鎖（chain）／個数（count）」に分けて数える。鎖の無い measured の長さは no_chain。
+    範囲は evidence_summary と同じ（photos・requests・history を除く測定値）。"""
+    out = {"direct": 0, "chain": 0, "count": 0, "no_chain": 0}
+    for m in iter_values(b, _SUMMARY_SKIP):
+        if m.get("status") != "measured":
+            continue
+        if is_count_unit(m.get("unit", "m")):
+            out["count"] += 1
+        elif m.get("chain") and m.get("measured_kind") in MEASURED_KINDS:
+            out[m["measured_kind"]] += 1
+        else:
+            out["no_chain"] += 1
+    out["measured"] = sum(out.values())
+    return out
+
+
+def measured_kinds_line(k: dict) -> str:
+    """1 行の表示：measured N（直接 a／鎖 b／個数 c）。鎖の無い measured があれば足す。"""
+    s = f"measured {k['measured']}（直接 {k['direct']}／鎖 {k['chain']}／個数 {k['count']}）"
+    return s + (f"　鎖の無い measured {k['no_chain']}" if k["no_chain"] else "")
+
+
 def warn_building(b: dict, photo_ids: set[str] | None = None, root: Path | None = None,
                   records: dict[str, dict] | None = None) -> list[str]:
     """警告の一覧（validate_building のエラーとは別。既存の棟を落とさない）。"""
     return (warn_tol_floor(b, ruler_ratios(root)) + warn_adopted(b)
-            + warn_evidence_ids(b, photo_ids, root) + warn_evidence_sorting(b, records, root))
+            + warn_evidence_ids(b, photo_ids, root) + warn_evidence_sorting(b, records, root) + warn_chain(b))
 
 
 def unknowns(b: dict) -> list[str]:
@@ -974,16 +1221,32 @@ def unknowns(b: dict) -> list[str]:
     return out
 
 
-def new_building(bid: str, name: str, campus: str = "meijo-tempaku") -> dict:
-    """空の棟 JSON。全部 unknown から始める。"""
+def _site_defaults(campus: str | None) -> tuple[str, dict]:
+    """棟 JSON の campus と crs の既定：敷地 JSON（campus を渡さなければ site.default_campus()）の campus と crs。
+    敷地 JSON が読めない・crs が空なら geo の今の値（geo は敷地 JSON に無い時だけ既定と警告）。大学名をここに書かない。"""
+    from . import geo, site
+
+    try:
+        doc = site.load_campus(campus or site.default_campus())
+    except (ValueError, OSError):
+        doc = {}
+    cid = campus or doc.get("campus") or "unknown"
+    c = geo._crs_of(doc) or geo.current()
+    crs = {k: c[k] for k in ("epsg", "origin_lat", "origin_lon")}
+    crs["note"] = "原点からの m。x=東, y=北。z は標高 m"
+    return cid, crs
+
+
+def new_building(bid: str, name: str, campus: str | None = None, crs: dict | None = None) -> dict:
+    """空の棟 JSON。全部 unknown から始める。campus・crs を渡さなければ敷地 JSON（既定のキャンパス）から。"""
     unk = Measurement(None).to_json()
+    cid, crs0 = _site_defaults(campus)
     return {
         "schema": SCHEMA_ID,
         "id": bid,
         "name": name,
-        "campus": campus,
-        "crs": {"epsg": 6675, "origin_lat": 35.1355, "origin_lon": 136.9755,
-                "note": "原点からの m。x=東, y=北。z は標高 m"},
+        "campus": cid,
+        "crs": dict(crs) if crs else crs0,
         "footprint": {"status": "unknown", "evidence": [], "method": "", "polygon": []},
         "ground_z": dict(unk),
         "floor_count": {**unk, "unit": "階"},

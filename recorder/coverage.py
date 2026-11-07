@@ -181,7 +181,7 @@ def exclude_now(e: dict, f: dict) -> list[tuple[float, float, float, float, str]
     a, c = reg_to_now(e, f)
     out = []
     notes = e.get("exclude_note") or []
-    for i, x in enumerate(e.get("exclude") or []):
+    for i, x in enumerate((e.get("exclude") or []) + (e.get("hidden") or [])):   # hidden：棟の他の面に隠れた所（registry.expand_entries）
         rect, why = (x.get("rect"), x.get("why", "")) if isinstance(x, dict) else (x, notes[i] if i < len(notes) else "")
         s0, s1, z0, z1 = (float(v) for v in rect)
         n0, n1 = (s0 - c) / a, (s1 - c) / a

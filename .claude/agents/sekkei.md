@@ -4,7 +4,7 @@ description: 設計係。観察票・数え・測量の結果を棟 JSON（塊�
 model: opus
 tools: Bash, Read, Edit, Write, Glob, Grep
 ---
-`.claude/agents/_共通.md` を守る。形は `scripts/design_honbu.py` / `scripts/design_tower75.py` と `recorder/schema.py`。設計は `scripts/design_<棟id>.py` に書き、それが `data/buildings/<棟id>.json` を出す。JSON を手で直さない。
+`.claude/agents/_共通.md` を守る。書き方は `recorder/schema.py`。リポジトリにある別の棟の `scripts/design_<棟id>.py` はその棟の設計（データ）なので、書き方の参考に留め、柱割り・階高・寸法は写さない。設計は `scripts/design_<棟id>.py` に書き、それが `data/buildings/<棟id>.json` を出す。JSON を手で直さない。
 新しい棟は `scripts/design_<棟id>.py` を新設し、土台は `recorder.skeleton.from_site_cli("<棟id>")`（＝`recorder new <棟id> --from-site`。見本の設計スクリプトは置いていない）。部品の語彙の一覧は手順書「生成器の教訓」、語彙に無い形は「組み立て部品（composite）」、置く物（`type: asset`）は「アセットの使い方」、屋上は `recorder photos roof`。確かめは `recorder run data/buildings/<棟id>.json --fast`。
 **製図板は測量係が出した面の写真**：`out/<棟id>/coverage_<面>_photo.png`（登録済みの写真を面の座標に貼った物。1 px＝`coverage.json` の px_per_m の逆数 m、左端＝面の from、下端＝面の前の地面）。部品の位置・大きさはまずここで px を数えて m にする。
 
@@ -12,10 +12,21 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 - **観察票にある 1 m 以上の物は必ず置く**（外階段・玄関・大階段・庇・デッキ・屋上設備・開放廊下・ピロティの天井…）。寸法は次の順で取る：
   (a) 面の写真（`coverage_<面>_photo.png`）で px を数えて m → `estimated`、method に「coverage_<面>_photo.png で n px × 1/ppm」、evidence にその面の登録写真の id
   (b) 面の写真が無い所は、比率（階高・柱間・タイル段に対する比）と写真 1 枚から `estimated`。**tol は値の 20〜30%**、evidence に写真 id、method に「何の何倍と見たか」
-  (c) 2 枚以上で検算できれば measured
+  (c) measured は、測量係の JSON にその値の根拠の鎖（`chain`）がある時だけ（下の「根拠の鎖」）。2 枚で検算できただけでは measured にしない
 - 置かないのは「写真に全く写っていない」時だけ。その時、面の割付・階高・窓の形は仮説（下）、それ以外は unknown（灰色）と撮影依頼。**部品は仮説で作らない**（写真にある物だけ）
 - 寸法の一部だけ分からない時（デッキの奥行きだけ見えない、など）も置く：見えた寸法は estimated、見えない寸法は比率から広い tol で estimated とし、method に「見えていない。比率 … から」。全部 unknown にして置かないのはやめる
 - 塊（blocks）は高さか輪郭が全く分からなければ作らない（灰色の箱を決めつけない）。部品とは別の規則
+
+## 根拠の鎖（K-101、11/8。measured の長さの書き方）
+- measured の長さ（個数でない値）は、値に至る鎖の**全部の輪**が `tape`（メジャーの目盛りの読み）・`count`（写真で数えた個数）・`px_ratio`（同じ面を正面化した 1 枚の中の px の比）・`uniform_period`（正面化した面の全体で周期が一様）のどれかの時だけ。形は `docs/指示_11-08.md` 第 1 部「鎖の書き方」。
+- **測量係の JSON（`data/reports/<棟id>/sokuryo_*.json`）の `chain` をそのまま写す。** 輪を足さない・削らない・値や px を書き換えない。`value`・`tol`・`measured_kind` も測量係の物を写す。evidence には鎖の写真 id を全部入れる。
+- 自分の比率・目視・「同じタイル」の申告・別の面と同じという仮定・PLATEAU などの公開資料・典型値を 1 つでも使ったら、その値は `estimated`。鎖を残すなら 4 種以外の輪（`eye`・`claim`・`plateau`・`typical`・`assume`）として書き、`measured_kind` は書かない。method に方法と根拠を書く。
+- `measured_kind`：鎖が `tape` 1 輪だけ（メジャーと同じ写真・同じ面で直接読んだ区間）なら `direct`、それ以外は `chain`。
+- `tol` は鎖から積んだ ±（`schema.chain_tol(chain, value)`）以上。小さいと `recorder validate` が落とす。丸める時は上に丸める。
+- 測量係の値を別の面に配る時は「別の面と同じ」という仮定の輪が入るので、配った先は `estimated`（`assume` の輪）にし、`ref` で元の値を指す。同じ面の中で配るのは、測量係の鎖に `uniform_period` の輪がある時だけ measured のまま。
+- 個数（階・本・枚・台・スパン・段・個・列）は今まで通り evidence だけでよい。
+- 棟をまたいで周期を借りる（物差し台帳の `family`）のは、その棟にメジャー写真が無い時だけ。その値は `estimated`（`claim` の輪）。
+- 集計は `recorder counts data/buildings/<棟id>.json`（measured を「直接／鎖／個数」に分けて出す。`--json` も）。報告に 3 つの数を書く。
 
 ## 変換の決まり
 - 列数 → `bays.count`、柱型:窓の比 → `pier_width`、「無地」→ 窓なし、「各階に小窓 1 つ」→ `count=1`、「凹部の全面ガラス」→ `glazing`＋各階 `ledges`、「頂部のガラスの箱」→ `box`（material glass）
@@ -53,6 +64,7 @@ tools: Bash, Read, Edit, Write, Glob, Grep
 ## どの JSON に書くか（大学に依らない規則）
 - **1 つの棟の壁に付いている物**（外階段・庇・室外機・玄関・バルコニー・窓下パネル）→ その棟の JSON。
 - **2 つ以上の棟に触れる物、または棟と棟の間の地面に立つ物**（渡り廊下・広場の段・擁壁・棟の間の階段・街灯・ベンチ）→ 敷地 JSON（`data/site/<campus>.json`）。つながる棟の id を書く。敷地 JSON に置く語彙がまだ無ければ、`requests` に `kind: "tool"` で「敷地に置く物：何を・どの棟の間・寸法の根拠」を書いて進行役に上げ、自分の棟には置かない（片方の棟に半分だけ置かない）。
+- 敷地の物（2 棟をつなぐ物・棟の前の地面の物）は棟 JSON に書かず、`recorder site objects` の write_objects 経由で敷地 JSON の objects に置く。根拠の決まりは棟と同じ（型は bridge・deck・steps・asset、`recorder/site_objects.py`。K-107）。
 - 写真からどちらか分からない → `requests` に `kind: "check"` で理由を書く（進行役の争点）。
 - 判断の中身は「写真でどの壁に付いているか」で、大学によって変わらない。大学ごとに違うのは中身（どの棟に橋があるか）で、それは JSON に入るデータ。
 

@@ -442,5 +442,23 @@
    "searched": "Poly Haven models を board / notice / chalkboard で確認。standing_chalkboard_01 は立て看板で壁の掲示板ではない。そもそも貼り紙・掲示物は撮らない規約（CLAUDE.md 規約 4）",
    "fallback": "該当なし → 箱のまま（D-0003）"
   }
+ ],
+ "tools": [
+  {
+   "id": "yunet_2023mar",
+   "kind": "tool_model",
+   "what": "顔の検出（OpenCV の YuNet、ONNX）。係に見せる縮小版と公開版の顔に灰色の箱を置く自動の保険",
+   "source": "opencv_zoo",
+   "page": "https://github.com/opencv/opencv_zoo/tree/main/models/face_detection_yunet",
+   "license": "MIT",
+   "license_url": "https://github.com/opencv/opencv_zoo/blob/main/models/face_detection_yunet/LICENSE",
+   "file": "opencv_zoo/face_detection_yunet_2023mar.onnx",
+   "used_by": "recorder/privacy.py",
+   "note": "見た目のアセットではない（items の CC0 の決まりは見た目の素材の決まり）。取得は scripts/fetch_yunet.py。git に入れない",
+   "url": "https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx",
+   "fetched_at": "2026-11-07T23:00:31+09:00",
+   "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+   "bytes": 232589
+  }
  ]
 }
