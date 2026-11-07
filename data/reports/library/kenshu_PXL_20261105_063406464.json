@@ -1,0 +1,599 @@
+{
+ "building": "library",
+ "photo": "PXL_20261105_063406464",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "chain（鎖）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f1",
+   "photo_lines_pass": false,
+   "face_pass": true,
+   "n_lines_strong": 47,
+   "n_ng": 14,
+   "face_lines_max_abs_m": 0.352,
+   "part_lines_max_abs_m": 0.409,
+   "lines": [
+    {
+     "what": "部品34（L1 の濃い色の四角） patch 右端",
+     "json_m": 12.5,
+     "diff_m": 0.409,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "L3 大窓 下端",
+     "json_m": 11.7,
+     "diff_m": -0.352,
+     "ok": false,
+     "action": "甲板の組は −0.35（窓下の濃い板の下の縁 11.45 を拾う取り違え。同じ写真で窓下パネルの線は ±0.04）。地上の写真は ±0.15。値は直さない"
+    },
+    {
+     "what": "部品19（外階段） landing_top 下端",
+     "json_m": 6.2,
+     "diff_m": -0.351,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品31（L1 の濃い色の四角） patch 上端",
+     "json_m": 4.85,
+     "diff_m": 0.35,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品29（L1 の濃い色の四角） patch 左端",
+     "json_m": 6.25,
+     "diff_m": 0.329,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "L1 の凹んだ板 列 1 下端",
+     "json_m": 0.5,
+     "diff_m": 0.324,
+     "ok": false,
+     "action": "足元は植え込みと坂の歩道に隠れる（見えていない値）。鎖の 5 枚で +0.25〜+0.33 は植え込みの縁。値は直さない"
+    },
+    {
+     "what": "部品19（外階段） flight_low 左端",
+     "json_m": 23.2,
+     "diff_m": 0.321,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品32（L1 の濃い色の四角） patch 下端",
+     "json_m": 0.95,
+     "diff_m": -0.308,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品19（外階段） flight_low 右端",
+     "json_m": 28.4,
+     "diff_m": -0.302,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品35（L1 の濃い色の四角） patch 右端",
+     "json_m": 15.9,
+     "diff_m": 0.237,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品27（茶色の両開きの扉） patch 下端",
+     "json_m": 2.0,
+     "diff_m": 0.223,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品32（L1 の濃い色の四角） patch 上端",
+     "json_m": 2.35,
+     "diff_m": 0.196,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品30（L1 の濃い色の四角） patch 下端",
+     "json_m": 0.95,
+     "diff_m": -0.154,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "柱型0右",
+     "json_m": 1.02,
+     "diff_m": 0.151,
+     "ok": false,
+     "action": "1 枚だけのずれか、甲板の組（063449740 起点の鎖）のずれ。地上の正面化・目印の写真で合うので値は直さない"
+    },
+    {
+     "what": "柱型0左",
+     "json_m": 0.01,
+     "diff_m": 0.147,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品36（L1 の濃い色の四角） patch 上端",
+     "json_m": 2.35,
+     "diff_m": -0.141,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品34（L1 の濃い色の四角） patch 下端",
+     "json_m": 0.95,
+     "diff_m": 0.138,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品19（外階段） base_wall 下端",
+     "json_m": 1.5,
+     "diff_m": 0.125,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品28（上が丸い白い縁の扉） patch 右端",
+     "json_m": 47.7,
+     "diff_m": -0.121,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "柱型2右",
+     "json_m": 11.79,
+     "diff_m": -0.119,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品27（茶色の両開きの扉） patch 上端",
+     "json_m": 4.3,
+     "diff_m": -0.103,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品26（外階段の下のガラスの扉） patch 下端",
+     "json_m": 1.5,
+     "diff_m": -0.102,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "L4 大窓 下端",
+     "json_m": 16.0,
+     "diff_m": -0.074,
+     "ok": true,
+     "action": "甲板の組だけ −0.16〜−0.21。地上の写真は ±0.09。値は直さない"
+    }
+   ]
+  },
+  {
+   "face": "f2",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 19,
+   "n_ng": 11,
+   "face_lines_max_abs_m": 0.359,
+   "part_lines_max_abs_m": 0.445,
+   "lines": [
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） nose_top 上端",
+     "json_m": 10.64,
+     "diff_m": -0.445,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "入口の南の横長の彫り込みの板 L4 下端",
+     "json_m": 15.73,
+     "diff_m": -0.359,
+     "ok": false,
+     "action": "正面化 075639031 は +0.03。値は直さない"
+    },
+    {
+     "what": "部品42（入口の南の白い植木鉢の箱） rim0 左端",
+     "json_m": 27.57,
+     "diff_m": -0.352,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "入口の南の横長の彫り込みの板 L2 上端",
+     "json_m": 10.04,
+     "diff_m": 0.255,
+     "ok": false,
+     "action": "正面化 075639031 は −0.07。鎖の写真で −0.39〜+0.26 と両側に散る（登録の散らばり）。値は直さない"
+    },
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） slab 上端",
+     "json_m": 10.45,
+     "diff_m": -0.253,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "面の端0",
+     "json_m": 0.0,
+     "diff_m": 0.244,
+     "ok": false,
+     "action": "f2 の写真 6 枚で +0.05〜+0.40（中央値 +0.20）。f1 の写真では同じ角（柱型 9 右）が +0.04。足元（PLATEAU）の北西の角か f2 の登録の横の原点の差。設計の値ではないので直さず、f2 のメジャーの撮影依頼（既存）で確かめる"
+    },
+    {
+     "what": "部品39（大階段） step1 上端",
+     "json_m": 3.35,
+     "diff_m": 0.232,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "入口の南の横長の彫り込みの板 L3 上端",
+     "json_m": 14.62,
+     "diff_m": -0.2,
+     "ok": false,
+     "action": "正面化 075639031 は −0.05。鎖の写真で −0.25〜+0.30。値は直さない"
+    },
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） slab 下端",
+     "json_m": 9.63,
+     "diff_m": 0.175,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品41（掲示板） plate 上端",
+     "json_m": 8.8,
+     "diff_m": 0.162,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） column_n 上端",
+     "json_m": 9.63,
+     "diff_m": 0.154,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品42（入口の南の白い植木鉢の箱） soil 上端",
+     "json_m": 7.25,
+     "diff_m": 0.114,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品42（入口の南の白い植木鉢の箱） rim0 上端",
+     "json_m": 7.3,
+     "diff_m": -0.104,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    }
+   ]
+  }
+ ],
+ "face": "f1",
+ "pass": false,
+ "lines": [
+  {
+   "what": "部品34（L1 の濃い色の四角） patch 右端",
+   "json_m": 12.5,
+   "diff_m": 0.409,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "L3 大窓 下端",
+   "json_m": 11.7,
+   "diff_m": -0.352,
+   "ok": false,
+   "action": "甲板の組は −0.35（窓下の濃い板の下の縁 11.45 を拾う取り違え。同じ写真で窓下パネルの線は ±0.04）。地上の写真は ±0.15。値は直さない",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） landing_top 下端",
+   "json_m": 6.2,
+   "diff_m": -0.351,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品31（L1 の濃い色の四角） patch 上端",
+   "json_m": 4.85,
+   "diff_m": 0.35,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品29（L1 の濃い色の四角） patch 左端",
+   "json_m": 6.25,
+   "diff_m": 0.329,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "L1 の凹んだ板 列 1 下端",
+   "json_m": 0.5,
+   "diff_m": 0.324,
+   "ok": false,
+   "action": "足元は植え込みと坂の歩道に隠れる（見えていない値）。鎖の 5 枚で +0.25〜+0.33 は植え込みの縁。値は直さない",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） flight_low 左端",
+   "json_m": 23.2,
+   "diff_m": 0.321,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品32（L1 の濃い色の四角） patch 下端",
+   "json_m": 0.95,
+   "diff_m": -0.308,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） flight_low 右端",
+   "json_m": 28.4,
+   "diff_m": -0.302,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品35（L1 の濃い色の四角） patch 右端",
+   "json_m": 15.9,
+   "diff_m": 0.237,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品27（茶色の両開きの扉） patch 下端",
+   "json_m": 2.0,
+   "diff_m": 0.223,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品32（L1 の濃い色の四角） patch 上端",
+   "json_m": 2.35,
+   "diff_m": 0.196,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品30（L1 の濃い色の四角） patch 下端",
+   "json_m": 0.95,
+   "diff_m": -0.154,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "柱型0右",
+   "json_m": 1.02,
+   "diff_m": 0.151,
+   "ok": false,
+   "action": "1 枚だけのずれか、甲板の組（063449740 起点の鎖）のずれ。地上の正面化・目印の写真で合うので値は直さない",
+   "face": "f1"
+  },
+  {
+   "what": "柱型0左",
+   "json_m": 0.01,
+   "diff_m": 0.147,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "部品36（L1 の濃い色の四角） patch 上端",
+   "json_m": 2.35,
+   "diff_m": -0.141,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "部品34（L1 の濃い色の四角） patch 下端",
+   "json_m": 0.95,
+   "diff_m": 0.138,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） base_wall 下端",
+   "json_m": 1.5,
+   "diff_m": 0.125,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "部品28（上が丸い白い縁の扉） patch 右端",
+   "json_m": 47.7,
+   "diff_m": -0.121,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "柱型2右",
+   "json_m": 11.79,
+   "diff_m": -0.119,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "部品27（茶色の両開きの扉） patch 上端",
+   "json_m": 4.3,
+   "diff_m": -0.103,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "部品26（外階段の下のガラスの扉） patch 下端",
+   "json_m": 1.5,
+   "diff_m": -0.102,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "L4 大窓 下端",
+   "json_m": 16.0,
+   "diff_m": -0.074,
+   "ok": true,
+   "action": "甲板の組だけ −0.16〜−0.21。地上の写真は ±0.09。値は直さない",
+   "face": "f1"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） nose_top 上端",
+   "json_m": 10.64,
+   "diff_m": -0.445,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "入口の南の横長の彫り込みの板 L4 下端",
+   "json_m": 15.73,
+   "diff_m": -0.359,
+   "ok": false,
+   "action": "正面化 075639031 は +0.03。値は直さない",
+   "face": "f2"
+  },
+  {
+   "what": "部品42（入口の南の白い植木鉢の箱） rim0 左端",
+   "json_m": 27.57,
+   "diff_m": -0.352,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "入口の南の横長の彫り込みの板 L2 上端",
+   "json_m": 10.04,
+   "diff_m": 0.255,
+   "ok": false,
+   "action": "正面化 075639031 は −0.07。鎖の写真で −0.39〜+0.26 と両側に散る（登録の散らばり）。値は直さない",
+   "face": "f2"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） slab 上端",
+   "json_m": 10.45,
+   "diff_m": -0.253,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "面の端0",
+   "json_m": 0.0,
+   "diff_m": 0.244,
+   "ok": false,
+   "action": "f2 の写真 6 枚で +0.05〜+0.40（中央値 +0.20）。f1 の写真では同じ角（柱型 9 右）が +0.04。足元（PLATEAU）の北西の角か f2 の登録の横の原点の差。設計の値ではないので直さず、f2 のメジャーの撮影依頼（既存）で確かめる",
+   "face": "f2"
+  },
+  {
+   "what": "部品39（大階段） step1 上端",
+   "json_m": 3.35,
+   "diff_m": 0.232,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "入口の南の横長の彫り込みの板 L3 上端",
+   "json_m": 14.62,
+   "diff_m": -0.2,
+   "ok": false,
+   "action": "正面化 075639031 は −0.05。鎖の写真で −0.25〜+0.30。値は直さない",
+   "face": "f2"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） slab 下端",
+   "json_m": 9.63,
+   "diff_m": 0.175,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "部品41（掲示板） plate 上端",
+   "json_m": 8.8,
+   "diff_m": 0.162,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） column_n 上端",
+   "json_m": 9.63,
+   "diff_m": 0.154,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "部品42（入口の南の白い植木鉢の箱） soil 上端",
+   "json_m": 7.25,
+   "diff_m": 0.114,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f2"
+  },
+  {
+   "what": "部品42（入口の南の白い植木鉢の箱） rim0 上端",
+   "json_m": 7.3,
+   "diff_m": -0.104,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f2"
+  }
+ ],
+ "changed": [],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f1",
+   "what": "甲板の写真の組（063449740 と鎖の 9 枚）の登録を目印でやり直す（視点の高さ 9.9〜10.4 m、甲板＋目の高さは約 8.1 m）",
+   "to": "tool",
+   "photos": [
+    "PXL_20261105_063449740",
+    "PXL_20261105_063405325",
+    "PXL_20261105_063406464",
+    "PXL_20261105_063412307",
+    "PXL_20261105_063413358",
+    "PXL_20261105_063417721",
+    "PXL_20261105_063418811",
+    "PXL_20261105_063420663",
+    "PXL_20261105_063455681",
+    "PXL_20261105_063529987"
+   ]
+  }
+ ],
+ "parts": [],
+ "note": ""
+}

@@ -102,7 +102,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南東の角（f6/f7）。左に垂れ幕の長い面 f6（5 層＋1 階ピロティ）、右に小窓だけの短い妻面 f7 とピロティへ上がる赤い大階段・机。右端に近接する別棟（図書館側）"
   },
   {
    "id": "PXL_20261103_042734715",
@@ -204,7 +212,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：042721424 と同じ南東の角。f6 の垂れ幕、f7 下の大階段と植栽"
   },
   {
    "id": "PXL_20261103_042822099",
@@ -306,7 +322,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 の東寄り。垂れ幕、1 階ピロティ、右端に南東角の階段と机。日が正面から当たる（11/3 13:28、f6 は南南西向き）"
   },
   {
    "id": "PXL_20261103_042830256",
@@ -408,7 +431,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 正面。垂れ幕 4 枚、ピロティの下を道路が北へ抜ける"
   },
   {
    "id": "PXL_20261103_042844361",
@@ -510,7 +540,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 正面。垂れ幕、通り抜けの道路（中央線あり）"
   },
   {
    "id": "PXL_20261103_042853166",
@@ -612,7 +649,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 正面。垂れ幕、通り抜け、左に白い 12 号館"
   },
   {
    "id": "PXL_20261103_042900775",
@@ -714,7 +758,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 の中央〜西。垂れ幕、通り抜けの道路、左に白い 12 号館"
   },
   {
    "id": "PXL_20261103_042909968",
@@ -809,7 +860,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 の西寄り。正面玄関の奥まり（ガラス戸・植込み・名城大学本部の石）、垂れ幕、黄色の斜線、左に 12 号館"
   },
   {
    "id": "PXL_20261103_042927350",
@@ -911,7 +969,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南西の角。右に垂れ幕の f6、左に小窓の妻面 f5、左端に近接する白い 12 号館と間の道路。提出物注意：右端に人 2 人（顔の判読は未確認）"
   },
   {
    "id": "PXL_20261103_042946748",
@@ -1041,7 +1107,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f5",
+   "faces": [
+    "f5",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：南西の角から北へ西面を見通す。右に南の翼の高い妻壁、左奥に 4 層の面と階段室。右端に南西の角"
   },
   {
    "id": "PXL_20261103_043004629",
@@ -1171,7 +1245,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f5",
+   "faces": [
+    "f5",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：043026097 と同じ。妻壁と階段室"
   },
   {
    "id": "PXL_20261103_043026097",
@@ -1294,7 +1376,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f5",
+   "faces": [
+    "f5",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：南の翼の西の妻（高い無窓の壁と小窓）と左の階段室・4 層の面"
   },
   {
    "id": "PXL_20261103_043034043",
@@ -1417,7 +1507,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f5",
+   "faces": [
+    "f5",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面の階段室と南の翼の妻壁の境。境目は見えない"
   },
   {
    "id": "PXL_20261103_043041105",
@@ -1540,7 +1638,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f5",
+   "faces": [
+    "f5",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面の階段室（灰色の板）と左の 4 層の面、右に南の翼の高い無窓の壁。境目は見えない"
   },
   {
    "id": "PXL_20261103_043049890",
@@ -1670,7 +1776,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f4",
+   "faces": [
+    "f4",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面。右に階段室（灰色の板・バルコニー）。f4/f5 の境目は見えない"
   },
   {
    "id": "PXL_20261103_043055592",
@@ -1800,7 +1914,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f4",
+   "faces": [
+    "f4",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面の北寄り。右上に階段室の灰色の板。f4/f5 の境目（0.6 m の段差）は見えない"
   },
   {
    "id": "PXL_20261103_043103134",
@@ -1930,7 +2052,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f4",
+   "faces": [
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：西面の北端寄り（左に北西の角の外の空き）。扉・窓。左奥にタワー75。北の角から約 3.5 柱間で f4（21.8 m）の中に収まる"
   },
   {
    "id": "PXL_20261103_043112969",
@@ -2067,7 +2196,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f4",
+   "faces": [
+    "f4",
+    "f3",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北西の角を西面の側から。右へ延びる f4（4 層、扉・窓）、角に室外機と配管、左に北端の階段の端。左奥にタワー75"
   },
   {
    "id": "PXL_20261103_043123901",
@@ -2204,7 +2342,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北端を北から。左寄りに外階段（f1 側）、右に配管と室外機の無窓の壁（f3 側）と北西の角、右に体育館。f1・f2・f3 の境目（2.7 m の段差）は写真ではっきりしない"
   },
   {
    "id": "PXL_20261103_043129358",
@@ -2334,7 +2481,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：043123901 と同じ北端。外階段と室外機の壁"
   },
   {
    "id": "PXL_20261103_043136840",
@@ -2450,7 +2606,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北端の外階段を正面に（丸い庇）。下にピロティ、右に室外機、右奥に体育館。段差の境目は見えない"
   },
   {
    "id": "PXL_20261103_043150092",
@@ -2566,7 +2731,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北東の角。右に外階段（f1）、左へ f0（窓と 1 階のピロティ）、左奥に中庭越しの f8"
   },
   {
    "id": "PXL_20261103_043221663",
@@ -2668,7 +2841,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：f0 の北寄りを真下から見上げる。デッキの煉瓦の帯、その下のピロティ（列柱）、上に窓 2 段。急な見上げ"
   },
   {
    "id": "PXL_20261103_043259125",
@@ -2763,7 +2943,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f0 正面。2 階デッキの帯、1 階の店先（ATM の赤い看板・NO SMOKING）、白い手すりの傾路と分別ごみ箱。提出物注意：戸に小さい貼り紙"
   },
   {
    "id": "PXL_20261103_043304319",
@@ -2872,7 +3059,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f0 の店先とデッキの帯（043259125 の続き）"
   },
   {
    "id": "PXL_20261103_043312297",
@@ -2981,7 +3175,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：入隅（f0/f8）。右に f0 の店先、左に f8 の通り抜け（外の木が見える）。デッキの帯が入隅で折れて続く"
   },
   {
    "id": "PXL_20261103_043314396",
@@ -3111,7 +3313,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：中庭から f8。2 階デッキの帯、その下の通り抜けを道路が抜ける。右端に入隅の f0"
   },
   {
    "id": "PXL_20261103_043320836",
@@ -3241,7 +3451,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f8 正面。デッキの帯、通り抜け（進入禁止の標識）、柱に「本部棟」"
   },
   {
    "id": "PXL_20261103_043327622",
@@ -3364,7 +3581,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f8 正面。デッキの帯、通り抜け、左に東端の大階段"
   },
   {
    "id": "PXL_20261103_043334437",
@@ -3487,7 +3711,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f8 の東寄り。デッキの帯、通り抜け、柱に「本部棟」、左に大階段と左端の別棟（図書館側）。提出物注意：ピロティ奥に掲示板"
   },
   {
    "id": "PXL_20261103_043342958",
@@ -3617,7 +3848,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：043334437 と同じ。デッキへ上がる大階段と通り抜け"
   },
   {
    "id": "PXL_20261103_043405159",
@@ -3698,7 +3936,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：北東の角（f8/f7）を図書館との隙間から。右に f8 とデッキへ上がる階段・入学センターの入口、左に小窓の f7。左端に図書館の壁"
   },
   {
    "id": "PXL_20261103_043515616",
@@ -3807,7 +4053,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：043405159 と同じ角。入学センターの入口と階段（f8）、左の妻面 f7。提出物注意：入口に掲示物"
   },
   {
    "id": "PXL_20261103_043608113",
@@ -3916,7 +4170,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f7",
+   "faces": [
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f7（東の妻面）。小窓の列、左下にピロティ、右下に壁沿いの階段"
   },
   {
    "id": "PXL_20261103_043612124",
@@ -4032,7 +4293,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f7",
+   "faces": [
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f7 正面（縦長）。小窓、ピロティの奥へ通る廊下。提出物注意：奥に掲示板。下端に指"
   },
   {
    "id": "PXL_20261103_043613678",
@@ -4155,7 +4423,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f7",
+   "faces": [
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f7 の南端（南東の角の手前）。ピロティと机・ベンチ、逆光（南）。下端に指"
   },
   {
    "id": "PXL_20261103_043623454",
@@ -4243,7 +4518,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f7",
+   "faces": [
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f7 の上部の小窓とピロティの机。提出物注意：右に掲示板"
   },
   {
    "id": "PXL_20261103_043642327",
@@ -4303,7 +4585,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南東の角（縦長）。左に f6、右に f7 下のピロティと机。右端に近接する別棟。下に指"
   },
   {
    "id": "PXL_20261103_043753272",
@@ -4363,7 +4653,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：f8 沿いの 2 階デッキの上から入隅の方へ。左に f8（デッキ階のガラス・上階のバルコニー窓）を斜めに、奥に正面の f0（小窓・横長窓・デッキ階・その下の店先）、右下に中庭の道路と横断歩道。GPS は南（-10,-42）を指すが中身はデッキ"
   },
   {
    "id": "PXL_20261103_043759272",
@@ -4437,7 +4735,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：043753272 と同じデッキ。左に f8 のデッキ階（大学のポスター）、奥に f0、右下に白い手すりの傾路とごみ箱。提出物注意：ポスターに人の顔"
   },
   {
    "id": "PXL_20261103_043812312",
@@ -4511,7 +4817,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：デッキの入隅の近く。左に f8、奥に正面の f0（入隅の階段室・オレンジの灯り）"
   },
   {
    "id": "PXL_20261103_043826814",
@@ -4613,7 +4927,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：f0 側のデッキの上から入隅の f8 を正面に（小窓の列＋横長窓 2 段＋デッキ階のガラス戸）。右に f0 の軒。GPS は南（-10,-42）を指すが中身はデッキ"
   },
   {
    "id": "PXL_20261103_043856844.MP",
@@ -4722,7 +5044,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：中庭から f8 正面。デッキ階のガラスに入学センターのポスター、下に通り抜けの道路。提出物注意：ポスターに人の顔、左下に赤いバスの側面"
   },
   {
    "id": "PXL_20261103_044049610.MP",
@@ -4831,7 +5160,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f8 正面。デッキ、入学センター、通り抜け。提出物注意：ポスターに人の顔"
   },
   {
    "id": "PXL_20261103_044051601",
@@ -4947,7 +5283,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f8 正面。左にデッキから下りる大階段と左端の別棟。提出物注意：ポスターに人の顔"
   },
   {
    "id": "PXL_20261103_044651355",
@@ -5077,7 +5420,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f8",
+    "f7",
+    "f6"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：南の翼の東寄りのピロティの中（天井・柱・大階段）から南東の外（植込み・白い棟）を見る。近い面は推定。提出物注意：左に掲示板"
   },
   {
    "id": "PXL_20261103_044700654",
@@ -5214,7 +5566,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f8",
+    "f7",
+    "f6"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：同じピロティの大階段。提出物注意：掲示板"
   },
   {
    "id": "PXL_20261103_044712412",
@@ -5358,7 +5719,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f7",
+    "f8"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：同じピロティから東へ大階段を見上げる。上に図書館側の青い庇"
   },
   {
    "id": "PXL_20261103_044734408",
@@ -5495,7 +5864,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f8",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f8 の東端。大階段、通り抜け、柱に「本部棟」、左に別棟のガラスと庇"
   },
   {
    "id": "PXL_20261103_044813659.MP",
@@ -5604,7 +5980,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f0 の北端。デッキの帯と下のピロティ、右に北東の角の外階段（駐車禁止の札）、右奥に体育館"
   },
   {
    "id": "PXL_20261103_044822533",
@@ -5713,7 +6097,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f0"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：f0 の 1 階の軒下（白い天井・列柱・奥の窓）を見通す。外の面は軒の縁だけ。左上の窓の並びは中庭越しの f8"
   },
   {
    "id": "PXL_20261103_044830148",
@@ -5822,7 +6213,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f0"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：044822533 と同じ軒下。奥に店先と傾路"
   },
   {
    "id": "PXL_20261103_044849371",
@@ -5931,7 +6329,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f0"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：f0 の軒下の店先（ATM・ガラス戸）を正面に。天井と奥の壁だけ。提出物注意：戸に貼り紙"
   },
   {
    "id": "PXL_20261103_044907567",
@@ -6033,7 +6438,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f0 を傾路とごみ箱の脇から斜めに。デッキの帯、店先、右に中庭の道路"
   },
   {
    "id": "PXL_20261103_065946407",
@@ -6163,7 +6575,20 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f19",
+   "faces": [
+    "f19",
+    "f18",
+    "f20",
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北の沈んだ広場から北面を正面に：中央の横長窓の柱間と頂部のガラスの冠（f19）、左に縦スリット窓（f18）、右端に青い縦窓 2 本の低い塊（f20/f0）。右に西面を斜めに（16:00 の西日で西面が明るく北面は日陰＝向きの検算）。f20/f0 は一直線で境目は見えない"
   },
   {
    "id": "PXL_20261103_070003022",
@@ -6230,7 +6655,20 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f19",
+   "faces": [
+    "f19",
+    "f18",
+    "f20",
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：#1 より西寄りから北面（ガラスの冠）を斜めに、右に西日の当たる西面。下に広場のガラスの入口と大階段"
   },
   {
    "id": "PXL_20261103_070044607",
@@ -6346,7 +6784,19 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f0",
+    "f20",
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北西の広場から。右に西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）が西日で明るく主、左に北面（ガラスの冠）を斜めに。f1〜f3 は一直線で境目は見えない"
   },
   {
    "id": "PXL_20261103_070114062",
@@ -6448,7 +6898,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西側のヘリンボーン舗装の広場から、渡り廊下（柱に MEIJO 100 の幕）越しに西面（西日で明るい）。f1〜f3 の境目は見えない"
   },
   {
    "id": "PXL_20261103_070123308",
@@ -6564,7 +7023,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西側のヘリンボーン舗装の広場から、渡り廊下（柱に MEIJO 100 の幕）越しに西面（西日で明るい）。f1〜f3 の境目は見えない"
   },
   {
    "id": "PXL_20261103_070134689",
@@ -6701,7 +7169,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：渡り廊下（別構造）の下から柱の間に階段とエレベーター箱、右上に西面の一部（西日）"
   },
   {
    "id": "PXL_20261103_070148248",
@@ -6817,7 +7293,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：渡り廊下（別構造）の下から柱の間に階段とエレベーター箱、右上に西面の一部（西日）"
   },
   {
    "id": "PXL_20261103_070156537",
@@ -6933,7 +7417,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：渡り廊下の柱越しに西面の南寄り（右上に一段低い南端）と階段"
   },
   {
    "id": "PXL_20261103_070204974",
@@ -7035,7 +7527,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）をほぼ正面に、手前に階段とエレベーター箱、左に渡り廊下"
   },
   {
    "id": "PXL_20261103_070222827",
@@ -7144,7 +7645,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）をほぼ正面に、手前に階段とエレベーター箱、左に渡り廊下"
   },
   {
    "id": "PXL_20261103_070244955",
@@ -7246,7 +7756,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面の前の木立とエレベーター箱・低い塀。西面は木で大半が隠れる"
   },
   {
    "id": "PXL_20261103_070327678",
@@ -7334,7 +7853,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：本部棟側の道路（横断歩道）から西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、右端に南側の縦スリット。下に階段・エレベーター箱・渡り廊下。16:03 の西日が正面から当たる"
   },
   {
    "id": "PXL_20261103_070334137",
@@ -7422,7 +7950,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：本部棟側の道路（横断歩道）から西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、右端に南側の縦スリット。下に階段・エレベーター箱・渡り廊下。16:03 の西日が正面から当たる"
   },
   {
    "id": "PXL_20261103_070409570",
@@ -7517,7 +8054,18 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f4",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西南西の道路から。左に西面（細窓多数、西日）、中央に南西の一段低い 2 列窓の塊、右に南側の縦スリットの面（袖の側面 f6 と読んだ）。手前にデッキの下を抜ける道路と店（赤い柱）"
   },
   {
    "id": "PXL_20261103_070422004",
@@ -7605,7 +8153,18 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f4",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西南西の道路から。左に西面（細窓多数、西日）、中央に南西の一段低い 2 列窓の塊、右に南側の縦スリットの面（袖の側面 f6 と読んだ）。手前にデッキの下を抜ける道路と店（赤い柱）"
   },
   {
    "id": "PXL_20261103_070441634",
@@ -7795,7 +8354,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：西面の下の赤れんがのデッキ、青い鉄骨の庇とガラスの入口、上に細窓の列"
   },
   {
    "id": "PXL_20261103_070619739",
@@ -7869,7 +8436,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：デッキから西面を見上げる（入口と庇、右端に一段低い南端）"
   },
   {
    "id": "PXL_20261103_070654529",
@@ -7985,7 +8560,19 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f7",
+   "faces": [
+    "f7",
+    "f4",
+    "f5",
+    "f6",
+    "f9",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：南西のデッキから。左に 2 列の縦窓とガラスブロックの南向きの面（f4/f5）、中央に南へ張り出す袖（左の側面 f6 に縦スリット）、右に吹き抜けのガラス（f9）。16:06 の西日"
   },
   {
    "id": "PXL_20261103_070742138",
@@ -8087,7 +8674,19 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f7",
+   "faces": [
+    "f7",
+    "f9",
+    "f4",
+    "f5",
+    "f6",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：#18 より近く。左に f4/f5 の 2 列窓、中央に袖（f7）、右に吹き抜け（f9）と奥の袖の縦スリット（f10）"
   },
   {
    "id": "PXL_20261103_074413490",
@@ -8182,7 +8781,19 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f9",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f10",
+    "f4",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南の道路から吹き抜けのガラスのカーテンウォール（f9）を正面に、両脇に袖（f7・f11）、袖の内側に縦スリット、頂部は開いた枠。16:44 で上部だけ夕日"
   },
   {
    "id": "PXL_20261103_074445985",
@@ -8270,7 +8881,17 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f11",
+   "faces": [
+    "f11",
+    "f13",
+    "f9",
+    "f12"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南から東寄り。左に吹き抜け（f9）、中央に東の袖の正面（f11、無地、下に扉）、右に 2 列窓・ガラスブロック・窓の面（f13）、右端にガラスの渡り廊下"
   },
   {
    "id": "PXL_20261103_074457079",
@@ -8358,7 +8979,18 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f9",
+   "faces": [
+    "f9",
+    "f7",
+    "f10",
+    "f4",
+    "f5"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：吹き抜け（f9）を南から見上げる。左に西の袖（f7）と 2 列窓の f4/f5、右に袖の内側の縦スリット（f10）、左端にデッキの橋"
   },
   {
    "id": "PXL_20261103_074549768",
@@ -8467,7 +9099,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f13",
+   "faces": [
+    "f13",
+    "f14",
+    "f12"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：南東の角（大判タイルの低い台座、上に 2 列窓とガラスブロックの f13、右に東面から出るガラスの渡り廊下）。16:45 で日は当たっていない"
   },
   {
    "id": "PXL_20261103_074606922",
@@ -8583,7 +9224,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f15",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：東面を正面に（細窓多数、低層にベージュの大扉・シャッター・張り出した帯）。f14/f15 は一直線で境目は見えない"
   },
   {
    "id": "PXL_20261103_074611962",
@@ -8808,7 +9457,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f15",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：東面を正面に（細窓多数、低層にベージュの大扉・シャッター・張り出した帯）。f14/f15 は一直線で境目は見えない"
   },
   {
    "id": "PXL_20261103_074649138.MP",
@@ -8917,7 +9574,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f15",
+   "faces": [
+    "f15",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：東面の北寄りと北東の切り欠き（引っ込んだ 2 列窓の面＝f17 と読んだ）、右に白い b10、手前に擁壁とルーバーの壁"
   },
   {
    "id": "PXL_20261103_074700641",
@@ -9012,7 +9677,16 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f15",
+   "faces": [
+    "f15",
+    "f17",
+    "f16"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "notes": "仕分け係（claude-opus-5-5）：北東から遠く、手前の壁と b10 で下半分が隠れる。左の細窓の面を東面、右を北東の切り欠きと読んだが境目は読めない（low の理由）"
   },
   {
    "id": "PXL_20261103_074702629",
@@ -9195,7 +9869,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：築山と木の奥にアーチ形の縦長ガラス窓と窓の縦列（f0 の目印）。木で壁の大半が隠れる。右に高層の塔"
   },
   {
    "id": "PXL_20261103_075051437",
@@ -9269,7 +9950,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：茶色の張り出し箱（ガラリ 2 つ）・窓の縦列・手前の階段と踊り場・ごみ箱。左に築山"
   },
   {
    "id": "PXL_20261103_075102006",
@@ -9343,7 +10031,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：アーチ形の縦長ガラス窓と張り出し箱・階段・ごみ箱。f0 のほぼ正面"
   },
   {
    "id": "PXL_20261103_075111985",
@@ -9417,7 +10112,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：アーチ窓・張り出し箱・窓の縦列・階段とごみ箱。f0 のほぼ正面"
   },
   {
    "id": "PXL_20261103_075114044",
@@ -9491,7 +10193,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：アーチ窓・張り出し箱・階段・ごみ箱。f0 のほぼ正面"
   },
   {
    "id": "PXL_20261103_075125252",
@@ -9579,7 +10288,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：アーチ窓・張り出し箱を斜めに。右端に北東の角のカーブミラーと高層の塔"
   },
   {
    "id": "PXL_20261103_075153504",
@@ -9681,7 +10397,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：北東の角。左にアーチ窓と張り出し箱（f0）、右に深い彫りの格子窓が道沿いに続く（f1）。角に棟の案内板とカーブミラー"
   },
   {
    "id": "PXL_20261103_075437320",
@@ -9825,7 +10549,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：道沿いの格子窓の面（5 層、最上階は小窓）を東端から。横断歩道。右奥の西端に外階段と通路橋"
   },
   {
    "id": "PXL_20261103_075438398",
@@ -9969,7 +10700,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：075437320 とほぼ同じ。f1 を東端から斜めに"
   },
   {
    "id": "PXL_20261103_075448020",
@@ -10113,7 +10851,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f1 の格子窓。坂の道、右奥に外階段"
   },
   {
    "id": "PXL_20261103_075500328",
@@ -10264,7 +11009,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f1 の中ほど〜西寄りをほぼ正面から。1 階は窓の無い板、2〜5 階は深い彫りの窓。右に外階段。道に黄色の斜線"
   },
   {
    "id": "PXL_20261103_075510510",
@@ -10401,7 +11153,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f1 の西寄り。外階段が 2 階の踊り場へ上がり、上に 2 層のガラスの凹み。右に通路橋"
   },
   {
    "id": "PXL_20261103_075517975",
@@ -10538,7 +11297,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f1 の西端。外階段・1 階の扉・右に通路橋の下面"
   },
   {
    "id": "PXL_20261103_075544770",
@@ -10963,7 +11729,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：大階段の上に正面入口（黒い庇と丸柱 2 本、上にガラスの壁）。左に 4 灯の街灯。右端に迫る壁は本部棟の北東の角"
   },
   {
    "id": "PXL_20261103_075629456",
@@ -11100,7 +11873,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：大階段の正面に入口（黒い庇・丸柱・ガラスの壁、上に横長の窓と小窓 2 つ）。入口の右に掲示板"
   },
   {
    "id": "PXL_20261103_075639031",
@@ -11230,7 +12010,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：正面入口を段の下から正面に。左上にタワー75、左の木の奥に青い鉄骨の庇、右端は本部棟の北東の角。扉にポスター・右に掲示板"
   },
   {
    "id": "PXL_20261103_075705849",
@@ -11360,7 +12147,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：青い鉄骨の庇の奥にポスターの貼られたガラスの壁と黒い凹みの帯、上に窓 1 つと彫り込みの枠。左奥にタワー75"
   },
   {
    "id": "PXL_20261103_075710233",
@@ -11483,7 +12277,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：青い鉄骨の庇とポスターのガラスの壁。右の柱型に図書館の銘板"
   },
   {
    "id": "PXL_20261103_075718159",
@@ -11592,7 +12393,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：銘板「名城大学附属図書館 MEIJO UNIVERSITY LIBRARY」と入口の扉・図書返却ポスト。青い鉄骨の柱"
   },
   {
    "id": "PXL_20261103_075811786",
@@ -11713,7 +12521,12 @@
    ],
    "imported_at": "2026-11-04T20:51:37",
    "building": null,
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low",
+   "notes": "仕分け係（claude-opus-5-5）：主に写っているのは本部棟ではない棟の角（大きな窓と暗い腰板、左上の階段の先に暗い庇の入口）。索引で library の 075830062・075837016 と同じ角。本部棟は左端に f7 の小窓が極端に斜めに入るだけで面に使えない"
   },
   {
    "id": "PXL_20261103_075822938",
@@ -11903,7 +12716,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南西の角。右に深い彫りの格子窓（f3）、左に窓の縦列と彫り込みの枠の平らな壁（f2 の南端）。白い柵の植え込み"
   },
   {
    "id": "PXL_20261103_075837016",
@@ -12005,7 +12826,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南西の角。右に格子窓（f3）、左に f2 の南端と路地の階段（上に入口の庇）、左上にタワー75。右端は 11 号館側の煉瓦の壁"
   },
   {
    "id": "PXL_20261103_080014086",
@@ -12100,7 +12929,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南東の角を南から。右は窓の縦列と小さな張り出し箱・屋上の塔屋（f0 の南端）、左奥へ格子窓（f3）。左手前は 11 号館の低い棟"
   },
   {
    "id": "PXL_20261103_080015280",
@@ -12202,7 +13039,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：080014086 とほぼ同じ（南東の角）"
   },
   {
    "id": "PXL_20261103_080016877",
@@ -12262,7 +13107,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南東の角。f0 の南端（窓の縦列・小さな張り出し箱・塔屋）、左に f3 の格子"
   },
   {
    "id": "PXL_20261103_080021242",
@@ -12364,7 +13217,15 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：南東の角。f0 の南端の窓の縦列、左に f3 の格子が細く。左手前は 11 号館の低い棟"
   },
   {
    "id": "PXL_20261103_080029484",
@@ -12424,7 +13285,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f0",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f0 の南寄り。窓の縦列 3 つと小さな張り出し箱（ガラリ）・塔屋、右に木の奥のアーチ窓。手前に階段と擁壁"
   },
   {
    "id": "PXL_20261103_080314875",
@@ -12554,7 +13422,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：日没後。西面の前の階段とエレベーター箱（Elevator 2）、上にデッキ階のガラスの入口と細窓の列、左に渡り廊下の下面"
   },
   {
    "id": "PXL_20261103_080325005",
@@ -12677,7 +13553,15 @@
    "building": "tower75",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f3",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：階段の上にデッキ階のガラスの入口、上に西面の細窓"
   },
   {
    "id": "PXL_20261103_080423326",
@@ -12765,7 +13649,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：外階段の踊り場を下から（夕方・縦長）。左奥に中庭越しの棟"
   },
   {
    "id": "PXL_20261103_080431748",
@@ -12874,7 +13766,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f1",
+   "faces": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北端の外階段を北から（夕方）。右に体育館"
   },
   {
    "id": "PXL_20261103_080531443",
@@ -12983,7 +13884,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f6"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：正面玄関の奥まり（天井と奥のガラス壁、名城大学本部の石）の中から。外の面は柱の縁だけ。夕方"
   },
   {
    "id": "PXL_20261103_080542963",
@@ -13092,7 +14000,14 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f6",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：f6 西寄りの正面玄関（名城大学本部の石、ガラスの風除室）を斜めに。左に白い 12 号館と駐車の黄線。夕方。042909968 と同じ玄関"
   },
   {
    "id": "PXL_20261103_080615077",
@@ -13201,7 +14116,16 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f7",
+    "f6",
+    "f8"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：ピロティの中の大階段と掲示板・机（夕方）。近い面は推定。下端に指"
   },
   {
    "id": "PXL_20261103_080625727.MP",
@@ -13310,7 +14234,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f8",
+    "f6"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：ピロティの大階段の角と柱、奥に中庭の道路（夕方）。右上に入学センターの掲示板"
   },
   {
    "id": "PXL_20261103_080635046.MP",
@@ -13412,7 +14344,15 @@
    "building": "honbu",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": null,
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f7",
+    "f8"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：大階段と「入学センター掲示板」、奥に図書館側の青い庇（夕方）"
   },
   {
    "id": "PXL_20261103_080725416",
@@ -13514,7 +14454,14 @@
    "building": "library",
    "building_source": "intake_proxy",
    "notes_intake": "取り込みの時に付いた棟（職員の振り分けの代わり。11/3 は判断役が付けた）",
-   "face": null
+   "face": "f2",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：大階段を下から。上端に丸柱と黒い庇、壁に銘板「名城大学附属図書館」。壁は入口の下部だけで、大半は階段"
   },
   {
    "id": "20261104_164031587",
@@ -13798,8 +14745,17 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:49",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f8",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T08:57:29",
+   "notes": "仕分け係（claude-opus-5-5）：本部棟（柱に「本部棟」の札、「入学センター」の窓、ピロティの通り抜け）が主。左端に図書館 f2 の壁と正面入口の黒い庇の端 | 仕分け係（claude-opus-5-5）：f8 の東寄り。デッキの帯、通り抜け、東端の大階段。候補に honbu が無いが、図書館の仕分け係が honbu と決め済み（同じ判断）",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261104_071007945",
@@ -13919,8 +14875,18 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:49",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f8",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T08:57:29",
+   "notes": "仕分け係（claude-opus-5-5）：本部棟の北東の角（「入学センター」の入口と段、平らな壁に小窓）が主。左端に図書館 f2 の壁 | 仕分け係（claude-opus-5-5）：北東の角（f8/f7）を図書館との隙間から（縦長）。右に f8 の階段、左に f7。候補に honbu が無いが、図書館の仕分け係が honbu と決め済み（同じ判断）",
+   "faces": [
+    "f8",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261104_071023801",
@@ -14026,8 +14992,18 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f8",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T08:57:29",
+   "notes": "仕分け係（claude-opus-5-5）：本部棟の北東の角（「入学センター」の入口と段）が主。左端の手前は図書館の壁と照明 | 仕分け係（claude-opus-5-5）：北東の角（f8/f7）。043515616 と同じ構図（階段・入学センター・左の小窓の妻）。棟は図書館の仕分け係が honbu と決め済み（同じ判断）",
+   "faces": [
+    "f8",
+    "f7"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261104_073521620",
@@ -14119,8 +15095,18 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f1",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [
+    "f1",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北東の角の外階段を近くから（縦長）。左に f0 の窓、右奥に体育館。索引は棟未定（候補に honbu が無い）"
   },
   {
    "id": "PXL_20261104_073547139",
@@ -14205,8 +15191,20 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f1",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [
+    "f1",
+    "f2",
+    "f3",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北西の角。左の北端（外階段・配管の壁）と右へ延びる西面 f4（室外機・窓）。奥に白い棟。索引は棟未定（候補に honbu が無い）"
   },
   {
    "id": "PXL_20261104_073618326",
@@ -14305,8 +15303,19 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f1",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：北端の外階段を北から（縦長）。踊り場の下のピロティ。索引は棟未定（候補に honbu が無い）"
   },
   {
    "id": "PXL_20261104_073740937",
@@ -14391,8 +15400,17 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": null,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f0"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：書店（ちくさ正文館）の店先を軒下から。天井と奥のガラス壁だけ。北の翼 f0 の 1 階と判断：063431446 で f0 北寄りの 1 階に黄緑の明るい店が見え、GPS の最寄りも本部棟。ただし軒の天井（濃い色）が f0 の他の軒下（白）と違う。提出物注意：チラシ・ポスター（人の顔あり）"
   },
   {
    "id": "PXL_20261104_074042680",
@@ -14484,8 +15502,17 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": null,
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f0"
+   ],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：073740937 と同じ書店の店先。提出物注意：チラシに人の顔"
   },
   {
    "id": "PXL_20261104_074057880",
@@ -14584,8 +15611,17 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": null,
+   "notes": "仕分け係（claude-opus-5-5）：図書館ではない。ピロティの下の書店の店先（看板）。本部棟か北の平屋かは決められない | 仕分け係（claude-opus-5-5）：同じ書店の看板（BOOK SHOP）とガラス。提出物注意：ガラスに撮影者の影",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f0"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261104_074148938",
@@ -14677,8 +15713,18 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f8",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [
+    "f8",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：入隅（f8/f0）を中庭から。左に f8 とデッキの帯・通り抜け、右に f0、入隅の上に塔屋。索引は棟未定（候補に honbu が無い）。提出物注意：通り抜けにトラックの正面（ナンバー板の判読は未確認）と人の後ろ姿"
   },
   {
    "id": "PXL_20261104_074357308",
@@ -14742,8 +15788,17 @@
     }
    ],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f6",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high",
+   "notes": "仕分け係（claude-opus-5-5）：f6 を南西から。垂れ幕、通り抜けの道路と車。索引は棟未定（候補に honbu が無い）だが本部棟 f6 と判定。下端に指"
   },
   {
    "id": "図書館屋上1",
@@ -14850,8 +15905,19 @@
    },
    "candidates": [],
    "imported_at": "2026-11-04T22:50:50",
-   "building": null,
-   "face": null
+   "building": "honbu",
+   "face": "f0",
+   "assigned_by": "shiwake",
+   "assigned_at": "2026-11-07T09:00:07",
+   "faces": [
+    "f0",
+    "f8",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid",
+   "notes": "仕分け係（claude-opus-5-5）：高い所から見下ろした写真（撮影位置は不明）。中央に北の翼の屋根と f0（デッキの帯）、左に南の翼の白い屋根と f8、入隅の塔屋、北東の外階段の丸い庇（f1）、右に体育館。屋上の観察に使える。索引は棟未定（GPS・候補なし）"
   },
   {
    "id": "20261105_165235743",
@@ -14894,7 +15960,8 @@
    "floor": 1,
    "interior_views": true,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。面にしない",
+   "confidence": "high"
   },
   {
    "id": "20261105_165344878",
@@ -14937,7 +16004,8 @@
    "floor": 1,
    "interior_views": true,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。面にしない",
+   "confidence": "high"
   },
   {
    "id": "20261105_165424644",
@@ -14980,7 +16048,8 @@
    "floor": 1,
    "interior_views": true,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。面にしない",
+   "confidence": "high"
   },
   {
    "id": "20261105_165632499",
@@ -15023,7 +16092,8 @@
    "floor": 1,
    "interior_views": true,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。写っているのは夜の入口のガラス戸を外から（床は角タイル、庇）。どの面の入口かは決めない（職員の値を優先して面にしない）",
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_055234749",
@@ -15115,8 +16185,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南東の遠く（GPS で 112 m）から東面を正面に（細窓 7 列＋南端の一段低い 2 列、屋上の塔屋）、左端に南側の縦スリット。下半分は手前の棟で隠れる",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060239806",
@@ -15236,8 +16313,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f14",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南東の角を南東から。右に東面（ガラスの渡り廊下と柱、ベージュの大扉）、左に南側の縦スリット",
+   "faces": [
+    "f14",
+    "f15",
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060255835",
@@ -15364,8 +16449,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を正面に見上げる（ベージュの大扉・シャッター・低層の張り出した帯、左上にガラスの渡り廊下）",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060310392",
@@ -15478,8 +16570,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を正面に見上げる（ベージュの大扉・シャッター・低層の張り出した帯、左上にガラスの渡り廊下）",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060316957",
@@ -15599,8 +16698,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を正面に見上げる（ベージュの大扉・シャッター・低層の張り出した帯、左上にガラスの渡り廊下）",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060328137",
@@ -15720,8 +16826,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を正面に見上げる（ベージュの大扉・シャッター・低層の張り出した帯、左上にガラスの渡り廊下）",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060342994",
@@ -15827,8 +16940,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を正面に見上げる（ベージュの大扉・シャッター・低層の張り出した帯、左上にガラスの渡り廊下）",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060528804",
@@ -15934,8 +17054,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面の北寄りを見上げる（低層の張り出した帯 2 段）、右に一段低く引っ込んだ 2 列窓（f17 と読んだ）と白い b10",
+   "faces": [
+    "f15",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060534782",
@@ -16041,8 +17168,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面の北寄りを見上げる（低層の張り出した帯 2 段）、右に一段低く引っ込んだ 2 列窓（f17 と読んだ）と白い b10",
+   "faces": [
+    "f15",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060542381",
@@ -16134,8 +17268,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を南端から北へ斜めに（左にガラスの渡り廊下、ベージュの大扉）、右奥に白い b10",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060548823",
@@ -16234,8 +17375,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を斜めに、北東の切り欠きと外階段、右に白い b10。手前に擁壁とルーバーの壁",
+   "faces": [
+    "f15",
+    "f17",
+    "f16"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060552836",
@@ -16334,8 +17483,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東面を斜めに、北東の切り欠きと外階段、右に白い b10。手前に擁壁とルーバーの壁",
+   "faces": [
+    "f15",
+    "f17",
+    "f16"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060601578",
@@ -16427,8 +17584,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北東から。手前のルーバーの壁と擁壁で塔の下半分が隠れる。左の細窓の面を東面、右の 2 列窓とスリットを北東の切り欠きと読んだが境目は読めない（low の理由）",
+   "faces": [
+    "f15",
+    "f17",
+    "f16"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_060613837",
@@ -16513,8 +17678,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北東から。手前のルーバーの壁と擁壁で塔の下半分が隠れる。左の細窓の面を東面、右の 2 列窓とスリットを北東の切り欠きと読んだが境目は読めない（low の理由）",
+   "faces": [
+    "f15",
+    "f17",
+    "f16"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_060703663",
@@ -16592,8 +17765,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f16",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：b10 と b09 の間の細い通路の先に、遠く細く塔（2 列の縦窓、下にガラスブロック）。北東の角の北向きの面と読んだが、写る幅が狭く通路の向きから推しただけ（low の理由）",
+   "faces": [
+    "f16",
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_060725949.MP",
@@ -16678,8 +17858,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f16",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：塔と b10 の間の通路から見上げる。2 列の縦窓・ガラスブロック・窓の面（北東の角の北向き f16 と読んだ）、手前に鉄骨の庇と白い樋、右に縦スリットの面（切り欠きの f17 か f18）、右上に b10 の張り出し",
+   "faces": [
+    "f16",
+    "f17",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060730259",
@@ -16771,8 +17959,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f16",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：#52 と同じ所から。左にガラスブロックと窓、中央に縦スリットの面、鉄骨の庇と樋、右上に b10",
+   "faces": [
+    "f16",
+    "f17",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060746293.MP",
@@ -16864,8 +18060,14 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北面の中央の柱間（各階に横長のガラスブロック＋窓）を真下から見上げる。足元は粗面タイルの腰",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_060756828",
@@ -16957,8 +18159,14 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北面の中央の柱間（各階に横長のガラスブロック＋窓）を真下から見上げる。足元は粗面タイルの腰",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_060800017",
@@ -17050,8 +18258,14 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北面の中央の柱間（各階に横長のガラスブロック＋窓）を真下から見上げる。足元は粗面タイルの腰",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_060801653",
@@ -17136,8 +18350,14 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北面の中央の柱間の足元を正面に（ガラスブロック＋窓 1 段、粗面タイルの腰、砂利の側溝）。#56 と同じ位置（1 秒差）",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_060804738",
@@ -17257,8 +18477,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北面に沿って東を見る（右の壁に横長窓と粗面タイルの腰、左に b10 との間の屋根付き通路）",
+   "faces": [
+    "f19",
+    "f18"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060807986",
@@ -17336,8 +18563,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北面に沿って西を見る（左の壁に横長のガラスブロック窓と柱型、右奥に共通講義棟）",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060834553",
@@ -17422,8 +18657,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北東の植え込みから、左の b10 越しに北面（頂部のガラスの冠、縦スリット、右寄りに青い縦窓 2 本）。下半分は木で隠れる",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060842230",
@@ -17508,8 +18751,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北東の植え込みから、左の b10 越しに北面（頂部のガラスの冠、縦スリット、右寄りに青い縦窓 2 本）。下半分は木で隠れる",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060854125",
@@ -17587,8 +18838,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北の沈んだ広場の縁から北面を正面に（ガラスの冠、中央の横長窓、右に青い縦窓 2 本の低い塊）。左は b10、下に広場のガラスの入口、右に渡り廊下",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060904811",
@@ -17666,8 +18925,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北の沈んだ広場の縁から北面を正面に（ガラスの冠、中央の横長窓、右に青い縦窓 2 本の低い塊）。左は b10、下に広場のガラスの入口、右に渡り廊下",
+   "faces": [
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060915328",
@@ -17745,8 +19012,19 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：広場の縁から北面（ガラスの冠）を主に、右に西面を斜めに。下に広場のガラスの入口とパーゴラ",
+   "faces": [
+    "f19",
+    "f20",
+    "f0",
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060927494",
@@ -17817,8 +19095,19 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北西の広場から。右に西面（細窓多数）、左に北面（ガラスの冠）を斜めに",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f19",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060950084",
@@ -17889,8 +19178,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：広場の階段脇（れんがの壁とパーゴラ）から西面を見上げる、左端に北面の角",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_060954729",
@@ -17961,8 +19260,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：広場の階段脇（れんがの壁とパーゴラ）から西面を見上げる、左端に北面の角",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061002256",
@@ -18033,8 +19342,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：広場の壁の上から西面を斜めに、左に北面の角と b10",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f20",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061028255",
@@ -18112,8 +19431,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西側の広場から渡り廊下（MEIJO 100 の幕）と階段越しに西面",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061034445",
@@ -18184,8 +19511,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西側の広場から渡り廊下（MEIJO 100 の幕）と階段越しに西面",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061122585",
@@ -18263,8 +19598,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：渡り廊下の下から柱の間に西面の一部と階段",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061241221",
@@ -18342,8 +19684,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f2",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：渡り廊下（MEIJO の幕）が西面の北寄りに取り付く所（OSM で渡り廊下 1304077323 が接する f2）、左に西面の細窓とガラスブロック、下に階段",
+   "faces": [
+    "f2",
+    "f1",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061247963",
@@ -18414,8 +19764,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f2",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：渡り廊下の下の階段越しに西面の北寄り",
+   "faces": [
+    "f2",
+    "f3",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061255833",
@@ -18486,8 +19844,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：渡り廊下の下の階段が主。塔は左端に北西の角の 2 列窓が細く写るだけ（low の理由）",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_061300605",
@@ -18579,8 +19944,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f2",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：渡り廊下の下の階段を正面に、奥に西面の細窓とエレベーター箱",
+   "faces": [
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061341818",
@@ -18651,8 +20023,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061357582",
@@ -18723,8 +20103,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061402813",
@@ -18795,8 +20183,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061410188",
@@ -18874,8 +20270,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061418906",
@@ -18953,8 +20357,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：渡り廊下の取り付き（左）からデッキの上の西面を斜めに（ガラスの入口と青い鉄骨の庇）",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061423669",
@@ -19025,8 +20436,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキから西面を正面に（入口と庇、右に一段低い南端の 2 列窓）",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061434917",
@@ -19097,8 +20516,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの入口と庇、上に西面の細窓",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061442402",
@@ -19204,8 +20630,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西寄りのデッキから西面（入口と庇）、右端に南端の低い塊と南側の面",
+   "faces": [
+    "f3",
+    "f2",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061449185",
@@ -19311,8 +20745,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキから西面を斜めに見上げる（入口と庇、右に南端の 2 列窓）",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061455930",
@@ -19418,8 +20861,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキから西面を斜めに、右に南端の 2 列窓と南側の縦スリット",
+   "faces": [
+    "f3",
+    "f4",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061511227",
@@ -19532,8 +20983,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f4",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西のデッキから南西の角。正面に 2 列の縦窓・ガラスブロック・窓の南向きの面（f4/f5、一直線で境目は見えない）、左に西面の入口のガラス戸、右に縦スリットの袖の側面（f6）",
+   "faces": [
+    "f4",
+    "f5",
+    "f6",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061520328",
@@ -19639,8 +21099,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f4",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの庇の脇から、右に南向きの 2 列窓とガラスブロックの面（f4）、左奥へ西面に沿う庇",
+   "faces": [
+    "f4",
+    "f5",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061525822",
@@ -19732,8 +21200,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの庇の通路と、右端に角の柱型・ガラスブロック・窓だけ。西面の南端か南面の西端か決めきれない（low の理由）",
+   "faces": [
+    "f3",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_061632682",
@@ -19832,8 +21307,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f4",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西のデッキから 2 列の縦窓・ガラスブロック・窓の面（f4）を見上げ、右に縦スリットの袖の側面（f6）",
+   "faces": [
+    "f4",
+    "f5",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061647959",
@@ -19918,8 +21401,20 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西のデッキから。左に 2 列窓の f4/f5、中央に袖（f7、左側面 f6 に縦スリット）、右に吹き抜けのガラス（f9）と奥の袖の縦スリット（f10）",
+   "faces": [
+    "f9",
+    "f7",
+    "f6",
+    "f4",
+    "f5",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_061649102",
@@ -19990,8 +21485,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f7",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの上から。左に 2 列窓の f4、中央に袖（f7）、右の手すりの先に吹き抜け（f9）",
+   "faces": [
+    "f7",
+    "f4",
+    "f5",
+    "f6",
+    "f9"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061704401",
@@ -20083,8 +21588,20 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西のデッキから。左に 2 列窓の f4/f5、中央に袖（f7、左側面 f6 に縦スリット）、右に吹き抜けのガラス（f9）と奥の袖の縦スリット（f10）",
+   "faces": [
+    "f9",
+    "f7",
+    "f6",
+    "f4",
+    "f5",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_061708177",
@@ -20155,8 +21672,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f7",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの橋の上から。左に 2 列窓とガラスブロックの f4、中央に袖の正面（f7）、右に吹き抜け",
+   "faces": [
+    "f7",
+    "f4",
+    "f5",
+    "f9"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061709593",
@@ -20255,8 +21781,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの手すり越しに吹き抜け（f9）と両袖、右の袖の内側に縦スリット",
+   "faces": [
+    "f9",
+    "f7",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_061710650",
@@ -20355,8 +21890,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f7",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの階段の手すり越しに袖の正面（f7）、右に吹き抜けと奥の袖",
+   "faces": [
+    "f7",
+    "f9",
+    "f10",
+    "f11",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061711714",
@@ -20448,8 +21993,19 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f7",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西のデッキから見上げる。左に 2 列窓の f4、中央に袖（f7）、右に吹き抜け（f9）と奥の袖",
+   "faces": [
+    "f7",
+    "f9",
+    "f4",
+    "f5",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061720413",
@@ -20548,8 +22104,19 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f7",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西のデッキから見上げる。左に 2 列窓の f4、中央に袖（f7）、右に吹き抜け（f9）と奥の袖",
+   "faces": [
+    "f7",
+    "f9",
+    "f4",
+    "f5",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061828741",
@@ -20670,7 +22237,15 @@
    "interior": false,
    "floor": null,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北西のテラス（赤れんがと青いパーゴラ）から外（北）向き。塔の壁は写っていない（low の理由）",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0",
+    "f20",
+    "f1"
+   ],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_061830023",
@@ -20804,8 +22379,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北西のテラス。塔は右端に角の柱型と入口が細く写るだけ（low の理由）",
+   "faces": [
+    "f1",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_061834617",
@@ -20939,8 +22521,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北西のテラスから北西の角の低い塊（ガラスブロックと入口、上に 2 列の縦窓）を正面に、左奥に b10",
+   "faces": [
+    "f1",
+    "f2",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061836019",
@@ -21032,8 +22622,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f1",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：北西の角。正面に西面の北端（ガラスブロックと入口、2 列の縦窓）、右に渡り廊下、左に北面",
+   "faces": [
+    "f1",
+    "f2",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061836600",
@@ -21139,8 +22737,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f2",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキで西面に沿って南を見る（左の壁に細窓とガラスブロック・入口、頭上を渡り廊下が西へ）",
+   "faces": [
+    "f2",
+    "f1",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061837232",
@@ -21225,8 +22831,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f2",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキで西面に沿って南を見る（左の壁に細窓とガラスブロック・入口、頭上を渡り廊下が西へ）",
+   "faces": [
+    "f2",
+    "f1",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061905208.MP",
@@ -21297,8 +22911,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061908705",
@@ -21376,8 +22998,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061909489",
@@ -21448,8 +23078,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061910368",
@@ -21520,8 +23158,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西面（縦の細窓が多数＝北寄り 6 列＋南端の一段低い 2 列）を正面に、手前に階段とエレベーター箱、左に渡り廊下",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061918505",
@@ -21627,8 +23273,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：木と街灯越しにエレベーター箱と西面（木で一部隠れる）",
+   "faces": [
+    "f3",
+    "f2",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061934785",
@@ -21734,8 +23388,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西の道路から見上げる。左に西面の細窓、右に縦スリットの面、下に植え込みと店（赤い柱）",
+   "faces": [
+    "f3",
+    "f6",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061939875",
@@ -21828,7 +23490,14 @@
    "interior": false,
    "floor": null,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの下を抜ける道路と店（赤い柱、ポスター）が主。塔は上端に少しだけで面として使えない（low の理由）",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f3",
+    "f6"
+   ],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_061943220",
@@ -21913,8 +23582,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：デッキの橋（下に店）越しに西面（細窓）と右に南西の縦スリットの面",
+   "faces": [
+    "f3",
+    "f4",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_061946087",
@@ -21999,8 +23676,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：店とデッキの橋の上に西面",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062046145",
@@ -22092,8 +23776,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南の道路（黄色の線）から吹き抜け（f9）を正面に、両袖（f7・f11）と袖の内側の縦スリット、足元に植え込み",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f8",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062155782",
@@ -22185,8 +23879,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：本部棟側の道路から、デッキの橋（下を道路が抜ける）越しに西面と右に南側の縦スリット",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062202098",
@@ -22278,8 +23981,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西の道路からデッキの橋越しに西面と右に袖の縦スリット",
+   "faces": [
+    "f3",
+    "f2",
+    "f1",
+    "f6",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062211785",
@@ -22385,8 +24098,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西の道路から。左に西面、右に袖の側面の縦スリット（f6・f10 と読んだ）が大きく、下にデッキの橋と店",
+   "faces": [
+    "f3",
+    "f6",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062220598",
@@ -22478,8 +24199,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西の道路から。左に西面、右に袖の側面の縦スリット（f6・f10 と読んだ）が大きく、下にデッキの橋と店",
+   "faces": [
+    "f3",
+    "f6",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062246708",
@@ -22571,8 +24300,19 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西寄りの道路から。左端にデッキの橋、2 列窓の f4、袖（f7）、吹き抜け（f9）、奥の袖の縦スリット",
+   "faces": [
+    "f9",
+    "f7",
+    "f4",
+    "f5",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062254010",
@@ -22657,8 +24397,19 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南西寄りの道路から。左端にデッキの橋、2 列窓の f4、袖（f7）、吹き抜け（f9）、奥の袖の縦スリット",
+   "faces": [
+    "f9",
+    "f7",
+    "f4",
+    "f5",
+    "f10",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062300065",
@@ -22750,8 +24501,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南の道路から吹き抜け（f9）と両袖、足元に植え込み",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062307232",
@@ -22836,8 +24596,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南の道路（黄色の線）から吹き抜け（f9）を正面に、両袖（f7・f11）と袖の内側の縦スリット、足元に植え込み",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f8",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062311895",
@@ -22922,8 +24692,18 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f9",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南の道路（黄色の線）から吹き抜け（f9）を正面に、両袖（f7・f11）と袖の内側の縦スリット、足元に植え込み",
+   "faces": [
+    "f9",
+    "f7",
+    "f11",
+    "f8",
+    "f10"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062317561",
@@ -23008,8 +24788,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f11",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南から東寄り。左に吹き抜け、中央に東の袖（f11、無地、下に扉と設備の箱）、右に 2 列窓とガラスブロックの f13、右奥にガラスの渡り廊下",
+   "faces": [
+    "f11",
+    "f9",
+    "f13",
+    "f12"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062323658",
@@ -23094,8 +24883,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f11",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東の袖（f11）を正面に、左に吹き抜け、右に 2 列窓・ガラスブロック・窓の f13 とガラスの渡り廊下",
+   "faces": [
+    "f11",
+    "f13",
+    "f9"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062330274",
@@ -23180,8 +24977,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f11",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：東の袖（f11）を正面に、左に吹き抜け、右に 2 列窓・ガラスブロック・窓の f13 とガラスの渡り廊下",
+   "faces": [
+    "f11",
+    "f13",
+    "f9"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062527087",
@@ -23287,8 +25092,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f13",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南東の横断歩道から。左に吹き抜けと東の袖、中央右に 2 列窓とガラスブロックの f13、右にガラスの渡り廊下",
+   "faces": [
+    "f13",
+    "f11",
+    "f9",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062537872",
@@ -23401,8 +25215,17 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f13",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南東の角を見上げる（大判タイルの低い台座、2 列窓・ガラスブロックの f13、右に東面から出るガラスの渡り廊下）",
+   "faces": [
+    "f13",
+    "f14",
+    "f12",
+    "f11"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062543289",
@@ -23515,8 +25338,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f15",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南東の角から東面に沿って北を見る（右に台座と東面、頭上にガラスの渡り廊下、左に b09）",
+   "faces": [
+    "f15",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062549239",
@@ -23636,8 +25466,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f14",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：ガラスの渡り廊下の下から南東の角（左に大判タイルの台座、右に東面の窓とベージュの大扉）",
+   "faces": [
+    "f14",
+    "f15",
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062637300",
@@ -23750,8 +25588,16 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f13",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：南東の道路から。南面の東端（2 列窓）と左に縦スリット、右手前にガラスの渡り廊下",
+   "faces": [
+    "f13",
+    "f11",
+    "f14"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062840332",
@@ -23843,8 +25689,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西の道路（横断歩道）とデッキの橋・奥の低い棟が主。塔は左端に斜めに少し写るだけ（low の理由）",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_062846360",
@@ -23943,8 +25796,15 @@
    "assigned_at": "2026-11-05T21:00:39",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "face": "f3",
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：西の道路（横断歩道）とデッキの橋・奥の低い棟が主。塔は左端に斜めに少し写るだけ（low の理由）",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_062856422",
@@ -24052,8 +25912,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f8",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：手前は舗装と左の別棟（本部棟ではない）。f8 の東端（デッキ・通り抜け・バス）は奥に小さく、木で半分隠れる。本部棟の面としては遠すぎて弱い。提出物注意：バスの後部",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_062904581",
@@ -24147,8 +26013,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f8",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f8 の東端を北東から。デッキの帯、大階段、通り抜けのバス。手前の木で面の中央が隠れる。提出物注意：バスのナンバー板が一部読める",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062912368",
@@ -24263,8 +26135,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f8",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f8 東端の大階段（主）と上のデッキ・通り抜け。面は上の一部だけ",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062916256",
@@ -24372,8 +26250,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f8",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：062912368 と同じ大階段の寄り。上にデッキと通り抜け",
+   "faces": [
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_062919435",
@@ -24488,8 +26372,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：大階段の上に正面入口の黒い庇とガラスの壁、青い鉄骨の柱",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062927980",
@@ -24597,8 +26487,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：大階段と正面入口（黒い庇・ガラスの壁・青い柱）。右に彫り込みの枠の壁",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062929449",
@@ -24713,8 +26609,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：大階段と正面入口を斜めに。右に彫り込みの枠の壁と階段脇の扉",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062930796",
@@ -24829,8 +26731,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：大階段の脇の植え込み越しに正面入口の黒い庇とガラス・青い柱",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_062931955",
@@ -24953,7 +26861,13 @@
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：図書館の外壁が写っていない（大階段の脇の植え込みと街灯だけ。奥に塔）。f2 の前の階段なので候補は f2",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [
+    "f2"
+   ],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_062946059",
@@ -25054,8 +26968,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：大階段の上に正面入口（黒い庇とガラスの壁）、左奥にタワー75、右に煉瓦の柱型",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063029997",
@@ -25149,8 +27069,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f8",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北東の角の脇から f8 沿いにデッキへ上がる階段を見上げる。左の壁が f8 の東端（無窓の妻寄り）、右はデッキの手すり壁、奥に正面の f0",
+   "faces": [
+    "f8",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063106256",
@@ -25244,8 +27171,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：主に写るのはタワー75（職員の示した棟の外）。右に図書館の f2 の北端（窓 1 つ・黒い凹みの帯・青い鉄骨の庇）。面の判定は確かだが写る範囲が狭い",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063115879.MP",
@@ -25346,8 +27279,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f2 の入口の並び（青い鉄骨の庇・ポスターのガラス・黒い凹みの帯・上に窓 1 つと彫り込みの帯）をほぼ正面。左にタワー75",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063405325",
@@ -25455,8 +27394,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：タワー75 側の通路橋の上から北西の角を。左に格子窓（f1）、右に窓の縦列と入口の凹みの平らな壁（f2）。青い鉄骨の庇の通路が図書館へ",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063406464",
@@ -25571,8 +27517,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：063405325 とほぼ同じ（北西の角、f1 と f2）",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063412307",
@@ -25680,8 +27633,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北西の角。左に格子窓（f1）、右に f2。手前の通路橋の下を道が通り、右奥に本部棟",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063413358",
@@ -25789,8 +27749,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：063412307 とほぼ同じ（北西の角、f1 と f2、橋の下の道）",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063417721",
@@ -25898,8 +27865,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北西の角（f1 と f2）、右に本部棟と植え込み",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063418811",
@@ -26014,8 +27988,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北西の角（f1 と f2）。左端にタワー75",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063420663",
@@ -26116,8 +28097,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：左に図書館の北西の角（f1 の西端 2 列と f2 を斜めに）、中央〜右は本部棟（ピロティの下に大学バス）",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063431446",
@@ -26239,8 +28227,16 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：中庭の東の高い所（手すり越し）から西を見る。右に f0（店先・北東の外階段の丸い庇）、左に f8（通り抜けにバス）、中央に入隅の塔屋。右奥に体育館。提出物注意：バスのナンバー板が読める",
+   "faces": [
+    "f0",
+    "f8",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_063439559",
@@ -26355,8 +28351,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北西の角（f1 と f2）、右に本部棟",
+   "faces": [
+    "f1",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063449740",
@@ -26478,8 +28481,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：通路橋の上から f1 を西端から。格子窓 5 層、右端に 2 層の凹みと甲板の高さの入口。左端にタワー75、手前に甲板の天窓",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063455681",
@@ -26594,8 +28603,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 の西端をほぼ正面。2 層の凹みと入口、右に青い鉄骨の庇",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063509567",
@@ -26745,8 +28760,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 の西端。格子窓の下に 2 層の凹みと曲面のガラス（中に閲覧席）。手前に甲板から下る階段。左は道の向こうのガラスの棟",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063510309",
@@ -26896,8 +28917,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 の西端から東へ。下に黄色の斜線の道、奥に道をまたぐ通路橋",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063514255",
@@ -27012,8 +29039,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 を西端から見通す。下に黄色の斜線の道",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063516032",
@@ -27121,8 +29154,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 の西端（曲面のガラスの凹みと格子）",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063517313",
@@ -27244,8 +29283,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 の西端を真下から。格子窓 2 段、下に曲面のガラスの凹み、右は北西の角の大きな軒下（甲板の高さで抜けている）。奥に本部棟",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063529987",
@@ -27346,8 +29391,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f1",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f1 の西端。格子窓と、2 層の凹みの中の入口の扉と曲面のガラス。右端が北西の角、その先に青い鉄骨の庇",
+   "faces": [
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063540463",
@@ -27455,8 +29506,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：青い鉄骨の庇がポスターのガラスの壁と黒い凹みの帯に沿う（f2 の北寄り）。右奥に本部棟",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063548675",
@@ -27557,8 +29614,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：青い鉄骨の庇・ポスターのガラス・銘板「名城大学附属図書館」・入口の扉と返却ポスト",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063611859.MP",
@@ -27673,8 +29736,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：正面入口を北寄りから。黒い庇、上に大きなガラスの壁、左上にタワー75。右の壁に掲示板、扉にポスター",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_063612628",
@@ -27775,8 +29844,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：正面入口（黒い庇・丸柱・ガラスの壁）。左に段",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064353508",
@@ -27870,8 +29945,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：正面入口の北脇。植え込みの木・青い鉄骨の柱・上のガラスの壁・黒い庇・扉のポスター",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064354855",
@@ -27979,8 +30060,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：正面入口（黒い庇と丸柱 2 本、上にガラスの帯）を斜めに。右奥に掲示板",
+   "faces": [
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064407496",
@@ -28074,8 +30161,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f8",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：大階段の上（デッキ）から。左上に f8 のデッキ階（入学センターの文字）、奥に f0 と店先・傾路。下半分は舗装。提出物注意：下の道路に人とトラック（小さい）",
+   "faces": [
+    "f8",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_064419229",
@@ -28168,7 +30262,11 @@
    "building": null,
    "interior": false,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：足元の舗装（赤い煉瓦タイルと灰色の舗石）だけ。建物が写っていない",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_064431924",
@@ -28283,8 +30381,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f8 のデッキの下（天井・柱・「本部棟」の札）から中庭越しに f0（店先・傾路・帯）を見る。左上に f8 の帯と上階。提出物注意：トラックの側面と人（小さい）",
+   "faces": [
+    "f0",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_064508808",
@@ -28378,8 +30483,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：南西の角。右に格子窓（f3）、左に f2 の南端（窓の縦列）と本部棟との間の路地の階段、その上に入口の庇。左端は本部棟の東の壁",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064510192",
@@ -28487,8 +30599,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：南西の角。右に格子窓（f3）、左に f2 の南端。手前に植え込み",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064514061",
@@ -28603,8 +30722,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f2",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：南西の角を南西から。左に f2 の南端（窓と彫り込みの枠）、右奥へ格子窓（f3）。右端に 11 号館の軒",
+   "faces": [
+    "f2",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064524057",
@@ -28684,8 +30810,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：路地の入口から南西の角。右に格子窓（f3）、左奥へ f2 の南端と路地の階段。左手前は本部棟の壁と縦樋",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064525427",
@@ -28772,8 +30905,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：南西の角。格子窓（f3）と f2 の南端、右に 11 号館側の煉瓦の壁",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064539230",
@@ -28888,8 +31028,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f3",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f3 の格子窓を西端から見上げる。左端に f2 の南端、右に 11 号館の煉瓦の角",
+   "faces": [
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064600203",
@@ -28969,8 +31116,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f6",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f6 の東端を南から。5 層＋ピロティ、ピロティへ上がる赤い大階段、白い柵の植込み、右に近接する別棟（図書館側）",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064601738",
@@ -29057,8 +31210,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f6",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f6 の東寄り。ピロティ、大階段、立て看板。右に別棟",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064609316",
@@ -29131,8 +31290,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f6",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f6 を南東から西北西へ見通す（面が右から左奥へ）。ピロティ、奥に白い 12 号館",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064614185",
@@ -29198,8 +31363,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f6",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：064609316 と同じ見通し。右下に大階段",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064650120",
@@ -29308,7 +31479,11 @@
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：図書館が写っていない。石積みの植え込みと半地下のガラスの入口がある広場、左にピロティのある格子の棟（本部棟の南側の可能性）、中央に屋上に塔のある 6 階前後の棟、右に白い棟",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_064700483",
@@ -29417,7 +31592,11 @@
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：064650120 とほぼ同じ広場（図書館は写っていない）",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_064721039",
@@ -29567,8 +31746,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f6",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f6 を西寄りから東へ見通す（面が左から右奥へ）。ピロティ、大階段、右奥に図書館側の低い煉瓦壁（縦長の小窓）と白い棟。デッキの帯が無いので f8 ではない。提出物注意：左に立て看板",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064729729",
@@ -29718,8 +31903,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f6",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：064721039 と同じ見通し",
+   "faces": [
+    "f6"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064744668",
@@ -29828,7 +32019,14 @@
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：ピロティの中（天井・柱・大階段・机）から外を見る（縦長）。近い面は推定",
+   "faces": [],
+   "interior_views": true,
+   "candidate_faces": [
+    "f7",
+    "f6"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_064926962",
@@ -29901,8 +32099,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：南東の角を南から（f0 の南端の窓の縦列・小さな張り出し箱・塔屋、左奥へ f3 の格子）。左は 11 号館の低い棟",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064937392.MP",
@@ -29989,8 +32194,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：南東の角（f0 と f3）、左に 11 号館の煉瓦の壁",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064942113",
@@ -30056,8 +32268,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f0 の南寄り（窓の縦列・張り出し箱、右にアーチ窓）、左に f3 の格子",
+   "faces": [
+    "f0",
+    "f3"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_064951872",
@@ -30123,8 +32342,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f0 の南寄り。窓の縦列と小さな張り出し箱、奥にアーチ窓。手前に擁壁と階段",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065001701",
@@ -30218,8 +32443,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f0 の南寄り。小さな張り出し箱と窓、右にアーチ窓",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065016249",
@@ -30306,8 +32537,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：アーチ形の縦長ガラス窓を近くから正面",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065027824",
@@ -30450,8 +32687,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f0 に沿って北を見通す（左上にアーチ窓、中ほどに張り出し箱）。右は共通講義棟東のガラスの壁、奥に通路橋。とても斜め",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065035660",
@@ -30545,8 +32788,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：アーチ窓を正面から（下に枠の彫り込み）",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065036832",
@@ -30633,8 +32882,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：アーチ窓と右の張り出し箱、右奥に高層の塔",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065038217",
@@ -30728,8 +32983,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：アーチ窓を斜め下から。手前に階段と擁壁",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065101059",
@@ -30802,8 +33063,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f0 のほぼ全体を正面（アーチ窓・張り出し箱・窓の縦列・階段・踊り場）。右手前に自販機",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065122957",
@@ -30925,8 +33192,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北東の角。左に張り出し箱とアーチ窓（f0）、右へ格子窓（f1）。カーブミラーと案内板",
+   "faces": [
+    "f0",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065125602",
@@ -31055,8 +33329,15 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：北東の角（f0 と f1）。カーブミラーと案内板",
+   "faces": [
+    "f0",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_065508197",
@@ -31156,7 +33437,11 @@
    "building": null,
    "interior": false,
    "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：室内（上の階の廊下のガラス越しにバルコニーと外）。外に茶色のタイルの棟の屋上と塔屋が見えるが図書館かは決められない。GPS は共通講義棟東の中 | 仕分け係（claude-opus-5-5）：屋内（床・天井・窓）から外の茶色い棟を見る写真。どの棟の中かは写真から決められない。本部棟の外の面は写っていない",
+   "faces": [],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "low"
   },
   {
    "id": "PXL_20261105_070904733",
@@ -31271,8 +33556,14 @@
    "building_source": "prior_sort",
    "notes_intake": "職員が示した候補から、前の仕分け係（11/6）が選んだ棟（職員の振り分けの代わり。面は渡さない）",
    "interior": false,
-   "face": null,
-   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ）"
+   "face": "f0",
+   "notes": "職員のフォルダ「主に図書館and本部棟と図書館の間」（棟は library/honbu のどれか。仕分け係が選ぶ） | 仕分け係（claude-opus-5-5）：f0 をほぼ正面（アーチ窓・張り出し箱・窓の縦列・階段）。右に高層の塔",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071033016.MP",
@@ -31364,8 +33655,19 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f13",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：南のデッキ（高い所）から南端：左に段状にバルコニーが後退する南翼の南面（f13、1 階はガラスブロックの柱廊）、中央に後退した打ち放しと煉瓦の箱（背骨の南面 f15）、右の木の陰に片持ちの庇（f17 の南端を斜めに）。手前に横断歩道と黄色い Meijo の回収箱",
+   "faces": [
+    "f13",
+    "f15"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f14",
+    "f16",
+    "f17"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_071255844",
@@ -31471,8 +33773,15 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f13",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：南翼の南西の角：右に南面 f13（1 階の柱廊とガラスブロック、上の階は段状に後退）が奥の横断歩道とタワー75 へ伸びる。左に西端 f12 の斜めの煉瓦タイルの壁と外階段、頭上に西の道路を渡るコンクリートの梁",
+   "faces": [
+    "f13",
+    "f12"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071303445",
@@ -31585,8 +33894,15 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f12",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：西の道路を北へ：中央に南翼の西端 f12（斜めの煉瓦タイルの壁、丸い照明 2 つ組、外階段の囲い）、右に南西の角と f13（柱廊が奥の横断歩道へ）、奥にタワー75。左は擁壁と頭上の梁",
+   "faces": [
+    "f12",
+    "f13"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071309389",
@@ -31692,8 +34008,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f12",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：南翼の西端 f12 をほぼ正面から：上端が北（左）へ下がる斜めの煉瓦タイルの壁、丸い照明 2 つ組が 2 か所、右端（南西の角）に外階段の囲いと手すり、頭上の梁",
+   "faces": [
+    "f12"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071316984",
@@ -31799,8 +34121,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f12",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f12 の北寄り：斜めの壁の低い端（北端）と丸い照明、頭上の梁 2 本。左奥に次の翼（中翼の西端）の斜めの壁と外階段が遠くに",
+   "faces": [
+    "f12"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f4"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071325894",
@@ -31920,8 +34250,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f12",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f12 の北端（右、丸い照明 2 つ組、斜めの縁が北へ下がる）と、左に南翼と中翼の間の中庭 1（赤い葉の木、四角い穴の塀）。中庭の北側に中翼の南面 f5（バルコニー）、左端に中翼の西端 f4 の斜めの壁と外階段",
+   "faces": [
+    "f12",
+    "f5",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071334183",
@@ -32013,8 +34351,23 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f5",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：中庭 1 を西の道路から正面に：左寄りに中翼の南面 f5（段状のバルコニー、1 階に格子窓）、奥に全高のガラスの縦長の筋がある細いコア（足元の出っ張りの正面 f8）、赤い葉の木と四角い穴の塀、右に南翼の北西の角（f12 の北端と通路の口）、左端に f4 の斜めの壁と外階段。コアの両脇の窓が f6・f10 か出っ張りの側面 f7・f9 かは見分けられない",
+   "faces": [
+    "f5",
+    "f8",
+    "f12",
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f6",
+    "f7",
+    "f9",
+    "f10",
+    "f11"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_071347810",
@@ -32099,8 +34452,22 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f4",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：中翼の西端 f4（斜めの煉瓦タイルの壁、丸い照明、南端に外階段の箱）。右に中庭 1（四角い穴の塀、赤い葉の木、奥のガラスの筋のコア f8）、右端に南翼の北面 f11 のバルコニー。左奥に北翼の西端",
+   "faces": [
+    "f4",
+    "f11",
+    "f8"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f0",
+    "f6",
+    "f7",
+    "f9",
+    "f10"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_071400772.MP",
@@ -32192,8 +34559,18 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f4",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：西の道路を北へ：右に中翼の西端 f4 の北寄り（斜めの壁、丸い照明 2 つ組、低い端に階段の箱）、頭上の梁。左中に中庭 2 と北翼の南面のバルコニー、左に北翼の西端の斜めの壁と外階段（遠く斜め）",
+   "faces": [
+    "f4"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f1",
+    "f0",
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071408553.MP",
@@ -32285,8 +34662,17 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f4",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：中翼の西端 f4 の北端を正面から：斜めの壁の低い端に階段の箱、丸い照明 2 つ組、頭上の梁。左に中庭 2 の丸い穴の塀、左端に北翼の南面 f1（段状のバルコニー、格子窓）。中央奥に中庭 2 を渡る打ち放しの橋と奥の棟",
+   "faces": [
+    "f4",
+    "f1"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f2"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071413956",
@@ -32378,8 +34764,19 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f2",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：中庭 2 を西の道路から正面に（丸い穴の塀）：奥に 5 階の打ち放しと大きな窓の面（背骨の西面 f2）、左に北翼の南面 f1（段状のバルコニー）、右に中翼の北面 f3、左端に北翼の西端 f0 の斜めの壁と外階段。右下の階段の箱は f4 の北端",
+   "faces": [
+    "f2",
+    "f1",
+    "f3",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f4"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071424391",
@@ -32471,8 +34868,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f0",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北翼の西端 f0 の南寄り（斜めの煉瓦タイルの壁、丸い照明 2 つ組が 2 か所、頭上の梁、南端に階段の箱と手すり）。右に中庭 2 の丸い穴の塀、右端に中翼の北面 f3 のバルコニー、奥に f2 の打ち放しの面",
+   "faces": [
+    "f0",
+    "f3",
+    "f2"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071434753",
@@ -32564,8 +34969,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f0",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：斜めの煉瓦タイルの壁を正面から（低い端が左＝北、丸い照明 2 つ組、頭上の梁 3 本、左端に階段の箱と縦の配管、その先は木）。各翼の西端は同じ作りなので、撮影の並び（071424391 の 10 秒後）と左端の先に中庭が無く木があることで f0 の北寄りと判断",
+   "faces": [
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_071509670",
@@ -32678,8 +35089,17 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北西の角から南東へ：左に段状に後退する 5 階の北面 f19（屋上にアンテナ、1 階はガラスブロック）、右へ西の道路が梁の下を南へ続き、道路沿いに f0 の北端の斜めの壁と外階段、右は擁壁。左端にピロティの上のガラスの箱（OSM osm-way-1304077324、f18 の前）",
+   "faces": [
+    "f19",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071517479",
@@ -32792,8 +35212,17 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北の広場から北西の角：段状の北面 f19（アンテナ、1 階のガラスブロックと低い煉瓦の塀）、右に f0 の北端の外階段と西の道路・梁・擁壁。左奥にピロティの上のガラスの箱（縦のひれ）",
+   "faces": [
+    "f19",
+    "f0"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071527944",
@@ -32913,8 +35342,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北面 f19 の西寄り（北翼）をほぼ正面から：段状に後退するバルコニー、1 階のガラスブロックの窓と打ち放し、低い煉瓦の塀。右端に北西の角と西の道路・擁壁",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071529022",
@@ -33027,8 +35462,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北面 f19 の全体（段状の 5 階、アンテナの塔）。左にピロティの上のガラスの箱（縦のひれ、上に手すり。OSM osm-way-1304077324 で足元の外）、ピロティの奥に東の庭",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071536516",
@@ -33141,8 +35584,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北面 f19 をほぼ正面から（段状のバルコニー、アンテナの塔、1 階のガラスブロックと入口）。左にピロティの上のガラスの箱",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_071548825",
@@ -33227,8 +35678,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f19",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：北の広場から北東寄り：中央にピロティの上のガラスの箱（縦のひれ、上に手すり）とその下の入口のガラス戸、右に段状の北面 f19。箱が f19 の東寄りと f18（1.9 m 引っ込んだ面）の前を覆い、入口が f19 の東寄りか f18 かは見えない",
+   "faces": [
+    "f19"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f18"
+   ],
+   "confidence": "mid"
   },
   {
    "id": "PXL_20261105_074837587",
@@ -33355,8 +35814,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：東の庭から北西へ：左に東面 f17 の北寄り（煉瓦タイルの柱型が並び、白い横帯、片持ちの庇、屋上にアンテナ）、右にピロティの上のガラスの箱（上に手すり。OSM osm-way-1304077324、足元の外）",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_074849844",
@@ -33490,8 +35955,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：東の庭の北端から南南西へ f17 を見通す（柱型の列と 1 階の柱廊、片持ちの庇）。右手前にガラスの箱とピロティの柱、左奥にタワー75、左に広場のテーブルとベンチ",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_074903876",
@@ -33632,8 +36103,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 の北端から南へ斜めに：手前に北端の柱型 4 列と 1 階の柱廊、中ほどに横長のガラス帯の区画、右にガラスの箱とピロティ",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_074913586",
@@ -33795,8 +36272,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 の北端の区画を正面寄りに（柱型 4 本、各階の窓とガラスブロックの腰、1 階の柱廊と引っ込んだ壁）、右にガラスの箱の片持ち",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_074925492",
@@ -33951,8 +36434,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 の柱型の区画をほぼ正面から（柱型 5 本、1 階の入口と柱廊、ごみ箱、片持ちの庇の下の高窓）、手前に広場のテーブル",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_074939442",
@@ -34100,8 +36589,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 を南へ斜めに：右に横長のガラス帯の区画（3 層）と入口と棟名の表示、左へ柱型の列が続き、左端に南端の渡り（柱の上の箱）と奥の棟",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f16"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_074949973",
@@ -34256,8 +36753,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 をほぼ正面から：左に柱型 6 本の区画、右に横長のガラス帯の区画（各階の連続窓）、1 階の柱廊と入口",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_075121795",
@@ -34370,8 +36873,16 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：東の庭の南寄りから f17 を南西へ斜めに：右に柱型の区画、中ほどに横長のガラス帯の区画、左端に南端の渡り（柱の上の箱、OSM osm-way-1304077323）と奥の棟。手前に木の枝",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [
+    "f16"
+   ],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_075128406",
@@ -34505,8 +37016,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 の南寄りを北へ斜めに：手前左に柱型と 1 階の柱廊（ごみ箱、入口）、右へ横長のガラス帯の区画と柱型の列が続く。右に広場のテーブル",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_075147867",
@@ -34640,8 +37157,14 @@
    "assigned_at": "2026-11-06T00:30:23",
    "interior": false,
    "floor": null,
-   "face": null,
-   "notes": "職員が振り分け（2026-11-06T00:30:23）"
+   "face": "f17",
+   "notes": "職員が振り分け（2026-11-06T00:30:23） | 仕分け係（claude-opus-5-5）：f17 の南寄りを近くから：左に柱型の区画、中央に横長のガラス帯の区画（3 層）、右へ柱型の列。1 階の柱廊に入口と階段、棟名の表示",
+   "faces": [
+    "f17"
+   ],
+   "interior_views": false,
+   "candidate_faces": [],
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_075519850",
@@ -34762,7 +37285,8 @@
    "floor": 1,
    "interior_views": true,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。面にしない",
+   "confidence": "high"
   },
   {
    "id": "PXL_20261105_075532769",
@@ -34876,7 +37400,8 @@
    "floor": 1,
    "interior_views": true,
    "face": null,
-   "notes": "職員が振り分け（2026-11-05T21:00:39）"
+   "notes": "職員が振り分け（2026-11-05T21:00:39） | 仕分け係（claude-opus-5-5）：職員が内装（1 階）と振り分け。面にしない",
+   "confidence": "high"
   }
  ]
 }

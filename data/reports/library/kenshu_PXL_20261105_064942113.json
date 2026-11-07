@@ -1,0 +1,74 @@
+{
+ "building": "library",
+ "photo": "PXL_20261105_064942113",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "plane（正面化＋compare）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f3",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 7,
+   "n_ng": 2,
+   "face_lines_max_abs_m": 0.373,
+   "part_lines_max_abs_m": null,
+   "lines": [
+    {
+     "what": "柱型7左",
+     "json_m": 37.69,
+     "diff_m": -0.373,
+     "ok": false,
+     "action": "急な斜め（面から 3.88 m）の 1 枚だけ。縦の線は ±0.5 m ぶれる（判断の目安）。柱型 8・9 は同じ写真で ±0.13。値は直さない"
+    },
+    {
+     "what": "柱型7右",
+     "json_m": 38.69,
+     "diff_m": -0.338,
+     "ok": false,
+     "action": "同上"
+    },
+    {
+     "what": "柱型8右",
+     "json_m": 44.07,
+     "diff_m": -0.128,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    }
+   ]
+  }
+ ],
+ "face": "f3",
+ "pass": false,
+ "lines": [
+  {
+   "what": "柱型7左",
+   "json_m": 37.69,
+   "diff_m": -0.373,
+   "ok": false,
+   "action": "急な斜め（面から 3.88 m）の 1 枚だけ。縦の線は ±0.5 m ぶれる（判断の目安）。柱型 8・9 は同じ写真で ±0.13。値は直さない",
+   "face": "f3"
+  },
+  {
+   "what": "柱型7右",
+   "json_m": 38.69,
+   "diff_m": -0.338,
+   "ok": false,
+   "action": "同上",
+   "face": "f3"
+  },
+  {
+   "what": "柱型8右",
+   "json_m": 44.07,
+   "diff_m": -0.128,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f3"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "parts": [],
+ "note": ""
+}

@@ -1,0 +1,486 @@
+{
+ "schema": "sekkei-summary/1",
+ "made_by": "設計係（sekkei・claude-opus-5-5）",
+ "made_at": "2026-11-07T14:17:31+09:00",
+ "building": "library",
+ "design_script": "scripts/design_library.py",
+ "building_json": "data/buildings/library.json",
+ "decisions_applied": [
+  "進行役 K-005：大階段（steps）と f0 の前の段々の広場・空堀（steps＋composite）は棟 JSON に置く。通路橋・甲板・青い鉄骨の庇・斜路・本部棟との間の路地の段・木・街灯・案内板は敷地の依頼（tool、open）のまま",
+  "進行役 K-006：階高は面ごとの値のまま揃えない。check 2 件を closed（note に決定の中身）"
+ ],
+ "inputs": [
+  "data/reports/library/kansatsu_f0〜f3.json・kansatsu_roof.json",
+  "data/reports/library/kazoe_f0〜f3.json",
+  "data/reports/library/sokuryo_f0〜f3.json",
+  "out/library/coverage_<面>_photo.png・coverage.json",
+  "out/rectified/library_*（登録済みの正面化）",
+  "out/library/roof.json（recorder photos roof）"
+ ],
+ "values": {
+  "measured": 4,
+  "estimated": 454,
+  "unknown": 2,
+  "hypothesis": 4,
+  "total": 460
+ },
+ "measured_values": [
+  "floor_count",
+  "faces[f1].bays.count",
+  "faces[f3].bays.count",
+  "parts[26].count"
+ ],
+ "unknown_values": [
+  "levels[B1].z",
+  "parts[26].size.d"
+ ],
+ "measured_note": "メジャーの写真が無いので measured は数だけ（棟の段数 5、f1・f3 の列数 9、f1 の室外機 2 台）。寸法は全部 estimated",
+ "states": {
+  "faces": {
+   "f0": "estimated",
+   "f1": "estimated",
+   "f2": "estimated",
+   "f3": "hypothesis"
+  },
+  "part_counts": {
+   "measured": 0,
+   "estimated": 52,
+   "hypothesis": 1,
+   "unknown": 0
+  },
+  "shape_ratio": 1.0,
+  "evidence_ratio": 0.009
+ },
+ "parts": 49,
+ "observed_items_1m_plus": {
+  "placed": 43,
+  "not_placed": 5,
+  "placed_list": [
+   {
+    "face": "f0",
+    "what": "南の窓の列 L2〜L4（3）",
+    "as": "glazing",
+    "how": "(a) 北の縁と段 ＋ (b) 幅は北の列と同じ"
+   },
+   {
+    "face": "f0",
+    "what": "北の窓の列（4）",
+    "as": "glazing",
+    "how": "(a) 正面化 070904733"
+   },
+   {
+    "face": "f0",
+    "what": "横長の彫り込みの枠（4）",
+    "as": "bands（負の depth）",
+    "how": "(a)、南の枠の南端は (b)"
+   },
+   {
+    "face": "f0",
+    "what": "張り出し箱（北）と正面の開口",
+    "as": "composite",
+    "how": "(a) 幅・高さ、(b) 出 1.1 m"
+   },
+   {
+    "face": "f0",
+    "what": "張り出し箱（南）とガラリ",
+    "as": "composite",
+    "how": "(b) 面の長さ・段の間隔・窓の幅に対する比"
+   },
+   {
+    "face": "f0",
+    "what": "箱の下の幅の広い柱型（2）",
+    "as": "composite",
+    "how": "(a) 北、(b) 南"
+   },
+   {
+    "face": "f0",
+    "what": "アーチの凹み（奥の平らなガラス）",
+    "as": "glazing",
+    "how": "(a) 開口、(b) 奥行き 3.4 m（脇の壁の見え幅と登録の視点）"
+   },
+   {
+    "face": "f0",
+    "what": "アーチの曲面ガラス",
+    "as": "composite（arc_wall）",
+    "how": "(b) 凹みの幅に対する比、ふくらみは見えていない"
+   },
+   {
+    "face": "f0",
+    "what": "L5 の帯窓",
+    "as": "glazing",
+    "how": "(a)"
+   },
+   {
+    "face": "f0",
+    "what": "アーチの下の水切り",
+    "as": "ledges",
+    "how": "(a) 高さ、(b) 出・端"
+   },
+   {
+    "face": "f0",
+    "what": "L1 の凹んだ板（3）",
+    "as": "bands",
+    "how": "(a)、アーチの下の板の下端は (b)"
+   },
+   {
+    "face": "f0",
+    "what": "扉（エネルギーセンター）",
+    "as": "patch",
+    "how": "(a)、下端は中段の踊り場"
+   },
+   {
+    "face": "f0",
+    "what": "縦樋（南東の角 2・アーチの脇 2）",
+    "as": "pipes",
+    "how": "(b)"
+   },
+   {
+    "face": "f0",
+    "what": "段々の広場：灰色の段 7 と中段の踊り場・赤い煉瓦の段 8 とテラスの北の端（K-005）",
+    "as": "steps＋composite",
+    "how": "(b) 正面化 070904733 の段数と視差で戻した位置、扉の高さ・広場の高さから 1 段の高さ"
+   },
+   {
+    "face": "f0",
+    "what": "空堀：擁壁・手すり・底（K-005）",
+    "as": "composite",
+    "how": "(b) 065027824 の比。底は見えていない（地形の下）"
+   },
+   {
+    "face": "屋上",
+    "what": "塔",
+    "as": "composite",
+    "how": "(b) 正面化の視差＋PLATEAU の最高の高さ"
+   },
+   {
+    "face": "屋上",
+    "what": "塔の北の低い盛り上がり",
+    "as": "composite",
+    "how": "(b) 見えたのは上 0.3 m だけ"
+   },
+   {
+    "face": "屋上",
+    "what": "入口の上の盛り上がり（2）",
+    "as": "composite（f2）",
+    "how": "(b) 正面化の視差"
+   },
+   {
+    "face": "f1",
+    "what": "9 列 × L2〜L5 の大窓・小窓・窓下の濃い板・手すり",
+    "as": "bays＋windows",
+    "how": "(a) coverage_f1、奥行きは (b)"
+   },
+   {
+    "face": "f1",
+    "what": "L1 の凹んだ板（列 1〜6）と水切り",
+    "as": "bands・ledges",
+    "how": "(a)、下端は (b)"
+   },
+   {
+    "face": "f1",
+    "what": "列 7・8 の凹みの全面ガラス",
+    "as": "glazing",
+    "how": "(a) 開口、(b) ガラスの奥 1.3 m"
+   },
+   {
+    "face": "f1",
+    "what": "列 8 の西端の曲面ガラス",
+    "as": "composite（arc_wall）",
+    "how": "(b) 半径は見えていない"
+   },
+   {
+    "face": "f1・f2",
+    "what": "北西の角の軒下と独立した角の柱型",
+    "as": "composite（cut）",
+    "how": "(a) 幅・高さ、(b) 奥行き 4.5 m"
+   },
+   {
+    "face": "f1・f2",
+    "what": "風除室",
+    "as": "vestibule",
+    "how": "(b)"
+   },
+   {
+    "face": "f1",
+    "what": "外階段（直進 2 本・踊り場）と上の踊り場の手すり",
+    "as": "composite・rail",
+    "how": "(a) coverage_f1 を視差で戻した、幅・出は (b)"
+   },
+   {
+    "face": "f1",
+    "what": "縦樋（4）",
+    "as": "pipes",
+    "how": "(a) 柱割りの位置"
+   },
+   {
+    "face": "f1",
+    "what": "室外機（2）",
+    "as": "asset ac_outdoor",
+    "how": "(b)"
+   },
+   {
+    "face": "f1",
+    "what": "扉（3）",
+    "as": "patch",
+    "how": "(b)"
+   },
+   {
+    "face": "f1",
+    "what": "L1 の濃い色の四角（8）",
+    "as": "patch",
+    "how": "(a) 上の 4、(b) 下の 4"
+   },
+   {
+    "face": "f1",
+    "what": "歩道沿いの白い縁の植え込み",
+    "as": "planter",
+    "how": "(b)"
+   },
+   {
+    "face": "f2",
+    "what": "正面入口の凹み（奥のガラスの壁）",
+    "as": "glazing",
+    "how": "(a) 開口、(b) 奥行き 3.2 m"
+   },
+   {
+    "face": "f2",
+    "what": "北の凹み（奥のガラスの壁）と北端の曲面ガラス",
+    "as": "glazing・composite",
+    "how": "(a) 縁と高さ、(b) 奥行き 1.5 m・曲がり"
+   },
+   {
+    "face": "f2",
+    "what": "黒い庇と丸柱 2",
+    "as": "composite",
+    "how": "(b)"
+   },
+   {
+    "face": "f2",
+    "what": "大階段（上の段が正面入口の床。K-005）",
+    "as": "steps（sides from・to）",
+    "how": "(b) 見えた蹴上げ 15、上の段は正面化で s 15〜31 m・6.6 m、下端は 5m 標高 2.85 m（1 段 0.25 m は写真と合わず未解決）"
+   },
+   {
+    "face": "f2",
+    "what": "L5 の帯窓・小窓 2・L4 の窓",
+    "as": "glazing",
+    "how": "(a)"
+   },
+   {
+    "face": "f2",
+    "what": "南西の角の窓（3）",
+    "as": "glazing",
+    "how": "(b) 急な斜めの写真の比"
+   },
+   {
+    "face": "f2",
+    "what": "横長の彫り込みの枠・板（北 1・南 3）",
+    "as": "bands",
+    "how": "(a)、南の端は (b)"
+   },
+   {
+    "face": "f2",
+    "what": "銘板",
+    "as": "nameplate",
+    "how": "(b)"
+   },
+   {
+    "face": "f2",
+    "what": "掲示板（枠だけ）",
+    "as": "nameplate",
+    "how": "(a)"
+   },
+   {
+    "face": "f2",
+    "what": "白い植木鉢の箱",
+    "as": "planter",
+    "how": "(a) 幅・高さ、(b) 奥行き"
+   },
+   {
+    "face": "f3",
+    "what": "9 列 × L2〜L5 の窓（中ほどの列の L2 は仮説）",
+    "as": "bays＋windows",
+    "how": "(a) 正面化 064942113 の南東の端"
+   },
+   {
+    "face": "f3",
+    "what": "縦樋（4）",
+    "as": "pipes",
+    "how": "柱割りの位置"
+   },
+   {
+    "face": "f3",
+    "what": "白い縦格子の縁の植え込み",
+    "as": "planter",
+    "how": "(b) 長さは見えていない"
+   }
+  ],
+  "not_placed_list": [
+   {
+    "face": "f1・f2",
+    "what": "通路橋",
+    "why": "2 棟（tower75）に触れる → 敷地 JSON（requests kind tool、open。K-005・K-006 で敷地のまま）"
+   },
+   {
+    "face": "f2・f1",
+    "what": "甲板（天窓 2）・青い鉄骨の庇・斜路と曲がった腰壁の段",
+    "why": "通路橋と一続きの OSM 多角形 → 敷地 JSON（tool、open）"
+   },
+   {
+    "face": "f2",
+    "what": "本部棟との間の路地の段と f2 側の段々の植え込み",
+    "why": "本部棟との間の地面 → 敷地 JSON（tool、open）"
+   },
+   {
+    "face": "f0・f2",
+    "what": "木・街灯・北東の角の白い縦格子の植え込み・案内板・カーブミラー・大階段の北の植え込みの台",
+    "why": "棟と棟の間の地面に立つ物 → 敷地 JSON（tool、open）"
+   },
+   {
+    "face": "屋上",
+    "what": "航空写真の中央の囲い・小さい囲い 2・長い盛り上がり A/B・東寄りの枠・明るい物",
+    "why": "地上の写真に写らず、航空写真では盛り上がりか凹みか決まらない（kansatsu_roof.json）→ 撮影依頼"
+   }
+  ],
+  "note": "置かなかった物はどれも写真には写っているが、進行役 K-005 で敷地に置く物（自分の棟には置かない）と決まった物か、航空写真だけで盛り上がりか凹みか決まらない物。1 m 未満の小物（照明・ごみ箱・返却ポスト・消火器の箱・アンテナ・空堀へ降りる狭い段）は数に入れていない"
+ },
+ "requests": [
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "f2",
+   "status": "open",
+   "what": "f2：メジャーを壁に沿えて 1 枚（タイル 10 段か、入口の南の彫り込みの板の高さ。メジャーの目盛りと壁が正面から 1 枚に入るように）"
+  },
+  {
+   "kind": "tool",
+   "to": "tool",
+   "face": "f0",
+   "status": "open",
+   "what": "registry の登録に exclude（面の m の矩形）を足す道具（例 recorder photos exclude <写真> --face <面> --rect s0,z0,s1,z1 --note …）"
+  },
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "f3",
+   "status": "open",
+   "what": "f3 の正面寄りの 1 枚（両端が入れば一番よい。入らなければ列 4〜6 と縦樋 2 本＝列 3|4・6|7 が入る 1 枚を数歩ずつ横に 3〜4 枚）"
+  },
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "f0",
+   "status": "open",
+   "what": "空堀を上から見下ろして、底・底に面した開口・北東の広場の地面が 1 枚に入る写真と、南の張り出し箱の下の柱型・L1 の南端を正面寄りに 1 枚"
+  },
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "f0",
+   "status": "open",
+   "what": "張り出し箱 2 つとアーチの凹みを真横に近い角度から（出・奥行き・曲面ガラスのふくらみ）"
+  },
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "f1",
+   "status": "open",
+   "what": "北西の角の軒下と列 7・8 の凹みを真横から 1 枚と、軒下の天井を見上げる 1 枚。外階段を真横（道の向かいの歩道）から段の両端と踊り場が入る 1 枚"
+  },
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "f2",
+   "status": "open",
+   "what": "f2 の南寄り（入口の南から南西の角まで）を正面寄りに 1 枚と、正面入口の庇・凹みを真横（北か南）から 1 枚"
+  },
+  {
+   "kind": "photo",
+   "to": "staff",
+   "face": "*",
+   "status": "open",
+   "what": "図書館の屋上全体を見下ろす写真 2〜3 枚（塔・中央の囲い・長い盛り上がり 2・小さい囲いが入るように）"
+  },
+  {
+   "kind": "tool",
+   "to": "tool",
+   "face": "f1",
+   "status": "open",
+   "what": "敷地に置く物：通路橋（図書館 f1 の西寄り・列 8〜9 の前から道をまたいでタワー75 の側へ）。両側にタイルの腰壁＋笠木＋金属の手すり、床は煉瓦色、下面はコンクリートの梁"
+  },
+  {
+   "kind": "tool",
+   "to": "tool",
+   "face": "f2",
+   "status": "open",
+   "what": "敷地に置く物：甲板（デッキ。天窓 2 と西の縁の腰壁・手すり）と青い鉄骨の庇（通路の屋根、柱 6 本以上）、甲板へ上がる斜路と曲がった腰壁の段"
+  },
+  {
+   "kind": "tool",
+   "to": "tool",
+   "face": "f2",
+   "status": "open",
+   "what": "敷地に置く物：路地の段（南西の角から北へ入口の高さまで、本部棟の壁との間）と f2 側の白い縁の段々の植え込み"
+  },
+  {
+   "kind": "tool",
+   "to": "tool",
+   "face": "f0",
+   "status": "open",
+   "what": "敷地に置く物：南の築山の高い木 3 以上・広葉樹 1・街灯 2、北東の角の白い縦格子の植え込み・案内板・カーブミラー、大階段の北の 4 灯の街灯と木・生け垣の植え込みの台"
+  },
+  {
+   "kind": "check",
+   "to": "staff",
+   "face": "f2",
+   "status": "closed",
+   "what": "正面入口の床（庇の下）を棟 JSON に置き、甲板・大階段は敷地に上げた。この境目でよいか",
+   "note": "進行役 K-005・K-006 で決定：大階段（西の広場から正面入口の床へ）と f0 の前の段々の広場・空堀は棟 JSON に置く（steps＋composite）。通路橋・甲板・青い鉄骨の庇・斜路・本部棟との間の路地の段・木・街灯・案内板は敷地の依頼（kind tool）のまま。入口の床は大階段の上の段として置いた"
+  },
+  {
+   "kind": "check",
+   "to": "tool",
+   "face": "*",
+   "status": "closed",
+   "what": "階高が面で 2〜5% 違う（f0 4.386・f1 4.472・f2 4.566・f3 4.607 m）。棟で 1 つにするか、面ごとの換算値のままか",
+   "note": "進行役 K-005・K-006 で決定：階高は面ごとの値のまま揃えない。窓の高さは各面の製図板の値のまま、floor_pitch は f1 の値を参考の 1 値として残す"
+  },
+  {
+   "kind": "data",
+   "to": "staff",
+   "face": "f2",
+   "status": "open",
+   "what": "大階段の上端（入口の床 6.6 m）と下端の広場（5m 標高で約 2.85 m）の差 3.75 m が、見えた蹴上げ 15 段では 1 段 0.25 m になり、写真の浅い段と合わない"
+  },
+  {
+   "kind": "data",
+   "to": "staff",
+   "face": "*",
+   "status": "open",
+   "what": "PLATEAU measuredHeight 33.7 m とパラペット上端 25.3 m の差 8.4 m"
+  }
+ ],
+ "requests_count": {
+  "open": {
+   "photo": 7,
+   "tool": 5,
+   "check": 0,
+   "data": 2
+  },
+  "closed": 2
+ },
+ "checks": {
+  "validate": "OK（--strict 警告 0）",
+  "run_fast": "OK（validate・draw・model。模型の仮の値 0 件）",
+  "run_report": "out/library/run_report.json",
+  "sheet": "out/library/sheet.png"
+ },
+ "open_points": [
+  "parapet_top を PLATEAU の 33.7 m から測った 25.3 m に直した。33.7 m は塔の上端に当てた（data 要求）",
+  "大階段の 1 段 0.25 m（入口の床 6.6 m と 5m 標高 2.85 m を 15 段で割った）は写真の浅い段と合わない（data 要求、未解決）",
+  "奥行き・出（凹み・箱・庇・軒下・階段・空堀）は真横の写真が無く、全部 (b) で ± 30% 以上",
+  "f0 の赤い煉瓦の段とテラスは s 8 m・面から 8 m で切った（その先は 11 号館の屋上庭園）。模型では切った所が箱の側面に見える",
+  "空堀の底は 5m 標高の地形の下に隠れる（地形は切り欠かない）",
+  "f3 の中ほどの列の L2 は same_block の仮説（4 値）。正面寄りの写真で確定する"
+ ]
+}

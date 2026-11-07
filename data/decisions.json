@@ -13,6 +13,17 @@
    "building": null,
    "request": null,
    "scope": "data/vocab.json に D-0001 として載っている型と、data/assets/catalog.json の decision D-0001 の項目だけ。内装（旧 D-0002・D-0003）は停止中なので承認しない"
+  },
+  {
+   "id": "D-0002",
+   "kind": "asset",
+   "target": "ピロティの長机の見た目（台帳の table_long。台帳の項目は決定 D-0003 を参照）",
+   "decision": "deny",
+   "by": "shinko(fable)",
+   "at": "2026-11-07T14:22:50+09:00",
+   "why": "honbu の設計係の依頼（kind asset）。台帳の table_long は内装の決定 D-0003（--zero で台帳から消えた）を参照していて、新しく approve しても別の id になり台帳の項目と結び付かない。台帳を書き換えるのは assets fetch の仕事で、進行役は台帳を直さない。机はピロティの見た目のための物で、位置・個数は写真の根拠どおり箱で置けている。進行役：Opus 5.5（Fable の代役）",
+   "building": "honbu",
+   "request": "ピロティの机（長机）の見た目"
   }
  ]
 }

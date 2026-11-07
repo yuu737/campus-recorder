@@ -1,0 +1,44 @@
+{
+ "building": "library",
+ "photo": "PXL_20261103_075705849",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "chain（鎖）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f2",
+   "photo_lines_pass": true,
+   "face_pass": false,
+   "n_lines_strong": 7,
+   "n_ng": 0,
+   "face_lines_max_abs_m": 0.056,
+   "part_lines_max_abs_m": 0.062,
+   "lines": [
+    {
+     "what": "面の端0",
+     "json_m": 0.0,
+     "diff_m": 0.053,
+     "ok": true,
+     "action": "f2 の写真 6 枚で +0.05〜+0.40（中央値 +0.20）。f1 の写真では同じ角（柱型 9 右）が +0.04。足元（PLATEAU）の北西の角か f2 の登録の横の原点の差。設計の値ではないので直さず、f2 のメジャーの撮影依頼（既存）で確かめる"
+    }
+   ]
+  }
+ ],
+ "face": "f2",
+ "pass": true,
+ "lines": [
+  {
+   "what": "面の端0",
+   "json_m": 0.0,
+   "diff_m": 0.053,
+   "ok": true,
+   "action": "f2 の写真 6 枚で +0.05〜+0.40（中央値 +0.20）。f1 の写真では同じ角（柱型 9 右）が +0.04。足元（PLATEAU）の北西の角か f2 の登録の横の原点の差。設計の値ではないので直さず、f2 のメジャーの撮影依頼（既存）で確かめる",
+   "face": "f2"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "parts": [],
+ "note": ""
+}

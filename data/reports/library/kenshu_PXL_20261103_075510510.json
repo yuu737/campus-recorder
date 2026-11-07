@@ -1,0 +1,220 @@
+{
+ "building": "library",
+ "photo": "PXL_20261103_075510510",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "landmarks",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f1",
+   "photo_lines_pass": true,
+   "face_pass": true,
+   "n_lines_strong": 29,
+   "n_ng": 8,
+   "face_lines_max_abs_m": 0.135,
+   "part_lines_max_abs_m": 0.38,
+   "lines": [
+    {
+     "what": "部品19（外階段） flight_low 上端",
+     "json_m": 5.25,
+     "diff_m": 0.38,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品19（外階段） parapet_low 上端",
+     "json_m": 6.24,
+     "diff_m": 0.31,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品19（外階段） parapet_mid 上端",
+     "json_m": 6.35,
+     "diff_m": 0.241,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品19（外階段） base_wall 上端",
+     "json_m": 2.8,
+     "diff_m": -0.201,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品20（外階段の上の踊り場の白い） rail_post3 左端",
+     "json_m": 33.22,
+     "diff_m": -0.192,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品28（上が丸い白い縁の扉） patch 右端",
+     "json_m": 47.7,
+     "diff_m": 0.184,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品19（外階段） landing_box 左端",
+     "json_m": 33.3,
+     "diff_m": -0.171,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品20（外階段の上の踊り場の白い） rail_post0 左端",
+     "json_m": 32.78,
+     "diff_m": -0.165,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "L3 大窓 下端",
+     "json_m": 11.7,
+     "diff_m": -0.135,
+     "ok": true,
+     "action": "甲板の組は −0.35（窓下の濃い板の下の縁 11.45 を拾う取り違え。同じ写真で窓下パネルの線は ±0.04）。地上の写真は ±0.15。値は直さない"
+    },
+    {
+     "what": "パラペット上端",
+     "json_m": 25.3,
+     "diff_m": -0.133,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "L4 大窓 下端",
+     "json_m": 16.0,
+     "diff_m": 0.032,
+     "ok": true,
+     "action": "甲板の組だけ −0.16〜−0.21。地上の写真は ±0.09。値は直さない"
+    }
+   ]
+  }
+ ],
+ "face": "f1",
+ "pass": true,
+ "lines": [
+  {
+   "what": "部品19（外階段） flight_low 上端",
+   "json_m": 5.25,
+   "diff_m": 0.38,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） parapet_low 上端",
+   "json_m": 6.24,
+   "diff_m": 0.31,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） parapet_mid 上端",
+   "json_m": 6.35,
+   "diff_m": 0.241,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） base_wall 上端",
+   "json_m": 2.8,
+   "diff_m": -0.201,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品20（外階段の上の踊り場の白い） rail_post3 左端",
+   "json_m": 33.22,
+   "diff_m": -0.192,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品28（上が丸い白い縁の扉） patch 右端",
+   "json_m": 47.7,
+   "diff_m": 0.184,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品19（外階段） landing_box 左端",
+   "json_m": 33.3,
+   "diff_m": -0.171,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "部品20（外階段の上の踊り場の白い） rail_post0 左端",
+   "json_m": 32.78,
+   "diff_m": -0.165,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f1"
+  },
+  {
+   "what": "L3 大窓 下端",
+   "json_m": 11.7,
+   "diff_m": -0.135,
+   "ok": true,
+   "action": "甲板の組は −0.35（窓下の濃い板の下の縁 11.45 を拾う取り違え。同じ写真で窓下パネルの線は ±0.04）。地上の写真は ±0.15。値は直さない",
+   "face": "f1"
+  },
+  {
+   "what": "パラペット上端",
+   "json_m": 25.3,
+   "diff_m": -0.133,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "L4 大窓 下端",
+   "json_m": 16.0,
+   "diff_m": 0.032,
+   "ok": true,
+   "action": "甲板の組だけ −0.16〜−0.21。地上の写真は ±0.09。値は直さない",
+   "face": "f1"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "parts": [
+  {
+   "what": "外階段（直進 2 本と踊り場）＋白い手すり（f1）",
+   "role": "歩道から甲板・通路橋の高さへの外階段",
+   "size_ok": true,
+   "size": "幅 1.8 m、踊り場 6.6 m",
+   "in_aerial": "地上",
+   "action": "通す（下の段の右端が鎖の 3 枚で −0.27〜−0.30、他は ±0.2 で散る。真横の撮影依頼のまま）",
+   "photos": [
+    "PXL_20261103_075510510",
+    "PXL_20261103_075517975",
+    "PXL_20261103_075500328"
+   ]
+  },
+  {
+   "what": "壁付けの室外機 2 台（f1 の列 9 の L1、asset）",
+   "role": "室外機",
+   "size_ok": true,
+   "size": "0.8 × ? × 0.65 m（室外機の目安 0.6〜2 m）",
+   "in_aerial": "—",
+   "action": "通す（075510510 の重ねで通路橋の下に 2 台。photoproj の「縁の裏付けなし」は甲板の組の 3 枚＝登録の確かめの依頼の組）",
+   "photos": [
+    "PXL_20261103_075517975",
+    "PXL_20261103_075510510"
+   ]
+  }
+ ],
+ "note": ""
+}

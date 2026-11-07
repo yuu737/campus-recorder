@@ -1,0 +1,86 @@
+{
+ "schema": "kazoe-count/1",
+ "schema_note": "係の定義 .claude/agents/kazoe.md の出力の形（bays・floors・interpreted・segments・exceptions・disagreement・requests）。数と比だけで寸法（m）は書かない",
+ "made_by": "数え係（kazoe・claude-opus-5-5）",
+ "made_at": "2026-11-07T09:53:29+09:00",
+ "building": "library",
+ "faces_from": "観察票 data/reports/library/kansatsu_<面>.json（面 id は仕分け係 out/photos/shiwake_library.json の face_key、土台は out/library/tmp/library.json）",
+ "gate": "根拠の写真は全部、索引 data/photos/index.json で building=library、faces にこの面を含み、確からしさ high（low の写真は使っていない）",
+ "images": "拡大・正面化の画像は out/library/kazoe/（git に入らない）。写真そのものは data/photos/",
+ "words": "段＝窓の段（下から L1〜L5、観察票と同じ名前）。列＝柱型で区切られた柱割りの区画（bays）",
+ "face": "f2",
+ "face_name": "西北西面（方位 298°）。本部棟の側",
+ "direction": "左端（from）＝北西の角、右端（to）＝南西の角（外から見て左が北）",
+ "bays": {
+  "value": null,
+  "not_applicable": true,
+  "why": "柱割りが無い（柱型の繰り返しが無く、北の凹み・銘板の柱型・正面入口の凹み・横長の枠・南西の角の窓の列の組み合わせ）。無地ではないので、区間は segments に並べた。unknown（見えない）とは違う",
+  "evidence": [
+   "PXL_20261103_075639031",
+   "PXL_20261105_063115879.MP",
+   "PXL_20261105_064514061"
+  ],
+  "method": "正面化した 075639031（入口）・063115879（北寄り）と南西の角の 064514061 で、柱型の繰り返しが無いのを見た。南寄りの中ほどは本部棟に隠れて正面からは見えないが、南西の角の写真で横長の枠が角まで続くのが見える"
+ },
+ "floors": {
+  "value": 5,
+  "status": "measured",
+  "what": "写真で見えた段の数（L1〜L5）。L1 は入口の床（甲板と同じ高さ）より下の段",
+  "evidence": [
+   "PXL_20261103_075639031",
+   "PXL_20261105_064514061",
+   "PXL_20261105_064524057",
+   "PXL_20261105_063115879.MP"
+  ],
+  "method": "2 枚を目印でつないだ：(1) 正面化した 075639031 で、入口の床から上に L2〜L4（入口の南の 3 段の横長の彫り込みの板、間隔 約 228 px）と L5（帯窓 1・縦長の小窓 2）の 4 段。L1 は大階段の下で隠れる。(2) 南西の角の 064514061・064524057 で、f2 側に L2〜L4 の窓 3 段と、L2 の窓下板の下から路地の植え込みまで無窓の壁（L1、段の間隔の約 1.2 倍）。f3 側の西端の列の L1〜L5 と段が揃う。つなぎの目印：L2〜L4 の横長の枠の段（観察票：入口の南から南西の角まで続く）と一直線のパラペット。北寄りの 063115879 でも L2〜L3 の北の凹み・L4 の枠と窓・L5 の小窓が同じ段に当たる"
+ },
+ "interpreted": [],
+ "interpreted_note": "甲板の下（北寄りの L1）は写真が無く見えない（観察票の unknown）。段の数には影響しないので依頼は出していない",
+ "segments": [
+  {
+   "order": 1,
+   "what": "北西の角の柱型（甲板の高さから上。下は北西の角の軒下）",
+   "width_ratio": "W の約 0.1 以下"
+  },
+  {
+   "order": 2,
+   "what": "北の凹み（L2〜L3）。上の L4 に横長の枠と窓 1、L5 に小窓 1",
+   "width_ratio": "W の約 1.07。北の角から凹みまで W の約 0.12"
+  },
+  {
+   "order": 3,
+   "what": "銘板の柱型（無地の壁）",
+   "width_ratio": "W の約 0.52"
+  },
+  {
+   "order": 4,
+   "what": "正面入口の凹み（L2〜L4）。L5 に同じ幅の帯窓と左右の小窓",
+   "width_ratio": "W＝1（窓の段の間隔の約 2.0）"
+  },
+  {
+   "order": 5,
+   "what": "入口の南の壁（L2〜L4 に横長の彫り込みの板）",
+   "width_ratio": "W の約 0.55 以上（右端は本部棟に隠れる）"
+  },
+  {
+   "order": 6,
+   "what": "南の路地に面する壁（L2〜L4 の横長の枠が南西の角へ）",
+   "width_ratio": null
+  },
+  {
+   "order": 7,
+   "what": "南西の角の窓の列（L2・L3・L4 に窓 1 ずつ）",
+   "width_ratio": null
+  }
+ ],
+ "segments_note": "観察票 kansatsu_f2.json の segments（W＝正面入口の凹みの幅に対する比。面の両端が 1 枚に入らないので面の長さに対する比は無い）をそのまま使った。数え係は区間の並びを 075639031・063115879 の正面化で見直し、同じ並びだった。比は読み直していない",
+ "exceptions": [
+  "正面入口の凹みだけ 3 段分（L2〜L4）。北の凹みは 2 段分（L2〜L3）",
+  "L5 は帯窓 1 と縦長の小窓 2（入口の左右）だけ",
+  "南西の角の窓は段ごとに形と大きさが違う（L2 が最大）",
+  "L1 は見えた所（南西の角）では無窓"
+ ],
+ "disagreement": [],
+ "disagreement_note": "観察票 kansatsu_f2.json（柱割り無し・段 5）と同じ",
+ "requests": []
+}

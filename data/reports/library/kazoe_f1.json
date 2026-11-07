@@ -1,0 +1,61 @@
+{
+ "schema": "kazoe-count/1",
+ "schema_note": "係の定義 .claude/agents/kazoe.md の出力の形（bays・floors・interpreted・segments・exceptions・disagreement・requests）。数と比だけで寸法（m）は書かない",
+ "made_by": "数え係（kazoe・claude-opus-5-5）",
+ "made_at": "2026-11-07T09:53:29+09:00",
+ "building": "library",
+ "faces_from": "観察票 data/reports/library/kansatsu_<面>.json（面 id は仕分け係 out/photos/shiwake_library.json の face_key、土台は out/library/tmp/library.json）",
+ "gate": "根拠の写真は全部、索引 data/photos/index.json で building=library、faces にこの面を含み、確からしさ high（low の写真は使っていない）",
+ "images": "拡大・正面化の画像は out/library/kazoe/（git に入らない）。写真そのものは data/photos/",
+ "words": "段＝窓の段（下から L1〜L5、観察票と同じ名前）。列＝柱型で区切られた柱割りの区画（bays）",
+ "face": "f1",
+ "face_name": "北北東面（方位 28°）。タワー75 との間の坂の道に沿う",
+ "direction": "左端（from）＝北東の角、右端（to）＝北西の角（外から見て左が東）。列は東から 1〜9",
+ "bays": {
+  "value": 9,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261103_075437320",
+   "PXL_20261105_063449740",
+   "PXL_20261103_075500328"
+  ],
+  "method": "両端が入る 2 枚で別々に数えて一致：(1) 075437320（北東の角の道から西を見通す。左端に f0 の張り出し箱、右端の先は空）で、L5 の小窓の組・L4 の大窓を東から数えて 9。(2) 063449740（甲板の西端から東を見通す。右端に北西の角の独立柱、左端の先は共通講義棟東）で、西から数えて 9。2 枚とも縦樋 4 本が同じ所（列 1|2・3|4・6|7・8|9 の柱型の上）にあり、縦樋で区切った列の数が 1・2・3・2・1 で同じ。(3) 正面化した 075500328（観察票の out/library/kansatsu/rect/f1_075500328/）で列 1〜8 と列 9 の始まりが同じ縦樋の並びで見える（3 枚目の確かめ）。拡大は out/library/kazoe/f1_075437320_right.jpg・_topright.jpg、f1_063449740_eastend.jpg・_west.jpg",
+  "landmarks": "縦樋（ピンク色の細い管）4 本：列 1|2・3|4・6|7・8|9 の柱型の上。面の中心に対して左右対称",
+  "cross_check": "参考：PLATEAU の足元で f1 と f3 の辺の長さは同じ 49.4 m（out/library/tmp/library.json）。f3 も写真で 9 と数えた（kazoe_f3.json）ので食い違いは無い。長さは根拠にしていない"
+ },
+ "floors": {
+  "value": 5,
+  "status": "measured",
+  "what": "写真で見えた窓の段の数（L1〜L5）。地面より下は含まない",
+  "evidence": [
+   "PXL_20261103_075437320",
+   "PXL_20261103_075500328",
+   "PXL_20261103_075153504"
+  ],
+  "method": "075437320 と正面化した 075500328 の 2 枚で、全部の列に L1（無窓の板）・L2〜L4（大窓）・L5（小窓 2 つ）の 5 段を数えた。063449740 は甲板の手すりで L1 が隠れ L2〜L5 の 4 段が見える（甲板の床が L2 の床の高さなので食い違いではない）。北東の角の 075153504 で f0 の北の窓の列（L2〜L4）の上端が f1 の L2〜L4 の凹みの上端と揃うのを確かめた（拡大 out/library/kazoe/f0f1_075153504_corner.jpg）",
+  "cross_check": "参考：PLATEAU の storeysAboveGround 5・OSM の building:levels 5 と合う（根拠にはしていない）"
+ },
+ "interpreted": [],
+ "interpreted_note": "f1 では地面より下の段は見えない。L1 の帯は見える高さが窓の段の間隔の約 1.4 倍（列 1〜4、観察票の比と正面化の拡大）で、列 2・3 の L1 には濃い色の四角が上下 2 段ある（下の段は歩道の高さ。拡大 out/library/kazoe/f1_075500328_L1.jpg）。1 つの高い段か、半分沈んだ段を含むかは写真で決まらないので、段は 1 と数えた。地下の段の仮説は f0 の空堀の所に書いた（kazoe_f0.json の interpreted）",
+ "segments": [
+  {
+   "what": "東端の柱型（北東の角）",
+   "from": "0（1 列目の前）",
+   "width_ratio": "約 0.19（正面化した 075500328 で角の柱型 約 30 px・中の柱型 約 28 px・柱間 約 158 px。中の柱型とほぼ同じなので細いスパンではない）"
+  },
+  {
+   "what": "西端の柱型（北西の角）。甲板の高さから L3 までは独立して立つ柱、L4 から上は普通の出隅",
+   "from": "9 列目の後",
+   "width_ratio": "未測（063449740 の斜めでは中の柱型と同じくらい。正面化していない）"
+  }
+ ],
+ "segments_note": "列 7〜9 の L2〜L3 の凹み・軒下は、L4・L5 で同じ柱割りが続き、列の幅も同じ（正面化 075500328 で列 7・8 が約 130 px、063449740 で列 9 の幅の伸びが遠近の伸びと同じ）なので、bays に数え、作りの違いは exceptions に書いた",
+ "exceptions": [
+  "L5 だけ小窓 2 つずつ（列 1〜9 全部。075437320・063449740 で各列 2 つを確かめた）",
+  "L1 だけ無窓の板（各列で縦 3 枚の凹んだ板）。列 2・3 の L1 にだけ濃い色の四角が上下 2 段 × 左右 2（075500328 の正面化）",
+  "列 7・8 の L2〜L3 は 2 段分の凹みの全面ガラス、列 9 の L2〜L3 は開いた軒下（奥に風除室）。L4・L5 は他の列と同じ（063449740・075437320）"
+ ],
+ "disagreement": [],
+ "disagreement_note": "観察票 kansatsu_f1.json（列 9・段 5）と同じ数",
+ "requests": []
+}

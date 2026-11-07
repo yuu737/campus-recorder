@@ -1,0 +1,138 @@
+{
+ "schema": "kansatsu-observation/1",
+ "schema_note": "見本 out/tower75_観察票.json（tower75-observation/1）は出発点（--zero）で退避されて無く、trial/ は読まない決まりなので、係の定義の項目名で書いた",
+ "made_by": "観察係（kansatsu・claude-opus-5-5）",
+ "made_at": "2026-11-07T09:45:00+09:00",
+ "building": "library",
+ "faces_from": "out/library/tmp/library.json（`recorder new library --from-site --dir out/library/tmp` の一時の土台。data/buildings/ には書いていない）。面 id は仕分け係 out/photos/shiwake_library.json の face_key と同じ",
+ "no_dimensions": "寸法（m）は書かない。比は窓の段の間隔（＝階高の代わり）・列の間隔・面の長さに対する比。正面化の比は `recorder photos rectify` の画像（out/library/kansatsu/rect/）の px の比で、寸法ではない",
+ "images": "拡大・正面化の画像は out/library/kansatsu/（crop_*.jpg、rect/、roof/）。写真そのものは git に入らない",
+ "face": null,
+ "target": "屋上（面ではない。数え係は読み飛ばしてよい）",
+ "source_photos": [
+  "PXL_20261105_070904733",
+  "PXL_20261103_080014086",
+  "PXL_20261105_064951872",
+  "PXL_20261103_080029484",
+  "PXL_20261105_065101059",
+  "PXL_20261103_075639031",
+  "PXL_20261103_075629456",
+  "PXL_20261103_075623165"
+ ],
+ "source_other": [
+  "gsi:aerial_z18（out/site/aerial_z18.png）"
+ ],
+ "roof_tool": {
+  "command": "`recorder photos roof out/library/tmp/library.json --out-dir out/library/kansatsu/roof`",
+  "result": "屋上の縁の候補の 1 位と 2 位が近い（ambiguous）。低い建物の検算でもずれが大きいと警告。倒れ込みは決まっていない",
+  "images": [
+   "out/library/kansatsu/roof/roof_aerial.png",
+   "out/library/kansatsu/roof/roof_grid.png（倒れ込み 1 位で戻した足元に 1 割ごとの格子。u＝西 0→東 1、v＝南 0→北 1）",
+   "out/library/kansatsu/roof/aerial_context.png（周りの棟の足元）"
+  ]
+ },
+ "items_aerial": [
+  {
+   "what": "平らな屋根面（暗い灰色）",
+   "where": "北東半分（v ≈ 0.6–1.0 の全体と、u ≈ 0.6–1.0 の v ≈ 0.35 から北）",
+   "height": "パラペットの内側の基準の屋根面と読む"
+  },
+  {
+   "what": "中央の囲い（明るい縁の長方形、中に明るい筋 3〜4 本）",
+   "where": "u ≈ 0.40–0.65、v ≈ 0.25–0.55",
+   "height": null,
+   "height_why": "縁の内側に暗い帯（影）があり、凹みか天窓の列か盛り上がりか航空写真だけでは決めない"
+  },
+  {
+   "what": "小さい囲い 2（中が暗い）",
+   "where": "中央の囲いのすぐ北（u ≈ 0.48–0.60、v ≈ 0.55–0.65）",
+   "height": null,
+   "height_why": "同上"
+  },
+  {
+   "what": "長い盛り上がり A（f1・f3 に平行、西の端に明るい四角＝道具の設備 3）",
+   "where": "u ≈ 0.05–0.40、v ≈ 0.45–0.65",
+   "height": null,
+   "height_why": "北西側に暗い帯（影）があるので盛り上がりと読めるが、高さは決めない"
+  },
+  {
+   "what": "長い盛り上がり B（f3 寄り、上面に細かい横の筋）",
+   "where": "u ≈ 0.10–0.65、v ≈ 0.05–0.30",
+   "height": null,
+   "height_why": "北側に暗い帯（影）。設備の囲いか天窓か決めない"
+  },
+  {
+   "what": "東寄りの枠（中が暗い）",
+   "where": "u ≈ 0.85–0.95、v ≈ 0.20–0.45（f0 の壁の近く）",
+   "height": null,
+   "height_why": "塔の上面か、凹み（光庭）か決められない"
+  },
+  {
+   "what": "南東の角の近くの明るい細長い物（道具の設備 1）",
+   "where": "u ≈ 0.80–0.88、v ≈ 0.05–0.15",
+   "height": null,
+   "height_why": "塔の上面の候補の 1 つ（塔は高いので倒れ込みが屋根より大きく、戻しの量が違う）"
+  }
+ ],
+ "items_aerial_note": "航空写真の南西の外（11 号館の足元）は芝と小道の緑の屋根（11 号館の屋上庭園）で、図書館の物ではない",
+ "items_ground": [
+  {
+   "what": "塔（タイル貼りの細長い箱、上に細いアンテナ）",
+   "count": 1,
+   "where": "f0 の南から 2〜3 割の所、f0 の壁から奥",
+   "ratio": "パラペットから出る高さは窓の段の間隔の約 1.1 倍以上（見える部分）",
+   "from_photos": [
+    "PXL_20261105_070904733",
+    "PXL_20261103_080014086",
+    "PXL_20261105_064951872",
+    "PXL_20261103_080029484",
+    "PXL_20261105_065101059"
+   ]
+  },
+  {
+   "what": "塔の北の低い盛り上がり",
+   "count": 1,
+   "where": "f0 側のパラペットの上に少し見える",
+   "from_photos": [
+    "PXL_20261103_080014086",
+    "PXL_20261105_064951872"
+   ]
+  },
+  {
+   "what": "f2 のパラペットの上に見える盛り上がり",
+   "count": 2,
+   "where": "正面入口の中心から左右対称（kansatsu_f2.json の top）",
+   "ratio": "各幅は入口の凹みの幅の約 0.4、出る高さは段の間隔の約 0.18（見える部分）",
+   "from_photos": [
+    "PXL_20261103_075639031",
+    "PXL_20261103_075629456"
+   ],
+   "guess": "航空写真の長い盛り上がり A・B の西の端の可能性（未確定）"
+  }
+ ],
+ "rooftop_units_hint": "航空写真の物は高さ（盛り上がりか凹みか）が決まらないので、設計係は塔（地上の写真で確か）を先に置き、残りを置くなら estimated で広い tol（sekkei の規則）。PXL_20261105_065508197（棟 null）には小さな白い丸屋根と白い小箱と屋根の段が写るが、棟が未確認なので使っていない",
+ "unknown": [
+  {
+   "what": "屋上の物の高さと、盛り上がりか凹みか",
+   "value": null,
+   "why": "航空写真は 1 枚で倒れ込みが決まらず、影だけでは高さが決まらない。地上からはパラペットの上に出る部分しか見えない"
+  },
+  {
+   "what": "塔の位置（航空写真の上での対応）",
+   "value": null,
+   "why": "候補が 2 つ（東寄りの枠・南東の明るい物）"
+  }
+ ],
+ "questions": [
+  "PXL_20261105_065508197（棟 null、共通講義棟東の上の階から西）は図書館の f0 の上部と屋上の塔・白い丸屋根を写しているように見える。職員が library と確かめれば屋上の根拠になる"
+ ],
+ "requests": [
+  {
+   "kind": "photo",
+   "face": null,
+   "what": "図書館の屋上全体を見下ろす写真 2〜3 枚（塔・中央の囲い・長い盛り上がり 2・小さい囲いが入るように）",
+   "where": "タワー75 の上の階（図書館の北）の窓か、共通講義棟東の上の階（東）",
+   "why": "航空写真だけでは屋上の物の高さと形が決まらない"
+  }
+ ]
+}

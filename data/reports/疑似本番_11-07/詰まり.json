@@ -21,6 +21,515 @@
     "proposal": "--zero は初期語彙の承認（vocab.json が参照する決定）を残し、棟ごとの決定だけを空にする。agent decide に --by（代役のモデル名）を足す"
    },
    "status": "worked_around"
+  },
+  {
+   "id": "J-002",
+   "at": "2026-11-07T08:39:17+09:00",
+   "building": "all",
+   "step": "satsuei",
+   "agent": "satsuei",
+   "kind": "other",
+   "symptom": "撮影係の出力の置き場が依頼文（out/<棟>/satsuei_checks.json）と _共通.md（係の報告は data/reports/<棟>/）で食い違い、係が質問として返した。kyotsu-minami の係は両方に書き、honbu・library は out/ だけ",
+   "evidence": [
+    "out/<棟>/agent_tasks.md の 1. satsuei の依頼文",
+    "_共通.md の出力の行",
+    "係の報告（honbu・library・kyotsu-minami）"
+   ],
+   "action": "other",
+   "effect": "結果は変わらない。out/ は再生成で消えるので、撮影係の返事が git に残らない棟がある",
+   "fix_for_honban": {
+    "target": "prompt",
+    "where": "recorder/agents.py の satsuei の依頼文（STEPS）と recorder/report.py の読み先",
+    "proposal": "撮影係の出力を data/reports/<棟>/satsuei_checks.json に揃え、report はそちらを先に読む"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-003",
+   "at": "2026-11-07T08:39:17+09:00",
+   "building": "all",
+   "step": "satsuei",
+   "agent": "satsuei",
+   "kind": "other",
+   "symptom": "撮影係（Haiku）は写真を開かず、索引の checks・candidates だけで判定した。人の顔・ナンバー・研究室・掲示物（決まり 4）は 3 棟とも目視していない",
+   "evidence": [
+    "係の報告：写真の中身（人の顔・ナンバー・貼り紙）は目視していない（honbu・library・kyotsu-minami）"
+   ],
+   "action": "other",
+   "effect": "決まり 4 の確かめは仕分け係（目視する）に寄る。撮影係の段では漏れる",
+   "fix_for_honban": {
+    "target": "prompt",
+    "where": "recorder/agents.py の satsuei の依頼文、.claude/agents/satsuei.md",
+    "proposal": "撮影係の依頼文に『写真を縮小して開き、顔・ナンバー・研究室・掲示物が写る物は privacy に写真 id と理由』を足す。または仕分け係の出力に privacy の欄を必須にする"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-004",
+   "at": "2026-11-07T09:01:43+09:00",
+   "building": "all",
+   "step": "shiwake",
+   "agent": "shiwake",
+   "kind": "tool_error",
+   "symptom": "recorder photos set-face は building: null の行でも face・faces を上書きする（共通講義棟南の仕分け係の報告）。棟が別の棟に決まった写真を、別の列の仕分け係が null の棟で出すと、先の列が書いた面が消える。今回は係が気づいて excluded_not_this_building に分けたので起きていない",
+   "evidence": [
+    "kyotsu-minami の仕分け係の報告：set-face は building: null の行でも face・faces を上書きするため photos に入れなかった",
+    "recorder/photos.py:548 set_faces（棟の skipped はあるが、面は棟の一致を見ていない疑い）"
+   ],
+   "action": "other",
+   "effect": "今回は無し（係の回避）",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/photos.py set_faces",
+    "proposal": "索引の棟が入力の building（null なら呼び出した棟）と違う写真は、face・faces も書かず skipped に理由を出す。set-face に --building を必須にして、その棟の写真だけ書く"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-005",
+   "at": "2026-11-07T09:31:09+09:00",
+   "building": "kyotsu-minami",
+   "step": "kansatsu",
+   "agent": "kansatsu",
+   "kind": "agent_error",
+   "symptom": "観察係の定義が書式の見本に out/tower75_観察票.json を指すが、--zero で trial/ に退避されて無い。係は読まない約束を守り、定義から書式を組んだ（schema tower75-observation/1）",
+   "evidence": [
+    ".claude/agents/kansatsu.md の見本の指し先",
+    "docs/手順_エージェント.md「観察票 → 設計」の out/tower75_観察票.md/.json が見本"
+   ],
+   "action": "other",
+   "effect": "棟ごとに観察票の書式が揺れる恐れ（設計係の読み取り）",
+   "fix_for_honban": {
+    "target": "agent_def",
+    "where": ".claude/agents/kansatsu.md と tests/fixtures/",
+    "proposal": "観察票の見本を前の答えを含まない形で tests/fixtures/kansatsu_example.json に置き、定義はそれを指す"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-006",
+   "at": "2026-11-07T09:31:09+09:00",
+   "building": "kyotsu-minami",
+   "step": "kansatsu",
+   "agent": "kansatsu",
+   "kind": "tool_error",
+   "symptom": "recorder new --from-site の土台で、面の名前の番号が id とずれる（例：f17 の名前が「東南東面 18」）",
+   "evidence": [
+    "data/reports/kyotsu-minami/kansatsu_building.json の requests（kind: tool）",
+    "out/kyotsu-minami/tmp/kyotsu-minami.json"
+   ],
+   "action": "unknown_request",
+   "effect": "名前で面を言うと 1 つずれる取り違えの元。id で指せば影響なし",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/skeleton.py（from_site の面の名前）",
+    "proposal": "面の名前の番号を id の番号と揃える（2 m 未満の辺を飛ばした後に付け直す）"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-007",
+   "at": "2026-11-07T09:35:07+09:00",
+   "building": "all",
+   "step": "kansatsu",
+   "agent": "kansatsu",
+   "kind": "agent_error",
+   "symptom": "同時に動く係が同じ作業フォルダ（scratchpad 直下）を使い、ファイル名がぶつかった。2 回：①本部棟の観察係の wk0.py が図書館の観察係の物で上書き、wk_all.py を消した ②共通講義棟南の数え係の crop.py がタワー75 の数え係の物で上書きされ、out/tower75/kazoe/ に 2 枚を誤って書いて消した（他の棟の out/ に書いた）。観察票の schema 名も棟で揃っていない（tower75-observation/1 と kansatsu-observation/1）",
+   "evidence": [
+    "honbu の観察係の報告（スクラッチパッドの名前のぶつかり）",
+    "data/reports/library/kansatsu_*.json の schema と data/reports/honbu/kansatsu_*.json の schema"
+   ],
+   "action": "other",
+   "effect": "係の作業用の一時ファイルが壊れる恐れ。出力（data/reports/）には影響なし（係が分けて回避）",
+   "fix_for_honban": {
+    "target": "prompt",
+    "where": "recorder/agents.py の依頼文の共通部分（_共通.md）",
+    "proposal": "作業用の一時ファイルは <scratchpad>/<棟id>_<係>/ の下だけに置くと共通の依頼文に足す。本番の API では工程ごとに作業フォルダを分けて渡す。観察票の schema 名を 1 つに決めて見本を置く（J-005）"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-008",
+   "at": "2026-11-07T09:54:09+09:00",
+   "building": "all",
+   "step": "satsuei・shiwake・kazoe",
+   "agent": "(複数)",
+   "kind": "agent_error",
+   "symptom": "依頼文の「短い Markdown」が、パスを名指ししない工程（撮影・仕分け・数え）では係がファイルを作らず返事に書いた（Claude Code のサブエージェントの既定「報告用の .md を作らない」が勝つ）。観察係はパスが名指しなので kansatsu.md を書いた",
+   "evidence": [
+    "honbu・tower75 の仕分け係、honbu の数え係の報告：報告用の .md ファイルを作らない決まりのため返事に書いた"
+   ],
+   "action": "other",
+   "effect": "短い報告が git に残らない工程がある（中身は JSON に揃っている）",
+   "fix_for_honban": {
+    "target": "prompt",
+    "where": "recorder/agents.py の依頼文の共通部分",
+    "proposal": "短い Markdown の置き場を data/reports/<棟>/<係>.md と名指しする。API の本番は SDK の system が係の定義だけなので起きない見込みだが、文は揃える"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-009",
+   "at": "2026-11-07T10:40:27+09:00",
+   "building": "library",
+   "step": "sokuryo",
+   "agent": "sokuryo",
+   "kind": "gate",
+   "symptom": "recorder new --from-site の土台が面の長さに ±1 m を書くが、validate は PLATEAU 3% の下限（39.45 m なら ±1.18 m）より小さいと警告する。測量係の後の validate --strict が土台のままで NG（警告 4）",
+   "evidence": [
+    "recorder validate --strict data/buildings/library.json → faces[f0].length: ±1 m は物差し（PLATEAU 3.0%）の下限 ±1.183 m より小さい ほか 3 件"
+   ],
+   "action": "other",
+   "effect": "測量係の値ではない（土台の道具の値）。設計係が design スクリプトで土台を作り直す時に直す（K-002）。直らなければ設計係に 1 回差し戻す",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/skeleton.py（from_site の faces[].length の tol）",
+    "proposal": "土台の面の長さの tol を物差しの許容（PLATEAU 3%）から出す（max(1.0, 0.03×長さ)）。道具どうしで矛盾しないようにテストを足す"
+   },
+   "status": "worked_around"
+  },
+  {
+   "id": "J-010",
+   "at": "2026-11-07T10:40:27+09:00",
+   "building": "library",
+   "step": "sokuryo",
+   "agent": "sokuryo",
+   "kind": "tool_error",
+   "symptom": "土台の parapet_top が PLATEAU の最高の高さ 33.7 m（屋上の塔を含む）で、compare の高さの原点が約 8 m ずれる。測量係は f0 で測ったパラペット 25.3 m を入れた写し out/library/sokuryo/library_compare_base.json に compare をかけ、--lines に z_named も渡して登録した（手順からはみ出し）",
+   "evidence": [
+    "library の測量係の報告",
+    "data/reports/library/sokuryo_f0.json",
+    "out/library/sokuryo/library_compare_base.json"
+   ],
+   "action": "other",
+   "effect": "登録 33 枚の視点はもっともらしい（地面から 1〜2 m）。写しを使った登録の出どころが台帳から追いにくい",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/skeleton.py の parapet_top、recorder photos compare の高さの原点",
+    "proposal": "土台の parapet_top は PLATEAU の最高ではなく屋根面の代表（中央値）か unknown にする。compare に --parapet-z（測った値）を渡せるようにし、写しを作らない"
+   },
+   "status": "worked_around"
+  },
+  {
+   "id": "J-011",
+   "at": "2026-11-07T10:40:28+09:00",
+   "building": "library",
+   "step": "sokuryo",
+   "agent": "(進行役)",
+   "kind": "vocab",
+   "symptom": "測量係が「registry の exclude（木の遮蔽）を書く道具が無い」を requests の kind: tool で出し、agent events が vocab の事件にした。本番の run_pipeline は vocab で止まる（手順書「run_pipeline は stuck/vocab/asset で止まる」）ので、語彙でない道具の不足で本番の流れが止まる",
+   "evidence": [
+    "recorder agent events library → [vocab]（fable）requests に kind tool の open が 1 件",
+    "data/buildings/library.json の requests（by sokuryo）"
+   ],
+   "action": "unknown_request",
+   "effect": "open のまま残す（K-003）。f0 の面の写真に木が貼られたまま",
+   "fix_for_honban": {
+    "target": "pipeline",
+    "where": "recorder/agents.py detect_events と schema の requests.kind",
+    "proposal": "kind: tool を語彙（vocab）と道具の不具合（tool_bug）に分け、tool_bug は記録だけで流れを止めない。registry の exclude を書くコマンド（photos exclude <写真> --face --rect）を足す"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-012",
+   "at": "2026-11-07T10:40:50+09:00",
+   "building": "honbu・kyotsu-minami",
+   "step": "sokuryo",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "photos register-chain が台帳の鍵 ledger を照合（特徴点の突き合わせ）の間ずっと持つ。①測量の終わり（10:36〜10:52）に本部棟・共通講義棟南の register・register-chain が 77〜787 秒待った ②15:04 前後に図書館の検収係の register-chain の間、本部棟・共通講義棟南の目印係の pnp と tower75 の landmarks が 228〜801 秒待った（本部棟の目印係は約 15 分待ったと報告）",
+   "evidence": [
+    "out/.locks/waits.jsonl：10:36:27 register honbu 787 s、10:52:38 register kyotsu-minami 530 s、15:04:09 pnp honbu 801 s、15:04:11 pnp kyotsu-minami 622 s、15:04:01 landmarks tower75 441 s",
+    "本部棟の目印係の報告（図書館の register-chain が鍵を持ち続け約 15 分待った）"
+   ],
+   "action": "other",
+   "effect": "結果は変わらない（待つだけ）。4 棟が測量の終わりで重なると待ちが積み上がる",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/__main__.py の LEDGER_WRITERS（register-chain・register-sfm）と recorder/registry.py",
+    "proposal": "照合は鍵の外で行い、台帳を読み直して書く所だけ鍵を持つ（読む→計算→鍵を取って読み直し→差分を書く）"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-013",
+   "at": "2026-11-07T10:56:06+09:00",
+   "building": "kyotsu-minami",
+   "step": "sokuryo",
+   "agent": "sokuryo",
+   "kind": "tool_error",
+   "symptom": "①登録台帳から古い登録を外すコマンドが無い（地面を直す前に鎖で登録した 3 枚が、高さ 0.2〜1 m ずれたまま残る）②coverage が隠れを見ないので、鎖の登録の視点が見えていない面（f0・f3・f11・f18）にも投影され、北翼・木・ガラスの箱が貼られる。exclude を書く道具も無い（J-011 と同じ根）",
+   "evidence": [
+    "kyotsu-minami の測量係の報告",
+    "data/reports/kyotsu-minami/sokuryo_f17.json・sokuryo_f19.json の requests（kind tool）",
+    "out/kyotsu-minami/coverage_f3_photo.png ほか"
+   ],
+   "action": "other",
+   "effect": "設計係は f0・f3・f11・f18 の製図板を使えない。古い 3 枚の登録が recheck に混ざる",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/registry.py（unregister・exclude のコマンド）、recorder/coverage.py（深度で隠れを見る）",
+    "proposal": "photos unregister <写真> --reason、photos exclude <写真> --face --rect を足す。coverage は photoproj と同じ深度の判定で隠れた所に貼らない"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-014",
+   "at": "2026-11-07T13:52:37+09:00",
+   "building": "all",
+   "step": "sekkei（honbu・library・kyotsu-minami）・sokuryo（tower75）",
+   "agent": "sekkei・sokuryo",
+   "kind": "agent_error",
+   "symptom": "Claude Code の使用量の 5 時間の上限に 10:58 頃に当たり、同時に動いていた Opus の係 4 本が全部途中で落ちた（HTTP 429 rate_limit、解除 13:50）。08:35 の始まりから約 2.4 時間、Opus の係 20 本（仕分け〜測量）で約 650 万トークン",
+   "evidence": [
+    "task-notification：Agent terminated early due to an API error: You have hit your 5-hour limit · resets 1:50pm",
+    "data/reports/<棟>/pipeline_*.json の tokens（〜測量）"
+   ],
+   "action": "retry",
+   "effect": "約 2 時間 53 分の停止（10:58〜13:51）。係の作業は保存されていて SendMessage で続きから再開できる。落ちた回のトークンは不明",
+   "fix_for_honban": {
+    "target": "pipeline",
+    "where": "recorder/agents.py run_pipeline（API の本番）、費用の上限",
+    "proposal": "本番の API では 1 棟あたりのトークンが 150〜200 万（仕分け〜測量だけで 1 棟 120〜150 万）と見込み、組織の速度の上限（ITPM・OTPM）に合わせて同時の棟数を決める。429 は指数で待って同じ工程を続きから（会話を保存して）やり直す。工程ごとのトークンを本番前に見積もる表を README に"
+   },
+   "status": "worked_around"
+  },
+  {
+   "id": "J-015",
+   "at": "2026-11-07T14:08:39+09:00",
+   "building": "library",
+   "step": "sekkei",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "requests の kind: check（規則で決まらない争点）が recorder agent events に出ない。事件の検出は out/<棟>/soten.json の open だけを見ていて、設計係が棟 JSON の requests に書いた check 2 件（入口の床と敷地の境目、面ごとの階高の差）は事件にならない",
+   "evidence": [
+    "recorder agent events library の出力（vocab・human だけ）",
+    "data/buildings/library.json の requests（kind check 2 件）",
+    "recorder/agents.py:476-480（soten.json だけを見る）"
+   ],
+   "action": "decide",
+   "effect": "今回は進行役が依頼を読んで決めた（K-006）。本番の進行役は事件の一覧しか見ないので、この 2 件は誰にも決められずに残る",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/agents.py _building_events",
+    "proposal": "requests の kind check の open を stuck（または新しい check の事件）として出す。または設計係の定義で check は soten.json に書かせる"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-016",
+   "at": "2026-11-07T14:23:07+09:00",
+   "building": "honbu",
+   "step": "sekkei",
+   "agent": "(道具)",
+   "kind": "asset",
+   "symptom": "--zero で決定の台帳から内装の D-0002・D-0003 が消え、CC0 の台帳の table_long（D-0003 を参照）が使えなくなった。agent decide は新しい id（連番）を振るので、approve しても台帳の項目と結び付かない",
+   "evidence": [
+    "data/buildings/honbu.json の requests（kind asset）",
+    "data/assets/catalog.json の table_long.decision D-0003",
+    "recorder/decisions.py add_decision（id は max+1）"
+   ],
+   "action": "skip",
+   "effect": "ピロティの長机が箱のまま（D-0002 deny）。deny の決定を出しても requests の asset が open のまま残るので、asset の事件が工程ごとに出続ける（本番では工程ごとに止まる）",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "scripts/trial_reset.py --zero、recorder agent decide",
+    "proposal": "--zero は台帳（vocab・catalog）が参照する決定を残す（J-001 と同じ）。agent decide に --supersede <古い id> を足し、台帳の参照を道具が付け替える"
+   },
+   "status": "worked_around"
+  },
+  {
+   "id": "J-017",
+   "at": "2026-11-07T14:26:13+09:00",
+   "building": "kyotsu-minami",
+   "step": "sekkei",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "同じ平面に面が重なる塊どうしで、Blender の足し算・引き算（EXACT）が壊れて止まった。設計係は低層以外の塊の輪郭を 1〜13 cm 外へ広げ、コアの頂部の箱を composite に、段の帯の引っ込みを手前で止めて回避",
+   "evidence": [
+    "kyotsu-minami の設計係の報告",
+    "scripts/design_kyotsu-minami.py と塊の note"
+   ],
+   "action": "other",
+   "effect": "値の ± より小さい寄せ（1〜13 cm）。形の根拠には影響しない",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/blender_build.py union_bodies・check_cut",
+    "proposal": "足す前に同一平面の面を検出して 1 mm 内側へ自動で寄せる（設計係にさせない）。寄せた量を model_report に出す"
+   },
+   "status": "worked_around"
+  },
+  {
+   "id": "J-018",
+   "at": "2026-11-07T14:39:51+09:00",
+   "building": "library",
+   "step": "mejirushi",
+   "agent": "mejirushi",
+   "kind": "tool_error",
+   "symptom": "recorder photos landmarks が柱割り（bays）の無い面（library の f0・f2）では面の角 4 点と地面・段の線しか目印を出さない。窓の列・アーチの凹み・張り出し箱の縁が入らず、角が枠の外か隠れる写真は 5 点・縦横 25% の門を越えられない。f0 19 枚・f2 9 枚が登録できない",
+   "evidence": [
+    "data/reports/library/mejirushi_summary.json",
+    "out/library/landmarks/landmarks.json"
+   ],
+   "action": "skip",
+   "effect": "図書館の目印係の登録は 46 枚中 4 枚だけ（f1 2・f3 2）。f0・f2 の未登録の写真は検収に使えない",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/landmarks.py（目印の一覧）",
+    "proposal": "bays の無い面でも windows・recesses・parts（box・canopy・glazing）の縁を目印に入れる"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-019",
+   "at": "2026-11-07T14:39:51+09:00",
+   "building": "library",
+   "step": "mejirushi",
+   "agent": "mejirushi",
+   "kind": "tool_error",
+   "symptom": "手順書は足元が写っていれば地面の線 <面>-G01 を目印に足すとするが、photos pnp の既定（--method cv2）は線の対応を捨てる。線を効かせるには poselib を指定する必要がある（手順書に無い）",
+   "evidence": [
+    "data/reports/library/mejirushi_summary.json の questions",
+    "docs/手順_エージェント.md「道具の穴 4 件（11/7）」の地面の線"
+   ],
+   "action": "other",
+   "effect": "地面の線を指しても効かない写真がある",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/landmarks.py pnp の既定、docs/手順_エージェント.md",
+    "proposal": "picks に線の対応があれば既定で poselib（点＋線）に切り替える。手順書の目印の節に書く"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-020",
+   "at": "2026-11-07T14:54:09+09:00",
+   "building": "library・tower75",
+   "step": "sekkei",
+   "agent": "(手順)",
+   "kind": "data",
+   "symptom": "図書館の設計係は「甲板（天窓 2）と青い鉄骨の庇と斜路」を通路橋とまとめて敷地の依頼に、タワー75 の設計係は「西のデッキ S1・青い鉄骨の庇 S5・大階段」を棟 JSON に置いた。OSM では甲板と橋が 1 つの輪郭（osm-way-1304081004）でタワー75 に触れる。同じ物を 2 棟が別々に扱っている恐れがあるが、11 工程に敷地の検収係（shikichi）が無く、誰も突き合わせない",
+   "evidence": [
+    "data/buildings/library.json の requests（敷地に置く物）",
+    "data/buildings/tower75.json の parts（デッキ S1・庇 S5）と requests（check）",
+    "data/reports/library/kansatsu.md（osm-way-1304081004）"
+   ],
+   "action": "decide",
+   "effect": "二重計上か抜けの恐れ（K-012 で棟ごとの読みを決めたが、突き合わせはしていない）",
+   "fix_for_honban": {
+    "target": "pipeline",
+    "where": "recorder/agents.py の工程表（STEPS）",
+    "proposal": "4 棟の 9（検収）の後、10（本番の run）の前に敷地の検収係 shikichi を 1 回入れ、棟どうしの重なり（同じ OSM の輪郭を 2 棟が持つ・依頼に出す）を数字で出す"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-021",
+   "at": "2026-11-07T14:54:10+09:00",
+   "building": "tower75",
+   "step": "sekkei",
+   "agent": "sekkei",
+   "kind": "other",
+   "symptom": "手順書の規則「一直線の辺（法線の差 3° 以内）は 1 つの面にまとめて merged に残す」と、登録台帳が面ごとの座標で写真を記録することが食い違う。設計係はまとめず、1 本の格子を各辺に配って wall_group を書いた（規則から外れ、確認を求めた）",
+   "evidence": [
+    "data/buildings/tower75.json の faces[].wall_group",
+    "data/reports/tower75/sekkei_summary.json",
+    "docs/手順_エージェント.md「面の id と形」"
+   ],
+   "action": "other",
+   "effect": "規則から外れたが、登録・検収の線は面ごとに合う。進行役は道具と規則を変えないので、このまま進める",
+   "fix_for_honban": {
+    "target": "procedure",
+    "where": "docs/手順_エージェント.md「面の id と形」と recorder/registry.py",
+    "proposal": "測量係が面ごとに登録した後は面をまとめない（wall_group で格子を共有）、と規則を直す。まとめる時は登録の面 id を道具が付け替える"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-022",
+   "at": "2026-11-07T14:54:10+09:00",
+   "building": "tower75",
+   "step": "sekkei",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "recorder new --from-site の土台で、OSM の輪の最後の点が始点と同じまま残り、長さ 0 の辺ができて recorder draw の平面図が止まった。設計係が閉じ点を外して回避",
+   "evidence": [
+    "tower75 の設計係の報告",
+    "scripts/design_tower75.py"
+   ],
+   "action": "other",
+   "effect": "形は変わらない",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/skeleton.py from_site（足元の輪）",
+    "proposal": "輪の最後の点が始点と同じなら落とす。長さ 0 の辺を validate でエラーにする"
+   },
+   "status": "worked_around"
+  },
+  {
+   "id": "J-023",
+   "at": "2026-11-07T15:09:35+09:00",
+   "building": "kyotsu-minami",
+   "step": "mejirushi",
+   "agent": "mejirushi",
+   "kind": "gate",
+   "symptom": "目印係が棟 JSON の requests に直接 4 件を書き足した（design スクリプトの外）。棟 JSON は scripts/design_<id>.py の生成物で、検収係が design スクリプトを再実行すると消える。図書館の目印係は同じ理由でまとめの JSON にだけ書いた（係で扱いが割れた）",
+   "evidence": [
+    "data/buildings/kyotsu-minami.json の requests[17]〜[20]",
+    "data/reports/library/mejirushi_summary.json（棟 JSON には書かなかった理由）"
+   ],
+   "action": "other",
+   "effect": "検収係の再生成で 4 件の依頼が消える恐れ。中身は data/reports/kyotsu-minami/mejirushi.json にも残る。やり直しはさせない（値は書いていない）",
+   "fix_for_honban": {
+    "target": "agent_def",
+    "where": ".claude/agents/mejirushi.md・kenshu.md",
+    "proposal": "目印係は棟 JSON を書かない。依頼は data/reports/<棟>/mejirushi.json の requests に書き、検収係が design スクリプトの requests に写す、と定義に書く"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-024",
+   "at": "2026-11-07T15:09:35+09:00",
+   "building": "kyotsu-minami・honbu",
+   "step": "mejirushi",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "目印の一覧に部品（階段の壁・柱型・ガラスの箱・塔・外階段）の角が入らない。面の端が部品に隠れる写真は縦の線が 0〜1 本で門を越えられない（共通講義棟南 11 枚、本部棟の外階段 9 枚など）",
+   "evidence": [
+    "data/reports/kyotsu-minami/mejirushi.json",
+    "data/reports/honbu/mejirushi/mejirushi_honbu.json"
+   ],
+   "action": "skip",
+   "effect": "目印係の登録が伸びない（共通講義棟南 14 枚中 3、本部棟 62 枚中 10）",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/landmarks.py",
+    "proposal": "parts（composite の素片・stair_switchback・box・steps）の外形の角と縦の縁を目印に入れる（J-018 と合わせて）"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-025",
+   "at": "2026-11-07T15:19:43+09:00",
+   "building": "library",
+   "step": "kenshu",
+   "agent": "(道具)",
+   "kind": "stuck",
+   "symptom": "agent events の stuck が「同じ線 567 本」と出た。写真×線の数で数えるので、鎖で入った 1 組（甲板の 10 枚）の登録のずれや、弱い縁の取り違えでも数百本になる。本番の run_pipeline は stuck で止まるので、検収の後で毎回止まる見込み",
+   "evidence": [
+    "recorder agent events library → [stuck] 再検収を 2 回回しても同じ線 567 本",
+    "out/library/events.json の evidence.lines",
+    "data/reports/library/kenshu_summary.json（f1 の NG 45 本のうち 31 本は甲板の 1 組）"
+   ],
+   "action": "decide",
+   "effect": "進行役が K-013 で決めて進めた。本番では毎棟で Fable が呼ばれる",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/agents.py _building_events の stuck の判定",
+    "proposal": "面ごとに数える（写真の中央値が 0.15 m を超える線だけ）。鎖の 1 組に偏る NG・弱い縁は数えない。件数ではなく「合格していない面」の一覧で出す"
+   },
+   "status": "open"
   }
  ]
 }

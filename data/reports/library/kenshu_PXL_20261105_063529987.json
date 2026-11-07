@@ -1,0 +1,193 @@
+{
+ "building": "library",
+ "photo": "PXL_20261105_063529987",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "chain（鎖）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f1",
+   "photo_lines_pass": true,
+   "face_pass": true,
+   "n_lines_strong": 14,
+   "n_ng": 1,
+   "face_lines_max_abs_m": 0.127,
+   "part_lines_max_abs_m": 0.2,
+   "lines": [
+    {
+     "what": "窓下パネル（L2 大窓）下端",
+     "json_m": 7.15,
+     "diff_m": -0.2,
+     "ok": false,
+     "action": "地上の 3 枚で +0.30〜+0.44＝ガラスの下端（7.6）の強い縁を拾う取り違え。正面化 075500328 は +0.03。値は直さない"
+    },
+    {
+     "what": "柱型6左",
+     "json_m": 32.32,
+     "diff_m": -0.127,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "柱型8左",
+     "json_m": 43.09,
+     "diff_m": -0.115,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "柱型9左",
+     "json_m": 48.47,
+     "diff_m": -0.101,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    }
+   ]
+  },
+  {
+   "face": "f2",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 6,
+   "n_ng": 2,
+   "face_lines_max_abs_m": 0.348,
+   "part_lines_max_abs_m": 0.197,
+   "lines": [
+    {
+     "what": "入口の南の横長の彫り込みの板 L3 下端",
+     "json_m": 11.15,
+     "diff_m": 0.348,
+     "ok": false,
+     "action": "鎖の登録の散らばりか縁の取り違え。正面化 075639031・063115879.MP で合う線は値を直さない"
+    },
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） column_n 上端",
+     "json_m": 9.63,
+     "diff_m": 0.197,
+     "ok": false,
+     "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed"
+    },
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） nose_top 上端",
+     "json_m": 10.64,
+     "diff_m": -0.114,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    },
+    {
+     "what": "部品38（正面入口の黒い庇と丸柱 ） column_n 右端",
+     "json_m": 18.05,
+     "diff_m": 0.107,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    }
+   ]
+  }
+ ],
+ "face": "f1",
+ "pass": false,
+ "lines": [
+  {
+   "what": "窓下パネル（L2 大窓）下端",
+   "json_m": 7.15,
+   "diff_m": -0.2,
+   "ok": false,
+   "action": "地上の 3 枚で +0.30〜+0.44＝ガラスの下端（7.6）の強い縁を拾う取り違え。正面化 075500328 は +0.03。値は直さない",
+   "face": "f1"
+  },
+  {
+   "what": "柱型6左",
+   "json_m": 32.32,
+   "diff_m": -0.127,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "柱型8左",
+   "json_m": 43.09,
+   "diff_m": -0.115,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "柱型9左",
+   "json_m": 48.47,
+   "diff_m": -0.101,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f1"
+  },
+  {
+   "what": "入口の南の横長の彫り込みの板 L3 下端",
+   "json_m": 11.15,
+   "diff_m": 0.348,
+   "ok": false,
+   "action": "鎖の登録の散らばりか縁の取り違え。正面化 075639031・063115879.MP で合う線は値を直さない",
+   "face": "f2"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） column_n 上端",
+   "json_m": 9.63,
+   "diff_m": 0.197,
+   "ok": false,
+   "action": "部品の線のずれ（見えていない寸法 (b) の部品・細い部品・木や影の縁の取り違え）。この 1 本では値を直さない。部品ごとの判断は kenshu_summary.json の parts と changed",
+   "face": "f2"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） nose_top 上端",
+   "json_m": 10.64,
+   "diff_m": -0.114,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f2"
+  },
+  {
+   "what": "部品38（正面入口の黒い庇と丸柱 ） column_n 右端",
+   "json_m": 18.05,
+   "diff_m": 0.107,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f2"
+  }
+ ],
+ "changed": [],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f1",
+   "what": "甲板の写真の組（063449740 と鎖の 9 枚）の登録を目印でやり直す（視点の高さ 9.9〜10.4 m、甲板＋目の高さは約 8.1 m）",
+   "to": "tool",
+   "photos": [
+    "PXL_20261105_063449740",
+    "PXL_20261105_063405325",
+    "PXL_20261105_063406464",
+    "PXL_20261105_063412307",
+    "PXL_20261105_063413358",
+    "PXL_20261105_063417721",
+    "PXL_20261105_063418811",
+    "PXL_20261105_063420663",
+    "PXL_20261105_063455681",
+    "PXL_20261105_063529987"
+   ]
+  }
+ ],
+ "parts": [
+  {
+   "what": "北西の角の軒下・曲面ガラス 2・風除室（f1・f2）",
+   "role": "北西の角の入口の軒下",
+   "size_ok": true,
+   "size": "軒下 4.3 × 奥 4.5 × 8.3 m、風除室 2.4 × 1.8 × 2.9 m",
+   "in_aerial": "壁の中",
+   "action": "通す（軒下の天井の線は recheck 13 枚で中央値 −0.08）",
+   "photos": [
+    "PXL_20261105_063517313",
+    "PXL_20261105_063529987",
+    "PXL_20261103_075437320"
+   ]
+  }
+ ],
+ "note": ""
+}

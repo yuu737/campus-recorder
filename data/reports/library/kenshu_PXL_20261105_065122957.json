@@ -1,0 +1,70 @@
+{
+ "building": "library",
+ "photo": "PXL_20261105_065122957",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "chain（鎖）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f0",
+   "photo_lines_pass": true,
+   "face_pass": true,
+   "n_lines_strong": 2,
+   "n_ng": 0,
+   "face_lines_max_abs_m": null,
+   "part_lines_max_abs_m": 0.064,
+   "lines": [
+    {
+     "what": "部品5（扉） patch 下端",
+     "json_m": 1.8,
+     "diff_m": 0.064,
+     "ok": true,
+     "action": "扉の下端は踊り場の腰壁に隠れ、拾ったのは腰壁の上の縁（+0.16〜+0.18）。値は直さない（設計の注記どおり）"
+    }
+   ]
+  },
+  {
+   "face": "f1",
+   "photo_lines_pass": true,
+   "face_pass": true,
+   "n_lines_strong": 2,
+   "n_ng": 0,
+   "face_lines_max_abs_m": 0.022,
+   "part_lines_max_abs_m": 0.007,
+   "lines": [
+    {
+     "what": "L1 の凹んだ板 列 1 下端",
+     "json_m": 0.5,
+     "diff_m": -0.022,
+     "ok": true,
+     "action": "足元は植え込みと坂の歩道に隠れる（見えていない値）。鎖の 5 枚で +0.25〜+0.33 は植え込みの縁。値は直さない"
+    }
+   ]
+  }
+ ],
+ "face": "f0",
+ "pass": true,
+ "lines": [
+  {
+   "what": "部品5（扉） patch 下端",
+   "json_m": 1.8,
+   "diff_m": 0.064,
+   "ok": true,
+   "action": "扉の下端は踊り場の腰壁に隠れ、拾ったのは腰壁の上の縁（+0.16〜+0.18）。値は直さない（設計の注記どおり）",
+   "face": "f0"
+  },
+  {
+   "what": "L1 の凹んだ板 列 1 下端",
+   "json_m": 0.5,
+   "diff_m": -0.022,
+   "ok": true,
+   "action": "足元は植え込みと坂の歩道に隠れる（見えていない値）。鎖の 5 枚で +0.25〜+0.33 は植え込みの縁。値は直さない",
+   "face": "f1"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "parts": [],
+ "note": ""
+}

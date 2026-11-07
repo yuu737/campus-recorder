@@ -1,0 +1,202 @@
+{
+ "made_by": "測量係（sokuryo・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:38:40+09:00",
+ "building": "library",
+ "schema_note": "係の定義 .claude/agents/sokuryo.md の出力の形。値は estimated（メジャーの写真が無い）。px は正面化画像（out/rectified/…）の画素",
+ "tape_measure": "recorder photos list --building library --ruler tape_measure → 0 枚（メジャーの写真は無い）。PLATEAU 以下で換算し estimated。撮影依頼を f2 に 1 件だけ（requests）",
+ "reader": "縁の位置は測量係（claude-opus-5-5）が、正面化画像の帯の明るさの勾配（行か列で平均、ガウスで均した微分の山。小数は放物線の当てはめ）で読み、拡大画像（目盛り付き）で縁を目で確かめた。タイルの段は 2 次元の自己相関の山（8〜10 段目まで）で読んだ。recorder photos measure の自動の周期は相関が弱く（strength 0.14〜0.39、窓の中の手すり・目地を拾う）採らなかった（各 _measure.json に残る）",
+ "tile_type": "小口（108×60、目地 10 として 1 段 0.070 m・横 0.118 m の割付）の馬踏み目地。縦横の目地の周期の比で確かめた：f1 075437320 1.709・075500328 1.679、f0 070904733 1.688〜1.703、f2 075639031 1.68・063115879 1.697（小口 118:70＝1.686、二丁掛 237:70＝3.39 ではない）。寄りの写真 PXL_20261103_075718159（f2 の銘板の柱型）で馬踏みの割付を目で確かめた。物差しには台帳 tile_course（1 段 0.070 m ±0.005）だけを使い、横の 0.118 m は台帳に無いので使わない",
+ "face": "f0",
+ "face_name": "東南東面（方位 118°、PLATEAU の辺 39.45 m）。from＝南東の角、to＝北東の角",
+ "rectified": "out/rectified/library_f0_070904733/PXL_20261105_070904733_front.jpg",
+ "rectified_others": [
+  "out/rectified/library_f0_075102006/PXL_20261103_075102006_front.jpg"
+ ],
+ "rectify_check": {
+  "PXL_20261105_070904733": "roi 無し。横 0.23° 縦 0.22°。両端の角が入る（南東の角は木の枝ごし、空との境で読んだ）",
+  "PXL_20261103_075102006": "--roi 0.25,0.05,0.85,0.75。横 0.18° 縦 0.29°。南東の角は木に隠れる（北東の角は入る）"
+ },
+ "readings_px": {
+  "PXL_20261105_070904733": {
+   "width_corner_to_corner": "4480.6（南東の角の外の縁 504.3/501.8/502.1 → 北東の角の外の縁 4983.5/4983.8/4982.6、y 950〜1250 の 3 つの帯。差 4479.2〜4482.0）",
+   "floor": "498.2（北の窓の列 x 4720〜4880 の窓の上の縁、L4→L2 の 2 段 ÷2：1611.9→2607.7＝497.9、1593.1→2590.2＝498.6。上の段 499.1〜499.9、下の段 496.7〜497.2）",
+   "tile": "1 段 7.70（床の線と同じ高さの無地の壁 x 3300〜3750：y 1650〜2050 で 7.744、y 2150〜2550 で 7.649。上の壁 y 1050〜1450 では 7.63〜7.66）、横 13.00、比 1.688（上の壁 1.703）。北の張り出し箱の下の幅の広い柱型（y 3000〜3300）は 1 段 8.30・箱の前面は 9.14 で、手前に出ているので使わない",
+   "parapet_and_foot": "パラペット上端 936.4（x 4300〜4400）・930.6（x 2600〜3000）。北東の広場の壁の足元（北の柱型の前、ごみ箱の左）3840"
+  },
+  "PXL_20261103_075102006": {
+   "floor": "606.1（北の窓の列の上の縁 L4 1346.8 → L2 2559.0 の 2 段 ÷2。measure の自動 605.6 と合う）",
+   "tile": "1 段 9.25（9.20〜9.40、夕方で縦の目地が弱い）、横 15.6、比 1.69",
+   "ne_corner": "3852（3849.5〜3855.3）"
+  }
+ },
+ "floor_pitch": {
+  "value": 4.386,
+  "unit": "m",
+  "status": "estimated",
+  "tol": 0.22,
+  "evidence": [
+   "PXL_20261105_070904733",
+   "plateau:bldg_feae3e15-dd53-4b4a-8f30-bb05525d15e3"
+  ],
+  "method": "PLATEAU の足元の辺 f0＝39.45 m を、両端の角が入る正面化 070904733 の角の外から外 4480.6 px に当てた：縮尺 4480.6 ÷ 39.45 = 113.58 px/m。階高 498.2 px（北の窓の列の窓の上の縁、L4→L2 の 2 段 ÷2）÷ 113.58 = 4.386 m。2 本目の物差し（タイル 1 段 0.070 m、小口と確かめた）：同じ画像の床の線と同じ高さで 1 段 7.70 px → 498.2 ÷ 7.70 × 0.070 = 4.529 m（差 +3.3%）。読んだ係：測量係（claude-opus-5-5）",
+  "tol_breakdown": "PLATEAU の辺 ±3%（0.132）＋階高の px の読み ±0.3%（0.013）＋縦横の比の揺れ ±0.9%（f1 の 3 枚の比の差を借りた目安、0.039）＋南東の角の縁 ±0.8%（木の枝ごしで、角の上端がパラペットより約 95 px 高く見える。縦樋 2 本の頭か角の柱型が面より手前に出ていれば、角の縁を縦樋 1 本分ほど外に読んでいる、0.035）＝0.219 → ±0.22 m",
+  "ratio_check": "柱割りが無い面なので柱間隔÷階高の比は無い。代わりに縮尺に依らない「階高 ÷ タイル 1 段」を 2 枚で比べた：070904733 64.7 段（上の壁の段で 65.2）、075102006 65.5 段。差 0.5〜1.2%（075102006 の段の読みが弱い）。measure の自動の階高とも 070904733 499.7 px（差 0.3%）、075102006 605.6 px（差 0.1%）で合う",
+  "unresolved": "PLATEAU の辺どうしの食い違い：同じ段の階高が f1 の辺では 4.472 m、f0 の辺では 4.386 m（2.0%）。f0 の幅は 4480.6 ÷ 498.2 = 8.99 階高で、f1 の階高で換算すると 40.2 m（辺 39.45 m と +2.0%）。5% 以内なので辺は物差しのままにした。向きは「南東の角の縁を外に読んでいる」（上の tol_breakdown）とも合うが、決めていない。未解決：公開資料 PLATEAU measuredHeight 33.7 m とパラペットの高さ（北東の広場から 25.6 m）の差 約 8.1 m（屋上の塔を含む高さと見られる。塔は未測）"
+ },
+ "bay_pitch": {
+  "value": null,
+  "unit": "m",
+  "status": "unknown",
+  "tol": null,
+  "not_applicable": true,
+  "evidence": [],
+  "method": "柱割りが無い面（kazoe_f0.json の bays.not_applicable）。区間の位置は面の写真 coverage_f0_photo.png（113.58 px/m で登録）から設計係が読む"
+ },
+ "parapet_for_registration": {
+  "value": 25.3,
+  "unit": "m",
+  "status": "estimated",
+  "tol": 1.3,
+  "evidence": [
+   "PXL_20261105_070904733",
+   "gsi:dem5a"
+  ],
+  "method": "パラペット上端の高さ（棟の z=0＝ground_z 41.67 m から）。正面化 070904733 で北東の広場の壁の足元 3840 px − パラペット上端 936.4 px ＝ 2903.6 px ÷ 113.58 px/m ＝ 25.56 m（広場から）。広場の 5m 標高 − ground_z ＝ −0.3 m（面の外 1〜3 m で −0.18〜−0.62）を足して 25.3 m。タイルで換算すると 2903.6 ÷ 7.70 × 0.070 ＝ 26.40 m（+3.3%）",
+  "use": "登録（compare の高さの原点）のためだけに使った。4 面ともパラペットは同じ高さと仮定（観察票：上端は一直線、角で段がつながる）。棟 JSON の parapet_top には書いていない（設計係が決める）",
+  "tol_breakdown": "PLATEAU の辺 ±3%（0.77）＋5m 標高の読み ±0.4＋足元の行 ±15 px（柱型が手前に出ている分、0.13）＝1.3 m"
+ },
+ "scale": {
+  "ruler": "plateau_wall",
+  "what": "PLATEAU LOD0 の足元の辺 f0（39.45 m、±3%）を角の外から外 4480.6 px に当てた",
+  "px_per_m": 113.58,
+  "photo": "PXL_20261105_070904733",
+  "check_ruler": "tile_course",
+  "check_what": "小口タイル 1 段 0.070 m（同じ画像の床の線の高さで 7.70 px）",
+  "check_px_per_m": 110.0,
+  "diff_pct": 3.3,
+  "diff_note": "タイルで換算した方が 3.3% 大きい。5% 以内",
+  "px_per_m_other_photos": {
+   "PXL_20261103_075102006": 138.19
+  },
+  "px_per_m_other_note": "075102006 は階高 606.1 px ÷ 4.386 m（登録用）"
+ },
+ "registration": {
+  "compare": "recorder photos compare <front.jpg> --building out/library/sokuryo/library_compare_base.json --face f0 --px-per-m <縮尺> --lines out/library/sokuryo/lines_f0_<写真>.json --out-dir out/library/compare（写しを使う理由は sokuryo_f1.json の registration.why_copy）",
+  "origins": {
+   "PXL_20261105_070904733": "x_origin 502（南東の角）・パラペット上端 933.5 px・113.58 px/m",
+   "PXL_20261103_075102006": "x_origin −1600（北東の角 3852 px − 39.45 m × 138.2）・パラペット上端 545.8 px・138.2 px/m"
+  },
+  "camera_check": "視点の高さ：070904733 1.53 m（標高 +0.1 → 地面から約 1.4 m）、075102006 1.29 m（標高 +0.15 → 約 1.1 m）"
+ },
+ "face_photo_note": "面の写真の左〜中ほど（面の 0〜25 m、アーチの凹みを含む）は、鎖で登録した 075051437 の手前の木が上に来る（画素数／m が多い写真が上）。registry の exclude を書く道具が無く（共有の台帳は道具だけが書く）書いていない。アーチの凹み・南の窓の列・張り出し箱は正面化 out/rectified/library_f0_070904733/（113.58 px/m）で読むこと",
+ "questions": [],
+ "requests": [
+  {
+   "kind": "tool",
+   "to": "tool",
+   "face": "f0",
+   "what": "registry の登録に exclude（面の m の矩形）を足す道具（例 recorder photos exclude <写真> --face <面> --rect s0,z0,s1,z1 --note …）",
+   "where": "recorder/registry.py・recorder/__main__.py",
+   "why": "f0 の面の写真で、075051437 の手前の木（面の 0〜25 m、高さ 0〜25 m）が 070904733 の壁の上に貼られる。手順書は『木・車で隠れた所は registry の exclude に足す』だが、共有の台帳は道具だけが書くので係が書けない",
+   "by": "sokuryo"
+  }
+ ],
+ "registered": [
+  "PXL_20261103_075102006",
+  "PXL_20261105_070904733"
+ ],
+ "registered_via_chain": [
+  "PXL_20261103_075051437",
+  "PXL_20261103_075125252",
+  "PXL_20261103_075153504",
+  "PXL_20261105_065122957"
+ ],
+ "not_registered": [
+  {
+   "photo": "PXL_20261103_075036075",
+   "why": "register-chain：面の上の対応点が 7 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_075111985",
+   "why": "register-chain：再投影の誤差 3.0 px（3.0 px 超）"
+  },
+  {
+   "photo": "PXL_20261103_075114044",
+   "why": "register-chain：再投影の誤差 3.0 px（3.0 px 超）"
+  },
+  {
+   "photo": "PXL_20261103_080014086",
+   "why": "register-chain：視点に合う点が写真の 1.4% の範囲に固まっている（4% 未満。誤対応の疑い）"
+  },
+  {
+   "photo": "PXL_20261103_080015280",
+   "why": "register-chain：視点に合う対応点が 6 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_080016877",
+   "why": "register-chain：視点に合う対応点が 9 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_080021242",
+   "why": "register-chain：視点に合う対応点が 5 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_080029484",
+   "why": "register-chain：PnP が解けない（つじつまの合う対応の組が無い）"
+  },
+  {
+   "photo": "PXL_20261105_064926962",
+   "why": "register-chain：視点に合う対応点が 5 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261105_064937392.MP",
+   "why": "register-chain：再投影の誤差 3.3 px（3.0 px 超）"
+  },
+  {
+   "photo": "PXL_20261105_064951872",
+   "why": "register-chain：面の上の対応点が 7 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261105_065001701",
+   "why": "register-chain：面の上の対応点が 8 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261105_065016249",
+   "why": "register-chain：PnP が解けない（つじつまの合う対応の組が無い）"
+  },
+  {
+   "photo": "PXL_20261105_065027824",
+   "why": "register-chain：PnP が解けない（つじつまの合う対応の組が無い）"
+  },
+  {
+   "photo": "PXL_20261105_065035660",
+   "why": "register-chain：視点に合う対応点が 8 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261105_065036832",
+   "why": "register-chain：視点に合う対応点が 10 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261105_065038217",
+   "why": "register-chain：面の上の対応点が 9 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261105_065101059",
+   "why": "register-chain：再投影の誤差 3.4 px（3.0 px 超）"
+  },
+  {
+   "photo": "PXL_20261105_065125602",
+   "why": "register-chain：再投影の誤差 3.1 px（3.0 px 超）"
+  }
+ ],
+ "face_photo": "out/library/coverage_f0_photo.png",
+ "face_photo_stats": {
+  "coverage_pct": 94.8,
+  "frame_pct": 99.8,
+  "px_per_m": 40.0,
+  "ground_z": -0.55,
+  "top_z": 33.7,
+  "photos": 6,
+  "check_png": "out/library/coverage_f0_check.png"
+ }
+}

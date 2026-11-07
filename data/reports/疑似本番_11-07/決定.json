@@ -16,6 +16,217 @@
    "result": "D-0001 approve。validate tests/fixtures/parts_building.json が OK（警告 1 は fixture の根拠 id）",
    "rule": "--zero の後は、最初の係を呼ぶ前に validate を fixture で 1 回打ち、語彙の承認が残っているかを確かめる",
    "record": "（全棟。pipeline の記録の前）"
+  },
+  {
+   "id": "K-002",
+   "at": "2026-11-07T10:40:28+09:00",
+   "building": "library",
+   "event": {
+    "kind": "gate",
+    "why": "validate --strict の警告 4（土台の面の長さの ± が PLATEAU 3% の下限より小さい）",
+    "evidence": [
+     "recorder validate --strict data/buildings/library.json の出力"
+    ]
+   },
+   "decision": "測量係に差し戻さない。値は土台の道具が書いた物で、測量係の値ではない。設計係が design スクリプトで棟 JSON を作り直す時に直す。設計係の後の validate --strict に残れば設計係に 1 回差し戻す",
+   "reason": "警告の場所は faces[].length（recorder new --from-site の値）。測量係が書いた値（階高・柱間）に警告は無い",
+   "result": "（設計係の後に確かめる）",
+   "rule": "土台由来の validate の警告は、棟 JSON を書く係（設計係）に回す。測量係は棟 JSON の値を書かない",
+   "record": "pipeline（library の runner subagent）"
+  },
+  {
+   "id": "K-003",
+   "at": "2026-11-07T10:40:28+09:00",
+   "building": "library",
+   "event": {
+    "kind": "vocab",
+    "why": "requests に kind tool の open が 1 件（registry の exclude を書く道具）",
+    "evidence": [
+     "recorder agent events library"
+    ]
+   },
+   "decision": "語彙の決定は出さない（部品の型ではない）。依頼は open のまま残して進む。新しい道具のコードは足さない（本番用の直し J-011）",
+   "reason": "events の vocab は requests の kind tool から出るが、中身は部品の型でなく台帳を書く道具の不足。composite でも表せない種類の物ではない。待たずに進める",
+   "result": "open のまま。f0 の面の写真に木が貼られた所は検収係の photoproj の読みで遮蔽として扱う",
+   "rule": "kind: tool の依頼が部品の型でなく道具の不足なら、決定を出さず記録して進む",
+   "record": "pipeline（library の runner subagent）"
+  },
+  {
+   "id": "K-004",
+   "at": "2026-11-07T13:52:37+09:00",
+   "building": "all",
+   "event": {
+    "kind": "agent_error",
+    "why": "使用量の上限で 4 本の係が落ちた",
+    "evidence": [
+     "task-notification の失敗 4 件"
+    ]
+   },
+   "decision": "落ちた 4 本は新しく呼ばず、同じ係に SendMessage で続きから再開させる（やり直しの 1 回目に数える）。同時の数は 4 のまま（落ちたのは総量の上限で、同時の数ではない。同時の数を下げても総量は減らない）。また上限に当たったら引き継ぎ.md を書いて止まる",
+   "reason": "手順書 3「係が落ちた時は止まらない：1 回やり直す」。落ちた係の作業は保存されている（通知）",
+   "result": "（再開の後に追記）",
+   "rule": "使用量の上限で落ちた係は、作業が保存されていれば SendMessage で続きから。同時の数を下げるのは速度の上限（短い時間の 429 が続く）の時だけ",
+   "record": "各棟の runner subagent"
+  },
+  {
+   "id": "K-005",
+   "at": "2026-11-07T14:08:53+09:00",
+   "building": "library",
+   "event": {
+    "kind": "vocab",
+    "why": "requests に kind tool の open が 6 件（うち 5 件は「敷地に置く物」、1 件は registry の exclude の道具）",
+    "evidence": [
+     "recorder agent events library → [vocab] 6 件",
+     "data/buildings/library.json の requests（by sekkei 5・sokuryo 1）"
+    ]
+   },
+   "decision": "①1 つの棟だけに付く段と広場は、既存の語彙で棟 JSON に置く：大階段（西の広場から正面入口の床へ、f2 の前）は steps（edge curved 可）、f0 の前の段々の広場と空堀は steps＋composite（擁壁・手すりは composite の素片）。②2 棟に触れる物（通路橋、それにつながる甲板・青い鉄骨の庇・斜路）、本部棟との間の路地の段、木・街灯・案内板は敷地の語彙が無いので open の依頼のまま残す（新しい語彙のコードは足さない）。③registry の exclude は K-003 のまま",
+   "reason": "手順書「棟をまたぐ物の置き場所」：1 つの棟の壁に付く物はその棟の JSON、2 棟以上に触れる物・棟と棟の間の地面の物は敷地 JSON。大階段と f0 の広場は図書館の入口・面の前だけに付く（依頼の文）。steps・composite は既存の語彙（D-0001）。設計係の依頼の通り、甲板が敷地に入るまで入口の床が浮いて見えるので、棟に付く段だけでも置く",
+   "result": "設計係が 1 回やり直し（attempt 3）：大階段 steps、f0 の段々の広場 steps＋composite、空堀 composite を足して部品 46→49。敷地に残した依頼 4 件（open）。validate --strict 警告 0。大階段の 1 段の高さが写真と合わない（上端か下端の高さの違い）を data の依頼で未解決",
+   "rule": "「敷地に置く物」の kind: tool は、①その棟の入口・面の前だけに付く段・広場は既存の steps・composite で棟 JSON に置く ②2 棟以上に触れる物・棟の間の物は敷地の語彙ができるまで open で残す",
+   "record": "pipeline（library の runner subagent）"
+  },
+  {
+   "id": "K-006",
+   "at": "2026-11-07T14:08:53+09:00",
+   "building": "library",
+   "event": {
+    "kind": "check（事件に出ない。J-015）",
+    "why": "設計係の check 2 件：入口の床と敷地の境目／面ごとの階高が 2〜5% 違う",
+    "evidence": [
+     "data/buildings/library.json の requests（kind check 2 件）"
+    ]
+   },
+   "decision": "①境目は K-005 の通り（入口の床と大階段・f0 の広場は棟、甲板・橋・路地の段は敷地）②階高は面ごとの換算値のまま（棟で 1 つに揃えない）。差は method に「未解決」と書いたまま。メジャーの撮影依頼（f2）で決める",
+   "reason": "手順書「写していない面に写さない」「公開資料と合わない時は合わせに行かず未解決と書く」。各面の階高はその面の物差し（PLATEAU の辺・タイル）で別々に出した物で、揃えると片方の根拠を捨てることになる",
+   "result": "面ごとの階高のまま。check 2 件は closed（note に決定）",
+   "rule": "面ごとの階高が数 % 違う時は、面ごとの値のまま未解決と書き、メジャーの撮影依頼で決める（棟で 1 つに揃えない）",
+   "record": "pipeline（library の runner subagent）"
+  },
+  {
+   "id": "K-007",
+   "at": "2026-11-07T14:23:07+09:00",
+   "building": "honbu",
+   "event": {
+    "kind": "vocab",
+    "why": "requests に kind tool の open が 3 件（どれも「敷地に置く物」：南東・北東の大階段の続き、f7 沿いの階段、旗竿・木・街灯・中庭の植え込み）",
+    "evidence": [
+     "recorder agent events honbu",
+     "data/buildings/honbu.json の requests"
+    ]
+   },
+   "decision": "K-005 の規則②：どれも本部棟と図書館の間・棟の前の地面の物なので、敷地の語彙ができるまで open で残す。設計係のやり直しはしない",
+   "reason": "依頼の文がどれも「本部棟と隣の棟の間」「棟の前の地面」。手順書「棟をまたぐ物の置き場所」で敷地 JSON の物。棟に付く大階段（8・9 柱間の前・ピロティの中）は設計係が既に棟に置いている",
+   "result": "open 3 件のまま",
+   "rule": "K-005 と同じ",
+   "record": "pipeline（honbu の runner subagent）"
+  },
+  {
+   "id": "K-008",
+   "at": "2026-11-07T14:23:07+09:00",
+   "building": "honbu",
+   "event": {
+    "kind": "asset",
+    "why": "requests に kind asset の open 1 件（ピロティの長机。台帳の table_long は決定 D-0003 を参照、今の決定台帳に無い）",
+    "evidence": [
+     "recorder agent events honbu",
+     "data/buildings/honbu.json の requests"
+    ]
+   },
+   "decision": "recorder agent decide --kind asset --decision deny（D-0002）。箱のまま",
+   "reason": "台帳の項目が参照する D-0003 は --zero で消え、新しい approve は別の id になって台帳と結び付かない（台帳は進行役が直さない）。位置・個数は写真の根拠で箱として置けている。見た目のためだけ",
+   "result": "D-0002 deny。机は箱のまま",
+   "rule": "--zero で消えた決定を参照するアセットは、本番の前に台帳の参照を直すまで箱のまま（J-016）",
+   "record": "pipeline（honbu の runner subagent）"
+  },
+  {
+   "id": "K-009",
+   "at": "2026-11-07T14:23:07+09:00",
+   "building": "honbu",
+   "event": {
+    "kind": "check（事件に出ない。J-015）",
+    "why": "設計係の check 3 件：垂れ幕・立て看板を置かなかった／coverage_f6 の 1 階の西半分にピロティの写真が貼られる（登録のずれの疑い）／デッキの床の高さと北の翼の 2 階",
+    "evidence": [
+     "data/buildings/honbu.json の requests（kind check 3 件）"
+    ]
+   },
+   "decision": "①垂れ幕・立て看板は仮設なので置かない（設計係の判断どおり）②登録のずれの疑いは検収係の recheck と目印係で見る（今は動かさない）③デッキの床は estimated のまま、検収係の photoproj で確かめる。設計係のやり直しはしない",
+   "reason": "①建物の記録の作品で、仮設の物は撮る日によって変わる（役割が建物に無い）②③は数字（recheck の線・photoproj）で決まる物で、検収係の工程",
+   "result": "値は変えない。依頼は open のまま検収係へ",
+   "rule": "仮設の物（垂れ幕・立て看板・工事の囲い）は模型に置かない。登録のずれ・高さの疑いの check は検収係に回す",
+   "record": "pipeline（honbu の runner subagent）"
+  },
+  {
+   "id": "K-010",
+   "at": "2026-11-07T14:26:13+09:00",
+   "building": "kyotsu-minami",
+   "event": {
+    "kind": "vocab",
+    "why": "requests に kind tool の open が 3 件（西の道路の上の梁 S1・南の渡り S4＝敷地に置く物、面の名前の番号のずれ＝道具）",
+    "evidence": [
+     "recorder agent events kyotsu-minami",
+     "data/buildings/kyotsu-minami.json の requests"
+    ]
+   },
+   "decision": "S1（擁壁＝敷地と棟をつなぐ）と S4（別の棟とつなぐ）は K-005 の規則②で open のまま。面の名前のずれは道具の不具合（J-006、K-003 の規則）で open のまま。設計係のやり直しはしない",
+   "reason": "依頼の文がどちらも敷地・別の棟に触れる物。面の名前は id で指せば影響なし",
+   "result": "open 3 件のまま",
+   "rule": "K-005・K-003 と同じ",
+   "record": "pipeline（kyotsu-minami の runner subagent）"
+  },
+  {
+   "id": "K-011",
+   "at": "2026-11-07T14:26:13+09:00",
+   "building": "kyotsu-minami",
+   "event": {
+    "kind": "check（事件に出ない。J-015）",
+    "why": "check 2 件：北東のガラスの箱 S3 を棟に置いたが北の棟につながらないか／西端の足元の線は奥の壁か手前の台形の壁か",
+    "evidence": [
+     "data/buildings/kyotsu-minami.json の requests（kind check 2 件）"
+    ]
+   },
+   "decision": "どちらも設計係の判断のまま進める（S3 は棟 JSON、足元は奥の建物の壁）。写真で決まらない所なので職員への確認（human）に回し、検収係の recheck で線が合わなければ検収係が直す",
+   "reason": "S3 は OSM でも別の輪郭で、北の棟につながる写真が無い（依頼の文）。足元は f13・f19 の帯が西端まで届く（依頼の文）。どちらも今ある写真の根拠に沿っている",
+   "result": "値は変えない",
+   "rule": "棟と敷地の境目の check は、写真の根拠がある方の設計係の判断で進め、職員の確認に回す",
+   "record": "pipeline（kyotsu-minami の runner subagent）"
+  },
+  {
+   "id": "K-012",
+   "at": "2026-11-07T14:54:09+09:00",
+   "building": "tower75",
+   "event": {
+    "kind": "vocab＋check",
+    "why": "requests に kind tool の open 7 件（敷地に置く物 6・exclude の道具 1）と check 1 件（西のデッキ・庇・大階段・エレベーター箱を棟に置いたが、デッキは南西で道路をまたぐ橋 S2 に続く。K-005 ②に当たるか）",
+    "evidence": [
+     "recorder agent events tower75",
+     "data/buildings/tower75.json の requests"
+    ]
+   },
+   "decision": "①デッキ・庇・大階段・エレベーター箱は西面にしか付いていない（依頼の文）ので棟 JSON のまま。橋 S2 から先（道路の上）は敷地で open のまま。K-005 ②を「2 棟に触れる部分（橋）だけ敷地、片方の棟の壁にだけ付く部分（デッキ）はその棟」と読み直す ②敷地に置く物 6 と exclude の道具は K-005・K-003 の規則で open のまま",
+   "reason": "手順書「1 つの棟の壁に付く物はその棟の JSON」。依頼の文でデッキは西面だけに付く",
+   "result": "値は変えない。依頼は open のまま",
+   "rule": "橋につながるデッキは、デッキが 1 つの棟の壁にだけ付くならその棟の JSON、橋は敷地。同じデッキを別の棟が敷地の依頼に出していないかは敷地の検収係が見る（J-020）",
+   "record": "pipeline（tower75 の runner subagent）"
+  },
+  {
+   "id": "K-013",
+   "at": "2026-11-07T15:19:43+09:00",
+   "building": "library",
+   "event": {
+    "kind": "stuck",
+    "why": "再検収を 2 回回しても同じ線 567 本が直らない",
+    "evidence": [
+     "recorder agent events library（recheck 20261107_150541・20261107_151135）",
+     "out/library/recheck/20261107_151135/summary.md",
+     "data/reports/library/kenshu_summary.json"
+    ]
+   },
+   "decision": "検収係のやり直しはしない（直し 2 回の上限に達し、係は撮影依頼で止めた）。①f2 の庇の出は撮影依頼（真横）が届くまで estimated のまま ②f3 の L2 の仮説は撮影依頼（正面寄り）が届くまで仮説のまま（縞で見せる）③f1 の NG の多くは甲板から撮った 1 組の登録のずれ（視点の高さが床より 2 m 高い）なので形ではなく登録の問題として目印の登録し直しを依頼に残す ④f2 の北西の角は足元を動かさず、f2 のメジャーの撮影まで待つ",
+   "reason": "events の線の多くは同じ数枚の写真（075051437・075102006 など）の部品の縁と、甲板の 1 組から出ている。検収係のまとめでは地上の正面化・目印の写真の中央値は 0.13 m 以内。手順書「2 回で収束しなければ止めて撮影依頼」「地盤の取り方を後から変えて合わせない」",
+   "result": "library の工程 10（本番の run）へ進む。開いた形の問い 2 件は撮影依頼のまま",
+   "rule": "recheck の NG が 1 組の登録（鎖でつながった写真）に偏り、その視点の高さが地面・床と合わない時は、形を直さず登録のやり直しを依頼する。2 回の直しで残る線は撮影依頼のまま次の工程へ",
+   "record": "pipeline（library の runner subagent）"
   }
  ]
 }

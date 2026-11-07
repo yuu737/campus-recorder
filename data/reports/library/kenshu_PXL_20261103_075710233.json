@@ -1,0 +1,27 @@
+{
+ "building": "library",
+ "photo": "PXL_20261103_075710233",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "chain（鎖）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f2",
+   "photo_lines_pass": true,
+   "face_pass": false,
+   "n_lines_strong": 7,
+   "n_ng": 0,
+   "face_lines_max_abs_m": 0.069,
+   "part_lines_max_abs_m": 0.084,
+   "lines": []
+  }
+ ],
+ "face": "f2",
+ "pass": true,
+ "lines": [],
+ "changed": [],
+ "requests": [],
+ "parts": [],
+ "note": ""
+}

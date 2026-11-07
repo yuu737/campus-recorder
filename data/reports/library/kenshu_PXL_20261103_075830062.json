@@ -1,0 +1,100 @@
+{
+ "building": "library",
+ "photo": "PXL_20261103_075830062",
+ "made_by": "検収係（kenshu・Claude Opus 5.5）",
+ "made_at": "2026-11-07T15:17:24+09:00",
+ "registration": "chain（鎖）",
+ "recheck": "out/library/recheck/20261107_151135",
+ "faces": [
+  {
+   "face": "f2",
+   "photo_lines_pass": true,
+   "face_pass": false,
+   "n_lines_strong": 1,
+   "n_ng": 0,
+   "face_lines_max_abs_m": 0.109,
+   "part_lines_max_abs_m": null,
+   "lines": [
+    {
+     "what": "面の端L",
+     "json_m": 39.44,
+     "diff_m": 0.109,
+     "ok": true,
+     "action": "なし（0.15 m 以内）"
+    }
+   ]
+  },
+  {
+   "face": "f3",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 3,
+   "n_ng": 2,
+   "face_lines_max_abs_m": 0.152,
+   "part_lines_max_abs_m": 0.052,
+   "lines": [
+    {
+     "what": "柱型0左",
+     "json_m": -0.01,
+     "diff_m": 0.152,
+     "ok": false,
+     "action": "角からの急な斜めの写真だけ。縦の線は ±0.5 m ぶれる（判断の目安）。値は直さない"
+    },
+    {
+     "what": "柱型0右",
+     "json_m": 0.99,
+     "diff_m": 0.151,
+     "ok": false,
+     "action": "角からの急な斜めの写真だけ。縦の線は ±0.5 m ぶれる（判断の目安）。値は直さない"
+    }
+   ]
+  }
+ ],
+ "face": "f2",
+ "pass": false,
+ "lines": [
+  {
+   "what": "面の端L",
+   "json_m": 39.44,
+   "diff_m": 0.109,
+   "ok": true,
+   "action": "なし（0.15 m 以内）",
+   "face": "f2"
+  },
+  {
+   "what": "柱型0左",
+   "json_m": -0.01,
+   "diff_m": 0.152,
+   "ok": false,
+   "action": "角からの急な斜めの写真だけ。縦の線は ±0.5 m ぶれる（判断の目安）。値は直さない",
+   "face": "f3"
+  },
+  {
+   "what": "柱型0右",
+   "json_m": 0.99,
+   "diff_m": 0.151,
+   "ok": false,
+   "action": "角からの急な斜めの写真だけ。縦の線は ±0.5 m ぶれる（判断の目安）。値は直さない",
+   "face": "f3"
+  }
+ ],
+ "changed": [],
+ "requests": [
+  {
+   "kind": "data",
+   "face": "f3",
+   "what": "f3 の前の通路の高さ（視点の高さから z 4.0〜4.7 m、5m 標高より約 3 m 高い）",
+   "to": "tool",
+   "photos": [
+    "PXL_20261105_064525427",
+    "PXL_20261105_064508808",
+    "PXL_20261105_064539230",
+    "PXL_20261105_064510192",
+    "PXL_20261103_075830062",
+    "PXL_20261103_075837016"
+   ]
+  }
+ ],
+ "parts": [],
+ "note": ""
+}
