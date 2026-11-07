@@ -194,6 +194,7 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     <p class="sub">ここから先は係の Claude とコードが進めます。写真が足りない面は、決めつけずに「どの面を、どこから」の撮影依頼として右の進捗に戻ります。</p>
     <div class="go">
     <div class="status" id="status">写真を入れてください。</div>
+    <select id="unusedPick" style="display:none;max-width:100%"aria-label="追記する棟（前に送った写真で）"></select>
     <span id="maxUsdWrap" style="display:none">費用の上限 <input type="number" id="maxUsd" min="0" step="1" style="width:6em"> USD／棟</span>
     <button class="btn primary" id="export" type="button" disabled>振り分けを書き出す</button>
     </div>
@@ -234,6 +235,8 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
   // recorder serve が配信している時だけ「サーバあり」（/api/site が答える）。無ければ従来どおり書き出し
   let SERVER = null;             // /api/site の応答
   const runs = {};               // 棟 id → pipeline の状態（/api/progress の run）
+  let unused = {};               // 棟 id → 前に送って未使用の写真 {n, tape, name}（/api/progress の unused_staff_photos。F16）
+  let resumes = {};              // 棟 id → /api/progress の resume（実行中の棟を追記の候補から外す）
 
   // --- 1. 大学とキャンパス
   const univ = $("#univ"), campus = $("#campus");
@@ -380,12 +383,38 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     const s2 = $("#s2");
     s2.textContent = n ? (ready === n ? "済" : "途中") : "未"; s2.className = "state " + (n ? (ready === n ? "done" : "partial") : "");
     const st = $("#status");
-    if (!n) st.textContent = "写真を入れてください。";
+    // この画面で写真を入れていなくても、前に送って未使用の写真がある棟（棟 JSON あり）は追記を始められる（F16）
+    const cands = n ? [] : unusedCands(), pick = $("#unusedPick");
+    if (cands.length > 1) {
+      const cur = pick.value;
+      pick.innerHTML = cands.map(id => `<option value="${esc(id)}"${id === cur ? " selected" : ""}>${esc(nameOf(id))}（未使用 ${unused[id].n} 枚・メジャー ${unused[id].tape} 枚）</option>`).join("");
+    }
+    pick.style.display = cands.length > 1 ? "" : "none";
+    if (!n && cands.length) {
+      const id = pickedUnused(), u = unused[id];
+      st.innerHTML = `前に送った写真のうち未使用 <b>${u.n}</b> 枚（メジャー ${u.tape} 枚）で追記します：<b>${esc(nameOf(id))}</b>` +
+        (cands.length > 1 ? `<span class="gray">（未使用の写真がある棟は ${cands.length} 棟。追記する棟を選べます）</span>` : "");
+    }
+    else if (!n) st.textContent = "写真を入れてください。";
     else {
       const missing = n - ready;
       st.innerHTML = `<b>${ready}</b> / ${n} 枚に棟が付きました` + (missing ? `。<span class="warn">${missing} 枚は棟か階が足りません</span>` : "");
     }
-    $("#export").disabled = ready === 0;
+    $("#export").disabled = ready === 0 && !cands.length;
+  }
+  // 前に送って未使用の写真（/api/progress の unused_staff_photos）がある棟。係が作業中・別の窓で実行中の棟は除く
+  function unusedCands() {
+    if (!SERVER) return [];
+    return Object.keys(unused).filter(id => unused[id] && unused[id].n > 0 && !(runs[id] && runs[id].state === "running") &&
+      !["running", "not_stopped"].includes((resumes[id] || {}).code));
+  }
+  function pickedUnused() {
+    const c = unusedCands(), v = $("#unusedPick").value;
+    return c.includes(v) ? v : c[0];
+  }
+  function nameOf(id) {
+    return (site && site.designed && site.designed[id] && site.designed[id].name) || [...names].find(([n, i]) => i === id)?.[0] ||
+      (unused[id] || {}).name || id;
   }
   async function addFiles(files) {
     const list = Array.from(files).filter(f => /^image\//.test(f.type) || /\.(jpe?g|png|heic|webp)$/i.test(f.name));
@@ -581,8 +610,30 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     if (running) pollTimer = setTimeout(poll, 10000);
     else if (Object.keys(runs).length) { $("#s3").textContent = "済"; $("#s3").className = "state done"; }
   }
+  $("#unusedPick").addEventListener("change", refresh);
+  // 写真を入れずに、前に送って未使用の写真で 1 棟の追記を始める（/api/start、写真フォルダ無し → continue_pipeline が使う。F16）
+  async function startUnused() {
+    const id = pickedUnused(), st = $("#status"), btn = $("#export");
+    if (!id) return;
+    const u = unused[id], nm = nameOf(id);
+    btn.disabled = true;
+    st.innerHTML = `${esc(nm)} の追記を起動しています（前に送った写真のうち未使用 ${u.n} 枚）…`;
+    try {
+      const s = await api("/api/start", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({buildings: [id], max_usd: maxUsd()})});
+      if (s.status === 409) { st.innerHTML = `<span class="warn">${esc(nm)} は係が作業中です。終わってからもう一度押してください</span>`; btn.disabled = false; return; }
+      if (!s.ok) throw new Error(s.j.error || s.status);
+      const md = s.j.modes || {};
+      let msg = `係を起動しました（${esc(nm)}、${md[id] === "continue" ? "前回の記録に追記" : "最初から"}。費用の上限 ${s.j.max_usd ? esc(s.j.max_usd) + " USD／棟" : "なし"}）` +
+        (s.j.dry_run ? `。<span class="warn">この PC に API キーが無いので、係（Claude）を呼ばずに手順だけ確かめる試しで動いています（棟の記録は増えません）</span>` : "");
+      $("#s3").textContent = "進行中"; $("#s3").className = "state partial";
+      st.innerHTML = msg + "。待機画面を開きます…";
+      location.href = `progress.html?building=${encodeURIComponent(id)}&live=1`;
+      return;
+    } catch (e) { st.innerHTML = `<span class="warn">止まりました：${esc(e.message)}</span>`; }
+    btn.disabled = false;
+  }
   $("#export").addEventListener("click", () => {
-    if (SERVER) return startRecording();
+    if (SERVER) return items.some(i => i.ready) ? startRecording() : startUnused();
     const rows = items.filter(i => i.ready).map(i => ({
       file: i.file, building: i.building, interior: i.interior, floor: i.interior ? i.floor : null, building_text: i.buildingText.trim(), known: i.known
     }));
@@ -604,6 +655,13 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     let prog = null;   // サーバありなら 1 回で全部の棟（report.json の stages・counts と pipeline の状態）
     if (SERVER) { try { const r = await api(`/api/progress?buildings=${ids.map(encodeURIComponent).join(",")}`); if (r.ok) prog = r.j.buildings; } catch (e) {} }
     if (prog) ids.forEach(id => { if (prog[id] && prog[id].run) runs[id] = prog[id].run; });
+    if (prog) {   // 前に送って未使用の写真（F16）。候補が変わった時だけ③の文とボタンを描き直す（起動の結果の文を消さない）
+      const before = JSON.stringify(unusedCands().map(id => [id, unused[id]]));
+      unused = {}; resumes = {};
+      ids.forEach(id => { if (prog[id] && prog[id].unused_staff_photos) unused[id] = prog[id].unused_staff_photos;
+        if (prog[id] && prog[id].resume) resumes[id] = prog[id].resume; });
+      if (JSON.stringify(unusedCands().map(id => [id, unused[id]])) !== before) refresh();
+    }
     const RUN_JA = {running: "係が作業中", done: "係の工程が終わりました", stopped: "止まりました", error: "エラー"};
     // 描き直しで、打ちかけの上限の欄を消さない（棟 id → 値）
     const typed = {}; rows.querySelectorAll("input[data-resume-max]").forEach(i => { typed[i.dataset.resumeMax] = i.value; });

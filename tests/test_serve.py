@@ -531,3 +531,40 @@ def test_resume_after_max_usd_needs_a_higher_cap(srv, monkeypatch):
     assert st == 200 and j["max_usd"] == 8
     _wait_run(base, "honbu")
     assert calls == [("honbu", False, str(root.resolve()), 8.0)]
+
+
+def test_progress_counts_unused_staff_photos_for_buildings_with_json(srv):
+    """棟 JSON がある棟だけ unused_staff_photos {n, tape, name}：職員が送って（assigned_by: staff）棟 JSON に id が出ない写真（F16）。"""
+    base, root = srv
+    (root / "data" / "photos").mkdir(parents=True, exist_ok=True)
+    (root / "data" / "photos" / "index.json").write_text(json.dumps({"photos": [
+        {"id": "IMG_A", "building": "honbu", "assigned_by": "staff"},                            # 棟 JSON に出る（使用済み）
+        {"id": "IMG_A1", "building": "honbu", "assigned_by": "staff"},                           # 頭が同じでも別の写真（未使用）
+        {"id": "IMG_T", "building": "honbu", "assigned_by": "staff", "ruler": "tape_measure"},   # 未使用のメジャー
+        {"id": "IMG_OLD", "building": "honbu"},                                                  # assigned_by 無し（数えない）
+        {"id": "IMG_X", "building": "tower75", "assigned_by": "staff"},                          # 棟 JSON が無い棟
+    ]}), encoding="utf-8")
+    (root / "data" / "buildings").mkdir(parents=True, exist_ok=True)
+    (root / "data" / "buildings" / "honbu.json").write_text(json.dumps(
+        {"id": "honbu", "name": "テスト棟", "faces": [{"id": "f0", "h": {"status": "measured", "evidence": ["IMG_A"]}}]},
+        ensure_ascii=False), encoding="utf-8")
+    st, p = _get(base + "/api/progress?buildings=honbu,tower75")
+    assert st == 200
+    u = p["buildings"]["honbu"]["unused_staff_photos"]
+    assert u == {"n": 2, "tape": 1, "building_photos": 3, "name": "テスト棟"}
+    assert "unused_staff_photos" not in p["buildings"]["tower75"]   # 棟 JSON が無い棟は出さない
+    assert serve.unused_staff_photos(root, "tower75") is None
+    # 全部使い終わったら 0（ボタンの候補にならない）
+    (root / "data" / "buildings" / "honbu.json").write_text(json.dumps(
+        {"id": "honbu", "name": "テスト棟", "ev": ["IMG_A", "IMG_A1", "IMG_T"]}, ensure_ascii=False), encoding="utf-8")
+    assert serve.unused_staff_photos(root, "honbu")["n"] == 0
+
+
+def test_staff_html_can_start_from_unused_staff_photos():
+    """職員の画面：写真を入れずに、前に送った未使用の写真で③を押せる（unused_staff_photos を読み、1 棟だけ /api/start）。"""
+    from pathlib import Path
+
+    html = (Path(__file__).resolve().parents[1] / "web" / "staff.html").read_text(encoding="utf-8")
+    assert "unused_staff_photos" in html and "前に送った写真のうち未使用" in html
+    assert "startUnused()" in html and "buildings: [id], max_usd: maxUsd()" in html
+    assert '$("#export").disabled = ready === 0 && !cands.length' in html

@@ -21,7 +21,9 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
                                    このサーバで作業中・キーが無い・状態が無い・止まっていない時は断る（409、理由の文）。
                                    費用の上限で止まった棟は、使った額より大きい max_usd が要る
     GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
-                                   pipeline_state.json がある棟は resume（止まっているか・画面から続けられるか）も
+                                   pipeline_state.json がある棟は resume（止まっているか・画面から続けられるか）も。
+                                   棟 JSON がある棟は unused_staff_photos {n, tape, building_photos, name}（職員が前に送って
+                                   棟 JSON にまだ出ない写真。写真を入れずに追記を始められる。F16）も
     GET  /api/steps                工程 → 係の名前・モデル・一言（.claude/agents/*.md の frontmatter と agents の工程の一覧。待機画面）
     GET  /api/pipeline?building=a  最新の pipeline の記録の要約（工程・係・モデル・秒・費用・要約 1 行）と pipeline_state.json の状態
     GET  /api/artifacts?building=a 待機画面の場面に使う、今ある生成物の一覧（写真と灰色の箱・正面化・立面図・製図板・検収・証拠・歩く画面）
@@ -670,6 +672,24 @@ def request_counts(root: Path, bid: str) -> dict | None:
             "photo_requests": [{k: r.get(k) for k in ("face", "what", "where", "why")} for r in by["staff"]]}
 
 
+def unused_staff_photos(root: Path, bid: str) -> dict | None:
+    """棟 JSON がある棟の「職員が画面で送った写真のうち、棟 JSON にまだ id が出ない物」（agents.find_new_photos。11/8、F16）。
+    写真フォルダ無しの /api/start（追記）はこの写真を新しい写真として使う。
+    {"n": 枚数, "tape": うちメジャー, "building_photos": この棟の職員の写真の数, "name": 棟 JSON の name}。棟 JSON が無い・読めなければ None。"""
+    from . import agents
+
+    b = _jload(root / "data" / "buildings" / f"{bid}.json")
+    if not isinstance(b, dict):
+        return None
+    try:
+        r = agents.find_new_photos(bid, root)
+    except Exception as e:  # noqa: BLE001  進捗は止めない
+        log(f"未使用の写真を数えられません {bid}: {type(e).__name__}: {e}")
+        return None
+    return {"n": len(r.get("ids") or []), "tape": len(r.get("tape") or []),
+            "building_photos": r.get("building_photos"), "name": b.get("name")}
+
+
 def api_progress(root: Path, buildings: list[str] | None) -> dict:
     if not buildings:
         buildings = list(RUNS) + [t for t in api_site(root)["targets"] if t not in RUNS]
@@ -687,6 +707,9 @@ def api_progress(root: Path, buildings: list[str] | None) -> dict:
             run = _run_public(RUNS.get(b))
             rs = resume_check(root, b, RUNS.get(b))
         out[b] = {"report": report, "run": run}
+        us = unused_staff_photos(root, b)
+        if us is not None:   # 棟 JSON がある棟だけ：前に送って未使用の写真（写真を入れずに追記を始められるか。F16）
+            out[b]["unused_staff_photos"] = us
         if rs is not None:   # pipeline_state.json がある棟だけ：止まっているか・画面から続けられるか（F15）
             out[b]["resume"] = rs
     site_run = _site_public()
