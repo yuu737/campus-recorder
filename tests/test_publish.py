@@ -74,13 +74,13 @@ def test_publish_masks_excludes_and_counts(tmp_path, monkeypatch):
     got = _got(idx)
     assert res["index"] == 6 and res["public"] == 3 and res["before"] == 1 and res["missing"] == ["M"]
     assert [e["id"] for e in res["excluded"]] == ["C"] and res["masked"] == 1 and res["cropped"] == 1
-    assert res["boxes"] == {"face": 1, "poster": 1} and res["not_reviewed"] == 3 and res["auto_now"] == 2
+    assert res["boxes"] == {"poster": 1} and res["auto_unconfirmed"] == 1 and res["not_reviewed"] == 3 and res["auto_now"] == 2
     a = root / got["A"]["public_file"]
     assert got["A"]["public_file"] == "public/20261105/honbu/A.jpg"
     im = Image.open(a)
     assert max(im.size) == 1600 and not im.getexif()
     assert im.getpixel((5, 5))[0] < 160                       # 掲示物の箱（左上）は灰色
-    assert im.getpixel((int(0.55 * 1600), int(0.505 * 1200)))[0] < 160   # 顔の自動の箱
+    assert im.getpixel((int(0.55 * 1600), int(0.505 * 1200)))[0] > 160   # 確かめていない自動の顔の箱は描かない（F11 追記）
     assert im.getpixel((1500, 1100))[0] > 180                 # 箱の外は元の色
     assert got["T"]["public_file"] == "public/メジャー/本部棟_honbu/T.jpg"
     assert Image.open(root / got["T"]["public_file"]).size == (960, 1600)   # 右の 2 列を切り落とし
@@ -127,3 +127,43 @@ def test_publish_default_holds_photos_not_through_both_hogo_and_review(tmp_path,
     from recorder.__main__ import main
     assert main(["photos", "publish", "--index", str(idx), "--allow-unreviewed"]) == 0
     assert (root / "public/20261105/honbu/B.jpg").exists()
+
+
+def test_seen_marks_review_without_touching_masks_and_makes_photo_publishable(tmp_path, monkeypatch):
+    root, idx = _setup(tmp_path, monkeypatch)
+    photos.set_masks(idx, {"pass": "hogo", "photos": {"A": {"masks": [{"kind": "poster", "cells": "A1"}]}, "B": {"masks": []}}})
+    n_masks = len(_got(idx)["A"]["masks"])
+    r = photos.set_masks(idx, {"pass": "review", "made_by": "見直し（sonnet）", "seen": ["A", "B", "B", "Z"],
+                               "photos": {"C": {"masks": []}}})
+    got = _got(idx)
+    assert r["seen"] == 2 and r["photos"] == 1 and r["not_found"] == ["Z"]
+    assert got["A"]["review"]["seen"] is True and got["A"]["review"]["by"] == "見直し（sonnet）"
+    assert len(got["A"]["masks"]) == n_masks and "seen" not in got["C"]["review"]
+    res = publish.publish(idx)
+    assert "A" not in res["held"] and "B" not in res["held"] and "C" in res["held"]
+    assert publish.is_reviewed(_got(idx)["A"]) and publish.is_reviewed(_got(idx)["B"])
+
+
+def test_cli_mark_seen_and_seen_from(tmp_path, monkeypatch, capsys):
+    from recorder.__main__ import main
+
+    root, idx = _setup(tmp_path, monkeypatch)
+    assert main(["photos", "masks", "--pass", "review", "--mark-seen", "A,B", "--index", str(idx)]) == 0
+    tasks = tmp_path / "tasks.json"
+    tasks.write_text(json.dumps({"photos": [{"photo": "C"}, {"photo": "T"}]}), encoding="utf-8")
+    assert main(["photos", "masks", "--pass", "hogo", "--seen-from", str(tasks), "--index", str(idx)]) == 0
+    got = _got(idx)
+    assert got["A"]["review"]["seen"] and got["B"]["review"]["seen"] and "hogo" not in got["A"]
+    assert got["C"]["hogo"]["seen"] and got["T"]["hogo"]["seen"] and "review" not in got["C"]
+
+
+def test_dry_run_counts_masks_and_crops_from_index(tmp_path, monkeypatch):
+    root, idx = _setup(tmp_path, monkeypatch)
+    photos.set_masks(idx, {"pass": "hogo", "photos": {"A": {"masks": [{"kind": "poster", "cells": "A1"}]},
+                                                      "T": {"masks": [], "crop": "A1:H10"}}})
+    before = idx.read_text(encoding="utf-8")
+    res = publish.publish(idx, dry_run=True, allow_unreviewed=True)
+    assert idx.read_text(encoding="utf-8") == before and not (root / "public").exists()
+    assert res["masked"] == 1 and res["boxes"] == {"poster": 1} and res["auto_unconfirmed"] == 1 and res["cropped"] == 1
+    txt = publish.summary_text(res)
+    assert "塗りつぶしあり 1" in txt and "切り落とし 1" in txt and "掲示物 1" in txt

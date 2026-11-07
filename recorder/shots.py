@@ -3,10 +3,11 @@
   3 段目の証拠ビューア：out/<棟>/evidence_<種>.png（種は three／overview／photo）
       Rerun の Web 版（rerun-sdk の serve_web_viewer を窓なしの子プロセスで。ブラウザは開かない）に「データ＋その種の画面（.rbl）」を ?url= で読ませ、headless の Edge で撮る。
   5 段目の歩く画面：out/<棟>/walk.png
+      既定は boxes=0（PLATEAU の未測の灰色の箱を消した状態＝棟の形を見せる絵）。--boxes を付けた時だけ箱ありで撮る。結果に boxes: false/true の印。
       web/index.html を headless の Edge で撮る。構図は model_report.json の web_cameras.street.query、
       無ければ棟の足元の中心から南西 40 m・目の高さ 1.6 m で中心を向く既定。読み込みの終わりは #loading が消えた事で判定。
 
-  python -m recorder shots data/buildings/honbu.json [--evidence] [--walk]   （どちらも付けなければ両方）
+  python -m recorder shots data/buildings/honbu.json [--evidence] [--walk] [--boxes]   （どちらも付けなければ両方）
 
 窓を出さない決まり（11/6 利用者の苦情「画面が開いたり閉じたりでちかちかする」）：
   - `rerun … --screenshot-to` はビューアの窓が開くので使わない。`rerun --serve-web` もいつものブラウザにタブを開くので使わない。
@@ -583,11 +584,12 @@ WALK_READY_JS = "(() => { const l = document.getElementById('loading'); return !
 
 
 def walk_shot(building_id: str, out_dir: Path | None = None, building_json: Path | None = None,
-              root: Path = Path(".")) -> dict:
-    """web/index.html を ?cam= の構図で撮って out/<棟>/walk.png に。真っ白なら 1 回だけ待ちを伸ばして撮り直す。"""
+              root: Path = Path("."), boxes: bool = False) -> dict:
+    """web/index.html を ?cam= の構図で撮って out/<棟>/walk.png に。真っ白なら 1 回だけ待ちを伸ばして撮り直す。
+    既定は boxes=0（PLATEAU の箱なし）。boxes=True の時だけ箱ありで撮る。結果に boxes の印（False＝PLATEAU の箱なし）。"""
     out_dir = out_dir or root / OUT_ROOT / building_id
     bj = building_json or root / "data" / "buildings" / f"{building_id}.json"
-    res = {"kind": "walk", "shots": {}, "errors": {}}
+    res = {"kind": "walk", "boxes": bool(boxes), "shots": {}, "errors": {}}
     if find_browser() is None:
         res["errors"]["browser"] = "Edge も Chrome も無い"
         return res
@@ -605,14 +607,16 @@ def walk_shot(building_id: str, out_dir: Path | None = None, building_json: Path
     info: dict = {}
     t0 = time.time()
     try:
-        url = f"http://127.0.0.1:{port}/web/index.html?cam={cam}&size={WALK_SIZE[0]}x{WALK_SIZE[1]}&ui=0"
+        url = f"http://127.0.0.1:{port}/web/index.html?cam={cam}&size={WALK_SIZE[0]}x{WALK_SIZE[1]}&ui=0" + ("" if boxes else "&boxes=0")
         with headless_browser(WALK_SIZE, info) as cdp:
             for n, settle in enumerate(WALK_SETTLE, 1):
                 r = capture(cdp, url, png, WALK_READY_JS, WALK_READY_TIMEOUT, settle)
                 if r["ready"] and not is_blank(png):
-                    res["shots"]["walk"] = {"png": str(png), "cam": cam, "cam_from": src, "size": _png_size(png),
+                    res["shots"]["walk"] = {"png": str(png), "cam": cam, "cam_from": src, "size": _png_size(png), "boxes": bool(boxes),
+                                            "note": ("PLATEAU の箱あり" if boxes else "PLATEAU の箱なし"),
                                             "seconds": round(time.time() - t0, 1), "tries": n}
                     res["errors"].pop("walk", None)
+                    (out_dir / "walk.json").write_text(json.dumps(res["shots"]["walk"], ensure_ascii=False, indent=1), encoding="utf-8")
                     break
                 res["errors"]["walk"] = ("読み込みが終わらない" if not r["ready"] else "真っ白") + f"（{n} 回）"
     except Exception as e:  # noqa: BLE001
@@ -627,12 +631,12 @@ def walk_shot(building_id: str, out_dir: Path | None = None, building_json: Path
 # --- まとめ・裏で走らせる ------------------------------------------------------------------
 
 def all_shots(building_id: str, evidence: bool = True, walk: bool = True, building_json: Path | None = None,
-              root: Path = Path(".")) -> dict:
+              root: Path = Path("."), boxes: bool = False) -> dict:
     out = {}
     if evidence:
         out["evidence"] = evidence_shots(building_id, building_json=building_json, root=root)
     if walk:
-        out["walk"] = walk_shot(building_id, building_json=building_json, root=root)
+        out["walk"] = walk_shot(building_id, building_json=building_json, root=root, boxes=boxes)
     return out
 
 
@@ -648,7 +652,7 @@ def _write_status(path: Path, d: dict) -> None:
 
 
 def run_in_background(building_id: str, evidence: bool = True, walk: bool = True, building_json: Path | None = None,
-                      root: Path = Path("."), on_done=None) -> threading.Thread | None:
+                      root: Path = Path("."), on_done=None, boxes: bool = False) -> threading.Thread | None:
     """all_shots を裏のスレッドで走らせる（呼んだ側を待たせない）。同じ棟は同時に 1 つだけ（走っていれば None）。
     状態は out/<棟>/shots_status.json：state＝running／done／failed、started・finished、result（all_shots の返り値）。
     on_done(result) があれば終わった後に呼ぶ（例外は status に書いて飲み込む）。"""
@@ -663,7 +667,7 @@ def run_in_background(building_id: str, evidence: bool = True, walk: bool = True
             d = {"building": building_id, "state": "running", "started": started}
             _write_status(status, d)
             try:
-                r = all_shots(building_id, evidence=evidence, walk=walk, building_json=building_json, root=root)
+                r = all_shots(building_id, evidence=evidence, walk=walk, building_json=building_json, root=root, boxes=boxes)
                 failed = any(part.get("errors") for part in r.values())
                 d.update(state="failed" if failed and not any(part.get("shots") for part in r.values()) else "done", result=r)
                 if on_done is not None:
@@ -685,6 +689,7 @@ def add_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("file", help="棟 JSON（data/buildings/<棟>.json）")
     p.add_argument("--evidence", action="store_true", help="証拠ビューアの絵だけ（evidence_<種>.png）")
     p.add_argument("--walk", action="store_true", help="歩く画面の絵だけ（walk.png）")
+    p.add_argument("--boxes", action="store_true", help="歩く画面を PLATEAU の箱ありで撮る（既定は boxes=0＝箱なし）")
 
 
 def print_result(res: dict) -> None:
@@ -703,6 +708,6 @@ def run_cli(a: argparse.Namespace) -> int:
     bj = Path(a.file)
     b = load_building(bj)
     both = not a.evidence and not a.walk
-    res = all_shots(b["id"], evidence=both or a.evidence, walk=both or a.walk, building_json=bj)
+    res = all_shots(b["id"], evidence=both or a.evidence, walk=both or a.walk, building_json=bj, boxes=a.boxes)
     print_result(res)
     return 0 if not any(part.get("errors") for part in res.values()) else 1

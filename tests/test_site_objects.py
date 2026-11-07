@@ -189,3 +189,24 @@ def test_write_objects_keeps_format_and_rejects_errors(tmp_path):
     d = json.loads(p.read_text(encoding="utf-8"))
     assert d["objects"]["items"][0]["id"] == "br"
     assert p.read_text(encoding="utf-8") == json.dumps(d, ensure_ascii=False, indent=1)
+
+
+def test_corridor_draws_box_or_floor_only():
+    """渡り廊下 corridor（11/8 F9）：高さが分かれば箱、unknown なら床だけ（箱は描かない）。棟 JSON は要らない。"""
+    from recorder import site_objects as so
+    poly = {"value": [[0, 0], [30, 0], [30, 6], [0, 6]], "unit": "m", "tol": 1.0, "status": "estimated",
+            "evidence": ["PXL_x"], "method": "OSM"}
+    fz = {"value": 56.6, "unit": "m", "tol": 2.6, "status": "estimated", "evidence": ["PXL_x"], "method": "観察票の比"}
+    o = {"id": "c1", "type": "corridor", "evidence": ["PXL_x"], "polygon": poly, "floor_z": fz,
+         "height": {"value": 4.37, "unit": "m", "tol": 1.3, "status": "estimated", "evidence": ["PXL_x"], "method": "1 段分"}}
+    site = {"objects": {"schema": so.SCHEMA, "items": [o]}}
+    errs, warns = so.validate_objects(site, {})
+    assert errs == [] and warns == []
+    meshes, skipped = so.object_meshes(o, {})
+    zs = [p[2] for t in meshes[0]["tris"] for p in t]
+    assert min(zs) == 56.6 and max(zs) == pytest.approx(60.97) and not skipped
+    o["height"] = {"value": None, "unit": "m", "tol": None, "status": "unknown", "evidence": [], "method": "", "note": ""}
+    errs, warns = so.validate_objects(site, {})
+    assert errs == [] and any("撮影依頼" in w for w in warns)
+    meshes, skipped = so.object_meshes(o, {})
+    assert meshes and max(p[2] for t in meshes[0]["tris"] for p in t) == 56.6 and "height" in skipped[0]

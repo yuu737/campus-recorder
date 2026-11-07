@@ -1091,13 +1091,28 @@ def make_send_for(rec: dict, src: Path, send_root: Path, photo_root: Path, force
     return res
 
 
+def redraw_send_for(rec: dict, src: Path, send_root: Path, photo_root: Path, now: str) -> None:
+    """顔を探さずに send_file を作り直す（11/8 F11 追記 3）。索引の masks のうち描く物（確かめていない by: auto 以外）
+    だけを描く。masks・auto_mask は触らない（古い縮小版に焼き込まれた誤検出の「顔」を消すため）。"""
+    from . import privacy
+
+    dst = Path(send_root) / SEND_DIRNAME / f"{rec['id']}.jpg"
+    im = privacy.resize_long(privacy.load_oriented(Path(src)), privacy.SEND_LONG)
+    privacy.save_jpeg(privacy.paint_masks(im, privacy.drawn_masks(rec.get("masks") or [])), dst, privacy.SEND_QUALITY)
+    rec["send_file"] = _rel_or_abs(dst, photo_root)
+    rec["send_redrawn_at"] = now
+    rec.pop("send_warning", None)
+
+
 def make_sends(index_path: Path = INDEX_PATH, ids: list[str] | None = None, force: bool = False,
-               photo_root: Path | None = None) -> dict:
+               photo_root: Path | None = None, no_detect: bool = False) -> dict:
     """索引の写真の send_file を作る（無い物だけ。--force で全部）。取り込み済みの写真に後から作る道具。
+    no_detect（--no-detect）：顔を探さず、索引の確かめた箱だけを描いて全部作り直す（masks は書かない）。
     縮小と顔の検出は鍵の外。最後に鍵を取って索引を読み直し、変わった項目だけ書く（patch_index）。"""
     photo_root = Path(photo_root or Path(index_path).parent)
     idx = load_index(index_path)
-    out: dict = {"made": 0, "kept": 0, "missing": [], "faces": 0, "warnings": []}
+    out: dict = {"made": 0, "kept": 0, "missing": [], "faces": 0, "warnings": [], "no_detect": no_detect}
+    now = time.strftime("%Y-%m-%dT%H:%M:%S")
     diffs: dict[str, dict] = {}
     for rec in idx["photos"]:
         if ids and not any(rec["id"].startswith(i) for i in ids):
@@ -1107,6 +1122,15 @@ def make_sends(index_path: Path = INDEX_PATH, ids: list[str] | None = None, forc
             out["missing"].append(rec["id"])
             continue
         base = copy.deepcopy(rec)
+        if no_detect:
+            try:
+                redraw_send_for(rec, src, Path(index_path).parent, photo_root, now)
+            except Exception as e:  # noqa: BLE001
+                out["warnings"].append(f"{rec['id']}: 縮小版を作れません：{type(e).__name__}: {e}")
+                continue
+            diffs[rec["id"]] = record_diff(base, rec)
+            out["made"] += 1
+            continue
         res = make_send_for(rec, src, Path(index_path).parent, photo_root, force=force)
         diffs[rec["id"]] = record_diff(base, rec)
         if res is None:
@@ -1293,12 +1317,15 @@ def mark_tape(index_path: Path, ids: list[str], building: str, *, face: str | No
     return out
 
 
-def set_masks(index_path: Path, doc: dict, *, by: str | None = None, now: str | None = None) -> dict:
+def set_masks(index_path: Path, doc: dict, *, by: str | None = None, now: str | None = None,
+              mark_seen: list[str] | None = None) -> dict:
     """保護係（hogo、Haiku）か見直し（Sonnet）の升（out/photos/hogo_<フォルダ>.json）を索引に書く道具。
 
     doc: {"pass": "hogo"|"review", "made_by", "photos": {写真 id: {"masks": [{"kind", "cells" | "box", "note"}],
           "drop": ["C3:E5", ...]（見直しで外す升）, "crop": "A1:H10"（残す範囲）| null, "exclude": "理由" | null,
-          "include": true（見直しで除外を取り消す）, "ok": true}}}
+          "include": true（見直しで除外を取り消す）, "ok": true}},
+          "seen": [写真 id, ...]（見たが変えなかった写真。この pass の記録だけ付け、箱・crop・除外は触らない）}
+    - mark_seen（--mark-seen / --seen-from）も同じ扱い。photos に書いた写真は seen より photos が優先。
     - 同じ pass（hogo か review）の前の箱は置き換える（やり直しても増えない）。auto の箱はそのまま。
     - exclude があれば public: false と public_reason（研究・研究室に関する物。塗りつぶしで済ませない）。
     - kind は face / plate / poster / name / phone だけ。升の書き方が違う写真は errors に出し、その写真は書かない。"""
@@ -1311,7 +1338,24 @@ def set_masks(index_path: Path, doc: dict, *, by: str | None = None, now: str | 
     items = doc.get("photos") or {}
     idx = load_index(index_path)
     by_id = {p["id"]: p for p in idx["photos"]}
-    out: dict = {"pass": by, "photos": 0, "masks": 0, "dropped": 0, "crops": 0, "excluded": [], "errors": [], "not_found": []}
+    out: dict = {"pass": by, "photos": 0, "masks": 0, "dropped": 0, "crops": 0, "excluded": [], "errors": [], "not_found": [],
+                 "seen": 0, "written": [], "skipped": []}
+    done_seen: set[str] = set()
+    for pid in list(doc.get("seen") or []) + list(mark_seen or []):
+        pid = str(pid)
+        if pid in items:
+            continue
+        p = by_id.get(pid)
+        if p is None:
+            if pid not in out["not_found"]:
+                out["not_found"].append(pid)
+            continue
+        if pid in done_seen:
+            continue   # 同じ呼び出しで重複して来た id
+        done_seen.add(pid)
+        prev = p.get(by) if isinstance(p.get(by), dict) else {}
+        p[by] = {"by": doc.get("made_by") or prev.get("by") or by, "at": now, "ok": True, "seen": True, "seen_at": now}
+        out["seen"] += 1
     for pid, r in items.items():
         p = by_id.get(pid)
         if p is None:
@@ -1342,20 +1386,67 @@ def set_masks(index_path: Path, doc: dict, *, by: str | None = None, now: str | 
             except ValueError as ex:
                 out["errors"].append({"id": pid, "crop": r["crop"], "error": str(ex)})
                 bad = True
-        drops = set()
-        for c in r.get("drop") or []:
+        drops, drop_n = set(), set()
+        n_masks = len(p.get("masks") or [])
+        for c in r.get("drop") or []:   # 元の升（"C3:E5"）か、箱の番号（3 か {"n": 3}）。寄せた後の箱は番号で
             try:
-                drops.add(tuple(privacy.cells_to_box(c)))
-            except ValueError as ex:
+                if isinstance(c, dict) or isinstance(c, int):
+                    n = int(c["n"] if isinstance(c, dict) else c)
+                    if not 0 <= n < n_masks:
+                        raise ValueError(f"masks[{n}] が無い")
+                    drop_n.add(n)
+                else:
+                    drops.add(tuple(privacy.cells_to_box(c)))
+            except (KeyError, ValueError, TypeError) as ex:
                 out["errors"].append({"id": pid, "drop": c, "error": str(ex)})
                 bad = True
         if bad:
+            out["skipped"].append(pid)
+            continue
+        cur = list(p.get("masks") or [])
+        auto_items = list(r.get("auto") or []) + [{"n": c["n"] if isinstance(c, dict) else c, "confirm": True}
+                                                  for c in r.get("confirm") or []]   # "confirm": [n, …] でも
+        if auto_items and by != "review":
+            out["errors"].append({"id": pid, "auto": auto_items, "error": "自動の顔の confirm / drop は見直し（review）か寄せ（refine）で"})
+            out["skipped"].append(pid)
+            continue
+        auto_bad = False
+        for it in auto_items:
+            try:
+                n = int(it["n"])
+                if not 0 <= n < len(cur) or cur[n] is None or cur[n].get("by") != "auto":
+                    raise ValueError(f"masks[{it.get('n')}] は自動の箱ではない")
+                if it.get("box") is not None and privacy.norm_box(it["box"]) != privacy.norm_box(cur[n]["box"]):
+                    raise ValueError(f"masks[{n}] の箱が依頼の時と違う")
+                dec = _auto_decision(cur[n], it, doc.get("made_by") or by, now)
+                if dec is None:
+                    p.setdefault("dropped_auto", []).append({"box": cur[n]["box"], "score": cur[n].get("score"), "at": now,
+                                                             "by": doc.get("made_by") or by})
+                    out["dropped_auto"] = out.get("dropped_auto", 0) + 1
+                else:
+                    out["confirmed"] = out.get("confirmed", 0) + 1
+                cur[n] = dec
+            except (KeyError, ValueError, TypeError) as ex:
+                out["errors"].append({"id": pid, "auto": it, "error": str(ex)})
+                auto_bad = True
+        if auto_bad:
+            out["skipped"].append(pid)
             continue
         keep = []
-        for m in p.get("masks") or []:
-            if m.get("by") == by:
+        for i, m in enumerate(cur):
+            if m is None:
                 continue
-            if drops and m.get("by") != "auto" and tuple(m.get("box") or ()) in drops:
+            if i in drop_n:   # 番号で外す（auto の箱も。どちらも写真に記録を残す）
+                key = "dropped_auto" if m.get("by") == "auto" else "dropped"
+                p.setdefault(key, []).append({"kind": m.get("kind"), "box": m.get("box"), "box_before": m.get("box_before"),
+                                              "by_was": m.get("by"), "dropped_by": by, "made_by": doc.get("made_by") or by,
+                                              "at": now})
+                out["dropped"] += 1
+                continue
+            if m.get("by") == by and not m.get("confirmed"):   # 確かめた顔はやり直しで消さない
+                continue
+            if drops and m.get("by") != "auto" and (tuple(m.get("box") or ()) in drops
+                                                   or tuple(m.get("box_before") or ()) in drops):
                 out["dropped"] += 1
                 continue
             keep.append(m)
@@ -1373,6 +1464,7 @@ def set_masks(index_path: Path, doc: dict, *, by: str | None = None, now: str | 
             p["public"], p["public_reason"] = None, None
         p[by] = {"by": doc.get("made_by") or by, "at": now, "ok": bool(r.get("ok", True))}
         out["photos"] += 1
+        out["written"].append(pid)
     save_index(idx, index_path)
     return out
 
@@ -1406,7 +1498,7 @@ def hogo_tasks(index_path: Path = INDEX_PATH, *, folder: str | None = None, ids:
             big = privacy.load_oriented(src)
             m, _ = privacy.auto_masks(big)
             others = [x for x in rec.get("masks") or [] if x.get("by") != "auto"]
-            im = privacy.paint_masks(privacy.resize_long(big, privacy.SEND_LONG), m + others)
+            im = privacy.paint_masks(privacy.resize_long(big, privacy.SEND_LONG), others)   # 自動の顔は描かない
         g = out_dir / f"{rec['id']}_grid.jpg"
         privacy.save_jpeg(privacy.grid_image(im), g, 85)
         rows.append({"photo": rec["id"], "folder": photo_folder(rec), "grid": g.as_posix(),
@@ -1418,6 +1510,243 @@ def hogo_tasks(index_path: Path = INDEX_PATH, *, folder: str | None = None, ids:
     tp = out_dir / f"tasks_{name}.json"
     tp.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return {"tasks": tp.as_posix(), "n": len(rows), "missing": missing, "write_to": doc["write_to"]}
+
+
+# --- 寄せ（refine）：保護係の粗い箱を細かい升で締める（11/8 F11） ------------------------------------------
+# 10×10 の升で指した箱は粗く、垂れ幕 3 本が壁の大きな一塊を隠す。箱ごとに各側 25 % 広げて切り出し、
+# その中に細かい 10×10 の升を引いた絵を係に見せ、「本当に隠す範囲」を指してもらう（目印係の寄りと同じ考え）。
+# 置き換える箱は元の箱の中に限る（広げない）。複数の物に分かれる時は分けてよい。
+
+REFINE_PAD = 0.25          # 寄せの切り出しで箱を各側にこの割合（箱の幅・高さに対して）だけ広げる
+REFINE_PASSES = ("hogo", "review")
+REFINE_LONG = 1200         # 寄せの絵の長辺（小さな箱は拡大して見せる。拡大は 8 倍まで）
+
+
+def refine_region(box) -> list[float]:
+    """箱 → 寄せの切り出しの範囲（割合）。各側に箱の幅・高さの REFINE_PAD だけ広げ、写真の中に収める。"""
+    from . import privacy
+
+    x0, y0, x1, y1 = privacy.norm_box(box)
+    px, py = (x1 - x0) * REFINE_PAD, (y1 - y0) * REFINE_PAD
+    return [round(max(0.0, x0 - px), 6), round(max(0.0, y0 - py), 6), round(min(1.0, x1 + px), 6), round(min(1.0, y1 + py), 6)]
+
+
+def refine_cells_to_box(region, box, cells: str) -> list[float]:
+    """寄せの絵の升（"C3:E5"）→ 写真全体の割合の箱。元の箱の中に切り詰める（広げない）。何も残らなければ ValueError。"""
+    from . import privacy
+
+    rx0, ry0, rx1, ry1 = region
+    cx0, cy0, cx1, cy1 = privacy.cells_to_box(cells)
+    rw, rh = rx1 - rx0, ry1 - ry0
+    fx0, fy0, fx1, fy1 = rx0 + cx0 * rw, ry0 + cy0 * rh, rx0 + cx1 * rw, ry0 + cy1 * rh
+    bx0, by0, bx1, by1 = privacy.norm_box(box)
+    nx0, ny0, nx1, ny1 = max(fx0, bx0), max(fy0, by0), min(fx1, bx1), min(fy1, by1)
+    if nx1 - nx0 <= 1e-6 or ny1 - ny0 <= 1e-6:
+        raise ValueError(f"升 {cells} は元の箱の外（元の箱より広げない）")
+    return privacy.norm_box([nx0, ny0, nx1, ny1])
+
+
+def _refine_targets(rec: dict, auto: bool = False) -> list[tuple[int, dict]]:
+    return [(i, m) for i, m in enumerate(rec.get("masks") or []) if m.get("box")
+            and (m.get("by") in REFINE_PASSES or (auto and m.get("by") == "auto" and m.get("kind") == "face"))]
+
+
+def hogo_refine_tasks(index_path: Path = INDEX_PATH, *, ids: list[str] | None = None, building: str | None = None,
+                      out_dir: Path = Path("out/photos/hogo_refine"), photo_root: Path | None = None,
+                      auto: bool = False) -> dict:
+    """寄せの絵 `<id>_<n>_grid.jpg`（n は索引の masks の番号）と依頼 `tasks_refine[_<棟>].json` を出す。索引は書かない。
+    絵は元の写真から切り出す（細かく見るため）。顔の自動の箱は塗ってから切り出す。元の箱の範囲を赤の線で示す。"""
+    from PIL import ImageDraw
+
+    from . import privacy
+
+    photo_root = Path(photo_root or Path(index_path).parent)
+    idx = load_index(index_path)
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rows, missing = [], []
+    for rec in idx["photos"]:
+        if rec.get("period") == "before" or rec.get("public") is False:
+            continue
+        if ids and not any(rec["id"].startswith(i) for i in ids):
+            continue
+        if building and rec.get("building") != building:
+            continue
+        targets = _refine_targets(rec, auto)
+        if not targets:
+            continue
+        src = source_path(rec, photo_root)
+        if not src.exists():
+            missing.append(rec["id"])
+            continue
+        big = privacy.resize_long(privacy.load_oriented(src), privacy.DETECT_LONG)
+        # 自動の顔の箱は塗らない（見直しが「顔か」を確かめるため。この絵は out/ の係用で公開しない）
+        W, H = big.size
+        for n, m in targets:
+            region = refine_region(m["box"])
+            x0, y0 = int(region[0] * W), int(region[1] * H)
+            px = (x0, y0, max(x0 + 1, round(region[2] * W)), max(y0 + 1, round(region[3] * H)))
+            crop = big.crop(px)
+            s = min(8.0, REFINE_LONG / max(crop.size))
+            crop = crop.resize((max(1, round(crop.size[0] * s)), max(1, round(crop.size[1] * s))))
+            cw, ch = crop.size
+            d = ImageDraw.Draw(crop)   # 元の箱（これより広げない）を赤の線で
+            rw, rh = region[2] - region[0], region[3] - region[1]
+            b = privacy.norm_box(m["box"])
+            d.rectangle((round((b[0] - region[0]) / rw * cw), round((b[1] - region[1]) / rh * ch),
+                         round((b[2] - region[0]) / rw * cw) - 1, round((b[3] - region[1]) / rh * ch) - 1),
+                        outline=(255, 40, 40), width=2)
+            g = out_dir / f"{rec['id']}_{n}_grid.jpg"
+            privacy.save_jpeg(privacy.grid_image(crop), g, 88)
+            rows.append({"photo": rec["id"], "n": n, "kind": m.get("kind"), "by": m.get("by"), "cells": m.get("cells"),
+                         "note": m.get("note"), "box": b, "region": region, "grid": g.as_posix()}
+                        | ({"score": m.get("score"), "ask": "顔か確かめて confirm（cells で締めてよい）か drop"}
+                           if m.get("by") == "auto" else {}))
+    tag = re.sub(r"[^\w-]+", "_", building) if building else ""
+    name = "tasks_refine" + (f"_{tag}" if tag else "")
+    write_to = "out/photos/hogo_refine" + (f"_{tag}" if tag else "") + ".json"
+    doc = {"made_at": time.strftime("%Y-%m-%dT%H:%M:%S"), "building": building, "boxes": rows, "missing": missing,
+           "write_to": write_to,
+           "note": "保護係（.claude/agents/hogo.md の「寄せの時」）が grid を見て、赤の線の中で本当に隠す升を指す。"
+                   "書き戻しは recorder photos masks --pass refine --from <write_to>"}
+    tp = out_dir / f"{name}.json"
+    tp.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+    return {"tasks": tp.as_posix(), "n": len(rows), "photos": len({r["photo"] for r in rows}), "missing": missing,
+            "write_to": write_to}
+
+
+def refine_masks(index_path: Path, doc: dict, *, now: str | None = None) -> dict:
+    """寄せの結果を索引の masks に書く（箱を細かい範囲に置き換える）。
+    doc: {"pass": "refine", "made_by", "photos": {写真 id: [{"n": 索引の masks の番号, "box": [元の箱]（あれば照合）,
+          "cells": ["C3:E5", "G2:H4"]（寄せの絵の升。1 つ以上）, "note"}]}}
+    - {"n", "drop": true, "note": 理由} → その箱を外す（写真の "dropped" に元の箱・dropped_by: refine・note を残す）。
+    - 自動の顔の箱（by: auto）は {"n", "confirm": true}（cells で締めてもよい）→ by: review にして残す（confirmed を記録）、
+      {"n", "drop": true} → 外す（dropped_auto に元の箱を残す）。auto の箱に cells だけ → その項目は errors。
+    - 置き換えた箱は元の pass（hogo / review）のまま、"refined": {by, at, cells}・"box_before"（元の箱）を残す。
+    - 新しい箱は元の箱の中に切り詰める（広げない）。分けた時は同じ kind・note で並べる。
+      元の箱の外だけの升は捨てて warnings に残し、中の升で書く（全部が外ならその項目は errors）。
+    - 項目ごとに確かめ、**だめな項目だけ飛ばして**同じ写真の他の箱は書く（11/8 追記 2）。
+      結果に written（書いた写真）・skipped（何も書かなかった写真）・errors（項目ごと）・warnings。"""
+    from . import privacy
+
+    now = now or time.strftime("%Y-%m-%dT%H:%M:%S")
+    made_by = doc.get("made_by") or "refine"
+    idx = load_index(index_path)
+    by_id = {p["id"]: p for p in idx["photos"]}
+    out: dict = {"pass": "refine", "photos": 0, "boxes": 0, "new_boxes": 0, "area_before": 0.0, "area_after": 0.0,
+                 "confirmed": 0, "dropped": 0, "dropped_auto": 0, "written": [], "skipped": [], "errors": [],
+                 "warnings": [], "not_found": []}
+    for pid, items in (doc.get("photos") or {}).items():
+        p = by_id.get(pid)
+        if p is None:
+            out["not_found"].append(pid)
+            out["skipped"].append(pid)
+            continue
+        masks = list(p.get("masks") or [])
+        repl: dict[int, list[dict]] = {}
+        logs: list[tuple[str, dict]] = []   # 書くと決まった項目の記録（dropped / dropped_auto）
+        for it in items if isinstance(items, list) else []:
+            try:
+                n = int(it["n"])
+                if n in repl:
+                    raise ValueError(f"masks[{n}] が 2 回出ている")
+                if not 0 <= n < len(masks) or masks[n].get("by") not in REFINE_PASSES + ("auto",):
+                    raise ValueError(f"masks[{it.get('n')}] は保護係・見直し・自動の箱ではない")
+                m = masks[n]
+                if it.get("box") is not None and privacy.norm_box(it["box"]) != privacy.norm_box(m["box"]):
+                    raise ValueError(f"masks[{n}] の箱が依頼の時と違う（hogo-grid --refine をやり直す）")
+                if m.get("by") == "auto":
+                    r = _auto_decision(m, it, made_by, now)
+                    if r is None:
+                        repl[n] = []
+                        logs.append(("dropped_auto", {"box": m["box"], "score": m.get("score"), "at": now, "by": made_by}))
+                        continue
+                    if not it.get("cells"):
+                        repl[n] = [r]
+                        logs.append(("confirmed", {}))
+                        continue
+                    m = r   # confirm＋cells：cells が書けた時だけ confirmed を数える（下）
+                elif it.get("drop"):
+                    if it.get("cells"):
+                        raise ValueError("drop と cells の両方は書けない")
+                    repl[n] = []
+                    logs.append(("dropped", {"kind": m.get("kind"), "box": m["box"], "box_before": m.get("box_before"),
+                                             "by_was": m.get("by"), "cells": m.get("cells"), "dropped_by": "refine",
+                                             "note": str(it.get("note") or "")[:200], "made_by": made_by, "at": now}))
+                    continue
+                cells = it.get("cells")
+                cells = [cells] if isinstance(cells, str) else list(cells or [])
+                if not cells:
+                    raise ValueError("cells が空（隠す物が無いなら {\"n\": …, \"drop\": true, \"note\": 理由}）")
+                region = refine_region(m["box"])
+                news = []
+                for c in cells:
+                    try:
+                        nb = refine_cells_to_box(region, m["box"], c)
+                    except ValueError as ex:
+                        if "元の箱の外" not in str(ex):
+                            raise
+                        out["warnings"].append({"id": pid, "n": n, "cells": c, "warning": f"{ex}。この升は捨てた"})
+                        continue
+                    e = {k: v for k, v in m.items() if k not in ("box", "refined", "box_before")}
+                    e["box"] = nb
+                    e["box_before"] = m.get("box_before") or m["box"]
+                    e["refined"] = {"by": made_by, "at": now, "cells": c}
+                    if it.get("note"):
+                        e["note"] = str(it["note"])[:200]
+                    news.append(e)
+                if not news:
+                    raise ValueError(f"升 {cells} はどれも元の箱の外（元の箱より広げない）")
+                repl[n] = news
+                if masks[n].get("by") == "auto":
+                    logs.append(("confirmed", {}))
+            except (KeyError, ValueError, TypeError) as ex:
+                out["errors"].append({"id": pid, "n": it.get("n") if isinstance(it, dict) else None, "item": it,
+                                      "error": str(ex)})
+        if not repl:
+            out["skipped"].append(pid)
+            continue
+        for k, rec in logs:
+            if k == "confirmed":
+                out["confirmed"] += 1
+            else:
+                out[k] += 1
+                p.setdefault(k, []).append(rec)
+        new_masks = []
+        for i, m in enumerate(masks):
+            if i in repl:
+                out["boxes"] += 1
+                out["new_boxes"] += len(repl[i])
+                out["area_before"] += _area(m["box"])
+                out["area_after"] += sum(_area(e["box"]) for e in repl[i])
+                new_masks += repl[i]
+            else:
+                new_masks.append(m)
+        p["masks"] = new_masks
+        p["refine"] = {"by": made_by, "at": now, "boxes": len(repl)}
+        out["photos"] += 1
+        out["written"].append(pid)
+    out["area_before"], out["area_after"] = round(out["area_before"], 4), round(out["area_after"], 4)
+    save_index(idx, index_path)
+    return out
+
+
+def _auto_decision(m: dict, it: dict, by: str, now: str) -> dict | None:
+    """自動の顔の箱への見直しの答え：confirm → by: review の写し（confirmed つき）、drop → None。どちらも無ければ ValueError。"""
+    if it.get("drop") and it.get("confirm"):
+        raise ValueError("confirm と drop の両方は書けない")
+    if it.get("drop"):
+        return None
+    if not it.get("confirm"):
+        raise ValueError("自動の顔の箱には confirm: true か drop: true を書く")
+    e = dict(m)
+    e["by"] = "review"
+    e["confirmed"] = {"by": by, "at": now, "from": "auto"}
+    return e
+
+
+def _area(b) -> float:
+    return max(0.0, b[2] - b[0]) * max(0.0, b[3] - b[1])
 
 
 # --- CLI（recorder/__main__.py は登録の 2 行だけ） -----------------------------------------------------
@@ -1447,6 +1776,8 @@ def add_t4_args(psub) -> None:
     q = psub.add_parser("send", help="係に見せる縮小版 send_file（顔に灰色の箱）を、まだ無い写真に作る（K-104）")
     q.add_argument("--photos", default=None, help="写真 id（カンマ区切り。頭だけでも可）")
     q.add_argument("--force", action="store_true")
+    q.add_argument("--no-detect", action="store_true",
+                   help="顔を探さず、索引の確かめた箱だけを描いて縮小版を全部作り直す（未確認の自動の箱を足さない）")
     q.add_argument("--index", default=None)
     q = psub.add_parser("ruler-mark", help="メジャーの枠（K-102）：写真に職員の申告として棟・面と ruler: tape_measure の印を付ける"
                                             "（メジャーの目盛りを読むのは measure tape）")
@@ -1456,11 +1787,17 @@ def add_t4_args(psub) -> None:
     q = psub.add_parser("hogo-grid", help="保護係に見せる升目の絵と依頼の一覧（out/photos/hogo/）")
     q.add_argument("--folder", default=None, help="元のフォルダ（例 <日付>/<棟id>）")
     q.add_argument("--photos", default=None)
-    q.add_argument("--out", default="out/photos/hogo")
+    q.add_argument("--out", default=None, help="既定 out/photos/hogo（--refine は out/photos/hogo_refine）")
+    q.add_argument("--refine", action="store_true",
+                   help="寄せ：索引の保護係・見直しの箱ごとに、各側 25%% 広げた切り出しに細かい升の絵を出す")
+    q.add_argument("--building", default=None, help="--refine の時、この棟の写真だけ")
+    q.add_argument("--auto", action="store_true", help="--refine の時、自動（YuNet）の顔の箱も切り出す（見直しが confirm か drop）")
     q.add_argument("--index", default=None)
     q = psub.add_parser("masks", help="保護係・見直しの升（out/photos/hogo_<フォルダ>.json）を索引の masks に書く")
-    q.add_argument("--from", dest="from_json", required=True)
-    q.add_argument("--pass", dest="pass_", choices=["hogo", "review"], default=None)
+    q.add_argument("--from", dest="from_json", default=None, help="hogo_<フォルダ>.json（--mark-seen / --seen-from だけの時は省ける）")
+    q.add_argument("--pass", dest="pass_", choices=["hogo", "review", "refine"], default=None)
+    q.add_argument("--mark-seen", default=None, help="見たが変えなかった写真の id（カンマ区切り）。この pass の見直し済みにする")
+    q.add_argument("--seen-from", default=None, help="hogo-grid の tasks JSON。中の写真すべてを見直し済みにする（箱のある物も、記録だけ付く）")
     q.add_argument("--index", default=None)
     q = psub.add_parser("publish", help="提出用の公開版：研究室が分かる物以外を縮小し、箱を塗って data/photos/public/ に（K-103）")
     q.add_argument("--photos", default=None)
@@ -1483,12 +1820,17 @@ def run_t4(a) -> int:
               file=sys.stderr)
         cmd = OLD_CMD_NAMES[cmd]
     if cmd == "hogo-grid":
-        res = hogo_tasks(index_path, folder=a.folder, ids=ids, out_dir=Path(a.out))
+        if a.refine:
+            res = hogo_refine_tasks(index_path, ids=ids, building=a.building, out_dir=Path(a.out or "out/photos/hogo_refine"),
+                                    auto=a.auto)
+            print(json.dumps(res, ensure_ascii=False, indent=1))
+            return 0
+        res = hogo_tasks(index_path, folder=a.folder, ids=ids, out_dir=Path(a.out or "out/photos/hogo"))
         print(json.dumps(res, ensure_ascii=False, indent=1))
         return 0
     # send・publish は縮小と顔の検出を鍵の外で回し、索引には鍵の中で差分だけ書く（各関数が鍵を取る。11/8 監査 B 3）
     if cmd == "send":
-        res = make_sends(index_path, ids, force=a.force)
+        res = make_sends(index_path, ids, force=a.force, no_detect=a.no_detect)
         print(json.dumps({**res, "missing": res["missing"][:20], "n_missing": len(res["missing"])}, ensure_ascii=False, indent=1))
         return 0
     if cmd == "publish":
@@ -1513,8 +1855,18 @@ def run_t4(a) -> int:
             print(json.dumps(res, ensure_ascii=False, indent=1))
             return 0 if not res["not_found"] else 1
         if cmd == "masks":
-            doc = json.loads(Path(a.from_json).read_text(encoding="utf-8"))
-            res = set_masks(index_path, doc, by=a.pass_)
+            doc = json.loads(Path(a.from_json).read_text(encoding="utf-8")) if a.from_json else {"pass": a.pass_ or "review"}
+            if (a.pass_ or doc.get("pass")) == "refine":
+                if not a.from_json:
+                    raise SystemExit("--pass refine には --from（out/photos/hogo_refine*.json）が要る")
+                res = refine_masks(index_path, doc)
+                print(json.dumps(res, ensure_ascii=False, indent=1))
+                return 0 if not res["errors"] else 1
+            seen = [x.strip() for x in (a.mark_seen or "").split(",") if x.strip()]
+            if a.seen_from:
+                tj = json.loads(Path(a.seen_from).read_text(encoding="utf-8"))
+                seen += [r["photo"] for r in tj.get("photos") or []]
+            res = set_masks(index_path, doc, by=a.pass_, mark_seen=seen)
             print(json.dumps(res, ensure_ascii=False, indent=1))
             return 0 if not res["errors"] else 1
     raise ValueError(cmd)

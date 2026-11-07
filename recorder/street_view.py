@@ -185,10 +185,22 @@ def obstacles(b: dict, campus_doc: dict | None, plateau_doc: dict | None, others
             obs.append({"id": ob["id"], "kind": "棟 JSON の足元", "polygon": p, "top": _mval(ob.get("parapet_top"))})
     designed = {ob.get("id") for ob in others} | {ob.get("site_id") for ob in others}
     own_parts: set[str] = set()
+    # site link-box で敷地の物（か複数の相手）に置き換わった PLATEAU の箱は立っている物ではない（歩く画面でも描かない）。
+    # 箱の代わりに、上端の分かる敷地の物（渡り廊下 corridor）を障害に足す（11/8 F9）
+    replaced = {lk["box"] for lk in (campus_doc or {}).get("plateau_links") or [] if lk.get("kind") == "replaced"}
+    for o in ((campus_doc or {}).get("objects") or {}).get("items") or []:
+        if o.get("type") != "corridor":
+            continue
+        poly, fz, h = _mval(o.get("polygon")), _mval(o.get("floor_z")), _mval(o.get("height"))
+        if poly and len(poly) >= 3:
+            obs.append({"id": o.get("id"), "kind": "敷地の物（渡り廊下）", "polygon": poly,
+                        "top": (fz + h) if fz is not None and h is not None else None})
     for sb in (campus_doc or {}).get("buildings", []) + (campus_doc or {}).get("staff_additions", []):
         if sb.get("id") in own_ids:
             own_parts.update(sb.get("plateau_parts") or [])
             continue
+        if sb.get("plateau_parts") and set(sb["plateau_parts"]) <= replaced:
+            continue                       # OSM の輪郭が置き換わった箱そのもの（甲板・渡り廊下の OSM の多角形）
         rings = sb.get("footprint_osm") or ([sb["footprint"]] if sb.get("footprint") else [])
         for r in rings:
             if len(r) < 3 or is_own(r):
@@ -200,7 +212,7 @@ def obstacles(b: dict, campus_doc: dict | None, plateau_doc: dict | None, others
             obs.append({"id": sb.get("id"), "kind": kind, "polygon": r, "top": top})
     for pb in (plateau_doc or {}).get("buildings", []):
         r = pb.get("footprint")
-        if not r or len(r) < 3 or pb.get("gml_id") in own_parts or is_own(r):
+        if not r or len(r) < 3 or pb.get("gml_id") in own_parts or pb.get("gml_id") in replaced or is_own(r):
             continue
         top = pb["base_z"] + pb["height_m"] if pb.get("base_z") is not None and pb.get("height_m") else None
         obs.append({"id": pb.get("gml_id"), "kind": "PLATEAU の箱", "polygon": r, "top": top})
@@ -458,10 +470,21 @@ def load_inputs(b: dict, repo: Path) -> dict:
             return None
     campus = b.get("campus")
     campus_doc = rd(repo / "data" / "site" / f"{campus}.json") if campus else None
+    if campus_doc is None:
+        # 棟 JSON の campus が古い呼び名（meijo-tempaku など）で敷地 JSON の名前と違う時：棟の site_id を持つ敷地 JSON を探す
+        sid = b.get("site_id") or b.get("id")
+        for sp in sorted((repo / "data" / "site").glob("*.json")):
+            d = rd(sp)
+            if isinstance(d, dict) and any(sb.get("id") == sid for sb in d.get("buildings") or []):
+                campus_doc = d
+                break
+    ok = {None, campus, (campus_doc or {}).get("campus")}
+    site_ids = {sb.get("id") for sb in (campus_doc or {}).get("buildings") or []}
     others = []
     for p in sorted((repo / "data" / "buildings").glob("*.json")):
         d = rd(p)
-        if isinstance(d, dict) and d.get("id") and d.get("id") != b.get("id") and (not campus or d.get("campus") in (None, campus)):
+        if isinstance(d, dict) and d.get("id") and d.get("id") != b.get("id") and (
+                not campus or d.get("campus") in ok or (d.get("site_id") or d.get("id")) in site_ids):
             others.append(d)
     return {"registry": rd(repo / "data" / "photos" / "registry.json"), "campus_doc": campus_doc,
             "plateau_doc": rd(repo / "data" / "site" / "plateau.json"), "others": others}

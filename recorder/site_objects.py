@@ -8,6 +8,8 @@
             平面は両端の面の区間の 4 点を結んだ四角（棟 JSON の面の from/to から計算。ここに座標を二重に書かない）。
             parapet_height・beam_depth（腰壁の高さ・桁の厚さ）は任意。
     deck    甲板。polygon（[[x,y],…] 原点からの m）と z（床の標高 m）、thickness（任意）。
+    corridor 渡り廊下（屋根と壁のある箱）。polygon（足元）と floor_z（床の標高 m）、height（床から屋根の上まで）。
+            片方の端が範囲外の棟に付く時も置ける（bridge は両端の棟 JSON が要る）。柱は置かない（11/8 F9）。
     steps   棟の間の階段・広場の段。polygon（4 点。最初の辺が下の段の縁、3・4 点目が上の段の縁）、z0・z1（下と上の標高 m）、count（段）。
     asset   CC0 の置物（木・街灯・旗竿・植え込み）。asset（data/assets/catalog.json の id）と position（[x,y]）、z（任意。無ければ地面）。
             見た目はアセット、位置だけが根拠付きの値（CLAUDE.md の 3）。
@@ -34,7 +36,7 @@ import struct
 from pathlib import Path
 
 SCHEMA = "campus-recorder/site-objects/1"
-TYPES = ("bridge", "deck", "steps", "asset")
+TYPES = ("bridge", "deck", "steps", "asset", "corridor")
 STATUSES = ("measured", "estimated", "unknown")
 COUNT_UNITS = ("階", "本", "枚", "台", "スパン", "段", "列", "か所")
 CHAIN_LINKS = ("tape", "count", "px_ratio", "uniform_period")
@@ -53,6 +55,7 @@ FIELDS = {
     "deck": (("polygon", True), ("z", True), ("thickness", False)),
     "steps": (("polygon", True), ("z0", True), ("z1", True), ("count", True)),
     "asset": (("position", True), ("z", False), ("rotation_deg", False)),
+    "corridor": (("polygon", True), ("floor_z", True), ("height", True)),
 }
 END_FIELDS = (("along0", True), ("along1", True), ("z", True))
 
@@ -237,7 +240,7 @@ def validate_objects(site: dict, buildings: dict[str, dict], catalog_ids: set | 
                 errs.append(f"{w}.asset: アセットの id が無い")
             elif catalog_ids is not None and aid not in catalog_ids:
                 errs.append(f"{w}.asset: {aid!r} が data/assets/catalog.json に無い（CC0 の台帳に載せてから）")
-        if t in ("deck", "steps"):
+        if t in ("deck", "steps", "corridor"):
             pv = _val(o.get("polygon"))
             if pv is not None and (not isinstance(pv, list) or len(pv) < 3):
                 errs.append(f"{w}.polygon: 3 点以上の [[x,y],…] ではない")
@@ -361,6 +364,15 @@ def object_meshes(o: dict, buildings: dict[str, dict]) -> tuple[list[dict], list
             skipped.append(f"{oid}.thickness: unknown（厚さ {DRAW_THICK_M} m の線で描いた）")
         meshes.append({"name": f"{oid}_floor", "material": o.get("material") or "brick",
                        "tris": prism(poly, z - (th or DRAW_THICK_M), z)})
+    elif t == "corridor":
+        poly, fz, h = _val(o.get("polygon")), _val(o.get("floor_z")), _val(o.get("height"))
+        if poly is None or fz is None:
+            return [], [f"{oid}: 足元か床の高さが unknown なので描かない"]
+        if h is None:
+            skipped.append(f"{oid}.height: unknown（床だけ厚さ {DRAW_THICK_M} m の線で描いた。箱は描かない）")
+            meshes.append({"name": f"{oid}_floor", "material": "metal", "tris": prism(poly, fz - DRAW_THICK_M, fz)})
+        else:
+            meshes.append({"name": f"{oid}_box", "material": o.get("material") or "metal", "tris": prism(poly, fz, fz + h)})
     elif t == "steps":
         poly, z0, z1, n = (_val(o.get(k)) for k in ("polygon", "z0", "z1", "count"))
         if None in (poly, z0, z1, n) or int(n) < 1:

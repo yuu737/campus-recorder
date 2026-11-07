@@ -198,3 +198,36 @@ def test_never_stands_inside_other_footprint_when_all_blocked():
     for w in walls:
         assert not SV.point_in_polygon(*r["eye_xy"], w)
     assert "一番よく見えた所" in r["standpoint"]["why_face"]
+
+
+def test_replaced_boxes_are_not_obstacles_but_corridor_is():
+    """site link-box で置き換えた箱（replaced）とその OSM の輪郭は障害に数えず、渡り廊下（corridor）は上端付きで数える（11/8 F9）。"""
+    b = _building()
+    b["site_id"] = "t"
+    campus = {"buildings": [{"id": "t", "plateau_parts": [], "footprint_osm": [_box(0, 0, 20, 20)]},
+                            {"id": "osm-deck", "plateau_parts": ["deckbox"], "footprint_osm": [_box(40, 0, 60, 20)]},
+                            {"id": "osm-other", "plateau_parts": ["other"], "footprint_osm": [_box(80, 0, 90, 10)]}],
+              "plateau_links": [{"box": "deckbox", "kind": "replaced", "replaced_by": ["deck-1", "bridge-1"]}],
+              "objects": {"items": [{"id": "cor-1", "type": "corridor", "polygon": _v(_box(25, 0, 35, 6)),
+                                     "floor_z": _v(GZ + 6.0), "height": _v(4.0)}]}}
+    plateau = {"buildings": [{"gml_id": "deckbox", "footprint": _box(40, 0, 60, 20), "base_z": GZ, "height_m": 24.0},
+                             {"gml_id": "other", "footprint": _box(80, 0, 90, 10), "base_z": GZ, "height_m": 10.0}]}
+    own, obs = SV.obstacles(b, campus, plateau, [])
+    ids = {o["id"]: o for o in obs}
+    assert "deckbox" not in ids and "osm-deck" not in ids
+    assert "other" in ids and "osm-other" in ids
+    assert ids["cor-1"]["top"] == GZ + 10.0
+
+
+def test_load_inputs_finds_site_doc_by_site_id(tmp_path):
+    """棟 JSON の campus が敷地 JSON の名前と違う（古い呼び名）時も、site_id を持つ敷地 JSON を読む。"""
+    import json as _json
+    (tmp_path / "data" / "site").mkdir(parents=True)
+    (tmp_path / "data" / "buildings").mkdir(parents=True)
+    (tmp_path / "data" / "site" / "new.json").write_text(_json.dumps({"campus": "new", "buildings": [{"id": "t"}, {"id": "u"}]}),
+                                                          encoding="utf-8")
+    b = {**_building(), "campus": "old-name", "site_id": "t"}
+    (tmp_path / "data" / "buildings" / "u.json").write_text(_json.dumps({"id": "u", "campus": "new", "site_id": "u"}), encoding="utf-8")
+    got = SV.load_inputs(b, tmp_path)
+    assert got["campus_doc"]["campus"] == "new"
+    assert [o["id"] for o in got["others"]] == ["u"]

@@ -69,6 +69,16 @@ def quick_reply(rec: dict) -> dict:
     return {"usable": not any(p in ("解像度が足りない", "ぶれの疑い") for p in problems), "problems": problems}
 
 
+def _walk_boxes(img) -> bool | None:
+    """out/<棟>/walk.png の撮り方（walk.json の boxes）。False＝PLATEAU の箱なし。印が無ければ None。"""
+    try:
+        if img is not None and Path(img).name == "walk.png":
+            return bool(json.loads((Path(img).parent / "walk.json").read_text(encoding="utf-8")).get("boxes"))
+    except Exception:  # noqa: BLE001
+        pass
+    return None
+
+
 def _street_cam(mr: dict) -> str | None:
     """model_report の web_cameras（{"street": {"query": "cam=…"}}）から歩く画面の構図の引数を取る。"""
     wc = (mr or {}).get("web_cameras") or {}
@@ -265,8 +275,13 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             break
     models = (site or {}).get("models") or {}
     boxes = (site or {}).get("boxes") or []
-    walk = {"image": walk_img, "on_site": bid in models, "colored": len(models), "gray": len(boxes) if isinstance(boxes, list) else 0,
-            "cam": _street_cam(mr)}
+    # 色付きの棟は棟 JSON のある物だけ。敷地の物（site-objects の glb：橋など）は棟に数えず別に出す（11/8 監査 C2）
+    so = (site or {}).get("site_objects") or {}
+    n_objects = len(so.get("objects") or []) if isinstance(so, dict) else 0
+    bld_models = [k for k in models if (root / "data" / "buildings" / f"{k}.json").exists() or k == bid]
+    walk = {"image": walk_img, "on_site": bid in models, "colored": len(bld_models), "site_objects": n_objects,
+            "gray": len(boxes) if isinstance(boxes, list) else 0,
+            "cam": _street_cam(mr), "boxes": _walk_boxes(walk_img)}
 
     # 6. まだ無い物
     # 撮影依頼は職員宛て（to="staff"）だけ。道具・係の作業（語彙・欄・再計算）は tool_requests に分ける（schema.request_to）
@@ -322,7 +337,7 @@ def stage_status(d: dict) -> dict[str, tuple[str, str]]:
     s["model"] = ("done" if m["glb"] and m["overlays"] else "partial" if m["glb"] else "todo",
                   (f"高さ {m['height_m']} m、" if m.get("height_m") else "") + f"仮置き {len(m['assumed'])} 件、検収の重ね {m.get('n_overlays', len(m['overlays']))} 枚" + ks_txt)
     w = d["walk"]
-    s["walk"] = ("done" if w["on_site"] else "todo", f"色付きの棟 {w['colored']}、灰色の箱（PLATEAU）{w['gray']}")
+    s["walk"] = ("done" if w["on_site"] else "todo", f"色付きの棟 {w['colored']}、" + (f"敷地の物 {w['site_objects']}、" if w.get("site_objects") else "") + f"灰色の箱（PLATEAU）{w['gray']}")
     r = d["rest"]
     tool_n = len(r.get("tool_requests") or [])
     s["rest"] = ("partial" if r["requests"] or tool_n or r["unknowns"] else "done",
@@ -587,8 +602,9 @@ def render(d: dict, out_html: Path) -> str:
     parts.append(head(5, "walk", "地形に載せて歩く", "根拠のある棟から色が付く。未測の棟は PLATEAU の灰色の箱のまま"))
     if w["image"]:
         parts.append(f"<figure class='fig-wide'>{_img(w['image'], base, '歩く画面')}<figcaption>歩く画面（<code>web/index.html</code>）。PC は WASD とドラッグ、スマホは左のスティック"
-                     + (f"。この構図：<code>?cam={_e(w['cam'])}</code>" if w.get("cam") else "") + "</figcaption></figure>")
-    parts.append(f"<p>{'この棟は地形に載っています。' if w['on_site'] else 'この棟はまだ地形に載っていません。'}敷地には色付きの棟 {w['colored']}、灰色の箱 {w['gray']}。</p></section>")
+                     + (f"。この構図：<code>?cam={_e(w['cam'])}</code>" if w.get("cam") else "")
+                     + ("。PLATEAU の箱なし（<code>boxes=0</code>）" if w.get("boxes") is False else "。PLATEAU の箱あり" if w.get("boxes") else "") + "</figcaption></figure>")
+    parts.append(f"<p>{'この棟は地形に載っています。' if w['on_site'] else 'この棟はまだ地形に載っていません。'}敷地には色付きの棟 {w['colored']}、{f"敷地の物（橋など） {w['site_objects']}、" if w.get("site_objects") else ""}灰色の箱 {w['gray']}。</p></section>")
 
     # 6 まだ無い物
     r = d["rest"]

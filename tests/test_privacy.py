@@ -33,7 +33,8 @@ def test_paint_masks_gray_box_with_label_outside_unchanged():
     im = Image.new("RGB", (1000, 800), (200, 30, 30))
     out = privacy.paint_masks(im, [{"kind": "poster", "box": [0.1, 0.1, 0.5, 0.5], "by": "hogo"}])
     assert im.getpixel((150, 120)) == (200, 30, 30)          # 元の画像はそのまま
-    assert out.getpixel((102, 82)) == privacy.GRAY            # 箱の角は灰色
+    assert out.getpixel((300, 300)) == privacy.GRAY           # 箱の中は灰色
+    assert out.getpixel((101, 81)) == privacy.TAG_BG          # 左上の隅に札（11/8 F11 で見た目を改めた）
     assert out.getpixel((700, 700)) == (200, 30, 30)          # 箱の外は変えない
     inside = [out.getpixel((x, y)) for x in range(100, 500, 7) for y in range(80, 400, 7)]
     assert any(p == (255, 255, 255) for p in inside)          # 理由の文字（白）が入っている
@@ -81,7 +82,7 @@ def test_import_makes_send_file_with_auto_boxes(tmp_path, monkeypatch):
     assert rec["masks"] == fake and rec["auto_mask"]["plates"] == "unsupported" and rec["auto_mask"]["n_faces"] == 1
     sent = Image.open(root / "send" / "P1.jpg")
     w, h = sent.size
-    assert sent.getpixel((int(0.45 * w), int(0.42 * h)))[0] < 160   # 顔の箱は灰色（元は赤 200）
+    assert sent.getpixel((int(0.45 * w), int(0.42 * h)))[0] == 200  # 確かめていない自動の顔の箱は描かない（11/8 F11 追記）
     assert _sha(src) == before
     # 係が指した箱は、取り込みをやり直しても残る（auto だけ置き換え）
     doc = json.loads(idx_path.read_text(encoding="utf-8"))

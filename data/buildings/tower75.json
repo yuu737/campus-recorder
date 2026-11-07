@@ -2,7 +2,7 @@
   "schema": "campus-recorder/building/1",
   "id": "tower75",
   "name": "タワー75",
-  "campus": "meijo-tempaku",
+  "campus": "tempaku",
   "crs": {
     "epsg": 6675,
     "origin_lat": 35.1355,
@@ -12,7 +12,8 @@
   "footprint": {
     "status": "estimated",
     "evidence": [
-      "osm:relation/17880184"
+      "osm:relation/17880184",
+      "plateau:bldg_89288d72-791f-424c-aadd-fb81a2ef906f"
     ],
     "polygon": [
       [
@@ -112,7 +113,7 @@
         34.96
       ]
     ],
-    "method": "PLATEAU に無いので OSM の輪郭（航空写真由来、高い棟は南へ倒れ込む）。写真で直す。設計係：写真の西の線（8.21 階高＝35.9 m）・東の線（8.15 階高＝35.3 m）は OSM（32.67・30.29 m）より長いが、縮尺（PLATEAU の高さ）が未解決なので足元は動かしていない（sokuryo_f3.json・sokuryo_f15.json の widths。requests の data）"
+    "method": "OSM の輪郭（relation/17880184）。PLATEAU の塔 bldg_89288d72 の LOD1 の立体の底（足元 LOD0 は無い）と頂点が1.4 cm 以内で一致する（IoU 1.000。OSM は PLATEAU から取り込んだ形。敷地の検収係 11/8）。写真で直す。設計係：写真の西の線（8.21 階高＝35.9 m）・東の線（8.15 階高＝35.3 m）は OSM（32.67・30.29 m）より長いが、縮尺（PLATEAU の高さ）が未解決なので足元は動かしていない（sokuryo_f3.json・sokuryo_f15.json の widths。requests の data）"
   },
   "ground_z": {
     "value": 42.9,
@@ -147,11 +148,10 @@
       "PXL_20261105_061341818",
       "PXL_20261105_061442402",
       "PXL_20261103_070334137",
-      "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1",
-      "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+      "plateau:bldg_89288d72-791f-424c-aadd-fb81a2ef906f",
       "gsi:dem5a"
     ],
-    "method": "西面 W の値（(114.5 − 45.0) ÷ 15.91 段 ＝ 4.37 m。data/reports/tower75/sokuryo_f3.json#floor_pitch）。東面は 4.33 m（sokuryo_f15.json#floor_pitch）。未解決：OSM の西の線との差 −8.9%、PLATEAU の部品の高さの対応",
+    "method": "西面 W の値（(114.5 − 45.0) ÷ 15.91 段 ＝ 4.37 m。data/reports/tower75/sokuryo_f3.json#floor_pitch）。東面は 4.33 m（sokuryo_f15.json#floor_pitch）。未解決：OSM の西の線との差 −8.9%、PLATEAU の塔の上端（116.00）がどの高さか",
     "note": "進行役 K-006 の規則：面ごとの階高のまま揃えない。窓の高さは西の面は西の値、東の面は東の値で置いた",
     "ref": "data/reports/tower75/sokuryo_f3.json#floor_pitch"
   },
@@ -161,12 +161,11 @@
     "tol": 2.7,
     "status": "estimated",
     "evidence": [
-      "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1",
-      "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+      "plateau:bldg_89288d72-791f-424c-aadd-fb81a2ef906f",
       "PXL_20261103_070327678",
       "PXL_20261105_055234749"
     ],
-    "method": "塔の上端の標高を PLATEAU の 2 つの部品（足元の外に付いた塔の値：69.5 m＋基盤 43.53＝113.0、74.2 m＋基盤 41.81＝116.0）の中ほど 114.5 m（±1.5）と置き、土台の ground_z 42.9 m を引いた 71.6 m（114.5 − 42.9）。西面の手前のパラペット上端・東面のパラペット上端をこの高さと置いた（仮定）。± は PLATEAU ±3%（2.2 m）と 2 部品の差の半分（1.5 m）を積んだ 2.7 m。未解決：PLATEAU の部品がどの高さ（パラペット・塔屋・ガラスの冠）か写真で決まらない（requests の data）",
+    "method": "測量係が塔の上端の標高を 114.5 m（±1.5）と置き、土台の ground_z 42.9 m を引いた 71.6 m（114.5 − 42.9）。西面の手前のパラペット上端・東面のパラペット上端をこの高さと置いた（仮定）。11/8 の確かめ：PLATEAU の塔そのもの（bldg_89288d72、足元は模型と同じ）の立体の上端は 116.00（地面から 73.1 m）で、71.6 ± 2.7 の中（差 1.5 m）なので値は動かしていない（前に根拠にした 2 つの箱 bldg_f693ff16・bldg_f2cc5f1b は塔の足元の外の渡り廊下とテラスに付いた値だった。敷地の検収係 data/reports/tower75/shikichi_plateau_box.md）。± は PLATEAU ±3%（2.2 m）と読みの幅（1.5 m）を積んだ 2.7 m。未解決：PLATEAU の上端（116.00）と measuredHeight（83.1 m）がどの高さ（パラペット・塔屋・ガラスの冠）か写真で決まらない（requests の data）",
     "note": "測量係が登録の高さの原点に置いた値。塊 T（主部）の上端。南西の角の塊 SW は低い（blocks）",
     "ref": "data/reports/tower75/sokuryo_f15.json#plateau_top"
   },
@@ -470,7 +469,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -1807,7 +1806,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -2758,7 +2757,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -3721,7 +3720,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -5234,7 +5233,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -5821,7 +5820,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {},
@@ -5978,7 +5977,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -6945,7 +6944,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {},
@@ -7775,7 +7774,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -8690,7 +8689,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -9309,7 +9308,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -10224,7 +10223,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {},
@@ -11177,7 +11176,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -12092,7 +12091,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -12813,7 +12812,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -13892,7 +13891,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -15191,7 +15190,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -16474,7 +16473,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {},
@@ -16505,7 +16504,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -17326,7 +17325,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -18076,7 +18075,7 @@
         "evidence": [
           "osm:relation/17880184"
         ],
-        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い",
+        "method": "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）",
         "note": ""
       },
       "bays": {
@@ -19308,65 +19307,65 @@
     {
       "at": "",
       "by": "recorder new --from-site",
-      "what": "PLATEAU と 5m 標高から土台を起こした（PLATEAU に塔の足元が無いので OSM の輪郭）"
+      "what": "OSM の輪郭と 5m 標高から土台を起こした（PLATEAU の塔は LOD1 の立体だけで、その底は OSM の輪郭と同じ。11/8 F9 で確かめた）"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "足元の多角形の最後の点（OSM の輪の閉じ点＝始点と同じ点）を外した。形は変わらない。長さ 0 の辺で平面図（recorder draw）が止まったため"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "観察票・数え・測量（data/reports/tower75/）から設計した。西 W（f1・f2・f3）・東 E（f14・f15）は面の写真と正面化で窓の列・段・入口を読み、北・南の面は数え係の列数と観察票の比（± 20〜30%）、段は仮説（same_block・symmetry・footprint）で置いた"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "W（f1・f2・f3）・E（f14・f15）・N-west（f20・f0）・S-SW（f4・f5）は 1 直線（法線差 3° 以内）だが 1 つの面にまとめなかった。登録台帳（data/photos/registry.json）の写真が面ごとの座標（f1・f2・f3 それぞれの from が原点）で、まとめると登録と検収の線がずれるため。代わりに 1 本の格子（W は f3 の座標、E は f15 の座標）を各辺に配り、面に wall_group を書いた"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "列の内訳は数え係を採った（W：主部 7＋SWu 2・下の段 NWb 1＋主部 7＋SWb 2。観察票の『北 1＋主部 6＋南 2』は #3・#101 で北の 2 本目の列が NWb の上端で切れずに続くので捨てた。写真 070044607・061836019）。NWu の段は数え係の 10（観察票 9。#1・#62 で一番下の段が笠木で半分隠れる、捨てた方の写真 065946407・060854125）"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "東西の 1・2 段目の間の白帯 B1/2 の高さの違い（西 1.25 P＝66.14、東 1.33 P＝65.84）は揃えず、面ごとの値のまま（進行役 K-006）。東の遠景 #37（055234749）だけは 1.275 P で西に近いが、近くの 3 枚（060316957・074621752・060328137）の読みを採った測量係の値のまま"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "南西の角だけ塊 SW（上端 69.65 m）に分けた。他の四隅の低い塊と上の引っ込んだ部分は、引っ込みの奥行きが測れないので塊に分けず、低い塊の上端を水切り（ledges）で示した。f19 の引っ込み（土台では外へ出る）も足元は動かしていない"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "渡り廊下 S3・南西の橋 S2・北の屋根付き通路 S8・東のガラスの渡り廊下 S9・北東のルーバーの壁 S10・ベンチ・街灯・木は 2 棟に触れるか棟の間の物なので棟 JSON に置かず requests（kind tool）で敷地に上げた（進行役 K-005 の②）。西のデッキ・庇・大階段・エレベーター箱は西面にだけ付くので棟に置き、境目を check に上げた"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "設計係（sekkei・claude-opus-5-5）",
       "what": "置かなかった物：開口の手すり（f6。数が決まらない）、擁壁の丸い照明（1 m 未満）、掲示物（幕・ポスター。規約で外す）、車、広場から上がる幅の広い大階段（北の沈んだ広場の物で、棟と棟の間の地面。requests の tool）、内装（決定 D-0002 は停止中、K-001）"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "検収係（kenshu・claude-opus-5-5）",
       "what": "検収 1 回目（再検収 out/tower75/recheck/20261107_153223、目印係が登録した南の 8 枚を含む 88 枚）。吹き抜け f9 の高さを登録 4 枚の視点で読み直した：ガラスは基壇の笠木の上 3.0 から 7F の床 35.45 まで（設計 7.23〜57.40）、7F〜11F の 5 段がガラスの無い吹き抜け（設計 12F〜13F の 2 段）、12F〜14F に枠（設計 14F の 1 段）。日よけ棚 7 本の高さも写真の値に。観察票の『頂部 2 段』の読み違い。理由と数は data/reports/tower75/kenshu_summary.json#f9"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "検収係（kenshu・claude-opus-5-5）",
       "what": "袖の正面 f7・f11 の白帯の仮説（same_block、塔の床 12 本）を写真の値で確定した：登録 8 枚で 13 本・間隔 4.0〜4.2 m（14F で塔の床と −3.5 m）。f11 に基壇の中ほどの灰色の帯（2.43〜2.70）を足した。吹き抜けの前の『コンクリートの台』は 2 枚の三角測量で高さ 2.69 m・出 1.85 m の低い壁と分かり直した"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "検収係（kenshu・claude-opus-5-5）",
       "what": "西 W：普通の段の窓の上端 +0.10、13F・14F の太い窓の境 −0.17、デッキの階のガラスブロックの欄間の上端 11.75 → 12.0、大階段の踊り場 +0.28。東 E：シャッターの上端 0.9 → 1.1、1F のガラスブロックの欄間 3・4 を −0.25 m。どれも再検収の写真の縁の中央値（10〜37 枚、同じ向き 78〜100%）"
     },
     {
-      "at": "2026-11-07T16:23:15+09:00",
+      "at": "2026-11-08T02:09:12+09:00",
       "by": "検収係（kenshu・claude-opus-5-5）",
       "what": "検収 2 回目（再検収 out/tower75/recheck/20261107_160222）：f9 の格子の棚 2・3 を +0.15、f7 の白帯 8〜12 本目を −0.10、f7・f11 の 2F の灰色の帯の下端を +0.2（帯は 0.2 m ほど）、メーターの箱を 0.11〜1.93 m に。2 回で止め、残りは撮影依頼（kenshu_summary.json）"
     }
@@ -19480,8 +19479,7 @@
         "tol": 2.7,
         "status": "estimated",
         "evidence": [
-          "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1",
-          "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+          "plateau:bldg_89288d72-791f-424c-aadd-fb81a2ef906f",
           "PXL_20261103_070327678",
           "PXL_20261105_055234749"
         ],

@@ -108,7 +108,7 @@ async function main() {
           <a href="${OUT}${id}/evidence_overview.png">俯瞰</a>
           <a href="${OUT}${id}/sheet.png">四面図</a>
           <a href="${OUT}${id}/plan.svg">平面図</a>
-          ${cam ? `<a href="index.html?${cam}">歩く画面でここへ</a>` : ""}
+          ${cam ? `<a href="index.html?${cam}&boxes=0">歩く画面でここへ</a>` : ""}
         </div>
       </div>`;
     root.appendChild(card);

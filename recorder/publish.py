@@ -5,7 +5,8 @@
 
 - 出す所：`data/photos/public/<元のフォルダ>/<id>.jpg`（長辺 1600 px・JPEG 品質 80・EXIF なし）。
   元のフォルダは photos.photo_folder（例 20261105/tower75、メジャー/本部棟_honbu）。
-- 塗る物：索引の `masks`（auto＝YuNet の顔、hogo＝保護係の升、review＝見直しの升）を灰色の箱＋理由の文字で。
+- 塗る物：索引の `masks`（auto＝YuNet の顔、hogo＝保護係の升、review＝見直しの升。寄せ済みの箱も）を、隠す範囲だけ
+  不透明の灰色（#8a8a8a）と 2 px の縁、左上の隅の札（顔・ナンバー・人名・掲示物・電話番号）で（privacy.paint_masks、11/8 F11）。
   `crop` があれば切り落とし（箱を塗ってから切る）。顔の自動の箱がまだ無い写真は、ここで YuNet を当てて masks に足す。
 - 出さない物：`public: false`（保護係・見直しが研究・研究室に関する物として外した。理由は public_reason）、
   期間前（period "before"）の写真、元の写真が見つからない物（missing。relink で付け直す）。
@@ -38,7 +39,7 @@ def publish(index_path: Path = photos.INDEX_PATH, *, out_dir: Path | None = None
     bases = {r["id"]: copy.deepcopy(r) for r in idx["photos"]}   # 鍵の外で縮小・顔の検出をし、最後に差分だけ書く
     res: dict = {"index": 0, "public": 0, "masked": 0, "boxes": {}, "cropped": 0, "excluded": [], "missing": [],
                  "before": 0, "not_reviewed": 0, "auto_now": 0, "warnings": [], "removed": 0, "out": out_dir.as_posix(),
-                 "dry_run": dry_run, "allow_unreviewed": allow_unreviewed, "held": []}
+                 "dry_run": dry_run, "allow_unreviewed": allow_unreviewed, "held": [], "auto_unconfirmed": 0}
     for rec in idx["photos"]:
         if ids and not any(rec["id"].startswith(i) for i in ids):
             continue
@@ -66,8 +67,11 @@ def publish(index_path: Path = photos.INDEX_PATH, *, out_dir: Path | None = None
                 res["held"].append(rec["id"])
                 continue
         dst = out_dir / photos.photo_folder(rec) / f"{rec['id']}.jpg"
-        if dry_run:
+        if dry_run:   # 書かない時も、索引の masks と crop から数える（顔の自動の箱がまだ無い写真は含まれない）
             res["public"] += 1
+            _count(res, rec.get("masks") or [])
+            if (rec.get("crop") or {}).get("box"):
+                res["cropped"] += 1
             continue
         im = privacy.load_oriented(src)
         if not rec.get("auto_mask"):   # 顔の自動の箱がまだ無い（取り込みが 11/8 より前）→ ここで当てる
@@ -79,16 +83,13 @@ def publish(index_path: Path = photos.INDEX_PATH, *, out_dir: Path | None = None
                 res["warnings"].append(f"{rec['id']}: 顔の自動の箱が作れない（{status.get('faces')}）")
         masks = rec.get("masks") or []
         small = privacy.resize_long(im, max(long, 1))
-        out = privacy.paint_masks(small, masks)
+        out = privacy.paint_masks(small, privacy.drawn_masks(masks))   # 確かめていない自動の顔は描かない（索引には残す）
         crop = (rec.get("crop") or {}).get("box")
         if crop:
             out = privacy.apply_crop(out, crop)
             res["cropped"] += 1
         privacy.save_jpeg(out, dst, quality)
-        if masks:
-            res["masked"] += 1
-            for m in masks:
-                res["boxes"][m.get("kind")] = res["boxes"].get(m.get("kind"), 0) + 1
+        _count(res, masks)
         new = photos._rel_or_abs(dst, photo_root)
         if old and old != new:
             f = photo_root / old
@@ -101,6 +102,16 @@ def publish(index_path: Path = photos.INDEX_PATH, *, out_dir: Path | None = None
         photos.patch_index(index_path, {r["id"]: photos.record_diff(bases.get(r["id"]), r) for r in idx["photos"]},
                            label="photos publish")
     return res
+
+
+def _count(res: dict, masks: list[dict]) -> None:
+    """描いた箱を数える。確かめていない自動の顔の箱は描かないので別に数える（auto_unconfirmed）。"""
+    drawn = privacy.drawn_masks(masks)
+    res["auto_unconfirmed"] += privacy.unconfirmed_auto(masks)
+    if drawn:
+        res["masked"] += 1
+        for m in drawn:
+            res["boxes"][m.get("kind")] = res["boxes"].get(m.get("kind"), 0) + 1
 
 
 def is_reviewed(rec: dict) -> bool:
@@ -124,6 +135,7 @@ def summary_text(res: dict) -> str:
         f"保護係と見直しをまだ通っていない {res['not_reviewed']} 枚"
         + ("（出した）" if res.get("allow_unreviewed") else "（出していない。--allow-unreviewed で出す）")
         + f"・顔の自動の箱をここで当てた {res['auto_now']} 枚・前の公開版を消した {res['removed']}"
+        + f"・未確認の自動の顔 {res.get('auto_unconfirmed', 0)}（描いていない。hogo-grid --refine --auto で見直し）"
         + ("（dry-run：書いていない）" if res["dry_run"] else ""),
         f"出した所：{res['out']}",
     ]

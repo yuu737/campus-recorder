@@ -303,3 +303,115 @@ def test_start_default_max_usd(srv, monkeypatch):
             break
         time.sleep(0.05)
     assert calls == [20.0]
+
+
+# --- 待機画面（web/progress.html）の API（11/8、F8） ---------------------------------------------
+
+def _agent_md(root, name, desc, model):
+    d = root / ".claude" / "agents"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"{name}.md").write_text(f"---\nname: {name}\ndescription: {desc}\nmodel: {model}\ntools: Read\n---\n本文", encoding="utf-8")
+
+
+def test_steps_reads_agent_frontmatter(srv):
+    url, root = srv
+    _agent_md(root, "sokuryo", "試し係。一言の説明。二つ目の文", "opus")
+    _agent_md(root, "seizu", "絵の係。コードの代行", "sonnet")
+    code, j = _get(url + "/api/steps")
+    assert code == 200
+    by = {s["step"]: s for s in j["steps"]}
+    assert [s["step"] for s in j["steps"]][: len(agents.PIPELINE_STEPS)] == agents.PIPELINE_STEPS
+    assert by["sokuryo"]["name"] == "試し係" and by["sokuryo"]["line"].startswith("一言の説明")
+    assert by["sokuryo"]["model_ja"] == "Claude Opus" and by["sokuryo"]["code"] is False
+    assert by["web"]["agent"] == "seizu" and by["web"]["name"] == "絵の係" and by["web"]["model"] == "code"
+    assert by["kenshu"]["name"] == "kenshu"          # 定義が無い係は id のまま（固定の名前を足さない）
+
+
+def test_pipeline_summarizes_latest_record_and_state(srv):
+    url, root = srv
+    rep = root / "data" / "reports" / "honbu"
+    rep.mkdir(parents=True)
+    old = {"steps": [{"step": "satsuei", "agent": "satsuei", "model": "m", "seconds": 1, "note": "古い"}]}
+    new = {"made_at": "2026-11-08T01:00:00", "runner": "api", "spent_usd": 1.5, "max_usd": 20,
+           "steps": [{"step": "satsuei", "agent": "satsuei", "model": "claude-haiku-5-5", "seconds": 12.0,
+                      "cost_usd_estimate": 0.1, "note": "x" * 300}]}
+    (rep / "pipeline_20261107_000000.json").write_text(json.dumps(old), encoding="utf-8")
+    (rep / "pipeline_20261108_000000.json").write_text(json.dumps(new), encoding="utf-8")
+    (root / "out" / "honbu").mkdir(parents=True)
+    (root / "out" / "honbu" / agents.STATE_NAME).write_text(json.dumps(
+        {"building": "honbu", "status": "stopped", "current": None, "steps": ["satsuei", "shiwake"], "done": ["satsuei"],
+         "stopped": {"step": "shiwake", "reason": "rate_limit", "label": "429"}, "spent_usd": 1.5, "max_usd": 20,
+         "record_name": "pipeline_20261108_000000.json"}), encoding="utf-8")
+    code, j = _get(url + "/api/pipeline?building=honbu")
+    assert code == 200
+    assert j["record"]["file"] == "data/reports/honbu/pipeline_20261108_000000.json" and j["records"] == 2
+    s = j["record"]["steps"][0]
+    assert s["cost_usd"] == 0.1 and s["seconds"] == 12.0 and len(s["summary"]) <= 140
+    assert j["state"]["status"] == "stopped" and j["state"]["stopped"]["reason"] == "rate_limit"
+    code, j = _get(url + "/api/pipeline?building=nothing")
+    assert code == 200 and j["record"] is None and j["state"] is None
+    try:
+        _get(url + "/api/pipeline?building=..%2Fx")
+        raise AssertionError("棟 id でない名前は断る")
+    except urllib.error.HTTPError as e:
+        assert e.code == 400
+
+
+def test_artifacts_lists_only_existing_files(srv):
+    url, root = srv
+    ob = root / "out" / "honbu"
+    ob.mkdir(parents=True)
+    (ob / "elev_fa.svg").write_text("<svg/>", encoding="utf-8")
+    (ob / "walk.png").write_bytes(b"x")
+    (root / "data" / "photos" / "send").mkdir(parents=True)
+    (root / "data" / "photos" / "send" / "p1.jpg").write_bytes(_jpeg("red"))
+    (root / "data" / "photos" / "index.json").write_text(json.dumps({"photos": [
+        {"id": "p1", "building": "honbu", "face": "fa", "send_file": "send/p1.jpg", "period": "during",
+         "masks": [{"kind": "face", "box": [0.1, 0.1, 0.2, 0.2], "by": "auto"},        # 確かめていない自動の顔 → 出さない
+                   {"kind": "face", "box": [0.5, 0.5, 0.6, 0.6], "by": "review"}]},     # 見直しで確かめた顔 → 出す
+        {"id": "p2", "building": "honbu", "send_file": "send/p2.jpg", "period": "during"},      # 縮小版が無い → 出さない
+        {"id": "p3", "building": "honbu", "send_file": "send/p1.jpg", "public": False}]}), encoding="utf-8")   # 公開しない
+    code, j = _get(url + "/api/artifacts?building=honbu")
+    assert code == 200
+    assert [p["id"] for p in j["photos"]] == ["p1"]
+    assert [(m["label"], m["box"]) for m in j["photos"][0]["masks"]] == [("顔", [0.5, 0.5, 0.6, 0.6])]   # by: auto は出ない（F11）
+    assert j["elev"] == [{"face": "fa", "name": None, "svg": "/out/honbu/elev_fa.svg"}]
+    assert j["walk"] == "/out/honbu/walk.png" and j["evidence"]["photo"] is None and j["kenshu"] == []
+    st, _ = _get_raw(url + j["photos"][0]["src"])
+    assert st == 200
+
+
+def _get_raw(url):
+    with urllib.request.urlopen(url, timeout=60) as r:
+        return r.status, r.read()
+
+
+def test_artifacts_maps_masks_onto_rectified_and_hides_unmappable(srv):
+    """元の写真から作った絵にも箱：正面化は rectify の H で四隅を写す。H の無い正面化・登録の無い製図板は見せない（masks_ok）。"""
+    url, root = srv
+    ob = root / "out" / "honbu"
+    (ob / "compare").mkdir(parents=True)
+    rect = root / "out" / "rectified" / "honbu"
+    rect.mkdir(parents=True)
+    for pid in ("p1", "p2"):
+        (rect / f"{pid}_front.jpg").write_bytes(b"x")
+        (ob / "compare" / f"{pid}_fa_compare.json").write_text(json.dumps(
+            {"ok": True, "source": f"out/rectified/honbu/{pid}_front.jpg", "px_per_m": 10, "lines": []}), encoding="utf-8")
+    # p1 は H あり（2 倍に拡大して右へ 10 px）、p2 は H 無し
+    (rect / "p1_front.json").write_text(json.dumps({"width": 100, "height": 50, "H": [[2, 0, 10], [0, 2, 0], [0, 0, 1]]}), encoding="utf-8")
+    (rect / "p2_front.json").write_text(json.dumps({"width": 100, "height": 50}), encoding="utf-8")
+    (ob / "coverage_fa_photo.png").write_bytes(b"x")
+    (ob / "coverage.json").write_text(json.dumps({"faces": [{"face": "fa", "length_m": 10, "ground_z": 0, "top_z": 5,
+        "photos": [{"photo": "p1", "outline": [[[0, 0], [5, 0], [5, 5]]]}]}]}), encoding="utf-8")
+    (root / "data" / "photos").mkdir(parents=True)
+    box = [{"kind": "poster", "box": [0.1, 0.2, 0.3, 0.4], "by": "review"}]
+    (root / "data" / "photos" / "index.json").write_text(json.dumps({"photos": [
+        {"id": "p1", "building": "honbu", "masks": box}, {"id": "p2", "building": "honbu", "masks": box}]}), encoding="utf-8")
+    code, j = _get(url + "/api/artifacts?building=honbu")
+    assert code == 200
+    by = {c["photo"]: c for c in j["compare"]}
+    assert by["p1"]["masks_ok"] and by["p1"]["rect_masks"][0]["label"] == "掲示物"
+    assert by["p1"]["rect_masks"][0]["poly"] == [[30.0, 20.0], [70.0, 20.0], [70.0, 40.0], [30.0, 40.0]]
+    assert by["p2"]["masks_ok"] is False and by["p2"]["rect_masks"] is None
+    assert j["compare"][0]["photo"] == "p1"                      # 箱を写せた物が先
+    assert j["coverage"][0]["masks_ok"] is False and j["coverage"][0]["masks"] is None   # 登録（H）が無い → その面は見せない

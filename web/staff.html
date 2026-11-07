@@ -143,7 +143,7 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 
   <section class="panel" id="p2">
     <h2><span class="n">2</span>棟ごとに写真を入れる<span class="state" id="s2">未</span></h2>
-    <p class="sub">スマホで撮った写真は、先にこの PC に移してください（Windows のスマホ連携・USB ケーブル・共有フォルダ）。棟ごとにフォルダを分けておくと、あとで棟を付けるのが速くなります。写真はこの PC に置かれ、係の Claude（API）が読むためにだけ外部に送られます。研究室・研究内容が分かる物、貼り紙・掲示物、人の顔、車のナンバーが写った写真は入れないでください。</p>
+    <p class="sub">スマホで撮った写真は、先にこの PC に移してください（Windows のスマホ連携・USB ケーブル・共有フォルダ）。棟ごとにフォルダを分けておくと、あとで棟を付けるのが速くなります。写真はこの PC に置かれ、係の Claude（API）が読むためにだけ外部に送られます。研究室・研究内容が分かる写真は入れないでください。掲示物・顔・ナンバーは写さないでください。写った物は公開版で灰色の箱にします。</p>
     <div id="drop">
     <button class="btn primary" id="browseDir" type="button">写真のフォルダを選ぶ</button>
     <button class="btn" id="browse" type="button">写真を選ぶ（複数可）</button>
@@ -520,6 +520,8 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
         const md = s.j.modes || {}, cont = s.j.started.filter(b => md[b] === "continue");
 msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.length ? `。うち ${esc(cont.join("、"))} は前回の記録に追記` : ""}。費用の上限 ${s.j.max_usd ? esc(s.j.max_usd) + " USD／棟" : "なし"}）` + (s.j.dry_run ? `。<span class="warn">この PC に API キーが無いので、係（Claude）を呼ばずに手順だけ確かめる試しで動いています（棟の記録は増えません）</span>` : "");
         $("#s3").textContent = "進行中"; $("#s3").className = "state partial";
+        // 待機画面へ（同じタブ。複数の棟なら先頭の棟。他の棟は待機画面から戻った進捗の欄の「待機画面を開く」で）
+        if (s.j.started.length) { st.innerHTML = msg + "。待機画面を開きます…"; location.href = `progress.html?building=${encodeURIComponent(s.j.started[0])}&live=1`; return; }
       }
       st.innerHTML = msg + "。";
       poll();
@@ -617,8 +619,9 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
       if (run) last += ` <span class="${run.state === "running" || run.state === "done" ? "ok" : "wait"}">${RUN_JA[run.state] || esc(run.state)}` +
         `${run.stopped_at ? `（${esc(run.stopped_at)}）` : ""}${run.continuing ? "・追記" : ""}${run.dry_run ? "・試し" : ""}</span>`;
       const link = ROOT && rep ? `<a href="${ROOT}out/${id}/report.html">${name}</a>` : name;
+      const pv = SERVER ? ` <span class="pv"><a href="progress.html?building=${encodeURIComponent(id)}&live=1">待機画面を開く</a>${rep ? ` ・ <a href="progress.html?building=${encodeURIComponent(id)}&replay=1">再生を見る</a>` : ""}</span>` : "";
       html.push(`<div class="row"><div class="name">${link}<span class="id">${id}</span></div><div class="dots">${dots}</div>
-        <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}</div></div>`);
+        <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}${pv}</div></div>`);
     }
     if (!ROOT) html.push(`<div class="gray" style="margin-top:8px">進捗を読むには、リポジトリ直下から配信した URL（…/web/staff.html）で開いてください。</div>`);
     rows.innerHTML = html.join("");

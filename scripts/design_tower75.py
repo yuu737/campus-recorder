@@ -2,7 +2,9 @@
 
     .venv/Scripts/python -I -X utf8 scripts/design_tower75.py
 
-土台は recorder.skeleton.from_site_cli("tower75")（＝ recorder new tower75 --from-site。PLATEAU に無い棟なので OSM の輪郭）。
+土台は recorder.skeleton.from_site（OSM の輪郭 relation/17880184 で起こす。PLATEAU の塔 bldg_89288d72 は LOD1 の立体だけで、
+その底は OSM の輪郭と頂点が 1.4 cm 以内で一致する（11/8 敷地の検収係・F9）。PLATEAU の足元で起こすと簡略化で頂点が減り面の id が変わるので、
+足元は今までどおり OSM の頂点を使い、根拠に PLATEAU の立体の底を足す）。
 JSON は手で直さず、ここを直して出し直す。
 
 製図板（px → m）
@@ -33,7 +35,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from recorder import schema  # noqa: E402
-from recorder.skeleton import from_site_cli  # noqa: E402
 
 BID = "tower75"
 OUT = ROOT / "data" / "buildings" / f"{BID}.json"
@@ -103,7 +104,11 @@ S_REG = [S113, S118, S119, S120, S121, S122, S124, S125]
 
 AERIAL = "gsi:aerial_z18"
 OSM = "osm:relation/17880184"
-PLATEAU_IDS = ["plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1", "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a"]
+# PLATEAU の塔（LOD1 の立体だけ。measuredHeight 83.1 m・16 階、立体の下端 40.95・上端 116.00）。11/8 F9 で plateau.json に入った。
+# 前はここに足元の外の 2 つの箱（bldg_f693ff16＝渡り廊下 S3、bldg_f2cc5f1b＝北西のテラス）を書いていた（塔の箱ではなかった）
+PLATEAU_TOWER = "plateau:bldg_89288d72-791f-424c-aadd-fb81a2ef906f"
+PLATEAU_IDS = [PLATEAU_TOWER]
+PLATEAU_TOWER_TOP = 116.00   # 立体の上端の標高（data/reports/tower75/shikichi_plateau_box.md の 1。PLATEAU の生の zip 52365768_bldg_6697_op.gml）
 
 # --- 1 つの値を配る元（ref で指す） --------------------------------------------------------
 PARAPET = 71.6          # data/reports/tower75/sokuryo_f15.json#plateau_top（114.5 − ground_z 42.9）
@@ -269,22 +274,51 @@ def tile_material(ev, color, note):
 
 
 # =========================================================================================
+def skeleton_osm() -> dict:
+    """土台を OSM の輪郭（relation/17880184）で起こし、足元の根拠に PLATEAU の塔の立体の底を足す。
+    敷地 JSON では塔の箱（bldg_89288d72）が tower75 の plateau_parts に入っているが、そこから起こすと足元の簡略化（0.3 m）で頂点が
+    24 → 18 に減り、面の id（f0〜f20）と登録が変わる。頂点は同じ（1.4 cm 以内）なので OSM の頂点のまま使う。"""
+    import copy
+
+    from recorder import geo
+    from recorder import site as site_mod
+    from recorder.skeleton import from_site
+    site_doc = copy.deepcopy(json.loads((site_mod.DATA_SITE / f"{site_mod.default_campus()}.json").read_text(encoding="utf-8")))
+    geo.configure_from_site(site_doc)
+    for sb in site_doc["buildings"]:
+        if sb["id"] == BID:
+            sb["plateau_parts"] = []
+    pl_path = site_mod.DATA_SITE / "plateau.json"
+    plateau_doc = json.loads(pl_path.read_text(encoding="utf-8")) if pl_path.exists() else {"buildings": []}
+    try:
+        dem = site_mod.load_dem()
+    except Exception:  # noqa: BLE001
+        dem = None
+    b = from_site(BID, site_doc, plateau_doc, dem, None)
+    b["footprint"]["evidence"] = list(b["footprint"]["evidence"]) + [PLATEAU_TOWER]
+    b["footprint"]["method"] = ("OSM の輪郭（relation/17880184）。PLATEAU の塔 bldg_89288d72 の LOD1 の立体の底（足元 LOD0 は無い）と頂点が"
+                                "1.4 cm 以内で一致する（IoU 1.000。OSM は PLATEAU から取り込んだ形。敷地の検収係 11/8）。写真で直す")
+    return b
+
+
 def build() -> dict:
-    b = from_site_cli(BID)
+    b = skeleton_osm()
     faces = {f["id"]: f for f in b["faces"]}
     for f in b["faces"]:
         L = f["length"]
         L["tol"] = round(0.05 * L["value"] + 0.01, 2)
-        L["method"] = "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU に塔の足元が無い"
+        L["method"] = "OSM の足元の辺の長さ（± は OSM の 5%）。PLATEAU の塔の立体の底と頂点が一致（1.4 cm 以内）"
     b["footprint"]["method"] += ("。設計係：写真の西の線（8.21 階高＝35.9 m）・東の線（8.15 階高＝35.3 m）は OSM（32.67・30.29 m）より長いが、"
                                  "縮尺（PLATEAU の高さ）が未解決なので足元は動かしていない（sokuryo_f3.json・sokuryo_f15.json の widths。requests の data）")
 
     # --- 棟の値 ----------------------------------------------------------------------------
     b["parapet_top"] = est(
         PARAPET, 2.7, PLATEAU_IDS + [W12, E37],
-        "塔の上端の標高を PLATEAU の 2 つの部品（足元の外に付いた塔の値：69.5 m＋基盤 43.53＝113.0、74.2 m＋基盤 41.81＝116.0）の中ほど "
-        "114.5 m（±1.5）と置き、土台の ground_z 42.9 m を引いた 71.6 m（114.5 − 42.9）。西面の手前のパラペット上端・東面のパラペット上端をこの高さと置いた"
-        "（仮定）。± は PLATEAU ±3%（2.2 m）と 2 部品の差の半分（1.5 m）を積んだ 2.7 m。未解決：PLATEAU の部品がどの高さ（パラペット・塔屋・"
+        "測量係が塔の上端の標高を 114.5 m（±1.5）と置き、土台の ground_z 42.9 m を引いた 71.6 m（114.5 − 42.9）。西面の手前のパラペット上端・"
+        "東面のパラペット上端をこの高さと置いた（仮定）。11/8 の確かめ：PLATEAU の塔そのもの（bldg_89288d72、足元は模型と同じ）の立体の上端は 116.00"
+        "（地面から 73.1 m）で、71.6 ± 2.7 の中（差 1.5 m）なので値は動かしていない（前に根拠にした 2 つの箱 bldg_f693ff16・bldg_f2cc5f1b は"
+        "塔の足元の外の渡り廊下とテラスに付いた値だった。敷地の検収係 data/reports/tower75/shikichi_plateau_box.md）。± は PLATEAU ±3%（2.2 m）と"
+        "読みの幅（1.5 m）を積んだ 2.7 m。未解決：PLATEAU の上端（116.00）と measuredHeight（83.1 m）がどの高さ（パラペット・塔屋・"
         "ガラスの冠）か写真で決まらない（requests の data）",
         ref="data/reports/tower75/sokuryo_f15.json#plateau_top",
         note="測量係が登録の高さの原点に置いた値。塊 T（主部）の上端。南西の角の塊 SW は低い（blocks）")
@@ -296,7 +330,7 @@ def build() -> dict:
     b["floor_pitch"] = est(
         PW, PW_TOL, [W12, W76, W83, W13] + PLATEAU_IDS + ["gsi:dem5a"],
         "西面 W の値（(114.5 − 45.0) ÷ 15.91 段 ＝ 4.37 m。data/reports/tower75/sokuryo_f3.json#floor_pitch）。東面は 4.33 m"
-        "（sokuryo_f15.json#floor_pitch）。未解決：OSM の西の線との差 −8.9%、PLATEAU の部品の高さの対応",
+        "（sokuryo_f15.json#floor_pitch）。未解決：OSM の西の線との差 −8.9%、PLATEAU の塔の上端（116.00）がどの高さか",
         ref=REF_PW, note="進行役 K-006 の規則：面ごとの階高のまま揃えない。窓の高さは西の面は西の値、東の面は東の値で置いた")
     lv = []
     for fl in range(1, 15):
@@ -1214,7 +1248,7 @@ def requests_list() -> list:
 
 def history_list() -> list:
     return [
-        {"at": "", "by": "recorder new --from-site", "what": "PLATEAU と 5m 標高から土台を起こした（PLATEAU に塔の足元が無いので OSM の輪郭）"},
+        {"at": "", "by": "recorder new --from-site", "what": "OSM の輪郭と 5m 標高から土台を起こした（PLATEAU の塔は LOD1 の立体だけで、その底は OSM の輪郭と同じ。11/8 F9 で確かめた）"},
         {"at": NOW, "by": BY, "what": "足元の多角形の最後の点（OSM の輪の閉じ点＝始点と同じ点）を外した。形は変わらない。長さ 0 の辺で平面図（recorder draw）が止まったため"},
         {"at": NOW, "by": BY, "what":
             "観察票・数え・測量（data/reports/tower75/）から設計した。西 W（f1・f2・f3）・東 E（f14・f15）は面の写真と正面化で窓の列・段・入口を読み、"

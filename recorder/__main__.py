@@ -17,6 +17,7 @@
   python -m recorder site confirm <id> <status> --by 名前 [--name 新しい名前] [--note ...]
                                                  職員の確認を敷地 JSON に書く
   python -m recorder site link-box <棟|敷地の物> <箱id> --why 理由 [--ask 撮影依頼の文]
+  python -m recorder site link-box <箱id> --to 相手 --to 相手 … --why 理由   相手の平面の和で 7 割以上なら置き換えの印
                                                  PLATEAU の箱を棟に結ぶ（足元の 7 割以上が輪郭の中の時だけ。足りなければ撮影依頼）
   python -m recorder assets list                CC0 アセットの台帳（data/assets/catalog.json）と取得状況
   python -m recorder assets fetch [id ...]      台帳のアセットを assets/ に取る（差分だけ。sha256 を台帳に書く）
@@ -119,8 +120,10 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--campus", default=None)
     q.add_argument("--out", default=None, help="export の書き出し先（<out>/data/models/site_objects.glb）。必須")
     q = ssub.add_parser("link-box", help="PLATEAU の箱を棟（棟 JSON の輪郭）か敷地の物に結ぶ。重なりが 7 割未満なら結ばず撮影依頼")
-    q.add_argument("target", help="棟 id（data/buildings/<id>.json）か敷地の物の id（objects.items[].id）")
-    q.add_argument("box", help="PLATEAU の箱の gml_id（先頭の一部でよい。bldg_f693ff16 など）")
+    q.add_argument("args", nargs="+", metavar="[相手] 箱id",
+                   help="`<相手> <箱id>`（相手は棟 id か敷地の物の id）か、--to を使う時は `<箱id>` だけ。箱 id は先頭の一部でよい")
+    q.add_argument("--to", action="append", default=[],
+                   help="相手（棟 id か敷地の物の id）。何度でも。複数なら相手の平面の和で 7 割以上の時に結ぶ（replaced_by の並び）")
     q.add_argument("--why", required=True, help="結ぶ理由（観察票・写真など）。敷地 JSON に残す")
     q.add_argument("--by", default="recorder site link-box")
     q.add_argument("--ask", default="", help="結べなかった時の撮影依頼の文")
@@ -1187,12 +1190,23 @@ def _site(a) -> int:
     if a.site_cmd == "link-box":
         path = site.DATA_SITE / f"{a.campus or site.default_campus()}.json"
         doc = json.loads(path.read_text(encoding="utf-8"))
-        r = site.link_box(doc, a.target, a.box, a.why, a.by, ask=a.ask)
+        if a.to:
+            if len(a.args) != 1:
+                print("エラー: --to を使う時は箱 id を 1 つだけ書く（link-box <箱id> --to 棟 --to 敷地の物 …）")
+                return 2
+            target, box = (a.to[0] if len(a.to) == 1 else a.to), a.args[0]
+        elif len(a.args) == 2:
+            target, box = a.args
+        else:
+            print("エラー: link-box <相手> <箱id> か link-box <箱id> --to 相手 [--to 相手 …]")
+            return 2
+        r = site.link_box(doc, target, box, a.why, a.by, ask=a.ask)
         for k, v in r["overlap"]["by"].items():
-            print(f"   {k}: 箱の足元 {r['overlap']['box_area_m2']} m² のうち {v['overlap_m2']} m²（{v['inside_ratio']:.1%}）が {r['target']} の中")
+            print(f"   {k}: 箱の足元 {r['overlap']['box_area_m2']} m² のうち {v['overlap_m2']} m²（{v['inside_ratio']:.1%}）が {k if isinstance(r['target'], list) else r['target']} の中")
         path.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+        tn = r["target"] if isinstance(r["target"], str) else "＋".join(r["target"])
         msg = {"linked": f"結び付けた：{r['box']} → {r['target']} の plateau_parts（前は {r['held_by']}）",
-               "replaced": f"置き換えの印：{r['box']} は敷地の物 {r['target']} に置き換わった（export-web で描かない）",
+               "replaced": f"置き換えの印：{r['box']} は {tn} に置き換わった（export-web で描かない）",
                "request": f"結ばない（一番大きい重なり {r['overlap']['best']:.1%} < {r['min_ratio']:.0%}）。撮影依頼 {r.get('request')} を敷地 JSON の requests に書いた"}
         print(msg[r["outcome"]])
         return 0

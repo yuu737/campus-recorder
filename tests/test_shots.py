@@ -186,3 +186,42 @@ def test_launch_recovers_on_second_try(tmp_path: Path, monkeypatch):
     assert calls == [60.0, 60.0]
     assert len(info["launch_errors"]) == 1 and info["launch_errors"][0]["reason"].startswith("60 秒")
     assert "Browser.close" in cdp.sent
+
+
+def _fake_walk_env(monkeypatch, tmp_path: Path, urls: list):
+    from contextlib import contextmanager
+
+    class Srv:
+        def shutdown(self): pass
+        def server_close(self): pass
+
+    @contextmanager
+    def hb(size, info=None):
+        yield object()
+
+    def cap(cdp, url, png, *a, **k):
+        urls.append(url)
+        return {"ready": True}
+
+    monkeypatch.setattr(S, "find_browser", lambda: Path("x"))
+    monkeypatch.setattr(S, "load_building", lambda p: {"id": "t"})
+    monkeypatch.setattr(S, "walk_cam", lambda b, o: ("1,2,3,4,5,6", "test"))
+    monkeypatch.setattr(S, "serve", lambda root: (Srv(), 1))
+    monkeypatch.setattr(S, "headless_browser", hb)
+    monkeypatch.setattr(S, "capture", cap)
+    monkeypatch.setattr(S, "is_blank", lambda p: False)
+    monkeypatch.setattr(S, "_png_size", lambda p: [1, 1])
+
+
+def test_walk_shot_default_has_boxes_0(tmp_path: Path, monkeypatch):
+    urls: list = []
+    _fake_walk_env(monkeypatch, tmp_path, urls)
+    r = S.walk_shot("t", out_dir=tmp_path, root=tmp_path)
+    assert "&boxes=0" in urls[0] and r["boxes"] is False and r["shots"]["walk"]["boxes"] is False
+
+
+def test_walk_shot_with_boxes_has_no_boxes_0(tmp_path: Path, monkeypatch):
+    urls: list = []
+    _fake_walk_env(monkeypatch, tmp_path, urls)
+    r = S.walk_shot("t", out_dir=tmp_path, root=tmp_path, boxes=True)
+    assert "boxes=0" not in urls[0] and r["boxes"] is True

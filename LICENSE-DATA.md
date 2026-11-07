@@ -4,7 +4,7 @@
 
 次の物は **MIT License ではありません**。このファイルの条件に従います。
 
-- 写真（`data/photos/public/` の公開版を含む、`data/photos/` の写真と索引）
+- 写真（`data/photos/` の写真と索引、`data/photos/public/` の公開版）。公開版は 407 枚（索引 408 枚のうち、研究室でないと言い切れない室内の 1 枚を除外）。掲示物・顔・ナンバー・電話番号・人名は灰色の箱で塗りつぶしてあります。
 - 棟 JSON（`data/buildings/*.json`）と敷地 JSON（`data/site/*.json`）
 - 生成物：図面（SVG・PNG）・模型（`.blend`・`.glb`）・絵（重ね合わせ・描画・スクリーンショット）・報告（`report.html`・`report.json` など）。リポジトリに入っている物（`docs/images/` の絵など）も、`out/` などに作り直した物も同じです。
 
@@ -28,7 +28,7 @@ The **code** (`recorder/`, `web/`, `scripts/`, `tests/`, and the code parts of `
 
 The following are **not** under the MIT License:
 
-- the photos (including the reduced public copies in `data/photos/public/`)
+- the photos (including the reduced public copies in `data/photos/public/`, 407 photos; 1 indoor photo that could not be ruled out as a lab is excluded; posters, faces, plates, phone numbers and names are covered with gray boxes)
 - the building JSON and site JSON
 - all generated outputs (drawings, models, images, reports)
 

@@ -4694,8 +4694,8 @@
    "building_tag": "university",
    "reference": {
     "levels_osm": null,
-    "plateau_height_m": null,
-    "plateau_base_z": null,
+    "plateau_height_m": 24.2,
+    "plateau_base_z": 23.84,
     "note": "参考値。棟 JSON の measured には使わない"
    },
    "footprint_osm": [
@@ -4722,8 +4722,10 @@
      ]
     ]
    ],
-   "plateau_parts": [],
-   "plateau_match": "none",
+   "plateau_parts": [
+    "bldg_5887c269-6ffc-40d6-ae97-8fdd6432bb2e"
+   ],
+   "plateau_match": "overlap",
    "centroid": [
     171.9,
     -191.4
@@ -4743,7 +4745,7 @@
    "building_tag": "university",
    "reference": {
     "levels_osm": "1",
-    "plateau_height_m": 18.7,
+    "plateau_height_m": 33.5,
     "plateau_base_z": 40.54,
     "note": "参考値。棟 JSON の measured には使わない"
    },
@@ -4868,6 +4870,7 @@
     ]
    ],
    "plateau_parts": [
+    "bldg_1264be43-3898-435d-8f60-4f556fd4e170",
     "bldg_997a8669-0297-4812-b017-17bfa42fa769",
     "bldg_713597eb-fd55-4124-ae38-cbd6df191965",
     "bldg_2546d8ba-55a3-4465-bfdd-81587fa2ab9a"
@@ -4892,8 +4895,8 @@
    "building_tag": "university",
    "reference": {
     "levels_osm": null,
-    "plateau_height_m": null,
-    "plateau_base_z": null,
+    "plateau_height_m": 21.1,
+    "plateau_base_z": 23.86,
     "note": "参考値。棟 JSON の measured には使わない"
    },
    "footprint_osm": [
@@ -4964,8 +4967,10 @@
      ]
     ]
    ],
-   "plateau_parts": [],
-   "plateau_match": "none",
+   "plateau_parts": [
+    "bldg_35eedd9b-7923-4e57-a0fe-d7c93f3557eb"
+   ],
+   "plateau_match": "overlap",
    "centroid": [
     269.6,
     -25.4
@@ -4985,8 +4990,8 @@
    "building_tag": "university",
    "reference": {
     "levels_osm": "16",
-    "plateau_height_m": null,
-    "plateau_base_z": null,
+    "plateau_height_m": 83.1,
+    "plateau_base_z": 40.95,
     "note": "参考値。棟 JSON の measured には使わない"
    },
    "footprint_osm": [
@@ -5093,8 +5098,10 @@
      ]
     ]
    ],
-   "plateau_parts": [],
-   "plateau_match": "none",
+   "plateau_parts": [
+    "bldg_89288d72-791f-424c-aadd-fb81a2ef906f"
+   ],
+   "plateau_match": "overlap",
    "centroid": [
     52.2,
     17.0
@@ -5103,7 +5110,16 @@
     "status": "unconfirmed",
     "by": null,
     "at": null,
-    "note": ""
+    "note": "",
+    "plateau_links": [
+     {
+      "box": "bldg_89288d72-791f-424c-aadd-fb81a2ef906f",
+      "inside_ratio": 1.0,
+      "why": "LOD1 の底が模型の足元と IoU 1.000（敷地の検収係 11/8）",
+      "by": "F9（直す係）",
+      "at": "2026-11-08T02:05:10"
+     }
+    ]
    }
   },
   {
@@ -15041,13 +15057,309 @@
     ],
     "made_by": "T6（Opus）",
     "made_at": "2026-11-08"
+   },
+   {
+    "id": "corridor-tower75-west",
+    "type": "corridor",
+    "name": "渡り廊下 S3（タワー75 の西面 f2 の 2F から西へ、大階段の上を渡る灰色の金属パネルの箱）",
+    "evidence": [
+     "PXL_20261103_070114062",
+     "PXL_20261103_070134689",
+     "PXL_20261105_061241221",
+     "PXL_20261105_061836019",
+     "PXL_20261105_061836600",
+     "PXL_20261105_061837232",
+     "PXL_20261103_070204974",
+     "PXL_20261105_061034445"
+    ],
+    "seen": "灰色の金属パネルの箱に横長の窓、四角い柱 2 本ずつで支え、西の大階段とデッキの上を渡る（070114062・061241221）。タワー75 の側は f2 の 2F に付き、西の端は範囲外の棟へ続く。観察票 data/reports/tower75/kansatsu_summary.json の S3。PLATEAU の箱 bldg_f693ff16（69.5 m）はこの足元で、高さだけ塔の値が付いている（敷地の検収係 11/8：視点が箱の中の写真 6 枚、061241221 で箱の上は空）",
+    "polygon": {
+     "value": [
+      [
+       28.24,
+       42.54
+      ],
+      [
+       11.97,
+       51.39
+      ],
+      [
+       9.14,
+       46.09
+      ],
+      [
+       22.02,
+       39.06
+      ],
+      [
+       35.82,
+       31.54
+      ],
+      [
+       38.62,
+       36.89
+      ]
+     ],
+     "unit": "m",
+     "tol": 1.0,
+     "status": "estimated",
+     "evidence": [
+      "osm:way/1304077323",
+      "plateau:bldg_f693ff16",
+      "PXL_20261103_070114062",
+      "PXL_20261103_070134689"
+     ],
+     "method": "OSM way/1304077323 の多角形そのまま（PLATEAU の箱 bldg_f693ff16 の足元と 99.9 % 重なる、F6）。070114062・070134689 で渡り廊下が f2 から西へ、幅は塔の窓の列 2 つ分ほどの帯で延びる。± は OSM の目安",
+     "note": "柱（四角い柱 2 本ずつ）は置いていない"
+    },
+    "floor_z": {
+     "value": 56.6,
+     "unit": "m",
+     "tol": 2.63,
+     "status": "estimated",
+     "evidence": [
+      "PXL_20261103_070114062",
+      "PXL_20261103_070134689",
+      "PXL_20261105_061241221",
+      "PXL_20261105_061836019"
+     ],
+     "method": "観察票 S3『床はデッキ階の 1 つ上（2F）の床の高さ』（写真の比）。タワー75 の ground_z 42.9＋2F の白帯 13.7（levels）＝56.6。± は 2F の ± と ground_z の ± の二乗和",
+     "note": "",
+     "ref": "tower75:levels[2F].z"
+    },
+    "height": {
+     "value": 4.37,
+     "unit": "m",
+     "tol": 1.31,
+     "status": "estimated",
+     "evidence": [
+      "PXL_20261103_070114062",
+      "PXL_20261103_070134689",
+      "PXL_20261105_061241221",
+      "PXL_20261105_061836019"
+     ],
+     "method": "観察票 S3『箱の高さは 1 段分』（写真の比）。タワー75 の 2F→3F の白帯の差 18.07−13.7＝4.37 m。± は比の読みの 30 %",
+     "note": "",
+     "ref": "tower75:levels[3F].z−levels[2F].z"
+    },
+    "material": "metal",
+    "requests": [
+     {
+      "kind": "photo",
+      "status": "open",
+      "by": "F9",
+      "to": "staff",
+      "what": "渡り廊下の側面を真横から 1 枚（塔の窓の列と箱の上下が 1 枚に入るように）と、下面と柱を見上げる 1 枚",
+      "where": "西の大階段の下の広場（渡り廊下の南の脇）",
+      "why": "床・箱の高さは観察票の比（2F・1 段分）だけ。正面化して塔の階高で測れば estimated の幅を狭められる"
+     }
+    ]
+   },
+   {
+    "id": "deck-library-nw",
+    "type": "deck",
+    "name": "図書館の北西の甲板（赤れんがの床、通路橋とタワー75 の西のデッキの間）",
+    "evidence": [
+     "PXL_20261105_063449740",
+     "PXL_20261105_063455681",
+     "PXL_20261105_063540463",
+     "PXL_20261103_075705849",
+     "PXL_20261105_063106256",
+     "PXL_20261105_063413358",
+     "PXL_20261105_063418811",
+     "PXL_20261105_063529987",
+     "PXL_20261103_075710233",
+     "PXL_20261103_075718159",
+     "PXL_20261105_063115879.MP",
+     "PXL_20261105_063548675"
+    ],
+    "seen": "赤れんがの床の広い甲板。縁に金属の手すりと低い腰壁、青い鉄骨の庇の柱が並ぶ（063449740・063455681）。図書館の正面入口 f2 の前から北西へ広がり、通路橋とタワー75 の西のデッキに続く。登録済みの図書館の写真 11 枚の視点がこの上（図書館の地面から 9.0〜10.4 m、敷地の検収係 11/8）",
+    "polygon": {
+     "value": [
+      [
+       17.05,
+       0.27
+      ],
+      [
+       6.69,
+       -19.2
+      ],
+      [
+       1.03,
+       -16.14
+      ],
+      [
+       4.16,
+       -10.36
+      ],
+      [
+       2.35,
+       -9.39
+      ],
+      [
+       9.41,
+       3.67
+      ],
+      [
+       12.29,
+       2.11
+      ],
+      [
+       19.75,
+       15.9
+      ],
+      [
+       16.13,
+       17.86
+      ],
+      [
+       16.16,
+       17.92
+      ],
+      [
+       25.98,
+       12.77
+      ],
+      [
+       17.05,
+       0.27
+      ],
+      [
+       24.02,
+       -3.44
+      ],
+      [
+       31.28,
+       9.99
+      ],
+      [
+       24.02,
+       -3.44
+      ]
+     ],
+     "unit": "m",
+     "tol": 1.0,
+     "status": "estimated",
+     "evidence": [
+      "osm:way/1304081004",
+      "plateau:bldg_2e2a316f",
+      "PXL_20261105_063449740",
+      "PXL_20261105_063455681"
+     ],
+     "method": "PLATEAU の箱 bldg_2e2a316f（＝OSM way/1304081004、100 %）から、タワー75 の輪郭と部品（西のデッキ S1・大階段 S4 など、棟 JSON の parts）と通路橋 bridge-library-tower75 の平面を引いた残りの一番大きい塊（261.7 m²。残りの小片 0.5 m² は捨てた）。1 つの物は棟か敷地の 1 か所（K-005）。縁の形は OSM のまま",
+     "note": "図書館の部品（風除室・庇）はこの床の上に立つ物で、床とは別"
+    },
+    "z": {
+     "value": null,
+     "unit": "m",
+     "tol": null,
+     "status": "unknown",
+     "evidence": [],
+     "method": "",
+     "note": "床の標高が 2 つの棟で食い違う（図書館側 41.67＋6.6＝48.27、タワー75 の西のデッキ 42.9＋7.23＝50.13、差 1.86 m）。どちらにも決めない（敷地 JSON の requests: deck-library-nw-z）"
+    },
+    "material": "brick",
+    "requests": [
+     {
+      "kind": "data",
+      "status": "open",
+      "by": "F9",
+      "to": "soten",
+      "what": "甲板の床の標高を決める（図書館側 48.27 と タワー75 側 50.13 が 1.86 m 違う）",
+      "where": "data/buildings/library.json（DECK_Z 6.6・ground_z 41.67）と tower75.json（levels 1F 7.23・ground_z 42.9）",
+      "why": "写真では甲板・通路橋・西のデッキは段差なしで続く（063412307・063439559・070409570）。どちらかの棟の ground_z か床の高さが違う"
+     },
+     {
+      "kind": "photo",
+      "status": "open",
+      "by": "F9",
+      "to": "staff",
+      "what": "甲板の縁から下の道へ、メジャーを笠木から道の面まで垂らして 1 枚（目盛りの 0 と上端が写るように）",
+      "where": "甲板の北西の縁（通路橋の西の脇）",
+      "why": "甲板の床の標高を道の面（5m 標高）から測り、2 つの棟のどちらが合うかを決める"
+     }
+    ]
+   },
+   {
+    "id": "steps-tower75-north-plaza",
+    "type": "steps",
+    "name": "北の沈んだ広場の大階段（タワー75 の北西のテラスの西脇、B1 の広場から北の地面へ）",
+    "evidence": [
+     "PXL_20261103_065946407",
+     "PXL_20261103_070003022"
+    ],
+    "seen": "065946407・070003022（北の広場から南を向いて）：テラスの前面の壁と B1 のガラスの入口の右（西）に、沈んだ広場から北の地面へ上がる幅の広い段（踏み面の広い段が並ぶ）と、壁沿いの手すり付きの細い段。上の段の先は北の地面で人が立つ。PLATEAU の箱 bldg_f2cc5f1b（74.2 m）の足元は、テラス（棟 JSON の parts）と、この広場・大階段を含むと見る（テラスで 52.5 %）",
+    "polygon": {
+     "value": null,
+     "unit": "m",
+     "tol": null,
+     "status": "unknown",
+     "evidence": [],
+     "method": "",
+     "note": "平面が読めない：065946407・070003022 は登録（視点）が無く、GPS だけ。OSM にも段（highway=steps）が無い。PLATEAU の箱の輪郭は広場（平らな床）と大階段を分けないので、段の縁の位置にはしない（決めつけない）"
+    },
+    "z0": {
+     "value": 45.76,
+     "unit": "m",
+     "tol": 1.64,
+     "status": "estimated",
+     "evidence": [
+      "PXL_20261103_065946407",
+      "PXL_20261103_070003022",
+      "PXL_20261103_070044607"
+     ],
+     "method": "下の段＝B1 の広場の床。タワー75 の ground_z 42.9＋B1 2.86（棟 JSON の S6・S7 の front_wall の下端。観察票 S7『デッキより 1 段低い』：7.23 − 4.37）。± は 1 段の読みの 30 % と ground_z の ± の二乗和",
+     "note": "",
+     "ref": "tower75:parts[S6・S7].front_wall.z0"
+    },
+    "z1": {
+     "value": null,
+     "unit": "m",
+     "tol": null,
+     "status": "unknown",
+     "evidence": [],
+     "method": "",
+     "note": "上の段＝北の地面の標高。写真に物差しが無く、5m 標高は沈んだ広場と混ざる"
+    },
+    "count": {
+     "value": 8,
+     "unit": "段",
+     "tol": 2,
+     "status": "estimated",
+     "evidence": [
+      "PXL_20261103_065946407"
+     ],
+     "method": "065946407 を拡大して広い段の縁の線を数えた（8）。070003022 は遠く斜めで数え切れない（2 枚で一致していないので estimated、± 2 段）",
+     "note": ""
+    },
+    "material": "stone",
+    "requests": [
+     {
+      "kind": "photo",
+      "status": "open",
+      "by": "F9",
+      "to": "staff",
+      "what": "大階段を真横（東の広場の床）から 1 枚：段の全部と上下の縁が入るように。メジャーを 1 段の蹴上げに当てて 1 枚",
+      "where": "タワー75 の北の沈んだ広場（B1 のガラスの入口の前）",
+      "why": "z1（上の地面の標高）と段数を写真で決める（蹴上げ×段数）"
+     },
+     {
+      "kind": "photo",
+      "status": "open",
+      "by": "F9",
+      "to": "staff",
+      "what": "大階段の上の縁と下の縁の四隅が入るように、北の地面の上から見下ろして 2 枚（タワー75 の f0・f1 の角が同じ写真に入る所から）",
+      "where": "大階段の北の地面（上の段の先）",
+      "why": "平面（polygon）が unknown。塔の角を目印に視点を解けば縁の位置が読める"
+     }
+    ]
    }
   ]
  },
  "requests": [
   {
    "id": "plateau-f693ff16-tower75",
-   "status": "open",
+   "status": "closed",
    "action": "request",
    "fix_in": "site",
    "buildings": [
@@ -15081,11 +15393,14 @@
     "plateau:bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1"
    ],
    "by": "直す係 F6",
-   "at": "2026-11-08T00:18:52"
+   "at": "2026-11-08T00:18:52",
+   "closed_by": "F9（直す係）",
+   "closed_at": "2026-11-08T02:07:39",
+   "closed_note": "link-box で結んだ（99.9%、相手 corridor-tower75-west）。渡り廊下 S3 の足元（OSM way/1304077323）。視点が箱の中の写真 6 枚、061241221 で箱の上は空（敷地の検収係 11/8）"
   },
   {
    "id": "plateau-2e2a316f-bridge-library-tower75",
-   "status": "open",
+   "status": "closed",
    "action": "request",
    "fix_in": "site",
    "buildings": [
@@ -15112,7 +15427,220 @@
     "plateau:bldg_2e2a316f-4471-4381-b071-ff0488fe8422"
    ],
    "by": "直す係 F6",
-   "at": "2026-11-08T00:18:53"
+   "at": "2026-11-08T00:18:53",
+   "closed_by": "F9（直す係）",
+   "closed_at": "2026-11-08T02:07:39",
+   "closed_note": "link-box で結んだ（99.9%、相手 tower75＋bridge-library-tower75＋deck-library-nw）。タワー75 の西のデッキ・大階段（棟 JSON の parts）＋通路橋＋図書館の北西の甲板の 3 つに分かれる（敷地の検収係 11/8：41 %＋17 %＋42 %）"
+  },
+  {
+   "id": "plateau-f2cc5f1b-tower75",
+   "status": "closed",
+   "action": "request",
+   "fix_in": "site",
+   "buildings": [
+    "tower75"
+   ],
+   "box": "bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+   "box_height_m": 74.2,
+   "held_by": "osm-way-1304077325",
+   "what": "PLATEAU の箱 bldg_f2cc5f1b（高さ 74.2 m、敷地 JSON では osm-way-1304077325）はtower75 の輪郭と 52.5% しか重ならない（footprint 0.0%（0.1 m²）、faces 0.0%（0.1 m²）、blocks 0.0%（0.1 m²）、parts 52.5%（132.9 m²）、all 52.5%（132.9 m²）。結ぶ目安 70%）。結ばず、灰色の箱のまま",
+   "ask": "タワー75 の北西のテラスの北の縁（f0 から 8 m より先）に何があるか：広場から上がる幅の広い大階段か、テラスがもっと北へ出ているか。北の沈んだ広場から f0 を正面に、テラスの縁と大階段が 1 枚に入るように 2 枚",
+   "why": "北西のテラス S6・S7 とパーゴラ（棟 JSON の parts）の足元（敷地の検収係 11/8）",
+   "overlap": {
+    "box_area_m2": 253.2,
+    "by": {
+     "footprint": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.1
+     },
+     "faces": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.1
+     },
+     "blocks": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.1
+     },
+     "parts": {
+      "inside_ratio": 0.525,
+      "overlap_m2": 132.9
+     },
+     "all": {
+      "inside_ratio": 0.525,
+      "overlap_m2": 132.9
+     }
+    },
+    "best": 0.525
+   },
+   "evidence": [
+    "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a"
+   ],
+   "by": "F9（直す係）",
+   "at": "2026-11-08T02:07:40",
+   "closed_by": "F9（直す係）",
+   "closed_at": "2026-11-08T02:20:19",
+   "closed_note": "plateau-f2cc5f1b-tower75+steps-tower75-north-plaza（大階段を敷地の物に置いた後の数）に引き継いだ"
+  },
+  {
+   "id": "deck-library-nw-z",
+   "status": "open",
+   "action": "soten",
+   "fix_in": "soten",
+   "buildings": [
+    "library",
+    "tower75"
+   ],
+   "object": "deck-library-nw",
+   "what": "図書館の北西の甲板（deck-library-nw）の床の標高が 2 つの棟で食い違う：図書館の甲板 41.67＋6.6＝48.27、タワー75 の西のデッキ 42.9＋7.23＝50.13（差 1.86 m）。写真では甲板・通路橋・西のデッキは段差なしで続く。甲板の z は unknown にして描かない（決めない）",
+   "ask": "どちらかの棟の ground_z か床の高さを写真（メジャー）で決める。決まれば deck-library-nw.z と通路橋 floor_z を直す",
+   "why": "通路橋の floor_z は 2 つの値の重み付き平均で置いてある（±1.5）。甲板まで同じ扱いにすると食い違いが見えなくなる",
+   "evidence": [
+    "PXL_20261105_063412307",
+    "PXL_20261105_063439559",
+    "PXL_20261103_070409570",
+    "library:design_library.DECK_Z",
+    "tower75:levels[1F].z"
+   ],
+   "by": "F9（直す係、Claude Opus 5.5）",
+   "at": "2026-11-08T02:07:31"
+  },
+  {
+   "id": "plateau-f2cc5f1b-tower75+steps-tower75-north-plaza",
+   "status": "open",
+   "action": "request",
+   "fix_in": "site",
+   "buildings": [
+    "tower75"
+   ],
+   "box": "bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a",
+   "box_height_m": 74.2,
+   "held_by": "osm-way-1304077325",
+   "what": "PLATEAU の箱 bldg_f2cc5f1b（高さ 74.2 m、敷地 JSON では osm-way-1304077325）はtower75＋steps-tower75-north-plaza の輪郭と 52.5% しか重ならない（tower75 52.5%（132.9 m²）、steps-tower75-north-plaza 0.0%（0.0 m²）、union 52.5%（132.9 m²）。結ぶ目安 70%）。結ばず、灰色の箱のまま",
+   "ask": "大階段の平面（縁の四隅）と北の沈んだ広場の床の広がりを写真で決める（steps-tower75-north-plaza の requests）。広場の平らな床は段ではないので、残りが広場なら別の物（deck か地面の帯）が要る",
+   "why": "北西のテラス S6・S7（棟 JSON の parts）＋北の沈んだ広場の大階段（敷地の物）。Fable の判断 11/8",
+   "overlap": {
+    "box_area_m2": 253.2,
+    "by": {
+     "tower75": {
+      "inside_ratio": 0.525,
+      "overlap_m2": 132.9
+     },
+     "steps-tower75-north-plaza": {
+      "inside_ratio": 0.0,
+      "overlap_m2": 0.0
+     },
+     "union": {
+      "inside_ratio": 0.525,
+      "overlap_m2": 132.9
+     }
+    },
+    "best": 0.525
+   },
+   "evidence": [
+    "plateau:bldg_f2cc5f1b-1403-4764-8a92-d081923b0f6a"
+   ],
+   "by": "F9（直す係）",
+   "at": "2026-11-08T02:20:13"
+  }
+ ],
+ "plateau_links": [
+  {
+   "box": "bldg_89288d72-791f-424c-aadd-fb81a2ef906f",
+   "kind": "building",
+   "target": "tower75",
+   "inside_ratio": 1.0,
+   "overlap": {
+    "box_area_m2": 1437.0,
+    "by": {
+     "footprint": {
+      "inside_ratio": 1.0,
+      "overlap_m2": 1436.6
+     },
+     "faces": {
+      "inside_ratio": 0.989,
+      "overlap_m2": 1421.7
+     },
+     "blocks": {
+      "inside_ratio": 1.0,
+      "overlap_m2": 1436.6
+     },
+     "parts": {
+      "inside_ratio": 0.078,
+      "overlap_m2": 111.9
+     },
+     "all": {
+      "inside_ratio": 1.0,
+      "overlap_m2": 1436.9
+     }
+    },
+    "best": 1.0
+   },
+   "why": "LOD1 の底が模型の足元と IoU 1.000（敷地の検収係 11/8）",
+   "by": "F9（直す係）",
+   "at": "2026-11-08T02:05:10",
+   "was_in": "tower75"
+  },
+  {
+   "box": "bldg_f693ff16-7d7b-4e35-b1c2-cff40827fcc1",
+   "kind": "replaced",
+   "target": "corridor-tower75-west",
+   "inside_ratio": 0.999,
+   "overlap": {
+    "box_area_m2": 183.2,
+    "by": {
+     "object": {
+      "inside_ratio": 0.999,
+      "overlap_m2": 183.0
+     }
+    },
+    "best": 0.999
+   },
+   "why": "渡り廊下 S3 の足元（OSM way/1304077323）。視点が箱の中の写真 6 枚、061241221 で箱の上は空（敷地の検収係 11/8）",
+   "by": "F9（直す係）",
+   "at": "2026-11-08T02:07:39",
+   "was_in": "osm-way-1304077323",
+   "replaced_by": "corridor-tower75-west"
+  },
+  {
+   "box": "bldg_2e2a316f-4471-4381-b071-ff0488fe8422",
+   "kind": "replaced",
+   "target": [
+    "tower75",
+    "bridge-library-tower75",
+    "deck-library-nw"
+   ],
+   "inside_ratio": 0.999,
+   "overlap": {
+    "box_area_m2": 633.4,
+    "by": {
+     "tower75": {
+      "inside_ratio": 0.419,
+      "overlap_m2": 265.4
+     },
+     "bridge-library-tower75": {
+      "inside_ratio": 0.167,
+      "overlap_m2": 105.7
+     },
+     "deck-library-nw": {
+      "inside_ratio": 0.413,
+      "overlap_m2": 261.7
+     },
+     "union": {
+      "inside_ratio": 0.999,
+      "overlap_m2": 632.8
+     }
+    },
+    "best": 0.999
+   },
+   "why": "タワー75 の西のデッキ・大階段（棟 JSON の parts）＋通路橋＋図書館の北西の甲板の 3 つに分かれる（敷地の検収係 11/8：41 %＋17 %＋42 %）",
+   "by": "F9（直す係）",
+   "at": "2026-11-08T02:07:39",
+   "was_in": "osm-way-1304081004",
+   "replaced_by": [
+    "tower75",
+    "bridge-library-tower75",
+    "deck-library-nw"
+   ]
   }
  ]
 }

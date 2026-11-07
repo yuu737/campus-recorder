@@ -1990,373 +1990,6 @@
    "registered_by": "registry"
   },
   {
-   "photo": "PXL_20261103_042822099",
-   "building": "honbu",
-   "face": "f6",
-   "kind": "pose",
-   "period": "during",
-   "file": "20261103/PXL_20261103_042822099.jpg",
-   "image_size": [
-    4624,
-    3472
-   ],
-   "camera": {
-    "focal_px": 1870.8946705855305,
-    "image_size": [
-     4624,
-     3472
-    ],
-    "R_cv": [
-     [
-      0.9582887800130204,
-      -0.27108113429961034,
-      0.09054077936484509
-     ],
-     [
-      0.20653859820284404,
-      0.43788254683150285,
-      -0.8749861042512393
-     ],
-     [
-      0.1975459985764356,
-      0.8571895320214739,
-      0.47560664906963357
-     ]
-    ],
-    "t_cv": [
-     34.78218274211495,
-     22.92763925473009,
-     33.13110979493772
-    ],
-    "camera_xyz": [
-     -44.61,
-     -29.01,
-     1.15
-    ],
-    "camera_height_m": 1.15,
-    "distance_to_face_m": null,
-    "blender": {
-     "location": [
-      -44.611736106290216,
-      -29.010460019021032,
-      1.1547837081640713
-     ],
-     "rotation_euler": [
-      2.0686810545102756,
-      -0.09066494128028918,
-      -0.27567771491665954
-     ],
-     "lens_mm": 14.565788957845825,
-     "sensor_width_mm": 36.0,
-     "sensor_fit": "AUTO",
-     "resolution": [
-      4624,
-      3472
-     ]
-    }
-   },
-   "visible_faces": [
-    {
-     "face": "f6",
-     "area_m2": 775.94,
-     "distance_m": 10.6,
-     "unoccluded": 1.0
-    }
-   ],
-   "via": [
-    "PXL_20261103_042909968",
-    "PXL_20261103_042900775",
-    "PXL_20261103_042734715"
-   ],
-   "source": {
-    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
-    "focal_source": "exif_35mm",
-    "ground_face": "f6"
-   },
-   "check": {
-    "reproj_rms_px": 2.95,
-    "reproj_median_px": 2.26,
-    "reproj_max_px": 5.9,
-    "n_points": 114,
-    "n_candidates": 236,
-    "inlier_ratio": 0.483,
-    "inlier_box_frac": 0.319,
-    "points_by_face": {
-     "PXL_20261103_042909968:f6": 114
-    },
-    "points_spread_m": [
-     18.22,
-     9.61,
-     16.64
-    ],
-    "camera_height_m": 1.15,
-    "via_stats": {
-     "PXL_20261103_042909968": {
-      "matches": 379,
-      "geometric": 171,
-      "on_plane": 171
-     },
-     "PXL_20261103_042900775": {
-      "matches": 328,
-      "geometric": 50,
-      "on_plane": 50
-     },
-     "PXL_20261103_042734715": {
-      "matches": 276,
-      "geometric": 42,
-      "on_plane": 38
-     }
-    }
-   },
-   "registered_at": "2026-11-07T10:43:10",
-   "registered_by": "register-chain"
-  },
-  {
-   "photo": "PXL_20261103_042830256",
-   "building": "honbu",
-   "face": "f6",
-   "kind": "pose",
-   "period": "during",
-   "file": "20261103/PXL_20261103_042830256.jpg",
-   "image_size": [
-    4624,
-    3472
-   ],
-   "camera": {
-    "focal_px": 1870.8946705855305,
-    "image_size": [
-     4624,
-     3472
-    ],
-    "R_cv": [
-     [
-      0.9989348935799257,
-      0.008101129673777236,
-      0.045425214214917034
-     ],
-     [
-      0.03836952474235558,
-      0.4009755182942492,
-      -0.9152848809522114
-     ],
-     [
-      -0.025629240322495278,
-      0.9160529490300584,
-      0.40023760019996235
-     ]
-    ],
-    "t_cv": [
-     47.32625223718688,
-     14.000503768625853,
-     23.199897793294927
-    ],
-    "camera_xyz": [
-     -47.22,
-     -27.25,
-     1.38
-    ],
-    "camera_height_m": 1.38,
-    "distance_to_face_m": null,
-    "blender": {
-     "location": [
-      -47.21844166184505,
-      -27.249590152096445,
-      1.3791728616015262
-     ],
-     "rotation_euler": [
-      1.9830237738414203,
-      -0.04544085084907581,
-      0.008109589657542606
-     ],
-     "lens_mm": 14.565788957845825,
-     "sensor_width_mm": 36.0,
-     "sensor_fit": "AUTO",
-     "resolution": [
-      4624,
-      3472
-     ]
-    }
-   },
-   "visible_faces": [
-    {
-     "face": "f6",
-     "area_m2": 401.2,
-     "distance_m": 10.26,
-     "unoccluded": 1.0
-    }
-   ],
-   "via": [
-    "PXL_20261103_042822099",
-    "PXL_20261103_042909968",
-    "PXL_20261103_042900775"
-   ],
-   "source": {
-    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
-    "focal_source": "exif_35mm",
-    "ground_face": "f6"
-   },
-   "check": {
-    "reproj_rms_px": 2.65,
-    "reproj_median_px": 2.23,
-    "reproj_max_px": 5.5,
-    "n_points": 227,
-    "n_candidates": 483,
-    "inlier_ratio": 0.47,
-    "inlier_box_frac": 0.095,
-    "points_by_face": {
-     "PXL_20261103_042822099:f6": 226,
-     "PXL_20261103_042909968:f6": 1
-    },
-    "points_spread_m": [
-     9.68,
-     5.11,
-     5.51
-    ],
-    "camera_height_m": 1.38,
-    "via_stats": {
-     "PXL_20261103_042822099": {
-      "matches": 828,
-      "geometric": 587,
-      "on_plane": 407
-     },
-     "PXL_20261103_042909968": {
-      "matches": 325,
-      "geometric": 98,
-      "on_plane": 98
-     },
-     "PXL_20261103_042900775": {
-      "matches": 325,
-      "geometric": 31,
-      "on_plane": 26
-     }
-    }
-   },
-   "registered_at": "2026-11-07T10:47:01",
-   "registered_by": "register-chain"
-  },
-  {
-   "photo": "PXL_20261103_042844361",
-   "building": "honbu",
-   "face": "f6",
-   "kind": "pose",
-   "period": "during",
-   "file": "20261103/PXL_20261103_042844361.jpg",
-   "image_size": [
-    4624,
-    3472
-   ],
-   "camera": {
-    "focal_px": 1870.8946705855305,
-    "image_size": [
-     4624,
-     3472
-    ],
-    "R_cv": [
-     [
-      0.9432415454431263,
-      -0.33193436429468237,
-      0.010722161645307565
-     ],
-     [
-      0.1418535841211488,
-      0.3734862326161558,
-      -0.9167254740205354
-     ],
-     [
-      0.30028810769334036,
-      0.8662145299211254,
-      0.3993738105227695
-     ]
-    ],
-    "t_cv": [
-     43.5752522525301,
-     18.34389481283931,
-     39.04208361232266
-    ],
-    "camera_xyz": [
-     -55.43,
-     -26.21,
-     0.76
-    ],
-    "camera_height_m": 0.76,
-    "distance_to_face_m": null,
-    "blender": {
-     "location": [
-      -55.42800891204272,
-      -26.205888613119733,
-      0.7567090662944032
-     ],
-     "rotation_euler": [
-      1.9816550888380617,
-      -0.010722367101042941,
-      -0.338373696208419
-     ],
-     "lens_mm": 14.565788957845825,
-     "sensor_width_mm": 36.0,
-     "sensor_fit": "AUTO",
-     "resolution": [
-      4624,
-      3472
-     ]
-    }
-   },
-   "visible_faces": [
-    {
-     "face": "f6",
-     "area_m2": 529.29,
-     "distance_m": 13.16,
-     "unoccluded": 1.0
-    }
-   ],
-   "via": [
-    "PXL_20261103_042900775",
-    "PXL_20261103_042822099",
-    "PXL_20261103_042909968"
-   ],
-   "source": {
-    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
-    "focal_source": "exif_35mm",
-    "ground_face": "f6"
-   },
-   "check": {
-    "reproj_rms_px": 2.64,
-    "reproj_median_px": 1.86,
-    "reproj_max_px": 5.87,
-    "n_points": 80,
-    "n_candidates": 473,
-    "inlier_ratio": 0.169,
-    "inlier_box_frac": 0.071,
-    "points_by_face": {
-     "PXL_20261103_042822099:f6": 80
-    },
-    "points_spread_m": [
-     7.05,
-     3.72,
-     5.47
-    ],
-    "camera_height_m": 0.76,
-    "via_stats": {
-     "PXL_20261103_042900775": {
-      "matches": 555,
-      "geometric": 311,
-      "on_plane": 311
-     },
-     "PXL_20261103_042822099": {
-      "matches": 475,
-      "geometric": 214,
-      "on_plane": 171
-     },
-     "PXL_20261103_042909968": {
-      "matches": 326,
-      "geometric": 98,
-      "on_plane": 98
-     }
-    }
-   },
-   "registered_at": "2026-11-07T10:47:02",
-   "registered_by": "register-chain"
-  },
-  {
    "photo": "PXL_20261103_042900775",
    "building": "honbu",
    "face": "f6",
@@ -29643,6 +29276,402 @@
    "period": "during",
    "chain_reason": "視点に合う対応点が 8 点（12 点未満）",
    "chain_code": "few_inliers"
+  }
+ ],
+ "unregistered": [
+  {
+   "photo": "PXL_20261103_042822099",
+   "building": "honbu",
+   "face": "f6",
+   "kind": "pose",
+   "why": "J-027 柱割り 4 つ分ずれた登録。追記で登録し直す",
+   "at": "2026-11-08T00:27:48",
+   "by": "Fable",
+   "entry": {
+    "photo": "PXL_20261103_042822099",
+    "building": "honbu",
+    "face": "f6",
+    "kind": "pose",
+    "period": "during",
+    "file": "20261103/PXL_20261103_042822099.jpg",
+    "image_size": [
+     4624,
+     3472
+    ],
+    "camera": {
+     "focal_px": 1870.8946705855305,
+     "image_size": [
+      4624,
+      3472
+     ],
+     "R_cv": [
+      [
+       0.9582887800130204,
+       -0.27108113429961034,
+       0.09054077936484509
+      ],
+      [
+       0.20653859820284404,
+       0.43788254683150285,
+       -0.8749861042512393
+      ],
+      [
+       0.1975459985764356,
+       0.8571895320214739,
+       0.47560664906963357
+      ]
+     ],
+     "t_cv": [
+      34.78218274211495,
+      22.92763925473009,
+      33.13110979493772
+     ],
+     "camera_xyz": [
+      -44.61,
+      -29.01,
+      1.15
+     ],
+     "camera_height_m": 1.15,
+     "distance_to_face_m": null,
+     "blender": {
+      "location": [
+       -44.611736106290216,
+       -29.010460019021032,
+       1.1547837081640713
+      ],
+      "rotation_euler": [
+       2.0686810545102756,
+       -0.09066494128028918,
+       -0.27567771491665954
+      ],
+      "lens_mm": 14.565788957845825,
+      "sensor_width_mm": 36.0,
+      "sensor_fit": "AUTO",
+      "resolution": [
+       4624,
+       3472
+      ]
+     }
+    },
+    "visible_faces": [
+     {
+      "face": "f6",
+      "area_m2": 775.94,
+      "distance_m": 10.6,
+      "unoccluded": 1.0
+     }
+    ],
+    "via": [
+     "PXL_20261103_042909968",
+     "PXL_20261103_042900775",
+     "PXL_20261103_042734715"
+    ],
+    "source": {
+     "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+     "focal_source": "exif_35mm",
+     "ground_face": "f6"
+    },
+    "check": {
+     "reproj_rms_px": 2.95,
+     "reproj_median_px": 2.26,
+     "reproj_max_px": 5.9,
+     "n_points": 114,
+     "n_candidates": 236,
+     "inlier_ratio": 0.483,
+     "inlier_box_frac": 0.319,
+     "points_by_face": {
+      "PXL_20261103_042909968:f6": 114
+     },
+     "points_spread_m": [
+      18.22,
+      9.61,
+      16.64
+     ],
+     "camera_height_m": 1.15,
+     "via_stats": {
+      "PXL_20261103_042909968": {
+       "matches": 379,
+       "geometric": 171,
+       "on_plane": 171
+      },
+      "PXL_20261103_042900775": {
+       "matches": 328,
+       "geometric": 50,
+       "on_plane": 50
+      },
+      "PXL_20261103_042734715": {
+       "matches": 276,
+       "geometric": 42,
+       "on_plane": 38
+      }
+     }
+    },
+    "registered_at": "2026-11-07T10:43:10",
+    "registered_by": "register-chain"
+   }
+  },
+  {
+   "photo": "PXL_20261103_042830256",
+   "building": "honbu",
+   "face": "f6",
+   "kind": "pose",
+   "why": "J-027 柱割り 4 つ分ずれた登録。追記で登録し直す",
+   "at": "2026-11-08T00:27:48",
+   "by": "Fable",
+   "entry": {
+    "photo": "PXL_20261103_042830256",
+    "building": "honbu",
+    "face": "f6",
+    "kind": "pose",
+    "period": "during",
+    "file": "20261103/PXL_20261103_042830256.jpg",
+    "image_size": [
+     4624,
+     3472
+    ],
+    "camera": {
+     "focal_px": 1870.8946705855305,
+     "image_size": [
+      4624,
+      3472
+     ],
+     "R_cv": [
+      [
+       0.9989348935799257,
+       0.008101129673777236,
+       0.045425214214917034
+      ],
+      [
+       0.03836952474235558,
+       0.4009755182942492,
+       -0.9152848809522114
+      ],
+      [
+       -0.025629240322495278,
+       0.9160529490300584,
+       0.40023760019996235
+      ]
+     ],
+     "t_cv": [
+      47.32625223718688,
+      14.000503768625853,
+      23.199897793294927
+     ],
+     "camera_xyz": [
+      -47.22,
+      -27.25,
+      1.38
+     ],
+     "camera_height_m": 1.38,
+     "distance_to_face_m": null,
+     "blender": {
+      "location": [
+       -47.21844166184505,
+       -27.249590152096445,
+       1.3791728616015262
+      ],
+      "rotation_euler": [
+       1.9830237738414203,
+       -0.04544085084907581,
+       0.008109589657542606
+      ],
+      "lens_mm": 14.565788957845825,
+      "sensor_width_mm": 36.0,
+      "sensor_fit": "AUTO",
+      "resolution": [
+       4624,
+       3472
+      ]
+     }
+    },
+    "visible_faces": [
+     {
+      "face": "f6",
+      "area_m2": 401.2,
+      "distance_m": 10.26,
+      "unoccluded": 1.0
+     }
+    ],
+    "via": [
+     "PXL_20261103_042822099",
+     "PXL_20261103_042909968",
+     "PXL_20261103_042900775"
+    ],
+    "source": {
+     "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+     "focal_source": "exif_35mm",
+     "ground_face": "f6"
+    },
+    "check": {
+     "reproj_rms_px": 2.65,
+     "reproj_median_px": 2.23,
+     "reproj_max_px": 5.5,
+     "n_points": 227,
+     "n_candidates": 483,
+     "inlier_ratio": 0.47,
+     "inlier_box_frac": 0.095,
+     "points_by_face": {
+      "PXL_20261103_042822099:f6": 226,
+      "PXL_20261103_042909968:f6": 1
+     },
+     "points_spread_m": [
+      9.68,
+      5.11,
+      5.51
+     ],
+     "camera_height_m": 1.38,
+     "via_stats": {
+      "PXL_20261103_042822099": {
+       "matches": 828,
+       "geometric": 587,
+       "on_plane": 407
+      },
+      "PXL_20261103_042909968": {
+       "matches": 325,
+       "geometric": 98,
+       "on_plane": 98
+      },
+      "PXL_20261103_042900775": {
+       "matches": 325,
+       "geometric": 31,
+       "on_plane": 26
+      }
+     }
+    },
+    "registered_at": "2026-11-07T10:47:01",
+    "registered_by": "register-chain"
+   }
+  },
+  {
+   "photo": "PXL_20261103_042844361",
+   "building": "honbu",
+   "face": "f6",
+   "kind": "pose",
+   "why": "J-027 柱割り 4 つ分ずれた登録。追記で登録し直す",
+   "at": "2026-11-08T00:27:49",
+   "by": "Fable",
+   "entry": {
+    "photo": "PXL_20261103_042844361",
+    "building": "honbu",
+    "face": "f6",
+    "kind": "pose",
+    "period": "during",
+    "file": "20261103/PXL_20261103_042844361.jpg",
+    "image_size": [
+     4624,
+     3472
+    ],
+    "camera": {
+     "focal_px": 1870.8946705855305,
+     "image_size": [
+      4624,
+      3472
+     ],
+     "R_cv": [
+      [
+       0.9432415454431263,
+       -0.33193436429468237,
+       0.010722161645307565
+      ],
+      [
+       0.1418535841211488,
+       0.3734862326161558,
+       -0.9167254740205354
+      ],
+      [
+       0.30028810769334036,
+       0.8662145299211254,
+       0.3993738105227695
+      ]
+     ],
+     "t_cv": [
+      43.5752522525301,
+      18.34389481283931,
+      39.04208361232266
+     ],
+     "camera_xyz": [
+      -55.43,
+      -26.21,
+      0.76
+     ],
+     "camera_height_m": 0.76,
+     "distance_to_face_m": null,
+     "blender": {
+      "location": [
+       -55.42800891204272,
+       -26.205888613119733,
+       0.7567090662944032
+      ],
+      "rotation_euler": [
+       1.9816550888380617,
+       -0.010722367101042941,
+       -0.338373696208419
+      ],
+      "lens_mm": 14.565788957845825,
+      "sensor_width_mm": 36.0,
+      "sensor_fit": "AUTO",
+      "resolution": [
+       4624,
+       3472
+      ]
+     }
+    },
+    "visible_faces": [
+     {
+      "face": "f6",
+      "area_m2": 529.29,
+      "distance_m": 13.16,
+      "unoccluded": 1.0
+     }
+    ],
+    "via": [
+     "PXL_20261103_042900775",
+     "PXL_20261103_042822099",
+     "PXL_20261103_042909968"
+    ],
+    "source": {
+     "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+     "focal_source": "exif_35mm",
+     "ground_face": "f6"
+    },
+    "check": {
+     "reproj_rms_px": 2.64,
+     "reproj_median_px": 1.86,
+     "reproj_max_px": 5.87,
+     "n_points": 80,
+     "n_candidates": 473,
+     "inlier_ratio": 0.169,
+     "inlier_box_frac": 0.071,
+     "points_by_face": {
+      "PXL_20261103_042822099:f6": 80
+     },
+     "points_spread_m": [
+      7.05,
+      3.72,
+      5.47
+     ],
+     "camera_height_m": 0.76,
+     "via_stats": {
+      "PXL_20261103_042900775": {
+       "matches": 555,
+       "geometric": 311,
+       "on_plane": 311
+      },
+      "PXL_20261103_042822099": {
+       "matches": 475,
+       "geometric": 214,
+       "on_plane": 171
+      },
+      "PXL_20261103_042909968": {
+       "matches": 326,
+       "geometric": 98,
+       "on_plane": 98
+      }
+     }
+    },
+    "registered_at": "2026-11-07T10:47:02",
+    "registered_by": "register-chain"
+   }
   }
  ]
 }

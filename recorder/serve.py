@@ -18,6 +18,9 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
                                    新しい写真の分だけ育てる）、無い棟は run_pipeline。max_usd は棟ごとの費用の上限
                                    （省けば agents.DEFAULT_MAX_USD＝20 USD、0 で上限なし）
     GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
+    GET  /api/steps                工程 → 係の名前・モデル・一言（.claude/agents/*.md の frontmatter と agents の工程の一覧。待機画面）
+    GET  /api/pipeline?building=a  最新の pipeline の記録の要約（工程・係・モデル・秒・費用・要約 1 行）と pipeline_state.json の状態
+    GET  /api/artifacts?building=a 待機画面の場面に使う、今ある生成物の一覧（写真と灰色の箱・正面化・立面図・製図板・検収・証拠・歩く画面）
     GET  /api/confirm?buildings=a,b    根拠の門で「確かめてほしい」と出た写真（棟ごと。out/<棟>/to_confirm.json も書く）と面の一覧
     POST /api/confirm              {"photo", "building"?, "face"?} 職員が 1 枚を確かめる（棟・面が無ければ「合っている」）
     POST /api/tape                 multipart：メジャーの写真（photos）＋ building・face?・note（11/8、K-102）→ 置く → 取り込み →
@@ -594,6 +597,358 @@ def api_progress(root: Path, buildings: list[str] | None) -> dict:
     return {"buildings": out, "site": site_run, "running": running, "at": _now()}
 
 
+# --- 待機画面（web/progress.html）が読む物（11/8、F8）。どれも読むだけ ---------------------------------
+
+MODEL_JA = {"haiku": "Claude Haiku", "sonnet": "Claude Sonnet", "opus": "Claude Opus", "fable": "Claude Fable"}
+
+
+def _split_desc(desc: str) -> tuple[str, str]:
+    """係の定義の description「〇〇係。説明…」→（係の名前, 一言）。句点が無ければ名前は空。"""
+    d = (desc or "").strip()
+    if "。" in d:
+        name, rest = d.split("。", 1)
+        return name.strip(), rest.strip()
+    return "", d
+
+
+def api_steps(root: Path) -> dict:
+    """工程 → 係の名前・モデル・一言。工程の順は agents.PIPELINE_STEPS（と追記の CONTINUE_STEPS）、
+    係の名前・モデル・一言は .claude/agents/*.md の frontmatter から（ここに固定で書かない）。"""
+    from . import agents
+
+    defs = agents.load_agent_defs(root / agents.DEFAULT_DIR)
+    order = list(dict.fromkeys(list(agents.PIPELINE_STEPS) + list(agents.CONTINUE_STEPS)))
+    steps = []
+    for s in order:
+        a = agents.step_agent(s)
+        d = defs.get(a) or {}
+        name, line = _split_desc(d.get("description", ""))
+        code = s in agents.CODE_STEPS
+        steps.append({"step": s, "agent": a, "name": name or a, "line": line, "code": code,
+                      "model": "code" if code else d.get("model"),
+                      "model_id": None if code else d.get("model_id"),
+                      "model_ja": "コード" if code else MODEL_JA.get(d.get("model") or "", d.get("model") or "")})
+    return {"steps": steps, "pipeline": list(agents.PIPELINE_STEPS), "continue": list(agents.CONTINUE_STEPS),
+            "max_usd_default": agents.DEFAULT_MAX_USD}
+
+
+def _pipeline_records(root: Path, b: str) -> list[Path]:
+    """pipeline の記録（data/reports/<棟>/pipeline_*.json と out/<棟>/pipeline_*.json。状態ファイルは除く）を古い順に。"""
+    out = []
+    for d in (root / "data" / "reports" / b, root / "out" / b):
+        if d.is_dir():
+            out += [p for p in d.glob("pipeline_*.json") if not p.name.startswith("pipeline_state")]
+    return sorted(out, key=lambda p: (p.name, p.stat().st_mtime))
+
+
+def _one_line(s) -> str | None:
+    if not s:
+        return None
+    s = " ".join(str(s).split())
+    return s if len(s) <= 140 else s[:139] + "…"
+
+
+def api_pipeline(root: Path, b: str) -> dict:
+    """棟の最新の pipeline の記録の要約（工程・係・モデル・秒・費用・要約 1 行）と、今の状態（out/<棟>/pipeline_state.json）、
+    このサーバが起動した物の状態。記録が無ければ record は None。"""
+    from . import agents
+
+    if not _ID_RE.match(b or ""):
+        raise ValueError(f"棟 id ではない名前: {b}")
+    state = agents.load_state(b, root)
+    recs = _pipeline_records(root, b)
+    want = (state or {}).get("record_name")
+    p = next((r for r in reversed(recs) if r.name == want), None) or (recs[-1] if recs else None)
+    doc = _jload(p) if p else None
+    steps = []
+    for r in (doc or {}).get("steps") or []:
+        if not isinstance(r, dict):
+            continue
+        cost = r.get("cost_usd_estimate")
+        if cost is None:
+            cost = r.get("cost_usd")
+        steps.append({"step": r.get("step") or r.get("agent"), "agent": r.get("agent"), "model": r.get("model"),
+                      "seconds": r.get("seconds"), "cost_usd": cost, "result": r.get("result"),
+                      "started_at": r.get("started_at"), "ended_at": r.get("ended_at") or r.get("logged_at"),
+                      "summary": _one_line(r.get("note") or r.get("summary") or r.get("stop") or r.get("error"))})
+    st = None
+    if isinstance(state, dict):
+        st = {k: state.get(k) for k in ("mode", "status", "current", "done", "steps", "stopped", "spent_usd", "max_usd",
+                                        "started_at", "updated_at", "pending_events")}
+    with _runs_lock:
+        run = _run_public(RUNS.get(b))
+    rec = None
+    if isinstance(doc, dict) and p is not None:
+        rec = {"file": p.relative_to(root).as_posix(), "made_at": doc.get("made_at"), "dry_run": doc.get("dry_run"),
+               "runner": doc.get("runner"), "mode": doc.get("mode"), "started_at": doc.get("started_at"),
+               "seconds_total": doc.get("seconds_total"), "wall_seconds": doc.get("wall_seconds"),
+               "cost_usd": doc.get("spent_usd", doc.get("cost_usd_estimate")), "max_usd": doc.get("max_usd"),
+               "stopped": doc.get("stopped"), "stopped_early": doc.get("stopped_early"), "steps": steps}
+    return {"building": b, "record": rec, "state": st, "run": run, "records": len(recs), "at": _now()}
+
+
+def _url(root: Path, p: Path | str | None) -> str | None:
+    """リポジトリの中のファイル → 配信の道（/out/…・/web/…・/data/photos/…）。配信しない所・無い物は None。"""
+    if not p:
+        return None
+    q = Path(str(p).replace("\\", "/"))
+    q = q if q.is_absolute() else root / q
+    if not q.is_file():
+        return None
+    try:
+        rel = q.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return None
+    return "/" + rel if rel.startswith(STATIC_PREFIXES) else None
+
+
+def _measured_chains(b: dict, limit: int = 12) -> list[dict]:
+    """棟 JSON の measured の値のうち鎖（chain）を持つ物を、どこの値か（道）と一緒に。"""
+    out: list[dict] = []
+
+    def walk(o, path):
+        if len(out) >= limit:
+            return
+        if isinstance(o, dict):
+            if o.get("status") == "measured" and o.get("chain"):
+                out.append({"where": path, "value": o.get("value"), "unit": o.get("unit", "m"), "tol": o.get("tol"),
+                            "measured_kind": o.get("measured_kind"), "chain": o.get("chain"),
+                            "method": _one_line(o.get("method"))})
+                return
+            for k, v in o.items():
+                if k in ("photos", "requests", "history"):
+                    continue
+                walk(v, f"{path}.{k}" if path else k)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{(v.get('id') if isinstance(v, dict) and v.get('id') else i)}]")
+    walk(b, "")
+    return out
+
+
+def _dirs(d: Path) -> list[Path]:
+    return sorted(x for x in d.glob("*") if x.is_dir()) if d.is_dir() else []
+
+
+def _shown_masks(r: dict) -> list[dict]:
+    """待機画面に描く箱：索引の masks のうち box のある物。by: auto のまま（見直しで確かめていない）の箱は描かない（F11 の決まり）。"""
+    from . import privacy
+
+    return [{"kind": m.get("kind"), "label": privacy.KINDS.get(m.get("kind"), m.get("kind")), "box": m.get("box"),
+             "note": m.get("note")} for m in r.get("masks") or [] if m.get("box") and m.get("by") != "auto"]
+
+
+def _clip_front(poly, hrow, sign: float, eps: float) -> list:
+    """写真 px の多角形を、H で写した時に面の手前（w·sign > eps）になる側だけに切る（地平線の向こうは面に乗らない）。"""
+    import numpy as np
+
+    def wv(p):
+        return float(np.dot(hrow, [p[0], p[1], 1.0])) * sign - eps
+    out = []
+    for i, cur in enumerate(poly):
+        prv = poly[i - 1]
+        a_, b_ = wv(prv), wv(cur)
+        if b_ >= 0:
+            if a_ < 0:
+                t = a_ / (a_ - b_)
+                out.append((prv[0] + t * (cur[0] - prv[0]), prv[1] + t * (cur[1] - prv[1])))
+            out.append(cur)
+        elif a_ >= 0:
+            t = a_ / (a_ - b_)
+            out.append((prv[0] + t * (cur[0] - prv[0]), prv[1] + t * (cur[1] - prv[1])))
+    return out
+
+
+def _map_boxes(H, w: float, h: float, masks: list[dict], ref: tuple[float, float] | None = None) -> list[dict] | None:
+    """箱（割合）を 写真 px → 別の平面 の H で写した多角形。ref は写した先で手前にあると分かっている写真の点（無ければ写真の中心）。
+    箱のうち地平線の向こう（平面に乗らない所）は切り捨てる。写せない（H が無い・形が変）なら None。"""
+    import numpy as np
+
+    if not masks:
+        return []
+    if H is None or not w or not h:
+        return None
+    try:
+        Hm = np.array(H, float).reshape(3, 3)
+    except (TypeError, ValueError):
+        return None
+    rx, ry = ref if ref is not None else (w / 2, h / 2)
+    sign = float(Hm[2] @ np.array([rx, ry, 1.0]))
+    if sign == 0 or not np.isfinite(sign):
+        return None
+    eps = abs(sign) * 0.02          # 地平線のすぐ手前は遠くへ飛ぶので、手前の点の 2 % までで止める
+    sign = 1.0 if sign > 0 else -1.0
+    out = []
+    for m in masks:
+        x0, y0, x1, y1 = m["box"]
+        poly = _clip_front([(x0 * w, y0 * h), (x1 * w, y0 * h), (x1 * w, y1 * h), (x0 * w, y1 * h)], Hm[2], sign, eps)
+        if len(poly) < 3:
+            continue                 # 箱が丸ごと平面の外（空など）
+        q = (Hm @ np.array([[x, y, 1.0] for x, y in poly]).T).T
+        if not np.all(np.isfinite(q)):
+            return None
+        out.append({"kind": m["kind"], "label": m["label"], "poly": [[round(float(a_), 3), round(float(b_), 3)] for a_, b_ in q[:, :2] / q[:, 2:3]]})
+    return out
+
+
+def _board_masks(root: Path, b: str, face_id: str, photo_ids: list[str], masks_by: dict[str, list[dict]],
+                 outlines: dict[str, list] | None = None) -> list[dict] | None:
+    """製図板の面の (s, z) に写した箱。H は登録（registry）の面ごとの H_plane（coverage と同じ entry_H_now の逆）。
+    箱のある写真のどれか 1 枚でも写せなければ None（その面は見せない）。"""
+    import numpy as np
+
+    need = [pid for pid in photo_ids if masks_by.get(pid)]
+    if not need:
+        return []
+    try:
+        from . import coverage as cov
+        from .schema import load_building
+
+        bld = load_building(root / "data" / "buildings" / f"{b}.json")
+        reg = cov.load_registry(root / "data" / "photos" / "registry.json")
+        ents = cov.expand_entries(cov.entries_for(reg, b), bld)
+        f = next(x for x in bld.get("faces", []) if x.get("id") == face_id)
+    except Exception:  # noqa: BLE001  写せない → 見せない
+        return None
+    out = []
+    for pid in need:
+        e = next((e for e in ents if e.get("face") == face_id and e.get("photo") == pid), None)
+        if e is None or not e.get("image_size"):
+            return None
+        try:
+            Hinv = np.linalg.inv(cov.entry_H_now(e, f))      # 写真 px → 面の (s, z)
+        except Exception:  # noqa: BLE001
+            return None
+        w, h = e["image_size"]
+        Hf = cov.entry_H_now(e, f)
+        ol = (outlines or {}).get(pid) or []
+        pts = [pt for poly in ol for pt in poly]
+        if not pts:
+            return None
+        sc, zc = float(np.mean([p_[0] for p_ in pts])), float(np.mean([p_[1] for p_ in pts]))
+        q = Hf @ np.array([sc, zc, 1.0])            # その写真が面を写している点（使える所の中心）→ 写真 px
+        if q[2] == 0:
+            return None
+        polys = _map_boxes(Hinv, w, h, masks_by[pid], ref=(q[0] / q[2], q[1] / q[2]))
+        if polys is None:
+            return None
+        out += [{"photo": pid, **m} for m in polys]
+    return out
+
+
+def api_artifacts(root: Path, b: str) -> dict:
+    """待機画面の場面に使う、今ある生成物の一覧（無い物は入れない）。絵は配信の道、数は元の JSON の物。"""
+    if not _ID_RE.match(b or ""):
+        raise ValueError(f"棟 id ではない名前: {b}")
+    out_b = root / "out" / b
+    bj = _jload(root / "data" / "buildings" / f"{b}.json")
+    bj = bj if isinstance(bj, dict) else {}
+    face_names = {f.get("id"): f.get("name") for f in bj.get("faces") or [] if isinstance(f, dict)}
+
+    # a・b 写真（係に見せる縮小版 send_file。無ければ報告の縮小版）と灰色の箱（索引の masks）。公開しない写真は出さない
+    idx = _jload(root / "data" / "photos" / "index.json") or {}
+    photos_ = []
+    for r in sorted((r for r in idx.get("photos") or [] if isinstance(r, dict) and r.get("building") == b
+                     and r.get("public") is not False and r.get("period") != "before"),
+                    key=lambda r: str(r.get("taken_at") or r.get("id"))):
+        src = _url(root, Path("data/photos") / r["send_file"]) if r.get("send_file") else None
+        src = src or _url(root, out_b / "report" / f"thumb_{r['id']}.jpg")
+        if not src:
+            continue
+        photos_.append({"id": r["id"], "src": src, "face": r.get("face"), "taken_at": r.get("taken_at"),
+                        "ruler": r.get("ruler"), "masks": _shown_masks(r)})
+    srcs = {p["id"]: p["src"] for p in photos_}
+    # 元の写真から作った絵（正面化・製図板・検収の重ね・模型の描画）にも同じ箱を描く（11/8、利用者の決定）
+    masks_by = {r["id"]: _shown_masks(r) for r in idx.get("photos") or [] if isinstance(r, dict) and r.get("building") == b}
+
+    # c 正面化（compare）と測量係の線（sokuryo_lines）、メジャーの読み（sokuryo_tape_select）
+    compare = []
+    for j in (sorted(out_b.glob("compare/*_compare.json")) if out_b.is_dir() else []):
+        stem = j.name[: -len("_compare.json")]
+        if "_" not in stem:
+            continue
+        pid, face = stem.rsplit("_", 1)
+        d = _jload(j) or {}
+        if not d.get("ok"):
+            continue
+        sl = _jload(out_b / "sokuryo_lines" / f"{pid}_{face}.json")
+        # 正面化の H（写真 px → 正面化した絵 px）は rectify の JSON（正面化した絵と同じ名前の .json）
+        rj = _jload(root / Path(str(d.get("source") or "").replace("\\", "/")).with_suffix(".json")) if d.get("source") else None
+        rmask = _map_boxes((rj or {}).get("H"), (rj or {}).get("width"), (rj or {}).get("height"), masks_by.get(pid) or []) \
+            if isinstance(rj, dict) else (None if masks_by.get(pid) else [])
+        compare.append({"masks": masks_by.get(pid) or [], "rect_masks": rmask, "masks_ok": rmask is not None, "photo": pid, "face": face, "photo_src": srcs.get(pid), "png": _url(root, j.with_suffix(".png")),
+                        "rectified": _url(root, d.get("source")), "px_per_m": d.get("px_per_m"),
+                        "x_origin_px": d.get("x_origin_px"), "z_origin_px": d.get("z_origin_px"),
+                        "lines": [{k: ln.get(k) for k in ("axis", "what", "json_m", "photo_m", "diff_m", "ok")}
+                                  for ln in d.get("lines") or []][:40],
+                        "sokuryo_lines": sl if isinstance(sl, dict) else None})
+    compare.sort(key=lambda c: (not c["masks_ok"], c["sokuryo_lines"] is None, c["photo_src"] is None, c["rectified"] is None))
+    tape = _jload(root / "data" / "reports" / b / "sokuryo_tape_select.json")
+    prim = tape.get("primary") if isinstance(tape, dict) else None
+    tape_out = None
+    if isinstance(prim, dict):
+        tape_out = {k: prim.get(k) for k in ("photo", "face", "what", "read", "n_tiles", "pitch_m", "pitch_tol_m", "calc")}
+        tape_out.update(made_by=tape.get("made_by"), status_note=tape.get("status_note"))
+
+    # e 立面図
+    elev = [{"face": p.stem[5:], "name": face_names.get(p.stem[5:]), "svg": _url(root, p)}
+            for p in (sorted(out_b.glob("elev_*.svg")) if out_b.is_dir() else [])]
+
+    # f 製図板（coverage_<面>_photo.png と、写真ごとの使える所の多角形）
+    cov = _jload(out_b / "coverage.json") or {}
+    coverage = []
+    for f in cov.get("faces") or []:
+        png = _url(root, out_b / f"coverage_{f.get('face')}_photo.png")
+        if not png or f.get("unknown"):
+            continue
+        pids = [p.get("photo") for p in f.get("photos") or []]
+        bm = _board_masks(root, b, f.get("face"), pids, masks_by,
+                          {p.get("photo"): p.get("outline") or ([p["polygon"]] if p.get("polygon") else []) for p in f.get("photos") or []})
+        coverage.append({"masks": bm, "masks_ok": bm is not None,
+                         "face": f.get("face"), "name": f.get("name"), "png": png, "length_m": f.get("length_m"),
+                         "ground_z": f.get("ground_z"), "top_z": f.get("top_z"), "coverage_pct": f.get("coverage_pct"),
+                         "photos": [{"photo": p.get("photo"), "order": p.get("order"), "used_m2": p.get("used_m2"),
+                                     "outline": p.get("outline") or ([p["polygon"]] if p.get("polygon") else []),
+                                     "label_at": p.get("label_at")} for p in f.get("photos") or []]})
+    coverage.sort(key=lambda c: (not c["masks_ok"], -len(c["photos"])))
+
+    # g 検収（合格の面だけ。検収係の kenshu_summary は report.json の counts.kenshu に写っている）
+    rep = _jload(out_b / "report.json") or {}
+    counts = rep.get("counts") or {}
+    ken = counts.get("kenshu") or {}
+    passed = set(ken.get("pass") or [])
+    rdirs, pdirs = _dirs(out_b / "recheck"), _dirs(out_b / "photoproj")
+    kenshu = []
+    if rdirs:
+        rs = _jload(rdirs[-1] / "summary.json") or {}
+        for ph in rs.get("photos") or []:
+            if ph.get("face") not in passed:
+                continue
+            png = _url(root, rdirs[-1] / f"lines_{ph.get('photo')}_{ph.get('face')}.png")
+            if not png:
+                continue
+            lines = [{k: ln.get(k) for k in ("what", "group", "axis", "diff_m", "ok", "weak")}
+                     for ln in ph.get("lines") or [] if ln.get("diff_m") is not None]
+            kenshu.append({"masks": masks_by.get(ph.get("photo")) or [],   # 検収の重ね・模型の描画は写真と同じ枠 → 割合のまま
+                           "photo": ph.get("photo"), "face": ph.get("face"), "photo_src": srcs.get(ph.get("photo")),
+                           "view": _url(root, out_b / f"view_photo_{ph.get('photo')}.png"),
+                           "overlay": _url(root, pdirs[-1] / f"overlay_{ph.get('photo')}.png") if pdirs else None,
+                           "lines_png": png, "recheck": rdirs[-1].name, "n_ok": ph.get("n_ok"), "n_ng": ph.get("n_ng"),
+                           "n_lines": ph.get("n_lines"), "tol_m": rs.get("tol_m"), "lines": lines})
+        kenshu.sort(key=lambda k: (not (k["view"] and k["photo_src"]), -(k["n_ok"] or 0), k["n_ng"] or 0))
+
+    # i 歩く画面の視点（model_report の web_cameras.street.query）
+    mr = _jload(out_b / "model_report.json") or {}
+    cam = (((mr.get("web_cameras") or {}).get("street")) or {}).get("query")
+    return {"building": b, "name": bj.get("name"), "has_building_json": bool(bj), "photos": photos_,
+            "compare": compare, "tape": tape_out, "chains": _measured_chains(bj) if bj else [],
+            "elev": elev, "coverage": coverage, "kenshu": kenshu, "kenshu_faces": ken,
+            "evidence": {k: _url(root, out_b / f"evidence_{k}.png") for k in ("photo", "three", "overview")},
+            "walk": _url(root, out_b / "walk.png"), "walk_query": cam, "sheet": _url(root, out_b / "sheet.png"),
+            "report_html": _url(root, out_b / "report.html"), "report": {"stages": rep.get("stages"), "counts": counts},
+            "at": _now()}
+
+
 # --- HTTP ---------------------------------------------------------------------------------------
 
 def api_confirm_list(root: Path, buildings: list[str] | None) -> dict:
@@ -741,6 +1096,12 @@ class Handler(SimpleHTTPRequestHandler):
         if u.path == "/api/confirm":
             b = [x.strip() for v in q.get("buildings", []) for x in v.split(",") if x.strip()]
             return self._json(200, api_confirm_list(self.root, b or None))
+        if u.path == "/api/steps":
+            return self._json(200, api_steps(self.root))
+        if u.path == "/api/pipeline":
+            return self._json(200, api_pipeline(self.root, (q.get("building") or [""])[0].strip()))
+        if u.path == "/api/artifacts":
+            return self._json(200, api_artifacts(self.root, (q.get("building") or [""])[0].strip()))
         return self._json(404, {"error": "知らない API", "path": u.path})
 
     # POST

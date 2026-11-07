@@ -779,7 +779,7 @@ def plateau_label(zip_path: str | Path) -> str:
 
 
 def extract_plateau(zip_path: str | Path, rings, out: Path | None = None, source: str | None = None) -> dict:
-    """PLATEAU の建物 GML から、敷地境界に重なる建物の足元形状（LOD0）と高さ（LOD1）を抜く。
+    """PLATEAU の建物 GML から、敷地境界に重なる建物の足元形状（LOD0。無い建物は LOD1 の立体の底）と高さ（LOD1）を抜く。
     source は出典の記述（敷地 JSON の sources.plateau）。無ければ zip の名前から作る。"""
     from shapely.geometry import MultiPolygon, Polygon
 
@@ -811,9 +811,13 @@ def extract_plateau(zip_path: str | Path, rings, out: Path | None = None, source
                     b["file"] = name
                     found.append(b)
     out.parent.mkdir(parents=True, exist_ok=True)
+    prev = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+    label = (source or plateau_label(zip_path)).split("、")[0]
+    if prev.get("label") and prev.get("zip") == Path(zip_path).name:
+        label = prev["label"]                        # 同じ zip なら前の label（人が足した出典の呼び名）を引き継ぐ
     doc = {"schema": "campus-recorder/plateau/1",
            "source": source or f"{plateau_label(zip_path)}（国土交通省）、建物 LOD0/LOD1 のみ",
-           "label": (source or plateau_label(zip_path)).split("、")[0],
+           "label": label,
            "zip": Path(zip_path).name, "meshes": sorted(meshes), "files": files, "buildings": found}
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return doc
@@ -825,16 +829,22 @@ def _parse_building(el: ET.Element) -> dict | None:
     fp = el.find("bldg:lod0FootPrint", NS)
     if fp is None:
         fp = el.find("bldg:lod0RoofEdge", NS)
-    if fp is None:
-        return None
-    pos = fp.find(".//gml:posList", NS)
-    if pos is None or not pos.text:
-        return None
-    v = [float(t) for t in pos.text.split()]
-    pts = []
-    for i in range(0, len(v) - 2, 3):
-        lat, lon = v[i], v[i + 1]
-        pts.append([round(c, 2) for c in geo.lonlat_to_xy(lon, lat)])
+    fp_source = None
+    if fp is not None:
+        pos = fp.find(".//gml:posList", NS)
+        if pos is None or not pos.text:
+            return None
+        v = [float(t) for t in pos.text.split()]
+        pts = []
+        for i in range(0, len(v) - 2, 3):
+            lat, lon = v[i], v[i + 1]
+            pts.append([round(c, 2) for c in geo.lonlat_to_xy(lon, lat)])
+    else:
+        # 足元（LOD0）が無く立体（LOD1）だけの建物（名古屋の高い棟に多い）。立体の底の面（z が一番低い面）を足元にする（11/8 F9）
+        pts = _lod1_bottom(el)
+        if pts is None:
+            return None
+        fp_source = "LOD1 の底"
     if len(pts) < 4:
         return None
     base = None
@@ -853,7 +863,36 @@ def _parse_building(el: ET.Element) -> dict | None:
         "base_z": round(base, 2) if base is not None else None,
         "storeys": int(storeys.text) if storeys is not None and storeys.text else None,
         "footprint": pts[:-1] if pts[0] == pts[-1] else pts,
+        **({"footprint_source": fp_source} if fp_source else {}),
     }
+
+
+def _lod1_bottom(el: ET.Element) -> list[list[float]] | None:
+    """LOD1 の立体の底：全部の頂点が立体の一番低い z（±0.05 m）にある面を集めて和にした輪郭（閉じた点の並び）。
+    底が 2 枚以上に分かれていれば和を取る。和が離れた 2 つ以上になれば一番大きい物（他は捨てたと数で残さない。PLATEAU の底は 1 つの建物で 1 つに続く）。"""
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+
+    rings = []
+    for pos in el.findall(".//bldg:lod1Solid//gml:posList", NS):
+        if not pos.text:
+            continue
+        v = [float(t) for t in pos.text.split()]
+        rings.append([(v[i], v[i + 1], v[i + 2]) for i in range(0, len(v) - 2, 3)])
+    if not rings:
+        return None
+    zmin = min(p[2] for r in rings for p in r)
+    polys = []
+    for r in rings:
+        if len(r) >= 4 and all(abs(p[2] - zmin) <= 0.05 for p in r):
+            P = Polygon([geo.lonlat_to_xy(lon, lat) for lat, lon, _ in r])
+            polys.append(P if P.is_valid else P.buffer(0))
+    if not polys:
+        return None
+    U = unary_union(polys)
+    if U.geom_type != "Polygon":
+        U = max(U.geoms, key=lambda g: g.area)
+    return [[round(c, 2) for c in xy] for xy in U.exterior.coords]
 
 
 # --- 敷地 JSON ----------------------------------------------------------------------
@@ -1007,6 +1046,8 @@ def build_site(campus: str, osm: dict, plateau: dict | None, out: Path | None = 
     for k, v in prev.items():                         # 他の欄（bbox_lonlat・objects など、係や職員が足した物）も引き継ぐ
         doc.setdefault(k, v)
     apply_plateau_links(doc)                          # site link-box で結んだ箱（plateau_links）を当て直す
+    order = [k for k in prev if k in doc] + [k for k in doc if k not in prev]
+    doc = {k: doc[k] for k in order}                  # 欄の並びは前の敷地 JSON のまま（差分を中身の違いだけにする）
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
     return doc
@@ -1084,7 +1125,43 @@ def outline_shapes(b: dict) -> dict:
     blocks = [_poly(bl["polygon"]) for bl in b.get("blocks") or [] if len(bl.get("polygon") or []) >= 3]
     if blocks:
         out["blocks"] = unary_union(blocks)
+    pp = parts_plan(b)
+    if pp is not None:
+        out["parts"] = pp
+    if len(out) > 1:
+        out["all"] = unary_union(list(out.values()))
     return out
+
+
+def parts_plan(b: dict):
+    """棟 JSON の部品（parts：デッキ・テラス・階段・パーゴラ など）の平面の和。素片ごとの頂点を平面に落とした凸包を足す。
+    形の決まらない部品（unknown・面が無い）は入れない。無ければ None。"""
+    from shapely.geometry import Polygon
+    from shapely.ops import unary_union
+
+    from . import parts_geom as pg
+    faces = b.get("faces") or []
+    faces = faces if isinstance(faces, dict) else {f["id"]: f for f in faces if f.get("id")}
+    polys = []
+    for pt in b.get("parts") or []:
+        try:
+            r = pg.part_prims(pt, faces)
+        except (KeyError, TypeError, ValueError):
+            continue
+        if not r:
+            continue
+        frame, _cut, prims = r
+        try:
+            axes = pg.frame_axes(frame, faces)
+        except (KeyError, TypeError):
+            continue
+        for pr in prims or []:
+            h = pg.hull([(x, y) for x, y, _z in pg.prim_vertices(pr, axes)])
+            if len(h) >= 3:
+                P = Polygon(h)
+                if P.area > 1e-6:
+                    polys.append(P)
+    return unary_union(polys) if polys else None
 
 
 def object_shape(o: dict, buildings: dict):
@@ -1132,17 +1209,39 @@ def apply_plateau_links(doc: dict) -> None:
             doc["plateau_only"] = [g for g in doc["plateau_only"] if g != lk["box"]]
 
 
-def replaced_boxes(doc: dict) -> dict[str, str]:
-    """敷地の物に置き換わった箱 {gml_id: object id}。export-web はこの箱を描かない。"""
+def replaced_boxes(doc: dict) -> dict[str, str | list[str]]:
+    """敷地の物（か複数の相手）に置き換わった箱 {gml_id: 相手 id（複数なら並び）}。export-web はこの箱を描かない。"""
     return {lk["box"]: lk["replaced_by"] for lk in doc.get("plateau_links") or [] if lk.get("kind") == "replaced"}
 
 
-def link_box(doc: dict, target: str, box: str, why: str, by: str, plateau: dict | None = None,
-             buildings_root: Path | None = None, ask: str = "", min_ratio: float = PLATEAU_LINK_MIN) -> dict:
-    """PLATEAU の箱 box を棟 target（棟 JSON の輪郭）か敷地の物 target（objects の id）に結ぶ。
-    箱の足元の min_ratio 以上が相手の中なら結ぶ（棟→plateau_parts、敷地の物→replaced_by）。足りなければ結ばず、
-    敷地 JSON の requests に撮影依頼（敷地の検収係の形）を書く。結果（重なりの数）を返す。"""
+def _target_shape(doc: dict, target: str, objs: dict, buildings_root: Path | None):
+    """相手 1 つの平面：(種類 "object"／"building", 敷地 JSON の id, 輪郭の dict, 触れる棟 id の並び)。"""
     from . import site_objects as so
+    if target in objs:
+        o = objs[target]
+        bs = so.load_buildings(so.ends_buildings({"objects": {"items": [o]}}), buildings_root)
+        return "object", target, {"object": object_shape(o, bs)}, sorted(bs)
+    bs = so.load_buildings([target], buildings_root)
+    if target not in bs:
+        raise KeyError(f"棟 JSON も敷地の物も無い: {target}")
+    sid = bs[target].get("site_id") or target
+    if not any(sb["id"] == sid for sb in doc.get("buildings", [])):
+        raise KeyError(f"敷地 JSON の buildings に棟がありません: {sid}")
+    return "building", sid, outline_shapes(bs[target]), [sid]
+
+
+def link_box(doc: dict, target, box: str, why: str, by: str, plateau: dict | None = None,
+             buildings_root: Path | None = None, ask: str = "", min_ratio: float = PLATEAU_LINK_MIN) -> dict:
+    """PLATEAU の箱 box を棟 target（棟 JSON の輪郭＋部品の平面）か敷地の物 target（objects の id）に結ぶ。
+    target は 1 つ（文字）か複数（並び）。複数なら相手の平面の和で数える（11/8 F9：1 つの箱が棟のデッキ・通路橋・甲板に
+    またがる時）。箱の足元の min_ratio 以上が相手の中なら結ぶ（棟 1 つ→plateau_parts、敷地の物か複数→replaced_by）。
+    足りなければ結ばず、敷地 JSON の requests に撮影依頼（敷地の検収係の形）を書く。結果（重なりの数）を返す。"""
+    from shapely.ops import unary_union
+
+    from . import site_objects as so
+    targets = [target] if isinstance(target, str) else list(dict.fromkeys(target))
+    if not targets:
+        raise KeyError("相手（棟か敷地の物）がありません")
     gid = _find_gid(doc, box)
     if plateau is None:
         plateau = json.loads((DATA_SITE / "plateau.json").read_text(encoding="utf-8"))
@@ -1150,23 +1249,23 @@ def link_box(doc: dict, target: str, box: str, why: str, by: str, plateau: dict 
     if p is None:
         raise KeyError(f"plateau.json に箱がありません: {gid}")
     objs = {o["id"]: o for o in so.objects_of(doc)}
-    if target in objs:
-        o = objs[target]
-        bs = so.load_buildings(so.ends_buildings({"objects": {"items": [o]}}), buildings_root)
-        shapes = {"object": object_shape(o, bs)}
-        kind, b_ids = "replaced", sorted(bs)
+    got = [_target_shape(doc, t, objs, buildings_root) for t in targets]
+    if len(got) == 1:
+        kind0, target, shapes, b_ids = got[0]
+        kind = "replaced" if kind0 == "object" else "building"
     else:
-        bs = so.load_buildings([target], buildings_root)
-        if target not in bs:
-            raise KeyError(f"棟 JSON も敷地の物も無い: {target}")
-        sid = bs[target].get("site_id") or target
-        if not any(sb["id"] == sid for sb in doc.get("buildings", [])):
-            raise KeyError(f"敷地 JSON の buildings に棟がありません: {sid}")
-        shapes = outline_shapes(bs[target])
-        kind, b_ids, target = "building", [sid], sid
+        # 複数の相手：相手ごとの平面（棟は輪郭と部品の和）と、全部の和 union
+        shapes = {}
+        for k0, tid, shp, _ in got:
+            vals = [v for v in shp.values() if v is not None]
+            shapes[tid] = unary_union(vals) if vals else None
+        shapes["union"] = unary_union([v for v in shapes.values() if v is not None])
+        kind, target = "replaced", [g[1] for g in got]
+        b_ids = sorted({b for g in got for b in g[3]})
     ov = plateau_box_overlap(p["footprint"], shapes)
     at = time.strftime("%Y-%m-%dT%H:%M:%S")
     holder = next((sb["id"] for sb in doc.get("buildings", []) if gid in (sb.get("plateau_parts") or [])), None)
+    tname = target if isinstance(target, str) else "＋".join(target)
     res = {"box": gid, "target": target, "kind": kind, "overlap": ov, "min_ratio": min_ratio,
            "box_height_m": p.get("height_m"), "box_base_z": p.get("base_z"), "held_by": holder}
     nums = "、".join(f"{k} {v['inside_ratio']:.1%}（{v['overlap_m2']} m²）" for k, v in ov["by"].items())
@@ -1177,6 +1276,10 @@ def link_box(doc: dict, target: str, box: str, why: str, by: str, plateau: dict 
             link["replaced_by"] = target
         doc["plateau_links"] = [lk for lk in doc.get("plateau_links") or [] if lk["box"] != gid] + [link]
         apply_plateau_links(doc)
+        for r in doc.get("requests") or []:          # この箱の撮影依頼（前に結べなかった時の物）は閉じる
+            if r.get("box") == gid and r.get("status") == "open":
+                r.update({"status": "closed", "closed_by": by, "closed_at": at,
+                          "closed_note": f"link-box で結んだ（{link['inside_ratio']:.1%}、相手 {tname}）。{why}"})
         if kind == "building":
             sb = next(x for x in doc["buildings"] if x["id"] == target)
             c = sb.setdefault("confirmation", {"status": "unconfirmed", "by": None, "at": None, "note": ""})
@@ -1184,11 +1287,11 @@ def link_box(doc: dict, target: str, box: str, why: str, by: str, plateau: dict 
                 {"box": gid, "inside_ratio": ov["best"], "why": why, "by": by, "at": at}]
         res["outcome"] = "linked" if kind == "building" else "replaced"
         return res
-    rid = f"plateau-{gid[5:13]}-{target}"
+    rid = f"plateau-{gid[5:13]}-{tname.replace('＋', '+')}"
     req = {"id": rid, "status": "open", "action": "request", "fix_in": "site", "buildings": b_ids,
            "box": gid, "box_height_m": p.get("height_m"), "held_by": holder,
            "what": (f"PLATEAU の箱 {gid[:13]}（高さ {p.get('height_m')} m、敷地 JSON では {holder or 'どの棟にも無い'}）は"
-                    f"{target} の輪郭と {ov['best']:.1%} しか重ならない（{nums}。結ぶ目安 {min_ratio:.0%}）。結ばず、灰色の箱のまま"),
+                    f"{tname} の輪郭と {ov['best']:.1%} しか重ならない（{nums}。結ぶ目安 {min_ratio:.0%}）。結ばず、灰色の箱のまま"),
            "ask": ask, "why": why, "overlap": ov, "evidence": [f"plateau:{gid}"], "by": by, "at": at}
     doc["requests"] = [r for r in doc.get("requests") or [] if r.get("id") != rid] + [req]
     res["outcome"] = "request"
