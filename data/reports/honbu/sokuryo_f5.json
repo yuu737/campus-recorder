@@ -1,0 +1,65 @@
+{
+ "schema": "sokuryo/1",
+ "building": "honbu",
+ "face": "f5",
+ "made_by": "測量係（sokuryo・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:53:40",
+ "input": [
+  "data/reports/honbu/kazoe_f5.json",
+  "data/rulers.json",
+  "data/site/tempaku.json",
+  "data/buildings/honbu.json（recorder new honbu --from-site の土台）"
+ ],
+ "tape_measure": {
+  "found": false,
+  "checked_with": "recorder photos list --building honbu --ruler tape_measure",
+  "request": "棟で 1 件だけ（sokuryo_f6.json の requests）"
+ },
+ "floor_pitch": {
+  "value": 4.189,
+  "unit": "m",
+  "status": "estimated",
+  "tol": 0.31,
+  "evidence": [
+   "PXL_20261103_043004629"
+  ],
+  "applies_to": "南の翼の西の妻（2〜5 階のスリット窓の段）。階段室の塔は測っていない",
+  "method": "物差し：タイル 1 段（PLATEAU の辺 f5 は両端［階段室と南西の角］が 1 枚に入る写真が無く使えない）。043004629（out/rectified/honbu/。f4 と f5 は同じ向き［方位 298°］なので 1 枚の正面化に両方入る。f5 は f4 より 0.64 m 手前の面なので、縮尺は妻の壁のタイルで取った）の妻の壁の自己相関で 1 段 7.99 px → 7.99 px ÷ 0.070 m = 114.1 px/m（丸め）。タイルの種類は小口（108×60 mm）と確かめた：目地の周期の比（横の 1 枚の長さ÷縦の 1 段）を正面化画像で測り、080542963（正面玄関の脇の壁を寄って撮った物。1 段 83.5 px、1 枚 143.6 px、比 1.72）、042909968（柱型。1 段 10.79 px、1 枚 18.5 px、比 1.71）。小口（108+10）÷（60+10）＝1.69、二丁掛 3.39、45 二丁 2.0 なので小口。北の翼 043304319（1.71）・043055592（1.70）、西の妻 043004629（1.73）、東の妻 043612124（1.70）も同じ。台帳 tile_course（高さ 60 mm＋目地 10 mm＝0.070 m ±0.005）。階高の px：北寄りの列のスリット窓の上端 5 階 1314.7・4 階 1793.3・3 階 2269.5・2 階 2748.7 px → (2748.7 − 1314.7) ÷ 3 = 478.0 px（59.8 段）。値：478.0 px ÷ 114.1 px/m = 4.189 m。検算（2 本目の物差し）：f6 で PLATEAU の辺から出した 1 段の長さ 0.0689 m（9.37 px ÷ 135.96 px/m）を使うと 59.8 段 × 0.0689 = 4.120 m、差 −1.6%。1 階高の段数は f6 59.9・f5 59.8 で揃う（縮尺に依らない検算）。± は台帳のタイルの許容 7.1%（0.297 m）＋スリットの上端の間隔の幅（476.2〜479.2 px、±0.3%、0.013 m）"
+ },
+ "bay_pitch": {
+  "not_applicable": true,
+  "why": "柱割りが無い（data/reports/honbu/kazoe_f5.json#bays）"
+ },
+ "scale": {
+  "ruler": "tile_course",
+  "px_per_m": 114.1,
+  "image": "out/rectified/honbu/PXL_20261103_043004629_front.jpg",
+  "what": "小口タイル 1 段 0.070 m ＝ 7.99 px（妻の壁）",
+  "check_ruler": "f6 の PLATEAU の辺で測ったタイル 1 段（0.0689 m）",
+  "diff_pct": -1.6
+ },
+ "rectified": [
+  "out/rectified/honbu/PXL_20261103_043004629_front.jpg",
+  "out/rectified/honbu/PXL_20261103_043026097_front.jpg"
+ ],
+ "rectify_check": "傾きの検算 043004629 横 0.25°・縦 0.27°（1° 以内）",
+ "registered": [
+  "PXL_20261103_042946748",
+  "PXL_20261103_043004629",
+  "PXL_20261103_043026097",
+  "PXL_20261103_043034043",
+  "PXL_20261103_043041105"
+ ],
+ "not_registered": [],
+ "face_photo": "out/honbu/coverage_f5_photo.png",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f5",
+   "what": "階段室の塔と南西の角が両方入る 1 枚（数え係の依頼と同じ）",
+   "where": "西の道路の向こう（12 号館側）",
+   "why": "f5 の辺を PLATEAU で検算する・階段室の段を決める"
+  }
+ ],
+ "questions": []
+}

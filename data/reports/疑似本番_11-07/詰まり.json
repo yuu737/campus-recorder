@@ -530,6 +530,49 @@
     "proposal": "面ごとに数える（写真の中央値が 0.15 m を超える線だけ）。鎖の 1 組に偏る NG・弱い縁は数えない。件数ではなく「合格していない面」の一覧で出す"
    },
    "status": "open"
+  },
+  {
+   "id": "J-026",
+   "at": "2026-11-07T15:31:33+09:00",
+   "building": "tower75",
+   "step": "mejirushi",
+   "agent": "mejirushi",
+   "kind": "gate",
+   "symptom": "photos pnp の門が、帯を 1 段取り違えた対応を ok にした（062307232：誤差 15.9 px、カメラの高さ 10.2 m、焦点が探索の下限に張り付く）。係が不自然さに気づいて登録せず、直して登録した。共通講義棟南でも焦点が上限に当たる・高さ 6.2 m で ok の 1 枚（071413956）",
+   "evidence": [
+    "data/reports/tower75/mejirushi/mejirushi_summary.json",
+    "data/reports/kyotsu-minami/mejirushi.json（071413956）"
+   ],
+   "action": "other",
+   "effect": "係の目視で 1 件止めた。共通講義棟南の 1 件は台帳に残る（検収係の判断へ）",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/landmarks.py pnp の合否",
+    "proposal": "焦点が探索の端（0.85・1.15 倍）に張り付いた解と、カメラが地面（5m 標高か ground_offset）から 5 m を超える地上の写真を、警告ではなく不合格（または要確認）にする"
+   },
+   "status": "open"
+  },
+  {
+   "id": "J-027",
+   "at": "2026-11-07T15:49:15+09:00",
+   "building": "honbu",
+   "step": "sokuryo→kenshu",
+   "agent": "(道具)",
+   "kind": "tool_error",
+   "symptom": "f6 の 3 枚（042822099・042830256・042844361）が柱割り 4 つ分（約 21.7 m）東へずれて登録された（kind pose）。柱割りがくり返すので柱型の線は合格に見え、recheck でも合格に紛れる。模型の正面玄関が写真のピロティの位置に乗る。設計係の製図板（coverage_f6_photo.png）の 1 階の西半分にピロティが貼られ、設計係が check に出していた",
+   "evidence": [
+    "data/reports/honbu/kenshu_summary.json",
+    "data/photos/registry.json の 3 件（face f6・kind pose）",
+    "data/buildings/honbu.json の requests（kind check：設計係・検収係）"
+   ],
+   "action": "other",
+   "effect": "3 枚は検収の合否から外した。台帳には残る（外す道具が無い）。設計係は製図板の西半分を使わず別の写真から 1 階を取った",
+   "fix_for_honban": {
+    "target": "tool",
+    "where": "recorder/registry.py（register-chain・register）、recorder photos compare",
+    "proposal": "周期の面では、面の端（角・妻）か唯一の部品（玄関・通り抜け）が写る対応を必須にし、無ければ「原点が曖昧」で not_registered にする。登録を外すコマンド（J-013）を足す"
+   },
+   "status": "open"
   }
  ]
 }

@@ -1,0 +1,188 @@
+{
+ "schema": "tower75-observation/1",
+ "schema_note": "見本 out/tower75_観察票.json は出発点（--zero）で退避されていて無く、trial/ は読まない決まりなので、係の定義（kansatsu.md）と手順書「観察票 → 設計」の項目名で書いた",
+ "building": "honbu",
+ "made_by": "観察係（kansatsu・claude-opus-5-5）",
+ "made_at": "2026-11-07T09:33:58",
+ "provisional_building": "out/honbu/tmp/honbu.json（recorder new honbu --from-site の一時の土台。data/buildings/honbu.json はまだ無い）",
+ "rule": "比率と個数だけ。寸法は書かない。比率は正面化していない写真の目安で、測量係が正面化で確かめる",
+ "crops": "out/honbu/kansatsu/（切り出し画像 crop_*.jpg・一覧 sheet_*.jpg）",
+ "face": "roof",
+ "face_name": "屋上と塊（面ではなく棟全体。壁の並び wall_groups もここにまとめる）",
+ "block": "全部",
+ "source_photos": [
+  "本部棟屋上",
+  "PXL_20261105_063431446",
+  "PXL_20261104_074148938",
+  "PXL_20261103_043314396",
+  "PXL_20261103_043034043",
+  "PXL_20261103_043004629",
+  "PXL_20261103_043136840",
+  "PXL_20261103_043150092"
+ ],
+ "aerial": {
+  "source": "gsi:aerial_z18（out/site/aerial_z18.png）",
+  "tool": "recorder photos roof out/honbu/tmp/honbu.json --out-dir out/honbu/tmp（一時の土台で実行。out/honbu/tmp/roof.json・roof_aerial.png）",
+  "caution": "一時の土台は塊が 1 つ（PLATEAU の高さ）なので、倒れ込みは南の翼の屋根の縁に合わせた値になっている。北の翼（低い）と塔屋（高い）は倒れ込みが違う。塊を分けてから設計係が回し直すこと。縁の候補は ambiguous（1 位と 2 位が近い）。低い建物の検算もずれが大きいと警告が出た"
+ },
+ "blocks": [
+  {
+   "id": "south_wing",
+   "faces": [
+    "f6",
+    "f7",
+    "f8",
+    "f5 の南の部分"
+   ],
+   "floors": 5,
+   "roof": "明るい灰色の平らな屋根（防水の仕上げ）、縁にパラペットと金属の笠木",
+   "evidence": [
+    "本部棟屋上",
+    "PXL_20261104_074357308"
+   ]
+  },
+  {
+   "id": "north_wing",
+   "faces": [
+    "f0",
+    "f1",
+    "f2",
+    "f3",
+    "f4"
+   ],
+   "floors": 4,
+   "roof": "濃い灰色の平らな屋根に格子の目地（押さえの板か目地の並び）、縁に細い濃い笠木",
+   "relation": "南の翼の北の壁に付く。屋根は南の翼の 5 階の床あたり（043034043・043150092 の見え方。確かでない）",
+   "evidence": [
+    "本部棟屋上",
+    "PXL_20261103_043150092"
+   ]
+  },
+  {
+   "id": "penthouse",
+   "faces": [
+    "f5 の北の部分（階段室）"
+   ],
+   "floors": null,
+   "why_null": "階の段が見えない（塔）",
+   "shape": "両翼のつなぎ目（北の翼の南の端、西面から入隅の近くまで）に立つ箱。東の面は煉瓦で小窓、西の面の上は灰色の金属板。南の翼の屋上より約 1 階分（0.7〜1 階高）上に出る（063431446）。上にテレビのアンテナと白い設備の箱",
+   "evidence": [
+    "本部棟屋上",
+    "PXL_20261105_063431446",
+    "PXL_20261104_074148938",
+    "PXL_20261103_043034043"
+   ]
+  }
+ ],
+ "wall_groups": [
+  {
+   "id": "W",
+   "faces": [
+    "f4",
+    "（土台で面にならなかった細い段差の辺）",
+    "f5"
+   ],
+   "normal": "同じ向き（西北西）",
+   "merge_for_bays": false,
+   "note": "作りが違う（f4＝北の翼の柱割り、f5＝階段室と南の翼の無地の妻）ので柱割りを通さない。細い段差の辺は f4 と f5 の境の入隅（階段室の塔の出と読む）で、別の面として残す"
+  },
+  {
+   "id": "N",
+   "faces": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "normal": "f1 と f3 は同じ向き（北北東）だが一直線ではない",
+   "merge_for_bays": false,
+   "note": "f1＝外階段の外面、f2＝外階段の側面、f3＝北の壁と読む（解釈）"
+  },
+  {
+   "id": "others",
+   "faces": [
+    "f0",
+    "f6",
+    "f7",
+    "f8"
+   ],
+   "note": "それぞれ単独。平行な辺（f0 と f7、f8 と f1・f3）はあるが一直線ではない"
+  }
+ ],
+ "parts": [
+  {
+   "what": "天窓（傾いたガラスの箱）",
+   "vocab": "box（material glass）か composite の wedge",
+   "count": 1,
+   "where": "南の翼の屋上の中ほど（東寄り）。航空写真の設備 1",
+   "ratio": "幅は柱間の約 1/2〜2/3",
+   "from_photos": [
+    "本部棟屋上",
+    "gsi:aerial_z18"
+   ]
+  },
+  {
+   "what": "塔屋の上の白い設備の箱",
+   "vocab": "rooftop_units",
+   "count": 1,
+   "where": "塔屋の屋上。航空写真の設備 3（明るい）",
+   "ratio": "—",
+   "from_photos": [
+    "本部棟屋上",
+    "gsi:aerial_z18"
+   ]
+  },
+  {
+   "what": "塔屋の上のアンテナ",
+   "vocab": "pipes か column（細い）",
+   "count": 1,
+   "where": "塔屋の屋上",
+   "ratio": "高さは塔屋の約 1/2",
+   "from_photos": [
+    "PXL_20261105_063431446",
+    "本部棟屋上"
+   ]
+  },
+  {
+   "what": "北端の外階段の屋上の出入口（半円筒の庇）",
+   "vocab": "stair_switchback の exit_box・canopy（f1 の観察票に書いた。二重に置かない）",
+   "count": 0,
+   "where": "北の翼の屋上の北端。航空写真の設備 2",
+   "ratio": "—",
+   "from_photos": [
+    "本部棟屋上",
+    "PXL_20261103_043136840"
+   ]
+  },
+  {
+   "what": "笠木",
+   "vocab": "coping",
+   "count": "塊ごと",
+   "where": "全部の塊の上端",
+   "ratio": "—",
+   "from_photos": [
+    "PXL_20261104_074357308",
+    "本部棟屋上"
+   ]
+  }
+ ],
+ "structures": [],
+ "discrepancies_with_provisional": [
+  "土台は 1 つの塊・PLATEAU の高さ（塔屋込みの最高高さ）。実際は南の翼 5 階・北の翼 4 階・塔屋の 3 つ。PLATEAU の高さを棟全体のパラペットに使わないこと",
+  "航空写真の設備 4・5（南の翼の西寄りの小さな暗い点）は真上の写真（本部棟屋上）の範囲外で確かめられない"
+ ],
+ "face_reassignment": [],
+ "unknowns": [
+  {
+   "item": "航空写真の設備 4・5",
+   "value": null,
+   "why": "真上の写真で西の端が切れている。影か小さな物か分からない"
+  },
+  {
+   "item": "塔屋の平面の範囲",
+   "value": null,
+   "why": "航空写真の倒れ込みが塔屋の高さで違う。塊を分けてから photos roof で読み直す"
+  }
+ ],
+ "questions": [],
+ "requests": []
+}

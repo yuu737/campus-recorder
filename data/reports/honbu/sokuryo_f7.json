@@ -1,0 +1,86 @@
+{
+ "schema": "sokuryo/1",
+ "building": "honbu",
+ "face": "f7",
+ "made_by": "測量係（sokuryo・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:53:40",
+ "input": [
+  "data/reports/honbu/kazoe_f7.json",
+  "data/rulers.json",
+  "data/site/tempaku.json",
+  "data/buildings/honbu.json（recorder new honbu --from-site の土台）"
+ ],
+ "tape_measure": {
+  "found": false,
+  "checked_with": "recorder photos list --building honbu --ruler tape_measure",
+  "request": "棟で 1 件だけ（sokuryo_f6.json の requests）"
+ },
+ "floor_pitch": {
+  "value": 4.245,
+  "unit": "m",
+  "status": "estimated",
+  "tol": 0.45,
+  "evidence": [
+   "PXL_20261103_043612124"
+  ],
+  "method": "物差し：タイル 1 段。使えた正面化は 043612124 の 1 枚だけ（真下から超広角で寄った写真。043608113・043623454 は角度が強く、043405159・043515616 は ROI を付けても正面化できない）。下半分の壁の自己相関で 1 段 16.45 px（16.40〜16.57。上半分は遠くて目地が解けない）→ 16.45 px ÷ 0.070 m = 235.0 px/m。タイルの種類は小口（108×60 mm）と確かめた：目地の周期の比（横の 1 枚の長さ÷縦の 1 段）を正面化画像で測り、080542963（正面玄関の脇の壁を寄って撮った物。1 段 83.5 px、1 枚 143.6 px、比 1.72）、042909968（柱型。1 段 10.79 px、1 枚 18.5 px、比 1.71）。小口（108+10）÷（60+10）＝1.69、二丁掛 3.39、45 二丁 2.0 なので小口。北の翼 043304319（1.71）・043055592（1.70）、西の妻 043004629（1.73）、東の妻 043612124（1.70）も同じ。台帳 tile_course（高さ 60 mm＋目地 10 mm＝0.070 m ±0.005）。階高の px：小窓の上端 5 階 989.4／1053.2・4 階 2004.3／2059.3・3 階 2992.7／3039.8 px（縁 2 本ずつ）→ 5〜3 階の 2 区間の平均 997.5 px（60.6 段）。値：997.5 px ÷ 235.0 px/m = 4.245 m。検算（2 本目の物差し）：f6 の PLATEAU で出した 1 段 0.0689 m を使うと 60.6 × 0.0689 = 4.175 m、差 −1.6%。f6 の階高 4.130 m とは +2.8%。この正面化は上下で縮尺が 2.5% 違う（5→4 階 1006 px・4→3 階 980 px、笠木が 1.1° 傾く）ので、± は台帳のタイル 7.1%＋正面化の歪み 2.5%＋1 段の読み 1% ＝ 10.6%（0.45 m）。PLATEAU の辺 f7（15.81 m）は物差しにしなかった：この画像の角から角 4036 px ÷ 235.0 = 17.17 m（+8.6%）で 5% を超えるが、超広角の端の歪みで角の位置も信用できない。撮影依頼に出した"
+ },
+ "bay_pitch": {
+  "not_applicable": true,
+  "why": "無地（data/reports/honbu/kazoe_f7.json#bays）"
+ },
+ "scale": {
+  "ruler": "tile_course",
+  "px_per_m": 235.0,
+  "image": "out/rectified/honbu/PXL_20261103_043612124_front.jpg",
+  "what": "小口タイル 1 段 0.070 m ＝ 16.45 px（下半分の壁）",
+  "check_ruler": "f6 の PLATEAU の辺で測ったタイル 1 段（0.0689 m）",
+  "diff_pct": -1.6,
+  "rejected_ruler": {
+   "ruler": "plateau_wall",
+   "face_length_m": 15.81,
+   "photo_length_m": 17.17,
+   "diff_pct": 8.6,
+   "why": "正面化の歪みで角の位置が信用できない"
+  }
+ },
+ "rectified": [
+  "out/rectified/honbu/PXL_20261103_043612124_front.jpg"
+ ],
+ "rectify_check": "傾きの検算 横 0.56°・縦 0.46°（1° 以内）。ただし上下の縮尺が 2.5% 違う（method）",
+ "registered": [],
+ "not_registered": [
+  {
+   "photo": "PXL_20261103_043623454",
+   "why": "面の上の対応点が 10 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_043608113",
+   "why": "面の上の対応点が 9 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_043612124",
+   "why": "PnP が解けない（つじつまの合う対応の組が無い）"
+  },
+  {
+   "photo": "PXL_20261103_043613678",
+   "why": "視点に合う対応点が 5 点（12 点未満）"
+  },
+  {
+   "photo": "PXL_20261103_043612124",
+   "why": "測量係が登録しなかった：地面が写真の外（1 階の通路の開口の下端が切れる）で高さの原点が決まらず、正面化の上下の縮尺が 2.5% 違う"
+  }
+ ],
+ "face_photo": "out/honbu/coverage_f7_photo.png",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f7",
+   "what": "f7（東の妻）を東の道路の向こうから、南東・北東の角と足元が入る 1 枚（離れて、広角の端を使わない）",
+   "where": "東の道路の向こう",
+   "why": "今ある写真は真下から超広角で、角の位置と地面が取れず、登録もできない"
+  }
+ ],
+ "questions": [],
+ "face_photo_note": "f7 に登録した写真は無い。coverage_f7_photo.png は f6 などに登録した写真の端に斜めに写った f7（被覆 10%）を貼った物で、製図板には足りない"
+}

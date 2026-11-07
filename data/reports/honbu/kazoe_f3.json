@@ -1,0 +1,42 @@
+{
+ "schema": "kazoe/1",
+ "building": "honbu",
+ "made_by": "数え係（kazoe・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:05:00",
+ "rule": "数と比だけ。寸法は書かない。比は正面化していない写真の目安で、測量係が正面化で確かめる。measured の根拠写真は索引で honbu・その面（faces）に仕分け済み・low でない物だけ",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/honbu/tmp/honbu.json の faces の from→to）",
+ "face": "f3",
+ "face_name": "北北東面 3（北端の西寄り。配管と室外機の無窓の壁）",
+ "block": "north_wing",
+ "input": [
+  "data/reports/honbu/kansatsu_f3.json"
+ ],
+ "left_end_here": "左端＝f2 との角（東）、右端＝北西の角（西）",
+ "bays": {
+  "not_applicable": true,
+  "why": "無地（窓も柱型も無い。縦の配管と室外機だけ）",
+  "evidence": [
+   "PXL_20261103_043123901",
+   "PXL_20261103_043112969"
+  ]
+ },
+ "floors": {
+  "value": 4,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261103_043753272",
+   "PXL_20261103_043259125",
+   "PXL_20261103_043055592",
+   "PXL_20261103_043103134",
+   "PXL_20261103_043112969"
+  ],
+  "method": "同じ塊（北の翼）の f0・f4 から（どちらも見えた段 4。data/reports/honbu/kazoe_f0.json・kazoe_f4.json）。043112969 で f3 の上端（笠木）が北西の角で f4（見えた段 4）の上端と同じ線に続く（同じ塊であることの確かめ）"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "agreement_with_kansatsu": "観察票の estimated_from（f0・f4 の 4 階）と同じ",
+ "requests": [],
+ "questions": []
+}

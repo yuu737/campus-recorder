@@ -1,0 +1,48 @@
+{
+ "photo": "PXL_20261103_044849371",
+ "face": "f0",
+ "registered_face": "(pose)",
+ "pass": false,
+ "pass_note": "面の線に 0.15 m を超える物あり（1 枚だけ。面の合否は kenshu_summary）",
+ "lines": [
+  {
+   "what": "f0 面 柱型1右",
+   "diff_m": -0.174,
+   "prev_diff_m": -0.174,
+   "action": "直さない：1 枚だけか写真どうしで符号が揃わない（縁の取り違え・遮蔽を疑う）"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column0 上端",
+   "diff_m": -0.42,
+   "prev_diff_m": -0.42,
+   "action": "直さない：044849371（面の無い姿勢の登録）と 043304319 で量が 0.32・0.12 m とばらつく。歩廊の天井 4.3 m は写真に縁が無い（photoproj）ので撮影依頼"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column0 右端",
+   "diff_m": 0.323,
+   "prev_diff_m": 0.323,
+   "action": "直さない：044849371（面の無い姿勢の登録）と 043304319 で量が 0.32・0.12 m とばらつく。歩廊の天井 4.3 m は写真に縁が無い（photoproj）ので撮影依頼"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column1 左端",
+   "diff_m": -0.022,
+   "prev_diff_m": -0.022,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column1 右端",
+   "diff_m": -0.179,
+   "prev_diff_m": -0.179,
+   "action": "直さない：044849371（面の無い姿勢の登録）と 043304319 で量が 0.32・0.12 m とばらつく。歩廊の天井 4.3 m は写真に縁が無い（photoproj）ので撮影依頼"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}

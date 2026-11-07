@@ -1,0 +1,97 @@
+{
+ "schema": "tower75-observation/1",
+ "schema_note": "見本 out/tower75_観察票.json は出発点（--zero）で退避されていて無く、trial/ は読まない決まりなので、係の定義（kansatsu.md）と手順書「観察票 → 設計」の項目名で書いた",
+ "building": "honbu",
+ "made_by": "観察係（kansatsu・claude-opus-5-5）",
+ "made_at": "2026-11-07T09:33:58",
+ "provisional_building": "out/honbu/tmp/honbu.json（recorder new honbu --from-site の一時の土台。data/buildings/honbu.json はまだ無い）",
+ "rule": "比率と個数だけ。寸法は書かない。比率は正面化していない写真の目安で、測量係が正面化で確かめる",
+ "crops": "out/honbu/kansatsu/（切り出し画像 crop_*.jpg・一覧 sheet_*.jpg）",
+ "face": "f2",
+ "face_name": "西北西面 2（北端の段差。外階段の西の側面と読む）",
+ "block": "north_wing",
+ "source_photos": [
+  "PXL_20261103_043123901",
+  "PXL_20261103_043129358",
+  "PXL_20261103_043136840",
+  "PXL_20261103_080431748",
+  "PXL_20261104_073547139",
+  "PXL_20261104_073618326"
+ ],
+ "face_identification": {
+  "finding": "外階段の 1 本目の段の下の煉瓦の塊と、上の踊り場の腰壁の西の端（043123901 で室外機の左）。建物の壁ではなく外階段の側面と読む（解釈）",
+  "confidence": "mid"
+ },
+ "wall_group": {
+  "id": "f2",
+  "merged": [],
+  "note": "f1 と f3 の間の段差。f1 の続き（外階段の側面）"
+ },
+ "columns": {
+  "value": null,
+  "not_applicable": true,
+  "why": "外階段の側面"
+ },
+ "segments": [],
+ "floors": {
+  "visible": null,
+  "why": "外階段の側面で階の段が無い（踊り場の腰壁の端が上下に並ぶだけ）"
+ },
+ "windows": [
+  {
+   "floor": "全階",
+   "shape": "無し",
+   "per_floor": 0
+  }
+ ],
+ "pier_to_window": {
+  "note": "無し"
+ },
+ "bands": [
+  "踊り場の腰壁の端（煉瓦）"
+ ],
+ "glazing": [],
+ "corners": [
+  "北：f1（外階段の外面）",
+  "南：f3（北の壁、配管と室外機）"
+ ],
+ "base": {
+  "summary": "1 本目の段の下は煉瓦で塞いだ三角の塊。脇に電気の箱",
+  "evidence": [
+   "PXL_20261103_043123901"
+  ]
+ },
+ "top": {
+  "what": "外階段の最上部（屋上の出入口）",
+  "evidence": [
+   "PXL_20261103_043123901"
+  ]
+ },
+ "exceptions": [],
+ "parts": [
+  {
+   "what": "外階段（f1 と同じ物）",
+   "vocab": "stair_switchback（f1 の観察票に書いた。二重に置かない）",
+   "count": 0,
+   "where": "f1",
+   "ratio": "—",
+   "from_photos": [
+    "PXL_20261103_043123901"
+   ]
+  }
+ ],
+ "structures": [],
+ "discrepancies_with_provisional": [
+  "土台の f2 は建物の壁の段差だが、外階段の側面と読む（解釈）"
+ ],
+ "face_reassignment": [],
+ "unknowns": [
+  {
+   "item": "f2 が外階段の側面か建物の壁の出隅か",
+   "value": null,
+   "why": "正面・真横の写真が無い（f1 の requests）"
+  }
+ ],
+ "questions": [],
+ "requests": []
+}

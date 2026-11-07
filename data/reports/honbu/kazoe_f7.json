@@ -1,0 +1,48 @@
+{
+ "schema": "kazoe/1",
+ "building": "honbu",
+ "made_by": "数え係（kazoe・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:05:00",
+ "rule": "数と比だけ。寸法は書かない。比は正面化していない写真の目安で、測量係が正面化で確かめる。measured の根拠写真は索引で honbu・その面（faces）に仕分け済み・low でない物だけ",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/honbu/tmp/honbu.json の faces の from→to）",
+ "face": "f7",
+ "face_name": "東南東面（南の翼の東の妻）",
+ "block": "south_wing",
+ "input": [
+  "data/reports/honbu/kansatsu_f7.json",
+  "data/reports/honbu/kansatsu_roof.json"
+ ],
+ "left_end_here": "左端＝南東の角、右端＝北東の角",
+ "bays": {
+  "not_applicable": true,
+  "why": "無地（柱型も窓の格子も無い。面の中央付近に小窓 2 列だけ）",
+  "evidence": [
+   "PXL_20261103_043612124",
+   "PXL_20261103_043623454"
+  ]
+ },
+ "floors": {
+  "value": 5,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261103_043612124",
+   "PXL_20261103_043623454"
+  ],
+  "method": "小窓 2 つの段が 4 段（2〜5 階）＋1 階（ピロティ・東西の通路の開口）。2 枚で同じ"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "2 階の窓の下から 1 階の開口の上まで、窓の無い壁が他の階の間より広い（1 階が高い。f6 と同じ）",
+   "evidence": [
+    "PXL_20261103_043612124",
+    "PXL_20261103_043623454"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "観察票と同じ（無地、2〜5 階に小窓 2 つずつ、階 5）",
+ "requests": [],
+ "questions": []
+}

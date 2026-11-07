@@ -1,0 +1,156 @@
+{
+ "photo": "PXL_20261103_043055592",
+ "face": "f4",
+ "registered_face": "f4",
+ "pass": true,
+ "pass_note": "面の線は全部 0.15 m 以内（数えない線を除く）",
+ "lines": [
+  {
+   "what": "f4 面 柱型0左",
+   "diff_m": 0.007,
+   "prev_diff_m": 0.007,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型0右",
+   "diff_m": -0.002,
+   "prev_diff_m": -0.002,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型1左",
+   "diff_m": -0.026,
+   "prev_diff_m": -0.026,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型1右",
+   "diff_m": -0.0,
+   "prev_diff_m": -0.0,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型2左",
+   "diff_m": -0.013,
+   "prev_diff_m": -0.013,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型2右",
+   "diff_m": 0.003,
+   "prev_diff_m": 0.003,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型3左",
+   "diff_m": -0.008,
+   "prev_diff_m": -0.008,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型3右",
+   "diff_m": 0.008,
+   "prev_diff_m": 0.008,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 面の端L",
+   "diff_m": 0.019,
+   "prev_diff_m": 0.019,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 1 階（柱型の間の濃い色の壁に窓と戸） 下端",
+   "diff_m": 0.088,
+   "prev_diff_m": 0.088,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 1 階（柱型の間の濃い色の壁に窓と戸） 上端",
+   "diff_m": -0.02,
+   "prev_diff_m": -0.02,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 2 階（横長） 下端",
+   "diff_m": -0.073,
+   "prev_diff_m": -0.073,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 2 階（横長） 上端",
+   "diff_m": -0.016,
+   "prev_diff_m": -0.016,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 3 階（横長） 下端",
+   "diff_m": -0.027,
+   "prev_diff_m": -0.027,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 3 階（横長） 上端",
+   "diff_m": -0.078,
+   "prev_diff_m": -0.078,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 4 階（平らな帯に窓 2 つずつ） 下端",
+   "diff_m": -0.038,
+   "prev_diff_m": -0.038,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 4 階（平らな帯に窓 2 つずつ） 上端",
+   "diff_m": 0.004,
+   "prev_diff_m": 0.004,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 パラペット上端",
+   "diff_m": -0.103,
+   "prev_diff_m": -0.103,
+   "action": "合格"
+  },
+  {
+   "what": "f4 部品 窓下パネル（3 階）下端",
+   "diff_m": -0.282,
+   "prev_diff_m": -0.282,
+   "action": "数えない：彫り込みの奥（0.5 m）の板の下端は見上げで窓台の手前の縁に隠れ、手前の縁か別の縁を拾う（階で符号が入れ替わる）"
+  },
+  {
+   "what": "f4 部品 部品36（通用口の前の鋼の段の板） step0 上端",
+   "diff_m": -0.168,
+   "prev_diff_m": -0.168,
+   "action": "直さない：1 枚だけか写真どうしで符号が揃わない（縁の取り違え・遮蔽を疑う）"
+  },
+  {
+   "what": "f4 部品 部品45（f4 の 1 柱間目の窓） front 上端",
+   "diff_m": -0.051,
+   "prev_diff_m": null,
+   "action": "合格"
+  }
+ ],
+ "changed": [
+  {
+   "field": "parts[f4 の 1 柱間目の窓の前の白い低い壁].北の端",
+   "from": 0.85,
+   "to": 1.05,
+   "round": 2,
+   "why": "1 回目の後の recheck で北の端の縁 043055592 +0.10・043103134 +0.30 m",
+   "photos": [
+    "PXL_20261103_043055592",
+    "PXL_20261103_043103134"
+   ]
+  }
+ ],
+ "requests": [],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}

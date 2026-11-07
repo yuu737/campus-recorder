@@ -1,0 +1,130 @@
+{
+ "schema": "tower75-observation/1",
+ "schema_note": "見本 out/tower75_観察票.json は出発点（--zero）で退避されていて無く、trial/ は読まない決まりなので、係の定義（kansatsu.md）と手順書「観察票 → 設計」の項目名で書いた",
+ "building": "honbu",
+ "made_by": "観察係（kansatsu・claude-opus-5-5）",
+ "made_at": "2026-11-07T09:33:58",
+ "provisional_building": "out/honbu/tmp/honbu.json（recorder new honbu --from-site の一時の土台。data/buildings/honbu.json はまだ無い）",
+ "rule": "比率と個数だけ。寸法は書かない。比率は正面化していない写真の目安で、測量係が正面化で確かめる",
+ "crops": "out/honbu/kansatsu/（切り出し画像 crop_*.jpg・一覧 sheet_*.jpg）",
+ "face": "f3",
+ "face_name": "北北東面 3（北端の西寄り。配管と室外機の無窓の壁）",
+ "block": "north_wing",
+ "source_photos": [
+  "PXL_20261103_043123901",
+  "PXL_20261103_043129358",
+  "PXL_20261103_043136840",
+  "PXL_20261104_073547139",
+  "PXL_20261103_043112969",
+  "PXL_20261103_080431748",
+  "PXL_20261103_043103134"
+ ],
+ "face_identification": {
+  "finding": "外階段の西の煉瓦の無窓の壁。縦の配管が並び、足元に室外機の群れ（043123901・073547139・043112969）",
+  "confidence": "mid"
+ },
+ "wall_group": {
+  "id": "f3",
+  "merged": [],
+  "note": "f1 と向きは同じだが一直線ではない。まとめない"
+ },
+ "columns": {
+  "value": null,
+  "not_applicable": true,
+  "why": "無地の壁（窓も柱型も無い）"
+ },
+ "segments": [],
+ "floors": {
+  "visible": null,
+  "estimated_from": "同じ塊（北の翼）の f0・f4 の 4 階",
+  "why": "窓が無く段が見えない"
+ },
+ "windows": [
+  {
+   "floor": "全階",
+   "shape": "無し",
+   "per_floor": 0
+  }
+ ],
+ "pier_to_window": {
+  "note": "無し"
+ },
+ "bands": [
+  "無し（無地の煉瓦タイル）。上端に細い濃い笠木"
+ ],
+ "glazing": [],
+ "corners": [
+  "北西の角：f4（西面）の角の柱型へ",
+  "東：f2（外階段の側面）"
+ ],
+ "base": {
+  "summary": "室外機の群れ（大きい縦型 2・横置き 2・小 2 ほど）がコンクリートの台の上、低い白い壁の囲い。街灯 2 本",
+  "evidence": [
+   "PXL_20261103_043123901",
+   "PXL_20261103_043112969",
+   "PXL_20261104_073547139"
+  ]
+ },
+ "top": {
+  "parapet": "上端に細い濃い笠木",
+  "evidence": [
+   "PXL_20261103_043123901"
+  ]
+ },
+ "exceptions": [],
+ "parts": [
+  {
+   "what": "縦の配管（4〜5 本）と縦樋",
+   "vocab": "pipes",
+   "count": "5〜6",
+   "where": "壁の西寄り、屋上から地面まで",
+   "ratio": "屋上から地面まで",
+   "from_photos": [
+    "PXL_20261103_043123901",
+    "PXL_20261103_043112969"
+   ]
+  },
+  {
+   "what": "室外機の群れ",
+   "vocab": "ac_units（asset ac_outdoor）",
+   "count": "6 ほど（大きい縦型 2、横置き 2、小 2）",
+   "where": "北西の角の地面（f3 と f4 の角にまたがる）",
+   "ratio": "大きい物の高さは 1 階の高さの約 1/2",
+   "from_photos": [
+    "PXL_20261103_043123901",
+    "PXL_20261103_043112969",
+    "PXL_20261103_043103134",
+    "PXL_20261104_073547139"
+   ]
+  },
+  {
+   "what": "電気・設備の箱",
+   "vocab": "box",
+   "count": "2〜3",
+   "where": "配管の脇、1 階の高さ",
+   "ratio": "大きい物は 1 階の高さの約 1/4",
+   "from_photos": [
+    "PXL_20261103_043123901"
+   ]
+  },
+  {
+   "what": "街灯",
+   "vocab": "asset（street_lamp）",
+   "count": 2,
+   "where": "北西の角の外（道路の脇）",
+   "ratio": "高さは 2 階の窓ほど",
+   "from_photos": [
+    "PXL_20261103_043112969",
+    "PXL_20261103_043103134"
+   ]
+  }
+ ],
+ "structures": [],
+ "discrepancies_with_provisional": [
+  "土台の 5 階に対し北の翼は 4 階"
+ ],
+ "face_reassignment": [],
+ "unknowns": [],
+ "questions": [],
+ "requests": []
+}

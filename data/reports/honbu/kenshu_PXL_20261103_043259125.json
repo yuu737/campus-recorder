@@ -1,0 +1,186 @@
+{
+ "photo": "PXL_20261103_043259125",
+ "face": "f0",
+ "registered_face": "f0",
+ "pass": true,
+ "pass_note": "面の線は全部 0.15 m 以内（数えない線を除く）",
+ "lines": [
+  {
+   "what": "f0 面 柱型0左",
+   "diff_m": 0.007,
+   "prev_diff_m": 0.007,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 柱型1左",
+   "diff_m": 0.036,
+   "prev_diff_m": 0.036,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 柱型1右",
+   "diff_m": -0.027,
+   "prev_diff_m": -0.027,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 2 階（デッキに面するガラス） 上端",
+   "diff_m": -0.042,
+   "prev_diff_m": -0.042,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 3 階（横長、柱型の間） 下端",
+   "diff_m": -0.021,
+   "prev_diff_m": -0.021,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 3 階（横長、柱型の間） 上端",
+   "diff_m": -0.027,
+   "prev_diff_m": -0.027,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 4 階（平らな帯に窓 2 つずつ） 下端",
+   "diff_m": -0.056,
+   "prev_diff_m": -0.056,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 4 階（平らな帯に窓 2 つずつ） 上端",
+   "diff_m": -0.027,
+   "prev_diff_m": -0.027,
+   "action": "合格"
+  },
+  {
+   "what": "f0 面 パラペット上端",
+   "diff_m": 0.132,
+   "prev_diff_m": 0.132,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 窓下パネル（3 階）下端",
+   "diff_m": 0.359,
+   "prev_diff_m": 0.359,
+   "action": "数えない：彫り込みの奥（0.5 m）の板の下端は見上げで窓台の手前の縁に隠れ、手前の縁か別の縁を拾う（階で符号が入れ替わる）"
+  },
+  {
+   "what": "f0 部品 部品24（デッキ） parapet2 上端",
+   "diff_m": -0.318,
+   "prev_diff_m": -0.318,
+   "action": "直さない：1 枚だけ（腰壁・柱の縁は木と植え込みの陰）。デッキの床の下は f8 の 4 枚で直した"
+  },
+  {
+   "what": "f0 部品 部品24（デッキ） parapet2 下端",
+   "diff_m": -0.129,
+   "prev_diff_m": -0.017,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品24（デッキ） column5 左端",
+   "diff_m": -0.02,
+   "prev_diff_m": -0.02,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column0 上端",
+   "diff_m": -0.013,
+   "prev_diff_m": -0.013,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column1 左端",
+   "diff_m": 0.037,
+   "prev_diff_m": 0.037,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column1 右端",
+   "diff_m": -0.05,
+   "prev_diff_m": -0.05,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column2 左端",
+   "diff_m": -0.036,
+   "prev_diff_m": -0.036,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品28（f0 の 1 階の歩廊） column2 右端",
+   "diff_m": -0.108,
+   "prev_diff_m": -0.108,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） rim2 上端",
+   "diff_m": -0.156,
+   "prev_diff_m": null,
+   "action": "位置は 1 回目に直した（8.3 → 8.6 m）。上端は 1 枚だけ"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） rim0 上端",
+   "diff_m": -0.358,
+   "prev_diff_m": -0.356,
+   "action": "位置は 1 回目に直した（8.3 → 8.6 m）。上端は 1 枚だけ"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） soil 上端",
+   "diff_m": -0.122,
+   "prev_diff_m": -0.104,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） rim0 左端",
+   "diff_m": 0.225,
+   "prev_diff_m": 0.421,
+   "action": "位置は 1 回目に直した（8.3 → 8.6 m）。上端は 1 枚だけ"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） rim0 右端",
+   "diff_m": 0.032,
+   "prev_diff_m": 0.092,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） rim2 左端",
+   "diff_m": 0.225,
+   "prev_diff_m": 0.449,
+   "action": "位置は 1 回目に直した（8.3 → 8.6 m）。上端は 1 枚だけ"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） rim3 右端",
+   "diff_m": 0.075,
+   "prev_diff_m": 0.375,
+   "action": "合格"
+  },
+  {
+   "what": "f0 部品 部品31（白い縦リブの腰壁の植え込） soil 左端",
+   "diff_m": 0.075,
+   "prev_diff_m": null,
+   "action": "合格"
+  }
+ ],
+ "changed": [
+  {
+   "field": "parts[白い縦リブの腰壁の植え込み（傾路の脇）].along",
+   "from": 8.3,
+   "to": 8.6,
+   "why": "recheck で植え込みの縁の左端 043259125 +0.42・043304319 +0.24 m",
+   "photos": [
+    "PXL_20261103_043259125",
+    "PXL_20261103_043304319"
+   ],
+   "round": 1
+  }
+ ],
+ "requests": [],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}

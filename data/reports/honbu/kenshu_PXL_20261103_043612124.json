@@ -1,0 +1,42 @@
+{
+ "photo": "PXL_20261103_043612124",
+ "face": "f7",
+ "registered_face": "f7",
+ "pass": true,
+ "pass_note": "面の線は全部 0.15 m 以内（数えない線を除く）",
+ "lines": [
+  {
+   "what": "f7 面 4 階の小窓 左（やや横長） 下端",
+   "diff_m": 0.055,
+   "prev_diff_m": 0.055,
+   "action": "合格"
+  },
+  {
+   "what": "f7 面 5 階の小窓 左（やや横長） 下端",
+   "diff_m": -0.128,
+   "prev_diff_m": -0.128,
+   "action": "合格"
+  },
+  {
+   "what": "f7 部品 部品16（f7 の北側の壁の掲示板） board 下端",
+   "diff_m": 0.049,
+   "prev_diff_m": 0.049,
+   "action": "合格"
+  },
+  {
+   "what": "f7 部品 部品16（f7 の北側の壁の掲示板） board 左端",
+   "diff_m": -0.131,
+   "prev_diff_m": -0.131,
+   "action": "合格"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}

@@ -1,0 +1,58 @@
+{
+ "schema": "kazoe/1",
+ "building": "honbu",
+ "made_by": "数え係（kazoe・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:05:00",
+ "rule": "数と比だけ。寸法は書かない。比は正面化していない写真の目安で、測量係が正面化で確かめる。measured の根拠写真は索引で honbu・その面（faces）に仕分け済み・low でない物だけ",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/honbu/tmp/honbu.json の faces の from→to）",
+ "face": "f1",
+ "face_name": "北北東面 1（北端の東寄り。外階段の外面と読む）",
+ "block": "north_wing",
+ "input": [
+  "data/reports/honbu/kansatsu_f1.json",
+  "data/reports/honbu/kansatsu_roof.json"
+ ],
+ "left_end_here": "左端＝北東の角（東）、右端＝f2 との角（西）",
+ "bays": {
+  "not_applicable": true,
+  "why": "外階段の外面（柱割りの壁ではない。観察票の読み、mid）",
+  "evidence": [
+   "PXL_20261103_043136840",
+   "PXL_20261103_043123901"
+  ]
+ },
+ "floors": {
+  "value": 4,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261103_043753272",
+   "PXL_20261103_043259125",
+   "PXL_20261103_043055592",
+   "PXL_20261103_043103134"
+  ],
+  "method": "同じ塊（北の翼）の f0・f4 から（どちらも見えた段 4。data/reports/honbu/kazoe_f0.json・kazoe_f4.json）。f1 は外階段の外面で窓が無い。外階段の上端（屋上の出入口の半円筒の庇）は北の翼の屋上の高さに出る（043136840・043123901）。観察票は踊り場の段から visible 4（mid）としたが、折り返しの階段は中間の踊り場もあり、踊り場の段を階の段として数えられないので、見えた数にしなかった"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "2 階の踊り場だけ東へ長く、北東の角を回って f0 のデッキにつながる（観察票と同じ）",
+   "evidence": [
+    "PXL_20261103_043136840",
+    "PXL_20261103_043150092"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "数（4）は観察票と同じ。status を visible（観察票）から estimated（同じ塊から）に下げた。理由は floors.method",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f1",
+   "what": "北端を北の道路の向こうから正面に 1 枚と、西の斜め横から 1 枚（観察票の依頼と同じ）",
+   "where": "北端の北の道路・駐車場",
+   "why": "外階段の踊り場が各階の床か中間かを見分け、f1 の段を見えた数で書くため"
+  }
+ ],
+ "questions": []
+}

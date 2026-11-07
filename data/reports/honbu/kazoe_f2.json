@@ -1,0 +1,41 @@
+{
+ "schema": "kazoe/1",
+ "building": "honbu",
+ "made_by": "数え係（kazoe・claude-opus-5-5）",
+ "made_at": "2026-11-07T10:05:00",
+ "rule": "数と比だけ。寸法は書かない。比は正面化していない写真の目安で、測量係が正面化で確かめる。measured の根拠写真は索引で honbu・その面（faces）に仕分け済み・low でない物だけ",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/honbu/tmp/honbu.json の faces の from→to）",
+ "face": "f2",
+ "face_name": "西北西面 2（北端の段差。外階段の西の側面と読む）",
+ "block": "north_wing",
+ "input": [
+  "data/reports/honbu/kansatsu_f2.json"
+ ],
+ "left_end_here": "左端＝f1 との角（北）、右端＝f3 との角（南）",
+ "bays": {
+  "not_applicable": true,
+  "why": "外階段の側面（観察票の読み、mid）。窓も柱型も無い",
+  "evidence": [
+   "PXL_20261103_043123901"
+  ]
+ },
+ "floors": {
+  "value": 4,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261103_043753272",
+   "PXL_20261103_043259125",
+   "PXL_20261103_043055592",
+   "PXL_20261103_043103134"
+  ],
+  "method": "同じ塊（北の翼）の f0・f4 から（どちらも見えた段 4。data/reports/honbu/kazoe_f0.json・kazoe_f4.json）。f2 は段差の短い辺で窓が無く、段が見えない。外階段の側面か建物の出隅かは観察票の unknowns のまま（外階段の側面なら高さは外階段の上端まで）"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "agreement_with_kansatsu": "観察票は visible null。無窓の面の決まり（同じ塊から estimated）で 4 を置いた",
+ "requests": [],
+ "requests_note": "f1 の撮影依頼（北と西の斜めから）で一緒に決まる",
+ "questions": []
+}

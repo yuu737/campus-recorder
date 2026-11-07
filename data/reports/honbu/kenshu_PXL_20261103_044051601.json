@@ -1,0 +1,90 @@
+{
+ "photo": "PXL_20261103_044051601",
+ "face": "f8",
+ "registered_face": "f8",
+ "pass": true,
+ "pass_note": "面の線は全部 0.15 m 以内（数えない線を除く）",
+ "lines": [
+  {
+   "what": "f8 面 柱型5右",
+   "diff_m": -0.188,
+   "prev_diff_m": -0.255,
+   "action": "1 回目に直した（f8 の柱型 0.93 → 0.80 m）"
+  },
+  {
+   "what": "f8 面 4 階（横長、柱型の間） 下端",
+   "diff_m": 0.125,
+   "prev_diff_m": 0.119,
+   "action": "合格"
+  },
+  {
+   "what": "f8 面 4 階（横長、柱型の間） 上端",
+   "diff_m": 0.059,
+   "prev_diff_m": 0.058,
+   "action": "合格"
+  },
+  {
+   "what": "f8 面 5 階（小窓 2 つずつ） 上端",
+   "diff_m": -0.01,
+   "prev_diff_m": -0.011,
+   "action": "合格"
+  },
+  {
+   "what": "f8 面 パラペット上端",
+   "diff_m": -0.09,
+   "prev_diff_m": -0.09,
+   "action": "合格"
+  },
+  {
+   "what": "f8 部品 部品24（デッキ） column2 左端",
+   "diff_m": -0.42,
+   "prev_diff_m": -0.42,
+   "action": "直さない：柱の上端・縁は腰壁（床の下 0.65 m）の陰で見えず、腰壁の縁を拾う（符号が揃わない）"
+  },
+  {
+   "what": "f8 部品 部品24（デッキ） column3 左端",
+   "diff_m": -0.025,
+   "prev_diff_m": -0.025,
+   "action": "合格"
+  },
+  {
+   "what": "f8 部品 部品24（デッキ） column3 右端",
+   "diff_m": -0.066,
+   "prev_diff_m": -0.066,
+   "action": "合格"
+  },
+  {
+   "what": "f8 部品 部品24（デッキ） parapet1 上端",
+   "diff_m": -0.218,
+   "prev_diff_m": -0.218,
+   "action": "直さない：腰壁の上端は 1 枚だけか符号が揃わない（下端は 1 回目に直した）"
+  },
+  {
+   "what": "f8 部品 部品24（デッキ） parapet1 下端",
+   "diff_m": 0.346,
+   "prev_diff_m": 0.003,
+   "action": "直さない：腰壁の上端は 1 枚だけか符号が揃わない（下端は 1 回目に直した）"
+  },
+  {
+   "what": "f8 部品 部品25（東端の階段） flight 右端",
+   "diff_m": 0.101,
+   "prev_diff_m": 0.101,
+   "action": "合格"
+  },
+  {
+   "what": "f8 部品 部品27（『本部棟』の柱の札） plate 右端",
+   "diff_m": 0.013,
+   "prev_diff_m": null,
+   "action": "合格"
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}

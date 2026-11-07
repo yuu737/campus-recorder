@@ -1,0 +1,464 @@
+{
+ "schema": "sekkei-summary/1",
+ "building": "honbu",
+ "made_by": "設計係（sekkei・claude-opus-5-5）",
+ "made_at": "2026-11-07T15:30:00",
+ "design_script": "scripts/design_honbu.py",
+ "output": "data/buildings/honbu.json",
+ "input": [
+  "data/reports/honbu/kansatsu_f0〜f8.json・kansatsu_roof.json",
+  "data/reports/honbu/kazoe_f0〜f8.json",
+  "data/reports/honbu/sokuryo_f0・f4〜f8.json",
+  "out/honbu/coverage_<面>_photo.png・coverage.json（製図板）",
+  "out/rectified/honbu/f6_042900775+042734715_stitched.jpg（測量係の正面化）",
+  "out/honbu/roof.json（recorder photos roof data/buildings/honbu.json）"
+ ],
+ "checks": {
+  "validate": "OK（--strict でも警告 0）",
+  "run_fast": "OK（validate・draw・model。model_report の warnings 2：f6・f0 の ground_offset が 5 m 標高の帯と合わない＝requests kind data）"
+ },
+ "values": {
+  "all": 452,
+  "measured": 5,
+  "estimated": 445,
+  "unknown": 2,
+  "note": "棟 JSON の測定値の数（photos・requests・history を除く）。recorder run の数え方（複製を除く独立した観察）では measured 5 / estimated 324 / unknown 1"
+ },
+ "measured": [
+  {
+   "where": "floor_count",
+   "value": 5
+  },
+  {
+   "where": "faces[0].bays.count",
+   "value": 4
+  },
+  {
+   "where": "faces[4].bays.count",
+   "value": 3
+  },
+  {
+   "where": "faces[6].bays.count",
+   "value": 9
+  },
+  {
+   "where": "faces[8].bays.count",
+   "value": 6
+  }
+ ],
+ "measured_note": "measured は数え係の数（柱間 f6 9・f8 6・f0 4・f4 3、階数 5）だけ。根拠の写真は全部その面に仕分け済み・low でない（根拠の門の警告 0）。寸法は物差しが全部 PLATEAU とタイル（メジャーの写真が無い）なので estimated",
+ "unknown": [
+  {
+   "where": "parts[40].size.d"
+  },
+  {
+   "where": "parts[41].size.d"
+  }
+ ],
+ "evidence_layer": {
+  "faces": {
+   "f0": "estimated",
+   "f1": "unknown",
+   "f2": "unknown",
+   "f3": "estimated",
+   "f4": "estimated",
+   "f5": "estimated",
+   "f6": "estimated",
+   "f7": "estimated",
+   "f8": "estimated"
+  },
+  "state_counts": {
+   "measured": 0,
+   "estimated": 59,
+   "hypothesis": 0,
+   "unknown": 2
+  },
+  "shape_ratio": 0.967
+ },
+ "hypotheses": 0,
+ "hypotheses_note": "仮説（symmetry・same_block・footprint）は置いていない。全部の面に写真がある（f1・f3 は登録が無いが観察票の写真で無地・外階段と読めた）",
+ "parts": {
+  "count": 52,
+  "composite": 22,
+  "blocks": [
+   "south_wing",
+   "north_wing",
+   "tower"
+  ]
+ },
+ "observed_1m_items": {
+  "placed": 46,
+  "not_placed": 7,
+  "placed_list": [
+   {
+    "face": "f6",
+    "what": "正面玄関の軒下（porch）＋中の柱",
+    "how": "a/b"
+   },
+   {
+    "face": "f6",
+    "what": "玄関の段 2 段",
+    "how": "a/b"
+   },
+   {
+    "face": "f6",
+    "what": "『名城大学 本部』の石の銘板",
+    "how": "a/b"
+   },
+   {
+    "face": "f6",
+    "what": "玄関前の植え込み 2",
+    "how": "a/b"
+   },
+   {
+    "face": "f6",
+    "what": "窓の手すり棒・窓下の濃い板（windows の rail・spandrel）",
+    "how": "a"
+   },
+   {
+    "face": "f6/f8",
+    "what": "車道の通り抜け（4〜6 柱間 → f8、奥のガラス、中の柱）＋天井の梁",
+    "how": "a/b"
+   },
+   {
+    "face": "f6/f7",
+    "what": "東のピロティ（床が高い）＋梁の格子＋煉瓦の閉じた箱＋f7 の東西の通路と梁",
+    "how": "b"
+   },
+   {
+    "face": "f6",
+    "what": "南東の大階段（8・9 柱間の前の部分）",
+    "how": "b"
+   },
+   {
+    "face": "f6",
+    "what": "ピロティの中の大階段",
+    "how": "b"
+   },
+   {
+    "face": "f6",
+    "what": "ピロティの机とベンチ 2 組（箱）",
+    "how": "b"
+   },
+   {
+    "face": "f6",
+    "what": "ピロティの奥の掲示板のガラスの箱",
+    "how": "b"
+   },
+   {
+    "face": "f7",
+    "what": "f7 の北の壁の掲示板のガラスの箱",
+    "how": "b"
+   },
+   {
+    "face": "f7",
+    "what": "南東の角の縦樋",
+    "how": "b"
+   },
+   {
+    "face": "f7",
+    "what": "小窓 2 列 × 4 段（windows）",
+    "how": "b"
+   },
+   {
+    "face": "f8/f0/f1",
+    "what": "2 階のデッキ（入隅で斜めに折れ、北東の角を回って外階段の踊り場へ）＋下の柱",
+    "how": "b"
+   },
+   {
+    "face": "f8",
+    "what": "東端の階段",
+    "how": "b"
+   },
+   {
+    "face": "f8",
+    "what": "東の歩行者の通路",
+    "how": "b"
+   },
+   {
+    "face": "f8",
+    "what": "縦樋 2",
+    "how": "a"
+   },
+   {
+    "face": "f8",
+    "what": "『本部棟』の柱の札",
+    "how": "b"
+   },
+   {
+    "face": "f8",
+    "what": "2 階のガラス（デッキに面する）",
+    "how": "a"
+   },
+   {
+    "face": "f0",
+    "what": "1 階の歩廊（店先）＋ATM のブース",
+    "how": "b"
+   },
+   {
+    "face": "f0",
+    "what": "白い腰壁の傾路",
+    "how": "b"
+   },
+   {
+    "face": "f0",
+    "what": "半円形の段",
+    "how": "b"
+   },
+   {
+    "face": "f0",
+    "what": "白い縦リブの腰壁の植え込み 2",
+    "how": "b"
+   },
+   {
+    "face": "f0",
+    "what": "分別ごみ箱の列（4 箱）",
+    "how": "b"
+   },
+   {
+    "face": "f0",
+    "what": "入隅の細い柱間の引っ込み（2・3・4 階、glazing）",
+    "how": "a/b"
+   },
+   {
+    "face": "f1/f2",
+    "what": "北端の折り返しの外階段（腰壁・煉瓦の柱・屋上の出入口の箱・半円筒の庇）",
+    "how": "b"
+   },
+   {
+    "face": "f2",
+    "what": "1 本目の段の下の煉瓦の塊",
+    "how": "b"
+   },
+   {
+    "face": "f1",
+    "what": "踊り場の下の鉄柵の門",
+    "how": "b"
+   },
+   {
+    "face": "f3",
+    "what": "縦の配管 5 本",
+    "how": "b"
+   },
+   {
+    "face": "f3/f4",
+    "what": "北西の角の室外機の群れ 6 台（ac_outdoor）＋台と白い囲い",
+    "how": "b"
+   },
+   {
+    "face": "f3",
+    "what": "電気・設備の箱",
+    "how": "b"
+   },
+   {
+    "face": "f4",
+    "what": "通用口の鋼の段の板",
+    "how": "a/b"
+   },
+   {
+    "face": "f4",
+    "what": "南端の細い柱間の煉瓦の庇",
+    "how": "a"
+   },
+   {
+    "face": "f4",
+    "what": "縦樋",
+    "how": "a"
+   },
+   {
+    "face": "f5",
+    "what": "階段室の上部の灰色の金属板（patch）",
+    "how": "a"
+   },
+   {
+    "face": "f5",
+    "what": "階段室の開いた踊り場 2 段＋柱＋足元の通路の口",
+    "how": "a/b"
+   },
+   {
+    "face": "f5",
+    "what": "縦樋 2",
+    "how": "a"
+   },
+   {
+    "face": "f5",
+    "what": "室外機 4（階段室の足元 1・南西の角 3）",
+    "how": "a/b"
+   },
+   {
+    "face": "f5",
+    "what": "ガスメーターの箱",
+    "how": "a"
+   },
+   {
+    "face": "f5",
+    "what": "防災センターの入口・1 階のやや大きい窓（glazing）",
+    "how": "a/b"
+   },
+   {
+    "face": "roof",
+    "what": "塔屋（塊 tower、31.0 m）",
+    "how": "b"
+   },
+   {
+    "face": "roof",
+    "what": "南の翼の屋上の天窓",
+    "how": "b"
+   },
+   {
+    "face": "roof",
+    "what": "塔屋の上の白い設備の箱",
+    "how": "b"
+   },
+   {
+    "face": "roof",
+    "what": "塔屋の上のアンテナの柱",
+    "how": "b"
+   },
+   {
+    "face": "roof",
+    "what": "笠木（全部の塊）",
+    "how": "b"
+   }
+  ],
+  "how_legend": "a＝面の写真・正面化の px から、b＝比率と写真 1 枚から（tol は値の 20〜30%）",
+  "not_placed_list": [
+   {
+    "face": "f6",
+    "what": "祝の垂れ幕 4 枚・立て看板 1",
+    "why": "写っているが仮設。置くかは進行役（requests kind check）"
+   },
+   {
+    "face": "f6",
+    "what": "西寄りの前の高い柱 2 本（旗竿か照明）・前の木 3〜4 本",
+    "why": "棟の壁に付かない地面の物 → 敷地 JSON（requests kind tool、語彙が無い）"
+   },
+   {
+    "face": "f6/f7",
+    "what": "南東の大階段の東の続き（角の外）と f7 沿いの北へ上がる階段",
+    "why": "本部棟と隣の棟の間の地面 → 敷地 JSON（requests kind tool）"
+   },
+   {
+    "face": "f8",
+    "what": "北東の大階段",
+    "why": "本部棟と図書館の間 → 敷地 JSON（requests kind tool）"
+   },
+   {
+    "face": "f8/f0",
+    "what": "中庭の木・植え込みの島",
+    "why": "中庭の地面 → 敷地 JSON（requests kind tool）"
+   },
+   {
+    "face": "f3",
+    "what": "街灯 2 本",
+    "why": "北西の角の外の道路の脇 → 敷地 JSON（requests kind tool）"
+   },
+   {
+    "face": "roof",
+    "what": "航空写真の暗い設備 1・3・4",
+    "why": "地上・高所のどの写真でも確かめられない（観察票 roof unknowns）"
+   }
+  ]
+ },
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f6",
+   "what": "f6（南南西面）を南の広場の奥から、両端と垂れ幕が 1 枚に入る写真"
+  },
+  {
+   "kind": "photo",
+   "face": "f6",
+   "what": "f6 の 1 階の柱型にメジャーを沿えて 1 枚（柱型の幅か窓の開口、タイル 10 段）"
+  },
+  {
+   "kind": "photo",
+   "face": "f1",
+   "what": "北端を北の道路の向こうから正面に 1 枚と、西の斜め横から 1 枚"
+  },
+  {
+   "kind": "photo",
+   "face": "f5",
+   "what": "西の道路の向こうから階段室とその左右（f4 の南端と南の翼の妻）を正面に 1 枚"
+  },
+  {
+   "kind": "photo",
+   "face": "f5",
+   "what": "塔屋の平面の位置が分かる 2 枚：南の広場から塔屋と南の翼の西の妻が一緒に入る 1 枚、中庭（デッキ）から塔屋の東の面と入隅が入る 1 枚"
+  },
+  {
+   "kind": "photo",
+   "face": "f8",
+   "what": "デッキの端（腰壁）を真横から見て、上の階の壁よりどれだけ前に出るか分かる 1 枚"
+  },
+  {
+   "kind": "photo",
+   "face": "f0",
+   "what": "デッキの上から、2 階と 3 階の開口の上端が両方入る正面の 1 枚"
+  },
+  {
+   "kind": "photo",
+   "face": "f0",
+   "what": "北東の角と外階段（f1）の東の側面が両方入る 1 枚"
+  },
+  {
+   "kind": "photo",
+   "face": "f7",
+   "what": "f7（東の妻）を東の道路の向こうから、南東・北東の角と足元が入る 1 枚（離れて、広角の端を使わない）"
+  },
+  {
+   "kind": "data",
+   "face": "f8",
+   "what": "PLATEAU の辺 f8 36.81 m に対し、写真では 7.18 柱間 ≒ 38.8 m（+5.5%）"
+  },
+  {
+   "kind": "data",
+   "face": "f6",
+   "what": "面の前の地面の高さ：5 m 標高の帯（土台の ground_z 45.25 m から f6 −1.35・f5 −0.61・f4 +0.64・f0 +0.04・f8 −0.61・f7 −3.33 m）と、登録の決まり（各面の前の地面を z=0）が食い違う"
+  },
+  {
+   "kind": "tool",
+   "face": "f6",
+   "what": "敷地に置く物：南東の大階段の東の続き（南東の角の外）と f7 沿いに北へ上がる細い階段（白い縦リブの腰壁と植え込み）、本部棟と隣の棟（図書館側）の間"
+  },
+  {
+   "kind": "tool",
+   "face": "f8",
+   "what": "敷地に置く物：北東の大階段（中庭の車道の脇 → 図書館側の高い所）、本部棟と図書館の間"
+  },
+  {
+   "kind": "tool",
+   "face": "f6",
+   "what": "敷地に置く物：f6 の西寄りの前の高い柱 2 本（旗竿か照明）、前の木 3〜4 本、f3 の北西の角の外の街灯 2 本、中庭の植え込みの島と木 2〜3 本"
+  },
+  {
+   "kind": "asset",
+   "face": "f6",
+   "what": "ピロティの机（長机）の見た目：台帳の table_long は決定 D-0003 で、今の決定の台帳に無い（内装は停止中）"
+  },
+  {
+   "kind": "check",
+   "face": "f6",
+   "what": "祝の垂れ幕 4 枚（4・5 柱間）と立て看板 1 つ（7/8 の柱）は置かなかった"
+  },
+  {
+   "kind": "check",
+   "face": "f6",
+   "what": "out/honbu/coverage_f6_photo.png の 1 階の西半分（s 0〜25 m）には東のピロティ（机とベンチ・煉瓦の段）が貼られている"
+  },
+  {
+   "kind": "check",
+   "face": "f0",
+   "what": "デッキの床の高さ（5.45 m、南の翼の 2 階）と北の翼の 2 階の床の関係"
+  }
+ ],
+ "requests_note": "撮影 9（staff）・data 2・tool 3（敷地に置く物）・asset 1・check 3。どれも理由付き",
+ "open_issues": [
+  "塔屋の位置は本部棟屋上と航空写真の影から ±3 m。航空写真の明るい四角は倒れ込みを戻すと中庭の上に出て合わない",
+  "面の前の地面：登録の決まり（各面の前の地面を z=0）と 5 m 標高が f6 で 1.35 m 食い違う（f6・f5・f4・f8 は 0 で上書き）",
+  "f8 の辺：写真 38.8 m・PLATEAU 36.81 m。margin_to −1.59 m で残した（6 柱間目の窓が入隅を越える）",
+  "coverage_f6_photo.png の 1 階の西半分に東のピロティの写真が貼られている（042830256 などの登録のずれの疑い）。検収係へ",
+  "デッキの床 5.45 m は南の翼の 2 階から。北の翼の 2 階の床は約 1 m 低く見え（f4）、f0 沿いのデッキの高さは見えていない",
+  "観察票 roof との違い：塔屋は南の翼より約 1 階分上ではなく 7.9 m 上、アンテナは塔屋の約 1/2 ではなく 9.5 m（本部棟屋上から。history）"
+ ]
+}

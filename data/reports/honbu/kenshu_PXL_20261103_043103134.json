@@ -1,0 +1,210 @@
+{
+ "photo": "PXL_20261103_043103134",
+ "face": "f4",
+ "registered_face": "f4",
+ "pass": true,
+ "pass_note": "面の線は全部 0.15 m 以内（数えない線を除く）",
+ "lines": [
+  {
+   "what": "f2 面 面の端L",
+   "diff_m": -0.064,
+   "prev_diff_m": -0.064,
+   "action": "参考：登録した面（f4）と違う面を斜めに見た線。面の合否には数えない"
+  },
+  {
+   "what": "f2 面 パラペット上端",
+   "diff_m": -0.361,
+   "prev_diff_m": -0.361,
+   "action": "参考：登録した面（f4）と違う面を斜めに見た線。面の合否には数えない（ずれ大）"
+  },
+  {
+   "what": "f4 面 柱型0左",
+   "diff_m": 0.015,
+   "prev_diff_m": 0.015,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型0右",
+   "diff_m": 0.011,
+   "prev_diff_m": 0.011,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型1左",
+   "diff_m": -0.01,
+   "prev_diff_m": -0.01,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型1右",
+   "diff_m": -0.006,
+   "prev_diff_m": -0.006,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型2左",
+   "diff_m": -0.018,
+   "prev_diff_m": -0.018,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型2右",
+   "diff_m": 0.002,
+   "prev_diff_m": 0.002,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型3左",
+   "diff_m": 0.024,
+   "prev_diff_m": 0.024,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 柱型3右",
+   "diff_m": 0.053,
+   "prev_diff_m": 0.053,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 面の端L",
+   "diff_m": 0.044,
+   "prev_diff_m": 0.044,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 1 階（柱型の間の濃い色の壁に窓と戸） 下端",
+   "diff_m": 0.116,
+   "prev_diff_m": 0.116,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 1 階（柱型の間の濃い色の壁に窓と戸） 上端",
+   "diff_m": -0.012,
+   "prev_diff_m": -0.012,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 2 階（横長） 下端",
+   "diff_m": -0.067,
+   "prev_diff_m": -0.067,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 2 階（横長） 上端",
+   "diff_m": -0.001,
+   "prev_diff_m": -0.001,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 3 階（横長） 下端",
+   "diff_m": -0.003,
+   "prev_diff_m": -0.003,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 3 階（横長） 上端",
+   "diff_m": -0.053,
+   "prev_diff_m": -0.053,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 4 階（平らな帯に窓 2 つずつ） 下端",
+   "diff_m": -0.033,
+   "prev_diff_m": -0.033,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 4 階（平らな帯に窓 2 つずつ） 上端",
+   "diff_m": 0.009,
+   "prev_diff_m": 0.009,
+   "action": "合格"
+  },
+  {
+   "what": "f4 面 パラペット上端",
+   "diff_m": -0.092,
+   "prev_diff_m": -0.092,
+   "action": "合格"
+  },
+  {
+   "what": "f4 部品 窓下パネル（2 階）下端",
+   "diff_m": 0.013,
+   "prev_diff_m": 0.013,
+   "action": "合格（参考）"
+  },
+  {
+   "what": "f4 部品 窓下パネル（3 階）下端",
+   "diff_m": 0.262,
+   "prev_diff_m": 0.262,
+   "action": "数えない：彫り込みの奥（0.5 m）の板の下端は見上げで窓台の手前の縁に隠れ、手前の縁か別の縁を拾う（階で符号が入れ替わる）"
+  },
+  {
+   "what": "f4 部品 部品36（通用口の前の鋼の段の板） step0 上端",
+   "diff_m": -0.148,
+   "prev_diff_m": -0.148,
+   "action": "合格"
+  },
+  {
+   "what": "f4 部品 部品45（f4 の 1 柱間目の窓） front 上端",
+   "diff_m": -0.078,
+   "prev_diff_m": null,
+   "action": "合格"
+  },
+  {
+   "what": "f4 部品 部品45（f4 の 1 柱間目の窓） front 左端",
+   "diff_m": 0.098,
+   "prev_diff_m": null,
+   "action": "合格"
+  },
+  {
+   "what": "f4 部品 部品45（f4 の 1 柱間目の窓） front 右端",
+   "diff_m": -0.095,
+   "prev_diff_m": null,
+   "action": "合格"
+  },
+  {
+   "what": "f4 部品 部品45（f4 の 1 柱間目の窓） return 右端",
+   "diff_m": -0.052,
+   "prev_diff_m": null,
+   "action": "合格"
+  },
+  {
+   "what": "f5 面 面の端0",
+   "diff_m": -0.363,
+   "prev_diff_m": -0.363,
+   "action": "参考：登録した面（f4）と違う面を斜めに見た線。面の合否には数えない（ずれ大）"
+  }
+ ],
+ "changed": [
+  {
+   "field": "parts に追加：f4 の 1 柱間目の窓の前の白い L 字の低い壁（s 1.05〜2.55、高さ 0.6 m）",
+   "from": null,
+   "to": "estimated",
+   "why": "観察票 f3 の『低い白い壁の囲い』の実物（場所は f4）",
+   "photos": [
+    "PXL_20261103_043112969",
+    "PXL_20261104_073547139",
+    "PXL_20261103_043103134"
+   ],
+   "round": 1
+  },
+  {
+   "field": "parts[f4 の 1 柱間目の窓の前の白い低い壁].北の端",
+   "from": 0.85,
+   "to": 1.05,
+   "round": 2,
+   "why": "1 回目の後の recheck で北の端の縁 043055592 +0.10・043103134 +0.30 m",
+   "photos": [
+    "PXL_20261103_043055592",
+    "PXL_20261103_043103134"
+   ]
+  }
+ ],
+ "requests": [],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}

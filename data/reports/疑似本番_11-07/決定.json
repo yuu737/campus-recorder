@@ -227,6 +227,26 @@
    "result": "library の工程 10（本番の run）へ進む。開いた形の問い 2 件は撮影依頼のまま",
    "rule": "recheck の NG が 1 組の登録（鎖でつながった写真）に偏り、その視点の高さが地面・床と合わない時は、形を直さず登録のやり直しを依頼する。2 回の直しで残る線は撮影依頼のまま次の工程へ",
    "record": "pipeline（library の runner subagent）"
+  },
+  {
+   "id": "K-014",
+   "at": "2026-11-07T15:49:15+09:00",
+   "building": "honbu",
+   "event": {
+    "kind": "stuck",
+    "why": "再検収を 2 回回しても同じ線 360 本が直らない",
+    "evidence": [
+     "recorder agent events honbu",
+     "out/honbu/recheck/20261107_153810/summary.md",
+     "data/reports/honbu/kenshu_summary.json",
+     "out/honbu/soten.json（decided 2）"
+    ]
+   },
+   "decision": "検収係のやり直しはしない（直し 2 回の上限）。①f6 の 3 枚（042822099・042830256・042844361）は柱割り 4 つ分ずれた登録なので形を直さず、登録を外すか目印で登録し直す依頼（kind check）のまま。外す道具が無い（J-013）②ピロティの天井の梁は撮影依頼（見上げ）のまま estimated ③f5 の境は撮影依頼のまま",
+   "reason": "K-013 の規則：NG が特定の登録に偏る時は形ではなく登録の問題。検収係のまとめで、f6 は 12 枚の中央値で合格、ずれの 3 枚は周期の取り違え",
+   "result": "honbu の工程 10（本番の run）へ進む",
+   "rule": "K-013 と同じ。周期の形（同じ柱割りのくり返し）の面では、登録の横の原点が柱割りの倍数ずれていないかを検収係が重ね画像で確かめる",
+   "record": "pipeline（honbu の runner subagent）"
   }
  ]
 }

@@ -1,0 +1,167 @@
+{
+ "photo": "PXL_20261103_042844361",
+ "face": "f6",
+ "registered_face": "f6",
+ "pass": false,
+ "pass_note": "数えない（登録ずれ）",
+ "lines": [
+  {
+   "what": "f6 面 柱型0右",
+   "diff_m": 0.016,
+   "prev_diff_m": 0.016,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 面 柱型4左",
+   "diff_m": -0.291,
+   "prev_diff_m": -0.291,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 面 柱型4右",
+   "diff_m": -0.011,
+   "prev_diff_m": -0.011,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 面 2 階（横長、柱型の間） 下端",
+   "diff_m": -0.008,
+   "prev_diff_m": -0.008,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 面 2 階（横長、柱型の間） 上端",
+   "diff_m": 0.035,
+   "prev_diff_m": 0.035,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 面 3 階（横長、柱型の間） 上端",
+   "diff_m": 0.077,
+   "prev_diff_m": 0.077,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 面 4 階（横長、柱型の間） 上端",
+   "diff_m": 0.167,
+   "prev_diff_m": 0.167,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 窓下パネル（2 階）下端",
+   "diff_m": 0.131,
+   "prev_diff_m": 0.131,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品0（正面玄関の軒下） soffit 上端",
+   "diff_m": 0.018,
+   "prev_diff_m": 0.018,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品0（正面玄関の軒下） soffit 下端",
+   "diff_m": 0.048,
+   "prev_diff_m": 0.048,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品0（正面玄関の軒下） column0 左端",
+   "diff_m": -0.172,
+   "prev_diff_m": -0.172,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品0（正面玄関の軒下） column0 右端",
+   "diff_m": 0.031,
+   "prev_diff_m": 0.031,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品1（玄関の中の柱） column 左端",
+   "diff_m": -0.024,
+   "prev_diff_m": -0.024,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品1（玄関の中の柱） column 右端",
+   "diff_m": -0.026,
+   "prev_diff_m": -0.026,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品3（玄関前の植え込み） rim0 左端",
+   "diff_m": -0.07,
+   "prev_diff_m": -0.07,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品3（玄関前の植え込み） rim0 右端",
+   "diff_m": 0.274,
+   "prev_diff_m": -0.107,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品3（玄関前の植え込み） rim1 左端",
+   "diff_m": -0.001,
+   "prev_diff_m": -0.352,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品3（玄関前の植え込み） rim1 右端",
+   "diff_m": -0.151,
+   "prev_diff_m": 0.054,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品3（玄関前の植え込み） rim2 左端",
+   "diff_m": -0.252,
+   "prev_diff_m": -0.252,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品3（玄関前の植え込み） rim3 右端",
+   "diff_m": -0.402,
+   "prev_diff_m": -0.402,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品4（玄関前の植え込み） rim2 左端",
+   "diff_m": -0.062,
+   "prev_diff_m": -0.062,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品5（『名城大学 本部』の石の） plate 上端",
+   "diff_m": 0.002,
+   "prev_diff_m": -0.198,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品5（『名城大学 本部』の石の） plate 下端",
+   "diff_m": -0.072,
+   "prev_diff_m": -0.072,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  },
+  {
+   "what": "f6 部品 部品5（『名城大学 本部』の石の） plate 左端",
+   "diff_m": -0.457,
+   "prev_diff_m": -0.155,
+   "action": "数えない：登録が柱割り 4 つ分（約 21.7 m）東へずれている（重ねで模型の正面玄関が写真の 6・7 柱間に乗る）。requests kind check"
+  }
+ ],
+ "changed": [],
+ "requests": [
+  {
+   "kind": "check",
+   "what": "登録が柱割り 4 つ分東へずれている。外すか目印で登録し直す"
+  }
+ ],
+ "recheck": [
+  "out/honbu/recheck/20261107_150933（前）",
+  "out/honbu/recheck/20261107_153306（1 回目の後）",
+  "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
+ ],
+ "made_by": "検収係（kenshu・claude-opus-5-5）",
+ "made_at": "2026-11-07T16:30:00+09:00"
+}
