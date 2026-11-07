@@ -1,0 +1,110 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f4",
+ "face_name": "南西の低い塊の南向き S-SW（f4・f5）",
+ "input": [
+  "data/reports/tower75/kansatsu_f4.json",
+  "data/reports/tower75/kansatsu_f5.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "wall_group": {
+  "id": "S-SW",
+  "faces": [
+   "f4",
+   "f5"
+  ],
+  "primary": "f4",
+  "note": "観察票の wall_groups。境目は写真に無い"
+ },
+ "left_end_here": "左端＝西（南西の角）、右端＝東（西の袖 f6 との入隅）",
+ "bays": {
+  "value": 2,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_061647959",
+   "PXL_20261105_061708177"
+  ],
+  "what": "SWb の窓の縦の列",
+  "method": "#90（061647959）で 2 列、#93（061708177、正面）で 2 列（拡大 m_f4.jpg）。一致"
+ },
+ "floors": {
+  "value": 6,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_061647959",
+   "PXL_20261105_061708177"
+  ],
+  "what": "デッキの床から塊の上端までに見えた段：窓の段 5＋デッキの階 1（大きなガラスブロックの欄間と 4 枚の窓）",
+  "method": "#93：2 列とも升 5、その下に無地の帯・ガラスブロックの欄間・窓 4 枚。#90：2 列とも升 5、同じ 1 段。一致",
+  "breakdown": [
+   {
+    "what": "窓の段",
+    "count": 5
+   },
+   {
+    "what": "デッキの階",
+    "count": 1
+   }
+  ],
+  "levels_note": "階の呼び名は観察係の解釈（デッキの入口の階＝1F、その上の窓の段＝2F〜14F、北の広場＝B1、東の道路＝B2）。数え係の floors は呼び名を使わず『窓の段』『デッキの階』のように見えた物で数え、呼び名は interpreted に置く"
+ },
+ "interpreted": [
+  {
+   "value": "デッキの下に道路の高さの層（デッキの橋の下の店）",
+   "basis": "hypothesis",
+   "why": "面の足元はデッキの橋で見えない。橋の下に店がある（#14・#116）が、この面の下か橋の下だけかは決まらない",
+   "evidence": [
+    "PXL_20261105_061708177"
+   ]
+  }
+ ],
+ "segments": [
+  {
+   "what": "右端の全高の縦のガラスのすき間（西の袖との入隅。観察票は f5 の東の端）",
+   "from": "2 スパン目の後",
+   "width_ratio": null,
+   "width_why": "正面化していないので柱間に対する比は出さない（測量係）",
+   "status": "measured",
+   "evidence": [
+    "PXL_20261105_061647959",
+    "PXL_20261105_061708177"
+   ]
+  },
+  {
+   "what": "上の部分 SWu の南向き（塊の上で引っ込む）",
+   "count": null,
+   "from": "塊の上",
+   "width_ratio": null,
+   "width_why": "正面化していないので柱間に対する比は出さない（測量係）",
+   "status": "unknown",
+   "evidence": [],
+   "note": "#90 では一番上の段にだけ小さな窓 2 つ、その下は無地に見える。観察票は #118 で 1 列。1 枚ずつで食い違うので数にしない"
+  }
+ ],
+ "exceptions": [
+  {
+   "what": "窓に赤い三角の印のある段がある（消防の進入口の印、観察票）",
+   "evidence": [
+    "PXL_20261105_061647959",
+    "PXL_20261105_061708177"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "2 列・窓の段 5＋1F は観察票と同じ",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f4",
+   "what": "SWu の南向きの面を南西から、上端が入る遠景で",
+   "where": "南の道路の向かい、デッキの橋の南",
+   "why": "SWu の南向きの窓の列と段（#90 と #118 で見え方が違う）"
+  }
+ ],
+ "questions": []
+}

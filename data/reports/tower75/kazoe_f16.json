@@ -1,0 +1,70 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f16",
+ "face_name": "北東の部分の北向き（NEb・NEu）",
+ "input": [
+  "data/reports/tower75/kansatsu_f16.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "bays": {
+  "value": 2,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261105_060725949.MP",
+   "PXL_20261105_060730259"
+  ],
+  "what": "北東の低い塊（NEb）の窓の縦の列",
+  "method": "#52（拡大 ne52.jpg）で 2 列。#53（060730259、拡大 ne53.jpg）で同じ 2 列の下の方が斜めに見える。上の部分（NEu）も #52 で 2 列"
+ },
+ "floors": {
+  "value": 4,
+  "status": "estimated",
+  "evidence": [
+   "PXL_20261105_060725949.MP"
+  ],
+  "what": "NEb：窓の段 3＋ガラスブロックの欄間と 4 枚の窓の段 1",
+  "method": "#52 で 2 列とも升 3、その下に無地の帯と大きなガラスブロックの欄間・窓 4 枚。#53 は斜めで段を数え切れないので 1 枚だけ（estimated）。NEu の段数は #52 で詰まって数えられない"
+ },
+ "interpreted": [],
+ "segments": [
+  {
+   "what": "上の部分 NEu（引っ込む）",
+   "count": 2,
+   "floors": null,
+   "floors_why": "見上げで詰まる",
+   "from": "NEb の上",
+   "width_ratio": null,
+   "width_why": "正面化していないので柱間に対する比は出さない（測量係）",
+   "status": "measured",
+   "evidence": [
+    "PXL_20261105_060725949.MP",
+    "PXL_20261105_060730259"
+   ]
+  }
+ ],
+ "exceptions": [
+  {
+   "what": "NEb の北面と B'（f18）は低い段で同じ面に見える（白帯がつながる）。土台の f16 が f18 より南へ引っ込む形とは合わない",
+   "evidence": [
+    "PXL_20261105_060725949.MP"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "2 列・3 段＋1F は観察票と同じ",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f16",
+   "what": "北東の角を北から、NEb と NEu の段が入る 1 枚",
+   "where": "10 号館と 9 号館の間の通路の東の端",
+   "why": "NEb の段数の 2 枚目と NEu の段数"
+  }
+ ],
+ "questions": []
+}

@@ -1,0 +1,468 @@
+{
+ "schema": "sekkei-summary/1",
+ "building": "tower75",
+ "made_by": "設計係（sekkei・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T14:52:35+09:00",
+ "script": "scripts/design_tower75.py",
+ "output": "data/buildings/tower75.json",
+ "inputs": [
+  "data/reports/tower75/kansatsu_*.json",
+  "data/reports/tower75/kazoe_*.json",
+  "data/reports/tower75/sokuryo_f3.json",
+  "data/reports/tower75/sokuryo_f15.json",
+  "out/photos/shiwake_tower75.json",
+  "out/tower75/coverage_*_photo.png",
+  "out/tower75/coverage.json",
+  "out/rectified/tower75_f3_061442402・061341818・tower75_f15_060328137（正面化の製図板）",
+  "out/tower75/roof.json（recorder photos roof）"
+ ],
+ "counts": {
+  "values": 1270,
+  "measured": 6,
+  "estimated": 1262,
+  "unknown": 2,
+  "hypothesis_values": 378,
+  "composite_grouped_estimated": 22,
+  "faces": 21,
+  "blocks": 2,
+  "parts": 55,
+  "parts_by_type": {
+   "composite": 22,
+   "patch": 25,
+   "louver": 3,
+   "pipes": 1,
+   "box": 1,
+   "pergola": 3
+  },
+  "face_states": {
+   "f0": "hypothesis",
+   "f1": "estimated",
+   "f2": "estimated",
+   "f3": "estimated",
+   "f4": "hypothesis",
+   "f5": "estimated",
+   "f6": "hypothesis",
+   "f7": "hypothesis",
+   "f8": "hypothesis",
+   "f9": "estimated",
+   "f10": "hypothesis",
+   "f11": "hypothesis",
+   "f12": "hypothesis",
+   "f13": "hypothesis",
+   "f14": "estimated",
+   "f15": "estimated",
+   "f16": "hypothesis",
+   "f17": "unknown",
+   "f18": "hypothesis",
+   "f19": "hypothesis",
+   "f20": "hypothesis"
+  },
+  "state_counts": {
+   "measured": 0,
+   "estimated": 62,
+   "hypothesis": 13,
+   "unknown": 1
+  },
+  "shape_ratio": 0.987,
+  "evidence_ratio": 0.005
+ },
+ "measured_what": "数（列・段）だけ。メジャーの写真が無いので寸法は全部 estimated（縮尺は PLATEAU の高さ）",
+ "measured_values": [
+  {
+   "where": "floor_count",
+   "value": 14,
+   "evidence": [
+    "PXL_20261105_061341818",
+    "PXL_20261103_070222827"
+   ]
+  },
+  {
+   "where": "faces[f9].bays.count",
+   "value": 1,
+   "evidence": [
+    "PXL_20261105_062307232",
+    "PXL_20261103_074413490"
+   ]
+  },
+  {
+   "where": "faces[f13].bays.count",
+   "value": 2,
+   "evidence": [
+    "PXL_20261105_062323658",
+    "PXL_20261105_062527087"
+   ]
+  },
+  {
+   "where": "faces[f16].bays.count",
+   "value": 2,
+   "evidence": [
+    "PXL_20261105_060725949.MP",
+    "PXL_20261105_060730259"
+   ]
+  },
+  {
+   "where": "faces[f18].bays.count",
+   "value": 1,
+   "evidence": [
+    "PXL_20261103_065946407",
+    "PXL_20261105_060725949.MP"
+   ]
+  },
+  {
+   "where": "faces[f19].bays.count",
+   "value": 1,
+   "evidence": [
+    "PXL_20261103_065946407",
+    "PXL_20261105_060854125"
+   ]
+  }
+ ],
+ "unknown_values": [
+  "levels[B1].z",
+  "levels[B2].z（数え係の interpreted。見えた段に混ぜない）",
+  "f17 の面（どの写真にも写っていない。灰色）"
+ ],
+ "observation_items_1m": {
+  "placed": 32,
+  "not_placed": 10,
+  "placed_list": [
+   {
+    "what": "S1 西のデッキ",
+    "where": "parts「西のデッキ」",
+    "how": "(b) 登録したカメラの位置と比"
+   },
+   {
+    "what": "S4 西の大階段",
+    "where": "parts「西の大階段」",
+    "how": "(b) 観察票の比（幅＝柱間の 3〜4 倍）"
+   },
+   {
+    "what": "S5 西の青い鉄骨の庇",
+    "where": "parts「西の青い鉄骨の庇」",
+    "how": "(b) #82・#16 の柱の台とカメラの位置"
+   },
+   {
+    "what": "S6 北西のテラスのパーゴラ 3 基",
+    "where": "parts「北西のテラスのパーゴラ 1〜3」",
+    "how": "(b)"
+   },
+   {
+    "what": "S7 北の広場の B1 のガラスの入口（テラス）",
+    "where": "parts「北西のテラスと下の B1 のガラスの入口」",
+    "how": "(b)"
+   },
+   {
+    "what": "S11 吹き抜けの頂部の枠",
+    "where": "parts「吹き抜けの頂部の鉄骨とガラスの枠」",
+    "how": "(b)"
+   },
+   {
+    "what": "頂部の吹き抜け（ガラスの無い 2 段）",
+    "where": "parts「頂部の吹き抜け」（cut）",
+    "how": "(b) 奥行きは見えていない 6 m ±30%"
+   },
+   {
+    "what": "エレベーター箱",
+    "where": "parts「エレベーター箱」",
+    "how": "(b) #107・#9 の比、位置は #76 の正面化"
+   },
+   {
+    "what": "西のデッキの階の入口（ガラス・欄間）",
+    "where": "faces f2・f3 glazing＋patch 4",
+    "how": "(a) 正面化 061442402"
+   },
+   {
+    "what": "デッキの階の銀色の箱",
+    "where": "parts「デッキの階の銀色の箱」",
+    "how": "(b) #101 の 1 枚"
+   },
+   {
+    "what": "北西の入口（f1）",
+    "where": "faces f1 glazing＋patch",
+    "how": "(b)"
+   },
+   {
+    "what": "SWb の 1F の欄間と 4 枚の窓（f4）",
+    "where": "faces f4 glazing＋patch",
+    "how": "(b)"
+   },
+   {
+    "what": "入隅の縦のガラスのすき間（f5・f13・f20）",
+    "where": "faces f5・f13・f20 glazing",
+    "how": "(b)"
+   },
+   {
+    "what": "西の袖の扉・東の袖の扉・SEb の扉",
+    "where": "patch 3",
+    "how": "(b)"
+   },
+   {
+    "what": "石積み風の基壇（f7・f9・f11・f13）",
+    "where": "patch 4",
+    "how": "(b)"
+   },
+   {
+    "what": "道路へ下りる短い階段",
+    "where": "parts（f6 の前、wedge）",
+    "how": "(b)"
+   },
+   {
+    "what": "鉄骨のはしご（f8）",
+    "where": "parts",
+    "how": "(b)"
+   },
+   {
+    "what": "日よけ棚 7（f9）",
+    "where": "faces f9 ledges 7",
+    "how": "(b)"
+   },
+   {
+    "what": "吹き抜けの前の植え込み・コンクリートの台",
+    "where": "parts 2",
+    "how": "(b)"
+   },
+   {
+    "what": "メーターの箱（f11）",
+    "where": "parts",
+    "how": "(b) 高さ 1/3 段＝1.45 m"
+   },
+   {
+    "what": "SEb の B1 の大窓・1F の欄間と窓（f13）",
+    "where": "faces f13 glazing＋patch",
+    "how": "(b)"
+   },
+   {
+    "what": "東の張り出した帯 2",
+    "where": "parts 2",
+    "how": "(b) 観察票の比＋#42"
+   },
+   {
+    "what": "シャッター・ベージュの大扉",
+    "where": "patch 3",
+    "how": "(a) 正面化 060328137"
+   },
+   {
+    "what": "ガラリ 2",
+    "where": "louver 2（f14）",
+    "how": "(b) #24 の大扉との比"
+   },
+   {
+    "what": "B2 の入口の前の低い壁",
+    "where": "parts",
+    "how": "(b)"
+   },
+   {
+    "what": "東の 1F のガラスブロック・窓、B1 の窓",
+    "where": "faces f14・f15 glazing＋patch 5",
+    "how": "(a) 正面化 060328137"
+   },
+   {
+    "what": "塔屋",
+    "where": "parts「塔屋」",
+    "how": "(a)＋(b) #37 の正面化"
+   },
+   {
+    "what": "アンテナ 4",
+    "where": "parts「アンテナ」4",
+    "how": "(b)"
+   },
+   {
+    "what": "f19 のガラスの冠（ひれ・庇）",
+    "where": "box＋composite",
+    "how": "(b)"
+   },
+   {
+    "what": "f19 の粗いタイルの腰・ガラリの帯",
+    "where": "faces f19 bands＋louver",
+    "how": "(b)"
+   },
+   {
+    "what": "NEb の 1F の欄間と窓・雨どい（f16）",
+    "where": "faces f16 glazing＋patch＋pipes",
+    "how": "(b)"
+   },
+   {
+    "what": "NWb の 1F のガラスブロックの帯と窓（f0）",
+    "where": "faces f0 glazing＋patch",
+    "how": "(b)"
+   }
+  ],
+  "not_placed_list": [
+   {
+    "what": "S2 南西のデッキの橋（道路をまたぐ）と下の店・三角柱の金属の箱",
+    "why": "2 棟（図書館の甲板の側）に触れる物。requests kind tool（敷地）"
+   },
+   {
+    "what": "S3 渡り廊下",
+    "why": "2 棟に触れる。requests kind tool"
+   },
+   {
+    "what": "S8 北の屋根付き通路・S10 北東のルーバーの壁と擁壁",
+    "why": "10 号館との間の物。requests kind tool"
+   },
+   {
+    "what": "S9 東のガラスの渡り廊下",
+    "why": "9 号館の方へ渡る。requests kind tool"
+   },
+   {
+    "what": "北の沈んだ広場と広場から上がる大階段",
+    "why": "棟と棟の間の地面。requests kind tool"
+   },
+   {
+    "what": "ベンチ・テーブル・街灯・高木・西の道路際の植え込み",
+    "why": "棟と棟の間の地面。requests kind tool"
+   },
+   {
+    "what": "f6 の開口の手すり",
+    "why": "写っているが、どの段にあるか（見える段と見えない段）が決まらない。袖の側面の撮影依頼"
+   },
+   {
+    "what": "擁壁の丸い照明",
+    "why": "1 m 未満"
+   },
+   {
+    "what": "幕・ポスター・車",
+    "why": "掲示物・建物でない（観察票 not_placed）"
+   },
+   {
+    "what": "NWb の西向きの 1 列（f1 の北）・SEb／SEu の東向きの 2 列（f14 の南）",
+    "why": "登録の縮尺で OSM の足元の外に出る（足元を動かしていない）。requests kind data"
+   }
+  ]
+ },
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f3",
+   "what": "西面（f3）デッキの階：メジャーを壁に沿えて 1 枚（入口の脇の柱型の幅か窓の開口、タイル 10 段）",
+   "by": "sokuryo"
+  },
+  {
+   "kind": "photo",
+   "face": "f19",
+   "what": "北面・南面・低い塊の面：面の両端と足元の地面が入る正面寄りの遠景（2 倍ズーム）を面ごとに 1 枚",
+   "by": "sokuryo"
+  },
+  {
+   "kind": "data",
+   "face": "*",
+   "what": "PLATEAU の塔の高さ（69.5 m・74.2 m）が塔の足元の外の部品（bldg_f693ff16・bldg_f2cc5f1b）に付いている。どの高さ（パラペット・塔屋・ガラスの冠）か",
+   "by": "sokuryo"
+  },
+  {
+   "kind": "data",
+   "face": "f1",
+   "what": "OSM の足元の西の線 32.67 m と東の線 30.29 m が、写真では同じ 8.2 階高ぶん（35.3〜35.9 m）。足元の西・東の線の長さの確かめ（敷地の検収）",
+   "by": "sokuryo"
+  },
+  {
+   "kind": "tool",
+   "face": "f1",
+   "what": "登録台帳の exclude（遮蔽の矩形）を書くコマンド",
+   "by": "sokuryo"
+  },
+  {
+   "kind": "photo",
+   "face": "f3",
+   "what": "西面の南端（南西の角の SWu と主部の南西の角）を、上端が入る遠景で南西から 1 枚と、四隅（北東・北西・南東・南西）を斜め 45° から上端が入る遠景で",
+   "by": "sekkei"
+  },
+  {
+   "kind": "photo",
+   "face": "f9",
+   "what": "吹き抜けを遠めの正面から（南の道路の向かい）と、吹き抜けの上の枠・空いた所が見える高い所から 1 枚",
+   "by": "sekkei"
+  },
+  {
+   "kind": "photo",
+   "face": "f6",
+   "what": "西の袖・東の袖の側面と正面を全段が入るように（南西・南東から 45°）",
+   "by": "sekkei"
+  },
+  {
+   "kind": "photo",
+   "face": "f17",
+   "what": "北東の角と北面の東半分（f16・f17・f18）を見上げずに",
+   "by": "sekkei"
+  },
+  {
+   "kind": "photo",
+   "face": "f3",
+   "what": "西のデッキの縁（大階段の上・エレベーター箱の南の腰壁）を道路から正面に 1 枚と、デッキの上から西を見て縁と庇の柱が入る 1 枚",
+   "by": "sekkei"
+  },
+  {
+   "kind": "photo",
+   "face": "*",
+   "what": "屋上の塔屋とアンテナを北か西の遠くから 1 枚",
+   "by": "sekkei"
+  },
+  {
+   "kind": "tool",
+   "face": "f2",
+   "what": "敷地に置く物：渡り廊下 S3（f2 の 2F から西へ、大階段の上を渡る灰色の金属パネルの箱、四角い柱 2 本ずつ）",
+   "by": "sekkei"
+  },
+  {
+   "kind": "tool",
+   "face": "f3",
+   "what": "敷地に置く物：南西のデッキの橋 S2（道路をまたぐコンクリートの梁の橋と手すり、下の店、脇の三角柱の穴あき金属の箱 2 以上）",
+   "by": "sekkei"
+  },
+  {
+   "kind": "tool",
+   "face": "f18",
+   "what": "敷地に置く物：北面の屋根付き通路 S8（塔と 10 号館の間、黒い鉄骨の柱と梁の庇、白い雨どい）と北東のルーバーの壁と擁壁 S10",
+   "by": "sekkei"
+  },
+  {
+   "kind": "tool",
+   "face": "f15",
+   "what": "敷地に置く物：東のガラスの渡り廊下 S9（東面の南寄りから 9 号館の方へ、ガラスの屋根と手すり壁、白い丸柱 2 本）",
+   "by": "sekkei"
+  },
+  {
+   "kind": "tool",
+   "face": "f20",
+   "what": "敷地に置く物：北の沈んだ広場（B1 の高さ）と、広場から上がる幅の広い大階段・両脇のタイルの擁壁",
+   "by": "sekkei"
+  },
+  {
+   "kind": "tool",
+   "face": "f3",
+   "what": "敷地に置く物：西のデッキと北西のテラスのベンチ・テーブル（テーブル 3 以上・ベンチ 1 以上）、街灯 3 以上、高木（数は区別できない）、西の道路際の植え込み",
+   "by": "sekkei"
+  },
+  {
+   "kind": "check",
+   "face": "f3",
+   "what": "西のデッキ S1（と庇 S5・大階段 S4・エレベーター箱）を棟 JSON に置いた。デッキは南西で道路をまたぐ橋 S2 に続く。進行役 K-005 の②（通路橋につながる甲板は敷地）に当たるか",
+   "by": "sekkei"
+  },
+  {
+   "kind": "data",
+   "face": "f1",
+   "what": "OSM の足元の西の北端と東の南端が写真より短い：NWb の西向きの 1 列（f1 の北 2.9 m）と SEb・SEu の東向きの 2 列（f14 の南 4.9 m）が足元の外に出るので置いていない",
+   "by": "sekkei"
+  }
+ ],
+ "requests_count": {
+  "photo": 8,
+  "data": 3,
+  "tool": 7,
+  "check": 1
+ },
+ "checks": {
+  "validate_strict": "OK 警告 0",
+  "photos_to_confirm": "0 枚",
+  "recorder_run_fast": "validate・draw・model OK（模型の警告 1：f15 の ground_offset −2.00 が地形の中央値 −1.68 と 0.32 m ずれる。測量係の道路の読みのまま、地盤は動かしていない）",
+  "model_assumed": "仮の値 141 件（窓の奥行き 136・目地 4・f9 の柱型の幅 1）。JSON には書いていない"
+ },
+ "decisions": [
+  "W・E・N-west・S-SW は 1 直線だが 1 つの面にまとめず、1 本の格子を各辺に配った（登録台帳が面ごとの座標のため。wall_group に記録）",
+  "階高は面ごと（西 4.37・東 4.33、白帯 B1/2 は西 66.14・東 65.84）。進行役 K-006",
+  "南西の角だけ塊 SW（上端 69.65 m）。他の四隅の引っ込みは奥行きが測れず塊にしない",
+  "西のデッキ・庇・大階段・エレベーター箱は棟に置いた（西面にだけ付く）。南西の橋 S2 との境目を check に上げた",
+  "足元（OSM）は動かしていない。写真の西・東の線が 3〜5 m 長い分は requests の data"
+ ]
+}

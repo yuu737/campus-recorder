@@ -1,0 +1,77 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f18",
+ "face_name": "北面の東寄り（スリット窓の壁柱 B'）",
+ "input": [
+  "data/reports/tower75/kansatsu_f18.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "bays": {
+  "value": 1,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261103_065946407",
+   "PXL_20261105_060725949.MP"
+  ],
+  "what": "スリット窓の縦の列 1（各段にスリット 1 つ）",
+  "method": "#1：左端の面に上から 4 つのスリットが 1 列（その下は白い 10 号館で隠れる）。#52（060725949.MP、拡大 ne52.jpg）：同じ壁柱にスリット 1 列が上から下まで"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "全部の段が入るのは #52 の見上げ 1 枚だけで、上の 6 段ほどが詰まって ±1 で数え切れない",
+  "seen": [
+   {
+    "photo": "PXL_20261105_060725949.MP",
+    "count": "スリット 13 に見える（上は詰まる）。下の 3 つは北東の低い塊（f16）の 3 段と同じ高さ"
+   },
+   {
+    "photo": "PXL_20261103_065946407",
+    "count": "上から 4 つ、その下は 10 号館で隠れる"
+   }
+  ]
+ },
+ "interpreted": [
+  {
+   "value": "スリットの段 13",
+   "basis": "hypothesis",
+   "why": "#52 で 13 に見え、西の B（スリット 13、#1・#3）と同じ作り。1 枚の見上げなので仮説",
+   "evidence": [
+    "PXL_20261105_060725949.MP"
+   ]
+  }
+ ],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "B' の足元近くのスリット（北東の低い塊の 1 段目の高さ）は他より大きい",
+   "evidence": [
+    "PXL_20261105_060725949.MP"
+   ]
+  },
+  {
+   "what": "低い段では B' と北東の低い塊の北面（f16）が同じ面に見え、白帯がつながる",
+   "evidence": [
+    "PXL_20261105_060725949.MP"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "観察票と同じく段数は null",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f18",
+   "what": "北面の東半分（B' と北東の部分）を見上げずに",
+   "where": "10 号館の上の階の窓か渡り廊下、または通路の東の端から",
+   "why": "B' のスリットの段数（見上げでは上が詰まる）"
+  }
+ ],
+ "questions": []
+}

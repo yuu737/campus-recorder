@@ -1,0 +1,1407 @@
+{
+ "building": "tower75",
+ "photo": "PXL_20261105_061122585",
+ "made_by": "検収係（kenshu・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T16:23:01+09:00",
+ "registration": "鎖（register-chain）",
+ "recheck": "out/tower75/recheck/20261107_161246",
+ "recheck_before": "out/tower75/recheck/20261107_153223",
+ "face": "f3",
+ "pass": false,
+ "lines": [
+  {
+   "what": "部品8（デッキの階のガラスブロッ） patch 右端",
+   "diff_m": -0.43,
+   "action": "この線の写真 20 枚の中央値は -0.02 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "部品9（デッキの階のガラスブロッ） patch 右端",
+   "diff_m": -0.41,
+   "action": "この線の写真 18 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "4F 上端",
+   "diff_m": 0.402,
+   "action": "この線の写真 34 枚の中央値は +0.10 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "2F 下端",
+   "diff_m": -0.399,
+   "action": "この線の写真 22 枚の中央値は +0.07 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "柱型2左",
+   "diff_m": 0.363,
+   "action": "写真 15 枚の中央値 -0.18 m。kenshu_summary.json の faces.f3 に理由（直した値・直さない理由・撮影依頼）"
+  },
+  {
+   "what": "柱型3右",
+   "diff_m": -0.344,
+   "action": "この線の写真 21 枚の中央値は +0.00 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（6F）下端",
+   "diff_m": 0.344,
+   "action": "この線の写真 36 枚の中央値は -0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（12F）下端",
+   "diff_m": 0.344,
+   "action": "この線の写真 14 枚の中央値は -0.12 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "部品9（デッキの階のガラスブロッ） patch 上端",
+   "diff_m": 0.344,
+   "action": "この線の写真 27 枚の中央値は -0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "柱型2右",
+   "diff_m": -0.343,
+   "action": "この線の写真 23 枚の中央値は -0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "8F 上端",
+   "diff_m": 0.332,
+   "action": "この線の写真 26 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "3F 下端",
+   "diff_m": -0.317,
+   "action": "この線の写真 26 枚の中央値は +0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "7F 上端",
+   "diff_m": 0.317,
+   "action": "この線の写真 31 枚の中央値は +0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "3F 上端",
+   "diff_m": 0.311,
+   "action": "この線の写真 37 枚の中央値は +0.10 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "8F 下端",
+   "diff_m": -0.298,
+   "action": "この線の写真 21 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "9F 下端",
+   "diff_m": -0.269,
+   "action": "この線の写真 23 枚の中央値は -0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "柱型0左",
+   "diff_m": 0.268,
+   "action": "この線の写真 23 枚の中央値は -0.08 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（5F）下端",
+   "diff_m": 0.252,
+   "action": "この線の写真 34 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "4F 下端",
+   "diff_m": -0.235,
+   "action": "この線の写真 24 枚の中央値は +0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "2F 上端",
+   "diff_m": 0.234,
+   "action": "この線の写真 36 枚の中央値は +0.11 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "14F（太い窓） 下端",
+   "diff_m": -0.228,
+   "action": "写真 17 枚の中央値 -0.15 m。kenshu_summary.json の faces.f3 に理由（直した値・直さない理由・撮影依頼）"
+  },
+  {
+   "what": "柱型3左",
+   "diff_m": 0.223,
+   "action": "この線の写真 15 枚の中央値は +0.11 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（9F）下端",
+   "diff_m": 0.182,
+   "action": "この線の写真 20 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "柱型1右",
+   "diff_m": -0.167,
+   "action": "この線の写真 20 枚の中央値は -0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（8F）下端",
+   "diff_m": 0.167,
+   "action": "この線の写真 30 枚の中央値は -0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（4F）下端",
+   "diff_m": 0.16,
+   "action": "この線の写真 38 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  }
+ ],
+ "faces": [
+  {
+   "face": "f0",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 7,
+   "n_ng": 3,
+   "lines": [
+    {
+     "what": "部品48（北西のテラスのパーゴラ ） post4 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 7.23,
+     "diff_m": -0.35,
+     "ok": false,
+     "diff_m_before": -0.35,
+     "action": "この線は写真 1 枚だけ（中央値 -0.35 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f0）"
+    },
+    {
+     "what": "4F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 23.21,
+     "diff_m": 0.255,
+     "ok": false,
+     "diff_m_before": 0.255,
+     "action": "この線は写真 1 枚だけ（中央値 +0.26 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f0）"
+    },
+    {
+     "what": "窓下パネル（4F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 22.61,
+     "diff_m": -0.156,
+     "ok": false,
+     "diff_m_before": -0.156,
+     "action": "この線は写真 1 枚だけ（中央値 -0.16 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f0）"
+    },
+    {
+     "what": "部品49（北西のテラスのパーゴラ ） rafter1 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 10.13,
+     "diff_m": -0.133,
+     "ok": true,
+     "diff_m_before": -0.133,
+     "action": "合う"
+    },
+    {
+     "what": "部品49（北西のテラスのパーゴラ ） rafter1 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 9.98,
+     "diff_m": -0.083,
+     "ok": true,
+     "diff_m_before": -0.083,
+     "action": "合う"
+    },
+    {
+     "what": "部品48（北西のテラスのパーゴラ ） post3 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 7.23,
+     "diff_m": -0.077,
+     "ok": true,
+     "diff_m_before": -0.077,
+     "action": "合う"
+    },
+    {
+     "what": "3F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 22.46,
+     "diff_m": -0.007,
+     "ok": true,
+     "diff_m_before": -0.03,
+     "action": "合う"
+    }
+   ]
+  },
+  {
+   "face": "f1",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 29,
+   "n_ng": 17,
+   "lines": [
+    {
+     "what": "11F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 57.42,
+     "diff_m": 0.414,
+     "ok": false,
+     "action": "この線の写真 12 枚の中央値は -0.11 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "部品10（北西の入口のガラスブロッ） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 4.6,
+     "diff_m": -0.394,
+     "ok": false,
+     "diff_m_before": -0.394,
+     "action": "この線の写真 17 枚の中央値は +0.09 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "8F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 40.69,
+     "diff_m": -0.325,
+     "ok": false,
+     "diff_m_before": -0.325,
+     "action": "この線の写真 15 枚の中央値は +0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "8F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 44.31,
+     "diff_m": 0.324,
+     "ok": false,
+     "diff_m_before": 0.424,
+     "action": "この線の写真 19 枚の中央値は +0.02 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "14F（太い窓） 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 66.05,
+     "diff_m": -0.31,
+     "ok": false,
+     "action": "この線の写真 8 枚の中央値は -0.14 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "7F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 39.94,
+     "diff_m": 0.305,
+     "ok": false,
+     "diff_m_before": 0.405,
+     "action": "この線の写真 18 枚の中央値は +0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "9F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 45.06,
+     "diff_m": -0.296,
+     "ok": false,
+     "diff_m_before": -0.296,
+     "action": "この線の写真 18 枚の中央値は +0.02 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "部品10（北西の入口のガラスブロッ） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 0.6,
+     "diff_m": 0.275,
+     "ok": false,
+     "diff_m_before": 0.275,
+     "action": "この線の写真 13 枚の中央値は +0.11 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（7F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 35.72,
+     "diff_m": 0.263,
+     "ok": false,
+     "diff_m_before": 0.263,
+     "action": "この線の写真 19 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（12F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 57.57,
+     "diff_m": 0.263,
+     "ok": false,
+     "diff_m_before": 0.263,
+     "action": "写真 11 枚の中央値 -0.20 m。kenshu_summary.json の faces.f1 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "7F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 36.32,
+     "diff_m": -0.231,
+     "ok": false,
+     "diff_m_before": -0.231,
+     "action": "この線の写真 19 枚の中央値は +0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（6F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 31.35,
+     "diff_m": -0.215,
+     "ok": false,
+     "diff_m_before": -0.215,
+     "action": "この線の写真 17 枚の中央値は -0.12 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "6F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 35.57,
+     "diff_m": -0.209,
+     "ok": false,
+     "diff_m_before": -0.109,
+     "action": "この線の写真 17 枚の中央値は +0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "13F（太い窓） 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 65.93,
+     "diff_m": -0.188,
+     "ok": false,
+     "diff_m_before": -0.359,
+     "action": "この線の写真 11 枚の中央値は -0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（9F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 44.46,
+     "diff_m": 0.174,
+     "ok": false,
+     "diff_m_before": 0.174,
+     "action": "この線の写真 14 枚の中央値は -0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "6F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.95,
+     "diff_m": 0.155,
+     "ok": false,
+     "diff_m_before": 0.155,
+     "action": "この線の写真 15 枚の中央値は +0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（8F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 40.09,
+     "diff_m": 0.155,
+     "ok": false,
+     "diff_m_before": 0.155,
+     "action": "この線の写真 16 枚の中央値は -0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "12F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 58.17,
+     "diff_m": -0.15,
+     "ok": true,
+     "diff_m_before": -0.15,
+     "action": "合う"
+    },
+    {
+     "what": "部品10（北西の入口のガラスブロッ） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.83,
+     "diff_m": -0.094,
+     "ok": true,
+     "diff_m_before": -0.094,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（5F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 26.98,
+     "diff_m": -0.091,
+     "ok": true,
+     "diff_m_before": -0.091,
+     "action": "合う"
+    },
+    {
+     "what": "4F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 23.21,
+     "diff_m": 0.065,
+     "ok": true,
+     "diff_m_before": 0.065,
+     "action": "合う"
+    },
+    {
+     "what": "5F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.2,
+     "diff_m": -0.065,
+     "ok": true,
+     "diff_m_before": 0.036,
+     "action": "合う"
+    },
+    {
+     "what": "4F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 26.83,
+     "diff_m": 0.058,
+     "ok": true,
+     "diff_m_before": 0.158,
+     "action": "合う"
+    },
+    {
+     "what": "地面（面の前）",
+     "group": "面",
+     "axis": "z",
+     "json_m": 2.1,
+     "diff_m": 0.044,
+     "ok": true,
+     "diff_m_before": 0.044,
+     "action": "合う"
+    },
+    {
+     "what": "11F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 53.8,
+     "diff_m": -0.038,
+     "ok": true,
+     "diff_m_before": -0.038,
+     "action": "合う"
+    },
+    {
+     "what": "柱型1左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 3.145,
+     "diff_m": 0.029,
+     "ok": true,
+     "diff_m_before": 0.029,
+     "action": "合う"
+    },
+    {
+     "what": "5F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 27.58,
+     "diff_m": 0.025,
+     "ok": true,
+     "diff_m_before": 0.025,
+     "action": "合う"
+    },
+    {
+     "what": "9F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 48.68,
+     "diff_m": 0.018,
+     "ok": true,
+     "diff_m_before": 0.118,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（10F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 48.83,
+     "diff_m": 0.018,
+     "ok": true,
+     "diff_m_before": 0.018,
+     "action": "合う"
+    }
+   ]
+  },
+  {
+   "face": "f2",
+   "photo_lines_pass": false,
+   "face_pass": true,
+   "n_lines_strong": 31,
+   "n_ng": 18,
+   "lines": [
+    {
+     "what": "11F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 57.42,
+     "diff_m": 0.47,
+     "ok": false,
+     "action": "この線の写真 12 枚の中央値は -0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "3F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.84,
+     "diff_m": -0.354,
+     "ok": false,
+     "diff_m_before": -0.354,
+     "action": "この線の写真 19 枚の中央値は +0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "8F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 44.31,
+     "diff_m": 0.338,
+     "ok": false,
+     "diff_m_before": 0.438,
+     "action": "この線の写真 26 枚の中央値は +0.02 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "7F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 39.94,
+     "diff_m": 0.323,
+     "ok": false,
+     "diff_m_before": -0.4,
+     "action": "この線の写真 23 枚の中央値は +0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（12F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 57.57,
+     "diff_m": 0.319,
+     "ok": false,
+     "diff_m_before": 0.319,
+     "action": "写真 11 枚の中央値 -0.19 m。kenshu_summary.json の faces.f2 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "8F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 40.69,
+     "diff_m": -0.311,
+     "ok": false,
+     "diff_m_before": -0.311,
+     "action": "この線の写真 24 枚の中央値は +0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "柱型1左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 1.115,
+     "diff_m": 0.308,
+     "ok": false,
+     "diff_m_before": 0.308,
+     "action": "この線の写真 14 枚の中央値は -0.10 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "9F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 45.06,
+     "diff_m": -0.289,
+     "ok": false,
+     "diff_m_before": -0.289,
+     "action": "この線の写真 26 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（7F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 35.72,
+     "diff_m": 0.275,
+     "ok": false,
+     "diff_m_before": 0.275,
+     "action": "この線の写真 26 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "柱型2左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 4.515,
+     "diff_m": 0.266,
+     "ok": false,
+     "diff_m_before": 0.266,
+     "action": "この線の写真 23 枚の中央値は -0.08 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "14F（太い窓） 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 66.05,
+     "diff_m": -0.252,
+     "ok": false,
+     "diff_m_before": -0.423,
+     "action": "この線の写真 7 枚の中央値は -0.02 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（6F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 31.35,
+     "diff_m": 0.214,
+     "ok": false,
+     "diff_m_before": 0.214,
+     "action": "この線の写真 22 枚の中央値は -0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "7F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 36.32,
+     "diff_m": -0.208,
+     "ok": false,
+     "diff_m_before": -0.208,
+     "action": "この線の写真 23 枚の中央値は +0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（9F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 44.46,
+     "diff_m": 0.188,
+     "ok": false,
+     "diff_m_before": 0.188,
+     "action": "この線の写真 23 枚の中央値は -0.12 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "6F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 35.57,
+     "diff_m": -0.185,
+     "ok": false,
+     "diff_m_before": -0.085,
+     "action": "この線の写真 27 枚の中央値は +0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "部品6（デッキの階のガラスブロッ） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 3.54,
+     "diff_m": 0.177,
+     "ok": false,
+     "diff_m_before": 0.176,
+     "action": "この線の写真 24 枚の中央値は +0.07 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（8F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 40.09,
+     "diff_m": 0.173,
+     "ok": false,
+     "diff_m_before": 0.173,
+     "action": "この線の写真 23 枚の中央値は -0.08 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "6F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.95,
+     "diff_m": 0.165,
+     "ok": false,
+     "diff_m_before": 0.165,
+     "action": "この線の写真 21 枚の中央値は +0.08 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "13F（太い窓） 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 65.93,
+     "diff_m": -0.132,
+     "ok": true,
+     "diff_m_before": -0.304,
+     "action": "合う"
+    },
+    {
+     "what": "12F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 58.17,
+     "diff_m": -0.089,
+     "ok": true,
+     "diff_m_before": -0.089,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（5F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 26.98,
+     "diff_m": -0.085,
+     "ok": true,
+     "diff_m_before": -0.085,
+     "action": "合う"
+    },
+    {
+     "what": "5F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.2,
+     "diff_m": -0.067,
+     "ok": true,
+     "diff_m_before": 0.033,
+     "action": "合う"
+    },
+    {
+     "what": "柱型2右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 6.565,
+     "diff_m": -0.053,
+     "ok": true,
+     "diff_m_before": -0.053,
+     "action": "合う"
+    },
+    {
+     "what": "地面（面の前）",
+     "group": "面",
+     "axis": "z",
+     "json_m": 2.1,
+     "diff_m": -0.045,
+     "ok": true,
+     "diff_m_before": -0.045,
+     "action": "合う"
+    },
+    {
+     "what": "5F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 27.58,
+     "diff_m": -0.044,
+     "ok": true,
+     "diff_m_before": -0.044,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（3F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 18.24,
+     "diff_m": 0.041,
+     "ok": true,
+     "diff_m_before": 0.041,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（10F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 48.83,
+     "diff_m": 0.034,
+     "ok": true,
+     "diff_m_before": 0.034,
+     "action": "合う"
+    },
+    {
+     "what": "11F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 53.8,
+     "diff_m": -0.029,
+     "ok": true,
+     "diff_m_before": -0.029,
+     "action": "合う"
+    },
+    {
+     "what": "4F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 26.83,
+     "diff_m": -0.028,
+     "ok": true,
+     "diff_m_before": 0.072,
+     "action": "合う"
+    },
+    {
+     "what": "柱型0左",
+     "group": "面",
+     "axis": "x",
+     "json_m": -2.285,
+     "diff_m": 0.024,
+     "ok": true,
+     "diff_m_before": 0.024,
+     "action": "合う"
+    },
+    {
+     "what": "9F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 48.68,
+     "diff_m": 0.024,
+     "ok": true,
+     "diff_m_before": 0.124,
+     "action": "合う"
+    }
+   ]
+  },
+  {
+   "face": "f3",
+   "photo_lines_pass": false,
+   "face_pass": true,
+   "n_lines_strong": 45,
+   "n_ng": 26,
+   "lines": [
+    {
+     "what": "部品8（デッキの階のガラスブロッ） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 12.8,
+     "diff_m": -0.43,
+     "ok": false,
+     "diff_m_before": -0.43,
+     "action": "この線の写真 20 枚の中央値は -0.02 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "部品9（デッキの階のガラスブロッ） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 16.5,
+     "diff_m": -0.41,
+     "ok": false,
+     "diff_m_before": -0.409,
+     "action": "この線の写真 18 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "4F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 26.83,
+     "diff_m": 0.402,
+     "ok": false,
+     "action": "この線の写真 34 枚の中央値は +0.10 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "2F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 14.47,
+     "diff_m": -0.399,
+     "ok": false,
+     "diff_m_before": -0.399,
+     "action": "この線の写真 22 枚の中央値は +0.07 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "柱型2左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 5.275,
+     "diff_m": 0.363,
+     "ok": false,
+     "diff_m_before": 0.363,
+     "action": "写真 15 枚の中央値 -0.18 m。kenshu_summary.json の faces.f3 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "柱型3右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 10.725,
+     "diff_m": -0.344,
+     "ok": false,
+     "diff_m_before": -0.344,
+     "action": "この線の写真 21 枚の中央値は +0.00 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（6F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 31.35,
+     "diff_m": 0.344,
+     "ok": false,
+     "diff_m_before": 0.344,
+     "action": "この線の写真 36 枚の中央値は -0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（12F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 57.57,
+     "diff_m": 0.344,
+     "ok": false,
+     "diff_m_before": 0.344,
+     "action": "この線の写真 14 枚の中央値は -0.12 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "部品9（デッキの階のガラスブロッ） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.0,
+     "diff_m": 0.344,
+     "ok": false,
+     "diff_m_before": -0.16,
+     "action": "この線の写真 27 枚の中央値は -0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "柱型2右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 7.325,
+     "diff_m": -0.343,
+     "ok": false,
+     "diff_m_before": -0.343,
+     "action": "この線の写真 23 枚の中央値は -0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "8F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 44.31,
+     "diff_m": 0.332,
+     "ok": false,
+     "diff_m_before": 0.432,
+     "action": "この線の写真 26 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "3F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.84,
+     "diff_m": -0.317,
+     "ok": false,
+     "diff_m_before": -0.317,
+     "action": "この線の写真 26 枚の中央値は +0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "7F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 39.94,
+     "diff_m": 0.317,
+     "ok": false,
+     "diff_m_before": -0.4,
+     "action": "この線の写真 31 枚の中央値は +0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "3F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 22.46,
+     "diff_m": 0.311,
+     "ok": false,
+     "diff_m_before": 0.411,
+     "action": "この線の写真 37 枚の中央値は +0.10 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "8F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 40.69,
+     "diff_m": -0.298,
+     "ok": false,
+     "diff_m_before": -0.298,
+     "action": "この線の写真 21 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "9F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 45.06,
+     "diff_m": -0.269,
+     "ok": false,
+     "diff_m_before": -0.269,
+     "action": "この線の写真 23 枚の中央値は -0.03 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "柱型0左",
+     "group": "面",
+     "axis": "x",
+     "json_m": -1.525,
+     "diff_m": 0.268,
+     "ok": false,
+     "diff_m_before": 0.268,
+     "action": "この線の写真 23 枚の中央値は -0.08 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（5F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 26.98,
+     "diff_m": 0.252,
+     "ok": false,
+     "diff_m_before": 0.252,
+     "action": "この線の写真 34 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "4F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 23.21,
+     "diff_m": -0.235,
+     "ok": false,
+     "diff_m_before": -0.235,
+     "action": "この線の写真 24 枚の中央値は +0.05 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "2F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.09,
+     "diff_m": 0.234,
+     "ok": false,
+     "diff_m_before": 0.333,
+     "action": "この線の写真 36 枚の中央値は +0.11 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "14F（太い窓） 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 66.05,
+     "diff_m": -0.228,
+     "ok": false,
+     "diff_m_before": -0.398,
+     "action": "写真 17 枚の中央値 -0.15 m。kenshu_summary.json の faces.f3 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "柱型3左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 8.675,
+     "diff_m": 0.223,
+     "ok": false,
+     "diff_m_before": 0.223,
+     "action": "この線の写真 15 枚の中央値は +0.11 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（9F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 44.46,
+     "diff_m": 0.182,
+     "ok": false,
+     "diff_m_before": 0.182,
+     "action": "この線の写真 20 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "柱型1右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 3.925,
+     "diff_m": -0.167,
+     "ok": false,
+     "diff_m_before": -0.167,
+     "action": "この線の写真 20 枚の中央値は -0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（8F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 40.09,
+     "diff_m": 0.167,
+     "ok": false,
+     "diff_m_before": 0.167,
+     "action": "この線の写真 30 枚の中央値は -0.06 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（4F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 22.61,
+     "diff_m": 0.16,
+     "ok": false,
+     "diff_m_before": 0.16,
+     "action": "この線の写真 38 枚の中央値は -0.04 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "5F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 27.58,
+     "diff_m": -0.14,
+     "ok": true,
+     "diff_m_before": -0.14,
+     "action": "合う"
+    },
+    {
+     "what": "部品3（エレベーター箱） shaft 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 2.8,
+     "diff_m": 0.121,
+     "ok": true,
+     "diff_m_before": 0.121,
+     "action": "合う"
+    },
+    {
+     "what": "部品1（西の青い鉄骨の庇） base2 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 3.3,
+     "diff_m": -0.119,
+     "ok": true,
+     "diff_m_before": -0.119,
+     "action": "合う"
+    },
+    {
+     "what": "13F（太い窓） 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 65.93,
+     "diff_m": -0.108,
+     "ok": true,
+     "diff_m_before": -0.278,
+     "action": "合う"
+    },
+    {
+     "what": "柱型4左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 12.075,
+     "diff_m": -0.104,
+     "ok": true,
+     "diff_m_before": -0.104,
+     "action": "合う"
+    },
+    {
+     "what": "南西の低い塊 SWb の上端（6F の上の水切り）",
+     "group": "面",
+     "axis": "z",
+     "json_m": 35.55,
+     "diff_m": 0.09,
+     "ok": true,
+     "diff_m_before": 0.09,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（3F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 18.24,
+     "diff_m": 0.084,
+     "ok": true,
+     "diff_m_before": 0.084,
+     "action": "合う"
+    },
+    {
+     "what": "6F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 35.57,
+     "diff_m": 0.082,
+     "ok": true,
+     "diff_m_before": 0.186,
+     "action": "合う"
+    },
+    {
+     "what": "12F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 58.17,
+     "diff_m": -0.068,
+     "ok": true,
+     "diff_m_before": -0.068,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（7F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 35.72,
+     "diff_m": -0.068,
+     "ok": true,
+     "diff_m_before": -0.068,
+     "action": "合う"
+    },
+    {
+     "what": "柱型0右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 0.525,
+     "diff_m": -0.051,
+     "ok": true,
+     "diff_m_before": -0.051,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（10F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 48.83,
+     "diff_m": 0.047,
+     "ok": true,
+     "diff_m_before": 0.047,
+     "action": "合う"
+    },
+    {
+     "what": "6F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.95,
+     "diff_m": -0.043,
+     "ok": true,
+     "diff_m_before": -0.043,
+     "action": "合う"
+    },
+    {
+     "what": "9F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 48.68,
+     "diff_m": 0.03,
+     "ok": true,
+     "diff_m_before": 0.13,
+     "action": "合う"
+    },
+    {
+     "what": "部品5（デッキの階のガラスブロッ） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 0.5,
+     "diff_m": 0.021,
+     "ok": true,
+     "diff_m_before": 0.024,
+     "action": "合う"
+    },
+    {
+     "what": "部品9（デッキの階のガラスブロッ） patch 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 10.9,
+     "diff_m": -0.021,
+     "ok": true,
+     "diff_m_before": -0.021,
+     "action": "合う"
+    },
+    {
+     "what": "部品7（デッキの階のガラスブロッ） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 6.3,
+     "diff_m": -0.011,
+     "ok": true,
+     "diff_m_before": -0.007,
+     "action": "合う"
+    },
+    {
+     "what": "11F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 53.8,
+     "diff_m": 0.003,
+     "ok": true,
+     "diff_m_before": 0.003,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（2F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 13.87,
+     "diff_m": 0.002,
+     "ok": true,
+     "diff_m_before": 0.002,
+     "action": "合う"
+    }
+   ]
+  },
+  {
+   "face": "f16",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 1,
+   "n_ng": 1,
+   "lines": [
+    {
+     "what": "7F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 39.78,
+     "diff_m": 0.33,
+     "ok": false,
+     "diff_m_before": 0.33,
+     "action": "この線は写真 1 枚だけ（中央値 +0.33 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f16）"
+    }
+   ]
+  },
+  {
+   "face": "f19",
+   "photo_lines_pass": true,
+   "face_pass": false,
+   "n_lines_strong": 1,
+   "n_ng": 0,
+   "lines": [
+    {
+     "what": "部品44（f19 のガラスの冠のひ） canopy 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 1.4,
+     "diff_m": -0.097,
+     "ok": true,
+     "diff_m_before": -0.097,
+     "action": "合う"
+    }
+   ]
+  },
+  {
+   "face": "f20",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 6,
+   "n_ng": 3,
+   "lines": [
+    {
+     "what": "部品47（北西のテラスのパーゴラ ） rafter3 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 9.98,
+     "diff_m": -0.384,
+     "ok": false,
+     "diff_m_before": -0.384,
+     "action": "この線は写真 1 枚だけ（中央値 -0.38 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f20）"
+    },
+    {
+     "what": "部品47（北西のテラスのパーゴラ ） post4 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 9.83,
+     "diff_m": -0.293,
+     "ok": false,
+     "diff_m_before": -0.293,
+     "action": "この線は写真 1 枚だけ（中央値 -0.29 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f20）"
+    },
+    {
+     "what": "部品47（北西のテラスのパーゴラ ） rafter1 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 9.98,
+     "diff_m": 0.257,
+     "ok": false,
+     "diff_m_before": 0.257,
+     "action": "この線は写真 1 枚だけ（中央値 +0.26 m）。1〜2 枚では値を直さない（kenshu_summary.json の faces.f20）"
+    },
+    {
+     "what": "部品47（北西のテラスのパーゴラ ） rafter1 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 10.13,
+     "diff_m": 0.107,
+     "ok": true,
+     "diff_m_before": 0.107,
+     "action": "合う"
+    },
+    {
+     "what": "9F の B のスリット 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 45.89,
+     "diff_m": 0.078,
+     "ok": true,
+     "diff_m_before": 0.078,
+     "action": "合う"
+    },
+    {
+     "what": "4F の B のスリット 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 25.99,
+     "diff_m": -0.024,
+     "ok": true,
+     "diff_m_before": -0.024,
+     "action": "合う"
+    }
+   ]
+  }
+ ],
+ "changed": [],
+ "requests": [],
+ "note": "pass は写真単位（この写真の強い縁の線が全部 0.15 m 以内か）。面の合否は face_pass（kenshu_summary.json の faces、面の登録写真の線を全部合わせた中央値で決める）"
+}

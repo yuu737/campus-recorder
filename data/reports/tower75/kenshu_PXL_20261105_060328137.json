@@ -1,0 +1,999 @@
+{
+ "building": "tower75",
+ "photo": "PXL_20261105_060328137",
+ "made_by": "検収係（kenshu・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T16:23:01+09:00",
+ "registration": "平面（正面化＋compare）",
+ "recheck": "out/tower75/recheck/20261107_161246",
+ "recheck_before": "out/tower75/recheck/20261107_153223",
+ "face": "f14",
+ "pass": false,
+ "lines": [
+  {
+   "what": "窓下パネル（3F）下端",
+   "diff_m": -0.294,
+   "action": "写真 13 枚の中央値 -0.19 m。kenshu_summary.json の faces.f14 に理由（直した値・直さない理由・撮影依頼）"
+  },
+  {
+   "what": "柱型0左",
+   "diff_m": 0.211,
+   "action": "この線の写真 11 枚の中央値は +0.09 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（5F）下端",
+   "diff_m": -0.206,
+   "action": "写真 10 枚の中央値 -0.16 m。kenshu_summary.json の faces.f14 に理由（直した値・直さない理由・撮影依頼）"
+  },
+  {
+   "what": "窓下パネル（4F）下端",
+   "diff_m": -0.205,
+   "action": "この線の写真 14 枚の中央値は -0.14 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  },
+  {
+   "what": "窓下パネル（6F）下端",
+   "diff_m": -0.197,
+   "action": "写真 12 枚の中央値 -0.16 m。kenshu_summary.json の faces.f14 に理由（直した値・直さない理由・撮影依頼）"
+  },
+  {
+   "what": "窓下パネル（8F）下端",
+   "diff_m": -0.166,
+   "action": "この線の写真 7 枚の中央値は -0.12 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+  }
+ ],
+ "faces": [
+  {
+   "face": "f14",
+   "photo_lines_pass": false,
+   "face_pass": true,
+   "n_lines_strong": 31,
+   "n_ng": 6,
+   "lines": [
+    {
+     "what": "窓下パネル（3F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 18.38,
+     "diff_m": -0.294,
+     "ok": false,
+     "diff_m_before": -0.294,
+     "action": "写真 13 枚の中央値 -0.19 m。kenshu_summary.json の faces.f14 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "柱型0左",
+     "group": "面",
+     "axis": "x",
+     "json_m": -0.1,
+     "diff_m": 0.211,
+     "ok": false,
+     "diff_m_before": 0.211,
+     "action": "この線の写真 11 枚の中央値は +0.09 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（5F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 27.04,
+     "diff_m": -0.206,
+     "ok": false,
+     "diff_m_before": -0.206,
+     "action": "写真 10 枚の中央値 -0.16 m。kenshu_summary.json の faces.f14 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "窓下パネル（4F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 22.71,
+     "diff_m": -0.205,
+     "ok": false,
+     "diff_m_before": -0.205,
+     "action": "この線の写真 14 枚の中央値は -0.14 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（6F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 31.37,
+     "diff_m": -0.197,
+     "ok": false,
+     "diff_m_before": -0.197,
+     "action": "写真 12 枚の中央値 -0.16 m。kenshu_summary.json の faces.f14 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "窓下パネル（8F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 40.03,
+     "diff_m": -0.166,
+     "ok": false,
+     "diff_m_before": -0.166,
+     "action": "この線の写真 7 枚の中央値は -0.12 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "12F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 57.95,
+     "diff_m": -0.15,
+     "ok": true,
+     "diff_m_before": -0.15,
+     "action": "合う"
+    },
+    {
+     "what": "11F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 53.62,
+     "diff_m": -0.135,
+     "ok": true,
+     "diff_m_before": -0.135,
+     "action": "合う"
+    },
+    {
+     "what": "柱型1左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 3.24,
+     "diff_m": 0.124,
+     "ok": true,
+     "diff_m_before": 0.124,
+     "action": "合う"
+    },
+    {
+     "what": "10F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 49.29,
+     "diff_m": -0.124,
+     "ok": true,
+     "diff_m_before": -0.124,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（2F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 14.05,
+     "diff_m": -0.12,
+     "ok": true,
+     "diff_m_before": -0.12,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（7F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 35.7,
+     "diff_m": -0.113,
+     "ok": true,
+     "diff_m_before": -0.113,
+     "action": "合う"
+    },
+    {
+     "what": "9F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 44.96,
+     "diff_m": -0.109,
+     "ok": true,
+     "diff_m_before": -0.109,
+     "action": "合う"
+    },
+    {
+     "what": "柱型0右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 1.94,
+     "diff_m": 0.099,
+     "ok": true,
+     "diff_m_before": 0.099,
+     "action": "合う"
+    },
+    {
+     "what": "6F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 35.45,
+     "diff_m": 0.075,
+     "ok": true,
+     "diff_m_before": 0.075,
+     "action": "合う"
+    },
+    {
+     "what": "柱型1右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 5.28,
+     "diff_m": 0.069,
+     "ok": true,
+     "diff_m_before": 0.069,
+     "action": "合う"
+    },
+    {
+     "what": "8F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 40.63,
+     "diff_m": -0.063,
+     "ok": true,
+     "diff_m_before": -0.063,
+     "action": "合う"
+    },
+    {
+     "what": "3F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 22.46,
+     "diff_m": -0.055,
+     "ok": true,
+     "diff_m_before": -0.055,
+     "action": "合う"
+    },
+    {
+     "what": "5F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.12,
+     "diff_m": 0.053,
+     "ok": true,
+     "diff_m_before": 0.053,
+     "action": "合う"
+    },
+    {
+     "what": "11F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 57.1,
+     "diff_m": -0.049,
+     "ok": true,
+     "diff_m_before": -0.049,
+     "action": "合う"
+    },
+    {
+     "what": "2F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.13,
+     "diff_m": -0.044,
+     "ok": true,
+     "diff_m_before": -0.044,
+     "action": "合う"
+    },
+    {
+     "what": "4F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 26.79,
+     "diff_m": 0.044,
+     "ok": true,
+     "diff_m_before": 0.044,
+     "action": "合う"
+    },
+    {
+     "what": "4F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 23.31,
+     "diff_m": -0.036,
+     "ok": true,
+     "diff_m_before": -0.036,
+     "action": "合う"
+    },
+    {
+     "what": "2F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 14.65,
+     "diff_m": 0.031,
+     "ok": true,
+     "diff_m_before": 0.031,
+     "action": "合う"
+    },
+    {
+     "what": "7F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 39.78,
+     "diff_m": 0.027,
+     "ok": true,
+     "diff_m_before": 0.027,
+     "action": "合う"
+    },
+    {
+     "what": "3F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.98,
+     "diff_m": 0.025,
+     "ok": true,
+     "diff_m_before": 0.025,
+     "action": "合う"
+    },
+    {
+     "what": "部品35（1F のガラスブロックの） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 2.41,
+     "diff_m": 0.023,
+     "ok": true,
+     "diff_m_before": 0.023,
+     "action": "合う"
+    },
+    {
+     "what": "部品35（1F のガラスブロックの） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.15,
+     "diff_m": 0.022,
+     "ok": true,
+     "diff_m_before": 0.022,
+     "action": "合う"
+    },
+    {
+     "what": "5F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 27.64,
+     "diff_m": -0.019,
+     "ok": true,
+     "diff_m_before": -0.019,
+     "action": "合う"
+    },
+    {
+     "what": "6F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.97,
+     "diff_m": -0.002,
+     "ok": true,
+     "diff_m_before": -0.002,
+     "action": "合う"
+    },
+    {
+     "what": "7F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 36.3,
+     "diff_m": -0.0,
+     "ok": true,
+     "diff_m_before": -0.0,
+     "action": "合う"
+    }
+   ]
+  },
+  {
+   "face": "f15",
+   "photo_lines_pass": false,
+   "face_pass": false,
+   "n_lines_strong": 61,
+   "n_ng": 8,
+   "lines": [
+    {
+     "what": "部品33（B2 の入口の前の低い壁） wall 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 0.2,
+     "diff_m": -0.359,
+     "ok": false,
+     "diff_m_before": -0.359,
+     "action": "写真 5 枚の中央値 +0.33 m。kenshu_summary.json の faces.f15 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "柱型7右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 25.25,
+     "diff_m": -0.32,
+     "ok": false,
+     "diff_m_before": -0.32,
+     "action": "写真 6 枚の中央値 -0.20 m。kenshu_summary.json の faces.f15 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "部品26（東の張り出した帯） band 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 10.4,
+     "diff_m": -0.319,
+     "ok": false,
+     "diff_m_before": -0.319,
+     "action": "この線の写真 14 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（12F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 57.35,
+     "diff_m": -0.242,
+     "ok": false,
+     "diff_m_before": -0.242,
+     "action": "写真 3 枚の中央値 -0.24 m。kenshu_summary.json の faces.f15 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "部品33（B2 の入口の前の低い壁） wall 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 13.0,
+     "diff_m": -0.232,
+     "ok": false,
+     "diff_m_before": -0.232,
+     "action": "この線の写真 6 枚の中央値は +0.01 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（3F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 18.38,
+     "diff_m": -0.197,
+     "ok": false,
+     "diff_m_before": -0.197,
+     "action": "この線の写真 13 枚の中央値は -0.13 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（11F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 53.02,
+     "diff_m": -0.184,
+     "ok": false,
+     "diff_m_before": -0.184,
+     "action": "写真 4 枚の中央値 -0.21 m。kenshu_summary.json の faces.f15 に理由（直した値・直さない理由・撮影依頼）"
+    },
+    {
+     "what": "窓下パネル（4F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 22.71,
+     "diff_m": -0.166,
+     "ok": false,
+     "diff_m_before": -0.166,
+     "action": "この線の写真 15 枚の中央値は -0.07 m で合う。この 1 枚のずれ（縁の取り違え・木・影・視点の差）。直さない"
+    },
+    {
+     "what": "窓下パネル（5F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 27.04,
+     "diff_m": -0.148,
+     "ok": true,
+     "diff_m_before": -0.148,
+     "action": "合う"
+    },
+    {
+     "what": "部品26（東の張り出した帯） band 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 7.48,
+     "diff_m": 0.141,
+     "ok": true,
+     "diff_m_before": 0.141,
+     "action": "合う"
+    },
+    {
+     "what": "柱型7左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 23.21,
+     "diff_m": -0.128,
+     "ok": true,
+     "diff_m_before": -0.128,
+     "action": "合う"
+    },
+    {
+     "what": "部品37（1F のガラスブロックの） patch 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 10.5,
+     "diff_m": -0.123,
+     "ok": true,
+     "diff_m_before": 0.338,
+     "action": "合う"
+    },
+    {
+     "what": "柱型0左",
+     "group": "面",
+     "axis": "x",
+     "json_m": -0.17,
+     "diff_m": 0.121,
+     "ok": true,
+     "diff_m_before": 0.121,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（2F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 14.05,
+     "diff_m": -0.121,
+     "ok": true,
+     "diff_m_before": -0.121,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（6F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 31.37,
+     "diff_m": -0.12,
+     "ok": true,
+     "diff_m_before": -0.12,
+     "action": "合う"
+    },
+    {
+     "what": "柱型6左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 19.87,
+     "diff_m": -0.108,
+     "ok": true,
+     "diff_m_before": -0.108,
+     "action": "合う"
+    },
+    {
+     "what": "窓下パネル（7F）下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 35.7,
+     "diff_m": -0.101,
+     "ok": true,
+     "diff_m_before": -0.101,
+     "action": "合う"
+    },
+    {
+     "what": "部品26（東の張り出した帯） soffit 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 7.43,
+     "diff_m": -0.101,
+     "ok": true,
+     "diff_m_before": -0.101,
+     "action": "合う"
+    },
+    {
+     "what": "12F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 57.95,
+     "diff_m": -0.087,
+     "ok": true,
+     "diff_m_before": -0.087,
+     "action": "合う"
+    },
+    {
+     "what": "柱型2右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 8.55,
+     "diff_m": 0.075,
+     "ok": true,
+     "diff_m_before": 0.075,
+     "action": "合う"
+    },
+    {
+     "what": "柱型1左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 3.17,
+     "diff_m": 0.072,
+     "ok": true,
+     "diff_m_before": 0.072,
+     "action": "合う"
+    },
+    {
+     "what": "柱型5左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 16.53,
+     "diff_m": -0.07,
+     "ok": true,
+     "diff_m_before": -0.07,
+     "action": "合う"
+    },
+    {
+     "what": "6F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 35.45,
+     "diff_m": -0.07,
+     "ok": true,
+     "diff_m_before": -0.07,
+     "action": "合う"
+    },
+    {
+     "what": "柱型0右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 1.87,
+     "diff_m": 0.066,
+     "ok": true,
+     "diff_m_before": 0.066,
+     "action": "合う"
+    },
+    {
+     "what": "部品28（シャッター） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 9.8,
+     "diff_m": 0.06,
+     "ok": true,
+     "diff_m_before": 0.06,
+     "action": "合う"
+    },
+    {
+     "what": "5F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.12,
+     "diff_m": -0.056,
+     "ok": true,
+     "diff_m_before": -0.056,
+     "action": "合う"
+    },
+    {
+     "what": "柱型6右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 21.91,
+     "diff_m": -0.054,
+     "ok": true,
+     "diff_m_before": -0.054,
+     "action": "合う"
+    },
+    {
+     "what": "柱型2左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 6.51,
+     "diff_m": 0.051,
+     "ok": true,
+     "diff_m_before": 0.051,
+     "action": "合う"
+    },
+    {
+     "what": "11F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 53.62,
+     "diff_m": -0.051,
+     "ok": true,
+     "diff_m_before": -0.051,
+     "action": "合う"
+    },
+    {
+     "what": "4F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 26.79,
+     "diff_m": -0.05,
+     "ok": true,
+     "diff_m_before": -0.05,
+     "action": "合う"
+    },
+    {
+     "what": "部品29（ベージュの両開きの大扉） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 1.4,
+     "diff_m": 0.049,
+     "ok": true,
+     "diff_m_before": 0.049,
+     "action": "合う"
+    },
+    {
+     "what": "7F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 36.3,
+     "diff_m": 0.044,
+     "ok": true,
+     "diff_m_before": 0.044,
+     "action": "合う"
+    },
+    {
+     "what": "2F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 14.65,
+     "diff_m": 0.039,
+     "ok": true,
+     "diff_m_before": 0.039,
+     "action": "合う"
+    },
+    {
+     "what": "柱型4右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 15.23,
+     "diff_m": 0.037,
+     "ok": true,
+     "diff_m_before": 0.037,
+     "action": "合う"
+    },
+    {
+     "what": "2F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.13,
+     "diff_m": -0.037,
+     "ok": true,
+     "diff_m_before": -0.037,
+     "action": "合う"
+    },
+    {
+     "what": "3F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 18.98,
+     "diff_m": -0.035,
+     "ok": true,
+     "diff_m_before": -0.035,
+     "action": "合う"
+    },
+    {
+     "what": "6F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 31.97,
+     "diff_m": 0.035,
+     "ok": true,
+     "diff_m_before": 0.035,
+     "action": "合う"
+    },
+    {
+     "what": "3F 上端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 22.46,
+     "diff_m": -0.033,
+     "ok": true,
+     "diff_m_before": -0.033,
+     "action": "合う"
+    },
+    {
+     "what": "部品38（1F のガラスブロックの） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 18.35,
+     "diff_m": 0.033,
+     "ok": true,
+     "diff_m_before": -0.217,
+     "action": "合う"
+    },
+    {
+     "what": "部品34（1F のガラスブロックの） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 3.6,
+     "diff_m": 0.032,
+     "ok": true,
+     "diff_m_before": 0.032,
+     "action": "合う"
+    },
+    {
+     "what": "部品37（1F のガラスブロックの） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 16.8,
+     "diff_m": 0.032,
+     "ok": true,
+     "diff_m_before": 0.032,
+     "action": "合う"
+    },
+    {
+     "what": "10F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 49.29,
+     "diff_m": -0.029,
+     "ok": true,
+     "diff_m_before": -0.029,
+     "action": "合う"
+    },
+    {
+     "what": "9F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 44.96,
+     "diff_m": -0.028,
+     "ok": true,
+     "diff_m_before": -0.028,
+     "action": "合う"
+    },
+    {
+     "what": "部品34（1F のガラスブロックの） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.15,
+     "diff_m": 0.024,
+     "ok": true,
+     "diff_m_before": 0.024,
+     "action": "合う"
+    },
+    {
+     "what": "部品38（1F のガラスブロックの） patch 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 10.5,
+     "diff_m": 0.023,
+     "ok": true,
+     "diff_m_before": 0.023,
+     "action": "合う"
+    },
+    {
+     "what": "部品36（1F のガラスブロックの） patch 右端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 10.2,
+     "diff_m": 0.02,
+     "ok": true,
+     "diff_m_before": 0.02,
+     "action": "合う"
+    },
+    {
+     "what": "柱型4左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 13.19,
+     "diff_m": 0.019,
+     "ok": true,
+     "diff_m_before": 0.019,
+     "action": "合う"
+    },
+    {
+     "what": "部品36（1F のガラスブロックの） patch 下端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 10.5,
+     "diff_m": 0.018,
+     "ok": true,
+     "diff_m_before": 0.018,
+     "action": "合う"
+    },
+    {
+     "what": "部品37（1F のガラスブロックの） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.15,
+     "diff_m": 0.018,
+     "ok": true,
+     "diff_m_before": 0.018,
+     "action": "合う"
+    },
+    {
+     "what": "部品38（1F のガラスブロックの） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.15,
+     "diff_m": 0.015,
+     "ok": true,
+     "diff_m_before": 0.015,
+     "action": "合う"
+    },
+    {
+     "what": "部品28（シャッター） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 5.3,
+     "diff_m": 0.013,
+     "ok": true,
+     "diff_m_before": 0.014,
+     "action": "合う"
+    },
+    {
+     "what": "8F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 40.63,
+     "diff_m": 0.01,
+     "ok": true,
+     "diff_m_before": 0.01,
+     "action": "合う"
+    },
+    {
+     "what": "柱型3右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 11.89,
+     "diff_m": 0.009,
+     "ok": true,
+     "diff_m_before": 0.009,
+     "action": "合う"
+    },
+    {
+     "what": "部品36（1F のガラスブロックの） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 12.15,
+     "diff_m": 0.009,
+     "ok": true,
+     "diff_m_before": 0.009,
+     "action": "合う"
+    },
+    {
+     "what": "部品36（1F のガラスブロックの） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 5.1,
+     "diff_m": -0.009,
+     "ok": true,
+     "diff_m_before": -0.009,
+     "action": "合う"
+    },
+    {
+     "what": "柱型3左",
+     "group": "面",
+     "axis": "x",
+     "json_m": 9.85,
+     "diff_m": -0.008,
+     "ok": true,
+     "diff_m_before": -0.008,
+     "action": "合う"
+    },
+    {
+     "what": "柱型5右",
+     "group": "面",
+     "axis": "x",
+     "json_m": 18.57,
+     "diff_m": 0.007,
+     "ok": true,
+     "diff_m_before": 0.007,
+     "action": "合う"
+    },
+    {
+     "what": "5F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 27.64,
+     "diff_m": 0.007,
+     "ok": true,
+     "diff_m_before": 0.007,
+     "action": "合う"
+    },
+    {
+     "what": "部品37（1F のガラスブロックの） patch 左端",
+     "group": "部品",
+     "axis": "x",
+     "json_m": 11.74,
+     "diff_m": -0.006,
+     "ok": true,
+     "diff_m_before": -0.266,
+     "action": "合う"
+    },
+    {
+     "what": "4F 下端",
+     "group": "面",
+     "axis": "z",
+     "json_m": 23.31,
+     "diff_m": 0.004,
+     "ok": true,
+     "diff_m_before": 0.004,
+     "action": "合う"
+    },
+    {
+     "what": "部品28（シャッター） patch 上端",
+     "group": "部品",
+     "axis": "z",
+     "json_m": 1.1,
+     "diff_m": 0.001,
+     "ok": true,
+     "diff_m_before": 0.201,
+     "action": "合う"
+    }
+   ]
+  }
+ ],
+ "changed": [
+  {
+   "field": "parts[シャッター（B2）].z1",
+   "from": 0.9,
+   "to": 1.1,
+   "why": "再検収 out/tower75/recheck/20261107_153223：12 枚で +0.20"
+  },
+  {
+   "field": "parts[1F のガラスブロックの欄間 3・4（f15）].along",
+   "from": "11.99〜16.8・18.6〜23.2",
+   "to": "11.74〜16.8・18.35〜22.95",
+   "why": "再検収 out/tower75/recheck/20261107_153223：欄間 3 の左端 12 枚 −0.26、欄間 4 の左端 8 枚 −0.26・右端 3 枚 −0.25"
+  }
+ ],
+ "requests": [],
+ "note": "pass は写真単位（この写真の強い縁の線が全部 0.15 m 以内か）。面の合否は face_pass（kenshu_summary.json の faces、面の登録写真の線を全部合わせた中央値で決める）"
+}

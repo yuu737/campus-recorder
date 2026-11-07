@@ -1,0 +1,62 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f6",
+ "face_name": "西の袖の西向きの側面",
+ "input": [
+  "data/reports/tower75/kansatsu_f6.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "bays": {
+  "value": 1,
+  "status": "measured",
+  "evidence": [
+   "PXL_20261103_070409570",
+   "PXL_20261105_062211785"
+  ],
+  "what": "深い開口の縦の列（各段に開口 1 つ）",
+  "method": "#14（070409570、拡大 m_f6.jpg 左）と #116（062211785、m_f6.jpg 右）でどちらも開口が 1 列。#90 でも 1 列"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "全部の段が 1 枚に入る写真が無い（見上げで上が詰まるか、足元がデッキの庇・橋で隠れる）",
+  "seen": [
+   {
+    "photo": "PXL_20261103_070409570",
+    "count": "上から 12（その下はデッキの庇で隠れる）"
+   },
+   {
+    "photo": "PXL_20261105_062211785",
+    "count": "上から 11〜12（下はデッキの橋で隠れる）"
+   }
+  ]
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "開口の中に手すりのある段がある（観察票 #86）",
+   "evidence": [
+    "PXL_20261105_061511227"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "1 列・段数 null は観察票と同じ",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f6",
+   "what": "袖の側面を、上端から足元まで見上げずに 1 枚で",
+   "where": "デッキの橋の上か南の道路の向かいから、側面に正対して少し離れて",
+   "why": "開口の段数"
+  }
+ ],
+ "questions": []
+}

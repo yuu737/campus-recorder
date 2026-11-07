@@ -1,0 +1,52 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f11",
+ "face_name": "東の袖の正面（南南西向き）",
+ "input": [
+  "data/reports/tower75/kansatsu_f11.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "bays": {
+  "not_applicable": true,
+  "why": "無地（窓も柱型も無い。白い横帯だけ）",
+  "evidence": [
+   "PXL_20261105_062323658",
+   "PXL_20261105_062317561"
+  ],
+  "method": "#124（062323658、正面）と #123（062317561）でどちらも窓の無いタイルの壁と白帯だけ"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "窓が無く、段は白帯でしか分からない。上端から足元まで白帯を数え切れる写真が無い（#121 は上が詰まる、#93・#124 は上端が切れるか詰まる）。同じ塊（袖）の窓のある面（側面）の段数も unknown なので、そこから estimated にもできない"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "下の方の 2 段は灰色の太い帯、足元は粗いタイルの基壇に扉 1 とメーターの箱",
+   "evidence": [
+    "PXL_20261105_062323658",
+    "PXL_20261105_062317561"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "無地は観察票と同じ",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f11",
+   "what": "袖の正面を、上端から足元まで 1 枚で（遠め）",
+   "where": "南の道路の向かいの歩道",
+   "why": "白帯の数（段数）"
+  }
+ ],
+ "questions": []
+}

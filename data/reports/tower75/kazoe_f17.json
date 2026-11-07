@@ -1,0 +1,48 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f17",
+ "face_name": "北東の切り欠きの東向きの段（土台の辺）",
+ "input": [
+  "data/reports/tower75/kansatsu_f17.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "どの写真でも東向きの細い面として見えない（観察票と同じ）"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "見えない"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "#52 では NEb の北面と B' が同じ面に見え、この段が見えない",
+   "evidence": [
+    "PXL_20261105_060725949.MP"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "agreement_with_kansatsu": "観察票と同じく見えない",
+ "requests": [
+  {
+   "kind": "photo",
+   "face": "f17",
+   "what": "北東の角を北東から、1F の高さで",
+   "where": "10 号館と 9 号館の間の通路の東の端",
+   "why": "f17 の段があるか"
+  }
+ ],
+ "questions": []
+}

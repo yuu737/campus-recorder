@@ -577,7 +577,7 @@
   {
    "id": "J-028",
    "at": "2026-11-07T15:54:52+09:00",
-   "building": "kyotsu-minami",
+   "building": "kyotsu-minami・tower75",
    "step": "kenshu",
    "agent": "(道具)",
    "kind": "stuck",
@@ -588,7 +588,7 @@
     "recorder agent events kyotsu-minami（stuck は線の数だけ）"
    ],
    "action": "decide",
-   "effect": "進行役が soten.json を直接読んで決めた（K-015）。本番の進行役は事件の一覧しか見ないので見落とす",
+   "effect": "進行役が soten.json を直接読んで決めた（K-015・K-016）。本番の進行役は事件の一覧しか見ないので見落とす。また進行役が争点に決定を書く道具が無く、係を再開して書かせた（kyotsu-minami）か、記録だけに残した（tower75）",
    "fix_for_honban": {
     "target": "tool",
     "where": "recorder/agents.py _building_events と検収係の定義（soten の書式）",

@@ -1,0 +1,538 @@
+{
+ "made_by": "mejirushi（目印係・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T15:30:53",
+ "building": "tower75",
+ "input": {
+  "building_json": "data/buildings/tower75.json",
+  "landmarks": "out/tower75/landmarks/（recorder photos landmarks、未登録 61 枚）"
+ },
+ "method": "升＋寄りの升だけを指し、recorder photos pnp --method poselib --check-jpg（点＋線の対応）。合否は道具の門のまま",
+ "counts": {
+  "tasks": 61,
+  "registered": 8,
+  "stopped": 9,
+  "not_done": 44
+ },
+ "how_bands_were_read": "南の道路からの写真では、袖の正面に灰色の太い帯が下から 3 本見える。一番下（目の高さ前後）は低い壁の笠木で模型に無い。2 本目を基壇の上端（f7/f11-H03）、3 本目を 2F の床（f7/f11-H05）に当てると、カメラの高さ 1.3〜3.6 m・消失点の仰角との差 0〜1°・縁の乗り 0.36〜0.53 で揃った",
+ "false_pass_caught": {
+  "photo": "PXL_20261105_062307232",
+  "what": "1 回目は一番下の帯を基壇・2 本目を 2F と当てた。道具は ok（RMS 15.9 px、縁 0.37/0.25）を出したが、カメラの高さ 10.2 m・焦点が探索の下限（EXIF の 0.85 倍）で、道路から撮った写真として不自然（マンホールの潰れ方からも目の高さ）。--no-register で止め、帯を 1 段ずつ上げて直した（高さ 1.97 m、焦点 1.0 倍）",
+  "suggestion": "門に「焦点が探索の端に張り付いた」「カメラの高さが地面から 5 m を超えた」の警告があると、帯の段の取り違えが合格で通るのを防げる"
+ },
+ "observations_for_kenshu": [
+  "南の袖 f7・f11 の幅と吹き抜け f9 の幅の比、2F と基壇の帯の高さ、南西・南東の上の塊の窓の帯は、8 枚の重ね画像で写真とよく合った（RMS 4.8〜11.8 px）",
+  "南の両袖の正面の足元に、目の高さほどの低い壁（笠木が灰色の帯）が全幅にある。模型には無い",
+  "北西の角の頂部は、北のスリット窓の壁柱と西面の北端の間に窓の溝があり、輪郭に山が 3 つ見える。模型は 1 本の角",
+  "南東：模型の f13 の東端 (63.87,-7.14) と f14 の南端 (64.77,-5.40) の間に面が無い（約 2 m）",
+  "062330274 は消失点の仰角が 18.9° と出たが、重ね画像は合っていて同じ場所の他の写真（33〜37°）とも揃う。消失点の推定が渡り廊下の線に引かれたと読む"
+ ],
+ "questions": [
+  "北面（f19 の 9 枚）は北西の頂部の溝の扱いが決まるまで目印が指せない。溝を模型に入れるか、北の面の角の目印を足すか（設計係・検収係）"
+ ],
+ "photos": [
+  {
+   "photo": "PXL_20261103_065946407",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_070003022",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_070044607",
+   "face": "f3",
+   "status": "stopped",
+   "reason": "060915328 と同じ理由。pnp は回していない"
+  },
+  {
+   "photo": "PXL_20261103_070244955",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_070654529",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_070742138",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_074413490",
+   "face": "f9",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_074445985",
+   "face": "f11",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_074457079",
+   "face": "f9",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261103_074549768",
+   "face": "f13",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060703663",
+   "face": "f16",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060725949.MP",
+   "face": "f16",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060730259",
+   "face": "f16",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060746293.MP",
+   "face": "f19",
+   "status": "stopped",
+   "reason": "北面 f19 の真下からの見上げで、面の右端が枠の外。角が一方の端にしか無く散らばりが足りない"
+  },
+  {
+   "photo": "PXL_20261105_060756828",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060800017",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060801653",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060804738",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060807986",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060834553",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060842230",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060854125",
+   "face": "f19",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060904811",
+   "face": "f19",
+   "status": "stopped",
+   "reason": "060915328 と同じ理由（北西の頂部の溝が模型に無く、角の対応が決まらない）。pnp は回していない"
+  },
+  {
+   "photo": "PXL_20261105_060915328",
+   "face": "f19",
+   "status": "stopped",
+   "reason": "北西の頂部の輪郭に山が 3 つ（北のスリット窓の壁柱・窓の溝・西面の北端）あり、模型の北西の角（f0 と f1 の境）が 1 本なのでどの山に当たるか決められない。pnp は回していない"
+  },
+  {
+   "photo": "PXL_20261105_060927494",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060950084",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_060954729",
+   "face": "f3",
+   "status": "stopped",
+   "reason": "北西の角を北から見上げ。頂部の溝の問題に加え、下半分が手前の壁とパーゴラ・木で隠れ、縦の散らばりが足りない"
+  },
+  {
+   "photo": "PXL_20261105_061002256",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061255833",
+   "face": "f1",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061300605",
+   "face": "f2",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061511227",
+   "face": "f4",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061520328",
+   "face": "f4",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061525822",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061632682",
+   "face": "f4",
+   "status": "stopped",
+   "reason": "南西の低い塊の真下からの見上げで、角が細い帯にしか写らない"
+  },
+  {
+   "photo": "PXL_20261105_061647959",
+   "face": "f9",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061649102",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061704401",
+   "face": "f9",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061708177",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061709593",
+   "face": "f9",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061710650",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061711714",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061720413",
+   "face": "f7",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061828741",
+   "face": null,
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061918505",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_061939875",
+   "face": null,
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_062046145",
+   "face": "f9",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062046145.json",
+   "solver": "poselib",
+   "rms_px": 10.51,
+   "n_inliers": 8,
+   "camera_xyz": [
+    40.96,
+    -11.17,
+    2.13
+   ],
+   "camera_height_m": 1.81,
+   "camera_height_face_m": 2.13,
+   "focal_vs_exif": 1.0,
+   "pitch_pnp": 33.5,
+   "pitch_vp": 34.11,
+   "edge_inlier": 0.392,
+   "edge_grad": 0.327,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062046145.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062155782",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_062246708",
+   "face": "f9",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062246708.json",
+   "solver": "poselib",
+   "rms_px": 4.77,
+   "n_inliers": 6,
+   "camera_xyz": [
+    29.81,
+    -5.18,
+    3.61
+   ],
+   "camera_height_m": 2.72,
+   "camera_height_face_m": 3.61,
+   "focal_vs_exif": 0.95,
+   "pitch_pnp": 33.2,
+   "pitch_vp": 33.12,
+   "edge_inlier": 0.374,
+   "edge_grad": 0.278,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062246708.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062254010",
+   "face": "f9",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062254010.json",
+   "solver": "poselib",
+   "rms_px": 11.79,
+   "n_inliers": 6,
+   "camera_xyz": [
+    30.43,
+    -3.97,
+    2.82
+   ],
+   "camera_height_m": 1.72,
+   "camera_height_face_m": 2.82,
+   "focal_vs_exif": 1.0,
+   "pitch_pnp": 35.3,
+   "pitch_vp": 35.54,
+   "edge_inlier": 0.355,
+   "edge_grad": 0.253,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062254010.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062300065",
+   "face": "f9",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062300065.json",
+   "solver": "poselib",
+   "rms_px": 10.79,
+   "n_inliers": 8,
+   "camera_xyz": [
+    37.41,
+    -7.11,
+    4.03
+   ],
+   "camera_height_m": 3.32,
+   "camera_height_face_m": 4.03,
+   "focal_vs_exif": 0.85,
+   "pitch_pnp": 31.2,
+   "pitch_vp": 30.96,
+   "edge_inlier": 0.412,
+   "edge_grad": 0.299,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062300065.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062307232",
+   "face": "f9",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062307232.json",
+   "solver": "poselib",
+   "rms_px": 11.66,
+   "n_inliers": 8,
+   "camera_xyz": [
+    38.65,
+    -8.9,
+    2.29
+   ],
+   "camera_height_m": 1.97,
+   "camera_height_face_m": 2.29,
+   "focal_vs_exif": 1.0,
+   "pitch_pnp": 37.3,
+   "pitch_vp": 37.13,
+   "edge_inlier": 0.53,
+   "edge_grad": 0.345,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062307232.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062311895",
+   "face": "f9",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062311895.json",
+   "solver": "poselib",
+   "rms_px": 8.51,
+   "n_inliers": 8,
+   "camera_xyz": [
+    41.39,
+    -9.94,
+    3.39
+   ],
+   "camera_height_m": 3.07,
+   "camera_height_face_m": 3.39,
+   "focal_vs_exif": 0.875,
+   "pitch_pnp": 32.2,
+   "pitch_vp": 33.0,
+   "edge_inlier": 0.445,
+   "edge_grad": 0.321,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062311895.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062317561",
+   "face": "f11",
+   "status": "stopped",
+   "reason": "f11 の正面が写真の中で細く、指せる目印（頂部の角 2・帯 2・左の縁）では散らばりの門（幅の 25 %）に届かない。西の袖 f7 の頂部は斜めに見えて角の対応を決めきれず、pnp は回していない"
+  },
+  {
+   "photo": "PXL_20261105_062323658",
+   "face": "f11",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062323658.json",
+   "solver": "poselib",
+   "rms_px": 7.28,
+   "n_inliers": 6,
+   "camera_xyz": [
+    47.79,
+    -14.06,
+    1.33
+   ],
+   "camera_height_m": 1.3,
+   "camera_height_face_m": 1.33,
+   "focal_vs_exif": 1.0,
+   "pitch_pnp": 35.6,
+   "pitch_vp": 36.44,
+   "edge_inlier": 0.392,
+   "edge_grad": 0.277,
+   "warnings": [],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062323658.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062330274",
+   "face": "f11",
+   "status": "registered",
+   "picks": "data/reports/tower75/mejirushi/picks_PXL_20261105_062330274.json",
+   "solver": "poselib",
+   "rms_px": 7.88,
+   "n_inliers": 6,
+   "camera_xyz": [
+    52.01,
+    -15.92,
+    1.19
+   ],
+   "camera_height_m": 1.51,
+   "camera_height_face_m": 1.19,
+   "focal_vs_exif": 1.0,
+   "pitch_pnp": 33.8,
+   "pitch_vp": 18.88,
+   "edge_inlier": 0.449,
+   "edge_grad": 0.307,
+   "warnings": [
+    "消失点の仰角 18.88° と PnP の仰角 33.8° が 15° 違う"
+   ],
+   "check_jpg": "out/tower75/landmarks/check_PXL_20261105_062330274.jpg"
+  },
+  {
+   "photo": "PXL_20261105_062527087",
+   "face": "f13",
+   "status": "stopped",
+   "reason": "南東。模型の f13 の東端と f14 の南端の間に約 2 m のすき間があり、写真の南東の角と模型のどちらの端が当たるか決められなかった（検収係へ）"
+  },
+  {
+   "photo": "PXL_20261105_062537872",
+   "face": "f13",
+   "status": "stopped",
+   "reason": "062527087 と同じ（南東の角の対応が決まらない）"
+  },
+  {
+   "photo": "PXL_20261105_062543289",
+   "face": "f15",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_062637300",
+   "face": "f13",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_062840332",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  },
+  {
+   "photo": "PXL_20261105_062846360",
+   "face": "f3",
+   "status": "not_done",
+   "reason": "時間内に手が回らなかった（升を指していない）"
+  }
+ ]
+}

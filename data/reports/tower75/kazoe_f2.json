@@ -1,0 +1,58 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f2",
+ "face_name": "西面 W の北寄り（f2。渡り廊下 S3 の取り付き）",
+ "input": [
+  "data/reports/tower75/kansatsu_f2.json",
+  "data/reports/tower75/kansatsu_f3.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "wall_group": {
+  "id": "W",
+  "faces": [
+   "f1",
+   "f2",
+   "f3"
+  ],
+  "primary": "f3",
+  "note": "観察票の wall_groups。f1・f2・f3 の境目は写真に無いので、W の 1 本の線として数えた。どの列がどの辺に乗るかは登録（測量係）で決める"
+ },
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "f1・f2・f3 の境目が写真に無い。W の列は kazoe_f3.json に数えた。f2 の前は渡り廊下と大階段の上で、#76・#10 でも北寄りの 1〜2 列は渡り廊下で隠れる"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "W として kazoe_f3.json"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [
+  {
+   "what": "W の一番下の窓の段で 1・2 本目の列に窓があるかは、渡り廊下で隠れて見えない（3 本目は無い）",
+   "evidence": [
+    "PXL_20261105_061341818",
+    "PXL_20261103_070222827"
+   ]
+  }
+ ],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f2",
+   "what": "渡り廊下の取り付きの位置と W の列の対応",
+   "why": "境目が写真に無い（登録で）"
+  }
+ ],
+ "questions": []
+}

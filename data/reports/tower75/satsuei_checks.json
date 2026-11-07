@@ -1,0 +1,2980 @@
+{
+  "made_by": "撮影係（claude-haiku-5-5）",
+  "made_at": "2026-11-07T08:39:53+09:00",
+  "building": "tower75",
+  "source": "data/photos/index.json の building=tower75 の 131 枚（period は全件 during。新しい取り込みはしていない）",
+  "basis": "checks・candidates・索引の振り分け・GPS と方位から棟の中心までの方向（幾何）。画像は 1 枚だけ目視（PXL_20261105_061834617）",
+  "summary": {
+    "tower75_photos": 131,
+    "usable_by_checks": 125,
+    "usable_false": 6,
+    "interior_photos": 6,
+    "no_gps": 4,
+    "centroid_in_view": 9,
+    "centroid_off_view": 118,
+    "note": "方位と棟の中心の食い違いが多い（画角の外が大半）。方位が 180° ずれている疑いを仕分け係が確かめるまで、面の根拠にしない"
+  },
+  "next_shots": [
+    {
+      "face": "東〜南の外観（写真にまだ無い向き）",
+      "what": "棟の両端の角が入る、正面寄りの写真",
+      "where": "棟の東側・南側の外の道。棟から 30 m 前後（中心までの距離 25〜75 m の範囲で）"
+    },
+    {
+      "face": "棟の中心を正面に捉えた写真（方位の検算用）",
+      "what": "棟の全体（上端と地面が入る）が 1 枚に入る写真。方位の 180° ずれを確かめる基準",
+      "where": "棟の北西側の外。11/5 の 061828741 付近の立ち位置から、後ろに下がって"
+    },
+    {
+      "face": "塔の上端（屋上の縁・最上階）",
+      "what": "上端の縁と最上階の窓の段",
+      "where": "棟の正面から離れて上端が入る位置（tower75 の上端の写真は索引に無い）"
+    }
+  ],
+  "questions": [
+    "方位（heading）と棟の中心の方向が、131 枚のうち大半で 90° 以上ずれる。方位が 180° ずれているのか、棟を向いていないのか、仕分け係・測量係が 2〜3 枚で確かめてほしい",
+    "PXL_20261105_061834617 は中心の方向と合うが、画面は煉瓦の広場と建物 2 棟。どの棟の壁かは仕分け係が目視で確定",
+    "室内 6 枚、GPS 無し 4 枚（20261105_165235743 ほか。16:52〜16:56）は棟を決められない",
+    "人が写る写真がある（ガラス越しの人影）。提出前に顔・貼り紙の目視が要る",
+    "11/3 の 20261103b の振り分けは取り込み時の判断役による（intake_proxy）。確かめてほしい"
+  ],
+  "photos": {
+    "PXL_20261103_065946407": {
+      "file": "20261103b/PXL_20261103_065946407.jpg",
+      "taken_at": "2026-11-03T15:59:46",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 57° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.7,
+          82.2
+        ],
+        "dist_to_centroid_m": 72.4,
+        "heading_deg": 211.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070003022": {
+      "file": "20261103b/PXL_20261103_070003022.jpg",
+      "taken_at": "2026-11-03T16:00:03",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.056）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 175° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.7,
+          82.2
+        ],
+        "dist_to_centroid_m": 72.4,
+        "heading_deg": 329.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070044607": {
+      "file": "20261103b/PXL_20261103_070044607.jpg",
+      "taken_at": "2026-11-03T16:00:44",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 46° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          40.9,
+          71.7
+        ],
+        "dist_to_centroid_m": 55.9,
+        "heading_deg": 122.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070114062": {
+      "file": "20261103b/PXL_20261103_070114062.jpg",
+      "taken_at": "2026-11-03T16:01:14",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 65° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b10（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          40.9,
+          71.7
+        ],
+        "dist_to_centroid_m": 55.9,
+        "heading_deg": 103.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070123308": {
+      "file": "20261103b/PXL_20261103_070123308.jpg",
+      "taken_at": "2026-11-03T16:01:23",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 45° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          40.9,
+          71.7
+        ],
+        "dist_to_centroid_m": 55.9,
+        "heading_deg": 123.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070134689": {
+      "file": "20261103b/PXL_20261103_070134689.jpg",
+      "taken_at": "2026-11-03T16:01:34",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "鮮明度 472.4（100 以上なので使えるが、縁を拡大して確認）",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          40.9,
+          71.7
+        ],
+        "dist_to_centroid_m": 55.9,
+        "heading_deg": 158.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261103_070148248": {
+      "file": "20261103b/PXL_20261103_070148248.jpg",
+      "taken_at": "2026-11-03T16:01:48",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 47° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          40.9,
+          71.7
+        ],
+        "dist_to_centroid_m": 55.9,
+        "heading_deg": 121.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070156537": {
+      "file": "20261103b/PXL_20261103_070156537.jpg",
+      "taken_at": "2026-11-03T16:01:56",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          34.8,
+          73.6
+        ],
+        "dist_to_centroid_m": 59.2,
+        "heading_deg": 148.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261103_070204974": {
+      "file": "20261103b/PXL_20261103_070204974.jpg",
+      "taken_at": "2026-11-03T16:02:04",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          34.8,
+          73.6
+        ],
+        "dist_to_centroid_m": 59.2,
+        "heading_deg": 123.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261103_070222827": {
+      "file": "20261103b/PXL_20261103_070222827.jpg",
+      "taken_at": "2026-11-03T16:02:22",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          34.8,
+          73.6
+        ],
+        "dist_to_centroid_m": 59.2,
+        "heading_deg": 132.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261103_070244955": {
+      "file": "20261103b/PXL_20261103_070244955.jpg",
+      "taken_at": "2026-11-03T16:02:44",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          34.8,
+          73.6
+        ],
+        "dist_to_centroid_m": 59.2,
+        "heading_deg": 126.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261103_070327678": {
+      "file": "20261103b/PXL_20261103_070327678.jpg",
+      "taken_at": "2026-11-03T16:03:27",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.079）。縁が見えるか確認",
+        "35mm 換算 25 mm（他の写真の 14 mm と画角が違う。面の縮尺を混ぜない）",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 139° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -15.2,
+          4.7
+        ],
+        "dist_to_centroid_m": 68.5,
+        "heading_deg": 301.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070334137": {
+      "file": "20261103b/PXL_20261103_070334137.jpg",
+      "taken_at": "2026-11-03T16:03:34",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.072）。縁が見えるか確認",
+        "35mm 換算 25 mm（他の写真の 14 mm と画角が違う。面の縮尺を混ぜない）",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 145° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -15.2,
+          4.7
+        ],
+        "dist_to_centroid_m": 68.5,
+        "heading_deg": 295.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070409570": {
+      "file": "20261103b/PXL_20261103_070409570.jpg",
+      "taken_at": "2026-11-03T16:04:09",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 140° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -15.2,
+          4.7
+        ],
+        "dist_to_centroid_m": 68.5,
+        "heading_deg": 300.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070422004": {
+      "file": "20261103b/PXL_20261103_070422004.jpg",
+      "taken_at": "2026-11-03T16:04:22",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.086）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 163° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -15.2,
+          4.7
+        ],
+        "dist_to_centroid_m": 68.5,
+        "heading_deg": 277.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070606125": {
+      "file": "20261103b/PXL_20261103_070606125.jpg",
+      "taken_at": "2026-11-03T16:06:06",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 151° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.3,
+          55.4
+        ],
+        "dist_to_centroid_m": 40.5,
+        "heading_deg": 312.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070619739": {
+      "file": "20261103b/PXL_20261103_070619739.jpg",
+      "taken_at": "2026-11-03T16:06:19",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.065）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 175° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.3,
+          55.4
+        ],
+        "dist_to_centroid_m": 40.5,
+        "heading_deg": 346.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070654529": {
+      "file": "20261103b/PXL_20261103_070654529.jpg",
+      "taken_at": "2026-11-03T16:06:54",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 95° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.3,
+          55.4
+        ],
+        "dist_to_centroid_m": 40.5,
+        "heading_deg": 256.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_070742138": {
+      "file": "20261103b/PXL_20261103_070742138.jpg",
+      "taken_at": "2026-11-03T16:07:42",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 171° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          25.8,
+          7.7
+        ],
+        "dist_to_centroid_m": 28.0,
+        "heading_deg": 242.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074413490": {
+      "file": "20261103b/PXL_20261103_074413490.jpg",
+      "taken_at": "2026-11-03T16:44:13",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 152° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          47.8,
+          2.1
+        ],
+        "dist_to_centroid_m": 15.5,
+        "heading_deg": 224.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074445985": {
+      "file": "20261103b/PXL_20261103_074445985.jpg",
+      "taken_at": "2026-11-03T16:44:45",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 177° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          47.8,
+          2.1
+        ],
+        "dist_to_centroid_m": 15.5,
+        "heading_deg": 199.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074457079": {
+      "file": "20261103b/PXL_20261103_074457079.jpg",
+      "taken_at": "2026-11-03T16:44:57",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 159° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          47.8,
+          2.1
+        ],
+        "dist_to_centroid_m": 15.5,
+        "heading_deg": 175.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074549768": {
+      "file": "20261103b/PXL_20261103_074549768.jpg",
+      "taken_at": "2026-11-03T16:45:49",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 123° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          74.2,
+          6.9
+        ],
+        "dist_to_centroid_m": 24.2,
+        "heading_deg": 172.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074606922": {
+      "file": "20261103b/PXL_20261103_074606922.jpg",
+      "taken_at": "2026-11-03T16:46:06",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 150° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          74.2,
+          6.9
+        ],
+        "dist_to_centroid_m": 24.2,
+        "heading_deg": 145.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074621752": {
+      "file": "20261103b/PXL_20261103_074621752.jpg",
+      "taken_at": "2026-11-03T16:46:21",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 129° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          74.2,
+          6.9
+        ],
+        "dist_to_centroid_m": 24.2,
+        "heading_deg": 166.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074649138.MP": {
+      "file": "20261103b/PXL_20261103_074649138.MP.jpg",
+      "taken_at": "2026-11-03T16:46:49",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 154° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          74.2,
+          6.9
+        ],
+        "dist_to_centroid_m": 24.2,
+        "heading_deg": 89.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_074700641": {
+      "file": "20261103b/PXL_20261103_074700641.jpg",
+      "taken_at": "2026-11-03T16:47:00",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.056）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 178° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          92.5,
+          30.3
+        ],
+        "dist_to_centroid_m": 42.4,
+        "heading_deg": 70.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261103_080314875": {
+      "file": "20261103b/PXL_20261103_080314875.jpg",
+      "taken_at": "2026-11-03T17:03:14",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "鮮明度 564.0（100 以上なので使えるが、縁を拡大して確認）",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          28.7,
+          44.3
+        ],
+        "dist_to_centroid_m": 36.0,
+        "heading_deg": 162.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261103_080325005": {
+      "file": "20261103b/PXL_20261103_080325005.jpg",
+      "taken_at": "2026-11-03T17:03:25",
+      "building_assigned": "tower75",
+      "building_source": "intake_proxy",
+      "usable": true,
+      "problems": [
+        "鮮明度 569.7（100 以上なので使えるが、縁を拡大して確認）",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          28.7,
+          44.3
+        ],
+        "dist_to_centroid_m": 36.0,
+        "heading_deg": 177.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261105_055234749": {
+      "file": "20261105/tower75/PXL_20261105_055234749.jpg",
+      "taken_at": "2026-11-05T14:52:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "鮮明度 667.5（100 以上なので使えるが、縁を拡大して確認）",
+        "35mm 換算 25 mm（他の写真の 14 mm と画角が違う。面の縮尺を混ぜない）",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 67° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は lab4（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          163.2,
+          -59.5
+        ],
+        "dist_to_centroid_m": 134.8,
+        "heading_deg": 238.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060239806": {
+      "file": "20261105/tower75/PXL_20261105_060239806.jpg",
+      "taken_at": "2026-11-05T15:02:39",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 162° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          78.0,
+          -3.2
+        ],
+        "dist_to_centroid_m": 32.8,
+        "heading_deg": 110.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060255835": {
+      "file": "20261105/tower75/PXL_20261105_060255835.jpg",
+      "taken_at": "2026-11-05T15:02:55",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 178° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          78.0,
+          -3.2
+        ],
+        "dist_to_centroid_m": 32.8,
+        "heading_deg": 130.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060310392": {
+      "file": "20261105/tower75/PXL_20261105_060310392.jpg",
+      "taken_at": "2026-11-05T15:03:10",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.076）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.054）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 160° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          79.5,
+          1.7
+        ],
+        "dist_to_centroid_m": 31.3,
+        "heading_deg": 99.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060316957": {
+      "file": "20261105/tower75/PXL_20261105_060316957.jpg",
+      "taken_at": "2026-11-05T15:03:16",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.064）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.058）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 157° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          79.5,
+          1.7
+        ],
+        "dist_to_centroid_m": 31.3,
+        "heading_deg": 96.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060328137": {
+      "file": "20261105/tower75/PXL_20261105_060328137.jpg",
+      "taken_at": "2026-11-05T15:03:28",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.053）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 154° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          79.5,
+          1.7
+        ],
+        "dist_to_centroid_m": 31.3,
+        "heading_deg": 93.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060342994": {
+      "file": "20261105/tower75/PXL_20261105_060342994.jpg",
+      "taken_at": "2026-11-05T15:03:42",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.052）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 138° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          79.5,
+          1.7
+        ],
+        "dist_to_centroid_m": 31.3,
+        "heading_deg": 77.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060528804": {
+      "file": "20261105/tower75/PXL_20261105_060528804.jpg",
+      "taken_at": "2026-11-05T15:05:28",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.099）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 136° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          99.1,
+          41.4
+        ],
+        "dist_to_centroid_m": 52.9,
+        "heading_deg": 107.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060534782": {
+      "file": "20261105/tower75/PXL_20261105_060534782.jpg",
+      "taken_at": "2026-11-05T15:05:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.083）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 136° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          99.1,
+          41.4
+        ],
+        "dist_to_centroid_m": 52.9,
+        "heading_deg": 107.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060542381": {
+      "file": "20261105/tower75/PXL_20261105_060542381.jpg",
+      "taken_at": "2026-11-05T15:05:42",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 171° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          99.1,
+          41.4
+        ],
+        "dist_to_centroid_m": 52.9,
+        "heading_deg": 72.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060548823": {
+      "file": "20261105/tower75/PXL_20261105_060548823.jpg",
+      "taken_at": "2026-11-05T15:05:48",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 167° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          99.1,
+          41.4
+        ],
+        "dist_to_centroid_m": 52.9,
+        "heading_deg": 76.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060552836": {
+      "file": "20261105/tower75/PXL_20261105_060552836.jpg",
+      "taken_at": "2026-11-05T15:05:52",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 146° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          99.1,
+          41.4
+        ],
+        "dist_to_centroid_m": 52.9,
+        "heading_deg": 97.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060601578": {
+      "file": "20261105/tower75/PXL_20261105_060601578.jpg",
+      "taken_at": "2026-11-05T15:06:01",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.053）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 180° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          99.1,
+          41.4
+        ],
+        "dist_to_centroid_m": 52.9,
+        "heading_deg": 63.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060613837": {
+      "file": "20261105/tower75/PXL_20261105_060613837.jpg",
+      "taken_at": "2026-11-05T15:06:13",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.051）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 174° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          94.0,
+          32.8
+        ],
+        "dist_to_centroid_m": 44.7,
+        "heading_deg": 63.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060703663": {
+      "file": "20261105/tower75/PXL_20261105_060703663.jpg",
+      "taken_at": "2026-11-05T15:07:03",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.064）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.08）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 136° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 33.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060725949.MP": {
+      "file": "20261105/tower75/PXL_20261105_060725949.MP.jpg",
+      "taken_at": "2026-11-05T15:07:25",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.062）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.064）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 148° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 45.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060730259": {
+      "file": "20261105/tower75/PXL_20261105_060730259.jpg",
+      "taken_at": "2026-11-05T15:07:30",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.09）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 165° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 62.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060746293.MP": {
+      "file": "20261105/tower75/PXL_20261105_060746293.MP.jpg",
+      "taken_at": "2026-11-05T15:07:46",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.079）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 118° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 15.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060756828": {
+      "file": "20261105/tower75/PXL_20261105_060756828.jpg",
+      "taken_at": "2026-11-05T15:07:56",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 118° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 15.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060800017": {
+      "file": "20261105/tower75/PXL_20261105_060800017.jpg",
+      "taken_at": "2026-11-05T15:08:00",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 120° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 17.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060801653": {
+      "file": "20261105/tower75/PXL_20261105_060801653.jpg",
+      "taken_at": "2026-11-05T15:08:01",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 156° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 53.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060804738": {
+      "file": "20261105/tower75/PXL_20261105_060804738.jpg",
+      "taken_at": "2026-11-05T15:08:04",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 66° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          98.5,
+          27.9
+        ],
+        "dist_to_centroid_m": 47.6,
+        "heading_deg": 323.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060807986": {
+      "file": "20261105/tower75/PXL_20261105_060807986.jpg",
+      "taken_at": "2026-11-05T15:08:07",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 120° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b10（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.7,
+          58.8
+        ],
+        "dist_to_centroid_m": 42.3,
+        "heading_deg": 51.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060834553": {
+      "file": "20261105/tower75/PXL_20261105_060834553.jpg",
+      "taken_at": "2026-11-05T15:08:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.087）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 134° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b10（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.7,
+          58.8
+        ],
+        "dist_to_centroid_m": 42.3,
+        "heading_deg": 37.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060842230": {
+      "file": "20261105/tower75/PXL_20261105_060842230.jpg",
+      "taken_at": "2026-11-05T15:08:42",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.054）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.079）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 136° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b10（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.7,
+          58.8
+        ],
+        "dist_to_centroid_m": 42.3,
+        "heading_deg": 35.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060854125": {
+      "file": "20261105/tower75/PXL_20261105_060854125.jpg",
+      "taken_at": "2026-11-05T15:08:54",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.057）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.064）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 148° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.7,
+          58.8
+        ],
+        "dist_to_centroid_m": 42.3,
+        "heading_deg": 23.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060904811": {
+      "file": "20261105/tower75/PXL_20261105_060904811.jpg",
+      "taken_at": "2026-11-05T15:09:04",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.065）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 150° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.7,
+          58.8
+        ],
+        "dist_to_centroid_m": 42.3,
+        "heading_deg": 21.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060915328": {
+      "file": "20261105/tower75/PXL_20261105_060915328.jpg",
+      "taken_at": "2026-11-05T15:09:15",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.089）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 163° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          43.2,
+          68.3
+        ],
+        "dist_to_centroid_m": 52.1,
+        "heading_deg": 7.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060927494": {
+      "file": "20261105/tower75/PXL_20261105_060927494.jpg",
+      "taken_at": "2026-11-05T15:09:27",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 172° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          43.2,
+          68.3
+        ],
+        "dist_to_centroid_m": 52.1,
+        "heading_deg": 358.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060950084": {
+      "file": "20261105/tower75/PXL_20261105_060950084.jpg",
+      "taken_at": "2026-11-05T15:09:50",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.07）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.08）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 169° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          43.2,
+          68.3
+        ],
+        "dist_to_centroid_m": 52.1,
+        "heading_deg": 339.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_060954729": {
+      "file": "20261105/tower75/PXL_20261105_060954729.jpg",
+      "taken_at": "2026-11-05T15:09:54",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.089）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.074）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 162° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          43.2,
+          68.3
+        ],
+        "dist_to_centroid_m": 52.1,
+        "heading_deg": 332.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061002256": {
+      "file": "20261105/tower75/PXL_20261105_061002256.jpg",
+      "taken_at": "2026-11-05T15:10:02",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.112）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.077）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 167° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          43.2,
+          68.3
+        ],
+        "dist_to_centroid_m": 52.1,
+        "heading_deg": 337.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061028255": {
+      "file": "20261105/tower75/PXL_20261105_061028255.jpg",
+      "taken_at": "2026-11-05T15:10:28",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.113）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 151° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.2,
+          62.8
+        ],
+        "dist_to_centroid_m": 46.3,
+        "heading_deg": 322.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061034445": {
+      "file": "20261105/tower75/PXL_20261105_061034445.jpg",
+      "taken_at": "2026-11-05T15:10:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 167° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          45.2,
+          62.8
+        ],
+        "dist_to_centroid_m": 46.3,
+        "heading_deg": 338.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061122585": {
+      "file": "20261105/tower75/PXL_20261105_061122585.jpg",
+      "taken_at": "2026-11-05T15:11:22",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 178° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          35.3,
+          62.2
+        ],
+        "dist_to_centroid_m": 48.3,
+        "heading_deg": 341.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061241221": {
+      "file": "20261105/tower75/PXL_20261105_061241221.jpg",
+      "taken_at": "2026-11-05T15:12:41",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.051）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 153° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          35.3,
+          62.2
+        ],
+        "dist_to_centroid_m": 48.3,
+        "heading_deg": 6.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061247963": {
+      "file": "20261105/tower75/PXL_20261105_061247963.jpg",
+      "taken_at": "2026-11-05T15:12:47",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 174° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 344.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061255833": {
+      "file": "20261105/tower75/PXL_20261105_061255833.jpg",
+      "taken_at": "2026-11-05T15:12:55",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 153° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 323.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061300605": {
+      "file": "20261105/tower75/PXL_20261105_061300605.jpg",
+      "taken_at": "2026-11-05T15:13:00",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 120° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 290.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061341818": {
+      "file": "20261105/tower75/PXL_20261105_061341818.jpg",
+      "taken_at": "2026-11-05T15:13:41",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 154° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 324.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061357582": {
+      "file": "20261105/tower75/PXL_20261105_061357582.jpg",
+      "taken_at": "2026-11-05T15:13:57",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 152° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 322.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061402813": {
+      "file": "20261105/tower75/PXL_20261105_061402813.jpg",
+      "taken_at": "2026-11-05T15:14:02",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.064）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 153° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 323.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061410188": {
+      "file": "20261105/tower75/PXL_20261105_061410188.jpg",
+      "taken_at": "2026-11-05T15:14:10",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 147° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 317.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061418906": {
+      "file": "20261105/tower75/PXL_20261105_061418906.jpg",
+      "taken_at": "2026-11-05T15:14:18",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 130° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 300.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061423669": {
+      "file": "20261105/tower75/PXL_20261105_061423669.jpg",
+      "taken_at": "2026-11-05T15:14:23",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.053）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 167° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 337.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061434917": {
+      "file": "20261105/tower75/PXL_20261105_061434917.jpg",
+      "taken_at": "2026-11-05T15:14:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.075）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 158° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          42.4,
+          70.5
+        ],
+        "dist_to_centroid_m": 54.4,
+        "heading_deg": 328.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061442402": {
+      "file": "20261105/tower75/PXL_20261105_061442402.jpg",
+      "taken_at": "2026-11-05T15:14:42",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.065）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 126° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.8,
+          5.8
+        ],
+        "dist_to_centroid_m": 33.3,
+        "heading_deg": 304.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061449185": {
+      "file": "20261105/tower75/PXL_20261105_061449185.jpg",
+      "taken_at": "2026-11-05T15:14:49",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.051）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 129° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.8,
+          5.8
+        ],
+        "dist_to_centroid_m": 33.3,
+        "heading_deg": 301.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061455930": {
+      "file": "20261105/tower75/PXL_20261105_061455930.jpg",
+      "taken_at": "2026-11-05T15:14:55",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 132° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.8,
+          5.8
+        ],
+        "dist_to_centroid_m": 33.3,
+        "heading_deg": 298.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061511227": {
+      "file": "20261105/tower75/PXL_20261105_061511227.jpg",
+      "taken_at": "2026-11-05T15:15:11",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.061）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 178° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.8,
+          5.8
+        ],
+        "dist_to_centroid_m": 33.3,
+        "heading_deg": 248.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061520328": {
+      "file": "20261105/tower75/PXL_20261105_061520328.jpg",
+      "taken_at": "2026-11-05T15:15:20",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.071）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 164° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.8,
+          5.8
+        ],
+        "dist_to_centroid_m": 33.3,
+        "heading_deg": 234.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061525822": {
+      "file": "20261105/tower75/PXL_20261105_061525822.jpg",
+      "taken_at": "2026-11-05T15:15:25",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.085）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 109° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          20.8,
+          5.8
+        ],
+        "dist_to_centroid_m": 33.3,
+        "heading_deg": 179.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061632682": {
+      "file": "20261105/tower75/PXL_20261105_061632682.jpg",
+      "taken_at": "2026-11-05T15:16:32",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 180° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 264.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061647959": {
+      "file": "20261105/tower75/PXL_20261105_061647959.jpg",
+      "taken_at": "2026-11-05T15:16:47",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 150° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 234.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061649102": {
+      "file": "20261105/tower75/PXL_20261105_061649102.jpg",
+      "taken_at": "2026-11-05T15:16:49",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.061）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 143° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 227.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061704401": {
+      "file": "20261105/tower75/PXL_20261105_061704401.jpg",
+      "taken_at": "2026-11-05T15:17:04",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 155° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 239.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061708177": {
+      "file": "20261105/tower75/PXL_20261105_061708177.jpg",
+      "taken_at": "2026-11-05T15:17:08",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 142° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 226.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061709593": {
+      "file": "20261105/tower75/PXL_20261105_061709593.jpg",
+      "taken_at": "2026-11-05T15:17:09",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 169° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 253.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061710650": {
+      "file": "20261105/tower75/PXL_20261105_061710650.jpg",
+      "taken_at": "2026-11-05T15:17:10",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 167° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 251.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061711714": {
+      "file": "20261105/tower75/PXL_20261105_061711714.jpg",
+      "taken_at": "2026-11-05T15:17:11",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 155° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          -21.2,
+          8.7
+        ],
+        "dist_to_centroid_m": 73.9,
+        "heading_deg": 239.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061720413": {
+      "file": "20261105/tower75/PXL_20261105_061720413.jpg",
+      "taken_at": "2026-11-05T15:17:20",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.134）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 150° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          35.2,
+          12.6
+        ],
+        "dist_to_centroid_m": 17.6,
+        "heading_deg": 225.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061828741": {
+      "file": "20261105/tower75/PXL_20261105_061828741.jpg",
+      "taken_at": "2026-11-05T15:18:28",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 56° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.1,
+          37.8
+        ],
+        "dist_to_centroid_m": 24.6,
+        "heading_deg": 92.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061830023": {
+      "file": "20261105/tower75/PXL_20261105_061830023.jpg",
+      "taken_at": "2026-11-05T15:18:30",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 44° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.1,
+          37.8
+        ],
+        "dist_to_centroid_m": 24.6,
+        "heading_deg": 104.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061834617": {
+      "file": "20261105/tower75/PXL_20261105_061834617.jpg",
+      "taken_at": "2026-11-05T15:18:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北 側の壁（方位の目安）。中心が画角の中",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.1,
+          37.8
+        ],
+        "dist_to_centroid_m": 24.6,
+        "heading_deg": 160.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261105_061836019": {
+      "file": "20261105/tower75/PXL_20261105_061836019.jpg",
+      "taken_at": "2026-11-05T15:18:36",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 148° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.1,
+          37.8
+        ],
+        "dist_to_centroid_m": 24.6,
+        "heading_deg": 0.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061836600": {
+      "file": "20261105/tower75/PXL_20261105_061836600.jpg",
+      "taken_at": "2026-11-05T15:18:36",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 109° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          39.1,
+          37.8
+        ],
+        "dist_to_centroid_m": 24.6,
+        "heading_deg": 39.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061837232": {
+      "file": "20261105/tower75/PXL_20261105_061837232.jpg",
+      "taken_at": "2026-11-05T15:18:37",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.053）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 125° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 47.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061905208.MP": {
+      "file": "20261105/tower75/PXL_20261105_061905208.MP.jpg",
+      "taken_at": "2026-11-05T15:19:05",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 152° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 324.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061908705": {
+      "file": "20261105/tower75/PXL_20261105_061908705.jpg",
+      "taken_at": "2026-11-05T15:19:08",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 138° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 310.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061909489": {
+      "file": "20261105/tower75/PXL_20261105_061909489.jpg",
+      "taken_at": "2026-11-05T15:19:09",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.067）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 153° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 325.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061910368": {
+      "file": "20261105/tower75/PXL_20261105_061910368.jpg",
+      "taken_at": "2026-11-05T15:19:10",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.068）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 174° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は kyotsu-minami（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 358.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061918505": {
+      "file": "20261105/tower75/PXL_20261105_061918505.jpg",
+      "taken_at": "2026-11-05T15:19:18",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 86° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 258.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061934785": {
+      "file": "20261105/tower75/PXL_20261105_061934785.jpg",
+      "taken_at": "2026-11-05T15:19:34",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.066）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 92° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077325（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          44.4,
+          71.1
+        ],
+        "dist_to_centroid_m": 54.7,
+        "heading_deg": 264.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061939875": {
+      "file": "20261105/tower75/PXL_20261105_061939875.jpg",
+      "taken_at": "2026-11-05T15:19:39",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 97° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          1.5,
+          14.5
+        ],
+        "dist_to_centroid_m": 50.8,
+        "heading_deg": 184.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061943220": {
+      "file": "20261105/tower75/PXL_20261105_061943220.jpg",
+      "taken_at": "2026-11-05T15:19:43",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.07）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 171° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          1.5,
+          14.5
+        ],
+        "dist_to_centroid_m": 50.8,
+        "heading_deg": 258.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_061946087": {
+      "file": "20261105/tower75/PXL_20261105_061946087.jpg",
+      "taken_at": "2026-11-05T15:19:46",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.097）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 162° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は honbu（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          1.5,
+          14.5
+        ],
+        "dist_to_centroid_m": 50.8,
+        "heading_deg": 249.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062046145": {
+      "file": "20261105/tower75/PXL_20261105_062046145.jpg",
+      "taken_at": "2026-11-05T15:20:46",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.059）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 104° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          1.5,
+          14.5
+        ],
+        "dist_to_centroid_m": 50.8,
+        "heading_deg": 191.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062155782": {
+      "file": "20261105/tower75/PXL_20261105_062155782.jpg",
+      "taken_at": "2026-11-05T15:21:55",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.061）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 177° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077542（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 274.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062202098": {
+      "file": "20261105/tower75/PXL_20261105_062202098.jpg",
+      "taken_at": "2026-11-05T15:22:02",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.113）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 176° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077542（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 275.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062211785": {
+      "file": "20261105/tower75/PXL_20261105_062211785.jpg",
+      "taken_at": "2026-11-05T15:22:11",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.06）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 147° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 238.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062220598": {
+      "file": "20261105/tower75/PXL_20261105_062220598.jpg",
+      "taken_at": "2026-11-05T15:22:20",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.137）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 172° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077542（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 263.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062246708": {
+      "file": "20261105/tower75/PXL_20261105_062246708.jpg",
+      "taken_at": "2026-11-05T15:22:46",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.064）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.102）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 119° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 210.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062254010": {
+      "file": "20261105/tower75/PXL_20261105_062254010.jpg",
+      "taken_at": "2026-11-05T15:22:54",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.055）。空の白飛びで縁が切れていないか確認",
+        "暗い部分が多い（0.059）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 114° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 205.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062300065": {
+      "file": "20261105/tower75/PXL_20261105_062300065.jpg",
+      "taken_at": "2026-11-05T15:23:00",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 129° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304081004（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          9.7,
+          17.5
+        ],
+        "dist_to_centroid_m": 42.5,
+        "heading_deg": 220.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062307232": {
+      "file": "20261105/tower75/PXL_20261105_062307232.jpg",
+      "taken_at": "2026-11-05T15:23:07",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 176° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は library（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          41.5,
+          -3.8
+        ],
+        "dist_to_centroid_m": 23.4,
+        "heading_deg": 203.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062311895": {
+      "file": "20261105/tower75/PXL_20261105_062311895.jpg",
+      "taken_at": "2026-11-05T15:23:11",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 175° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は library（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          41.5,
+          -3.8
+        ],
+        "dist_to_centroid_m": 23.4,
+        "heading_deg": 202.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062317561": {
+      "file": "20261105/tower75/PXL_20261105_062317561.jpg",
+      "taken_at": "2026-11-05T15:23:17",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 170° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は library（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          41.5,
+          -3.8
+        ],
+        "dist_to_centroid_m": 23.4,
+        "heading_deg": 217.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062323658": {
+      "file": "20261105/tower75/PXL_20261105_062323658.jpg",
+      "taken_at": "2026-11-05T15:23:23",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 177° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は library（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          41.5,
+          -3.8
+        ],
+        "dist_to_centroid_m": 23.4,
+        "heading_deg": 204.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062330274": {
+      "file": "20261105/tower75/PXL_20261105_062330274.jpg",
+      "taken_at": "2026-11-05T15:23:30",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 175° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は library（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          41.5,
+          -3.8
+        ],
+        "dist_to_centroid_m": 23.4,
+        "heading_deg": 202.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062527087": {
+      "file": "20261105/tower75/PXL_20261105_062527087.jpg",
+      "taken_at": "2026-11-05T15:25:27",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.064）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 110° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は b09（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          80.3,
+          9.7
+        ],
+        "dist_to_centroid_m": 29.0,
+        "heading_deg": 175.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062537872": {
+      "file": "20261105/tower75/PXL_20261105_062537872.jpg",
+      "taken_at": "2026-11-05T15:25:37",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.056）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 89° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          75.7,
+          20.2
+        ],
+        "dist_to_centroid_m": 23.7,
+        "heading_deg": 173.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062543289": {
+      "file": "20261105/tower75/PXL_20261105_062543289.jpg",
+      "taken_at": "2026-11-05T15:25:43",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.071）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 105° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北西 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          75.7,
+          20.2
+        ],
+        "dist_to_centroid_m": 23.7,
+        "heading_deg": 157.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062549239": {
+      "file": "20261105/tower75/PXL_20261105_062549239.jpg",
+      "taken_at": "2026-11-05T15:25:49",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "明るい部分が多い（0.081）。空の白飛びで縁が切れていないか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 98° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          75.7,
+          20.2
+        ],
+        "dist_to_centroid_m": 23.7,
+        "heading_deg": 164.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062637300": {
+      "file": "20261105/tower75/PXL_20261105_062637300.jpg",
+      "taken_at": "2026-11-05T15:26:37",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 84° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "タワー75 の 北 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          75.7,
+          20.2
+        ],
+        "dist_to_centroid_m": 23.7,
+        "heading_deg": 178.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062840332": {
+      "file": "20261105/tower75/PXL_20261105_062840332.jpg",
+      "taken_at": "2026-11-05T15:28:40",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 115° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077542（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 南 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          4.6,
+          22.5
+        ],
+        "dist_to_centroid_m": 47.9,
+        "heading_deg": 342.0,
+        "centroid_in_view": false
+      }
+    },
+    "PXL_20261105_062846360": {
+      "file": "20261105/tower75/PXL_20261105_062846360.jpg",
+      "taken_at": "2026-11-05T15:28:46",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": true,
+      "problems": [
+        "暗い部分が多い（0.068）。縁が見えるか確認",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 175° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "候補の 1 位は osm-way-1304077542（tower75 は画角の外か候補に無い）。職員の振り分けは tower75"
+      ],
+      "matches_request": "タワー75 の 東 側の壁の目安だが、棟が写っているかは未確認（方位の食い違い）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          4.6,
+          22.5
+        ],
+        "dist_to_centroid_m": 47.9,
+        "heading_deg": 282.0,
+        "centroid_in_view": false
+      }
+    },
+    "20261105_165235743": {
+      "file": "20261105/20261105_165235743.jpg",
+      "taken_at": "2026-11-05T16:52:35",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": false,
+      "problems": [
+        "GPS 無し（棟の根拠に使えない）",
+        "室内（1 階）の写真。外観の面の根拠に使わない。貼り紙・研究室・人が写っていないか未確認",
+        "鮮明度 323.4（100 以上なので使えるが、縁を拡大して確認）"
+      ],
+      "matches_request": "室内の写真（外観には使わない）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": null,
+        "dist_to_centroid_m": null,
+        "heading_deg": null,
+        "centroid_in_view": null
+      }
+    },
+    "20261105_165344878": {
+      "file": "20261105/20261105_165344878.jpg",
+      "taken_at": "2026-11-05T16:53:44",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": false,
+      "problems": [
+        "GPS 無し（棟の根拠に使えない）",
+        "室内（1 階）の写真。外観の面の根拠に使わない。貼り紙・研究室・人が写っていないか未確認",
+        "鮮明度 348.5（100 以上なので使えるが、縁を拡大して確認）"
+      ],
+      "matches_request": "室内の写真（外観には使わない）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": null,
+        "dist_to_centroid_m": null,
+        "heading_deg": null,
+        "centroid_in_view": null
+      }
+    },
+    "20261105_165424644": {
+      "file": "20261105/20261105_165424644.jpg",
+      "taken_at": "2026-11-05T16:54:24",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": false,
+      "problems": [
+        "GPS 無し（棟の根拠に使えない）",
+        "室内（1 階）の写真。外観の面の根拠に使わない。貼り紙・研究室・人が写っていないか未確認",
+        "鮮明度 577.4（100 以上なので使えるが、縁を拡大して確認）"
+      ],
+      "matches_request": "室内の写真（外観には使わない）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": null,
+        "dist_to_centroid_m": null,
+        "heading_deg": null,
+        "centroid_in_view": null
+      }
+    },
+    "PXL_20261105_075519850": {
+      "file": "20261105/PXL_20261105_075519850.jpg",
+      "taken_at": "2026-11-05T16:55:19",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": false,
+      "problems": [
+        "室内（1 階）の写真。外観の面の根拠に使わない。貼り紙・研究室・人が写っていないか未確認",
+        "鮮明度 621.9（100 以上なので使えるが、縁を拡大して確認）",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "室内の写真（外観には使わない）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          53.7,
+          13.8
+        ],
+        "dist_to_centroid_m": 3.5,
+        "heading_deg": 349.0,
+        "centroid_in_view": true
+      }
+    },
+    "PXL_20261105_075532769": {
+      "file": "20261105/PXL_20261105_075532769.jpg",
+      "taken_at": "2026-11-05T16:55:32",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": false,
+      "problems": [
+        "室内（1 階）の写真。外観の面の根拠に使わない。貼り紙・研究室・人が写っていないか未確認",
+        "鮮明度 429.0（100 以上なので使えるが、縁を拡大して確認）",
+        "写真の向きと棟の中心（タワー75 の輪郭）の方向が 135° ずれる。棟が写っていない疑い、または方位が 180° ずれている。仕分け係が目視で確かめる",
+        "立ち位置が棟の輪郭の中（距離 0 m）。GPS は ±数 m の目安"
+      ],
+      "matches_request": "室内の写真（外観には使わない）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": [
+          53.7,
+          13.8
+        ],
+        "dist_to_centroid_m": 3.5,
+        "heading_deg": 110.0,
+        "centroid_in_view": false
+      }
+    },
+    "20261105_165632499": {
+      "file": "20261105/20261105_165632499.jpg",
+      "taken_at": "2026-11-05T16:56:32",
+      "building_assigned": "tower75",
+      "building_source": "staff",
+      "usable": false,
+      "problems": [
+        "GPS 無し（棟の根拠に使えない）",
+        "室内（1 階）の写真。外観の面の根拠に使わない。貼り紙・研究室・人が写っていないか未確認",
+        "鮮明度 491.2（100 以上なので使えるが、縁を拡大して確認）",
+        "暗い部分が多い（0.069）。縁が見えるか確認"
+      ],
+      "matches_request": "室内の写真（外観には使わない）",
+      "next_shots": [],
+      "geometry": {
+        "station_xy_m": null,
+        "dist_to_centroid_m": null,
+        "heading_deg": null,
+        "centroid_in_view": null
+      }
+    }
+  }
+}

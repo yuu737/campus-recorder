@@ -1,0 +1,57 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f0",
+ "face_name": "北面の西端（f0）",
+ "input": [
+  "data/reports/tower75/kansatsu_f0.json",
+  "data/reports/tower75/kansatsu_f20.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "wall_group": {
+  "id": "N-west",
+  "faces": [
+   "f20",
+   "f0"
+  ],
+  "primary": "f20",
+  "note": "観察票の wall_groups。f20 と f0 の境目は写真に無い。観察票は B を f20、北西の部分を f0 と見立てた（寸法の根拠なし）"
+ },
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "f20 と f0 の境目が写真に無い。N-west の列は kazoe_f20.json に数えた（北西の部分 2 列。観察票はこれを f0 と見立てた）"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "N-west として kazoe_f20.json（NWu 10 段・NWb 3 段＋テラスの高さ）"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [
+  {
+   "item": "上の部分の段数",
+   "kansatsu": "上 9 段＋下 3 段＋1F（#1・#62）",
+   "kazoe": "上 10 段（1 段は NWb の笠木で半分隠れる）＋下 3 段＋テラスの高さ",
+   "adopted": "kazoe",
+   "why": "kazoe_f20.json の disagreement と同じ"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f0",
+   "what": "北西の部分（2 列）が f0 の上か",
+   "why": "境目が写真に無い（登録で）"
+  }
+ ],
+ "questions": []
+}

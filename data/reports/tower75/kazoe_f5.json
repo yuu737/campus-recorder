@@ -1,0 +1,63 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f5",
+ "face_name": "S-SW の東の端（f5）",
+ "input": [
+  "data/reports/tower75/kansatsu_f5.json",
+  "data/reports/tower75/kansatsu_f4.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "wall_group": {
+  "id": "S-SW",
+  "faces": [
+   "f4",
+   "f5"
+  ],
+  "primary": "f4",
+  "note": "観察票の wall_groups。境目は写真に無い"
+ },
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "f4 と f5 の境目が写真に無い。S-SW の列は kazoe_f4.json（2 列）"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "S-SW として kazoe_f4.json（窓の段 5＋デッキの階）"
+ },
+ "interpreted": [],
+ "segments": [
+  {
+   "what": "全高の縦のガラスのすき間（西の袖 f6 との入隅）",
+   "count": 1,
+   "from": "S-SW の右端",
+   "width_ratio": null,
+   "width_why": "正面化していないので柱間に対する比は出さない（測量係）",
+   "status": "measured",
+   "evidence": [
+    "PXL_20261105_061647959",
+    "PXL_20261105_061708177"
+   ],
+   "note": "#90・#93 で 1 本。この辺に乗るかは登録で"
+  }
+ ],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f4・f5",
+   "what": "2 列とすき間がどの辺に乗るか",
+   "why": "境目が写真に無い（登録で）"
+  }
+ ],
+ "questions": []
+}

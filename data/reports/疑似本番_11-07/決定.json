@@ -266,6 +266,23 @@
    "result": "検収係（SendMessage、同じ係）が soten.json の open 2 件を decided に（値・design は変えず）。open 0。工程 10 へ",
    "rule": "写真 2 枚以上と製図板が合う値と、1 枚の局所の見え＋航空写真の解釈が食い違う時は、前者を採り後者の場所を撮影依頼にする。高さと奥行きが組で決まる部品で 1 方向の写真しか無い時は、比率の値のまま撮影依頼",
    "record": "pipeline（kyotsu-minami の runner subagent）"
+  },
+  {
+   "id": "K-016",
+   "at": "2026-11-07T16:24:26+09:00",
+   "building": "tower75",
+   "event": {
+    "kind": "stuck（事件に出ない。J-028）",
+    "why": "soten.json の open 1 件：f19 の頂部のガラスの冠の奥行き（模型 1.3 m、航空写真の明るい四角なら 6 m 前後）",
+    "evidence": [
+     "out/tower75/soten.json（open 1、rule の欄に止めた理由）"
+    ]
+   },
+   "decision": "冠の奥行きは模型の 1.3 m（観察票と写真 4 枚の比）のまま。航空写真の四角が冠の屋根か設備かは撮影依頼（屋上が見える高い所から）で決める。争点の status を decided に書き換えるためだけに検収係を再開はしない（再開すると文脈約 50 万トークンを読み直す）。この決定は 決定.json に残す",
+   "reason": "K-015 の規則②（高さ・奥行きが組で決まり、1 方向の資料しか無い時は今の値のまま撮影依頼）。航空写真 0.49 m/px では決まらない（争点の文）",
+   "result": "値は変えない。soten は open のまま（記録の上では K-016 で決定）",
+   "rule": "K-015 と同じ。争点の書き換えだけのために係を再開しない（本番では進行役が soten に decision を書く道具が要る）",
+   "record": "pipeline（tower75 の runner subagent）"
   }
  ]
 }

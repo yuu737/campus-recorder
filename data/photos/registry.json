@@ -16357,6 +16357,159 @@
    "registered_by": "register-chain"
   },
   {
+   "photo": "PXL_20261105_062317561",
+   "building": "tower75",
+   "face": "f11",
+   "kind": "pose",
+   "period": "during",
+   "file": "20261105/tower75/PXL_20261105_062317561.jpg",
+   "image_size": [
+    3472,
+    4624
+   ],
+   "camera": {
+    "focal_px": 1870.8946705855305,
+    "image_size": [
+     3472,
+     4624
+    ],
+    "R_cv": [
+     [
+      0.7091444374804867,
+      -0.7045608322116534,
+      0.02661203681994434
+     ],
+     [
+      0.43840188231869504,
+      0.41106472203920547,
+      -0.7992681551733785
+     ],
+     [
+      0.5521937670509409,
+      0.5784633333306899,
+      0.6003850561281803
+     ]
+    ],
+    "t_cv": [
+     -43.08077358396117,
+     -13.926520878502586,
+     -18.193934124730546
+    ],
+    "camera_xyz": [
+     46.7,
+     -14.1,
+     0.94
+    ],
+    "camera_height_m": 0.94,
+    "distance_to_face_m": null,
+    "blender": {
+     "location": [
+      46.70248093852012,
+      -14.10380047455202,
+      0.9388086429725233
+     ],
+     "rotation_euler": [
+      2.215044852163534,
+      -0.02661517893105423,
+      -0.782155911065347
+     ],
+     "lens_mm": 14.565788957845825,
+     "sensor_width_mm": 36.0,
+     "sensor_fit": "AUTO",
+     "resolution": [
+      3472,
+      4624
+     ]
+    }
+   },
+   "visible_faces": [
+    {
+     "face": "f4",
+     "area_m2": 50.47,
+     "distance_m": 14.17,
+     "unoccluded": 0.36
+    },
+    {
+     "face": "f7",
+     "area_m2": 290.25,
+     "distance_m": 11.29,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f8",
+     "area_m2": 145.88,
+     "distance_m": 15.49,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f9",
+     "area_m2": 703.77,
+     "distance_m": 14.31,
+     "unoccluded": 0.91
+    },
+    {
+     "face": "f11",
+     "area_m2": 511.15,
+     "distance_m": 11.66,
+     "unoccluded": 1.0
+    },
+    {
+     "face": "f13",
+     "area_m2": 502.76,
+     "distance_m": 14.12,
+     "unoccluded": 0.88
+    }
+   ],
+   "via": [
+    "PXL_20261105_062323658",
+    "PXL_20261105_062311895",
+    "PXL_20261105_062330274"
+   ],
+   "source": {
+    "method": "chain：SIFT（比の検定・基礎行列の RANSAC）→ 登録済みの写真の面の平面に戻した点 → solvePnPRansac（SQPnP）→ 内点で LM",
+    "focal_source": "exif_35mm",
+    "ground_face": "f9"
+   },
+   "check": {
+    "reproj_rms_px": 2.85,
+    "reproj_median_px": 2.27,
+    "reproj_max_px": 5.88,
+    "n_points": 191,
+    "n_candidates": 1176,
+    "inlier_ratio": 0.162,
+    "inlier_box_frac": 0.287,
+    "points_by_face": {
+     "PXL_20261105_062323658:f9": 168,
+     "PXL_20261105_062323658:f13": 23
+    },
+    "points_spread_m": [
+     20.14,
+     10.73,
+     60.35
+    ],
+    "camera_height_m": 0.94,
+    "via_stats": {
+     "PXL_20261105_062323658": {
+      "matches": 1143,
+      "geometric": 843,
+      "on_plane": 759
+     },
+     "PXL_20261105_062311895": {
+      "matches": 700,
+      "geometric": 460,
+      "on_plane": 443
+     },
+     "PXL_20261105_062330274": {
+      "matches": 629,
+      "geometric": 301,
+      "on_plane": 281
+     }
+    }
+   },
+   "registered_at": "2026-11-07T16:20:32",
+   "registered_by": "register-chain"
+  },
+  {
    "photo": "PXL_20261105_062323658",
    "building": "tower75",
    "face": "f11",
@@ -29434,6 +29587,62 @@
    "period": "during",
    "chain_reason": "再投影の誤差 3.2 px（3.0 px 超）",
    "chain_code": "reproj"
+  },
+  {
+   "photo": "PXL_20261103_074445985",
+   "building": "tower75",
+   "face": "f11",
+   "period": "during",
+   "chain_reason": "再投影の誤差 3.2 px（3.0 px 超）",
+   "chain_code": "reproj"
+  },
+  {
+   "photo": "PXL_20261103_074457079",
+   "building": "tower75",
+   "face": "f9",
+   "period": "during",
+   "chain_reason": "再投影の誤差 3.0 px（3.0 px 超）",
+   "chain_code": "reproj"
+  },
+  {
+   "photo": "PXL_20261103_074413490",
+   "building": "tower75",
+   "face": "f9",
+   "period": "during",
+   "chain_reason": "視点に合う点が写真の 3.0% の範囲に固まっている（4% 未満。誤対応の疑い）",
+   "chain_code": "clustered"
+  },
+  {
+   "photo": "PXL_20261105_062527087",
+   "building": "tower75",
+   "face": "f13",
+   "period": "during",
+   "chain_reason": "視点に合う点が 23 点で候補の 15%（30 点未満なら 25% 以上が要る。偶然の一致の疑い）",
+   "chain_code": "weak"
+  },
+  {
+   "photo": "PXL_20261103_070742138",
+   "building": "tower75",
+   "face": "f7",
+   "period": "during",
+   "chain_reason": "視点に合う点が 15 点で候補の 12%（30 点未満なら 25% 以上が要る。偶然の一致の疑い）",
+   "chain_code": "weak"
+  },
+  {
+   "photo": "PXL_20261105_062537872",
+   "building": "tower75",
+   "face": "f13",
+   "period": "during",
+   "chain_reason": "PnP が解けない（つじつまの合う対応の組が無い）",
+   "chain_code": "pnp_fail"
+  },
+  {
+   "photo": "PXL_20261103_070654529",
+   "building": "tower75",
+   "face": "f7",
+   "period": "during",
+   "chain_reason": "視点に合う対応点が 8 点（12 点未満）",
+   "chain_code": "few_inliers"
   }
  ]
 }

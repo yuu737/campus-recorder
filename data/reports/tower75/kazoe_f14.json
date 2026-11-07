@@ -1,0 +1,49 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f14",
+ "face_name": "東面 E の南端（f14）",
+ "input": [
+  "data/reports/tower75/kansatsu_f14.json",
+  "data/reports/tower75/kansatsu_f15.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "wall_group": {
+  "id": "E",
+  "faces": [
+   "f14",
+   "f15"
+  ],
+  "primary": "f15",
+  "note": "観察票の wall_groups。境目は写真に無い"
+ },
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "f14 と f15 の境目が写真に無い。E の列は kazoe_f15.json。観察票は f14 を南東の低い塊の東向き 2 列（#127）と読んだが、数え係は 2 枚で確かめていない"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "E として kazoe_f15.json。南東の低い塊の段は南向き（kazoe_f13.json、窓の段 5）と同じ塊"
+ },
+ "interpreted": [],
+ "segments": [],
+ "exceptions": [],
+ "disagreement": [],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f14",
+   "what": "南東の低い塊の東向きの列とガラスの渡り廊下の取り付きが f14 の上か",
+   "why": "境目が写真に無い（登録で）"
+  }
+ ],
+ "questions": []
+}

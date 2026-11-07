@@ -1,0 +1,81 @@
+{
+ "schema": "kazoe/1",
+ "building": "tower75",
+ "made_by": "数え係（kazoe・Claude Opus 5.5、claude-opus-5-5）",
+ "made_at": "2026-11-07T10:40:00+09:00",
+ "rule": "数と比だけ。寸法は書かない。measured は索引で tower75・その面（faces）に仕分け済み・low でない写真が 2 枚以上で数が一致した物。1 枚でしか数え切れない物は estimated、見えない物は unknown（値 null）。写真は id（本文の #n は仕分け係の一覧番号）",
+ "left_end": "左端＝面の from（外から面を見て左。一時の土台 out/tower75/tmp/tower75.json の faces の from→to。全部の面でそうなっていることを座標で確かめた）",
+ "face": "f1",
+ "face_name": "西面 W の北端（f1）",
+ "input": [
+  "data/reports/tower75/kansatsu_f1.json",
+  "data/reports/tower75/kansatsu_f3.json"
+ ],
+ "crops": "切り出しは out/tower75/kazoe/（数えに使った拡大。git に入らない）",
+ "wall_group": {
+  "id": "W",
+  "faces": [
+   "f1",
+   "f2",
+   "f3"
+  ],
+  "primary": "f3",
+  "note": "観察票の wall_groups。f1・f2・f3 の境目は写真に無いので、W の 1 本の線として数えた。どの列がどの辺に乗るかは登録（測量係）で決める"
+ },
+ "left_end_here": "左端＝北西の角（北）",
+ "bays": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "f1・f2・f3 の境目が写真に無い。W の列は kazoe_f3.json に 1 本の線として数えた（主部 7＋NWb 1＋SWb・SWu）。f1 だけの列数は登録で辺に割り当ててから"
+ },
+ "floors": {
+  "value": null,
+  "status": "unknown",
+  "evidence": [],
+  "why": "W として kazoe_f3.json（窓の段 13＋デッキの階）。f1 の範囲が決まらない"
+ },
+ "interpreted": [],
+ "segments": [
+  {
+   "what": "北西の低い塊（NWb）の西向きの窓の列（W の北の角のすぐ南）",
+   "count": 1,
+   "floors": "窓の段 3＋デッキの階（ガラスの扉とガラスブロックの欄間）",
+   "from": "0（北の角）",
+   "width_ratio": null,
+   "width_why": "正面化していないので柱間に対する比は出さない（測量係）",
+   "status": "measured",
+   "evidence": [
+    "PXL_20261103_070044607",
+    "PXL_20261105_061836019"
+   ],
+   "note": "#3（拡大 nw3_NWb.jpg）：西向きに 1 列、ガラスブロックの升 3。#101（拡大 nw101z.jpg）：西向きに 1 列、升 3。一致。この列が f1 に乗るかは登録で（観察票は f1 と読んだ）"
+  }
+ ],
+ "exceptions": [],
+ "disagreement": [
+  {
+   "item": "NWb の西向きの列数",
+   "kansatsu": "2 列（#3）",
+   "kazoe": "1 列（#3・#101）",
+   "adopted": "kazoe",
+   "why": "#3 の 2 本目の列は NWb の上端で切れずに上へ続く（主部の 1 本目）"
+  },
+  {
+   "item": "NWb の段数",
+   "kansatsu": "#62 で 3、#3 で 4 に見える（null）",
+   "kazoe": "3（#1・#3・#62 の北向きの 2 列、#3・#101 の西向きの 1 列、どれも升 3）",
+   "adopted": "kazoe",
+   "why": "#3 の拡大で北向きの 2 列とも升は 3。デッキの階のガラスブロックを 4 段目に数えると 4 に見える"
+  }
+ ],
+ "requests": [
+  {
+   "kind": "check",
+   "face": "f1",
+   "what": "NWb の西向きの列と主部の 1 本目が f1 の上か",
+   "why": "境目が写真に無い（登録で）"
+  }
+ ],
+ "questions": []
+}
