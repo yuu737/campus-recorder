@@ -148,21 +148,24 @@ export function setupLook(opt) {
   // 束ねないと段ごとに部品の数だけ描画命令が出て、PC でも 1 枚 200 ms を超えた（11/6 の計測）。
   // 代役はレイヤー 1 にだけ置く（画面のカメラには映らない。影のカメラと GTAO の時だけ見る）
   const PROXY_LAYER = 1;
+  // PLATEAU の箱（userData.plateauBox）は別の代役に分ける：箱を消すボタンで影も一緒に消せるように
   const casters = [];
-  const proxy = (() => {
+  const buildProxy = (want, name) => {
     scene.updateMatrixWorld(true);
     let nv = 0, ni = 0;
+    const mine = [];
     scene.traverse((o) => {
       if (!o.isMesh || o.isInstancedMesh || o.isSkinnedMesh || !o.castShadow || !o.geometry.attributes.position) return;
+      if (!!o.userData.plateauBox !== want) return;
       for (let p = o; p; p = p.parent) if (!p.visible) return;
       if ([].concat(o.material).some((m) => m.transparent)) return;
-      casters.push(o);
+      casters.push(o); mine.push(o);
       const g = o.geometry; nv += g.attributes.position.count; ni += g.index ? g.index.count : g.attributes.position.count;
     });
     const pos = new Float32Array(nv * 3), nor = new Float32Array(nv * 3), idx = new Uint32Array(ni);
     const v = new THREE.Vector3(), n = new THREE.Vector3(), nm = new THREE.Matrix3();
     let vo = 0, io = 0;
-    for (const o of casters) {
+    for (const o of mine) {
       const g = o.geometry, P = g.attributes.position, N = g.attributes.normal;
       nm.getNormalMatrix(o.matrixWorld);
       for (let i = 0; i < P.count; i++) {
@@ -183,10 +186,12 @@ export function setupLook(opt) {
     m.material.shadowSide = THREE.DoubleSide;           // 庇や板（厚みの無い面）も影を落とす
     m.castShadow = true; m.receiveShadow = false;
     m.layers.set(PROXY_LAYER);
-    m.name = "shadow_proxy";
+    m.name = name;
     scene.add(m);
     return m;
-  })();
+  };
+  const proxy = buildProxy(false, "shadow_proxy");
+  const boxProxy = buildProxy(true, "shadow_proxy_plateau");
   for (const l of csm.lights) l.shadow.camera.layers.enable(PROXY_LAYER);
 
   // 5) 後処理（PC）：GTAO の接触影 → トーンマップ → SMAA。スマホは後処理なし（端末の MSAA だけ）
@@ -259,7 +264,7 @@ export function setupLook(opt) {
   const info = {
     t: hour, doy, sunAltDeg: +(h / D2R).toFixed(1), sunAzDeg: +(az / D2R).toFixed(1),
     cascades: csm.cascades, shadowMapSize: csm.shadowMapSize, post: usePost, ao: !!gtao, mobile, cut, meter,
-    fog: "#" + fogColor.getHexString(), casters: casters.length, proxyTris: proxy.geometry.index.count / 3,
+    fog: "#" + fogColor.getHexString(), casters: casters.length, proxyTris: (proxy.geometry.index.count + boxProxy.geometry.index.count) / 3,
   };
-  return { render, resize, prepare, info, csm, get composer() { return composer; } };
+  return { render, resize, prepare, info, csm, boxProxy, get composer() { return composer; } };
 }

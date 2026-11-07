@@ -28,8 +28,8 @@
   .touch #stick { display:block; }
   .touch #msg { bottom:160px; }
   .noui .panel, .noui #stick { display:none !important; }
-  #evbtn { margin-top:6px; font:inherit; padding:4px 10px; border:1px solid #b9c3cc; border-radius:14px; background:#fff; color:var(--ink); }
-  #evbtn.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  #evbtn, #boxbtn { margin-top:6px; font:inherit; padding:4px 10px; border:1px solid #b9c3cc; border-radius:14px; background:#fff; color:var(--ink); }
+  #evbtn.on, #boxbtn.on { background:var(--ink); color:#fff; border-color:var(--ink); }
   #evlegend { display:none; margin-top:4px; }
   .evmode #evlegend { display:block; }
   .sw.hyp { background:repeating-linear-gradient(45deg, #f2c94c 0 3px, #8a6d12 3px 5px); }
@@ -53,6 +53,7 @@
   <span class="sw" style="background:var(--gray)"></span>未測（PLATEAU の箱）
   <div id="jump"></div>
   <button id="evbtn" type="button">根拠で見る</button>
+  <button id="boxbtn" type="button">PLATEAU の箱を消す</button>
   <div id="evlegend">
     <span class="sw" style="background:#3fa34d"></span>measured（写真で測った）<br>
     <span class="sw" style="background:#e8912d"></span>estimated（推定。方法あり）<br>
@@ -256,6 +257,7 @@ function groundZ(x, n) {
 }
 
 const pickables = [];
+const plateauBoxes = [];                               // 未測の PLATEAU の箱（消す・出すボタンの対象）
 const matGray = new THREE.MeshStandardMaterial({ color: 0x9aa3ab, roughness: 0.9 });
 const matOn = new THREE.MeshStandardMaterial({ color: 0xe0702a, roughness: 0.9 });
 for (const b of site.boxes) {
@@ -267,7 +269,8 @@ for (const b of site.boxes) {
   mesh.userData.info = { id: b.id, name: b.name, grounded: b.grounded, measured: b.measured, estimated: b.estimated, unknown: b.unknown, height: b.height,
                          shape_ratio: b.shape_ratio, evidence_ratio: b.evidence_ratio };
   mesh.castShadow = mesh.receiveShadow = true;
-  scene.add(mesh); pickables.push(mesh);
+  mesh.userData.plateauBox = true;
+  scene.add(mesh); pickables.push(mesh); plateauBoxes.push(mesh);
 }
 // 根拠の層：glb の extras（node / 素材の userData.evidence・face・part）で素材を差し替える。戻すと元の素材
 const evRoots = [];
@@ -332,6 +335,16 @@ function setEvidence(on) {
   if (lookFx) lookFx.prepare();
 }
 document.getElementById("evbtn").addEventListener("click", () => setEvidence(!evOn));
+// PLATEAU の箱を消す・出す（影の代役も一緒に。?boxes=0 で消した状態から始める）
+let boxesOn = true;
+function setBoxes(on) {
+  boxesOn = on;
+  for (const m of plateauBoxes) m.visible = on;
+  if (lookFx && lookFx.boxProxy) lookFx.boxProxy.visible = on;
+  const btn = document.getElementById("boxbtn");
+  btn.classList.toggle("on", !on); btn.textContent = on ? "PLATEAU の箱を消す" : "PLATEAU の箱を出す";
+}
+document.getElementById("boxbtn").addEventListener("click", () => setBoxes(!boxesOn));
 // 室内の明かり：部屋の中（roomBoxes）にいる間だけ点ける半球光（天井に遮られて日が入らないので真っ暗にならないように）
 const roomBoxes = [];
 const roomLight = new THREE.HemisphereLight(0xfff6e8, 0x8a7f70, 0);
@@ -373,7 +386,7 @@ await Promise.all(Object.entries(site.models).map(([id, m]) => new Promise((res)
     evRoots.push(root);
     root.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(root);
-    const ct = bb.getCenter(new THREE.Vector3()); ct.y = bb.min.y; centers[id] = ct;
+    const ct = bb.getCenter(new THREE.Vector3()); ct.y = bb.min.y; ct.size = bb.getSize(new THREE.Vector3()); centers[id] = ct;
     res();
   }, undefined, (e) => { console.error("glb 読み込み失敗", m.url, e); res(); });
 })));
@@ -418,12 +431,22 @@ const groundAt = (x, z) => groundZ(x, -z);
 const jump = document.getElementById("jump");
 function addJump(label, id, off) {
   const c = centers[id]; if (!c) return;
+  if (typeof off === "function") off = off(c.size);      // 棟の大きさから立つ位置を決める
   const go = () => place(c.x + off[0], c.z + off[1], Math.atan2(off[0], off[1]));   // 棟の方を向く
   const btn = document.createElement("button"); btn.textContent = label; btn.onclick = go; jump.appendChild(btn);
   return go;
 }
 const goHonbu = addJump("本部棟へ", "honbu", [-20, 37]);
 addJump("タワー75へ", "tower75", [10, 70]);
+// 面の前に立つ：mid＝面の中点（東, 北 m。棟 JSON の faces の from/to の中点）、bearing＝面の外向きの方位°、dist＝面からの距離 m
+function addJumpFace(label, mid, bearing, dist) {
+  const b = bearing * Math.PI / 180, dx = Math.sin(b) * dist, dz = -Math.cos(b) * dist;
+  const btn = document.createElement("button"); btn.textContent = label;
+  btn.onclick = () => place(mid[0] + dx, -mid[1] + dz, Math.atan2(dx, dz));   // 面の方を向く
+  jump.appendChild(btn);
+}
+addJumpFace("図書館へ", [7.79, -17.14], 298, 22);         // 西北西面 f2（正面入口）
+addJump("共通講義棟南へ", "kyotsu-minami", (s) => [-10, s.z / 2 + 30]);
 (goHonbu || (() => place(0, 0, 0)))();
 let fixed = null;                                      // ?cam= の固定視点（three.js の座標）
 if (fixedCam) {
@@ -474,7 +497,7 @@ const ray = new THREE.Raycaster();
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 function pick(cx, cy) {
   ray.setFromCamera(new THREE.Vector2(cx / innerWidth * 2 - 1, -(cy / innerHeight) * 2 + 1), camera);
-  const hit = ray.intersectObjects(pickables, false)[0];
+  const hit = ray.intersectObjects(pickables.filter((o) => o.visible), false)[0];   // 消した箱は札の対象外
   if (!hit) { card.style.display = "none"; return; }
   const i = hit.object.userData.info;
   const pct = (v) => (v == null ? "—" : Math.round(v * 100) + "%");
@@ -527,7 +550,7 @@ function fpsTick() {
 window.__fps = fpsM;
 if (LOOK) {
   try {
-    const { setupLook } = await import("./look.js");
+    const { setupLook } = await import("./look.js?v=boxes1");   // 版の印：look.js を変えたら上げる（古いキャッシュを避ける）
     lookFx = setupLook({ renderer, scene, camera, sun, Q, mobile: touchDevice || innerWidth < 768,
                        lat: DAY?.lat ?? 35.1355, lon: DAY?.lon ?? 136.9755, date: DAY?.date, time: DAY?.time,
                        materials: Object.values(EV_MAT), onResize: resize });
@@ -535,6 +558,7 @@ if (LOOK) {
   } catch (e) { console.error("新の見た目の準備に失敗（旧の見た目で続ける）", e); lookFx = null; sun.visible = sun.castShadow = true; loadEnv(site.env); }
 }
 await envReady;
+if (Q.get("boxes") === "0") setBoxes(false);          // 影の代役ができた後に当てる
 document.getElementById("loading").style.display = "none";
 frame();
 window.__campus = { dbg, camera, player, place, pick, centers, renderer, scene, sun, setEvidence, look: () => lookFx };   // 動作確認用
