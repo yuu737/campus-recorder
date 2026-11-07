@@ -311,7 +311,7 @@ def test_retry_429_then_ok(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_agent("kazoe", "数える", cwd=tmp_path, agents_dir=".claude/agents", building_id="b1")
     assert waits == [60.0, 120.0] and len(r["calls"]) == 3 and r["session_id"] == "S1"
-    assert seen[0][0] is None and seen[0][1].endswith("\n\n数える") and "手数は 30 手まで" in seen[0][1]
+    assert seen[0][0] is None and seen[0][1].endswith("\n\n数える") and "予算（手数 30・" in seen[0][1]
     assert seen[1][0] == "S1" and "続きから" in seen[1][1] and "数える" in seen[1][1]
     assert r["input_tokens"] == 100 and r["stop"] == "success" and not r["is_error"] and "呼び出し 3 回" in r["note"]
     assert agents.is_rate_limit(RuntimeError("You have hit your 5-hour limit")) and not agents.is_rate_limit(ValueError("x"))
@@ -417,9 +417,15 @@ def test_continue_dry_run(tmp_path):
     assert not (tmp_path / "out/b1/pipeline_state.json").exists()
 
 
+def _idx(tmp_path, photos):
+    (tmp_path / "data/photos").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "data/photos/index.json").write_text(json.dumps({"photos": photos}, ensure_ascii=False), encoding="utf-8")
+
+
 def test_continue_keeps_previous_state(tmp_path, monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
     _b(tmp_path)
+    _idx(tmp_path, [{"id": "N1", "building": "b1", "assigned_by": "staff"}])
     monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: _ok())
     old = agents._new_state("b1", "full", None, ["kansatsu"], None, None)
     old.update(status="stopped", record_name="pipeline_20261107_083839.json")
@@ -433,8 +439,9 @@ def test_continue_keeps_previous_state(tmp_path, monkeypatch):
 
 def test_continue_known_events_do_not_stop(tmp_path):
     _b(tmp_path, requests=[{"kind": "asset", "what": "長机の見た目", "status": "open"}])
+    _idx(tmp_path, [{"id": "N1", "building": "b1", "assigned_by": "staff"}])
     r = agents.continue_pipeline("b1", None, steps=["satsuei", "shiwake"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
-    assert not r["stopped_early"] and "アセット" in r["runs"][0]["known_events"][0]
+    assert not r["stopped_early"] and any("アセット" in w for w in r["runs"][0]["known_events"])
     # 最初からの pipeline では止まる
     r2 = agents.run_pipeline("b1", steps=["satsuei", "shiwake"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
     assert r2["stopped"]["reason"] == "event"
@@ -645,12 +652,84 @@ def test_prompt_states_limits_and_partial_continues(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_pipeline("zz9", steps=["sokuryo"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=3.0)
     hdr = seen[0][1].split("\n\n")[0]
-    assert hdr.startswith("【この呼び出しの上限】手数は 60 手まで。費用は 3.00 USD まで（棟の残り 3.00 USD）")
-    assert "8 割（48 手か 2.40 USD）" in hdr and agents.CONTINUE_MARK in hdr and "自動の続きはその会話から" in hdr
+    assert hdr.startswith("予算（手数 60・1 回の費用 3.00 USD・棟の残り 3.00 USD）はこれだけ。")
+    assert "上限の 8 割を使ったら途中を保存し" in hdr and agents.CONTINUE_MARK in hdr
     assert "zz9" not in hdr and seen[0][2] == 3.0
     assert not r["stopped_early"] and [s for s, _, _ in seen] == [None, "SP"]
     h2 = seen[1][1].split("\n\n")[0]
     assert "手数 48 手・費用 0.40 USD" in h2 and "棟の残り 2.60 USD" in h2 and "係が上限の 8 割で区切った" in seen[1][1]
     assert r["auto_resumes"]["sokuryo"][0]["kind"] == "partial" and r["spent_usd"] == pytest.approx(0.5)
     dr = agents.run_agent("sokuryo", "x", dry_run=True, max_budget_usd=2.0)
-    assert dr["max_turns"] == 60 and "費用は 2.00 USD まで" in dr["limits_header"]
+    assert dr["max_turns"] == 60 and "1 回の費用 2.00 USD" in dr["limits_header"]
+
+
+def test_preamble_text_and_not_for_code_steps():
+    """係の依頼文の共通の前置き（予算・試行錯誤 2 回・省いてよい物／いけない物・8 割で【続きあり】）。コードの工程には付けない。"""
+    h = agents.limits_header(60, 3.0, None)
+    assert h == ("予算（手数 60・1 回の費用 3.00 USD・棟の残り 上限なし）はこれだけ。試行錯誤は同じ事を 2 回までにし、手戻りの無い順で進む。"
+                 "省いてよい物：言い直し、同じ確かめの繰り返し、報告の飾り。省いてはいけない物：規約 1・5（根拠の無い寸法を書かない、決めつけない）、"
+                 "鎖の各輪の写真 id と ±、2 つ目の物差しでの検算、測れない物の unknown と撮影依頼、台帳を道具でだけ書くこと。"
+                 "上限の 8 割を使ったら途中を保存し、返事の 1 行目を【続きあり】にして残りを箇条書きで終える。\n\n")
+    h2 = agents.limits_header(60, 1.5, 4.0, used_turns=48, used_usd=0.4)
+    assert "棟の残り 4.00 USD" in h2 and "これまでに使ったのは 手数 48 手・費用 0.40 USD" in h2 and h2.endswith("\n\n")
+    assert agents.run_agent("seizu", "x", dry_run=True, max_budget_usd=2.0)["limits_header"] == ""
+    assert agents.run_agent("kenshu", "x", dry_run=True, max_budget_usd=2.0)["limits_header"].startswith("予算（")
+
+
+def test_find_new_photos_by_building_json(tmp_path):
+    """写真フォルダ無しの追記：索引でこの棟の写真のうち、前回の棟 JSON に id が出てこない物が新しい写真。
+    id が別の id の頭と同じでも取り違えない。メジャーは分けて数える。"""
+    (tmp_path / "data/buildings").mkdir(parents=True)
+    (tmp_path / "data/buildings/b1.json").write_text(json.dumps({
+        "id": "b1", "faces": [{"h": {"value": 3.4, "status": "measured",
+                                     "evidence": {"photos": ["P1"], "chain": [{"photo": "柱92cm"}]}}}],
+        "requests": [{"kind": "photo", "status": "answered", "answered_by": ["P2"]}]}), encoding="utf-8")   # ascii の \u で書く
+    st = {"assigned_by": "staff"}
+    _idx(tmp_path, [{"id": "P1", "building": "b1", **st}, {"id": "P2", "building": "b1", **st}, {"id": "柱", "building": "b1", **st},
+                    {"id": "柱92cm", "building": "b1", **st}, {"id": "T1", "building": "b1", "ruler": "tape_measure", **st},
+                    {"id": "N1", "building": "b1", **st}, {"id": "X1", "building": "b2", **st}, {"id": "P10", "building": "b1", **st},
+                    {"id": "OLD1", "building": "b1"}, {"id": "OLD2", "building": "b1", "assigned_by": "shiwake"}])
+    f = agents.find_new_photos("b1", tmp_path)      # 職員の写真だけ。assigned_by の無い古い写真・仕分けの写真は新しくない
+    assert f == {"ids": ["柱", "T1", "N1", "P10"], "tape": ["T1"], "building_photos": 7}
+
+
+def test_continue_without_folder_names_new_photos(tmp_path):
+    """写真フォルダ無しで始めた追記は、state の new_photos を依頼文に書く（多ければ数と条件）。フォルダが有れば今のまま。"""
+    _b(tmp_path, requests=[{"kind": "photo", "answered_by": ["OLD"]}])
+    _idx(tmp_path, [{"id": "OLD", "building": "b1", "assigned_by": "staff"}, {"id": "N1", "building": "b1", "assigned_by": "staff"},
+                    {"id": "T1", "building": "b1", "ruler": "tape_measure", "assigned_by": "staff"}, {"id": "OLD2", "building": "b1"}])
+    r = agents.continue_pipeline("b1", None, dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    assert r["state_preview"]["new_photos"] == ["N1", "T1"]
+    assert r["runs"][0]["new_photos"] == {"n": 2, "tape": 1, "building_photos": 3}
+    by = {s["step"]: s for s in r["steps"]}
+    for st in ("satsuei", "shiwake", "sokuryo", "sekkei", "kenshu"):
+        t = by[st]["task"]
+        assert "新しい写真は 2 枚（うちメジャー（ruler: tape_measure）1 枚）" in t and "id：N1。" in t and "メジャーの写真 id：T1。" in t
+        assert "OLD" not in t
+    assert by["seizu"]["task"] == "recorder run data/buildings/b1.json --fast"
+    r2 = agents.continue_pipeline("b1", "フォルダ/b1", dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    assert r2["state_preview"]["new_photos"] is None and "【新しい写真】" not in r2["steps"][0]["task"]
+    _idx(tmp_path, [{"id": f"N{i}", "building": "b1", "assigned_by": "staff", **({"ruler": "tape_measure"} if i < 3 else {})}
+                    for i in range(40)])
+    r3 = agents.continue_pipeline("b1", None, steps=["satsuei"], dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
+    t = r3["steps"][0]["task"]
+    assert "新しい写真は 40 枚（うちメジャー（ruler: tape_measure）3 枚）" in t and "N39" not in t
+    assert "`recorder photos list --building b1` で出る写真のうち assigned_by が staff で data/buildings/b1.json に id が無い物" in t
+    assert "`recorder photos list --building b1 --ruler tape_measure`" in t
+
+
+def test_continue_without_new_photos_stops_for_human(tmp_path, monkeypatch):
+    """新しい写真が 0 枚なら最初の工程の前で止めて人を呼ぶ。人が見て resume すれば続ける。"""
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    _b(tmp_path, requests=[{"kind": "photo", "answered_by": ["OLD"]}])
+    _idx(tmp_path, [{"id": "OLD", "building": "b1", "assigned_by": "staff"}, {"id": "OLD2", "building": "b1"}])
+    calls = []
+    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: calls.append(task) or _ok())
+    r = agents.continue_pipeline("b1", None, steps=["satsuei", "shiwake"], cwd=tmp_path, agents_dir=".claude/agents")
+    assert calls == [] and r["stopped"]["reason"] == "event" and r["stopped"]["step"] == "satsuei"
+    assert "新しい写真が 0 枚" in r["stopped"]["why"]
+    st = agents.load_state("b1", tmp_path)
+    assert st["status"] == "stopped" and st["new_photos"] == [] and st["done"] == []
+    assert [e["kind"] for e in st["pending_events"]] == ["human"] and st["pending_events"][0]["call"] == "human"
+    r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
+    assert len(calls) == 2 and not r2["stopped_early"] and r2["done"] == ["satsuei", "shiwake"]

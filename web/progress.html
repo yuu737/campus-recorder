@@ -41,6 +41,12 @@ body{overflow:hidden}
 .stopbar{grid-column:1/3;display:none;background:var(--amberbg);color:var(--amber);border:1px solid var(--amber);border-radius:8px;padding:6px 12px;font-weight:500}
 .stopbar.on{display:block}
 .stopbar code{font-family:ui-monospace,Consolas,monospace;background:var(--card);border-radius:4px;padding:0 5px;color:var(--ink)}
+.stopbar .sbctl{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px;margin-left:10px}
+.stopbar input{width:5.5em;font:inherit;padding:2px 6px;border:1px solid var(--amber);border-radius:6px;background:var(--card);color:var(--ink);margin:0 4px}
+.stopbar small{font-weight:400;margin-left:4px}
+.stopbar button{font:inherit;font-weight:600;padding:3px 14px;border-radius:6px;border:1px solid var(--amber);background:var(--amber);color:var(--card);cursor:pointer}
+.stopbar button:disabled{opacity:.45;cursor:default}
+.stopbar .sbmsg{font-weight:400}
 /* 中央の場面 */
 .main{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:0;
   display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px;overflow:hidden}
@@ -191,6 +197,6 @@ body:hover .ctl{opacity:.9}
   <div class="film" id="film"></div>
 </div>
 <div class="ctl" id="ctl">← → 場面　スペース 一時停止</div>
-<script src="progress.js?v=3"></script>
+<script src="progress.js?v=4"></script>
 </body>
 </html>

@@ -78,6 +78,10 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 .prog .dots i.done{background:var(--done)}.prog .dots i.partial{background:var(--partial)}.prog .dots i.wait{background:var(--wait)}
 .prog .last{grid-column:1/-1;color:var(--ink2);font-size:13px;line-height:1.5}
 .prog .wait{display:inline-block;background:#fdecec;color:var(--wait);font-size:12px;border-radius:999px;padding:0 8px;font-weight:700}
+.prog .resume{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:6px}
+.prog .resume .btn{padding:4px 14px;font-size:14px}
+.prog .resume input[type=number]{width:6em;padding:4px 8px}
+.prog .resume .rmsg{font-size:13px}
 .prog .ok{display:inline-block;background:#e6f4ea;color:var(--done);font-size:12px;border-radius:999px;padding:0 8px;font-weight:700}
 .prog .gray{color:var(--ink3);font-size:13px}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin-top:10px}
@@ -197,7 +201,7 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     <span class="cmd" id="cmd">recorder photos assign --from assignments.json</span>
     ボタン 1 つで写真を置いて係を起動するには、リポジトリ直下で <code>recorder serve</code> を起動し、表示された URL で開き直してください。</div>
     <ul class="cant" id="cantList">
-    <li>画面でまだできない事：止まった係の続き（<code>recorder agent resume &lt;棟&gt;</code>）と、作業中の係を止めるボタンはありません。</li>
+    <li>画面でまだできない事：作業中の係を止めるボタンはありません（止まった係の続きは、進捗の欄の「続きから」で）。</li>
     <li>API キーありでこの画面から 1 棟を最後まで通した記録は、まだありません。</li>
     <li>別の大学で敷地の取得から最後まで通した試しは、まだありません。</li>
     </ul>
@@ -601,6 +605,8 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     if (SERVER) { try { const r = await api(`/api/progress?buildings=${ids.map(encodeURIComponent).join(",")}`); if (r.ok) prog = r.j.buildings; } catch (e) {} }
     if (prog) ids.forEach(id => { if (prog[id] && prog[id].run) runs[id] = prog[id].run; });
     const RUN_JA = {running: "係が作業中", done: "係の工程が終わりました", stopped: "止まりました", error: "エラー"};
+    // 描き直しで、打ちかけの上限の欄を消さない（棟 id → 値）
+    const typed = {}; rows.querySelectorAll("input[data-resume-max]").forEach(i => { typed[i.dataset.resumeMax] = i.value; });
     const html = [];
     for (const id of ids) {
       const name = (site && site.designed && site.designed[id] && site.designed[id].name) || [...names].find(([n, i]) => i === id)?.[0] || id;
@@ -616,16 +622,43 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
         last = `${STAGE_JA[cur]}：${st[cur] ? st[cur].result : "記録なし"}`;
       }
       const run = runs[id];
+      const rs = prog && prog[id] ? prog[id].resume : null;   // pipeline_state.json がある棟だけ（F15）
+      if (!run && rs && rs.stopped) last += ` <span class="wait">止まりました${rs.step ? `（${esc(rs.step)}）` : ""}</span>`;
       if (run) last += ` <span class="${run.state === "running" || run.state === "done" ? "ok" : "wait"}">${RUN_JA[run.state] || esc(run.state)}` +
         `${run.stopped_at ? `（${esc(run.stopped_at)}）` : ""}${run.continuing ? "・追記" : ""}${run.dry_run ? "・試し" : ""}</span>`;
       const link = ROOT && rep ? `<a href="${ROOT}out/${id}/report.html">${name}</a>` : name;
       const pv = SERVER ? ` <span class="pv"><a href="progress.html?building=${encodeURIComponent(id)}&live=1">待機画面を開く</a>${rep ? ` ・ <a href="progress.html?building=${encodeURIComponent(id)}&replay=1">再生を見る</a>` : ""}</span>` : "";
+      // 止まった棟だけ「続きから」（POST /api/resume）。費用の上限で止まった時だけ上限の欄
+      let rz = "";
+      if (rs && rs.stopped && !(run && run.state === "running") && (rs.ok || rs.code === "no_key")) {
+        const sug = typed[id] != null ? typed[id] : Math.ceil(Math.max((Number(rs.spent_usd) || 0) + 5, (Number(rs.max_usd) || 0) * 1.5));
+        rz = `<div class="resume" data-resume="${esc(id)}"><span>止まった理由：${esc(rs.label || rs.reason || "不明")}</span>` +
+          (rs.need_max_usd ? `<label>費用の上限 <input type="number" min="0" step="1" data-resume-max="${esc(id)}" value="${esc(sug)}"> USD` +
+            `<span class="gray">（使った額 ${Number(rs.spent_usd).toFixed(2)} USD より大きく）</span></label>` : "") +
+          `<button class="btn primary" type="button" data-resume-go="${esc(id)}"${rs.ok ? "" : " disabled"}>続きから</button>` +
+          `<span class="rmsg">${rs.ok ? "" : esc(rs.why)}</span></div>`;
+      }
       html.push(`<div class="row"><div class="name">${link}<span class="id">${id}</span></div><div class="dots">${dots}</div>
-        <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}${pv}</div></div>`);
+        <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}${pv}${rz}</div></div>`);
     }
     if (!ROOT) html.push(`<div class="gray" style="margin-top:8px">進捗を読むには、リポジトリ直下から配信した URL（…/web/staff.html）で開いてください。</div>`);
     rows.innerHTML = html.join("");
   }
+
+  // 進捗の欄の「続きから」（11/8、F15）：止まった棟を POST /api/resume で続ける
+  $("#rows").addEventListener("click", async ev => {
+    const btn = ev.target.closest("button[data-resume-go]"); if (!btn) return;
+    const id = btn.dataset.resumeGo, box = btn.closest(".resume"), msg = box.querySelector(".rmsg");
+    const body = {building: id}, inp = box.querySelector("input[data-resume-max]");
+    if (inp) { if (inp.value.trim() === "" || !(Number(inp.value) > 0)) { msg.innerHTML = `<span class="warn">上限（USD）を数で入れてください</span>`; return; }
+      body.max_usd = Number(inp.value); }
+    btn.disabled = true; msg.textContent = "続きを起動しています…";
+    let r; try { r = await api("/api/resume", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}); } catch (e) { r = {ok: false, j: {error: "サーバに届きません"}}; }
+    if (!r.ok) { msg.innerHTML = `<span class="warn">${esc(r.j.error || r.status)}</span>`; btn.disabled = false; return; }
+    msg.innerHTML = `<span class="done">続きを起動しました（${esc((r.j.resumed_from || {}).step || "")} から）</span>`;
+    $("#s3").textContent = "進行中"; $("#s3").className = "state partial";
+    poll();
+  });
 
   // --- 2b. メジャーの枠（/api/tape。K-102）
   let tapeFiles = [], tapeBid = null;

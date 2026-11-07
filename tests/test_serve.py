@@ -415,3 +415,119 @@ def test_artifacts_maps_masks_onto_rectified_and_hides_unmappable(srv):
     assert by["p2"]["masks_ok"] is False and by["p2"]["rect_masks"] is None
     assert j["compare"][0]["photo"] == "p1"                      # 箱を写せた物が先
     assert j["coverage"][0]["masks_ok"] is False and j["coverage"][0]["masks"] is None   # 登録（H）が無い → その面は見せない
+
+
+# --- 止まった所から続ける POST /api/resume（11/8、F15） -------------------------------------------------
+
+def _write_state(root, bid, **kw):
+    st = {"building": bid, "mode": "full", "steps": ["satsuei", "shiwake", "sokuryo"], "done": ["satsuei"],
+          "status": "stopped", "current": None, "spent_usd": 1.25, "max_usd": 20.0, "sessions": {}, "runs": [],
+          "stopped": {"step": "shiwake", "reason": "limit", "why": "手数の上限", "label": "1 回の呼び出しの上限"}}
+    st.update(kw)
+    p = agents.state_path(bid, root)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(st, ensure_ascii=False), encoding="utf-8")
+
+
+def _fake_resume(monkeypatch, calls, gate=None, result=None):
+    def fake(bid, *, dry_run=False, cwd=".", agents_dir=None, prices=None, max_usd=None):
+        calls.append((bid, dry_run, str(cwd), max_usd))
+        if gate is not None:
+            gate.wait(10)
+        return result or {"building": bid, "steps": [{"step": "shiwake"}, {"step": "sokuryo"}], "stopped_early": False}
+    monkeypatch.setattr(agents, "resume_pipeline", fake)
+
+
+def _wait_run(base, bid):
+    for _ in range(100):
+        _st, p = _get(base + f"/api/progress?buildings={bid}")
+        run = p["buildings"][bid]["run"]
+        if run and run["state"] != "running":
+            return p["buildings"][bid]
+        time.sleep(0.05)
+    raise AssertionError("終わらない")
+
+
+def test_resume_refuses_without_api_key(srv, monkeypatch):
+    base, root = srv
+    calls = []
+    _fake_resume(monkeypatch, calls)
+    _write_state(root, "honbu")
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 409 and j["code"] == "no_key" and "API キー" in j["error"]
+    assert calls == []
+    _st, p = _get(base + "/api/progress?buildings=honbu,tower75")
+    rs = p["buildings"]["honbu"]["resume"]
+    assert rs["stopped"] is True and rs["ok"] is False and rs["code"] == "no_key" and rs["step"] == "shiwake"
+    assert "resume" not in p["buildings"]["tower75"]   # 状態ファイルが無い棟には出さない
+
+
+def test_resume_calls_resume_pipeline_in_thread(srv, monkeypatch):
+    base, root = srv
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-not-a-key")
+    calls = []
+    _fake_resume(monkeypatch, calls)
+    _write_state(root, "honbu")
+    _st, pj = _get(base + "/api/pipeline?building=honbu")
+    assert pj["resume"]["ok"] is True and pj["resume"]["code"] == "ok" and pj["resume"]["need_max_usd"] is False
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 200 and j["started"] == "honbu" and j["resumed_from"] == {"step": "shiwake", "reason": "limit"}
+    b = _wait_run(base, "honbu")
+    assert b["run"]["state"] == "done" and b["run"]["resumed"] is True and b["run"]["last_step"] == "sokuryo"
+    assert calls == [("honbu", False, str(root.resolve()), None)]   # 上限は変えない（None）、dry_run にしない
+
+
+def test_resume_refuses_while_running(srv, monkeypatch):
+    base, root = srv
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-not-a-key")
+    gate = threading.Event()
+    calls = []
+    _fake_resume(monkeypatch, calls, gate=gate)
+    _write_state(root, "honbu")
+    st, _j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 200
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())   # 同じ棟がまだ動いている
+    assert st == 409 and j["busy"] == ["honbu"]
+    st, j = _post(base + "/api/start", json.dumps({"buildings": ["honbu"]}).encode())   # start も同じ RUNS で断る
+    assert st == 409
+    gate.set()
+    _wait_run(base, "honbu")
+    assert len(calls) == 1
+
+
+def test_resume_refuses_without_state_or_when_not_stopped(srv, monkeypatch):
+    base, root = srv
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-not-a-key")
+    calls = []
+    _fake_resume(monkeypatch, calls)
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 409 and j["code"] == "no_state"
+    _write_state(root, "honbu", status="done", stopped=None)
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 409 and j["code"] == "done"
+    _write_state(root, "honbu", status="running", current="shiwake", stopped=None)   # 別の窓で動いているかもしれない
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 409 and j["code"] == "not_stopped"
+    st, j = _post(base + "/api/resume", json.dumps({"building": "../x"}).encode())
+    assert st == 400
+    assert calls == []
+
+
+def test_resume_after_max_usd_needs_a_higher_cap(srv, monkeypatch):
+    base, root = srv
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-not-a-key")
+    calls = []
+    _fake_resume(monkeypatch, calls)
+    _write_state(root, "honbu", spent_usd=5.0, max_usd=5.0,
+                 stopped={"step": "sokuryo", "reason": "max_usd", "why": "上限", "label": "棟の費用の上限"})
+    _st, p = _get(base + "/api/progress?buildings=honbu")
+    rs = p["buildings"]["honbu"]["resume"]
+    assert rs["code"] == "need_max_usd" and rs["ok"] is True and rs["need_max_usd"] is True and rs["spent_usd"] == 5.0
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu"}).encode())
+    assert st == 409 and j["code"] == "need_max_usd"
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu", "max_usd": 4}).encode())
+    assert st == 409 and j["code"] == "need_max_usd"
+    st, j = _post(base + "/api/resume", json.dumps({"building": "honbu", "max_usd": 8}).encode())
+    assert st == 200 and j["max_usd"] == 8
+    _wait_run(base, "honbu")
+    assert calls == [("honbu", False, str(root.resolve()), 8.0)]

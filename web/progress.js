@@ -429,7 +429,8 @@
     if (LIVE) {
       const steps = (st && st.steps) || ORDER;
       const cur = st && st.current;
-      const stopped = (st && st.status === "stopped") || (run && (run.state === "stopped" || run.state === "error"));
+      // 続きを起動した直後（このサーバの係が running）は、状態ファイルがまだ stopped でも生きている表示に戻す
+      const stopped = !(run && run.state === "running") && ((st && st.status === "stopped") || (run && (run.state === "stopped" || run.state === "error")));
       if (cur) stepTxt = `${steps.indexOf(cur) + 1}/${steps.length} ${who(cur)}が動いています`;
       else if (stopped) stepTxt = "止まっています";
       else if (st && st.status === "done" || run && run.state === "done") stepTxt = "全部の工程が終わりました";
@@ -438,10 +439,24 @@
       if (stopped) {
         const s = (st && st.stopped) || (run && run.stopped) || {};
         const why = s.label || s.reason || (run && run.error) || "";
-        stopbar.innerHTML = `止まっています。続きから再開できます。${s.step ? `工程 ${esc(stepInfo(s.step).name)}` : ""}${why ? `（${esc(why)}）` : ""}` +
-          `　続きは <code>recorder agent resume ${esc(B)}</code>${s.reason === "max_usd" ? `（上限を上げるなら <code>--max-usd</code>）` : ""}`;
+        const rs = PIPE && PIPE.resume;   // /api/pipeline の「画面から続けられるか」（無ければ CLI の案内だけ）
+        const key = JSON.stringify([s.step, why, s.reason, rs && rs.code, rs && rs.need_max_usd, rs && rs.spent_usd]);
+        if (stopbar.dataset.key !== key) {   // 1 秒ごとの描き直しで、打っている上限の欄を消さない
+          stopbar.dataset.key = key;
+          const head = `止まっています。${s.step ? `工程 ${esc(stepInfo(s.step).name)}` : ""}${why ? `（${esc(why)}）` : ""}`;
+          const cli = `続きは <code>recorder agent resume ${esc(B)}</code>${s.reason === "max_usd" ? `（上限を上げるなら <code>--max-usd</code>）` : ""}`;
+          let ctl;
+          if (rs && (rs.ok || rs.code === "no_key")) {
+            const sug = Math.ceil(Math.max((Number(rs.spent_usd) || 0) + 5, (Number(rs.max_usd) || 0) * 1.5));
+            ctl = `<span class="sbctl">` +
+              (rs.need_max_usd ? `<label>費用の上限 <input id="sbMax" type="number" min="0" step="1" value="${sug}" aria-label="費用の上限（USD）"> USD` +
+                `<small>（使った額 ${Number(rs.spent_usd).toFixed(2)} USD より大きく）</small></label>` : "") +
+              `<button id="sbGo" type="button"${rs.ok ? "" : " disabled"}>続きから</button><span id="sbMsg" class="sbmsg">${rs.ok ? "" : esc(rs.why)}</span></span>`;
+          } else ctl = rs ? `　${esc(rs.why)}` : `　${cli}`;
+          stopbar.innerHTML = head + ctl;
+        }
         stopbar.classList.add("on");
-      }
+      } else delete stopbar.dataset.key;
       const t0 = (st && st.started_at) || (run && run.started_at);
       const t1 = !cur && (st && st.updated_at) && (st.status !== "running") ? new Date(st.updated_at) : (run && run.finished_at ? new Date(run.finished_at) : new Date());
       if (t0) el_ = `経過 <b>${fmtHMS((t1 - new Date(t0)) / 1000)}</b>`;
@@ -545,6 +560,25 @@
     const rep = await getJSON(`/out/${encodeURIComponent(B)}/report.json`);
     PROG = rep ? {report: {stages: rep.stages, counts: rep.counts}, run: null} : PROG;
   }
+  // 「止まっています」の帯の「続きから」（11/8、F15）：POST /api/resume。成功したら読み直して生きている表示に戻す
+  $("#stopbar").addEventListener("click", async ev => {
+    const btn = ev.target.closest("#sbGo"); if (!btn || !LIVE) return;
+    const msg = $("#sbMsg"), inp = $("#sbMax"), rs = (PIPE && PIPE.resume) || {};
+    const body = {building: B};
+    if (inp) {
+      const v = Number(inp.value);
+      if (!(v > (Number(rs.spent_usd) || 0))) { msg.textContent = `使った額 ${Number(rs.spent_usd || 0).toFixed(2)} USD より大きい上限を入れてください`; return; }
+      body.max_usd = v;
+    }
+    btn.disabled = true; msg.textContent = "続きを起動しています…";
+    let r = null, j = {};
+    try { r = await fetch(u("/api/resume"), {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}); j = await r.json(); } catch (e) {}
+    if (!r || !r.ok) { msg.textContent = (j && j.error) || "サーバに届きません"; btn.disabled = false; return; }
+    delete $("#stopbar").dataset.key;
+    await Promise.all([loadPipeline(), loadProgress()]);
+    renderTop(cur);
+  });
+
   async function init() {
     if (!/^[A-Za-z0-9_-]+$/.test(B)) { ART = null; show(0); return; }
     const steps = await getJSON("/api/steps");

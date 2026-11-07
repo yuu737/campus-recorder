@@ -305,22 +305,25 @@ RESUME_PROMPT = ("前の呼び出しは「{why}」で途中で止まりました
                  "済んだ作業はやり直さず、出力のファイルを確かめてから足りない所だけ。依頼（もう一度）：{task}")
 # 係が自分で区切った印（上限の 8 割で途中の結果を保存して終える時、最後の返事の 1 行目に書く）。これがあれば工程は済んでいない
 CONTINUE_MARK = "【続きあり】"
-LIMITS_HEADER = ("【この呼び出しの上限】手数は {turns} 手まで。費用は {usd:.2f} USD まで（{left}）。{used}"
-                 "上限の 8 割（{t80} 手か {u80:.2f} USD）を使ったら、途中の結果をファイルに保存し、"
-                 "最後の返事の 1 行目を「" + CONTINUE_MARK + "」にして、残りの作業を箇条書きで書いて終える"
-                 "（自動の続きはその会話から始まる）。\n\n")
+LIMITS_HEADER = ("予算（手数 {turns}・1 回の費用 {usd:.2f} USD・{left}）はこれだけ。"
+                 "試行錯誤は同じ事を 2 回までにし、手戻りの無い順で進む。"
+                 "省いてよい物：言い直し、同じ確かめの繰り返し、報告の飾り。"
+                 "省いてはいけない物：規約 1・5（根拠の無い寸法を書かない、決めつけない）、鎖の各輪の写真 id と ±、"
+                 "2 つ目の物差しでの検算、測れない物の unknown と撮影依頼、台帳を道具でだけ書くこと。"
+                 "上限の 8 割を使ったら途中を保存し、返事の 1 行目を" + CONTINUE_MARK + "にして残りを箇条書きで終える。"
+                 "{used}\n\n")
 
 
 def limits_header(max_turns: int, max_budget_usd: float, building_left_usd: float | None = None,
                   used_turns: int | None = None, used_usd: float | None = None) -> str:
-    """依頼文の先頭に付ける、この呼び出しの上限（手数・費用・棟の残り）と 8 割で区切る決まり。続きの時は使った手数と費用も。"""
-    left = "棟の費用の上限なし" if building_left_usd is None else f"棟の残り {max(building_left_usd, 0.0):.2f} USD"
+    """係の依頼文の先頭に付ける共通の前置き：予算（手数・1 回の費用・棟の残り）、試行錯誤の回数、省いてよい物・いけない物、
+    8 割で区切る決まり。続きの時は使った手数と費用も後ろに足す。コードの工程（CODE_STEPS）には付けない（run_agent が見る）。"""
+    left = "棟の残り 上限なし" if building_left_usd is None else f"棟の残り {max(building_left_usd, 0.0):.2f} USD"
     used = ""
     if used_turns is not None or used_usd is not None:
         used = (f"この工程でこれまでに使ったのは 手数 {int(used_turns or 0)} 手・費用 {float(used_usd or 0.0):.2f} USD。"
                 f"この呼び出しで使えるのは上の分（手数 {max_turns} 手・費用 {max_budget_usd:.2f} USD）。")
-    return LIMITS_HEADER.format(turns=max_turns, usd=max_budget_usd, left=left, used=used,
-                                t80=int(max_turns * 0.8), u80=max_budget_usd * 0.8)
+    return LIMITS_HEADER.format(turns=max_turns, usd=max_budget_usd, left=left, used=used)
 
 
 def _has_continue_mark(text: str | None) -> bool:
@@ -376,8 +379,9 @@ def run_agent(name: str, task: str, *, cwd: str | Path = ".", dry_run: bool = Fa
         return {"dry_run": True, "agent": name, "model": spec["model_id"], "tools": spec["tools"], "task": task,
                 "max_turns": lim["max_turns"], "max_budget_usd": lim["max_budget_usd"], "system_prompt": spec["system_prompt"],
                 "resume": resume,
-                "limits_header": limits_header(lim["max_turns"], lim["max_budget_usd"], left,
-                                               used_turns if resume else None, used_usd if resume else None)}
+                "limits_header": "" if name in CODE_STEPS else limits_header(
+                    lim["max_turns"], lim["max_budget_usd"], left, used_turns if resume else None,
+                    used_usd if resume else None)}
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise AgentError("ANTHROPIC_API_KEY が環境変数にありません（リポジトリには書かない）。--dry-run なら呼ばずに内容だけ出せます")
     started, t0 = _now(), time.time()
@@ -402,8 +406,9 @@ def run_agent(name: str, task: str, *, cwd: str | Path = ".", dry_run: bool = Fa
         body = RESUME_PROMPT.format(why=why or "途中で止まった", task=task) if sid else task
         spent_here = sum(c.get("cost_usd") or 0.0 for c in calls)
         turns_here = sum(c.get("turns") or 0 for c in calls)
-        hdr = limits_header(lim["max_turns"], lim["max_budget_usd"], None if left is None else left - spent_here,
-                            used_turns + turns_here if sid else None, used_usd + spent_here if sid else None)
+        hdr = "" if name in CODE_STEPS else limits_header(
+            lim["max_turns"], lim["max_budget_usd"], None if left is None else left - spent_here,
+            used_turns + turns_here if sid else None, used_usd + spent_here if sid else None)
         prompt = hdr + body
         at = _now()
         try:
@@ -1021,12 +1026,67 @@ def _auto_kind(rec: dict | None, stop: dict) -> str:
     return "crash"
 
 
-def continue_task(step: str, building_id: str, photos_folder: str | None = None, faces: list[str] | None = None) -> str:
-    """追記の依頼文：step_task（いつもの文）＋前回の値を保つ決まり。faces が無ければ撮影係の答えと仕分けで決まる面。"""
+NEW_PHOTOS_LIST_MAX = 30      # 追記の依頼文に新しい写真の id を並べる上限（超えたら数と探す条件だけ）
+
+
+def _json_strings(o) -> list[str]:
+    """JSON の中の文字列（キーも値も）を全部。"""
+    if isinstance(o, dict):
+        return [x for k, v in o.items() for x in [str(k), *_json_strings(v)]]
+    if isinstance(o, list):
+        return [x for v in o for x in _json_strings(v)]
+    return [o] if isinstance(o, str) else []
+
+
+def find_new_photos(building_id: str, cwd: str | Path = ".") -> dict:
+    """追記を写真フォルダ無しで始めた時の「新しい写真」：索引 data/photos/index.json で building がこの棟で
+    assigned_by が staff（職員が画面で送った）の写真のうち、前回の棟 JSON data/buildings/<棟>.json の中のどこ（evidence・chain・requests・answered_by など、文字列なら何でも）にも
+    id が出てこない物。id が別の id の頭と同じ時（「…正面」と「…正面柱」）に取り違えないよう、長い id から先に当てる。
+    assigned_by の無い古い写真（前回までに撮影係・仕分けが見た物）は、棟 JSON に id が無くても新しい写真にしない。
+    返り値 {"ids": [...], "tape": [ruler が tape_measure の id], "building_photos": この棟の職員の写真の数}（索引の順）。"""
+    cwd = Path(cwd)
+    idx = _jload(cwd / "data" / "photos" / "index.json") or {}
+    photos = [p for p in idx.get("photos") or [] if isinstance(p, dict) and p.get("id")]
+    mine = [p for p in photos if p.get("building") == building_id and p.get("assigned_by") == "staff"]
+    all_ids = sorted({str(p["id"]) for p in photos}, key=len, reverse=True)
+    text = "\n".join(_json_strings(_jload(cwd / "data" / "buildings" / f"{building_id}.json") or {}))
+    seen: set[str] = set()
+    if all_ids and text:
+        seen = {m.group(0) for m in re.finditer("|".join(re.escape(i) for i in all_ids), text)}
+    new = [p for p in mine if str(p["id"]) not in seen]
+    return {"ids": [str(p["id"]) for p in new], "tape": [str(p["id"]) for p in new if p.get("ruler") == "tape_measure"],
+            "building_photos": len(mine)}
+
+
+def new_photos_text(building_id: str, ids: list[str], tape: list[str] | None = None) -> str:
+    """追記の依頼文の「新しい写真」の段（写真フォルダ無しで始めた時）。多ければ数と、道具で出す条件だけ。"""
+    b, j = building_id, f"data/buildings/{building_id}.json"
+    tape = [i for i in (tape or []) if i in ids]
+    head = (f" 【新しい写真】写真フォルダは無い。新しい写真は {len(ids)} 枚（うちメジャー（ruler: tape_measure）{len(tape)} 枚）。"
+            f"索引 data/photos/index.json で building が {b}・assigned_by が staff（職員が送った）の写真のうち、"
+            f"前回の棟 JSON {j} のどこにも id が出てこない物"
+            f"（一覧は out/{b}/{STATE_NAME} の new_photos、メジャーは new_photos_tape）。")
+    if len(ids) <= NEW_PHOTOS_LIST_MAX:
+        rest = [i for i in ids if i not in tape]
+        txt = head + f"id：{', '.join(rest) if rest else 'なし'}。"
+        if tape:
+            txt += f"メジャーの写真 id：{', '.join(tape)}。"
+    else:
+        txt = (head + f"`recorder photos list --building {b}` で出る写真のうち assigned_by が staff で {j} に id が無い物"
+               f"（メジャーは `recorder photos list --building {b} --ruler tape_measure` のうち同じ条件の物）。")
+    return txt + "それ以外の写真は前回の根拠なので、新しい写真として扱わない。"
+
+
+def continue_task(step: str, building_id: str, photos_folder: str | None = None, faces: list[str] | None = None,
+                  new_photos: list[str] | None = None, new_photos_tape: list[str] | None = None) -> str:
+    """追記の依頼文：step_task（いつもの文）＋前回の値を保つ決まり。faces が無ければ撮影係の答えと仕分けで決まる面。
+    写真フォルダ無しで始めた時（photos_folder が None）は、フォルダの代わりに new_photos（find_new_photos の id）を書く。"""
     b = building_id
     base = step_task(step, b, photos_folder)
     if step in CODE_STEPS:
         return base
+    if not photos_folder and new_photos is not None:
+        base += new_photos_text(b, list(new_photos), new_photos_tape)
     rep, j, design = f"{REPORTS_DIR}/{b}", f"data/buildings/{b}.json", f"scripts/design_{b}.py"
     ftxt = (f"面 {', '.join(faces)}" if faces else
             f"撮影係の {rep}/satsuei_answers.json の faces と、仕分けで新しい写真が入った面")
@@ -1051,7 +1111,8 @@ def continue_task(step: str, building_id: str, photos_folder: str | None = None,
 
 def _task_for(state: dict, step: str) -> str:
     if state.get("mode") == "continue":
-        return continue_task(step, state["building"], state.get("photos"), state.get("faces"))
+        return continue_task(step, state["building"], state.get("photos"), state.get("faces"),
+                             state.get("new_photos"), state.get("new_photos_tape"))
     return step_task(step, state["building"], state.get("photos"))
 
 
@@ -1191,6 +1252,23 @@ def _auto_resume_loop(state: dict, s: str, cwd: Path, rec, stop, recs: list, *, 
     return rec, stop
 
 
+def _no_new_photos_stop(state: dict) -> dict | None:
+    """追記を写真フォルダ無しで始めて、新しい写真（find_new_photos）が 0 枚の時の止める理由（人を呼ぶ事件）。
+    最初の工程の前だけ。resume で人が見て続けると決めた（acknowledged）なら止めない。"""
+    if state.get("mode") != "continue" or state.get("photos") or state.get("new_photos") is None:
+        return None
+    if state["new_photos"] or state.get("done"):
+        return None
+    b = state["building"]
+    why = (f"追記を写真フォルダ無しで始めたが、新しい写真が 0 枚（索引で building が {b}・assigned_by が staff の写真は全部、"
+           f"前回の棟 JSON data/buildings/{b}.json に id が出ている）。写真を取り込んで棟を付けてから始める")
+    ev = {"kind": "human", "call": EVENT_CALL["human"], "why": why}
+    if _event_sig(ev) in (state.get("acknowledged_events") or []):
+        return None
+    state["pending_events"] = list(state.get("pending_events") or []) + [ev]
+    return {"reason": "event", "why": why, "events": [_event_sig(ev)]}
+
+
 def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict:
     """state の steps のうち done に無い物を順に回す。工程の前後で state を out/<棟>/pipeline_state.json に保存する（dry_run は保存しない）。
     止まった時（事件・429・上限・落ち・費用の上限）は stopped に {step, reason, why, at, session_id} を書いて返す。"""
@@ -1199,6 +1277,7 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
     prev_stop = state.get("stopped") or {}
     state["stopped"] = None
     extra: dict = {}
+    pre_stop = _no_new_photos_stop(state)
     for s in [x for x in state["steps"] if x not in state["done"]]:
         same = prev_stop.get("step") == s and prev_stop.get("reason") in RESUME_SAME_SESSION
         resume_sid = state["sessions"].get(s) if same else None
@@ -1208,7 +1287,9 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
         stop: dict | None = None
         recs: list[dict] = []
         try:
-            if s in CODE_STEPS:
+            if pre_stop is not None:      # 追記なのに新しい写真が 0 枚：最初の工程の前で止めて人を呼ぶ
+                stop, pre_stop = pre_stop, None
+            elif s in CODE_STEPS:
                 if dry_run:
                     rec = {"agent": step_agent(s), "step": s, "model": "code", "task": step_command(s, b), "dry_run": True}
                 else:
@@ -1280,7 +1361,7 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
         summary.update(write_pipeline_record(b, summary, cwd, state["record_name"]))
         summary["state"] = str(state_path(b, cwd))
     else:
-        summary["state_preview"] = {k: state.get(k) for k in ("mode", "photos", "faces", "steps", "done", "status", "stopped",
+        summary["state_preview"] = {k: state.get(k) for k in ("mode", "photos", "faces", "new_photos", "steps", "done", "status", "stopped",
                                                               "sessions", "spent_usd", "max_usd", "record_name")}
     return summary
 
@@ -1320,6 +1401,11 @@ def continue_pipeline(building_id: str, photos_folder: str | None = None, *, fac
     if bad:
         raise AgentError(f"知らない工程: {bad}。ある工程: {PIPELINE_STEPS}")
     state = _new_state(building_id, "continue", photos_folder, steps, list(faces) if faces else None, max_usd)
+    if not photos_folder:   # 職員の画面で写真を送らずに始めた時：前回の棟 JSON に id が無い写真を「新しい写真」に（0 枚なら止める）
+        found = find_new_photos(building_id, cwd)
+        state["new_photos"], state["new_photos_tape"] = found["ids"], found["tape"]
+        state["runs"][0]["new_photos"] = {"n": len(found["ids"]), "tape": len(found["tape"]),
+                                          "building_photos": found["building_photos"]}
     # 始める前から在る止める事件（前回の実行で進行役が見た物）は「既知」として止めない。追記で新しく起きた事件だけで止める
     base = _stop_events(detect_events(building_id, cwd, after_step=None, write=False), [])
     state["acknowledged_events"] = sorted({_event_sig(e) for e in base})

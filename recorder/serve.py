@@ -17,7 +17,11 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
                                    （data/buildings/<棟>.json）がある棟は追記（agents.continue_pipeline、前回の値を保って
                                    新しい写真の分だけ育てる）、無い棟は run_pipeline。max_usd は棟ごとの費用の上限
                                    （省けば agents.DEFAULT_MAX_USD＝20 USD、0 で上限なし）
+    POST /api/resume               {"building", "max_usd"?} 止まった棟を agents.resume_pipeline で続ける（別スレッド。11/8、F15）。
+                                   このサーバで作業中・キーが無い・状態が無い・止まっていない時は断る（409、理由の文）。
+                                   費用の上限で止まった棟は、使った額より大きい max_usd が要る
     GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
+                                   pipeline_state.json がある棟は resume（止まっているか・画面から続けられるか）も
     GET  /api/steps                工程 → 係の名前・モデル・一言（.claude/agents/*.md の frontmatter と agents の工程の一覧。待機画面）
     GET  /api/pipeline?building=a  最新の pipeline の記録の要約（工程・係・モデル・秒・費用・要約 1 行）と pipeline_state.json の状態
     GET  /api/artifacts?building=a 待機画面の場面に使う、今ある生成物の一覧（写真と灰色の箱・正面化・立面図・製図板・検収・証拠・歩く画面）
@@ -477,11 +481,15 @@ def _worker(root: Path, bid: str) -> None:
 
     st = RUNS[bid]
     try:
-        if st.get("mode") == "continue":   # 棟 JSON がある棟は追記（11/8、K-106。T3 の continue_pipeline）
+        if st.get("mode") == "resume":     # 止まった所から続ける（11/8、F15。CLI の recorder agent resume と同じ関数）
+            res = agents.resume_pipeline(bid, dry_run=False, cwd=root, max_usd=st.get("resume_max_usd"))
+        elif st.get("mode") == "continue":   # 棟 JSON がある棟は追記（11/8、K-106。T3 の continue_pipeline）
             res = agents.continue_pipeline(bid, st.get("photos_folder"), dry_run=st["dry_run"], cwd=root, max_usd=st.get("max_usd"))
         else:
             res = agents.run_pipeline(bid, st.get("photos_folder"), dry_run=st["dry_run"], cwd=root, max_usd=st.get("max_usd"))
         steps = [s.get("step") for s in res.get("steps", []) if isinstance(s, dict)]
+        if res.get("nothing"):
+            st["note"] = res["nothing"]
         with _runs_lock:
             st["last_step"] = steps[-1] if steps else None
             st["steps"] = steps
@@ -554,13 +562,99 @@ def api_start(root: Path, body: dict) -> dict:
     return out
 
 
+# --- 止まった所から続ける（11/8、F15）。画面から本番を起動するので、止まった時も画面から続けられるように --------
+
+class Refused(Exception):
+    """続けられない（理由の文を職員に返す。409）。args = (code, 理由の文)"""
+
+
+def resume_check(root: Path, b: str, run: dict | None) -> dict | None:
+    """棟の pipeline_state.json を見て、画面から続けられるかを返す。状態ファイルが無ければ None。
+    {"ok", "code", "why", "stopped": bool, "reason", "label", "step", "need_max_usd", "spent_usd", "max_usd", "api_key"}
+    code：running（このサーバで動いている）・done・not_stopped・no_key・need_max_usd・ok。
+    run はこのサーバの RUNS の物（呼ぶ側が _runs_lock の中で渡す）。"""
+    from . import agents
+
+    state = agents.load_state(b, root)
+    if not isinstance(state, dict):
+        return None
+    status = state.get("status")
+    stop = state.get("stopped") if isinstance(state.get("stopped"), dict) else {}
+    run_state = (run or {}).get("state")
+    spent = float(state.get("spent_usd") or 0.0)
+    cap = state.get("max_usd")
+    has_key = bool(os.environ.get("ANTHROPIC_API_KEY"))
+    # 「実行中」のまま残った状態は、このサーバの係のスレッドが落ちた（error）時だけ落ちたと見て続ける。
+    # それ以外（別の窓の CLI で動いているかもしれない）は画面からは続けない
+    crashed = status == "running" and run_state in ("error", "stopped")
+    stopped = status == "stopped" or crashed
+    reason = stop.get("reason") if status == "stopped" else ("crash" if crashed else None)
+    need = stopped and (reason == "max_usd" or (cap is not None and spent >= float(cap)))
+    out = {"stopped": stopped, "reason": reason, "label": stop.get("label") if status == "stopped" else None,
+           "step": stop.get("step") if status == "stopped" else state.get("current"), "why_stop": stop.get("why"),
+           "need_max_usd": bool(need), "spent_usd": round(spent, 4), "max_usd": cap, "api_key": has_key}
+    if run_state == "running":
+        code, why = "running", "係が作業中です。終わるか止まるまで待ってください"
+    elif status == "done":
+        code, why = "done", "前の実行は最後まで済んでいます（続ける所がありません）"
+    elif not stopped:
+        code, why = "not_stopped", ("記録は「実行中」のままです。別の窓（recorder agent pipeline など）で動いているかもしれないので、"
+                                    "画面からは続けません。落ちたと分かっているなら recorder agent resume で続けてください"
+                                    if status == "running" else f"止まっていません（状態 {status}）")
+    elif not has_key:
+        code, why = "no_key", "この PC に API キー（ANTHROPIC_API_KEY）が無いので、係（Claude）を呼んで続けることができません"
+    elif need:
+        code, why = "need_max_usd", f"費用の上限で止まっています。使った額 {spent:.2f} USD より大きい上限（USD）を入れて続けてください"
+    else:
+        code, why = "ok", "止まった所から続けられます"
+    out.update(ok=code in ("ok", "need_max_usd"), code=code, why=why)
+    return out
+
+
+def api_resume(root: Path, body: dict) -> dict:
+    """POST /api/resume {"building", "max_usd"?}：止まった棟を agents.resume_pipeline で続ける（別スレッド）。
+    断る時：このサーバで動いている（Busy＝409）・キーが無い・状態が無い・止まっていない・費用の上限で止まったのに
+    使った額より大きい上限が無い（Refused＝409、理由の文）。"""
+    b = str(body.get("building") or "").strip()
+    if not _ID_RE.match(b) or b == UNSORTED:
+        raise ValueError(f"棟 id ではない名前: {b!r}")
+    mu = body.get("max_usd")
+    max_usd = None if mu in (None, "") else float(mu)
+    with _runs_lock:
+        prev = RUNS.get(b)
+        if (prev or {}).get("state") == "running":
+            raise Busy([b])
+        chk = resume_check(root, b, prev)
+        if chk is None:
+            raise Refused("no_state", f"続ける記録がありません（out/{b}/pipeline_state.json が無い）。先に「記録を始める」で起動してください")
+        if chk["code"] == "need_max_usd":
+            if max_usd is None or max_usd <= chk["spent_usd"]:
+                raise Refused("need_max_usd", chk["why"])
+        elif not chk["ok"]:
+            raise Refused(chk["code"], chk["why"])
+        if max_usd is not None and max_usd <= chk["spent_usd"]:
+            raise Refused("need_max_usd", f"上限 {max_usd} USD は使った額 {chk['spent_usd']:.2f} USD 以下です。もっと大きい数を入れてください")
+        stamp = f"{datetime.now():%Y%m%d_%H%M%S}"
+        st = {"building": b, "state": "running", "started_at": _now(), "finished_at": None, "dry_run": False,
+              "mode": "resume", "max_usd": max_usd if max_usd is not None else chk["max_usd"], "resume_max_usd": max_usd,
+              "resumed_from": {"step": chk["step"], "reason": chk["reason"]},
+              "photos_folder": None, "last_step": None, "stopped_at": None, "error": None,
+              "record": f"out/{b}/serve_{stamp}.json"}
+        RUNS[b] = st
+    _record(root, b, st)
+    threading.Thread(target=_worker, args=(root, b), name=f"pipeline-{b}", daemon=True).start()
+    log(f"pipeline {b} 続きから（{chk['step']} の {chk['reason']} から" + (f"、上限 {max_usd} USD" if max_usd is not None else "") + "）")
+    return {"started": b, "resumed_from": st["resumed_from"], "max_usd": st["max_usd"], "record": st["record"]}
+
+
 def _run_public(st: dict | None) -> dict | None:
     if not st:
         return None
     keys = ("state", "started_at", "finished_at", "dry_run", "last_step", "stopped_at", "error", "record", "events",
-            "mode", "max_usd", "spent_usd", "stopped")
+            "mode", "max_usd", "spent_usd", "stopped", "resumed_from", "note")
     out = {k: st.get(k) for k in keys if k in st}
     out["continuing"] = st.get("mode") == "continue"   # 進捗の印「追記で回している」
+    out["resumed"] = st.get("mode") == "resume"        # 進捗の印「止まった所から続けている」
     return out
 
 
@@ -591,7 +685,10 @@ def api_progress(root: Path, buildings: list[str] | None) -> dict:
             report["photo_requests"] = rc["photo_requests"]
         with _runs_lock:
             run = _run_public(RUNS.get(b))
+            rs = resume_check(root, b, RUNS.get(b))
         out[b] = {"report": report, "run": run}
+        if rs is not None:   # pipeline_state.json がある棟だけ：止まっているか・画面から続けられるか（F15）
+            out[b]["resume"] = rs
     site_run = _site_public()
     running = any((v["run"] or {}).get("state") == "running" for v in out.values()) or (site_run or {}).get("state") == "running"
     return {"buildings": out, "site": site_run, "running": running, "at": _now()}
@@ -678,6 +775,7 @@ def api_pipeline(root: Path, b: str) -> dict:
                                         "auto_resumes", "auto_resumes_total")}
     with _runs_lock:
         run = _run_public(RUNS.get(b))
+        rs = resume_check(root, b, RUNS.get(b))
     rec = None
     if isinstance(doc, dict) and p is not None:
         rec = {"file": p.relative_to(root).as_posix(), "made_at": doc.get("made_at"), "dry_run": doc.get("dry_run"),
@@ -685,7 +783,7 @@ def api_pipeline(root: Path, b: str) -> dict:
                "seconds_total": doc.get("seconds_total"), "wall_seconds": doc.get("wall_seconds"),
                "cost_usd": doc.get("spent_usd", doc.get("cost_usd_estimate")), "max_usd": doc.get("max_usd"),
                "stopped": doc.get("stopped"), "stopped_early": doc.get("stopped_early"), "steps": steps}
-    return {"building": b, "record": rec, "state": st, "run": run, "records": len(recs), "at": _now()}
+    return {"building": b, "record": rec, "state": st, "run": run, "resume": rs, "records": len(recs), "at": _now()}
 
 
 def _url(root: Path, p: Path | str | None) -> str | None:
@@ -1055,6 +1153,8 @@ class Handler(SimpleHTTPRequestHandler):
             fn()
         except Busy as e:
             self._json(409, {"error": "作業中です（同じ棟・敷地の取得は同時に 1 つ）", "busy": e.args[0]})
+        except Refused as e:
+            self._json(409, {"error": e.args[1], "code": e.args[0]})
         except OverflowError as e:
             self._json(413, {"error": str(e)})
         except (ValueError, KeyError, TypeError) as e:
@@ -1128,6 +1228,8 @@ class Handler(SimpleHTTPRequestHandler):
             raise ValueError("本文は JSON のオブジェクト")
         if u.path == "/api/start":
             return self._json(200, api_start(self.root, body))
+        if u.path == "/api/resume":
+            return self._json(200, api_resume(self.root, body))
         if u.path == "/api/campus":
             res = api_campus(self.root, body)
             log(f"敷地 {res['campus']}: {res['message']}")
