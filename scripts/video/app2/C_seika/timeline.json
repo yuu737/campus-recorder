@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 6.9,
+ "scenes": [
+  {
+   "id": "C_seika",
+   "start": 0,
+   "end": 6.9,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 5.6,
+     "dur": 5.6,
+     "text": "数週間と数万円が、約二時間と約三千円に。"
+    }
+   ]
+  }
+ ]
+}

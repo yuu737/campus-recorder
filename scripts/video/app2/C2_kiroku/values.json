@@ -1,0 +1,42 @@
+{
+ "note": "C2 記録の札（締め、6 秒）。数は実ファイルを数え直した（11/8 16:00、係 U）",
+ "dur": 6.0,
+ "head": "全部、[記録に残っている]",
+ "cards": [
+  {
+   "n": "7",
+   "u": "本",
+   "k": "実験の記録",
+   "src": "docs/実験_*.md の数（ls で 7）"
+  },
+  {
+   "n": "30",
+   "u": "件",
+   "k": "疑似本番の詰まり",
+   "src": "data/reports/疑似本番_11-07/詰まり.json の jams（open 23・worked_around 7）"
+  },
+  {
+   "n": "16",
+   "u": "件",
+   "k": "決定の台帳（案を含む）",
+   "src": "決定_*.md の K 番号：確定 12（K-201〜204・301〜303・401〜405）＋案 4（K-205〜208）"
+  },
+  {
+   "n": "768",
+   "u": "件",
+   "k": "テスト",
+   "src": "python -I -X utf8 -m pytest -q --co → 768 tests collected（11/8 16:00 に係 U が再実行）"
+  }
+ ],
+ "url": "github.com/yuu737/campus-recorder",
+ "url_src": "docs/日誌.md 11/8 13:22（公開リポジトリの作成と最初の push）",
+ "check_note": "一覧.md の「本番の決定 11 件」は K-401〜405（決定_自動_honbu_1.md は ## K- 見出しが無く太字の箇条）を数えていなかった。含めて 16 件。うち K-205〜208 の 4 件は案に戻した（決定_本番_3.md）",
+ "cap": "docs/実験_*.md／data/reports/疑似本番_11-07/詰まり.json／data/reports/指示_11-08/決定_*.md／pytest --co／docs/日誌.md",
+ "narration": {
+  "note": "暫定の文（台本は利用者が書く）。Achernar・gemini-3.1-flash-tts-preview",
+  "wav": "out/video/app2/narration/C2_kiroku/",
+  "sentences": [
+   "試した事も、詰まった所も、全部記録に残しています。"
+  ]
+ }
+}

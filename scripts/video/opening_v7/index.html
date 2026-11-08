@@ -360,11 +360,11 @@ function seekC(o,s,t){
 function buildT(b,s){
   const o={};
   const bg=$("div","el",b);css(bg,{left:"0",top:"0",width:"1920px",height:"1080px",overflow:"hidden"});
-  bg.innerHTML=`<img src="../../../out/web_look_after_overview_pc.png" style="position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;opacity:.30;filter:saturate(.7)">
-    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(245,246,248,.94) 0%,rgba(245,246,248,.78) 55%,rgba(245,246,248,.15) 100%)"></div>`;
+  bg.innerHTML=`<img src="../../../out/video/title_bg/title_bg.png" style="position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;opacity:.95">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(245,246,248,.55) 0%,rgba(245,246,248,0) 40%)"></div>`;
   o.bg=bg;o.img=bg.querySelector("img");
   o.lines=s.lines.map((L,i)=>{const e=$("div","el head",b,i===2?L.replace("歩ける大学の 3D 空間",'<span class="a">歩ける大学の 3D 空間</span>'):L);
-    css(e,{fontSize:"108px"});place(e,120,250+i*160);return e});
+    css(e,{fontSize:"108px",background:"rgba(245,246,248,.9)",padding:"4px 28px 10px",boxShadow:"0 0 24px 8px rgba(245,246,248,.6)"});place(e,92,246+i*160);return e});
   const ul=$("div","el",b);place(ul,120,250+3*160-6);
   ul.innerHTML=`<svg width="1560" height="44" fill="none" stroke="#0031d8" stroke-width="6"><path d="M4 4V40M1556 4V40M4 22H1556"/><path d="M-8 36L16 8M1544 36L1568 8" stroke-width="8"/></svg>`;o.ul=ul;
   o.name=$("div","el tname",b,"campus-recorder");

@@ -1,0 +1,77 @@
+{
+ "note": "B02 撮影係（アプリ版 2）。声の文・数字は記録の実文と実値。",
+ "dur": 10.0,
+ "pill": "Claude Haiku",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T04:13:33",
+  "at": "2026-11-08T04:15:16"
+ },
+ "app": {
+  "replay_t": 4.0,
+  "w": 1600,
+  "h": 900,
+  "src": "out/video/app/_src/replay_004.0.png",
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 撮影、1/11 撮影係の工程）",
+  "source": "out/video/replay_honbu.mp4 の 4.0 秒",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    1100,
+    560
+   ],
+   "spot": [
+    1252,
+    612,
+    340,
+    104
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3
+  },
+  "grid_crop": [
+   22,
+   150,
+   1212,
+   527
+  ]
+ },
+ "voice": {
+  "who": "撮影係",
+  "model": "Claude Haiku",
+  "took": "1:43",
+  "text": "【報告】新しい写真 33 枚のうち 30 枚は使える（ぶれ無し・面が仕分け済み）。",
+  "src": "pipeline_state_20261108_final.json results[0].summary（04:13〜04:15、102.6 秒）",
+  "note": "took は seconds 102.6 を分:秒に。待機画面の右の欄にも「撮影係 Claude Haiku・1:43」と同じ文が出ている"
+ },
+ "ok": {
+  "n": 30,
+  "of": 33,
+  "source": "data/reports/honbu/satsuei_checks.md「使える写真：30 枚 / 33 枚」"
+ },
+ "blur": {
+  "v": "91.7",
+  "rule": "100 未満はぶれの疑い",
+  "source": "satsuei_checks.md（本部棟タイル隙間横1cm 鮮明度 91.7）・recorder/photos.py の Laplacian の分散"
+ },
+ "next": {
+  "faces": [
+   "f5",
+   "f7",
+   "f0"
+  ],
+  "text": "西の道路の西側から階段室／東の道路の向こうから妻／北東の角と外階段",
+  "source": "satsuei_checks.md「次に撮るもの」",
+  "short": "階段室・東の妻・北東の角と外階段"
+ },
+ "cap": "data/reports/honbu/satsuei_checks.md・pipeline_state_20261108_final.json results[0]／画面 replay_honbu.mp4 4 秒"
+}

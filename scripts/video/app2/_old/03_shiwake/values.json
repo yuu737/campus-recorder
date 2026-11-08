@@ -1,0 +1,132 @@
+{
+ "note": "B03 仕分け係（アプリ版 2）。面ごとの枚数は data/photos/index.json を数えた（building=honbu・period=during、11/8 16 時）。待機画面の再生の 9 秒にも同じ数（f6 41・f8 24・f0 18・面なし 16・f1 9・f5 5・f4 4・f7 4）が出ている",
+ "dur": 9.0,
+ "pill": "Claude Opus",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T04:15:16",
+  "at": "2026-11-08T04:15:50"
+ },
+ "app": {
+  "replay_t": 9.0,
+  "w": 1600,
+  "h": 900,
+  "src": "out/video/app/_src/replay_009.0.png",
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 撮影、2/11 仕分け係の工程）",
+  "cells": {
+   "x": [
+    29,
+    201,
+    373,
+    545,
+    716
+   ],
+   "y": [
+    160,
+    291,
+    421
+   ],
+   "w": 166,
+   "h": 124,
+   "faces": [
+    [
+     "f6",
+     "f6",
+     "f6",
+     "f6",
+     "f6"
+    ],
+    [
+     "f5",
+     "f5",
+     "f4",
+     "f4",
+     "f1"
+    ],
+    [
+     "f7",
+     "f1",
+     "f6",
+     "f0",
+     null
+    ]
+   ],
+   "source": "replay_009.0.png の写真の左上の札（目で読んだ）"
+  },
+  "source": "out/video/replay_honbu.mp4 の 9.0 秒",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    452,
+    420
+   ],
+   "spot": [
+    22,
+    150,
+    860,
+    540
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3
+  },
+  "grid_crop": [
+   22,
+   150,
+   860,
+   540
+  ]
+ },
+ "voice": {
+  "who": "仕分け係",
+  "model": "Claude Opus",
+  "took": "0:34",
+  "text": "タイル・目地の近写：周りが写っていないので、面は撮った順と GPS から決めています。",
+  "src": "pipeline_state_20261108_final.json results[1].text（04:15、33.6 秒）"
+ },
+ "faces": [
+  [
+   "f6",
+   41
+  ],
+  [
+   "f8",
+   24
+  ],
+  [
+   "f0",
+   18
+  ],
+  [
+   "f1",
+   9
+  ],
+  [
+   "f5",
+   5
+  ],
+  [
+   "f4",
+   4
+  ],
+  [
+   "f7",
+   4
+  ],
+  [
+   "面なし",
+   16
+  ]
+ ],
+ "total": 121,
+ "source": "data/photos/index.json（building=honbu・period=during の face を数えた）",
+ "cap": "data/photos/index.json（121 枚の face を数えた）・pipeline_state_20261108_final.json／画面 replay_honbu.mp4 9 秒"
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B03 仕分け係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>.win{position:absolute;overflow:hidden;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:44}</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"shiwake",
+build(F,S){
+  const V=F.V,o={},R=F.RIGHT,v=V.voice,C=V.app.cells;
+  const G=V.app.grid_crop;o.G=G;
+  o.g=F.$("div","win el",S);F.place(o.g,620,206,G[2],G[3]);
+  o.g.style.background=`#fff url(${F.R+V.app.src}) ${-G[0]}px ${-G[1]}px/${V.app.w}px ${V.app.h}px no-repeat`;
+  o.gs=(ix,iy)=>[620+ix-G[0],206+iy-G[1]];
+  o.v=F.claudeVoice({who:v.who,model:v.model,took:v.took,text:v.text,src:"pipeline_state_20261108_final.json（仕分け係の報告）",t0:3.0,ms:58,x:620,y:768,w:1242,size:32});
+  // 面の箱（4×2）
+  const bw=122,bh=150,gap=10,y0=540,X0=60;
+  o.boxes=V.faces.map(([f,n],i)=>{const x=X0+(i%4)*(bw+gap),y=y0+Math.floor(i/4)*(bh+gap);
+    const e=F.board("",x,y,bw,bh,`<div style="position:absolute;left:10px;top:8px;font-family:${f==="面なし"?"var(--font-ja)":"var(--font-mono)"};font-size:${f==="面なし"?28:32}px;font-weight:700;color:${f==="面なし"?"var(--sub)":"var(--ink)"}">${f}</div><div class="num n" style="position:absolute;right:10px;top:${f==="面なし"?40:6}px;font-size:40px;color:${f==="f6"?"var(--acc)":"var(--ink)"}">0</div>`);
+    return {e,f,n,x,y,nEl:e.querySelector(".n"),got:0}});
+  // 切り出しの写真（アプリが出した絵そのもの）が箱へ飛ぶ
+  o.fl=[];let k=0;
+  C.faces.forEach((row,r)=>row.forEach((f,c)=>{if(!f)return;const b=o.boxes.find(x=>x.f===f);if(!b)return;
+    const e=F.$("div","el",S);e.style.zIndex=48;e.style.backgroundImage=`url(${F.R+V.app.src})`;e.style.boxShadow="0 4px 10px rgba(14,16,21,.35)";e.style.border="3px solid #fff";
+    const slot=b.got++;o.fl.push({e,b,ix:C.x[c],iy:C.y[r],slot,t0:5.1+k*.17});k++}));
+  o.boxes.forEach(b=>{const fs=o.fl.filter(p=>p.b===b);b.ta=fs.length?fs[0].t0+.5:7.7;b.tb=fs.length?fs[fs.length-1].t0+.6:8.3});
+  o.tgF=F.tag("claude","面は Claude が決めた",{x:640,y:206+540-62,t0:4.4});
+  F.tag("code","枚数はコードが数えた（索引）",{x:60,y:870,t0:8.0});
+  // 面に写真が埋まる（coverage の記録。f0）
+  const Z=V.puzzle;o.pz=F.puzzle({img:F.R+Z.img,imgw:Z.imgw,imgh:Z.imgh,patches:Z.patches,x:620,y:206,w:860,h:Z.imgh*860/Z.imgw,t0:8.0,step:.3});
+  o.pzt=F.tag("code",`f0 の面に写真を貼ったのはコード（覆い ${Z.coverage_pct} %）`,{x:640,y:206+Z.imgh*860/Z.imgw+14,t0:10.6});
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.cap,60,1008);o.cap.style.zIndex=46;
+  return o;
+},
+seek(F,t,o){
+  const V=F.V,C=V.app.cells;
+  o.boxes.forEach((b,i)=>{F.rise(b.e,t,4.7+i*.06,.3,20);F.countTo(b.nEl,b.n,F.eo(F.P(t,b.ta,b.tb-b.ta)))});
+  o.fl.forEach(p=>{const [sx,sy]=o.gs(p.ix,p.iy),w0=C.w,h0=C.h,w1=84,h1=63;
+    const tx=p.b.x+(122-w1)/2+(p.slot%3-1)*6,ty=p.b.y+66+p.slot*4;
+    const q=F.eio(F.P(t,p.t0,.55)),arc=Math.sin(q*Math.PI)*-90;
+    const x=F.lerp(sx,tx,q),y=F.lerp(sy,ty,q)+arc,w=F.lerp(w0,w1,q),h=F.lerp(h0,h1,q),k=w/C.w;
+    F.place(p.e,x,y,w,h);p.e.style.backgroundSize=`${1600*k}px ${900*k}px`;p.e.style.backgroundPosition=`${-p.ix*k}px ${-p.iy*k}px`;
+    p.e.style.opacity=t>=p.t0?1:0;p.e.style.transform=`rotate(${(p.slot%2?3:-3)*q}deg)`});
+  F.rise(o.cap,t,2.4,.3,6);F.rise(o.g,t,2.25,.4,30);o.g.style.opacity*=1-F.P(t,7.6,.4);o.pz.el.style.opacity=F.P(t,7.7,.3);o.tgF.el.style.opacity*=1-F.P(t,7.5,.3);
+  F.pulse(o.boxes[0].e,t,8.35,.5);
+}});
+</script></body></html>

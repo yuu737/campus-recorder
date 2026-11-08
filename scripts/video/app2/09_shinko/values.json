@@ -1,0 +1,144 @@
+{
+ "note": "B9 進行役（塊 B 10 場面版。旧 08_shinko を流用、10 秒に詰めた。本文に決定の番号は出さない）",
+ "dur": 10.0,
+ "step": "shinko",
+ "context": {
+  "src": "out/video/app2/_src/replay_021.0.png",
+  "w": 1600,
+  "h": 900,
+  "crop": [
+   1250,
+   376,
+   340,
+   340
+  ],
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生",
+  "label": "待機画面の右の欄：再開（4 周目、11:34〜12:16、検収係の後の事件から）",
+  "source": "out/video/replay_honbu.mp4 の 21.0 秒（out/video/app/make_app.py が切り出した 1 コマの写し）"
+ },
+ "voice": {
+  "who": "進行役",
+  "model": "Claude Fable",
+  "took": "2:46",
+  "text": "f6 の不合格は登録の縮尺が古いため（台帳も解き直し途中）。値は動かさず…",
+  "source": "out/honbu/pipeline_state.json の shinko[0].summary（進行役が決定と一緒に書いた要約。… は省略）。待機画面の右の欄「進行役 Claude Fable・2:46 決定を書き終えました。」の決定。2:46＝11:34:49〜11:37:35（jisseki_20261108.md 区切り 5）"
+ },
+ "flow": [
+  {
+   "k": "事件 11:34",
+   "t": "再検収で合格しない面が 5 つ残った",
+   "source": "決定_自動_honbu_1.md 事件 1「再検収 2 回で不合格の面 5（f4・f5・f6・f7・f8）」を初見向けに 1 行で"
+  },
+  {
+   "k": "進行役 Claude Fable",
+   "t": "規則を書いて決める",
+   "acc": true
+  },
+  {
+   "k": "測量係 Claude Opus",
+   "t": "登録を新しい縮尺で解き直す"
+  }
+ ],
+ "flow_source": "data/reports/指示_11-08/決定_自動_honbu_1.md（事件 1 の見出し・決定）／out/honbu/pipeline_state.json の shinko[0]（redo_from: sokuryo、review）",
+ "rules": [
+  {
+   "t": "縮尺が古いせいの不合格は、値を直さず、登録を解き直して 1 回だけやり直す。",
+   "src": "K-401"
+  },
+  {
+   "t": "小さな部品の外れなどは、撮影依頼が出ていれば、不合格のまま記録して進める。",
+   "src": "K-404"
+  },
+  {
+   "t": "登録の解き直しは 1 回だけ。合格しない面は記録して先へ。",
+   "src": "K-405"
+  }
+ ],
+ "rules_source": "data/reports/指示_11-08/決定_自動_honbu_1.md「決定（規則の形）」K-401・K-404・K-405 の太字の文を、番号を抜いて平易に（利用者の判定で番号を本文に出さない。言い換えは語の置き換えだけで中身は足さない）",
+ "review": {
+  "head": "進行役の決定（1 件）",
+  "n": "#1",
+  "at": "11-08 11:37",
+  "step": "工程 kenshu",
+  "summary": "f6 の不合格は登録の縮尺が古いため（台帳も解き直し途中）。値は動かさず測量係が錨 3 枚から register-chain で f6（余力で f8）を解き直して再検収。f4・f5・f7 は撮影依頼 open のまま不合格で進める。解き直しは 1 回だけ",
+  "redo": "（sokuryo からやり直し）",
+  "cost": "1.41 USD",
+  "mark": "承認済み 11-08 12:24",
+  "note": "画面の再現（web/staff.html の「進行役の決定」の欄を、記録の値で描いた）",
+  "source": "web/staff.html の reviewHtml（欄の形）／out/honbu/pipeline_state.json の shinko[0]（summary・cost_usd 1.412312・review.verdict approve・at 2026-11-08T12:24:23）"
+ },
+ "tags": [
+  {
+   "kind": "claude",
+   "t": "Claude が決めた：やり直し方の規則"
+  },
+  {
+   "kind": "human",
+   "t": "人が押したのは 2 回：11:33 続ける・12:24 承認"
+  }
+ ],
+ "tags_source": "docs/run_2026-11-08.md Round 4（11:33 に上限 40 USD を入れて「進行役に決めさせて続ける」を押した＝この周の人の操作 1 回）／out/honbu/pipeline_state.json shinko[0].review（12:24:23 approve、事後）",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T11:34:49",
+  "at": "2026-11-08T12:16:53",
+  "d0": 8.0,
+  "d": 1.4,
+  "note": "線は 11:34:49 → 12:16:53。費用は殻が results の cost_usd の和で出す（12:16 で 13.43 USD＝記録全体の累計。この再開だけなら 4.11 USD）",
+  "source": "data/reports/honbu/pipeline_state_20261108_final.json の results／jisseki_20261108.md 区切り 5"
+ },
+ "cap": "data/reports/指示_11-08/決定_自動_honbu_1.md／out/honbu/pipeline_state.json／data/reports/honbu/jisseki_20261108.md／画面 out/video/replay_honbu.mp4（21 秒）",
+ "pill": "Claude Fable",
+ "app": {
+  "w": 1600,
+  "h": 900,
+  "src": "out/video/app2/_src/replay_021.0.png",
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（右の欄：再開の記録）",
+  "source": "out/video/replay_honbu.mp4 の 21.0 秒（out/video/app/make_app.py が切り出した 1 コマの写し）",
+  "element": {
+   "box": [
+    1256,
+    406,
+    330,
+    42
+   ],
+   "note": "右の欄の「進行役 Claude Fable・2:46 決定を書き終えました。」の行（画像の px）"
+  },
+  "mini": {
+   "z0": 2.2,
+   "focus": [
+    1420,
+    420
+   ],
+   "spot": [
+    1254,
+    378,
+    334,
+    72
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    640,
+    262
+   ],
+   "link_t": 2.3,
+   "note": "寄せた全画面＝待機画面の右の欄の「再開（4 周目…）」と「進行役 Claude Fable・2:46 決定を書き終えました。」の行"
+  },
+  "video": {
+   "dir": "out/video/app2/_src/replay_09_shinko",
+   "fps": 10,
+   "n": 60,
+   "source": "cut_replay.py 09_shinko 18〜24 秒（右の欄の再開の記録は同じ）"
+  }
+ },
+ "intro": {
+  "html": "行き詰まったら、<b>進行役の Claude</b> が決めて続ける",
+  "t1": 2.3,
+  "source": "web/staff.html の説明「事件（行き詰まりなど）で止まると、進行役（Claude）が自動で決めて続けます」"
+ }
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>締め C4 他大学の土台と題の板</title>
+<link rel="stylesheet" href="../_shell/app.css"><link rel="stylesheet" href="../_closing.css">
+<style>
+.col{position:absolute;width:840px;height:600px}
+.col .k{font-size:34px;font-weight:700;padding:14px 22px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+.col .im{position:absolute;left:12px;right:12px;top:74px;height:440px;overflow:hidden;background:#fff;border:2px solid var(--line)}
+.col .im img{position:absolute}
+.col .t{position:absolute;left:22px;bottom:16px;font-size:28px;white-space:nowrap}
+</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"walk",
+build(F,S){
+  const V=F.V,o={};
+  o.h=F.$("div","el chead",S,V.head.replace(/\[(.+?)\]/g,'<span class="a">$1</span>'));o.h.style.fontSize="80px";F.place(o.h,120,110);
+  // 東山は全体、本郷は入口の頁の上（文のある所）を切り出す
+  const fit=[{l:0,t:0,w:816},{l:-110,t:-10,w:1110}];
+  o.c=V.cols.map((c,i)=>{const e=F.board("",120+i*880,250,840,600,"");e.classList.add("col");
+    e.innerHTML=`<div class="k">${F.esc(c.k)}</div><div class="im"><img src="${F.R+c.src}" style="left:${fit[i].l}px;top:${fit[i].t}px;width:${fit[i].w}px"></div><div class="t">${F.esc(c.t)}</div>`;return e});
+  o.s=F.$("div","el csub",S,F.esc(V.sub));F.place(o.s,120,880);o.s.style.color="var(--ink)";
+  o.n=F.$("div","el csub",S,F.esc(V.cols_note));o.n.style.fontSize="28px";F.place(o.n,120,936);
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.cap,60,1044-30);o.cap.style.zIndex=46;
+  const T=V.title;o.ti=F.$("div","tb paper",S,`<img class="bgi" src="${F.R+T.bg}"><div class="grad"></div>`+T.lines.map((L,i)=>`<div class="hd" style="top:${250+i*160}px">${i===2?L.replace("歩ける大学の 3D 空間",'<span class="a">歩ける大学の 3D 空間</span>'):L}</div>`).join("")+`<div class="ul"><svg width="1560" height="44" fill="none" stroke="#0031d8" stroke-width="6"><path d="M4 4V40M1556 4V40M4 22H1556"/><path d="M-8 36L16 8M1544 36L1568 8" stroke-width="8"/></svg></div><div class="tname">campus-recorder</div><div class="fr"></div>`);
+  return o;
+},
+seek(F,t,o){
+  // 題の板だけ（他大学は外した）。行が順に上がり、下線が引かれて静止
+  [o.h,o.s,o.n,o.cap,...o.c].forEach(e=>e.style.display="none");
+  o.ti.style.opacity=1;o.ti.style.transform="none";
+  const hd=[...o.ti.querySelectorAll(".hd")];hd.forEach((e,i)=>F.rise(e,t,.2+i*.45,.4,30));
+  const ul=o.ti.querySelector(".ul");ul.style.opacity=F.P(t,1.6,.1);F.draw(ul,t,1.6,.8);
+  F.rise(o.ti.querySelector(".tname"),t,.5,.4,12);
+}});
+</script></body></html>

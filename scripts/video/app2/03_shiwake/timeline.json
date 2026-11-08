@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 11.5,
+ "scenes": [
+  {
+   "id": "03_shiwake",
+   "start": 0,
+   "end": 11.5,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 2.4,
+     "seconds": 5.88,
+     "dur": 5.88,
+     "text": "仕分け係が、写真がどの棟のどの面かを、一枚ずつ決めます。"
+    }
+   ]
+  }
+ ]
+}

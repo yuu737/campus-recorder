@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 8.0,
+ "scenes": [
+  {
+   "id": "C1_sumaho",
+   "start": 0,
+   "end": 8.0,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 3.44,
+     "dur": 3.44,
+     "text": "受験生は、スマホでキャンパスを歩けます。"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B4 観察・数え係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>.win{position:absolute;overflow:hidden;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:44}
+.ct{position:absolute;z-index:47;color:#fff;background:var(--acc);font-weight:700;padding:6px 18px;white-space:nowrap;box-shadow:4px 4px 0 rgba(14,16,21,.3)}
+.rw{display:flex;justify-content:space-between;align-items:baseline;padding:10px 22px;border-bottom:1.5px dashed var(--line);font-family:var(--font-mono);font-size:34px;font-weight:700}</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"kansatsu",
+build(F,S){
+  const V=F.V,o={},v=V.voice,P=V.photo,H=520,k=H/P.size[1];
+  // 本文：数え係が根拠にした f6 の写真（公開版）。札は記録の数だけ
+  o.p=F.$("div","win el",S);F.place(o.p,620,206,P.size[0]*k,H);
+  const im=F.$("img","",o.p);im.src=F.R+P.file;F.css(im,{position:"absolute",left:0,top:0,width:P.size[0]*k+"px"});
+  o.c1=F.$("div","ct el",S,`柱間 <span class="tk1" style="font-size:40px;letter-spacing:2px"></span> <span class="num n1" style="font-size:64px">0</span>`);o.c1.style.fontSize="34px";F.place(o.c1,640,226);
+  o.c2=F.$("div","ct el",S,`階 <span class="tk2" style="font-size:40px;letter-spacing:2px"></span> <span class="num n2" style="font-size:64px">0</span>`);o.c2.style.fontSize="34px";F.place(o.c2,640,330);
+  o.n1=o.c1.querySelector(".n1");o.k1=o.c1.querySelector(".tk1");o.k2=o.c2.querySelector(".tk2");o.n2=o.c2.querySelector(".n2");
+  o.st=F.$("div","el",S,`<span class="tagm" style="font-size:28px">${V.f6.status}</span>`);F.place(o.st,640,430);o.st.style.zIndex=47;
+  // 右：4 面の数（棟の記録）
+  const x2=620+P.size[0]*k+24,w2=1862-x2;
+  o.b=F.board("数えた面（柱間 × 階）",x2,206,w2,H,"");
+  o.rows=V.faces.map(([f,b,fl],i)=>{const e=F.$("div","rw",o.b,`<span>${f}</span><span>${b} × ${fl}</span>`);if(i===0)e.style.color="var(--acc)";return e});
+  o.v=F.claudeVoice({who:v.who,model:v.model,took:v.took,text:v.text,src:"kazoe_f6.json（数え係の数え方）",t0:2.9,ms:45,x:620,y:756,w:1242,size:32});
+  F.tag("claude","列数と階数は Claude が数えた",{x:60,y:540,t0:7.6});
+  o.chk=F.board("検算（数え係）",60,604,520,170,`<div class="num" style="padding:22px 22px 0;font-size:38px">${V.f6.check}</div>`);
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.cap,60,1008);o.cap.style.zIndex=46;
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;F.rise(o.p,t,2.25,.4,30);
+  F.rise(o.c1,t,4.6,.3,10);{const n=Math.max(0,Math.min(V.f6.bays,Math.floor((t-4.8)/.22)+1));o.k1.textContent="｜".repeat(n);o.n1.textContent=n}
+  F.rise(o.c2,t,6.8,.3,10);{const n=Math.max(0,Math.min(V.f6.floors,Math.floor((t-7.0)/.25)+1));o.k2.textContent="｜".repeat(n);o.n2.textContent=n}
+  F.pop(o.st,t,8.4);
+  F.rise(o.b,t,8.0,.35,24);o.rows.forEach((e,i)=>F.rise(e,t,8.2+i*.2,.3,12));
+  F.rise(o.chk,t,9.0,.35,24);
+  F.rise(o.cap,t,2.4,.3,6);
+}});
+</script></body></html>

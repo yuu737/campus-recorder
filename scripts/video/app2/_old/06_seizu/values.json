@@ -1,0 +1,70 @@
+{
+ "note": "B6 製図・模型係（アプリ版）。この記録ではコード（recorder run）が実行",
+ "dur": 12.0,
+ "app": {
+  "replay_t": 38.0,
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 の記録）",
+  "z0": 1.5,
+  "focus": [
+   620,
+   420
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 3.05,
+    "x": 22,
+    "y": 150,
+    "w": 1212,
+    "h": 540,
+    "tag": "立面図（棟 JSON から生成）",
+    "ty": 96,
+    "main": true
+   }
+  ],
+  "source": "out/video/replay_honbu.mp4 の 38.0 秒（7/11 製図・模型係の工程の生成物）",
+  "src": "out/video/app/_src/replay_038.0.png"
+ },
+ "head": "同じ JSON から、[図面・模型・3D]を出す",
+ "elev": {
+  "file": "out/honbu/elev_f6.svg",
+  "w": 1385,
+  "h": 876,
+  "label": "本部棟 f6 の立面図",
+  "source": "out/honbu/elev_f6.svg（recorder run が棟 JSON から生成）"
+ },
+ "legend": [
+  [
+   "#1a1a1c",
+   "solid",
+   "黒",
+   "実測（measured）"
+  ],
+  [
+   "#b07a10",
+   "solid",
+   "琥珀",
+   "推定（estimated）"
+  ],
+  [
+   "#c8322b",
+   "dash",
+   "赤の破線",
+   "未確定（unknown）"
+  ]
+ ],
+ "outs": [
+  "図面 SVG",
+  "模型（Blender）",
+  "四面図",
+  "街路視点",
+  "glb"
+ ],
+ "agent": {
+  "model": "コード（recorder run）"
+ },
+ "cap": "out/honbu/elev_f6.svg（凡例の文：赤の破線は未確定。琥珀は推定）／.claude/agents/seizu.md／画面 out/video/replay_honbu.mp4（38 秒）",
+ "pill": "コード"
+}

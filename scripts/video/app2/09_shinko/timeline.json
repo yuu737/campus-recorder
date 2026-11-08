@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 10.0,
+ "scenes": [
+  {
+   "id": "09_shinko",
+   "start": 0,
+   "end": 10.0,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 2.4,
+     "seconds": 5.68,
+     "dur": 5.68,
+     "text": "行き詰まると進行役が決めて続け、人は後から承認します。"
+    }
+   ]
+  }
+ ]
+}

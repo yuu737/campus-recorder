@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 2 B06 検収係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.cv.notail::before{display:none}
+.win{position:absolute;overflow:hidden;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:44}
+.win img{position:absolute;display:block;transform-origin:50% 40%}
+.lg{font-size:28px;font-weight:700;white-space:nowrap}
+.lg i{display:inline-block;width:34px;height:8px;vertical-align:8px;margin:0 8px 0 0}
+.half{position:absolute;top:70px;width:470px}
+.who-tag.fail{color:#fff;background:var(--unknown);border:3px solid var(--unknown);font-size:34px}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"kenshu",
+build(F,S){
+  const V=F.V,o={},$=(c,h,p)=>F.$("div",c,p||S,h);
+  const O=V.overlay,H=700,W=Math.round(950/1040*H);
+  o.ow=$("win el");F.place(o.ow,620,206,W,H);o.oi=F.$("img","",o.ow);o.oi.src=F.R+O.file;F.css(o.oi,{left:0,top:0,width:W+"px",height:H+"px"});
+  o.ocap=$("el src20",`${O.photo} · f6（左半分。掲示物の無い範囲）`);F.place(o.ocap,620,206+H+2);
+  const X=1290,RW=572;
+  o.voice=F.claudeVoice({who:V.voice.agent,model:V.voice.model,took:V.voice.took,text:V.voice.text,src:"pipeline_state_20261108_final.json（検収係の報告の抜粋、4 周目）",x:X,y:206,w:RW,t0:3.4,ms:45,tail:false});
+  o.lg=$("el lg",`<i style="background:#1f6fff"></i>模型の線　<i style="background:#00b000"></i>写真の縁（合う）　<i style="background:#e01010"></i>外れ`);F.place(o.lg,620,950);
+  const N=V.nums;
+  o.bd=F.board("f6 の外壁の線（18 枚の写真）",60,530,520,420,`
+    <div class="half" style="left:26px"><div class="t28">0.15 m 以内</div><div style="margin-top:6px"><span class="num v1" style="font-size:100px">0</span><span class="num" style="font-size:40px;color:var(--sub)"> / ${N.total} 本</span></div></div>
+    <div class="half" style="left:26px;top:236px"><div class="t28">傾きの中央値</div><div style="margin-top:8px;white-space:nowrap"><span class="num s0" style="font-size:38px;color:var(--sub)">${N.slope_before} %</span><span class="num ar" style="font-size:36px;color:var(--acc)"> → </span><span class="num s1" style="font-size:50px">${N.slope_after} %</span></div></div>
+    <div class="src20" style="position:absolute;left:26px;bottom:14px">出典 data/reports/honbu/kenshu_k401.md（f6）</div>`);
+  o.bd.classList.add("el");o.v1=o.bd.querySelector(".v1");o.s0=o.bd.querySelector(".s0");o.ar=o.bd.querySelector(".ar");o.s1=o.bd.querySelector(".s1");
+  o.tg1=F.tag("code","残差の計算はコード",{x:X,y:470,t0:6.2});
+  o.tg2=F.tag("claude","ずれの読みと直す先の判断は Claude",{x:X,y:540,t0:7.0});
+  o.fl=F.tag("fail",V.fail.text,{x:X,y:640,t0:12.0});
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;
+  F.rise(o.ow,t,2.15,.4,40);o.ocap.style.opacity=F.P(t,2.5,.3);
+  o.oi.style.transform=`scale(${1+.06*F.eio(F.P(t,2.4,10))})`;
+  F.rise(o.lg,t,2.9,.3,16);F.pulse(o.ow,t,8.0,.6);F.pulse(o.lg,t,8.6,.5);
+  F.rise(o.bd,t,9.3,.35,-60);F.countTo(o.v1,String(V.nums.ok),F.eo(F.P(t,9.6,1.4)));
+  o.s0.style.opacity=F.P(t,10.9,.25);o.ar.style.opacity=F.P(t,11.2,.2);F.pop(o.s1,t,11.45);
+}});
+</script></body></html>

@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 11.0,
+ "scenes": [
+  {
+   "id": "04_kansatsu",
+   "start": 0,
+   "end": 11.0,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 2.4,
+     "seconds": 6.6,
+     "dur": 6.6,
+     "text": "観察係と数え係が、柱の列と階の数を、写真から数えます。"
+    }
+   ]
+  }
+ ]
+}

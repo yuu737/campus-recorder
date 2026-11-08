@@ -1,0 +1,62 @@
+{
+ "note": "B7 検収（アプリ版）。数字と文はすべて記録から（source に出典）。アプリの画面は待機画面の再生の 1 コマ（掲示物は画面が灰色の箱で隠している）",
+ "dur": 13.5,
+ "app": {
+  "replay_t": 54.0,
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 の記録）",
+  "z0": 1.45,
+  "focus": [
+   627,
+   421
+  ],
+  "spots": [
+   {
+    "t0": 1.3,
+    "t1": 3.05,
+    "x": 279,
+    "y": 160,
+    "w": 696,
+    "h": 522,
+    "tag": "検収：写真と模型を重ねる（模型は半透明）",
+    "ty": 700,
+    "main": true
+   }
+  ],
+  "source": "out/video/replay_honbu.mp4 の 54.0 秒（9/11 検収係の工程の生成物）",
+  "src": "out/video/app/_src/replay_054.0.png"
+ },
+ "head": "写真に模型の線を重ねて、[ずれ]を測る",
+ "lines": {
+  "total": 295,
+  "ok": 259,
+  "within_m": 0.15,
+  "median_abs_d_m": "0.029",
+  "source": "data/reports/honbu/kenshu_k401.md（f6）"
+ },
+ "slopes_before": {
+  "unit": "%",
+  "median": "+2.3",
+  "source": "out/honbu/recheck/20261108_091323/kenshu_slopes.json（level の slope）、data/reports/honbu/kenshu_1108.md（中央値 +2.3 %）"
+ },
+ "slopes_after": {
+  "median": "−0.13",
+  "source": "data/reports/honbu/kenshu_k401.md（高さの線の傾きの中央値）"
+ },
+ "verdicts": [
+  {
+   "face": "f6",
+   "text": "不合格",
+   "sub": "記録して進める（K-405）。縮尺の差は消えた",
+   "source": "data/reports/honbu/kenshu_k401.md"
+  },
+  {
+   "face": "f8",
+   "text": "不合格",
+   "sub": "70 本中 29 本が合格。解き直しの後も残る差として記録",
+   "source": "data/reports/honbu/kenshu_k401.md"
+  }
+ ],
+ "cap": "data/reports/honbu/kenshu_k401.md・kenshu_1108.md／out/honbu/recheck/20261108_091323/kenshu_slopes.json／画面 out/video/replay_honbu.mp4（54 秒）"
+}

@@ -1,0 +1,24 @@
+{
+ "note": "映像係 T が書いた（場面の長さと声の位置。声は out/video/app2/narration/05_sekkei/）",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 12.0,
+ "scenes": [
+  {
+   "id": "05_sekkei",
+   "start": 0,
+   "end": 12.0,
+   "sentences": [
+    {
+     "text": "設計係の Claude が推定の値を測った値に書き換え、コードが図面を描き直します。",
+     "file": "001.wav",
+     "start": 0.3,
+     "end": 8.22
+    }
+   ]
+  }
+ ]
+}

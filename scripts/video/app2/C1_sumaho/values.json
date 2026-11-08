@@ -1,0 +1,39 @@
+{
+ "note": "C1 スマホで歩く（締め、10 秒）。縦のコマを CSS のスマホの枠の中で流す",
+ "dur": 10.0,
+ "frames": {
+  "dir": "out/video/closing_assets/walk_portrait/",
+  "pattern": "f%04d.png",
+  "n": 300,
+  "fps": 30,
+  "w": 1080,
+  "h": 1920,
+  "source": "out/video/closing_assets/walk_portrait/（web/index.html を CSS 540×960・倍率 2 で撮影。walk_portrait.json）",
+  "small": "out/video/app2/_src/c1/f%04d.jpg（540×960 に縮めた写し）"
+ },
+ "end_still": {
+  "src": "out/video/closing_assets/evidence_portrait_end.png",
+  "source": "同じ頁で「根拠で見る」（window.__campus.setEvidence(true)）",
+  "small": "out/video/app2/_src/c1/evidence_end.jpg"
+ },
+ "head": "受験生は、[スマホで歩ける]",
+ "sub": "歩く画面 web/index.html（幅 540 のスマホ向けの見た目）を、そのまま撮った 10 秒",
+ "tag": {
+  "kind": "code",
+  "t": "公開されるのは歩く画面だけ（写真は職員の PC に残る）",
+  "source": "CLAUDE.md 規約 6「本番で公開されるのは歩く画面だけで、写真は職員の PC に留まる」"
+ },
+ "cap": "out/video/closing_assets/walk_portrait/（一覧.md C1）／CLAUDE.md 規約 6",
+ "head_lines": [
+  "受験生は、",
+  "スマホで歩ける"
+ ],
+ "ev_label": "最後の 1.5 秒：「根拠で見る」",
+ "narration": {
+  "note": "暫定の文（台本は利用者が書く）。Achernar・gemini-3.1-flash-tts-preview",
+  "wav": "out/video/app2/narration/C1_sumaho/",
+  "sentences": [
+   "受験生は、スマホで大学を歩けます。"
+  ]
+ }
+}

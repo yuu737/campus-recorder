@@ -6,7 +6,7 @@
   1080
  ],
  "flip": 0.6,
- "total": 28.26,
+ "total": 27.86,
  "scenes": [
   {
    "id": "T",
@@ -22,7 +22,7 @@
    "text_in": 0.4,
    "text_dur": 5.59,
    "speech_end": 5.99,
-   "end": 6.49,
+   "end": 6.09,
    "sentences": [
     {
      "n": 1,
@@ -43,17 +43,17 @@
     "志望校を見ないまま",
     "決めています"
    ],
-   "start": 6.49,
-   "text_in": 7.09,
+   "start": 6.09,
+   "text_in": 6.69,
    "text_dur": 4.19,
-   "speech_end": 11.28,
-   "end": 12.09,
+   "speech_end": 10.88,
+   "end": 11.69,
    "sentences": [
     {
      "n": 2,
      "text": "地方の受験生は、志望校を見ないまま決めています。",
      "file": "002.wav",
-     "start": 7.09,
+     "start": 6.69,
      "dur": 4.19
     }
    ],
@@ -67,17 +67,17 @@
    "lines": [
     "作者自身もそうでした"
    ],
-   "start": 12.09,
-   "text_in": 12.59,
+   "start": 11.69,
+   "text_in": 12.19,
    "text_dur": 1.68,
-   "speech_end": 14.27,
-   "end": 16.29,
+   "speech_end": 13.87,
+   "end": 15.89,
    "sentences": [
     {
      "n": 3,
      "text": "作者自身もそうでした。",
      "file": "003.wav",
-     "start": 12.59,
+     "start": 12.19,
      "dur": 1.68
     }
    ],
@@ -92,17 +92,17 @@
     "外注すると",
     "1 棟 4万円から"
    ],
-   "start": 16.29,
-   "text_in": 16.69,
+   "start": 15.89,
+   "text_in": 16.29,
    "text_dur": 5.47,
-   "speech_end": 22.16,
-   "end": 22.66,
+   "speech_end": 21.76,
+   "end": 22.26,
    "sentences": [
     {
      "n": 4,
      "text": "キャンパスの建物を 3D にするには、外注で 1 棟 4 万円から。",
      "file": "004.wav",
-     "start": 16.69,
+     "start": 16.29,
      "dur": 5.47
     }
    ],
@@ -117,17 +117,17 @@
     "予算も専門家も",
     "いない"
    ],
-   "start": 22.66,
-   "text_in": 23.06,
+   "start": 22.26,
+   "text_in": 22.66,
    "text_dur": 4.0,
-   "speech_end": 27.06,
-   "end": 28.26,
+   "speech_end": 26.66,
+   "end": 27.86,
    "sentences": [
     {
      "n": 5,
      "text": "大学の広報には、その予算も専門家もいません。",
      "file": "005.wav",
-     "start": 23.06,
+     "start": 22.66,
      "dur": 4.0
     }
    ],

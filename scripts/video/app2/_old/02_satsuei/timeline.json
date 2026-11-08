@@ -1,0 +1,23 @@
+{
+ "note": "make_av.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 10.0,
+ "scenes": [
+  {
+   "id": "02_satsuei",
+   "start": 0,
+   "sentences": [
+    {
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 6.72,
+     "text": "撮影係の Claude Haiku が、33 枚のうち 30 枚は使えると返します。"
+    }
+   ]
+  }
+ ]
+}

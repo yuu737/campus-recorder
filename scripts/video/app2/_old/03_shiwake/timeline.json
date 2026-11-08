@@ -1,0 +1,23 @@
+{
+ "note": "make_av.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 9.0,
+ "scenes": [
+  {
+   "id": "03_shiwake",
+   "start": 0,
+   "sentences": [
+    {
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 5.64,
+     "text": "仕分け係の Claude Opus が、写真を面ごとに振り分けます。"
+    }
+   ]
+  }
+ ]
+}

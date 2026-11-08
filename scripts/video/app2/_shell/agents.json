@@ -1,0 +1,121 @@
+{
+ "note": "make_app.py が作る。手で直さない",
+ "agents": [
+  {
+   "id": "staff",
+   "short": "職員",
+   "name": "職員",
+   "model": "人",
+   "long_model": "人（大学の職員）",
+   "desc": [
+    "撮った写真を職員の画面に落とし、棟の名前を付けて「記録を始める」を押す。"
+   ],
+   "source": "人の操作（web/staff.html）"
+  },
+  {
+   "id": "satsuei",
+   "short": "撮影係",
+   "name": "撮影係",
+   "model": "Haiku",
+   "long_model": "Claude Haiku",
+   "desc": [
+    "届いた写真が使えるかを数秒で返し、足りない面・角度を伝える（職員への速い返事）"
+   ],
+   "source": ".claude/agents/satsuei.md"
+  },
+  {
+   "id": "shiwake",
+   "short": "仕分け係",
+   "name": "仕分け係",
+   "model": "Opus",
+   "long_model": "Claude Opus",
+   "desc": [
+    "写真がどの棟のどの面かを目視で確定し、索引の building / face を埋める"
+   ],
+   "source": ".claude/agents/shiwake.md"
+  },
+  {
+   "id": "kansatsu",
+   "short": "観察・数え係",
+   "name": "観察係",
+   "model": "Opus",
+   "long_model": "Claude Opus",
+   "desc": [
+    "面ごとに何があるか（列数・段数・窓の形・帯・ガラス・角・足元・頂部）を比率と個数だけで観察票に書く。",
+    "寸法は書かない"
+   ],
+   "source": ".claude/agents/kansatsu.md"
+  },
+  {
+   "id": "sokuryo",
+   "short": "測量係",
+   "name": "測量係",
+   "model": "Opus",
+   "long_model": "Claude Opus",
+   "desc": [
+    "縮尺の根拠を物差し台帳から選び、正面化→周期→m に換算して階高・柱間隔を出す。",
+    "必ず 2 つ目の物差しで検算。",
+    "最後に写真を面に登録して面の写真（製図板）を出す"
+   ],
+   "source": ".claude/agents/sokuryo.md"
+  },
+  {
+   "id": "sekkei",
+   "short": "設計・製図",
+   "name": "設計係",
+   "model": "Opus",
+   "long_model": "Claude Opus",
+   "desc": [
+    "観察票・数え・測量の結果を棟 JSON（塊・面・部品）に落とす。",
+    "写っている物は 1 枚からでも estimated で置き、写っていない面は仮説か unknown と撮影依頼"
+   ],
+   "source": ".claude/agents/sekkei.md"
+  },
+  {
+   "id": "shoko",
+   "short": "証拠",
+   "name": "証拠",
+   "model": "",
+   "long_model": "コード（recorder）",
+   "desc": [
+    "写真と模型を重ねた証拠の絵"
+   ],
+   "source": "recorder"
+  },
+  {
+   "id": "kenshu",
+   "short": "検収係",
+   "name": "検収係",
+   "model": "Opus",
+   "long_model": "Claude Opus",
+   "desc": [
+    "正面化（検収 A）と写真の視点（検収 B）で模型と写真のずれを見て、直す先を JSON（design スクリプト）に限って直し、再生成する"
+   ],
+   "source": ".claude/agents/kenshu.md"
+  },
+  {
+   "id": "shinko",
+   "short": "進行役",
+   "name": "進行役",
+   "model": "Fable",
+   "long_model": "Claude Fable",
+   "desc": [
+    "係が自動で回っている間は何もしない。",
+    "事件（立ち上げ・行き詰まり・語彙不足・アセット・完成判定・人を呼ぶ）の時だけ呼ばれて決め、決めた事を規則にして手順書に足す。",
+    "部品ごとの審判はしない"
+   ],
+   "source": ".claude/agents/shinko.md"
+  },
+  {
+   "id": "walk",
+   "short": "歩く画面",
+   "name": "歩く画面",
+   "model": "",
+   "long_model": "web/index.html",
+   "desc": [
+    "受験生がスマホで歩く 3D。"
+   ],
+   "source": "web/index.html"
+  }
+ ]
+}

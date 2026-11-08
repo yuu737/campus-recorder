@@ -1,0 +1,144 @@
+{
+ "note": "B10 歩く画面（塊 B 10 場面版。旧 09_aruku を流用。順＝本部棟が立つ → 根拠で見る → 撮影依頼 10 件が職員へ）",
+ "dur": 10.0,
+ "step": "walk",
+ "context": {
+  "src": "out/video/closing_assets/walk_landscape/f0000.png",
+  "w": 1920,
+  "h": 1080,
+  "url": "web/index.html　歩く画面（本部棟 f6 の正面）",
+  "source": "out/video/closing_assets/walk_landscape/f0000.png（capture_walk.py、カメラ＝out/honbu/model_report.json の web_cameras.street）"
+ },
+ "evidence": {
+  "src": "out/video/demo/walk_cap/f00100.jpg",
+  "w": 1920,
+  "h": 1080,
+  "crop_legend": [
+   10,
+   150,
+   505,
+   180
+  ],
+  "crop_bldg": [
+   660,
+   120,
+   1260,
+   520
+  ],
+  "url": "web/index.html　「根拠で見る」を押した所",
+  "source": "out/video/demo/walk_cap/f00100.jpg（scripts/video/demo/capture_walk.py）"
+ },
+ "legend": [
+  [
+   "#3fa34d",
+   "measured",
+   "写真で測った"
+  ],
+  [
+   "#e8912d",
+   "estimated",
+   "推定。方法あり"
+  ],
+  [
+   "#f2c94c",
+   "hypothesis",
+   "仮説"
+  ],
+  [
+   "#8f969c",
+   "unknown",
+   "まだ分からない"
+  ]
+ ],
+ "legend_source": "web/index.html の凡例（画面 f00100.jpg に出ている文）",
+ "counts": {
+  "measured": 7,
+  "estimated": 456,
+  "unknown": 2,
+  "requests": 10,
+  "rest": "撮影依頼 10 件、道具の作業 14 件、未確定の値 2、灰色の面 2",
+  "source": "out/honbu/report.json の counts（measured・estimated・unknown・requests）と stages.rest.result"
+ },
+ "tags": [
+  {
+   "kind": "code",
+   "t": "コードが色を塗った：根拠の種類ごと"
+  },
+  {
+   "kind": "human",
+   "t": "足りない所は職員へ戻る"
+  }
+ ],
+ "cap": "web/index.html（凡例）／out/honbu/report.json（counts・stages.rest）／画面 closing_assets/walk_landscape/f0000.png・demo/walk_cap/f00100.jpg",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T12:14:49",
+  "at": "2026-11-08T12:16:53",
+  "source": "jisseki_20261108.md 区切り 5 の seizu_final・web の行"
+ },
+ "app": {
+  "w": 1920,
+  "h": 1080,
+  "src": "out/video/closing_assets/walk_landscape/f0000.png",
+  "url": "web/index.html　歩く画面（本部棟 f6 の正面）→「根拠で見る」",
+  "mini": {
+   "z0": 1.4,
+   "focus": [
+    1060,
+    500
+   ],
+   "spot": [
+    660,
+    270,
+    1260,
+    450
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_t": 2.9,
+   "note": "spot＝立った本部棟。小窓に縮んだ後、同じ所が「根拠で見る」の色に変わる",
+   "link_note": "線は場面が F.link で引く（先＝本文の動画。動画が縮んで板が出る 6.4 秒で消す）"
+  },
+  "source": "out/video/closing_assets/walk_landscape/f0000.png（立った本部棟）・out/video/demo/walk_cap/f00100.jpg（根拠で見る）",
+  "over": "out/video/demo/walk_cap/f00100.jpg"
+ },
+ "legend_rows_y": [
+  161,
+  181,
+  200,
+  220
+ ],
+ "intro": {
+  "html": "できた<b>本部棟が、歩く画面に立つ</b>",
+  "t1": 2.3,
+  "source": "web/index.html（歩く画面）"
+ },
+ "walk": {
+  "pattern": "out/video/demo/walk_cap/f{n}.jpg",
+  "pad": 5,
+  "keys": [
+   [
+    2.4,
+    0
+   ],
+   [
+    4.6,
+    79
+   ],
+   [
+    4.7,
+    80
+   ],
+   [
+    6.0,
+    156
+   ]
+  ],
+  "press_at": 4.65,
+  "source": "out/video/demo/walk_cap/f00000〜f00156.jpg（scripts/video/demo/capture_walk.py。f00000〜79 本部棟へ近づく、f00080〜「根拠で見る」）"
+ }
+}

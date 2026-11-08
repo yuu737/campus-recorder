@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 10.0,
+ "scenes": [
+  {
+   "id": "10_aruku",
+   "start": 0,
+   "end": 10.0,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 2.4,
+     "seconds": 5.24,
+     "dur": 5.24,
+     "text": "測れた所は色で分かり、足りない所は職員に戻ります。"
+    }
+   ]
+  }
+ ]
+}

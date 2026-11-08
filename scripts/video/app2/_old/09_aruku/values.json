@@ -1,0 +1,131 @@
+{
+ "note": "B08 歩く画面（app2）。Claude の声は無し（コードと職員の場面）。数字と文は全部ここに出典付き",
+ "dur": 10.8,
+ "step": "walk",
+ "context": {
+  "src": "out/video/closing_assets/walk_landscape/f0000.png",
+  "w": 1920,
+  "h": 1080,
+  "url": "web/index.html　歩く画面（本部棟 f6 の正面）",
+  "source": "out/video/closing_assets/walk_landscape/f0000.png（capture_walk.py、カメラ＝out/honbu/model_report.json の web_cameras.street）"
+ },
+ "evidence": {
+  "src": "out/video/demo/walk_cap/f00100.jpg",
+  "w": 1920,
+  "h": 1080,
+  "crop_legend": [
+   10,
+   150,
+   505,
+   180
+  ],
+  "crop_bldg": [
+   660,
+   120,
+   1260,
+   520
+  ],
+  "url": "web/index.html　「根拠で見る」を押した所",
+  "source": "out/video/demo/walk_cap/f00100.jpg（scripts/video/demo/capture_walk.py）"
+ },
+ "legend": [
+  [
+   "#3fa34d",
+   "measured",
+   "写真で測った"
+  ],
+  [
+   "#e8912d",
+   "estimated",
+   "推定。方法あり"
+  ],
+  [
+   "#f2c94c",
+   "hypothesis",
+   "仮説"
+  ],
+  [
+   "#8f969c",
+   "unknown",
+   "まだ分からない"
+  ]
+ ],
+ "legend_source": "web/index.html の凡例（画面 f00100.jpg に出ている文）",
+ "counts": {
+  "measured": 7,
+  "estimated": 456,
+  "unknown": 2,
+  "requests": 10,
+  "rest": "撮影依頼 10 件、道具の作業 14 件、未確定の値 2、灰色の面 2",
+  "source": "out/honbu/report.json の counts（measured・estimated・unknown・requests）と stages.rest.result"
+ },
+ "tags": [
+  {
+   "kind": "code",
+   "t": "コードが色を塗った：根拠の種類ごと"
+  },
+  {
+   "kind": "human",
+   "t": "足りない所は職員へ戻る"
+  }
+ ],
+ "cap": "web/index.html（凡例）／out/honbu/report.json（counts・stages.rest）／画面 out/video/demo/walk_cap/f00100.jpg",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T12:14:49",
+  "at": "2026-11-08T12:16:53",
+  "source": "jisseki_20261108.md 区切り 5 の seizu_final・web の行"
+ },
+ "app": {
+  "w": 1920,
+  "h": 1080,
+  "src": "out/video/demo/walk_cap/f00100.jpg",
+  "url": "web/index.html　歩く画面（「根拠で見る」を押した所）",
+  "mini": {
+   "z0": 1.6,
+   "focus": [
+    1080,
+    420
+   ],
+   "spot": [
+    12,
+    150,
+    300,
+    80
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    640,
+    300
+   ],
+   "link_t": 2.4,
+   "note": "spot＝凡例の色の 4 行（measured〜unknown）。右に同じ所の切り出しを大きく"
+  },
+  "source": "out/video/demo/walk_cap/f00100.jpg（scripts/video/demo/capture_walk.py）"
+ },
+ "legend_rows_y": [
+  161,
+  181,
+  200,
+  220
+ ],
+ "narration": {
+  "note": "暫定の文（台本は利用者が書く）。Achernar・gemini-3.1-flash-tts-preview",
+  "wav": "out/video/app2/narration/09_aruku/",
+  "sentences": [
+   "根拠で見ると、どこを写真で測ったかが色で分かります。",
+   "足りない所は、職員に撮影を頼みます。"
+  ]
+ },
+ "legend_crop": [
+  12,
+  150,
+  300,
+  80
+ ]
+}

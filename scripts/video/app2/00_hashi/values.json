@@ -1,0 +1,9 @@
+{
+ "note": "B0 繋ぎの札（導入の後・B1 の前、4 秒、無音）。題の板と同じ見た目（帯なし）。終わりにめくれて B1 へ",
+ "dur": 4.0,
+ "lines": ["ここからは、この道具で", "[本部棟を実際に記録した]流れです"],
+ "sub": "写真 121 枚から、歩ける 3D まで",
+ "sub_source": "写真 121 枚＝out/honbu/report.json の counts.photos（121）。歩ける 3D＝同 stages.walk",
+ "source": "文は利用者の指示（11/8 夕方、進行役経由）",
+ "cap": "out/honbu/report.json（counts.photos 121）"
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>塊 B B5 測量係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.cv.notail::before{display:none}
+.win{position:absolute;overflow:hidden;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:44}
+.win img{position:absolute;display:block}
+.jt{position:absolute;width:6px;margin-left:-3px;background:var(--acc);box-shadow:0 0 0 2px #fff}
+.jl{position:absolute;font-size:28px;font-weight:700;color:var(--acc);transform:translateX(-50%);white-space:nowrap;font-variant-numeric:tabular-nums}
+.mk{position:absolute;top:0;width:5px;margin-left:-2px;height:100%;background:var(--acc)}
+.mn{position:absolute;top:84px;font-size:28px;font-weight:700;color:#fff;background:var(--acc);padding:0 5px;transform:translateX(-50%);line-height:1.25;font-variant-numeric:tabular-nums}
+.head{position:absolute;top:-8px;bottom:-8px;width:4px;margin-left:-2px;background:#c8322b;z-index:3}
+.brk{position:absolute;height:22px;border:4px solid var(--ink);border-top:0;box-sizing:border-box}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+function warp(t){const K=[[0,0],[2.4,2.2],[4.6,2.22],[6.4,5.0],[8.2,5.05],[11.0,10.0],[14,13.0]];
+  for(let i=1;i<K.length;i++){if(t<=K[i][0]){const [a,b]=K[i-1],[c,d]=K[i];return b+(d-b)*(t-a)/(c-a)}}return t-1.0}
+function stage1(F,t,o){const out=1-F.eo(F.P(t,4.4,.3));
+  F.rise(o.e1,t,2.45,.4,40);o.e1.style.opacity*=out;o.e1s.style.opacity=F.P(t,2.7,.3)*out;
+  F.rise(o.b1,t,3.1,.4,-60);o.b1.style.opacity*=out;o.v1b.el.style.opacity*=out;o.t1.el.style.opacity*=out;
+  const q=F.P(t,4.6,.3)*(1-F.P(t,8.2,.3));o.n2.style.opacity=q;o.prev.style.opacity=F.P(t,12.2,.3);
+  o.rc.style.opacity=F.P(t,6.2,.2)*(1-F.eo(F.P(t,8.2,.3)));o.rb.style.opacity=F.P(t,7.85,.2);o.rl.style.opacity=F.P(t,6.5,.3)*(1-F.P(t,8.2,.3));}
+APP.scene({step:"sokuryo",
+build(F,S){
+  const V=F.V,o={},$=(c,h,p)=>F.$("div",c,p||S,h);
+  // ── B メジャーの写真（公開版）の寄り
+  const T=V.tape,TC=[60,470,1180,400],ks=1242/TC[2];o.ks=ks;
+  o.tw=$("win el");F.place(o.tw,620,206,1242,TC[3]*ks);
+  const ti=F.$("img","",o.tw);ti.src=F.R+T.file;F.css(ti,{left:(-TC[0]*ks)+"px",top:(-TC[1]*ks)+"px",width:(T.size[0]*ks)+"px"});
+  o.jt=T.joints_px.map((x,i)=>{const e=$("jt el","",o.tw);F.place(e,(x-TC[0])*ks,(585-TC[1])*ks,null,(700-585)*ks);return e});
+  o.jl=T.joints_px.map((x,i)=>{const e=$("jl el",T.joints_cm[i]);F.place(e,620+(x-TC[0])*ks,206+TC[3]*ks+8);return e});
+  o.jcap=$("el src20","目地 8 本の読み（cm）は記録の値・線の位置は映像係が写真に合わせた");F.place(o.jcap,620,206+TC[3]*ks+48);
+  o.eq=F.board("",620,730,1242,250,`<div style="padding:22px 28px"><div class="t32" style="font-weight:700">（86.2 − 5.4）cm ÷ ${T.n} 枚 ＝ タイル 1 枚の幅</div>
+    <div style="margin-top:14px"><span class="num v1" style="font-size:104px">0</span><span class="num" style="font-size:52px"> m</span><span class="num" style="font-size:36px;color:var(--sub)">　± ${V.tile.tol}</span></div>
+    <div class="src20" style="margin-top:10px">出典 sokuryo_chain_f6.json（chain[0] tape）</div></div>`);o.eq.classList.add("el");o.v1=o.eq.querySelector(".v1");
+  o.tgB1=F.tag("claude","物差しはこの写真：Claude が選んだ",{x:60,y:540,t0:5.1});
+  o.fb=F.board("物差し",60,600,520,230,`<div style="padding:16px 22px" class="t28">${T.photo}<br>（公開版の写真）<br>目地 8 本 → ${T.n} 周期</div>`);o.fb.classList.add("el");
+  o.tgB2=F.tag("code","割り算と ± はコード",{x:60,y:860,t0:5.82});
+  // ── C 柱間 3 の正面化（測量係が切り出した絵）と、印を重ねた 4 倍の拡大
+  const C=V.count,kb=860/870;
+  o.bay=$("win el");F.place(o.bay,620,206,860,240*kb);const bi=F.$("img","",o.bay);bi.src=F.R+C.bay;F.css(bi,{left:0,top:0,width:"860px"});
+  o.brk=$("brk el");F.place(o.brk,620+92*kb,206+240*kb+6,(763-92)*kb);
+  o.brl=$("el t28","<b>柱型の芯 → 芯</b>（3 階と 4 階の間の腰壁）");F.place(o.brl,620+92*kb,206+240*kb+30);
+  o.cnt=F.board("数えた枚数",1500,206,362,264,`<div style="padding:8px 28px"><span class="num vc" style="font-size:150px">0</span><span class="num" style="font-size:60px"> 枚</span></div>`);o.cnt.classList.add("el");o.vc=o.cnt.querySelector(".vc");
+  o.cf=$("el t28",`もう 1 枚（${C.confirm.replace("PXL_20261103_","…")}）でも <b>${C.confirm_n} 枚</b>`);F.place(o.cf,620,520);
+  o.tgC=F.tag("claude","印を付けて数えたのは Claude",{x:1440,y:516,t0:8.96});
+  const SH=210,k=SH/224;o.k=k;
+  o.sw=$("win el");F.place(o.sw,60,580,1802,SH);
+  o.sin=$("el","",o.sw);F.css(o.sin,{left:0,top:0,height:SH+"px",width:(3380*k)+"px",zIndex:1});
+  C.strips.forEach((u,s)=>{const im=F.$("img","",o.sin);im.src=F.R+u;F.css(im,{left:(1096*s*k)+"px",top:0,height:SH+"px"})});
+  const wx=x=>(x-2865)*4*k;o.wx=wx;
+  const M=C.marks.slice(C.from_index,C.to_index+1);o.M=M;
+  o.mk=M.map(x=>{const e=$("mk el","",o.sin);F.place(e,wx(x),0);return e});
+  o.mn=M.slice(1).map((x,i)=>{const e=$("mn el",String(i+1),o.sin);F.place(e,(wx(M[i])+wx(x))/2,0);return e});
+  o.head=$("head el","",o.sw);
+  o.scap=$("el src20","測量係の拡大（out/honbu/k201/a1_*.png、4 倍）。青の細い線と赤い番号は測量係が付けた印、太い線と白抜きの数は記録の印の位置から");F.place(o.scap,60,580+SH+6,1802);
+  o.voice=F.claudeVoice({who:V.voice.agent,model:V.voice.model,took:V.voice.took,text:V.voice.text,src:"pipeline_state_20261108_final.json（測量係の報告の抜粋）",x:60,y:836,w:1802,t0:8.5,ms:30,tail:false});
+  o.voice.el.style.transformOrigin="0 0";
+  // ── D 結果：左に直前の生成物（印を付けた正面化）を小さく残し、右に数字
+  o.dl1=$("win el");F.place(o.dl1,60,540,520,240*520/870);const di=F.$("img","",o.dl1);di.src=F.R+C.bay;F.css(di,{left:0,top:0,width:"520px"});
+  o.dl1c=$("el t28","柱型の芯 → 芯（測量係が選んだ柱間）");F.place(o.dl1c,60,540+240*520/870+8);
+  const k2=170/224;o.dl2=$("win el");F.place(o.dl2,60,740,520,170);
+  const din=$("el","",o.dl2);F.css(din,{left:(520-6-(3613-2865)*4*k2-20)+"px",top:0,height:"170px",width:(3380*k2)+"px"});
+  C.strips.forEach((u,s2)=>{const im=F.$("img","",din);im.src=F.R+u;F.css(im,{left:(1096*s2*k2)+"px",top:0,height:"170px"})});
+  M.forEach(x=>{const e=$("mk el","",din);F.place(e,(x-2865)*4*k2,0)});
+  M.slice(1).forEach((x,i)=>{if(i<36)return;const e=$("mn el",String(i+1),din);F.place(e,((M[i]+x)/2-2865)*4*k2,0);e.style.fontSize="24px"});
+  o.dl2c=$("el t28","印を付けて数えた 46 枚（終わりの 10 枚）");F.place(o.dl2c,60,918);
+  o.res=F.board("f6 の柱間（棟 JSON）",620,206,1242,560,`<div style="padding:24px 34px">
+    <div class="num" style="font-size:56px"><span>0.115429 m</span><span style="color:var(--acc)"> × </span><span>46 枚</span><span style="color:var(--acc)"> ＝</span></div>
+    <div style="margin-top:22px"><span class="num vr" style="font-size:150px">0</span><span class="num" style="font-size:64px"> m</span></div>
+    <div style="margin-top:22px"><span class="num" style="font-size:52px;color:var(--sub)">± ${V.result.tol}</span>　<span class="mt" style="display:inline-block;font-size:44px;font-weight:700;padding:4px 18px;vertical-align:8px;color:#fff;background:var(--measured)">${V.result.status}</span></div>
+    <div class="src20" style="margin-top:20px">出典 data/buildings/honbu.json（faces f6 bays.pitch）</div></div>`);
+  o.res.classList.add("el");o.vr=o.res.querySelector(".vr");o.mt=o.res.querySelector(".mt");
+  o.tgD1=F.tag("claude","物差しと枚数は Claude が決めた",{x:620,y:830,t0:12.6});
+  o.tgD2=F.tag("code","掛け算と ± はコードが測った",{x:1130,y:830,t0:12.9});
+  o.dsrc=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.dsrc,620,900,1242);
+  // ── ① 11/7：メジャーの写真が無い時（PLATEAU の足元の辺を物差しにした推定）
+  const E=V.est,ec=E.elev_crop,ke=1242/ec[2];
+  o.e1=$("win el");F.place(o.e1,620,206,1242,ec[3]*ke);o.e1.style.background="#fbfaf7";
+  const ei=F.$("img","",o.e1);ei.src=F.R+E.elev;F.css(ei,{left:(-ec[0]*ke)+"px",top:(-ec[1]*ke)+"px",width:(1385*ke)+"px"});
+  o.e1s=$("el src20","出典 "+E.elev_source);F.place(o.e1s,620,206+ec[3]*ke+6,1242);
+  o.b1=F.board("① 11/7　メジャーの写真が無い時",620,580,1242,230,`<div style="padding:16px 26px"><div class="t28">物差し：${E.ruler}</div>
+    <div style="margin-top:10px;color:var(--estimated)"><span class="num" style="font-size:96px">${E.value}</span><span class="num" style="font-size:48px"> m</span><span class="num" style="font-size:40px">　± ${E.tol}</span>
+    <span style="display:inline-block;font-size:36px;font-weight:700;padding:2px 14px;border:3px solid var(--estimated);background:#fff8ea;vertical-align:20px;margin-left:16px">${E.status}</span></div></div>`);o.b1.classList.add("el");
+  o.v1b=F.claudeVoice({who:V.voice1.agent,model:V.voice1.model,took:V.voice1.took,text:V.voice1.text,src:"sokuryo.md（11/7、抜粋）",x:60,y:530,w:520,t0:2.9,ms:40,tail:false});
+  o.t1=F.tag("claude","物差しの選択は Claude",{x:620,y:836,t0:3.6});
+  o.prev=$("el t28",`<span style="color:var(--estimated)">① の推定 ${E.value} ± ${E.tol}（estimated）</span> → ② の実測　差 −2.0 %（henka_20261108.md）`);F.place(o.prev,620,778);
+  // 正面化：公開版の写真（灰色の箱入り）が記録の H で起き上がる
+  const RC=V.rectify,sc=1242/RC.rect_public_px[2];
+  o.rc=$("el","",S);F.place(o.rc,620,206,1242,824);F.css(o.rc,{overflow:"hidden",zIndex:45,background:"#15171c"});
+  F.rectify({parent:o.rc,img:F.R+RC.img_boxed,w:1600,h:1201,quad:RC.quad_public_px,rect:RC.rect_public_px,x:-RC.rect_public_px[0]*sc,y:-RC.rect_public_px[1]*sc,scale:sc,t0:6.45,dur:1.3});
+  const bx=RC.bay_crop_in_rect,rb=RC.rect_box_in_rectified,kk=RC.rect_public_px[2]/(rb[2]-rb[0]);
+  o.rb=$("el","",o.rc);F.place(o.rb,(bx[0]-rb[0])*kk*sc,(bx[1]-rb[1])*kk*sc,bx[2]*kk*sc,bx[3]*kk*sc);F.css(o.rb,{border:"5px solid var(--acc)",boxSizing:"border-box",zIndex:50});
+  o.rl=$("el src20","正面化：公開版（灰色の箱入り）を記録の H（out/rectified/…042900775_front.json）で起こす。青枠＝数える柱間");F.place(o.rl,620,1036-8,1242);o.rl.style.background="rgba(245,246,248,.9)";
+  o.n2=$("el","",S);F.place(o.n2,620,206);o.n2.innerHTML='<span style="font-size:30px;font-weight:700;color:#fff;background:var(--ink);padding:6px 16px">② 11/8　メジャーの写真が来た → 鎖で実測</span>';
+  o.n2.style.zIndex=49;
+  return o;
+},
+seek(F,T0,o){
+  const V=F.V;stage1(F,T0,o);const t=warp(T0);
+  // アプリの画面は 2.3 秒から消す（本物の生成物に替わる）
+  // B
+  const outB=1-F.eo(F.P(t,5.0,.4));
+  F.rise(o.tw,t,2.25,.4,40);o.tw.style.opacity*=outB;
+  o.jt.forEach((e,i)=>{const p=F.P(t,2.85+i*.11,.15);e.style.opacity=p*outB;e.style.transform=`scaleY(${p})`});
+  o.jl.forEach((e,i)=>{e.style.opacity=F.P(t,2.9+i*.11,.15)*outB});
+  o.jcap.style.opacity=F.P(t,3.4,.3)*outB;
+  F.rise(o.eq,t,3.55,.35,30);o.eq.style.opacity*=outB;F.countTo(o.v1,V.tile.value,F.eo(F.P(t,3.7,.8)));
+  F.rise(o.fb,t,3.2,.35,20);o.fb.style.opacity*=outB;
+  [o.tgB1,o.tgB2].forEach(g=>g.el.style.opacity*=outB);
+  {const h=1-F.eo(F.P(T0,6.25,.25));[o.tw,o.eq,o.fb,o.jcap,o.tgB1.el,o.tgB2.el,...o.jl].forEach(e=>e.style.opacity=String(Number(e.style.opacity||0)*h));}
+  // C
+  const outC=1-F.eo(F.P(t,10.0,.35));
+  F.rise(o.bay,t,5.2,.4,40);o.bay.style.opacity*=outC;
+  F.draw(o.brk,t,5.6,.4);o.brk.style.opacity=(t>=5.6?1:0)*outC;o.brl.style.opacity=F.P(t,5.8,.3)*outC;
+  F.rise(o.cnt,t,5.5,.35,30);o.cnt.style.opacity*=outC;
+  F.rise(o.sw,t,5.9,.4,30);o.sw.style.opacity*=outC;o.scap.style.opacity=F.P(t,6.2,.3)*outC;
+  const wx=o.wx,M=o.M,a=wx(M[0]),b=wx(M[M.length-1]),W=1796;
+  const h=a+(b-a)*F.P(t,6.4,3.0),pan=F.clamp(h-W/2,0,3380*o.k-W);
+  o.sin.style.transform=`translateX(${-pan}px)`;F.place(o.head,h-pan,0);o.head.style.opacity=t>=6.4&&t<9.6?1:0;
+  let n=0;M.forEach((x,i)=>{const on=wx(x)<=h+.5&&t>=6.4;o.mk[i].style.opacity=on?1:0;if(on&&i>0)n=i});
+  o.mn.forEach((e,i)=>{e.style.opacity=wx(M[i+1])<=h+.5&&t>=6.4?1:0});
+  o.vc.textContent=t>=9.4?V.count.n:n;
+  F.pop(o.cf,t,9.5);o.cf.style.opacity*=outC;o.tgC.el.style.opacity*=outC;
+  o.voice.el.style.opacity*=outC;
+  // D
+  [o.dl1,o.dl2].forEach((e,i)=>{F.rise(e,t,10.05+i*.1,.35,20)});o.dl1c.style.opacity=F.P(t,10.3,.3);o.dl2c.style.opacity=F.P(t,10.4,.3);
+  F.rise(o.res,t,10.3,.45,-90);F.countTo(o.vr,V.result.value,F.eo(F.P(t,10.5,1.1)));F.pop(o.mt,t,11.3);
+  o.dsrc.style.opacity=F.P(t,11.0,.3);
+}});
+</script></body></html>

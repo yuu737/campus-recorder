@@ -1,0 +1,41 @@
+{
+ "note": "C4 題の板（締め、6 秒）。11/8 夕方に他大学 2 校を外し、題の板だけにした（他大学の値 cols は残すが使わない）",
+ "dur": 6.0,
+ "head": "同じ道具で、[他の大学の土台も]",
+ "cols": [
+  {
+   "src": "out/video/closing_assets/other_campus/other_campus_higashiyama_walk.png",
+   "k": "名古屋大学 東山",
+   "t": "歩く画面（地形と地面だけ、棟なし）",
+   "source": "docs/images/ の写し。README.md の他大学の節の表の画と説明"
+  },
+  {
+   "src": "out/video/closing_assets/other_campus/other_campus_hongo_hub.png",
+   "k": "東京大学 本郷",
+   "t": "入口の頁（座標系は IX 系に自動で切替）",
+   "source": "docs/images/ の写し。README.md の他大学の節の表の画と説明"
+  }
+ ],
+ "cols_note": "公開データ（PLATEAU・OpenStreetMap）からの土台。各大学の関与・導入ではない",
+ "title": {
+  "lines": [
+   "写真を撮るだけで、",
+   "根拠付きの、",
+   "歩ける大学の 3D 空間がつくれる"
+  ],
+  "bg": "out/video/title_bg/title_bg.png",
+  "bg_opacity": 0.95,
+  "source": "導入 v7 の題の板（scripts/video/opening_v7/index.html の buildT）を同じ作りで描き直し。背景の歩く画面の不透明度だけ .30 → .60（利用者の直し）。11/8 夕方の判定：背景はぼかさず不透明度 .95、可読性は文字の行ごとの白い幕（.9）だけで確保"
+ },
+ "cap": "out/video/closing_assets/other_campus/（README の他大学の節）／題の板 out/video/opening_v7",
+ "sub": "範囲（bbox）を渡すだけで、土台まで約 3 分。棟を立てるのは、その大学の職員の写真",
+ "sub_source": "README.md「Trial on other campuses, up to the site base (early 11/8)」（about 3 min・zone IX・Only the site base…needs photos from the university's own staff）",
+ "narration": {
+  "note": "暫定の文（台本は利用者が書く）。Achernar・gemini-3.1-flash-tts-preview",
+  "wav": "out/video/app2/narration/C4_tadaigaku/",
+  "sentences": [
+   "同じ道具で、ほかの大学の土台もつくれます。",
+   "写真を撮るだけで、根拠付きの、歩ける大学の 3D 空間がつくれる。"
+  ]
+ }
+}

@@ -1,0 +1,101 @@
+{
+ "note": "B8 検収係（塊 B 10 場面版。06_kenshu を流用し、頭に 1 拍の説明）",
+ "dur": 12.0,
+ "step": "kenshu",
+ "app": {
+  "src": "out/video/app2/_src/replay_57.png",
+  "w": 1600,
+  "h": 900,
+  "source": "out/video/replay_honbu.mp4 の 57 秒（待機画面の再生、9/11 検収係の工程の生成物。掲示物は灰色の箱。下の行の「合格」の注記は古い faces の表示なので切り落とした）",
+  "url": "web/progress.html?building=honbu&replay=1（9/11 検収係の工程）",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    424,
+    421
+   ],
+   "spot": [
+    76,
+    160,
+    695,
+    522
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3,
+   "note": "spot は検収係の工程の生成物（写真と模型の線の重ね）の所"
+  },
+  "video": {
+   "dir": "out/video/app2/_src/replay_08_kenshu",
+   "fps": 10,
+   "n": 45,
+   "source": "cut_replay.py 08_kenshu 53.5〜58 秒（待機画面の再生の検収係の工程）"
+  }
+ },
+ "overlay": {
+  "file": "out/video/app2/_src/B06_overlay_crop.png",
+  "from": "out/honbu/recheck/20261108_115608/lines_PXL_20261103_042900775_f6.png",
+  "how": "（中間の全体版は消した）索引の masks（保護係の箱）を recorder.privacy.paint_masks で塗ってから、掲示物の無い左の範囲 [40,250,990,1290] を切り出した（箱も垂れ幕も範囲の外）",
+  "legend": {
+   "blue": "模型（JSON）の線",
+   "green": "写真の縁（0.15 m 以内）",
+   "red": "写真の縁（外れ）"
+  },
+  "legend_source": "recorder/recheck.py（線の画像：青＝JSON、緑／赤＝写真の縁の位置）",
+  "photo": "PXL_20261103_042900775",
+  "n_ok": 39,
+  "n_lines": 49,
+  "photo_source": "out/honbu/recheck/20261108_115608/summary.json（PXL_20261103_042900775 f6：n_ok 39、n_lines 49）"
+ },
+ "voice": {
+  "agent": "検収係",
+  "model": "Claude Opus",
+  "took": "18 分 47 秒",
+  "text": "f6 と f8 は、登録の解き直しの後も不合格です。…",
+  "source": "pipeline_state_20261108_final.json（results[14] 検収係 attempt 3、seconds 1127.4、text の 1 文目の抜粋）"
+ },
+ "nums": {
+  "ok": 259,
+  "total": 295,
+  "tol_m": "0.15",
+  "median_m": "0.029",
+  "slope_before": "+2.3",
+  "slope_after": "−0.13",
+  "source": "data/reports/honbu/kenshu_k401.md（f6：295 本中 259 本が 0.15 m 以内、|d| の中央値 0.029 m、傾きの中央値 −0.13 %（前は +2.3 %））"
+ },
+ "fail": {
+  "text": "f6・f8 は不合格のまま記録",
+  "source": "kenshu_k401.md・out/honbu/report.json（counts.kenshu.fail）"
+ },
+ "tags": {
+  "claude": "ずれの読みと直す先の判断は Claude",
+  "code": "残差の計算はコード"
+ },
+ "cap": "kenshu_k401.md・recheck/20261108_115608（lines_PXL_20261103_042900775_f6.png）・pipeline_state_20261108_final.json",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T11:55:57",
+  "at": "2026-11-08T12:14:44",
+  "source": "results[14] 検収係（4 周目）の始まり→終わり"
+ },
+ "intro": {
+  "html": "検収：写真の上に<b>模型の線</b>を重ねて、ずれを測る",
+  "t1": 2.3,
+  "source": "recorder/recheck.py（線の画像：青＝JSON の模型の線、緑／赤＝写真の縁）の説明を初見向けに言い換え"
+ },
+ "layers": {
+  "photo": "out/video/app2/_src/b8/photo.jpg",
+  "blue": "out/video/app2/_src/b8/blue.png",
+  "green": "out/video/app2/_src/b8/green.png",
+  "red": "out/video/app2/_src/b8/red.png",
+  "how": "photo＝公開版 data/photos/public/20261103/PXL_20261103_042900775.jpg を線の画像と同じ 2000×1501 に伸ばし、同じ範囲 [40,250,990,1290] を切り出した。線＝lines_PXL_20261103_042900775_f6.png の同じ範囲から recheck.py の色（青 RGB 0,120,255／緑 0,200,0／赤 255,0,0）の画素だけを抜いた。重ねると元の線の画像と一致（目で確認）"
+ }
+}

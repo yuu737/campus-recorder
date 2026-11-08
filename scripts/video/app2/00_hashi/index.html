@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>B0 繋ぎの札</title>
+<link rel="stylesheet" href="../_shell/app.css"><link rel="stylesheet" href="../_closing.css">
+<style>
+.pg{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:60;transform-origin:0 50%;backface-visibility:hidden}
+.pg .fr{position:absolute;left:28px;top:28px;right:28px;bottom:28px;border:3px solid var(--ink)}
+.shade{position:absolute;inset:0;background:#0e1015;opacity:0;z-index:55;pointer-events:none}
+</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"walk",
+build(F,S){
+  const V=F.V,o={};
+  o.sh=F.$("div","shade",S);
+  o.pg=F.$("div","pg paper",S,`<div class="fr"></div>`);
+  o.l=V.lines.map((L,i)=>{const e=F.$("div","el chead",o.pg,L.replace(/\[(.+?)\]/g,'<span class="a">$1</span>'));F.place(e,120,300+i*130);return e});
+  o.u=F.$("div","el uline",o.pg);F.place(o.u,124,580,1200,8);
+  o.s=F.$("div","el csub",o.pg,F.esc(V.sub));o.s.style.fontSize="44px";o.s.style.color="var(--ink)";F.place(o.s,124,620);
+  o.n=F.$("div","el tname",o.pg,"campus-recorder");F.css(o.n,{right:"72px",bottom:"62px",fontFamily:"var(--font-mono)",fontSize:"44px",fontWeight:"700",borderBottom:"6px solid var(--acc)",paddingBottom:"4px"});
+  return o;
+},
+seek(F,t,o){
+  o.l.forEach((e,i)=>F.rise(e,t,.15+i*.35,.4,30));F.draw(o.u,t,.9,.6);F.rise(o.s,t,1.2,.35,12);F.rise(o.n,t,.3,.4,12);
+  const p=F.eio(F.P(t,3.4,.6));o.pg.style.transform=p>0?`perspective(2600px) rotateY(${100*p}deg)`:"";o.sh.style.opacity=p*.35;
+}});
+</script></body></html>

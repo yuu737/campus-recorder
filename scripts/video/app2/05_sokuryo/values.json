@@ -1,0 +1,310 @@
+{
+ "note": "B5 測量係（塊 B 手順順）。① 11/7 疑似本番：メジャーの写真が無く PLATEAU の足元の辺を物差しにした推定 → ② 11/8 本番：メジャーの鎖で実測。数字と文は記録から",
+ "dur": 14.0,
+ "step": "sokuryo",
+ "app": {
+  "src": "out/video/app/_src/replay_017.0.png",
+  "w": 1600,
+  "h": 900,
+  "source": "out/video/replay_honbu.mp4 の 17.0 秒（待機画面の再生、5/11 測量係の工程の生成物：正面化。掲示物は灰色の箱）",
+  "url": "web/progress.html?building=honbu&replay=1（5/11 測量係の工程：正面化）",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    912,
+    411
+   ],
+   "spot": [
+    600,
+    255,
+    625,
+    312
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3,
+   "note": "殻の全画面の小窓（11/8 利用者の判定で 15 時台の動きに戻した）。spot は測量係の工程の生成物（正面化）の所"
+  },
+  "video": {
+   "dir": "out/video/app2/_src/replay_05_sokuryo",
+   "fps": 10,
+   "n": 80,
+   "source": "replay_honbu.mp4 の 14〜22 秒（5/11 測量係：正面化）"
+  }
+ },
+ "voice": {
+  "agent": "測量係",
+  "model": "Claude Opus",
+  "took": "5 分 01 秒",
+  "text": "…46 枚です。正面化した 2 枚の写真で、目地に 1 本ずつ印を付けて数え、どちらも 46 枚で一致しました。",
+  "source": "pipeline_state_20261108_final.json（results[6] 測量係 attempt 2、seconds 301.1、text の頭 2 文の抜粋。頭の「K-201 の答えは」と ** を外した）"
+ },
+ "tape": {
+  "photo": "本部棟正面柱92cm",
+  "file": "data/photos/public/メジャー/本部棟_honbu/本部棟正面柱92cm.jpg",
+  "size": [
+   1600,
+   1201
+  ],
+  "band": [
+   20,
+   560,
+   1340,
+   760
+  ],
+  "joints_cm": [
+   "5.4",
+   "17.1",
+   "28.7",
+   "40.2",
+   "51.9",
+   "63.4",
+   "74.8",
+   "86.2"
+  ],
+  "joints_px": [
+   116,
+   266,
+   417,
+   570,
+   731,
+   887,
+   1056,
+   1222
+  ],
+  "joints_px_note": "目地の読み（cm）は記録。px は映像係が公開版の写真を目で見て目地に合わせた位置（記録には無い）",
+  "read": "5.4→86.2 cm",
+  "n": 7,
+  "source": "data/reports/honbu/sokuryo_tape_select.json（primary：read・n_tiles・why の目地 8 本）"
+ },
+ "tile": {
+  "value": "0.115429",
+  "tol": "0.000715",
+  "unit": "m",
+  "source": "data/reports/honbu/sokuryo_chain_f6.json（values.bay_pitch.chain[0] tape：value 0.115429、tol 0.000715）"
+ },
+ "count": {
+  "n": 46,
+  "photo": "PXL_20261103_042900775",
+  "confirm": "PXL_20261103_042909968",
+  "confirm_n": 46,
+  "bay": "out/honbu/k201/a_sp3.jpg",
+  "bay_note": "測量係が数えた柱間 3（3 階と 4 階の間の腰壁）を正面化から切り出した絵。原点は x≈2850（柱型の芯 2942・3613 が絵の 92・763 に来る）",
+  "strips": [
+   "out/honbu/k201/a1_0.png",
+   "out/honbu/k201/a1_1.png",
+   "out/honbu/k201/a1_2.png"
+  ],
+  "strips_note": "測量係が印を重ねて 1 本ずつ確かめた 4 倍の拡大（out/honbu/k201/mark.py が出した物。段 y1490–1496、帯の始まり a = 2865 + 274 × s）",
+  "marks": [
+   2885,
+   2898,
+   2912,
+   2927,
+   2941,
+   2956,
+   2971,
+   2985,
+   3003,
+   3015,
+   3030,
+   3045,
+   3059,
+   3074,
+   3088,
+   3104,
+   3118,
+   3133,
+   3147,
+   3162,
+   3176,
+   3191,
+   3206,
+   3220,
+   3235,
+   3249,
+   3264,
+   3278,
+   3293,
+   3307,
+   3322,
+   3337,
+   3351,
+   3366,
+   3380,
+   3394,
+   3409,
+   3424,
+   3438,
+   3453,
+   3467,
+   3482,
+   3496,
+   3511,
+   3525,
+   3540,
+   3554,
+   3570,
+   3584,
+   3598,
+   3613,
+   3627,
+   3642,
+   3656,
+   3671
+  ],
+  "from_index": 4,
+  "to_index": 50,
+  "source": "data/reports/honbu/sokuryo_count_f6.json（photos.PXL_20261103_042900775.courses.y1490-1496：marks・edges 2941→3613・n 46、result 46・46 agree）"
+ },
+ "result": {
+  "value": "5.30973",
+  "tol": "0.054",
+  "unit": "m",
+  "status": "measured",
+  "source": "data/buildings/honbu.json（faces f6 bays.pitch：value 5.30973、tol 0.054、status measured、measured_kind chain）"
+ },
+ "tags": {
+  "claude": "物差しの選択と枚数の数え（Claude が決めた）",
+  "code": "割り算と ±（コードが測った）",
+  "source": "sokuryo_tape_select.json（read_by 測量係）／sokuryo_count_f6.json（made_by 測量係、how）／measure chain の道具（± は輪ごとに積んだ）"
+ },
+ "cap": "honbu.json（f6 柱間）・sokuryo_chain_f6.json・sokuryo_count_f6.json・sokuryo_tape_select.json・out/honbu/k201/",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T08:59:46",
+  "at": "2026-11-08T09:04:47",
+  "source": "② の工程（11/8 測量係 K-201 の数え直し）。① は 11/7 の記録で、この線の外"
+ },
+ "est": {
+  "value": "5.418",
+  "tol": "0.19",
+  "status": "estimated",
+  "ruler": "PLATEAU の足元の辺（f6、135.96 px/m）",
+  "source": "git show c96f149:data/buildings/honbu.json（faces f6 bays.pitch 5.418 ±0.19 estimated）・data/reports/honbu/sokuryo.md（11/7 の表：f6 柱間 5.418 ±0.19、物差し plateau_wall）",
+  "elev": "docs/images/before_honbu/elev_f6.svg",
+  "elev_crop": [
+   40,
+   330,
+   760,
+   200
+  ],
+  "elev_source": "docs/images/before_honbu/elev_f6.svg（11/8 02:53、追記の前の立面図。柱間の寸法線 5.42 琥珀）"
+ },
+ "voice1": {
+  "agent": "測量係",
+  "model": "Claude Opus",
+  "took": "59 分 55 秒",
+  "text": "…縮尺は全部 estimated。撮影依頼を 1 件（f6 の柱型にメジャー）出した。",
+  "source": "data/reports/honbu/sokuryo.md（11/7 10:53 測量係の報告の抜粋）・所要は pipeline_20261107_083839.json の steps sokuryo seconds 3595"
+ },
+ "rectify": {
+  "public_file": "data/photos/public/20261103/PXL_20261103_042900775.jpg",
+  "public_size": [
+   1600,
+   1201
+  ],
+  "orig_size": [
+   4624,
+   3472
+  ],
+  "H": [
+   [
+    1.255055207890128,
+    0.8625327724072299,
+    -1156.2987728151281
+   ],
+   [
+    0.3223613932960959,
+    1.502100150100744,
+    -1407.5143799909195
+   ],
+   [
+    0.00010036885385883455,
+    0.00023749506616410724,
+    0.23159803048778316
+   ]
+  ],
+  "out_size": [
+   6679,
+   3605
+  ],
+  "wall_box": [
+   597.5,
+   322.6,
+   6572.6,
+   3549.1
+  ],
+  "bay_crop_in_rect": [
+   2850,
+   1380,
+   870,
+   240
+  ],
+  "course_y_in_bay": [
+   110,
+   116
+  ],
+  "how": "H は元の写真の px → 正面化の px（out/rectified/honbu/PXL_20261103_042900775_front.json）。公開版（灰色の箱入り、1600 px）は元の 1600/4624 倍なので、公開版の px は × 4624/1600 してから H を掛ける。正面化の画像そのものは垂れ幕が写るので見せず、公開版を H で変形して起き上がらせ、最後に測量係の切り出し a_sp3.jpg（rect の [2850,1380,870,240]、垂れ幕の無い柱間 3）に寄る",
+  "bay_source": "out/honbu/k201/a_sp3.jpg を正面化の画像に当てて位置を確かめた（相関 0.998、x 2850・y 1380）",
+  "source": "out/rectified/honbu/PXL_20261103_042900775_front.json（H・out_size・wall_box、vp の残差 0.21°・0.23°）",
+  "extra_boxes": {
+   "boxes_public_px": [
+    [
+     800,
+     350,
+     960,
+     680
+    ],
+    [
+     980,
+     335,
+     1245,
+     630
+    ]
+   ],
+   "label": "掲示物",
+   "why": "公開版の箱の縁から垂れ幕の白い端と字の一部が覗く（x 935〜945・1150〜1210 付近）。動画では箱を少し広げて重ねる（灰色の箱＋理由の文字、CLAUDE.md の決まり）"
+  },
+  "quad_public_px": [
+   [
+    225.1,
+    323.8
+   ],
+   [
+    964.7,
+    175.4
+   ],
+   [
+    1076.1,
+    672.1
+   ],
+   [
+    -16.8,
+    758.0
+   ]
+  ],
+  "rect_public_px": [
+   100,
+   150,
+   1400,
+   840
+  ],
+  "quad_how": "正面化の画像の範囲 [900,400]〜[4400,2500]（rect px）の 4 隅を H の逆で元の写真に戻し、公開版の px（× 1600/4624）にした。rect は同じ縦横比 3500:2100",
+  "img_boxed": "out/video/app2/_src/B5_public_042900775_boxed.jpg",
+  "rect_box_in_rectified": [
+   900,
+   400,
+   4400,
+   2500
+  ]
+ }
+}

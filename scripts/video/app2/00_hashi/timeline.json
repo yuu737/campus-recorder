@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 4.38,
+ "scenes": [
+  {
+   "id": "00_hashi",
+   "start": 0,
+   "end": 4.38,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 3.08,
+     "dur": 3.08,
+     "text": "ここからは、実際の記録です。"
+    }
+   ]
+  }
+ ]
+}

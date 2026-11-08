@@ -1,0 +1,185 @@
+{
+ "note": "B7 証拠（目印係、塊 B 手順順）。記録は 11/7 疑似本番の目印係と、今の out/honbu/evidence_*.png（rerun の絵）・report.json",
+ "dur": 11.0,
+ "step": "shoko",
+ "app": {
+  "src": "out/video/app2/_src/replay_46.png",
+  "w": 1600,
+  "h": 900,
+  "source": "out/video/replay_honbu.mp4 の 46 秒（待機画面の再生。下の段の「証拠」の札。掲示物はアプリの灰色の箱）",
+  "url": "web/progress.html?building=honbu&replay=1（下の段：証拠）",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    668,
+    700
+   ],
+   "spot": [
+    541,
+    735,
+    255,
+    152
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3,
+   "note": "spot は待機画面の下の段の「証拠」の札"
+  },
+  "video": {
+   "dir": "out/video/app2/_src/replay_07_shoko",
+   "fps": 10,
+   "n": 90,
+   "source": "replay_honbu.mp4 の 42〜51 秒（製図板：写真を面に貼った証拠）"
+  }
+ },
+ "overview": {
+  "file": "out/video/app2/_src/B7_overview_crop.png",
+  "w": 1338,
+  "h": 850,
+  "from": "out/honbu/evidence_overview.png の 3D の欄 [100,150,1438,1000]（rerun の画面の枠・右の件数の欄は外した）",
+  "what": "模型の周りに、写真を撮った位置（カメラの錐）と、写真の中で指した目印"
+ },
+ "photo": {
+  "file": "out/video/app2/_src/B7_photo_crop.png",
+  "w": 1313,
+  "h": 536,
+  "from": "out/honbu/evidence_photo.png（写真 PXL_20261103_044051601 の目印と再投影）の上の部分 [63,64,1376,600]。1 階の掲示物が写る下の部分は切り落とした",
+  "what": "赤＝目印係が指した位置、水色＝解いた視点で写した位置、ラベル＝残差 px、緑の線＝模型の線"
+ },
+ "three": {
+  "file": "out/video/app2/_src/B7_three_crop.png",
+  "w": 1150,
+  "h": 766,
+  "from": "out/honbu/evidence_three.png の 3D の欄 [0,64,1150,830]"
+ },
+ "nums": {
+  "registered": 42,
+  "median_px": "23.1",
+  "median_m": "0.2",
+  "picks": 17,
+  "source": "out/honbu/report.json（counts.registered 42、counts.resid.median_px 23.1・median_m 0.2・picks 17）"
+ },
+ "voice": {
+  "agent": "目印係",
+  "model": "Claude Opus",
+  "took": "44 分 10 秒",
+  "text": "合格の前に…重ね画像を見て、窓・柱型が合うことを確かめてから登録した",
+  "source": "data/reports/honbu/mejirushi/mejirushi_honbu.json（11/7 15:08 目印係の method の抜粋。道具の名と旗は外した）・所要は pipeline_20261107_083839.json steps mejirushi seconds 2650"
+ },
+ "tags": {
+  "claude": "目印を指すのは Claude",
+  "code": "視点を解くのはコード"
+ },
+ "cap": "report.json・evidence_overview/photo/three.png・mejirushi_honbu.json",
+ "picks": {
+  "photo": "PXL_20261103_044051601",
+  "points": [
+   {
+    "id": "f8-02",
+    "fx": 0.245,
+    "fy": 0.235,
+    "crop_px": [
+     321.7,
+     231.7
+    ]
+   },
+   {
+    "id": "f8-12",
+    "fx": 0.345,
+    "fy": 0.175,
+    "crop_px": [
+     453.0,
+     172.5
+    ]
+   },
+   {
+    "id": "f8-11",
+    "fx": 0.345,
+    "fy": 0.275,
+    "crop_px": [
+     453.0,
+     271.2
+    ]
+   },
+   {
+    "id": "f8-20",
+    "fx": 0.535,
+    "fy": 0.035,
+    "crop_px": [
+     702.5,
+     34.5
+    ]
+   },
+   {
+    "id": "f8-19",
+    "fx": 0.535,
+    "fy": 0.165,
+    "crop_px": [
+     702.5,
+     162.7
+    ]
+   },
+   {
+    "id": "f8-23",
+    "fx": 0.665,
+    "fy": 0.065,
+    "crop_px": [
+     873.1,
+     64.1
+    ]
+   }
+  ],
+  "lines": [
+   {
+    "id": "f8-V01",
+    "from": [
+     321.7,
+     231.7
+    ],
+    "to": [
+     308.6,
+     537.4
+    ]
+   },
+   {
+    "id": "f8-V03",
+    "from": [
+     453.0,
+     172.5
+    ],
+    "to": [
+     453.0,
+     468.3
+    ]
+   }
+  ],
+  "rms_px": 14.94,
+  "how": "升目（10×10 の cell）と寄りの升（sub）から写真の割合 fx,fy を出し、evidence_photo の写真の欄（1313×986、crop の原点 63,64）の px にした。f8-02 の印（380,288）と一致を確かめた",
+  "source": "data/reports/honbu/mejirushi/picks_PXL_20261103_044051601.json（目印係 11/7）・mejirushi_honbu.json registered（rms_px 14.94）"
+ },
+ "reveal": {
+  "how": "evidence_overview は静止画。撮った位置の座標を絵の px に写す情報（rerun のカメラ）が無いので、暗転から円形に広げて見せる。円の中心は写真の錐が集まる所（crop の px）",
+  "centers": [
+   [
+    560,
+    400
+   ],
+   [
+    180,
+    600
+   ],
+   [
+    420,
+    600
+   ]
+  ]
+ }
+}

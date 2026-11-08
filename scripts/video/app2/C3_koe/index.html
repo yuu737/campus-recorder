@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>締め C3 教員の声</title>
+<link rel="stylesheet" href="../_shell/app.css"><link rel="stylesheet" href="../_closing.css">
+<style>
+.qb{position:absolute}
+.qb .sh{font-size:32px;font-weight:700;color:#fff;background:var(--ink);display:inline-block;padding:8px 22px;position:absolute;left:-3px;top:-58px}
+.qb .q{position:absolute;left:40px;top:10px;font-size:220px;line-height:1;color:var(--acc);font-weight:700}
+.qb .tx{position:absolute;left:150px;right:70px;top:80px;font-size:60px;font-weight:700;line-height:1.5}
+.qb .ft{position:absolute;left:150px;right:70px;bottom:36px;font-size:28px;color:var(--sub);line-height:1.45}
+</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"walk",
+build(F,S){
+  const V=F.V,o={};
+  o.b=F.board("",120,300,1680,500,`<div class="sh">${F.esc(V.shoulder)}</div><div class="q">“</div><div class="tx"></div><div class="ft">${F.esc(V.foot)}</div>`);o.b.classList.add("qb");o.b.style.overflow="visible";
+  o.tx=o.b.querySelector(".tx");o.ch=Array.from(V.text);
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.cap,60,1044-30);o.cap.style.zIndex=46;
+  return o;
+},
+seek(F,t,o){
+  F.rise(o.b,t,-.2,.45,30);
+  const n=Math.max(0,Math.min(o.ch.length,Math.floor((t-.6)/.045)));o.tx.textContent=o.ch.slice(0,n).join("");
+  F.rise(o.cap,t,.8,.3,6);
+}});
+</script></body></html>

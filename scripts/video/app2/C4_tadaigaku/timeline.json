@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 6.89,
+ "scenes": [
+  {
+   "id": "C4_tadaigaku",
+   "start": 0,
+   "end": 6.89,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 5.59,
+     "dur": 5.59,
+     "text": "写真を撮るだけで、根拠付きの、歩ける大学の 3D 空間がつくれる。"
+    }
+   ]
+  }
+ ]
+}

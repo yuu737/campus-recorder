@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>塊 B B7 証拠</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.cv.notail::before{display:none}
+.win{position:absolute;overflow:hidden;background:#15171c;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:44}
+.win img{position:absolute;display:block;transform-origin:50% 50%}
+.stg{position:absolute;font-size:30px;font-weight:700;color:#fff;background:var(--ink);padding:6px 16px;white-space:nowrap;z-index:49}
+.nr{display:flex;align-items:baseline;justify-content:space-between;padding:10px 24px;border-bottom:2px solid var(--line)}
+.nr .k{font-size:28px;font-weight:700}
+.pk{position:absolute;width:26px;height:26px;border-radius:50%;box-sizing:border-box;border:5px solid #fff;background:#e01010;box-shadow:0 0 0 3px #e01010;z-index:3}
+.pl{position:absolute;font-family:var(--font-mono);font-size:24px;font-weight:700;color:#fff;background:rgba(224,16,16,.9);padding:0 6px;z-index:3;white-space:nowrap}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"shoko",
+build(F,S){
+  const V=F.V,o={},$=(c,h,p)=>F.$("div",c,p||S,h);
+  const AX=620,AW=1242,MH=560;
+  const win=(I,h)=>{const k=Math.min(AW/I.w,h/I.h),w=I.w*k,e=$("win el");F.place(e,AX,206,w,I.h*k);
+    const im=F.$("div","",e);F.css(im,{position:"absolute",left:0,top:0,width:w+"px",height:(I.h*k)+"px",transformOrigin:"50% 50%"});const ii=F.$("img","",im);ii.src=F.R+I.file;F.css(ii,{left:0,top:0,width:w+"px",height:(I.h*k)+"px"});return {e,im,k}};
+  o.ov=win(V.overview,MH);o.ph=win(V.photo,MH);o.th=win(V.three,MH);
+  // 目印係が指した点（記録の升目から）を 1 つずつ打つ
+  const kp=o.ph.k;o.pd=V.picks.points.map(p=>{const d=F.$("div","pk",o.ph.im);F.place(d,p.crop_px[0]*kp-13,p.crop_px[1]*kp-13);const l=F.$("div","pl",o.ph.im,p.id);F.place(l,p.crop_px[0]*kp+16,p.crop_px[1]*kp-18);return [d,l]});
+  // 円形に広げる暗転（撮った位置の錐が集まる所）
+  o.dk=$("el","",o.ov.e);F.css(o.dk,{left:0,top:0,width:"100%",height:"100%",background:"rgba(14,16,21,.82)",zIndex:2});
+  o.s1=$("stg el","模型の周りに、写真を撮った位置");F.place(o.s1,AX+12,218);
+  o.s2=$("stg el","1 枚の写真：指した目印と残差（px）");F.place(o.s2,AX+12,218);
+  o.s3=$("stg el","模型・視点・写真を 1 画面に");F.place(o.s3,AX+12,218);
+  o.c1=$("el src20","出典 "+V.overview.from);F.place(o.c1,AX,206+MH+6,AW);
+  o.c2=$("el src20","出典 "+V.photo.from+"。"+V.photo.what);F.place(o.c2,AX,206+V.photo.h*AW/V.photo.w+6,AW);
+  o.c3=$("el src20","出典 "+V.three.from);F.place(o.c3,AX,206+MH+6,AW);
+  o.voice=F.claudeVoice({who:V.voice.agent,model:V.voice.model,took:V.voice.took,text:V.voice.text,src:"mejirushi_honbu.json（11/7、抜粋）",x:AX,y:836,w:AW,t0:3.2,ms:45,tail:false});
+  const N=V.nums;
+  o.nb=F.board("証拠の数",60,530,520,300,`
+    <div class="nr"><span class="k">登録した写真</span><span><span class="num n1" style="font-size:72px">0</span><span class="num" style="font-size:32px"> 枚</span></span></div>
+    <div class="nr" style="border:0;display:block"><div class="k">目印のずれ（中央値）</div><div style="text-align:right"><span class="num n2" style="font-size:64px">0</span><span class="num" style="font-size:30px"> px ≈ ${N.median_m} m</span></div></div>`);
+  o.nb.classList.add("el");o.n1=o.nb.querySelector(".n1");o.n2=o.nb.querySelector(".n2");
+  o.tg1=F.tag("claude",V.tags.claude,{x:60,y:852,t0:6.0});
+  o.tg2=F.tag("code",V.tags.code,{x:60,y:920,t0:6.6});
+  o.ns=$("el src20","出典 out/honbu/report.json（counts）");F.place(o.ns,60,990,520);
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;
+  // 全体（2.4〜5.6）→ 1 枚の写真（5.6〜9.6）→ 3 つを 1 画面（9.6〜）
+  const a1=1-F.eo(F.P(t,5.5,.3)),a2=1-F.eo(F.P(t,9.5,.3));
+  F.rise(o.ov.e,t,2.4,.4,40);o.ov.e.style.opacity*=a1;o.ov.im.style.transform=`scale(${1+.08*F.eio(F.P(t,2.6,3))})`;
+  {const c=V.reveal.centers,k=o.ov.k;const r=F.eio(F.P(t,2.7,2.2))*1500;o.dk.style.webkitMaskImage=o.dk.style.maskImage=c.map(([x,y])=>`radial-gradient(circle ${r}px at ${x*k}px ${y*k}px, transparent 98%, #000 100%)`).join(",");o.dk.style.maskComposite="intersect";o.dk.style.webkitMaskComposite="source-in";}
+  o.pd.forEach(([d,l],i)=>{const a=F.P(t,6.0+i*.4,.2);d.style.opacity=a;d.style.transform=`scale(${a<1?1.8-.8*a:1})`;l.style.opacity=F.P(t,6.15+i*.4,.2)});
+  o.s1.style.opacity=F.P(t,2.7,.3)*a1;o.c1.style.opacity=F.P(t,2.8,.3)*a1;
+  F.rise(o.ph.e,t,5.6,.4,40);o.ph.e.style.opacity*=a2;o.ph.im.style.transformOrigin="40% 15%";o.ph.im.style.transform=`scale(${1+.25*F.eio(F.P(t,6.0,3.0))})`;
+  o.s2.style.opacity=F.P(t,5.8,.3)*a2;o.c2.style.opacity=F.P(t,5.9,.3)*a2;
+  F.rise(o.th.e,t,9.6,.4,40);o.s3.style.opacity=F.P(t,9.8,.3);o.c3.style.opacity=F.P(t,9.9,.3);
+  F.rise(o.nb,t,4.4,.35,-50);F.countTo(o.n1,String(V.nums.registered),F.eo(F.P(t,4.6,.9)));F.countTo(o.n2,V.nums.median_px,F.eo(F.P(t,7.0,1.0)));
+  o.ns.style.opacity=F.P(t,4.8,.3);
+}});
+</script></body></html>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B02 撮影係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>.win{position:absolute;overflow:hidden;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:44}</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"satsuei",
+build(F,S){
+  const V=F.V,o={},v=V.voice,G=V.app.grid_crop,k=1242/G[2];
+  // 本文：届いた写真の並び（待機画面の生成物の切り出し、灰色の箱はアプリが付けた物）
+  o.g=F.$("div","win el",S);F.place(o.g,620,206,1242,G[3]*k);
+  o.g.style.background=`#fff url(${F.R+V.app.src}) ${-G[0]*k}px ${-G[1]*k}px/${V.app.w*k}px ${V.app.h*k}px no-repeat`;
+  o.v=F.claudeVoice({who:v.who,model:v.model,took:v.took,text:v.text,src:"pipeline_state_20261108_final.json（11/8 撮影係の報告）",t0:3.0,ms:55,x:620,y:768,w:1242,size:32});
+  const bd=(r,y)=>{const e=F.board(r.title,60,y,520,200,`<div style="padding:10px 22px 0;white-space:nowrap"><span class="num n" style="font-size:80px;color:var(--acc)">0</span><span style="font-size:38px;font-weight:700"> / ${r.of} 枚 使える</span></div><div class="t28" style="padding:6px 22px 0;white-space:nowrap">${r.sub}</div>`);e.n=e.querySelector(".n");return e};
+  o.a=bd(V.run1107,540);o.b=bd(V.run1108,770);
+  F.tag("code","鮮明度はコードが測った（OpenCV）",{x:640,y:206+G[3]*k-62,t0:7.5});
+  F.tag("claude","使えるか・足りない面は Claude が決めた",{x:1160,y:206+G[3]*k-62,t0:6.9});
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.cap,60,1008);o.cap.style.zIndex=46;
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;F.rise(o.g,t,2.25,.4,30);
+  F.rise(o.a,t,5.2,.35,24);F.countTo(o.a.n,V.run1107.ok,F.eo(F.P(t,5.4,.9)));
+  F.rise(o.b,t,6.0,.35,24);F.countTo(o.b.n,V.run1108.ok,F.eo(F.P(t,6.2,.9)));
+  F.rise(o.cap,t,2.4,.3,6);
+}});
+</script></body></html>

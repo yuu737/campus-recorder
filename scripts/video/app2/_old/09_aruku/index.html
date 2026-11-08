@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 2 B08 歩く画面</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.cn{position:absolute;left:28px;right:28px;display:flex;align-items:center;gap:20px}
+.cn i{flex:none;width:44px;height:44px;border:2px solid var(--ink)}
+.cn b{font-family:var(--font-mono);font-size:34px;width:260px}
+.cn .num{font-size:96px;margin-left:auto}
+.crop{position:absolute;overflow:hidden;background:#fff;border:3px solid var(--acc);box-sizing:border-box;box-shadow:var(--shadow);z-index:46}
+.crop img{position:absolute;transform-origin:0 0}
+</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"walk",
+build(F,S){
+  const V=F.V,o={},C=V.counts,c=V.legend_crop,k=3.4;
+  // 凡例の切り出し（本物の画面を 4 倍）
+  o.cr=F.$("div","crop",S,`<img src="${F.R+V.app.src}">`);F.place(o.cr,640,206,c[2]*k,c[3]*k);
+  const im=o.cr.querySelector("img");F.css(im,{width:"1920px",height:"1080px",transform:`scale(${k}) translate(${-c[0]}px,${-c[1]}px)`});
+  o.cl=F.$("div","el src20",S,"切り出し：歩く画面の凡例（そのまま 3.4 倍）");F.place(o.cl,640,206+c[3]*k+8);o.cl.style.zIndex=46;
+  o.t1=F.tag("code",V.tags[0].t,{x:1250,y:486,t0:3.4});
+  const rows=[["measured","#3fa34d",C.measured],["estimated","#e8912d",C.estimated],["unknown","#8f969c",C.unknown]];
+  o.b=F.board("本部棟の値の数（棟 JSON の全部の値）",60,560,880,400,"");
+  o.cn=rows.map(([kk,cc,n],i)=>{const e=F.$("div","cn",o.b,`<i style="background:${cc}"></i><b>${kk}</b><span class="num v">0</span>`);e.style.top=(74+i*106)+"px";e._n=n;e._v=e.querySelector(".v");return e});
+  o.r=F.board("測れなかった所は、職員に戻る",980,560,880,400,`<div style="padding:20px 28px 0;white-space:nowrap"><span class="num" style="font-size:140px;color:var(--acc)">${C.requests}</span><span style="font-size:48px;font-weight:700"> 件の撮影依頼</span></div><div class="t32" style="padding:10px 28px 0;font-weight:700">→ 職員の画面へ</div><div class="t28" style="padding:10px 28px 0;color:var(--sub)">${F.esc(C.rest)}</div>`);
+  o.t2=F.tag("human",V.tags[1].t,{x:1300,y:966,t0:7.6});
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap);F.place(o.cap,60,1044-30);o.cap.style.zIndex=46;
+  return o;
+},
+seek(F,t,o){
+  F.rise(o.cr,t,2.5,.35,20);F.rise(o.cl,t,2.7,.3,6);
+  F.rise(o.b,t,4.4,.35,24);
+  o.cn.forEach((e,i)=>{F.rise(e,t,4.6+i*.35,.3,12);e._v.textContent=Math.round(e._n*F.eo(F.P(t,4.7+i*.35,.8)))});
+  F.rise(o.r,t,6.4,.35,30);F.pulse(o.r,t,8.6,.6);
+  F.rise(o.cap,t,1.2,.3,6);
+}});
+</script></body></html>

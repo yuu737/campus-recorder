@@ -1,0 +1,17 @@
+/* 塊 C 締めの場面だけの見た目（係 U）。殻の帯と時間の線を消して、導入 v7 の題の板に寄せる */
+#bar,#clock{display:none}
+.chead{font-size:96px;font-weight:700;line-height:1.18;white-space:nowrap;letter-spacing:.01em}
+.chead .a{color:var(--acc)}
+.csub{font-size:32px;line-height:1.5;color:var(--sub)}
+.uline{height:8px;background:var(--acc);transform-origin:0 50%}
+.brandC{position:absolute;right:72px;bottom:62px;font-family:var(--font-mono);font-size:40px;font-weight:700;border-bottom:6px solid var(--acc);padding-bottom:2px;z-index:46}
+/* 題の板（導入 v7 の buildT と同じ作り。背景の歩く画面だけ不透明度 .30 → .60） */
+.tb{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;z-index:90;background:var(--paper);transform-origin:0 50%;backface-visibility:hidden}
+.tb .bgi{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;opacity:.95}
+.tb .grad{display:none}
+.tb .paperL{position:absolute;inset:0}
+.tb .hd{position:absolute;left:96px;padding:2px 24px 8px;background:rgba(245,246,248,.9);font-size:108px;font-weight:700;line-height:1.12;white-space:nowrap;letter-spacing:.01em}
+.tb .hd .a{color:var(--acc)}
+.tb .ul{position:absolute;left:96px;top:716px;padding:8px 24px 6px;background:rgba(245,246,248,.9)}
+.tb .tname{position:absolute;background:rgba(245,246,248,.9);padding:4px 12px 4px;right:72px;bottom:62px;font-family:var(--font-mono);font-size:44px;font-weight:700;color:var(--ink);border-bottom:6px solid var(--acc);padding-bottom:4px}
+.tb .fr{position:absolute;left:28px;top:28px;right:28px;bottom:28px;border:3px solid var(--ink)}

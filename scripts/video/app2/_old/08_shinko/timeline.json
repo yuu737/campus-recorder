@@ -1,0 +1,32 @@
+{
+ "note": "係 U が書いた（声の長さに合わせた。声 out/video/app2/narration/<場面>/）",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 13.6,
+ "scenes": [
+  {
+   "id": "08_shinko",
+   "start": 0,
+   "end": 13.6,
+   "sentences": [
+    {
+     "n": 1,
+     "text": "行き詰まると、進行役の Claude が規則を書いて決めます。",
+     "file": "001.wav",
+     "start": 0.5,
+     "dur": 4.96
+    },
+    {
+     "n": 2,
+     "text": "人は後から読んで、承認しました。",
+     "file": "002.wav",
+     "start": 9.4,
+     "dur": 3.84
+    }
+   ]
+  }
+ ]
+}

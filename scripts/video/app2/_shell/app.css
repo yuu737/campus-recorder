@@ -1,0 +1,96 @@
+/* 塊 B「アプリ版」2 の共通の殻。導入 v7 と同じ地（方眼紙）・黒の線・差し色の青・字体・板の影。
+ * 1 場面＝アプリの画面（1 秒の文脈、めくれで入る）→ 注目部分の切り出しが大きくなる（画面の 60 % 以上）
+ * → Claude の声（係が本当に書いた文を打ち出す）→ 結果の数字・生成物。
+ * 字の大きさ：本文 28 px 以上、出典の行だけ 20 px。字体は --font-ja の 1 か所で差し替える。 */
+:root{
+  --font-ja:"BIZ UDPGothic","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+  --font-mono:Consolas,"BIZ UDGothic",monospace;
+  --paper:#f5f6f8; --ink:#1a1a1c; --sub:#545861; --line:#d6d8dd;
+  --acc:#0031d8; --acc-soft:#e8edff;
+  --measured:#222; --estimated:#b07a10; --unknown:#c8322b;
+  --shadow:8px 8px 0 rgba(0,49,216,.16);
+}
+html,body{margin:0;padding:0;background:#0e1015;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:var(--font-ja);color:var(--ink)}
+.paper{background-color:var(--paper);
+  background-image:linear-gradient(rgba(0,49,216,.13) 1.5px,transparent 1.5px),linear-gradient(90deg,rgba(0,49,216,.13) 1.5px,transparent 1.5px),
+    linear-gradient(rgba(0,49,216,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(0,49,216,.055) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;background-position:-1px -1px}
+.noise::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .1  0 0 0 0 .15  0 0 0 .9 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
+#base{position:absolute;inset:0}
+.frame{position:absolute;left:28px;top:28px;right:28px;bottom:28px;border:3px solid var(--ink);pointer-events:none;z-index:80}
+.el{position:absolute;will-change:transform,opacity}
+
+/* 上の帯：流れの中の今の係 */
+#bar{position:absolute;left:28px;top:28px;right:28px;height:84px;border-bottom:3px solid var(--ink);z-index:60;background:rgba(245,246,248,.94)}
+#bar .steps{position:absolute;left:32px;top:20px;display:flex;align-items:center}
+#bar .st{font-size:22px;font-weight:700;color:#a3a7af;padding:6px 10px;border:2px solid transparent;white-space:nowrap;line-height:1}
+#bar .st.done{color:var(--ink)}
+#bar .st.on{color:#fff;background:var(--acc);border-color:var(--acc)}
+#bar .st .md{font-family:var(--font-mono);font-size:17px;font-weight:700;margin-left:6px;opacity:.9}
+#bar .sep{width:12px;height:2px;background:#b9bcc3}
+#bar .sep.done{background:var(--ink)}
+#bar .brand{position:absolute;right:32px;top:30px;font-family:var(--font-mono);font-size:20px;color:var(--sub);white-space:nowrap}
+#bar .brand b{color:var(--ink);border-bottom:3px solid var(--acc)}
+
+/* 帯の下の細い時間の線（記録の再生：経過と費用） */
+#clock{position:absolute;left:31px;right:31px;top:115px;height:44px;z-index:58;background:rgba(245,246,248,.94);border-bottom:1.5px solid var(--line)}
+#clock .lb{position:absolute;left:30px;top:10px;font-size:20px;font-weight:700;color:var(--sub);white-space:nowrap}
+#clock .tr{position:absolute;left:170px;right:520px;top:21px;height:3px;background:#c9ccd2}
+#clock .fl{position:absolute;left:0;top:-2px;height:7px;background:var(--acc)}
+#clock .tk{position:absolute;top:-7px;width:2px;height:17px;background:#a3a7af}
+#clock .tk.ai{background:var(--acc);opacity:.45}
+#clock .hd{position:absolute;top:-9px;width:21px;height:21px;margin-left:-10px;border-radius:50%;background:var(--acc);border:3px solid #fff;box-shadow:0 0 0 2px var(--acc)}
+#clock .rt{position:absolute;right:30px;top:9px;font-family:var(--font-mono);font-size:21px;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+#clock .rt b{color:var(--acc)}
+#clock .rt span{color:var(--sub)}
+
+/* アプリの画面（本物の生成物）：全体 → 切り出し */
+#appcap{position:absolute;z-index:44;font-family:var(--font-mono);font-size:20px;color:var(--sub);white-space:nowrap}
+#appcap b{font-family:var(--font-ja);color:#fff;background:var(--ink);padding:2px 10px;margin-right:12px;font-size:20px}
+#appbox{position:absolute;overflow:hidden;background:#fff;box-sizing:border-box;z-index:42;transform-origin:50% 0}
+#appbox .in{position:absolute;left:0;top:0;transform-origin:0 0}
+#appbox .in img{position:absolute;left:0;top:0;display:block}
+#appbox .lay{position:absolute;left:0;top:0}
+#appedge{position:absolute;z-index:45;box-sizing:border-box;pointer-events:none}
+.dim{position:absolute;box-sizing:border-box;border:6px solid var(--acc);pointer-events:none}
+
+/* Claude の声：係が本当に書いた文を打ち出す板 */
+.cv{position:absolute;z-index:46;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);padding:0 0 16px}
+.cv .who{display:flex;align-items:center;gap:12px;padding:14px 22px 12px;border-bottom:2px solid var(--line);white-space:nowrap}
+.cv .who .nm{font-size:30px;font-weight:700}
+.cv .who .dot{color:#a3a7af;font-size:28px}
+.cv .who .md{font-family:var(--font-mono);font-size:28px;font-weight:700;color:var(--acc)}
+.cv .who .tk{font-family:var(--font-mono);font-size:28px;color:var(--sub);font-variant-numeric:tabular-nums}
+.cv .kind{position:absolute;right:16px;top:-16px;font-size:20px;font-weight:700;color:#fff;background:var(--acc);padding:3px 10px;white-space:nowrap}
+.cv .tx{position:relative;margin:16px 22px 0 22px;padding-left:18px;border-left:6px solid var(--acc);font-size:32px;line-height:1.5;font-weight:700;overflow:hidden;max-height:144px}
+.cv .tx .gh{visibility:hidden}
+.cv .tx .ty{position:absolute;left:18px;top:0;right:0}
+.cv .cur{display:inline-block;width:.42em;height:1em;margin-left:3px;background:var(--acc);vertical-align:-.18em}
+.cv .src{margin:12px 22px 0;font-family:var(--font-mono);font-size:20px;color:var(--sub);line-height:1.35}
+.cv::before{content:"";position:absolute;left:-21px;top:30px;border:18px solid transparent;border-right-color:var(--ink);border-left:0}
+
+/* 「判断は Claude／測るのはコード」の札 */
+.who-tag{position:absolute;z-index:47;font-size:28px;font-weight:700;padding:6px 16px 7px;white-space:nowrap;box-shadow:4px 4px 0 rgba(14,16,21,.22);line-height:1.2}
+.who-tag.claude{color:#fff;background:var(--acc);border:3px solid var(--acc)}
+.who-tag.code{color:#fff;background:var(--ink);border:3px solid var(--ink)}
+.who-tag.human{color:var(--ink);background:#fff;border:3px solid var(--ink)}
+.who-tag i{font-style:normal;font-family:var(--font-mono);font-size:20px;opacity:.8;margin-right:10px}
+
+/* 板（結果） */
+.board2{position:absolute;background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:var(--shadow);z-index:46}
+.board2 .bt{font-size:30px;font-weight:700;padding:12px 22px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+.num{font-weight:700;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.src20{position:absolute;font-family:var(--font-mono);font-size:20px;color:var(--sub);line-height:1.35}
+.t28{font-size:28px;line-height:1.45}
+.t32{font-size:32px;line-height:1.45}
+.mono{font-family:var(--font-mono)}
+.photo{position:absolute;overflow:hidden;background:#fff;box-shadow:0 6px 16px rgba(14,16,21,.28);border:6px solid #fff;box-sizing:border-box;z-index:48}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ripple{position:absolute;border:6px solid var(--acc);border-radius:50%;box-sizing:border-box;pointer-events:none}
+.cv.notail::before{display:none}
+.chip{display:inline-block;font-family:var(--font-mono);font-size:44px;font-weight:700;color:#fff;background:var(--acc);padding:4px 18px;margin-right:14px;line-height:1.1}
+.tagm{display:inline-block;font-size:28px;font-weight:700;padding:2px 12px;border:3px solid var(--measured);color:#fff;background:var(--measured)}
+.tage{display:inline-block;font-size:28px;font-weight:700;padding:2px 12px;border:3px solid var(--estimated);color:var(--estimated);background:#fff8ea}
+.tagu{display:inline-block;font-size:28px;font-weight:700;padding:2px 12px;border:3px dashed var(--unknown);color:var(--unknown);background:#fff}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>塊 B B6 設計→製図</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.cv.notail::before{display:none}
+.df{font-family:var(--font-mono);font-size:34px;line-height:46px;white-space:pre;padding:0 26px}
+.df .l{position:relative;padding-left:46px}
+.df .l b{position:absolute;left:0;font-weight:700}
+.df .m{color:var(--estimated);background:#fff4dc}
+.df .p{color:var(--ink);background:#e9ecf3;font-weight:700}
+.df .p b{color:var(--acc)}
+.df .s{text-decoration:line-through;text-decoration-thickness:2px}
+.cr{display:flex;align-items:baseline;justify-content:space-between;padding:8px 24px;border-bottom:2px solid var(--line)}
+.cr .k{font-size:30px;font-weight:700}
+.cr .n{font-size:64px}
+.cell{position:absolute;background:#fbfaf7;border:2px solid var(--ink);box-sizing:border-box;overflow:hidden}
+.cell img{position:absolute;display:block}
+.cell .fl{position:absolute;left:0;top:0;font-size:28px;font-weight:700;color:#fff;background:var(--ink);padding:0 10px;font-family:var(--font-mono)}
+.pane{position:absolute;overflow:hidden;z-index:44}
+.vw{position:absolute;background:#fff;border:2px solid var(--ink);box-sizing:border-box;overflow:hidden;box-shadow:var(--shadow)}
+.vw img{position:absolute;display:block}
+.stg{position:absolute;font-size:30px;font-weight:700;color:#fff;background:var(--ink);padding:6px 16px;white-space:nowrap;z-index:49}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"sekkei",
+async build(F,S){
+  const V=F.V,o={},$=(c,h,p)=>F.$("div",c,p||S,h);
+  // ── 棟 JSON の本物の行
+  const D=V.diff;
+  const rows=D.lines.map(([k,s])=>`<div class="l ${k==="-"?"m":k==="+"?"p":""}"><b>${k===" "?"":k}</b><span class="${k==="-"?"s":""}">${F.esc(s)}</span></div>`).join("");
+  o.df=F.board(`${D.path}　<span class="mono" style="font-size:24px;color:var(--sub)">faces[f6].bays.pitch</span>`,620,206,1242,540,
+    `<div class="df" style="margin-top:14px">${rows}</div><div class="src20" style="margin:8px 26px 0">出典 git c96f149 → 今の honbu.json（根拠・method の行は略）</div>`);
+  o.df.classList.add("el");o.rows=[...o.df.querySelectorAll(".l")];
+  o.voice=F.claudeVoice({who:V.voice.agent,model:V.voice.model,took:V.voice.took,text:V.voice.text,src:"pipeline_state_20261108_final.json（設計係の報告の抜粋）",x:620,y:776,w:1242,t0:2.9,ms:36,tail:false});
+  const C=V.counts;
+  o.cn=F.board("棟 JSON の値は 3 種類",60,530,520,330,`
+    <div class="cr"><span class="k">measured 測った</span><span class="num n c1">0</span></div>
+    <div class="cr"><span class="k" style="color:var(--estimated)">estimated 推定</span><span class="num n c2" style="color:var(--estimated)">0</span></div>
+    <div class="cr" style="border:0"><span class="k" style="color:var(--unknown)">unknown 不明</span><span class="num n c3" style="color:var(--unknown)">0</span></div>`);
+  o.cn.classList.add("el");o.c=[1,2,3].map(i=>o.cn.querySelector(".c"+i));
+  o.cs=$("el src20","出典 out/honbu/report.json（counts）");F.place(o.cs,60,866,520);
+  o.tg1=F.tag("claude",V.tags.claude,{x:60,y:910,t0:3.6});
+  // ── 立面図 9 枚（3×3）
+  const AX=620,AY=206,AW=1242,AH=824,cw=AW/3,ch=AH/3;o.ch=ch;
+  o.pane=$("pane el");F.place(o.pane,AX,AY,AW,AH);o.grid=$("el","",o.pane);F.css(o.grid,{left:0,top:0,width:AW+"px",height:AH+"px",transformOrigin:"0 0"});
+  o.cells=[];
+  for(let i=0;i<9;i++){const u=i===6?"docs/images/before_honbu/elev_f6.svg":V.elevs[i],[w,h]=V.elev_sizes[i],c=$("cell","",o.grid);F.place(c,(i%3)*cw+4,Math.floor(i/3)*ch+4,cw-8,ch-8);
+    const k=Math.min((cw-8)/w,(ch-8)/h);
+    await F.drawSvg({parent:c,url:F.R+u,x:(cw-8-w*k)/2,y:(ch-8-h*k)/2,w:w*k,t0:5.2+i*.2,dur:1.0});
+    if(i===6){o.f6a=F.$("img","",c);o.f6a.src=F.R+V.elevs[6];F.css(o.f6a,{width:(w*k)+"px",height:(h*k)+"px",left:((cw-8-w*k)/2)+"px",top:((ch-8-h*k)/2)+"px",zIndex:46,background:"#fbfaf7"})}
+    $("fl","f"+i,c).style.zIndex=47;o.cells.push(c)}
+  o.st1=$("stg el","立面図　9 面 → f6 の寸法線（琥珀→黒）");F.place(o.st1,60,530);
+  o.es=$("el src20","出典 "+V.elev_source);F.place(o.es,60,590,520);
+  o.tg2=F.tag("code",V.tags.code,{x:60,y:660,t0:5.6});
+  // ── 平面図
+  const P=V.plan,kp=Math.min(AW/P.w,AH/P.h);
+  o.pl=$("vw el");F.place(o.pl,AX+(AW-P.w*kp)/2,AY,P.w*kp,P.h*kp);o.pl.style.zIndex=45;
+  await F.drawSvg({parent:o.pl,url:F.R+P.file,x:0,y:0,w:P.w*kp,t0:9.0,dur:1.2});
+  o.st2=$("stg el","平面図");F.place(o.st2,60,530);
+  o.ps=$("el src20","出典 out/honbu/plan.svg");F.place(o.ps,60,590,520);
+  // ── 模型の 4 方向
+  const vw=(AW-16)/2,vh=(AH-16)/2;
+  o.vs=V.views.map((u,i)=>{const e=$("vw el");F.place(e,AX+(i%2)*(vw+16),AY+Math.floor(i/2)*(vh+16),vw,vh);e.style.zIndex=46;
+    const k=Math.max(vw/2400,vh/1700)*1.25,im=F.$("img","",e);im.src=F.R+u;F.css(im,{width:(2400*k)+"px",left:((vw-2400*k)/2)+"px",top:((vh-1700*k)/2)+"px"});return e});
+  o.st3=$("stg el","模型　4 方向");F.place(o.st3,60,530);
+  o.vsrc=$("el src20","出典 "+V.views_source);F.place(o.vsrc,60,590,520);
+  return o;
+},
+seek(F,t,o){
+  const V=F.V,C=V.counts;
+  const out1=1-F.eo(F.P(t,5.1,.3));
+  F.rise(o.df,t,2.4,.4,40);o.df.style.opacity*=out1;
+  o.rows.forEach((r,i)=>{const k=V.diff.lines[i][0];r.style.opacity=k==="+"?F.P(t,2.8+i*.1,.2):1});
+  o.voice.el.style.opacity*=out1;
+  F.rise(o.cn,t,3.0,.35,30);o.cn.style.opacity*=out1;o.cs.style.opacity=F.P(t,3.3,.3)*out1;
+  [C.measured,C.estimated,C.unknown].forEach((v,i)=>F.countTo(o.c[i],String(v),F.eo(F.P(t,3.2,.9))));
+  o.tg1.el.style.opacity*=out1;
+  // 立面図：5.2 から 1 枚ずつ → 7.4〜8.4 で f6（左下）に寄る → 9.0 で消える
+  const out2=1-F.eo(F.P(t,8.9,.3));
+  o.pane.style.opacity=(t>=5.2?1:0)*out2;
+  o.cells.forEach((c,i)=>{c.style.opacity=F.P(t,5.15+i*.2,.15)});o.f6a.style.opacity=F.P(t,8.3,.5);
+  const z=F.eio(F.P(t,7.4,1.0)),s=1+2*z;
+  o.grid.style.transform=`translate(0px,${-2*o.ch*s*z}px) scale(${s})`;
+  [o.st1,o.es].forEach(e=>e.style.opacity=F.P(t,5.3,.3)*out2);
+  // 平面図
+  const out3=1-F.eo(F.P(t,10.3,.3));
+  o.pl.style.opacity=F.P(t,8.95,.2);o.pl.style.opacity*=out3;[o.st2,o.ps].forEach(e=>e.style.opacity=F.P(t,9.1,.3)*out3);
+  // 模型の 4 方向
+  o.vs.forEach((e,i)=>F.pop(e,t,10.35+i*.22,.3));[o.st3,o.vsrc].forEach(e=>e.style.opacity=F.P(t,10.4,.3));
+}});
+</script></body></html>

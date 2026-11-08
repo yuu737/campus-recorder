@@ -1,0 +1,26 @@
+{
+ "note": "make_final.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 6.0,
+ "scenes": [
+  {
+   "id": "C2_kiroku",
+   "start": 0,
+   "end": 6.0,
+   "sentences": [
+    {
+     "n": 1,
+     "file": "001.wav",
+     "start": 0.8,
+     "seconds": 3.52,
+     "dur": 3.52,
+     "text": "試行錯誤も、全部記録に残しています。"
+    }
+   ]
+  }
+ ]
+}

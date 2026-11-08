@@ -1,0 +1,88 @@
+{
+ "note": "B4 観察・数え係（本部棟の記録 11/7〜11/8）。数と文は kazoe_f6.json・kansatsu_f6.json と疑似本番の記録から。写真の上の札は記録の値だけ（写真の中の位置は描かない）",
+ "dur": 11.0,
+ "app": {
+  "src": "out/video/app/_src/replay_009.0.png",
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（面ごとの写真。観察・数えの工程は再生に自分の画面が無い）",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    452,
+    220
+   ],
+   "spot": [
+    22,
+    150,
+    860,
+    135
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3
+  },
+  "source": "out/video/replay_honbu.mp4 の 9.0 秒（f6 の札の付いた写真の列）",
+  "video": {
+   "dir": "out/video/app2/_src/replay_04_kansatsu",
+   "fps": 10,
+   "n": 50,
+   "source": "cut_replay.py：7〜12 秒（2/11 仕分け係、面の札の付いた写真）"
+  }
+ },
+ "photo": {
+  "file": "data/photos/public/20261103/PXL_20261103_042900775.jpg",
+  "size": [
+   1600,
+   1201
+  ],
+  "note": "数え係が柱間と階の根拠に使った 1 枚（kazoe_f6.json bays.evidence・floors.evidence）。灰色の箱はアプリが掲示物（祝の垂れ幕）を隠した物"
+ },
+ "f6": {
+  "bays": 9,
+  "floors": 5,
+  "status": "measured",
+  "check": "5 階の小窓 18 個 ＝ 9 × 2",
+  "source": "data/reports/honbu/kazoe_f6.json（bays.value 9・floors.value 5・status measured、bays.method の検算「計 18 個＝9×2」）"
+ },
+ "faces": [
+  [
+   "f6",
+   "9",
+   "5"
+  ],
+  [
+   "f8",
+   "6",
+   "5"
+  ],
+  [
+   "f0",
+   "4",
+   "4"
+  ],
+  [
+   "f4",
+   "3",
+   "4"
+  ]
+ ],
+ "faces_source": "data/reports/疑似本番_11-07/記録.md 09:54:21 honbu kazoe「f6 9×5・f8 6×5・f0 4×4・f4 3×4 measured」",
+ "voice": {
+  "who": "数え係",
+  "model": "Claude Opus",
+  "took": "19:02",
+  "text": "両端が 1 枚に入る写真が無いので、祝の垂れ幕 4 枚（2 枚ずつ隣り合う 2 つの柱間に下がる）を目印に 2 枚の列をつないだ。",
+  "src": "kazoe_f6.json bays.method の頭の 1 文",
+  "took_source": "疑似本番_11-07/記録.md 09:54:21 honbu kazoe の秒 1142"
+ },
+ "cap": "kazoe_f6.json・kansatsu_f6.json・疑似本番_11-07/記録.md／写真 data/photos/public（公開版）／画面 replay_honbu.mp4 9 秒"
+}

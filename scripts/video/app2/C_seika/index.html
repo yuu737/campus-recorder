@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>締め C 成果</title>
+<link rel="stylesheet" href="../_shell/app.css"><link rel="stylesheet" href="../_closing.css">
+<style>
+.cmp{position:absolute}
+.cmp .bt{font-size:36px}
+.cmp.after .bt{background:var(--acc);color:#fff}
+.rw{position:absolute;left:28px;right:28px;display:flex;align-items:baseline;gap:18px;white-space:nowrap}
+.rw .t{font-size:32px;color:var(--sub)}
+.rw .n{font-size:84px;font-weight:700;font-variant-numeric:tabular-nums}
+.rw .sb{font-size:28px;color:var(--sub)}
+.rw{flex-direction:column;gap:6px}
+.before .rw .t{width:auto}
+.before .rw .n{font-size:64px}
+.yn{position:absolute;left:28px;bottom:18px;font-size:28px;color:var(--sub)}
+.vs{position:absolute;font-size:80px;font-weight:700;color:var(--acc)}
+.ft{font-size:30px;font-weight:700;color:var(--ink)}
+.cmp.before .rw .n{font-size:54px}
+</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"walk",
+build(F,S){
+  const V=F.V,o={};
+  o.h=F.$("div","el chead",S,V.head.replace(/\[(.+?)\]/g,'<span class="a">$1</span>'));o.h.style.fontSize="80px";F.place(o.h,120,90);
+  o.b=F.board(V.before.k,120,250,720,520,"");o.b.classList.add("cmp","before");
+  o.br=V.before.rows.map((r,i)=>{const e=F.$("div","rw",o.b,`<span class="t">${F.esc(r.t)}</span><span class="n">${F.esc(r.n)}</span>`);e.style.top=(96+i*170)+"px";return e});
+  o.bs=F.$("div","src20",o.b,"出典 "+V.before.src);F.css(o.bs,{left:"28px",right:"20px",bottom:"16px"});
+  o.vs=F.$("div","vs",S,"→");F.place(o.vs,862,450);
+  o.a=F.board(V.after.k,960,250,900,520,"");o.a.classList.add("cmp","after");
+  o.ar=V.after.rows.map((r,i)=>{const e=F.$("div","rw",o.a,`<span class="t">${F.esc(r.t)}</span><span class="n">${F.esc(r.n)}</span>${r.sub?`<span class="sb">（${F.esc(r.sub)}）</span>`:""}`);e.style.top=(96+i*170)+"px";return e});
+  o.ft=F.$("div","el",S,F.esc(V.foot));F.css(o.ft,{fontSize:"28px",color:"var(--sub)"});F.place(o.ft,120,800);
+  o.cap=F.$("div","el src20",S,"出典 "+V.cap+"（"+V.foot_src+"）");F.place(o.cap,60,1044-30);o.cap.style.zIndex=46;F.css(o.cap,{right:"60px",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"});
+  return o;
+},
+seek(F,t,o){
+  // 声（0.8 秒から）に合わせる：左 0.8、右の時間は「一時間余り」（3.75）、費用は「二千四百円」（5.07）で落ちる
+  F.rise(o.h,t,-.2,.35,24);
+  F.rise(o.b,t,.8,.35,30);o.br.forEach((e,i)=>F.rise(e,t,1.0+i*.35,.3,12));
+  F.rise(o.vs,t,3.2,.25,0);F.draw(o.vs,t,3.2,.3);
+  F.rise(o.a,t,3.3,.3,30);
+  o.ar.forEach((e,i)=>F.rise(e,t,[3.75,5.07][i],.3,-50));
+  F.rise(o.ft,t,5.9,.3,10);F.rise(o.cap,t,.8,.3,6);
+}});
+</script></body></html>

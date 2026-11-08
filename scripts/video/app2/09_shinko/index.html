@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 2 B9 進行役</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.fl .k{font-size:28px;font-weight:700;padding:12px 20px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+.fl .t{font-size:30px;font-weight:700;line-height:1.4;padding:12px 20px 0}
+.fl.acc .k{background:var(--acc);color:#fff}
+.rule{position:absolute;left:28px;right:28px;display:flex;gap:22px;align-items:baseline}
+.rule i{font-style:normal;flex:none;width:18px;height:18px;background:var(--acc);transform:translateY(-6px)}
+.rule span{font-size:40px;font-weight:700;line-height:1.4}
+.rv h4{margin:0;font-size:32px;padding:14px 26px 10px;border-bottom:2px solid var(--line)}
+.rv .row{display:flex;gap:26px;align-items:baseline;padding:16px 26px 0;font-size:30px;white-space:nowrap}
+.rv .gray{color:var(--sub)}
+.rv .sum{font-size:30px;line-height:1.45;padding:10px 26px 0}
+.rv .btns{position:absolute;right:26px;bottom:22px;display:flex;gap:16px}
+.rv .btn{border:2px solid var(--ink);background:#fff;border-radius:10px;padding:8px 26px;font-size:30px;font-weight:700}
+.rv .btn.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+.rv .ok{position:absolute;right:26px;bottom:26px;background:#e6f4ea;color:#1e7b34;font-size:32px;font-weight:700;border-radius:999px;padding:6px 26px}
+.rp{position:absolute;border:6px solid var(--acc);border-radius:50%;box-sizing:border-box;z-index:49}
+.hl{position:absolute;border:4px solid var(--acc);box-sizing:border-box}
+#lk{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:47;pointer-events:none}
+.cv .tx{font-size:38px;max-height:114px}
+.cv .cur{height:40px}
+.fl .t{font-size:30px}
+.fl .k{font-size:32px}
+.intro{position:absolute;left:50%;bottom:96px;z-index:70;background:var(--ink);color:#fff;font-size:48px;font-weight:700;padding:14px 36px;white-space:nowrap;box-shadow:var(--shadow)}
+.intro b{color:#9fb4ff}
+</style>
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"shinko",
+build(F,S){
+  const V=F.V,o={},v=V.voice;
+  o.v=F.claudeVoice({who:v.who,model:v.model,took:v.took,text:v.text,src:"pipeline_state.json shinko[0].summary（… は省略）",t0:2.6,ms:40,x:640,y:206,w:1220});
+  // 流れ（図はここだけ）
+  o.fl=V.flow.map((s,i)=>{const e=F.board("",60+i*620,530,560,200,"");e.classList.add("fl");if(s.acc)e.classList.add("acc");
+    e.innerHTML=`<div class="k">${F.esc(s.k)}</div><div class="t">${F.esc(s.t)}</div>`;return e});
+  o.ar=[0,1].map(i=>{const e=F.$("div","el",S,`<svg width="56" height="40"><path d="M2 20H46M30 6L48 20L30 34" stroke="#0031d8" stroke-width="6" fill="none"/></svg>`);F.place(e,620+i*620+2,610);e.style.zIndex=46;return e});
+  // 決定（番号なし）
+  o.r=F.board(`進行役が書いた決定（規則の形）`,60,530,1800,440,"");
+  o.rows=V.rules.map((r,i)=>{const e=F.$("div","rule",o.r,`<i></i><span>${F.esc(r.t)}</span>`);e.style.top=(80+i*100)+"px";return e});
+  o.t1=F.tag("claude",V.tags[0].t,{x:1290,y:474,t0:6.1});
+  // 職員の画面の「進行役の決定」の欄（再現）
+  const R=V.review;
+  o.rv=F.board("",60,530,1800,330,`<h4>職員の画面：${F.esc(R.head)}</h4><div class="row"><b>${R.n}</b><span class="gray">${R.at}</span><span>${R.step}</span><span class="gray">${R.cost}</span><span class="gray">${F.esc(R.redo)}</span></div><div class="sum">${F.esc(R.summary)}</div><div class="btns"><span class="btn primary">承認</span><span class="btn">取り消し（記録だけ）</span></div><span class="ok">${F.esc(R.mark)}</span>`);
+  o.rv.classList.add("rv");o.btns=o.rv.querySelector(".btns");o.ok=o.rv.querySelector(".ok");o.sp=o.rv.querySelector(".btn.primary");
+  o.note=F.$("div","el src20",S,"画面の再現（web/staff.html の「進行役の決定」の欄を、記録 pipeline_state.json の値で描いた）");F.place(o.note,60,870);o.note.style.zIndex=46;
+  o.rp=[0,1].map(()=>F.$("div","rp",S));
+  o.t2=F.tag("human",V.tags[1].t,{x:1060,y:474,t0:9.2});
+  o.cap=F.$("div","el src20",S,"出典 決定_自動_honbu_1.md（K-401・K-404・K-405 を番号なしで）／pipeline_state.json／jisseki_20261108.md／画面 replay_honbu.mp4 21 秒");F.place(o.cap,60,1044-30);o.cap.style.zIndex=46;
+  o.intro=F.$("div","intro",S,F.V.intro.html);
+  return o;
+},
+seek(F,t,o){
+  {const a=F.eo(F.P(t,.2,.3))*(1-F.P(t,F.V.intro.t1,.3));o.intro.style.opacity=a;o.intro.style.transform=`translateX(-50%) translateY(${(1-F.eo(F.P(t,.2,.3)))*20}px)`;}
+  // 5〜7：流れ
+  const fOut=1-F.P(t,5.9,.3);
+  o.fl.forEach((e,i)=>{F.rise(e,t,4.3+i*.35,.35,24);e.style.opacity=+e.style.opacity*fOut});
+  o.ar.forEach((e,i)=>{F.rise(e,t,4.5+i*.35,.25,0);F.draw(e,t,4.5+i*.35,.3);e.style.opacity=+e.style.opacity*fOut});
+  F.pulse(o.fl[1],t,5.2,.6);
+  // 7.1〜9.4：決定
+  const rOut=1-F.P(t,7.9,.3);
+  F.rise(o.r,t,5.9,.35,30);o.r.style.opacity=+o.r.style.opacity*rOut;
+  o.rows.forEach((e,i)=>F.rise(e,t,6.1+i*.35,.3,14));
+  o.t1.el.style.opacity=+o.t1.el.style.opacity*rOut;
+  // 9.5〜：承認の欄
+  F.rise(o.rv,t,8.0,.35,30);F.rise(o.note,t,8.2,.3,6);
+  const tap=8.7;o.btns.style.opacity=t<tap+.25?1:0;o.ok.style.opacity=F.eo(F.P(t,tap+.25,.25));
+  const rb=o.sp.getBoundingClientRect(),bx=rb.left+rb.width/2,by=rb.top+rb.height/2;
+  o.rp.forEach((e,i)=>{const p=F.P(t,tap+i*.14,.55),r=F.lerp(12,80,F.eo(p));F.place(e,bx-r,by-r,2*r,2*r);e.style.opacity=p>0&&p<1?1-p:0});
+  F.rise(o.cap,t,1.2,.3,6);
+}});
+</script></body></html>

@@ -1,0 +1,52 @@
+{
+ "note": "C_seika このツールの成果（締め、静止画だけ）。make_values.py が作る。手で直さない",
+ "dur": 6.9,
+ "head": "何が[どう変わった]か",
+ "before": {
+  "k": "外注すると",
+  "rows": [
+   {
+    "t": "費用",
+    "n": "1 棟 約 4 万〜100 万円",
+    "src": "scripts/video/opening_v7/values.json cost（個人の出品と制作会社の公開価格、11/8 取得）"
+   },
+   {
+    "t": "期間",
+    "n": "数週間〜",
+    "src": "scripts/video/opening_v7/values.json period（同上）"
+   }
+  ],
+  "src": "docs/動画_数字の出典_3D相場_11-08.md（図面がある前提。測る作業は別）"
+ },
+ "after": {
+  "k": "この道具（本部棟を写真だけから 0 から立てた実走）",
+  "rows": [
+   {
+    "t": "係が動いた時間",
+    "n": "1 時間 56 分",
+    "src": "pipeline_state.json results[].seconds の和 6989.7 秒（17 件）"
+   },
+   {
+    "t": "費用",
+    "n": "19.80 USD",
+    "sub": "約 2,970 円、1 USD＝150 円で換算（10 円単位）",
+    "src": "pipeline_state.json spent_usd"
+   }
+  ]
+ },
+ "ops": {
+  "start": 1,
+  "resume": 4,
+  "review": 0,
+  "note": "画面には出さない（利用者の直しで行を消した）。記録として残す"
+ },
+ "photos": 55,
+ "requests": 8,
+ "foot": "長さの実測はまだ無く、推定の模型と撮影依頼 8 件まで。製図で 1 回、人が決定を手で入れた",
+ "foot_manual_src": "D:/BuiltwithClaude_run0/data/decisions.json の D-0001（17:34 に利用者が手で入れた。台帳の書いた人は shinko と記録）",
+ "foot_src": "report.json counts（measured_kinds：direct 0・chain 0・count 3）",
+ "yen_per_usd": 150,
+ "as_of": "2026-11-08T18:21:31",
+ "status": "done",
+ "cap": "D:/BuiltwithClaude_run0/out/honbu/pipeline_state.json・report.json（2026-11-08T18:21:31 の値、status done）／README.ja.md／docs/動画_数字の出典_3D相場_11-08.md"
+}

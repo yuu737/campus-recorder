@@ -1,0 +1,24 @@
+{
+ "note": "映像係 T が書いた（場面の長さと声の位置。声は out/video/app2/narration/06_kenshu/）",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 13.0,
+ "scenes": [
+  {
+   "id": "06_kenshu",
+   "start": 0,
+   "end": 13.0,
+   "sentences": [
+    {
+     "text": "検収係の Claude は写真と模型の線を比べ、合わない面も不合格のまま記録しました。",
+     "file": "001.wav",
+     "start": 0.6,
+     "end": 8.24
+    }
+   ]
+  }
+ ]
+}

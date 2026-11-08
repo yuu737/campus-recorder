@@ -1,0 +1,126 @@
+{
+ "note": "B05 設計係 → 製図・模型係（アプリ版 2、2 係を 1 場面）。本物の JSON の行と本物の立面図 SVG",
+ "dur": 12.0,
+ "step": "sekkei",
+ "app": {
+  "src": "out/video/app/_src/replay_025.0.png",
+  "w": 1600,
+  "h": 900,
+  "source": "out/video/replay_honbu.mp4 の 25.0 秒（待機画面の再生、設計係の工程）",
+  "url": "web/progress.html?building=honbu&replay=1（6/11 設計係の工程）",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    325,
+    260
+   ],
+   "spot": [
+    30,
+    160,
+    590,
+    200
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3,
+   "note": "spot は設計係の工程の生成物（値の状態）の所"
+  }
+ },
+ "voice": {
+  "agent": "設計係",
+  "model": "Claude Opus",
+  "took": "6 分 17 秒",
+  "text": "新しいメジャー写真で、f6（南南西面）の柱間と笠木の高さを「measured（測った値）」にしました。",
+  "source": "data/reports/honbu/pipeline_state_20261108_final.json（results[3] 設計係 attempt 1、seconds 376.6、text の 2 文目）"
+ },
+ "diff": {
+  "path": "data/buildings/honbu.json",
+  "before_ref": "c96f149（11/8 本番の追記の前。henka_20261108.md の「前」）",
+  "source": "git show c96f149:data/buildings/honbu.json 2166–2170 行 → 今の honbu.json 2600–2605 行（evidence・method の行は略）",
+  "lines": [
+   [
+    " ",
+    "\"pitch\": {"
+   ],
+   [
+    "-",
+    "  \"value\": 5.418,"
+   ],
+   [
+    "+",
+    "  \"value\": 5.30973,"
+   ],
+   [
+    " ",
+    "  \"unit\": \"m\","
+   ],
+   [
+    "-",
+    "  \"tol\": 0.19,"
+   ],
+   [
+    "+",
+    "  \"tol\": 0.054,"
+   ],
+   [
+    "-",
+    "  \"status\": \"estimated\","
+   ],
+   [
+    "+",
+    "  \"status\": \"measured\","
+   ],
+   [
+    "+",
+    "  \"measured_kind\": \"chain\","
+   ]
+  ]
+ },
+ "counts": {
+  "measured": 7,
+  "estimated": 456,
+  "unknown": 2,
+  "source": "out/honbu/report.json（counts.measured・estimated・unknown）"
+ },
+ "elev": {
+  "before": "docs/images/before_honbu/elev_f6.svg",
+  "after": "out/honbu/elev_f6.svg",
+  "w": 1385,
+  "h": 876,
+  "crop": [
+   40,
+   330,
+   760,
+   200
+  ],
+  "before_label": "5.42（琥珀＝推定）",
+  "after_label": "5.31（黒＝実測）",
+  "source": "docs/images/before_honbu/elev_f6.svg（11/8 02:53、追記の前）・out/honbu/elev_f6.svg（11/8 12:14、追記の後）の柱間の寸法線"
+ },
+ "seizu": {
+  "agent": "製図・模型係",
+  "model": "コード",
+  "took": "1 分 17 秒",
+  "cmd": "recorder run data/buildings/honbu.json --fast → ok",
+  "source": "pipeline_state_20261108_final.json（results[4] seizu code、seconds 77.4）／待機画面の右の欄の文"
+ },
+ "tags": {
+  "claude": "JSON に書くのは Claude",
+  "code": "図面・模型・3D を出すのはコード"
+ },
+ "cap": "honbu.json（git c96f149 → 今）・henka_20261108.md・out/honbu/report.json・elev_f6.svg（前・後）",
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T04:54:38",
+  "at": "2026-11-08T05:02:13",
+  "source": "results[3] 設計係 → results[4] 製図・模型係（コード）"
+ }
+}

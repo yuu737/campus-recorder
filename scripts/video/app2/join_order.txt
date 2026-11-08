@@ -1,0 +1,19 @@
+# 繋ぐ順（1 行 1 本、repo の根からのパス）。最終（11/8 夜、docs/指示_最終_11-08.md の 1-4）：
+#   python -I -X utf8 scripts/video/join.py --out out/video/full_v3.mp4 $(grep -v '^#' scripts/video/app2/join_order.txt)
+out/video/opening_v7.mp4
+out/video/app2/B00_hashi.mp4
+out/video/app2/B01_osu.mp4
+out/video/app2/B02_satsuei.mp4
+out/video/app2/B03_shiwake.mp4
+out/video/app2/B04_kansatsu.mp4
+out/video/app2/B05_sokuryo.mp4
+out/video/app2/B06_sekkei.mp4
+out/video/app2/B07_shoko.mp4
+out/video/app2/B08_kenshu.mp4
+out/video/app2/B09_shinko.mp4
+out/video/app2/B10_aruku.mp4
+out/video/app2/C1_sumaho.mp4
+out/video/app2/C_seika.mp4
+out/video/app2/C2_kiroku.mp4
+out/video/app2/C3_koe.mp4
+out/video/app2/C4_tadaigaku.mp4

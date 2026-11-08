@@ -1,0 +1,128 @@
+{
+ "note": "B01 職員が押す（アプリ版 2）。職員の画面は作業用の複製で撮った（scripts/video/capture_staff.py、係は呼ばない）。コマ番号は out/video/flow/staff_cap/log.json の時刻×30",
+ "dur": 10.0,
+ "app": {
+  "w": 1920,
+  "h": 1080,
+  "url": "web/staff.html　職員の画面（作業用の複製で撮影・係は呼ばない）",
+  "seq": {
+   "pattern": "out/video/flow/staff_cap/f{n}.jpg",
+   "pad": 5,
+   "keys": [
+    [
+     0,
+     95
+    ],
+    [
+     0.95,
+     108
+    ],
+    [
+     1.0,
+     112
+    ],
+    [
+     2.2,
+     150
+    ],
+    [
+     2.4,
+     340
+    ],
+    [
+     5.6,
+     366
+    ],
+    [
+     5.9,
+     372
+    ],
+    [
+     10,
+     372
+    ]
+   ]
+  },
+  "press": [
+   1081,
+   594
+  ],
+  "source": "out/video/flow/staff_cap/f00095〜f00372.jpg・log.json（drop 3.65 秒、記録を始める 12.2 秒）",
+  "keep": [
+   760,
+   568,
+   390,
+   52
+  ],
+  "keep_note": "費用の上限の欄と「記録を始める」だけ明るく、他の説明文は暗転で沈める",
+  "mini": {
+   "z0": 1.6,
+   "focus": [
+    770,
+    760
+   ],
+   "spots": [
+    {
+     "t": 0,
+     "r": [
+      380,
+      590,
+      780,
+      485
+     ]
+    },
+    {
+     "t": 2.4,
+     "r": [
+      755,
+      555,
+      400,
+      70
+     ]
+    }
+   ],
+   "spot_at": 0.4,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    300
+   ],
+   "link_t": 2.5
+  },
+  "press_crop": [
+   755,
+   520,
+   400,
+   140
+  ]
+ },
+ "drop": {
+  "files": [
+   "data/photos/public/20261103/PXL_20261103_043026097.jpg",
+   "data/photos/public/20261103/PXL_20261103_043041105.jpg",
+   "data/photos/public/20261103/PXL_20261103_043129358.jpg",
+   "data/photos/public/20261103/PXL_20261103_044907567.jpg"
+  ],
+  "source": "out/video/flow/staff_cap/log.json（steps の drop）"
+ },
+ "cost": {
+  "inset_src": "out/video/flow/staff_cap/f00360.jpg",
+  "inset_crop": [
+   760,
+   570,
+   260,
+   48
+  ],
+  "text": "上限に当たると係はそこで止まり、進捗に「止まりました」と出ます。",
+  "source": "web/staff.html の「記録を始める」の説明（f00360.jpg に写っている文）"
+ },
+ "cap": "data/photos/index.json（本部棟 121 枚）・web/staff.html（作業用の複製）／画面 staff_cap/f00095〜f00372.jpg",
+ "photos": {
+  "n": 121,
+  "source": "data/photos/index.json の building=honbu の枚数（11/8 夕方に数えた。全部 period=during）"
+ }
+}

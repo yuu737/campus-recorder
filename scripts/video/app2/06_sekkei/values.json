@@ -1,0 +1,171 @@
+{
+ "app": {
+  "src": "out/video/app/_src/replay_025.0.png",
+  "w": 1600,
+  "h": 900,
+  "source": "out/video/replay_honbu.mp4 の 25.0 秒（待機画面の再生、設計係の工程）",
+  "url": "web/progress.html?building=honbu&replay=1（6/11 設計係の工程）",
+  "mini": {
+   "z0": 1.5,
+   "focus": [
+    325,
+    260
+   ],
+   "spot": [
+    30,
+    160,
+    590,
+    200
+   ],
+   "spot_at": 0.5,
+   "t_shrink": 1.2,
+   "d_shrink": 1.2,
+   "w": 520,
+   "x": 60,
+   "y": 206,
+   "link_to": [
+    620,
+    260
+   ],
+   "link_t": 2.3,
+   "note": "spot は設計係の工程の生成物（値の状態）の所"
+  },
+  "video": {
+   "dir": "out/video/app2/_src/replay_06_sekkei",
+   "fps": 10,
+   "n": 120,
+   "source": "replay_honbu.mp4 の 23〜35 秒（6/11 設計係 → 7/11 製図・模型係の立面図）"
+  }
+ },
+ "voice": {
+  "agent": "設計係",
+  "model": "Claude Opus",
+  "took": "6 分 17 秒",
+  "text": "新しいメジャー写真で、f6（南南西面）の柱間と笠木の高さを「measured（測った値）」にしました。",
+  "source": "data/reports/honbu/pipeline_state_20261108_final.json（results[3] 設計係 attempt 1、seconds 376.6、text の 2 文目）"
+ },
+ "diff": {
+  "path": "data/buildings/honbu.json",
+  "before_ref": "c96f149（11/8 本番の追記の前。henka_20261108.md の「前」）",
+  "source": "git show c96f149:data/buildings/honbu.json 2166–2170 行 → 今の honbu.json 2600–2605 行（evidence・method の行は略）",
+  "lines": [
+   [
+    " ",
+    "\"pitch\": {"
+   ],
+   [
+    "-",
+    "  \"value\": 5.418,"
+   ],
+   [
+    "+",
+    "  \"value\": 5.30973,"
+   ],
+   [
+    " ",
+    "  \"unit\": \"m\","
+   ],
+   [
+    "-",
+    "  \"tol\": 0.19,"
+   ],
+   [
+    "+",
+    "  \"tol\": 0.054,"
+   ],
+   [
+    "-",
+    "  \"status\": \"estimated\","
+   ],
+   [
+    "+",
+    "  \"status\": \"measured\","
+   ],
+   [
+    "+",
+    "  \"measured_kind\": \"chain\","
+   ]
+  ]
+ },
+ "counts": {
+  "measured": 7,
+  "estimated": 456,
+  "unknown": 2,
+  "source": "out/honbu/report.json（counts.measured・estimated・unknown）"
+ },
+ "clock": {
+  "state": "data/reports/honbu/pipeline_state_20261108_final.json",
+  "from": "2026-11-08T04:54:38",
+  "at": "2026-11-08T05:02:13",
+  "source": "results[3] 設計係 → results[4] 製図・模型係（コード）"
+ },
+ "note": "B6 設計→製図（塊 B 手順順）。棟 JSON の本物の行 → 立面図 9 枚 → f6 → 平面図 → 模型の 4 方向。生成物は SVG・PNG をそのまま img で",
+ "dur": 12.0,
+ "step": "sekkei",
+ "elevs": [
+  "out/honbu/elev_f0.svg",
+  "out/honbu/elev_f1.svg",
+  "out/honbu/elev_f2.svg",
+  "out/honbu/elev_f3.svg",
+  "out/honbu/elev_f4.svg",
+  "out/honbu/elev_f5.svg",
+  "out/honbu/elev_f6.svg",
+  "out/honbu/elev_f7.svg",
+  "out/honbu/elev_f8.svg"
+ ],
+ "elev_sizes": [
+  [
+   1193,
+   675
+  ],
+  [
+   720,
+   617
+  ],
+  [
+   720,
+   573
+  ],
+  [
+   733,
+   573
+  ],
+  [
+   1092,
+   595
+  ],
+  [
+   976,
+   704
+  ],
+  [
+   1385,
+   876
+  ],
+  [
+   955,
+   700
+  ],
+  [
+   1277,
+   726
+  ]
+ ],
+ "plan": {
+  "file": "out/honbu/plan.svg",
+  "w": 731,
+  "h": 780
+ },
+ "views": [
+  "out/honbu/view_A.png",
+  "out/honbu/view_B.png",
+  "out/honbu/view_C.png",
+  "out/honbu/view_top.png"
+ ],
+ "views_source": "out/honbu/view_A・B・C・top.png（製図・模型係＝コード。view_D は無いので上から見た view_top を 4 枚目に）",
+ "elev_source": "out/honbu/elev_f0〜f8.svg（recorder run の図面、11/8 12:14）",
+ "tags": {
+  "claude": "JSON に書くのは Claude",
+  "code": "図面・模型を出すのはコード"
+ }
+}
