@@ -12,7 +12,9 @@ From photos that campus staff take with a phone, Claude agents write an evidence
 
 ![Main building, south-west face: model lines overlaid on a phone photo (left) and the elevation generated from the same building JSON (right)](docs/images/hero.png)
 
-**Video** (3 min, YouTube): https://youtu.be/RILAzs4MiHY
+**Video** (3 min, YouTube): https://youtu.be/8fYBU0GE6vk
+
+**Walk the 4 buildings (GitHub Pages, phone OK)**: https://yuu737.github.io/campus-recorder/web/index.html — the walk view only; photos stay on the staff PC (`web/data/` is the exported site, 23 MB).
 
 **For judges: what to look at in 5 minutes**
 1. **Video** (3 min): the YouTube link above.

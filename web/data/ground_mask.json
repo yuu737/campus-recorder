@@ -1,0 +1,94 @@
+{
+ "url": "data/ground_mask.png",
+ "x0": -402.0,
+ "y_top": 968.0,
+ "step": 1.0,
+ "w": 820,
+ "h": 1318,
+ "kinds": [
+  {
+   "id": 0,
+   "kind": "unknown",
+   "label": "根拠なし（OSM に無い）",
+   "color": "#96928a"
+  },
+  {
+   "id": 1,
+   "kind": "asphalt",
+   "label": "車道（アスファルト）",
+   "color": "#3e3f42"
+  },
+  {
+   "id": 2,
+   "kind": "paving",
+   "label": "歩道・広場（舗装）",
+   "color": "#b8ac98"
+  },
+  {
+   "id": 3,
+   "kind": "grass",
+   "label": "芝・植え込み",
+   "color": "#628c46"
+  },
+  {
+   "id": 4,
+   "kind": "parking",
+   "label": "駐車場",
+   "color": "#686a6e"
+  },
+  {
+   "id": 5,
+   "kind": "steps",
+   "label": "階段",
+   "color": "#d6d0c4"
+  },
+  {
+   "id": 6,
+   "kind": "building",
+   "label": "建物の足元",
+   "color": "#282828"
+  }
+ ],
+ "counts": {
+  "unknown": {
+   "features": 0,
+   "area_m2": 688894.0
+  },
+  "asphalt": {
+   "features": 77,
+   "area_m2": 81366.0
+  },
+  "paving": {
+   "features": 87,
+   "area_m2": 21510.0
+  },
+  "grass": {
+   "features": 12,
+   "area_m2": 236193.0
+  },
+  "parking": {
+   "features": 0,
+   "area_m2": 0.0
+  },
+  "steps": {
+   "features": 0,
+   "area_m2": 0.0
+  },
+  "building": {
+   "features": 0,
+   "area_m2": 52797.0
+  }
+ },
+ "status": "estimated",
+ "source": "OpenStreetMap contributors（ODbL）",
+ "license": "ODbL",
+ "fetched_at": "2026-11-05T11:43:35",
+ "method": "OSM のタグから地表の種類を決める（surface があればそれ、無ければ種類の既定）。道は中心線を幅で太らせる",
+ "standard_width_m": {
+  "road": 6.0,
+  "service": 4.0,
+  "foot": 2.0,
+  "steps": 2.0
+ },
+ "note": "画素の値＝種類の番号（行 0 が北）。道は OSM の中心線を width（無ければ標準幅）で太らせた。unknown は OSM に何も無い所"
+}

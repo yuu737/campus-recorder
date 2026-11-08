@@ -1,14 +1,14 @@
 {
- "note": "C1 スマホで歩く（締め、10 秒）。縦のコマを CSS のスマホの枠の中で流す",
+ "note": "C1 スマホで歩く（締め、8 秒）。縦のコマを CSS のスマホの枠の中で流す。11/8 19:40 撮り直し：目の高さのまま前へ歩く（前の版は終わりが空から見下ろす構図で宙に浮いていた）",
  "dur": 10.0,
  "frames": {
-  "dir": "out/video/closing_assets/walk_portrait/",
+  "dir": "out/video/closing_assets/walk_portrait_eye/",
   "pattern": "f%04d.png",
-  "n": 300,
+  "n": 240,
   "fps": 30,
   "w": 1080,
   "h": 1920,
-  "source": "out/video/closing_assets/walk_portrait/（web/index.html を CSS 540×960・倍率 2 で撮影。walk_portrait.json）",
+  "source": "out/video/closing_assets/walk_portrait_eye/（web/index.html を CSS 540×960・倍率 2 で撮影。scripts/video/capture_walk_eye.py、walk_portrait_eye.json。高さはページの地面追従 groundAt + EYE、速さ 1.6 m/s）",
   "small": "out/video/app2/_src/c1/f%04d.jpg（540×960 に縮めた写し）"
  },
  "end_still": {
@@ -17,13 +17,13 @@
   "small": "out/video/app2/_src/c1/evidence_end.jpg"
  },
  "head": "受験生は、[スマホで歩ける]",
- "sub": "歩く画面 web/index.html（幅 540 のスマホ向けの見た目）を、そのまま撮った 10 秒",
+ "sub": "歩く画面 web/index.html（幅 540 のスマホ向けの見た目）を、目の高さで 8 秒歩いてそのまま撮った物",
  "tag": {
   "kind": "code",
   "t": "公開されるのは歩く画面だけ（写真は職員の PC に残る）",
   "source": "CLAUDE.md 規約 6「本番で公開されるのは歩く画面だけで、写真は職員の PC に留まる」"
  },
- "cap": "out/video/closing_assets/walk_portrait/（一覧.md C1）／CLAUDE.md 規約 6",
+ "cap": "out/video/closing_assets/walk_portrait_eye/（capture_walk_eye.py）／CLAUDE.md 規約 6",
  "head_lines": [
   "受験生は、",
   "スマホで歩ける"
