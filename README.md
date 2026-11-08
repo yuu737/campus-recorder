@@ -2,9 +2,25 @@
 
 From photos that campus staff take with a phone, Claude agents write an evidence-marked design (JSON) for each building, check the model against the photos, and add the building to a Web 3D that prospective students can walk on their phones: a way to record a campus and hand it over.
 
+| | What it means |
+|---|---|
+| Outsourcing price | About 40,000 to 1,000,000 yen for a 3D model of one building (assuming drawings already exist; surveying is extra) |
+| This project | The main building rebuilt from a zero state holding only the photos (171) and the staff's declarations, up to the walk view, in the 11/8 16:20–18:21 run; API cost 19.80 USD (all 11 steps passed, but not fully automatic: the user entered one decision by hand at the drawing step) |
+| Scope | 4 buildings (main building, library, Tower 75, Kyotsu Lecture Building South) / 408 photos taken during the event |
+| Evidence marks | Every dimension is `measured` (with the ids of the photos it came from), `estimated` (the method and basis are written down), or `unknown` (value is null, and a photo request is returned). A `measured` value with no evidence fails validation |
+| After the hackathon | Staff keep adding photos and hand the building JSON and its photo requests on to the next person in charge |
+
 ![Main building, south-west face: model lines overlaid on a phone photo (left) and the elevation generated from the same building JSON (right)](docs/images/hero.png)
 
 **Video** (3 min, YouTube): https://youtu.be/RILAzs4MiHY
+
+**For judges: what to look at in 5 minutes**
+1. **Video** (3 min): the YouTube link above.
+2. **Walk view**: how to start it is in "[Setup and usage](#setup-and-usage)".
+3. **Evidence marks**: `measured` / `estimated` / `unknown` on every value, in "[No dimension without evidence](#no-dimension-without-evidence)".
+4. **How Claude is used**: the table of 13 agents, the model split (Opus / Sonnet / Haiku / Fable), the coordinator called automatically on incidents, and the check before resuming (preflight), in "[How Claude is used](#how-claude-is-used)".
+5. **Trial and error**: the run from zero, the dress rehearsal's blockers (30 fixes), and the numbered experiments in "[Results, and what we tried](#results-and-what-we-tried)"; the real-run incidents in [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md) (Japanese).
+6. **Honest limits**: what it cannot do and what is unresolved, in "[Honest limits](#honest-limits)".
 
 **4 buildings** (main building, library, Tower 75, Kyotsu Lecture Building South) / **408 photos** taken during the event (407 reduced public copies in the repository, excluding anything that would identify a lab) / site base built for **2 other universities** (no building built from photos there yet)
 
@@ -14,8 +30,8 @@ Japanese: [README.ja.md](README.ja.md) · English: this page
 
 This is a way for a university to *record its campus and hand it over*, not a photo-analysis tool.
 
+- **University PR staff** want a walkable 3D campus but have no budget for a vendor and no 3D expert on staff. Outsourcing a 3D model of one building costs about 40,000 to 1,000,000 yen (assuming drawings already exist; from individual freelance listings to production companies' published prices; surveying is extra; [sources, Japanese](docs/動画_数字の出典_3D相場_11-08.md)). This time the main building was rebuilt from zero up to the walk view for an API cost of 19.80 USD (table above; a person entered one decision by hand at the drawing step).
 - **Prospective students** far from campus cannot afford the trip to open campus. 360-degree photo tours do not show distances between buildings, slopes, or the walk from the station. Even among university entrants who attended open campuses, 28.3 % did not attend the open campus of the university they entered (Recruit Shingaku Soken, "Shingaku Census 2022"). Coming from Niigata to Meijo University for a one-night, two-day visit costs about 54,000 yen (no student discount; fares from JR's published figures, lodging from one example; [sources, Japanese](docs/動画_数字の出典_受験生_11-08.md)).
-- **University PR staff** want a walkable 3D campus but have no budget for a vendor and no 3D expert on staff. Outsourcing a 3D model of one building costs about 40,000 to 1,000,000 yen (assuming drawings already exist; from individual freelance listings to production companies' published prices; surveying is extra; [sources, Japanese](docs/動画_数字の出典_3D相場_11-08.md)).
 - **After the hackathon**, staff keep adding photos and hand the building JSON and its photo requests on to the next person in charge. Another university only gives an area (bbox) to get a site base (building the buildings needs photos from that university's own staff).
 
 Compared with the previous attempt: the author's earlier 3D model of the same campus took **one person about two months** (2026-08-20 to 10-31). This time, in the roughly six days of the event, 408 photos taken during the period become building JSON with an evidence mark on every value, for 4 buildings (main building, library, Tower 75, Kyotsu Lecture Building South).
