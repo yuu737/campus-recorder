@@ -4,7 +4,7 @@ From photos that campus staff take with a phone, Claude agents write an evidence
 
 ![Main building, south-west face: model lines overlaid on a phone photo (left) and the elevation generated from the same building JSON (right)](docs/images/hero.png)
 
-**Video:** the URL will be added here at submission (not yet available).
+**Video** (3 min, YouTube): https://youtu.be/RILAzs4MiHY
 
 **4 buildings** (main building, library, Tower 75, Kyotsu Lecture Building South) / **408 photos** taken during the event (407 reduced public copies in the repository, excluding anything that would identify a lab) / site base built for **2 other universities** (no building built from photos there yet)
 
