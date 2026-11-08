@@ -21,7 +21,7 @@ def test_fable_model(tmp_path):
     (tmp_path / "x.md").write_text("---\nname: x\nmodel: fable\ntools: Read\n---\n本文", encoding="utf-8")
     d = agents.load_agent_defs(tmp_path)
     assert d["x"]["model"] == "fable" and d["x"]["model_id"] == "claude-fable-5-1"
-    assert agents.LIMITS["fable"] == {"max_turns": 20, "max_budget_usd": 6.0}
+    assert agents.LIMITS["fable"] == {"max_turns": 40, "max_budget_usd": 10.0}
 
 
 def test_dry_run():
@@ -59,7 +59,7 @@ def test_pipeline_mocked(tmp_path, monkeypatch):
     monkeypatch.setattr(runner, "run", lambda p, out, **kw: ran.setdefault("p", str(p)) and {"ok": True, "out": str(out)})
     r = agents.run_pipeline("b1", steps=["satsuei", "shiwake", "seizu", "kenshu"], cwd=tmp_path, agents_dir=".claude/agents")
     assert [c[0] for c in calls] == ["satsuei", "shiwake", "kenshu"]
-    assert calls[0][1:] == (12, 0.5) and calls[1][1:] == (30, 4.0)
+    assert calls[0][1:] == (12, 0.5) and calls[1][1:] == (40, 6.0)
     assert "b1.json" in ran["p"]
     rec = json.loads(open(r["record"], encoding="utf-8").read())
     assert [s["agent"] for s in rec["steps"]] == ["satsuei", "shiwake", "seizu", "kenshu"]
@@ -74,7 +74,7 @@ def test_pipeline_stops_on_limit(tmp_path, monkeypatch):
     # 1 回の費用の上限 → 自動の続き 2 回 → 3 回目も止まったので止める（人を呼ぶ事件に出す）
     assert r["stopped_early"] and len(r["steps"]) == 1 + agents.AUTO_RESUME_MAX and r["steps"][0]["stopped_by_limit"]
     assert r["stopped"]["reason"] == "limit" and r["stopped"]["auto_resumes"] == agents.AUTO_RESUME_MAX
-    assert [e["kind"] for e in r["auto_resumes"]["shiwake"]] == ["max_budget", "max_budget"]
+    assert [e["kind"] for e in r["auto_resumes"]["shiwake"]] == ["max_budget"] * agents.AUTO_RESUME_MAX
     assert any(e["kind"] == "human" and "shiwake" in e["why"] for e in r["pending_events"])
 
 
@@ -311,7 +311,7 @@ def test_retry_429_then_ok(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_agent("kazoe", "数える", cwd=tmp_path, agents_dir=".claude/agents", building_id="b1")
     assert waits == [60.0, 120.0] and len(r["calls"]) == 3 and r["session_id"] == "S1"
-    assert seen[0][0] is None and seen[0][1].endswith("\n\n数える") and "予算（手数 30・" in seen[0][1]
+    assert seen[0][0] is None and seen[0][1].endswith("\n\n数える") and "予算（手数 40・" in seen[0][1]
     assert seen[1][0] == "S1" and "続きから" in seen[1][1] and "数える" in seen[1][1]
     assert r["input_tokens"] == 100 and r["stop"] == "success" and not r["is_error"] and "呼び出し 3 回" in r["note"]
     assert agents.is_rate_limit(RuntimeError("You have hit your 5-hour limit")) and not agents.is_rate_limit(ValueError("x"))
@@ -337,7 +337,7 @@ def test_rate_limit_stop_and_resume(tmp_path, monkeypatch):
     assert len([c for c in calls if c[0] == "kazoe"]) == n_kz
     st = agents.load_state("b1", tmp_path)
     assert st["status"] == "stopped" and st["sessions"] == {"kansatsu": "S-kansatsu", "kazoe": "KZ"}
-    assert len(st["usage_calls"]) == 1 + n_kz and [e["kind"] for e in st["auto_resumes"]["kazoe"]] == ["rate_limit"] * 2
+    assert len(st["usage_calls"]) == 1 + n_kz and [e["kind"] for e in st["auto_resumes"]["kazoe"]] == ["rate_limit"] * agents.AUTO_RESUME_MAX
     # dry_run の再開：計画だけ（状態は書かない）。止まった工程は同じ会話の続きから
     dr = agents.resume_pipeline("b1", dry_run=True, cwd=tmp_path, agents_dir=".claude/agents")
     assert [s["step"] for s in dr["steps"][-2:]] == ["kazoe", "sokuryo"] and dr["steps"][-2]["resume"] == "KZ"
@@ -616,8 +616,8 @@ def _max_turns_err(sid="SK", total=1.0, turns=60):
 
 def test_limits_per_agent():
     for a in ("sokuryo", "sekkei", "kenshu"):
-        assert agents.agent_limits(a, "opus") == {"max_turns": 60, "max_budget_usd": 4.0}
-    assert agents.agent_limits("kansatsu", "opus")["max_turns"] == 30 and agents.agent_limits("satsuei", "haiku")["max_turns"] == 12
+        assert agents.agent_limits(a, "opus") == {"max_turns": 90, "max_budget_usd": 6.0}
+    assert agents.agent_limits("kansatsu", "opus")["max_turns"] == 40 and agents.agent_limits("satsuei", "haiku")["max_turns"] == 12
 
 
 def test_auto_resume_after_max_turns(tmp_path, monkeypatch):
@@ -637,9 +637,9 @@ def test_auto_resume_after_max_turns(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_pipeline("b1", steps=["sokuryo", "sekkei"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=20.0)
     assert not r["stopped_early"] and r["done"] == ["sokuryo", "sekkei"]
-    assert [(n, s, t) for n, s, t, _ in seen] == [("sokuryo", None, 60), ("sokuryo", "SK", 60), ("sekkei", None, 60)]
+    assert [(n, s, t) for n, s, t, _ in seen] == [("sokuryo", None, 90), ("sokuryo", "SK", 90), ("sekkei", None, 90)]
     t2 = seen[1][3]
-    assert "自動の続き 1/2" in t2 and "手数の上限" in t2 and "手数 60 手・費用 1.00 USD" in t2 and "棟の残り 19.00 USD" in t2
+    assert f"自動の続き 1/{agents.AUTO_RESUME_MAX}" in t2 and "手数の上限" in t2 and "手数 60 手・費用 1.00 USD" in t2 and "棟の残り 19.00 USD" in t2
     st = agents.load_state("b1", tmp_path)
     assert st["spent_usd"] == pytest.approx(1.0 + 0.6 + 0.01)               # 1.6 を足して 2.6 にしない
     assert [c["cost_usd"] for c in st["usage_calls"]] == pytest.approx([1.0, 0.6, 0.01])
@@ -668,17 +668,18 @@ def test_auto_resume_gives_up_after_three_stops(tmp_path, monkeypatch):
 
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_pipeline("b1", steps=["kenshu"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=20.0)
-    assert seen == [None, "S", "S"] and r["stopped_early"] and r["stopped"]["reason"] == "crash"
-    assert r["stopped"]["auto_resumes"] == 2 and "自動の続き 2 回" in r["stopped"]["why"]
-    assert r["spent_usd"] == pytest.approx(1.5)                              # 0.5＋1.0＋1.5＝3.0 にしない
+    n = agents.AUTO_RESUME_MAX
+    assert seen == [None] + ["S"] * n and r["stopped_early"] and r["stopped"]["reason"] == "crash"
+    assert r["stopped"]["auto_resumes"] == n and f"自動の続き {n} 回" in r["stopped"]["why"]
+    assert r["spent_usd"] == pytest.approx(0.5 * (n + 1))                    # 会話の合計の最後の値（足し合わせない）
     st = agents.load_state("b1", tmp_path)
-    assert st["status"] == "stopped" and [e["result"] for e in st["auto_resumes"]["kenshu"]] == ["crash", "crash"]
+    assert st["status"] == "stopped" and [e["result"] for e in st["auto_resumes"]["kenshu"]] == ["crash"] * n
     ev = [e for e in st["pending_events"] if e["kind"] == "human"]
     assert len(ev) == 1 and ev[0]["call"] == "human" and "kenshu" in ev[0]["why"]
     seen.clear()
-    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: seen.append(resume) or {**_ok(sid="S"), "cost_usd": 1.7})
+    monkeypatch.setattr(agents, "_invoke", lambda spec, task, *a, resume=None: seen.append(resume) or {**_ok(sid="S"), "cost_usd": 0.5 * (n + 1) + 0.2})
     r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
-    assert seen == ["S"] and not r2["stopped_early"] and r2["spent_usd"] == pytest.approx(1.7)
+    assert seen == ["S"] and not r2["stopped_early"] and r2["spent_usd"] == pytest.approx(0.5 * (n + 1) + 0.2)
 
 
 def test_auto_resume_respects_max_usd(tmp_path, monkeypatch):
@@ -713,7 +714,7 @@ def test_prompt_states_limits_and_partial_continues(tmp_path, monkeypatch):
     monkeypatch.setattr(agents, "_invoke", fake)
     r = agents.run_pipeline("zz9", steps=["sokuryo"], cwd=tmp_path, agents_dir=".claude/agents", max_usd=3.0)
     hdr = seen[0][1].split("\n\n")[0]
-    assert hdr.startswith("予算（手数 60・1 回の費用 3.00 USD・棟の残り 3.00 USD）はこれだけ。")
+    assert hdr.startswith("予算（手数 90・1 回の費用 3.00 USD・棟の残り 3.00 USD）はこれだけ。")
     assert "上限の 8 割を使ったら途中を保存し" in hdr and agents.CONTINUE_MARK in hdr
     assert "zz9" not in hdr and seen[0][2] == 3.0
     assert not r["stopped_early"] and [s for s, _, _ in seen] == [None, "SP"]
@@ -721,7 +722,7 @@ def test_prompt_states_limits_and_partial_continues(tmp_path, monkeypatch):
     assert "手数 48 手・費用 0.40 USD" in h2 and "棟の残り 2.60 USD" in h2 and "係が上限の 8 割で区切った" in seen[1][1]
     assert r["auto_resumes"]["sokuryo"][0]["kind"] == "partial" and r["spent_usd"] == pytest.approx(0.5)
     dr = agents.run_agent("sokuryo", "x", dry_run=True, max_budget_usd=2.0)
-    assert dr["max_turns"] == 60 and "1 回の費用 2.00 USD" in dr["limits_header"]
+    assert dr["max_turns"] == 90 and "1 回の費用 2.00 USD" in dr["limits_header"]
 
 
 def test_preamble_text_and_not_for_code_steps():
@@ -794,3 +795,17 @@ def test_continue_without_new_photos_stops_for_human(tmp_path, monkeypatch):
     assert [e["kind"] for e in st["pending_events"]] == ["human"] and st["pending_events"][0]["call"] == "human"
     r2 = agents.resume_pipeline("b1", cwd=tmp_path, agents_dir=".claude/agents")
     assert len(calls) == 2 and not r2["stopped_early"] and r2["done"] == ["satsuei", "shiwake"]
+
+
+def test_kenshu_passed_faces_uses_latest_round(tmp_path):
+    """合格の面は report.kenshu_faces と同じ判定（面ごとに一番新しい round_*。上の faces は一番古い回）。"""
+    d = tmp_path / "data/reports/b1"
+    d.mkdir(parents=True)
+    (d / "kenshu_summary.json").write_text(json.dumps({
+        "made_at": "2026-11-08T08:00:00",
+        "faces": {"f6": {"pass": True}, "f7": {"pass": True}, "f8": {"pass": True}},
+        "round_k401": {"made_at": "2026-11-08T10:00:00", "faces": {"f6": {"pass": False}, "f8": {"pass": False}}},
+    }), encoding="utf-8")
+    assert agents.kenshu_passed_faces(tmp_path, "b1") == {"f7"}
+    assert agents.kenshu_passed_faces(tmp_path, "b1", after="20261108_090000") == {"f7"}
+    assert agents.kenshu_passed_faces(tmp_path, "b1", after="20261108_110000") == set()

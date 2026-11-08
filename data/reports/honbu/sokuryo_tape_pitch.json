@@ -1,0 +1,33 @@
+{
+ "schema": "sokuryo-tape-pitch/1",
+ "building": "honbu",
+ "tile_pitch_h": {
+  "building": "honbu",
+  "what": "tile_pitch_h",
+  "value": 0.115429,
+  "tol": 0.000715,
+  "photo": "本部棟正面柱92cm",
+  "face": "f6",
+  "link": {
+   "link": "tape",
+   "photo": "本部棟正面柱92cm",
+   "read": "5.4→86.2 cm",
+   "n": 7,
+   "what": "tile_pitch_h",
+   "value": 0.115429,
+   "tol": 0.000715
+  },
+  "checks": [
+   {
+    "photo": "本部棟側面柱74.5cm",
+    "face": "f6",
+    "value": 0.1155,
+    "tol": 0.001,
+    "diff": 7.1e-05,
+    "diff_pct": 0.06,
+    "ok": true
+   }
+  ],
+  "warnings": []
+ }
+}

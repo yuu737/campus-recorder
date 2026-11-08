@@ -25,9 +25,10 @@ data/site/cache/
 位置情報2.jpg
 
 # 本部棟/ は撮影直後の置き場（data/photos/ に写してから使う）
+# メジャー/ は撮り置きのフォルダ（リポジトリ直下）だけ。data/photos/public/メジャー/ の公開版は入れる（data/photos/** で元の写真はもう除外）
 本部棟/
 タワーと図書館付近/
-メジャー/
+/メジャー/
 
 # 歩ける画面の生成物（recorder site export-web で再生成）
 web/data/

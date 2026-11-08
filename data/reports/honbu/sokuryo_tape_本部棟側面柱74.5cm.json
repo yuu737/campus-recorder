@@ -1,0 +1,17 @@
+{
+ "schema": "sokuryo-tape/1",
+ "building": "honbu",
+ "face": "f6",
+ "photo": "本部棟側面柱74.5cm",
+ "made_by": "測量係 opus-5.5",
+ "made_at": "2026-11-08T04:16:28",
+ "link": {
+  "link": "tape",
+  "photo": "本部棟側面柱74.5cm",
+  "read": "5.5→63.25 cm",
+  "n": 5,
+  "what": "tile_pitch_h",
+  "value": 0.1155,
+  "tol": 0.001
+ }
+}

@@ -1,0 +1,92 @@
+{
+ "html": "out\\honbu\\report.html",
+ "made_by": "report（recorder）",
+ "made_at": "2026-11-08T00:26:56",
+ "stages": {
+  "photos": {
+   "status": "done",
+   "result": "121 枚（期間中 121・期間前 0）"
+  },
+  "elev": {
+   "status": "partial",
+   "result": "9 面の図面。実測で形が決まった面 0、推定 7、不明 2"
+  },
+  "evidence": {
+   "status": "done",
+   "result": "登録済みの写真 36 枚、目印の対応 61 点、再投影の中央値 17.6 px（約 0.18 m）、面ごとの最良 f8 17.1 px（約 0.18 m）"
+  },
+  "model": {
+   "status": "done",
+   "result": "高さ 23.15 m、仮置き 0 件、検収の重ね 36 枚、検収で合格した面 4（ほか弱い合格 1）・不合格 1・判定せず 3"
+  },
+  "walk": {
+   "status": "done",
+   "result": "色付きの棟 4、敷地の物 1、灰色の箱（PLATEAU）75"
+  },
+  "rest": {
+   "status": "partial",
+   "result": "撮影依頼 11 件、道具の作業 10 件、未確定の値 2、灰色の面 2"
+  }
+ },
+ "counts": {
+  "photos": 121,
+  "registered": 36,
+  "measured": 5,
+  "estimated": 458,
+  "unknown": 2,
+  "observations": {
+   "measured": 5,
+   "estimated": 338,
+   "unknown": 1
+  },
+  "derived": 121,
+  "requests": 11,
+  "tool_requests": 10,
+  "unknowns": 2,
+  "hypotheses": 0,
+  "measured_kinds": {
+   "direct": 0,
+   "chain": 0,
+   "count": 5,
+   "no_chain": 0,
+   "measured": 5
+  },
+  "shape_ratio": 0.968,
+  "evidence_ratio": 0.011,
+  "gray_faces": 2,
+  "kenshu": {
+   "pass": [
+    "f0",
+    "f4",
+    "f6",
+    "f8"
+   ],
+   "weak": [
+    "f7"
+   ],
+   "fail": [
+    "f5"
+   ],
+   "not_judged": [
+    "f1",
+    "f2",
+    "f3"
+   ],
+   "made_at": "2026-11-07T16:40:00+09:00",
+   "file": "data\\reports\\honbu\\kenshu_summary.json"
+  },
+  "resid": {
+   "median_px": 17.6,
+   "median_m": 0.18,
+   "picks": 61,
+   "picks_m": 61,
+   "best_face": {
+    "face": "f8",
+    "median_px": 17.1,
+    "median_m": 0.18,
+    "picks": 44
+   },
+   "note": "m は 残差 px × 目印までの距離 ÷ 焦点距離 px（点の目印だけ。線の目印は px だけ）"
+  }
+ }
+}

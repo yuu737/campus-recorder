@@ -45,6 +45,27 @@ def test_stage_status_levels():
     assert st["model"][0] == "partial" and st["walk"][0] == "todo" and st["rest"][0] == "partial"
 
 
+def test_elev_line_separates_all_measured_from_partly_measured():
+    # 面の状態は「全部の値が measured の時だけ measured」。f6 のように柱間と笠木は実測・階高は推定の面は別の数で出す
+    b = {"faces": [], "floor_pitch": {"value": 4.0, "unit": "m", "status": "estimated", "evidence": ["p"], "method": "x"}}
+    m = lambda v, u="m", st="measured": {"value": v, "unit": u, "status": st, "evidence": ["p"], "method": "x"}
+    f6 = {"id": "f6", "bays": {"count": m(9, "個"), "pitch": m(5.3)}, "top_z": m(22.6)}
+    f0 = {"id": "f0", "bays": {"count": m(4, "個"), "pitch": m(6.1, st="estimated")}, "top_z": m(17.7, st="estimated")}
+    assert rp._measured_lengths(b, f6) == 2 and rp._measured_lengths(b, f0) == 0
+    d = {"photos": {"total": 1, "during": 1, "before": 0},
+         "elev": [{"face": "f6", "svg": Path("x"), "state": "estimated", "measured": 3, "measured_m": 2},
+                  {"face": "f0", "svg": Path("x"), "state": "estimated", "measured": 1, "measured_m": 0},
+                  {"face": "f1", "svg": Path("x"), "state": "unknown", "measured": 0, "measured_m": 0}],
+         "evidence": {"registered": 1, "picks": 4, "resid_median": 10.0},
+         "model": {"glb": Path("x"), "overlays": [], "height_m": 10.0, "assumed": []},
+         "walk": {"on_site": False, "colored": 1, "gray": 2},
+         "rest": {"requests": [], "unknowns": [], "gray_faces": []}}
+    st, txt = rp.stage_status(d)["elev"]
+    assert st == "partial"
+    assert "全部の寸法が実測の面 0" in txt and "長さの一部が実測の面 1（f6 2 値）" in txt and "個数だけ実測の面 1" in txt
+    assert "推定 2、不明 1" in txt and "実測で形が決まった面" not in txt
+
+
 @pytest.mark.skipif(not (any(Path("out/honbu").glob("elev_*.svg")) and Path("data/photos/registry.json").exists()),
                     reason="本部棟の生成物が無い")
 def test_report_honbu_builds_page(tmp_path: Path):
@@ -121,6 +142,23 @@ def test_kenshu_faces_two_shapes(tmp_path: Path):
     k = rp.kenshu_faces(tmp_path, "b")
     assert k["pass"] == ["f0"] and k["fail"] == ["f1"]
     assert rp.kenshu_faces(tmp_path, "none") is None
+
+
+def test_kenshu_faces_use_latest_round_and_warn_on_stale_faces(tmp_path: Path):
+    # faces は検収係が手で書く欄で、再検収の回（round_<…>）だけ足されて古いまま残る事がある（本部棟 11/8 の k401）
+    d = tmp_path / "data" / "reports" / "a"
+    d.mkdir(parents=True)
+    (d / "kenshu_summary.json").write_text(json.dumps({"made_at": "2026-11-08T12:30:00", "faces": {
+        "f0": {"pass": True}, "f6": {"pass": True}, "f7": {"pass": True}, "f8": {"pass": True}, "f1": {"pass": None}},
+        "round_b": {"made_at": "2026-11-08T12:30:00", "faces": {"f6": {"pass": False}, "f8": {"pass": False}}},
+        "round_a": {"made_at": "2026-11-08T05:40:00", "faces": {"f6": {"pass": True}, "f7": {"pass": True, "weak": True},
+                                                                "f9": {"lines": [{"ok": True}, {"ok": False}]}}},
+    }), encoding="utf-8")
+    k = rp.kenshu_faces(tmp_path, "a")
+    assert k["latest_round"] == "round_b"
+    assert k["pass"] == ["f0"] and k["weak"] == ["f7"] and sorted(k["fail"]) == ["f6", "f8", "f9"] and k["not_judged"] == ["f1"]
+    assert k["source"]["f6"] == "round_b" and k["source"]["f7"] == "round_a" and k["source"]["f0"] == "faces"
+    assert len(k["warnings"]) == 2 and all("faces が古い" in w for w in k["warnings"])   # f6・f8（f7 は合格どうし）
 
 
 def test_stage_status_shows_overall_next_to_best():

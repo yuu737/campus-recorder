@@ -50,6 +50,7 @@ tools: Bash, Read, Glob, Grep
    - `recorder photos register <写真id> --building … --face … --from-rectify <front.json> --compare <compare.json>`。平らな壁でない写真（階段・デッキ・角）は `recorder photos register-chain data/buildings/<棟id>.json` で登録済みの写真からつなぐ
    - `recorder coverage data/buildings/<棟id>.json` → `out/<棟id>/coverage_<面>_photo.png`（面の座標に貼った写真。左端＝面の from、下端＝面の前の地面、px_per_m は `coverage.json`）。木・車で隠れた所は registry の `exclude` に足す
    - 登録できなかった写真は id と理由（`not_registered`）を出力に書く
+   - **登録の解き直し**（進行役の決定で「登録し直す」と言われた写真）：register-chain は登録済みの写真を解き直さないので、先に `python -m recorder photos unregister <写真id> --why <理由> --building <棟id> --face <面> --by sokuryo` で外してから compare → register → register-chain
 
 ## 出力
 `data/reports/<棟id>/sokuryo_<面id>.json`（out/ ではない。git に入り、棟 JSON の evidence からこのパスを指す。画像は out/ のまま）：`{"floor_pitch": {"value","unit":"m","status","tol","evidence","method"}, "bay_pitch": {...}, "scale": {"ruler","px_per_m","check_ruler","diff_pct"}, "rectified": "out/rectified/...", "registered": [写真id], "not_registered": [{"photo","why"}], "face_photo": "out/<棟id>/coverage_<面>_photo.png"}`。入力の数え・観察票も `data/reports/<棟id>/` から読む。メジャーがある棟は、道具の出力 `sokuryo_tape_<写真id>.json`・`sokuryo_tape_pitch.json`・`sokuryo_chain_<面>.json` も同じ所に（手で書かない）

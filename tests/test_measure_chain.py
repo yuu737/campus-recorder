@@ -134,8 +134,13 @@ def test_pitch_disagreement_warns(tmp_path):
 
 
 def test_rescale_against_previous_plateau_value(tmp_path):
+    # 前の値は固定の試験データ（本番の報告ファイルは本番の進行で書き換わるので読まない。
+    # 11/7 の疑似本番の時点の f6：PLATEAU の壁の長さから縮尺を取った estimated 5.418 m）
     (tmp_path / "honbu").mkdir()
-    shutil.copy(REPO / "data" / "reports" / "honbu" / "sokuryo_f6.json", tmp_path / "honbu" / "sokuryo_f6.json")
+    (tmp_path / "honbu" / "sokuryo_f6.json").write_text(json.dumps({
+        "building": "honbu", "face": "f6", "scale": {"ruler": "plateau_wall"},
+        "bay_pitch": {"value": 5.418, "unit": "m", "tol": 0.12, "status": "estimated",
+                      "evidence": [F6], "method": "試験データ"}}, ensure_ascii=False), encoding="utf-8")
     s = _pitch(tmp_path)
     m = measure.build_chain(building="honbu", face="f6", pitch=s, count={"photo": F6, "n": 46})
     prev = measure._prev_value("honbu", "f6", "bay_pitch", tmp_path)

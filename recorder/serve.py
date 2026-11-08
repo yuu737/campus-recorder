@@ -16,11 +16,17 @@ API（どれも JSON を返し、失敗してもサーバは落ちない）：
     POST /api/start                {"buildings": [...], "dry_run": false, "max_usd": n?} 棟ごとに別スレッドで。棟 JSON
                                    （data/buildings/<棟>.json）がある棟は追記（agents.continue_pipeline、前回の値を保って
                                    新しい写真の分だけ育てる）、無い棟は run_pipeline。max_usd は棟ごとの費用の上限
-                                   （省けば agents.DEFAULT_MAX_USD＝20 USD、0 で上限なし）
+                                   （省けば agents.DEFAULT_MAX_USD＝40 USD、0 で上限なし）
     POST /api/resume               {"building", "max_usd"?, "redo_from"?, "decision_file"?} 止まった棟を agents.resume_pipeline で
                                    続ける（別スレッド。11/8、F15）。redo_from・decision_file（data/reports/ の下）は F18。
                                    このサーバで作業中・キーが無い・状態が無い・止まっていない時は断る（409、理由の文）。
                                    費用の上限で止まった棟は、使った額より大きい max_usd が要る
+                                   "shinko": true で、止まった記録の事件を進行役（shinko）に自動で決めさせてから続ける（11/8、F19）。
+                                   記録が「実行中」のままでも、このサーバで動かしておらず updated_at が 10 分より古ければ
+                                   落ちたと見て続けられる（code "stale"）
+    POST /api/review               {"building", "n", "verdict": "approve"|"revoke", "note"?} 進行役の自動の決定 n を職員が承認／取り消す
+                                   （agents.review_decision。取り消しは halt も書き、工程の輪が次の工程の前で止まる。F19）
+    GET  /api/decision?file=…      進行役の決定のファイル（data/reports/ の下の md・txt）の中身を文字で返す（data/reports/ は静的配信しない）
     GET  /api/progress?buildings=a,b   report.json の stages・counts と、動いている pipeline の状態。
                                    pipeline_state.json がある棟は resume（止まっているか・画面から続けられるか）も。
                                    棟 JSON がある棟は unused_staff_photos {n, tape, building_photos, name}（職員が前に送って
@@ -485,8 +491,9 @@ def _worker(root: Path, bid: str) -> None:
     st = RUNS[bid]
     try:
         if st.get("mode") == "resume":     # 止まった所から続ける（11/8、F15。CLI の recorder agent resume と同じ関数）
+            kw = {"shinko": True} if st.get("shinko") else {}   # 進行役に決めさせる時だけ渡す（F19）
             res = agents.resume_pipeline(bid, dry_run=False, cwd=root, max_usd=st.get("resume_max_usd"),
-                                         redo_from=st.get("redo_from"), decision_file=st.get("decision_file"))
+                                         redo_from=st.get("redo_from"), decision_file=st.get("decision_file"), **kw)
         elif st.get("mode") == "continue":   # 棟 JSON がある棟は追記（11/8、K-106。T3 の continue_pipeline）
             res = agents.continue_pipeline(bid, st.get("photos_folder"), dry_run=st["dry_run"], cwd=root, max_usd=st.get("max_usd"))
         else:
@@ -510,7 +517,7 @@ def _worker(root: Path, bid: str) -> None:
             for k in ("stopped", "spent_usd", "pending_events"):
                 if k in res:
                     st[k] = res[k]
-    except Exception as e:  # noqa: BLE001  1 棟の失敗でサーバは落とさない
+    except (Exception, SystemExit) as e:  # noqa: BLE001  1 棟の失敗でサーバは落とさない（SystemExit も拾い、running のまま残さない）
         with _runs_lock:
             st["state"], st["error"] = "error", f"{type(e).__name__}: {e}"
         log(f"pipeline {bid} エラー: {st['error']}")
@@ -591,12 +598,20 @@ def resume_check(root: Path, b: str, run: dict | None) -> dict | None:
     # 「実行中」のまま残った状態は、このサーバの係のスレッドが落ちた（error）時だけ落ちたと見て続ける。
     # それ以外（別の窓の CLI で動いているかもしれない）は画面からは続けない
     crashed = status == "running" and run_state in ("error", "stopped")
-    stopped = status == "stopped" or crashed
-    reason = stop.get("reason") if status == "stopped" else ("crash" if crashed else None)
+    # 別の窓の係かもしれないが、このサーバの RUNS に無く 10 分以上更新が無ければ落ちたと見る（11/8、F19。code "stale"）
+    stale = status == "running" and run is None and _older_than(state.get("updated_at"), STALE_SECONDS)
+    stopped = status == "stopped" or crashed or stale
+    reason = stop.get("reason") if status == "stopped" else ("crash" if crashed else ("stale" if stale else None))
     need = stopped and (reason == "max_usd" or (cap is not None and spent >= float(cap)))
     out = {"stopped": stopped, "reason": reason, "label": stop.get("label") if status == "stopped" else None,
            "step": stop.get("step") if status == "stopped" else state.get("current"), "why_stop": stop.get("why"),
-           "need_max_usd": bool(need), "spent_usd": round(spent, 4), "max_usd": cap, "api_key": has_key}
+           "need_max_usd": bool(need), "spent_usd": round(spent, 4), "max_usd": cap, "api_key": has_key,
+           "events": (stop.get("events") or []) if status == "stopped" else [],
+           # 進行役を呼ぶ費用が上限の残りに足りずに止まった（reason は max_usd。上限を上げて続けると進行役が決める。F19）
+           "shinko_pending": bool(status == "stopped" and stop.get("shinko_pending")),
+           "shinko_cost_usd": (agents.LIMITS.get("fable") or {}).get("max_budget_usd"),   # 進行役 1 回の費用の上限（画面の勧める額）
+           "human_events": sum(1 for e in (state.get("pending_events") or []) if isinstance(e, dict) and e.get("kind") == "human"),
+           "updated_at": state.get("updated_at")}
     if run_state == "running":
         code, why = "running", "係が作業中です。終わるか止まるまで待ってください"
     elif status == "done":
@@ -609,10 +624,25 @@ def resume_check(root: Path, b: str, run: dict | None) -> dict | None:
         code, why = "no_key", "この PC に API キー（ANTHROPIC_API_KEY）が無いので、係（Claude）を呼んで続けることができません"
     elif need:
         code, why = "need_max_usd", f"費用の上限で止まっています。使った額 {spent:.2f} USD より大きい上限（USD）を入れて続けてください"
+    elif stale:
+        code, why = "stale", (f"記録は「実行中」のままですが、10 分以上更新が無いので落ちたと見ます（最後の更新 {state.get('updated_at')}）。"
+                              "止まった所から続けられます")
     else:
         code, why = "ok", "止まった所から続けられます"
-    out.update(ok=code in ("ok", "need_max_usd"), code=code, why=why)
+    out.update(ok=code in ("ok", "need_max_usd", "stale"), code=code, why=why)
     return out
+
+
+def _older_than(at, seconds: float) -> bool:
+    """state の時刻（ISO、agents._now の形）が seconds より古いか。読めなければ False（落ちたとは見ない）。"""
+    if not at:
+        return False
+    try:
+        t = datetime.fromisoformat(str(at))
+    except ValueError:
+        return False
+    now = datetime.now(t.tzinfo) if t.tzinfo else datetime.now()
+    return (now - t).total_seconds() > seconds
 
 
 def api_resume(root: Path, body: dict) -> dict:
@@ -620,12 +650,15 @@ def api_resume(root: Path, body: dict) -> dict:
     redo_from は済んだ工程からのやり直し（最後まで済んだ記録も可）、decision_file は進行役の決定（data/reports/ の下の md か txt）。
     断る時：このサーバで動いている（Busy＝409）・キーが無い・状態が無い・止まっていない・費用の上限で止まったのに
     使った額より大きい上限が無い（Refused＝409、理由の文）。"""
+    from . import agents
+
     b = str(body.get("building") or "").strip()
     if not _ID_RE.match(b) or b == UNSORTED:
         raise ValueError(f"棟 id ではない名前: {b!r}")
     mu = body.get("max_usd")
     max_usd = None if mu in (None, "") else float(mu)
     redo_from, decision_file = _resume_redo_args(root, b, body)
+    shinko = body.get("shinko") is True     # 進行役に決めさせて続ける（F19）
     with _runs_lock:
         prev = RUNS.get(b)
         if (prev or {}).get("state") == "running":
@@ -642,23 +675,30 @@ def api_resume(root: Path, body: dict) -> dict:
             raise Refused(chk["code"], chk["why"])
         if max_usd is not None and max_usd <= chk["spent_usd"]:
             raise Refused("need_max_usd", f"上限 {max_usd} USD は使った額 {chk['spent_usd']:.2f} USD 以下です。もっと大きい数を入れてください")
+        fee = agents.LIMITS["fable"]["max_budget_usd"]
+        cap_now = max_usd if max_usd is not None else chk["max_usd"]
+        if (shinko or chk.get("shinko_pending")) and cap_now is not None and float(cap_now) < chk["spent_usd"] + fee:
+            raise Refused("need_max_usd", f"進行役を呼ぶには、使った額 {chk['spent_usd']:.2f} USD に進行役の費用 {fee:g} USD 分を足した "
+                                          f"{chk['spent_usd'] + fee:.2f} USD より大きい上限を入れてください（今の上限 {cap_now} USD）")
         stamp = f"{datetime.now():%Y%m%d_%H%M%S}"
         st = {"building": b, "state": "running", "started_at": _now(), "finished_at": None, "dry_run": False,
               "mode": "resume", "max_usd": max_usd if max_usd is not None else chk["max_usd"], "resume_max_usd": max_usd,
               "resumed_from": {"step": chk["step"], "reason": chk["reason"]},
-              "redo_from": redo_from, "decision_file": decision_file,
+              "redo_from": redo_from, "decision_file": decision_file, "shinko": shinko,
               "photos_folder": None, "last_step": None, "stopped_at": None, "error": None,
               "record": f"out/{b}/serve_{stamp}.json"}
         RUNS[b] = st
     _record(root, b, st)
     threading.Thread(target=_worker, args=(root, b), name=f"pipeline-{b}", daemon=True).start()
     log(f"pipeline {b} 続きから（{chk['step']} の {chk['reason']} から" + (f"、上限 {max_usd} USD" if max_usd is not None else "")
-        + (f"、{redo_from} からやり直し" if redo_from else "") + (f"、決定 {decision_file}" if decision_file else "") + "）")
+        + (f"、{redo_from} からやり直し" if redo_from else "") + (f"、決定 {decision_file}" if decision_file else "")
+        + ("、進行役に決めさせる" if shinko else "") + "）")
     return {"started": b, "resumed_from": st["resumed_from"], "max_usd": st["max_usd"], "record": st["record"],
-            "redo_from": redo_from, "decision_file": decision_file}
+            "redo_from": redo_from, "decision_file": decision_file, "shinko": shinko, "code": chk["code"]}
 
 
 DECISION_DIR = "data/reports/"      # 画面から渡せる進行役の決定のファイルの置き場（リポジトリの中のここの下だけ）
+STALE_SECONDS = 600                 # 「実行中」のまま、この秒より更新が無く、このサーバでも動かしていなければ落ちたと見る（F19）
 
 
 def _resume_redo_args(root: Path, b: str, body: dict) -> tuple[str | None, str | None]:
@@ -684,11 +724,305 @@ def _resume_redo_args(root: Path, b: str, body: dict) -> tuple[str | None, str |
     return redo_from, decision_file
 
 
+# --- 進行役の自動の決定を職員が見て承認／取り消す（11/8、F19） ----------------------------------------------
+
+def _decision_summary(text) -> str | None:
+    """決定の文の最初の見出し（無ければ最初の行）を 1 行で。"""
+    for line in str(text or "").splitlines():
+        t = line.strip().lstrip("#").strip()
+        if t:
+            return _one_line(t)
+    return None
+
+
+def state_review(state: dict | None) -> dict:
+    """pipeline_state.json から、職員の画面と待機画面が見る物の抜粋：
+    shinko（進行役の自動の決定）・halt・halted・pending_events・stopped（events を含む）・decisions（文の中身は 1 行に）。
+    無い物は空（list は []、dict は None）。"""
+    s = state if isinstance(state, dict) else {}
+
+    def lst(v):
+        return [x for x in v if isinstance(x, dict)] if isinstance(v, list) else []
+
+    def dic(v):
+        return v if isinstance(v, dict) else None
+
+    decisions = [{"at": d.get("at"), "file": d.get("file"), "redo_from": d.get("redo_from"), "chars": d.get("chars"),
+                  "summary": _decision_summary(d.get("text")), "withdrawn": dic(d.get("withdrawn"))}
+                 for d in lst(s.get("decisions"))]
+    halted = s.get("halted")
+    return {"shinko": lst(s.get("shinko")), "halt": dic(s.get("halt")),
+            "halted": lst(halted) if isinstance(halted, list) else dic(halted),
+            "pending_events": lst(s.get("pending_events")), "stopped": dic(s.get("stopped")), "decisions": decisions}
+
+
+# --- 再開した記録を待機画面と職員の画面で同じに見せる（11/8、F20） --------------------------------------------
+# 1 つの記録（pipeline_state.json）には、最初の起動（runs の start）・再開（resume）・記録を戻した（rewind）・
+# 進行役（shinko）が並び、results には同じ工程が周ごとに何度も入る。画面はここで作った物だけを見る（画面で推し量らない）
+
+RUN_START_KINDS = ("start", "resume")
+
+
+def _rcost(r: dict) -> float:
+    c = r.get("cost_usd")
+    if c is None:
+        c = r.get("cost_usd_estimate")
+    try:
+        return float(c or 0.0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _split_note(r: dict) -> tuple[str | None, str | None]:
+    """結果の 1 行の要約と警告。「警告：」で始まる note（単価が無い等）は要約にせず警告に分ける。"""
+    note = str(r.get("note") or "").strip()
+    warn = None
+    if note.startswith("警告"):
+        warn, note = _one_line(note), ""
+    return _one_line(r.get("summary") or note or r.get("stop") or r.get("error")), warn
+
+
+def state_timeline(state: dict | None) -> dict:
+    """results と runs を時刻順に 1 本に並べ、周（round：start か resume 1 回分）を振る。
+    {"rounds": [{n, kind, at, ended_at, from_step, reason, redo_from, rewound, cost_usd, steps}],
+     "items": [{"type": "result"|"run", "round", "at", …}], "latest": {工程: その工程の最新の結果の周},
+     "history": {resumes, rewinds: [{at, to}], shinko, shinko_waiting, auto_resumes, this_round_at, this_round_cost_usd}}"""
+    s = state if isinstance(state, dict) else {}
+    runs = [r for r in (s.get("runs") or []) if isinstance(r, dict)]
+    results = [r for r in (s.get("results") or []) if isinstance(r, dict)]
+    rounds = []
+    for r in runs:
+        if r.get("kind") in RUN_START_KINDS:
+            rounds.append({"n": len(rounds) + 1, "kind": r.get("kind"), "at": r.get("at"), "ended_at": r.get("ended_at"),
+                           "from_step": r.get("from_step"), "reason": r.get("reason"), "why": _one_line(r.get("why")),
+                           "redo_from": r.get("redo_from"), "decision_file": r.get("decision_file"),
+                           "rewound": False, "cost_usd": 0.0, "steps": []})
+    starts = [str(x.get("at") or "") for x in rounds]
+
+    def round_of(at) -> int | None:
+        a = str(at or "")
+        n = None
+        for i, t in enumerate(starts):
+            if t and a >= t:
+                n = i + 1
+        return n
+
+    items = []
+    latest: dict[str, int | None] = {}
+    for r in results:
+        step = r.get("step") or r.get("agent")
+        n = round_of(r.get("started_at") or r.get("ended_at"))
+        summary, warn = _split_note(r)
+        cost = _rcost(r)
+        items.append({"type": "result", "round": n, "at": r.get("started_at"), "ended_at": r.get("ended_at") or r.get("logged_at"),
+                      "step": step, "agent": r.get("agent"), "model": r.get("model"), "seconds": r.get("seconds"),
+                      "cost_usd": round(cost, 6), "summary": summary, "warn": warn,
+                      "error": bool(r.get("error") or r.get("is_error")), "shinko_n": r.get("shinko_n")})
+        latest[step] = n
+        if n is not None:
+            rounds[n - 1]["cost_usd"] = round(rounds[n - 1]["cost_usd"] + cost, 6)
+            if step not in rounds[n - 1]["steps"]:
+                rounds[n - 1]["steps"].append(step)
+    rewinds = []
+    for r in runs:
+        if r.get("kind") in RUN_START_KINDS:
+            continue
+        n = round_of(r.get("at"))
+        item = {"type": "run", "kind": r.get("kind"), "round": n, "at": r.get("at"), "why": _one_line(r.get("why")),
+                "to": r.get("to"), "n": r.get("n"), "redo_from": r.get("redo_from"), "decision_file": r.get("decision_file"),
+                "failed": r.get("failed")}
+        items.append(item)
+        if r.get("kind") == "rewind":
+            rewinds.append({"at": r.get("at"), "to": r.get("to"), "why": item["why"]})
+            if n is not None:          # 戻した時に動いていた周は取り下げ（その周の結果は記録に残る）
+                rounds[n - 1]["rewound"] = True
+    for x in rounds:
+        items.append({"type": "run", "kind": x["kind"], "round": x["n"], "at": x["at"], "from_step": x["from_step"],
+                      "reason": x["reason"], "why": x["why"], "redo_from": x["redo_from"], "decision_file": x["decision_file"]})
+    # 同じ時刻なら周の始まり → 結果 → その他の印 の順
+    rank = {"start": 0, "resume": 0}
+    items.sort(key=lambda i: (str(i.get("at") or ""), rank.get(i.get("kind"), 1) if i["type"] == "run" else 1))
+    sh = [x for x in (s.get("shinko") or []) if isinstance(x, dict)]
+    ar = s.get("auto_resumes") or {}
+    n_ar = sum(len(v) for v in ar.values() if isinstance(v, list)) if isinstance(ar, dict) else 0
+    # 周の終わり：runs の ended_at、無ければその周の結果の最後の終わり、それも無ければ始まり（取り下げた周など）。
+    # 今動いている最後の周（状態が running）は None（画面が今の時刻で数える）
+    running = s.get("status") == "running"
+    for x in rounds:
+        if not x["ended_at"] and not (running and x is rounds[-1]):
+            ends = [i.get("ended_at") for i in items if i["type"] == "result" and i["round"] == x["n"] and i.get("ended_at")]
+            x["ended_at"] = max(ends) if ends else x["at"]
+    work = 0.0      # 係が動いていた時間の合計（止まっていた間は入れない）
+    for x in rounds:
+        try:
+            if x["ended_at"]:
+                work += max(0.0, (datetime.fromisoformat(str(x["ended_at"])) - datetime.fromisoformat(str(x["at"]))).total_seconds())
+        except (TypeError, ValueError):
+            pass
+    live_rounds = [x for x in rounds if not x["rewound"]]
+    last = (live_rounds or rounds or [None])[-1]     # 「この再開」：取り下げた（記録を戻した）周は数えない
+    hist = {"rounds": len(rounds), "resumes": sum(1 for x in rounds if x["kind"] == "resume"), "rewinds": rewinds,
+            "shinko": len(sh), "shinko_waiting": sum(1 for x in sh if not x.get("review")),
+            "shinko_last": (sh[-1].get("summary") if sh else None), "auto_resumes": n_ar,
+            "this_round_at": last["at"] if last else s.get("started_at"), "this_round_kind": last["kind"] if last else None,
+            "this_round_cost_usd": last["cost_usd"] if last else None, "this_round_n": last["n"] if last else None,
+            "this_round_ended_at": last["ended_at"] if last else None,
+            "work_seconds_ended": round(work, 1), "running": running, "started_at": s.get("started_at")}
+    return {"rounds": rounds, "items": items, "latest": latest, "history": hist}
+
+
+def _sig_event(x) -> dict | None:
+    """事件の印（"kind|why" の文字列か {kind, why} の dict）→ {kind, why}。"""
+    if isinstance(x, dict):
+        return {"kind": x.get("kind"), "why": x.get("why")}
+    if isinstance(x, str):
+        k, _, w = x.partition("|")
+        return {"kind": k, "why": w} if w else {"kind": None, "why": k}
+    return None
+
+
+def incident(root: Path, b: str, state: dict | None) -> dict | None:
+    """画面に出す「事件」の源を 1 つに（11/8、F20）。
+    - 進行役が考えている（current shinko）：今回進行役に出した事件。state の shinko_pending_events があればそれ、
+      無ければ out/<棟>/events.json の最新のうち止める事件（stuck・vocab・asset）で、決定済み（acknowledged_events）を除いた物
+    - 止まっている：止まった時の事件（stopped.events）。続ける時に取り直す
+    - それ以外で進行役の決定がある：最新の決定 shinko[n].events（進行役が受け取った事件）
+    {"source": "pending"|"events_json"|"stopped"|"shinko", "n"?, "at"?, "events": [{kind, why}]}。無ければ None。"""
+    from . import agents
+
+    s = state if isinstance(state, dict) else None
+    if not s:
+        return None
+    ack = set(s.get("acknowledged_events") or [])
+    if s.get("status") == "running" and s.get("current") == "shinko":
+        pend = s.get("shinko_pending_events")
+        if isinstance(pend, list) and pend:
+            return {"source": "pending", "events": [e for e in map(_sig_event, pend) if e]}
+        doc = _jload(root / "out" / b / "events.json")
+        doc = doc if isinstance(doc, dict) else {}
+        evs = [e for e in (doc.get("events") or []) if isinstance(e, dict)
+               and e.get("kind") in agents.STOP_EVENTS and str(e.get("kind")) + "|" + str(e.get("why")) not in ack]
+        return {"source": "events_json", "at": doc.get("made_at"),
+                "events": [{"kind": e.get("kind"), "why": e.get("why")} for e in evs]}
+    stop = s.get("stopped") if isinstance(s.get("stopped"), dict) else None
+    if s.get("status") == "stopped" and stop and stop.get("events"):
+        return {"source": "stopped", "at": stop.get("at"), "events": [e for e in map(_sig_event, stop["events"]) if e]}
+    sh = [x for x in (s.get("shinko") or []) if isinstance(x, dict)]
+    if sh:
+        return {"source": "shinko", "n": sh[-1].get("n"), "at": sh[-1].get("at"),
+                "events": [e for e in map(_sig_event, sh[-1].get("events") or []) if e]}
+    return None
+
+
+LIVE_LABEL = {"running": "係が作業中", "shinko": "進行役が決めています", "starting": "係を起動しています",
+              "stopped": "止まりました", "stale": "止まっています（10 分以上更新が無いので落ちたと見ます）",
+              "done": "係の工程が終わりました", "error": "エラー", "idle": "記録はまだ動いていません"}
+
+
+def live_phase(state: dict | None, run: dict | None, rs: dict | None) -> dict:
+    """職員の画面と待機画面が同じ言葉で言うための「今どうなっているか」。
+    phase：running（係が作業中）・shinko（進行役が考えている）・starting（このサーバで起動した直後、状態ファイルがまだ古い）・
+    stopped・stale（落ちたと見る）・done・error・idle。where：this（このサーバの係）・other（別の窓かもしれない）・None。"""
+    st = state if isinstance(state, dict) else None
+    rstate = (run or {}).get("state")
+    status = (st or {}).get("status")
+    cur = (st or {}).get("current")
+    where = "this" if rstate == "running" else None
+    stop = (st or {}).get("stopped") if isinstance((st or {}).get("stopped"), dict) else None
+    if rstate == "running":
+        if status == "running" and cur:
+            phase = "shinko" if cur == "shinko" else "running"
+        else:
+            phase = "starting"
+    elif rs and rs.get("code") == "stale":
+        phase = "stale"
+    elif status == "running":
+        if rs and rs.get("reason") == "crash":
+            phase = "stopped"
+        else:
+            phase, where = ("shinko" if cur == "shinko" else "running"), "other"
+    elif status == "stopped":
+        phase = "stopped"
+    elif status == "done":
+        phase = "done"
+    elif st is None and rstate in ("done", "stopped", "error"):
+        phase = rstate
+    else:
+        phase = "idle"
+    out = {"phase": phase, "label": LIVE_LABEL[phase], "current": cur if phase in ("running", "shinko") else None,
+           "where": where, "updated_at": (st or {}).get("updated_at")}
+    if phase == "stopped":
+        s = stop or (run or {}).get("stopped") or {}
+        out.update(step=s.get("step"), reason=s.get("reason") or ("crash" if rs and rs.get("reason") == "crash" else None),
+                   why_label=s.get("label"))
+    if phase == "starting":
+        out["since"] = (run or {}).get("started_at")
+    return out
+
+
+def _building_known(root: Path, b: str) -> bool:
+    from . import agents
+    return agents.load_state(b, root) is not None or (root / "data" / "buildings" / f"{b}.json").exists()
+
+
+def api_review(root: Path, body: dict) -> dict:
+    """POST /api/review {"building", "n", "verdict": "approve"|"revoke", "note"?}：agents.review_decision を呼ぶ。
+    400：棟が無い（棟 JSON も状態も無い）・n が整数でない・verdict が 2 つ以外・agents が断った（AgentError）。
+    係が動いている最中の取り消しも受ける（halt は次の工程の前で効く）。返事：書いた項目（item）と halt。"""
+    from . import agents
+
+    b = str(body.get("building") or "").strip()
+    if not _ID_RE.match(b) or b == UNSORTED:
+        raise ValueError(f"棟 id ではない名前: {b!r}")
+    if not _building_known(root, b):
+        raise ValueError(f"棟がありません（data/buildings/{b}.json も out/{b}/pipeline_state.json も無い）")
+    n = body.get("n")
+    if isinstance(n, str) and n.strip().isdigit():
+        n = int(n.strip())
+    if not isinstance(n, int) or isinstance(n, bool) or n < 1:
+        raise ValueError(f"n は 1 以上の整数（進行役の決定の番号）: {body.get('n')!r}")
+    verdict = str(body.get("verdict") or "").strip()
+    if verdict not in ("approve", "revoke"):
+        raise ValueError(f"verdict は approve か revoke: {verdict!r}")
+    note = body.get("note")
+    note = (str(note).strip() or None) if note is not None else None
+    try:
+        res = agents.review_decision(b, n, verdict, note, cwd=root)
+    except agents.AgentError as e:
+        raise ValueError(str(e)) from None
+    state = res if isinstance(res, dict) and "shinko" in res else agents.load_state(b, root)
+    items = (state or {}).get("shinko") if isinstance((state or {}).get("shinko"), list) else []
+    item = next((x for x in items if isinstance(x, dict) and x.get("n") == n), None)
+    if item is None and isinstance(res, dict) and "shinko" not in res:
+        item = res
+    with _runs_lock:
+        running = (RUNS.get(b) or {}).get("state") == "running"
+    log(f"進行役の決定 {b} #{n} を職員が{'承認' if verdict == 'approve' else '取り消し'}" + (f"（{note}）" if note else "")
+        + ("（係は作業中。次の工程の前で止まります）" if verdict == "revoke" and running else ""))
+    return {"building": b, "n": n, "verdict": verdict, "item": item, "halt": (state or {}).get("halt"), "running": running}
+
+
+def api_decision(root: Path, file: str) -> dict:
+    """GET /api/decision?file=：進行役の決定のファイルの中身（data/reports/ の下の md・txt だけ。外は 400）。"""
+    from . import agents
+
+    f = str(file or "").strip().replace("\\", "/")
+    if not f:
+        raise ValueError("file（data/reports/ の下の決定のファイル）が要ります")
+    try:
+        rel, text = agents.read_decision(f, root)
+    except agents.AgentError as e:
+        raise ValueError(str(e)) from None
+    if not rel.startswith(DECISION_DIR):
+        raise ValueError(f"決定のファイルは {DECISION_DIR} の下の物だけ読めます：{f}")
+    return {"file": rel, "text": text, "summary": _decision_summary(text)}
+
+
 def _run_public(st: dict | None) -> dict | None:
     if not st:
         return None
     keys = ("state", "started_at", "finished_at", "dry_run", "last_step", "stopped_at", "error", "record", "events",
-            "mode", "max_usd", "spent_usd", "stopped", "resumed_from", "note")
+            "mode", "max_usd", "spent_usd", "stopped", "resumed_from", "note", "shinko")
     out = {k: st.get(k) for k in keys if k in st}
     out["continuing"] = st.get("mode") == "continue"   # 進捗の印「追記で回している」
     out["resumed"] = st.get("mode") == "resume"        # 進捗の印「止まった所から続けている」
@@ -747,6 +1081,16 @@ def api_progress(root: Path, buildings: list[str] | None) -> dict:
             out[b]["unused_staff_photos"] = us
         if rs is not None:   # pipeline_state.json がある棟だけ：止まっているか・画面から続けられるか（F15）
             out[b]["resume"] = rs
+            from . import agents
+            stt = agents.load_state(b, root)
+            out[b]["state"] = state_review(stt)   # 進行役の決定・職員宛ての事件など（F19）
+            out[b]["history"] = state_timeline(stt)["history"]   # 再開の回数・戻した・進行役（F20）
+            out[b]["incident"] = incident(root, b, stt)          # 画面に出す事件の源（待機画面と同じ。F20）
+        with _runs_lock:
+            run_raw = RUNS.get(b)
+        if rs is not None or run_raw is not None:   # 職員の画面と待機画面で同じ言葉（F20）
+            from . import agents
+            out[b]["live"] = live_phase(agents.load_state(b, root), run_raw, rs)
     site_run = _site_public()
     running = any((v["run"] or {}).get("state") == "running" for v in out.values()) or (site_run or {}).get("state") == "running"
     return {"buildings": out, "site": site_run, "running": running, "at": _now()}
@@ -825,15 +1169,21 @@ def api_pipeline(root: Path, b: str) -> dict:
         steps.append({"step": r.get("step") or r.get("agent"), "agent": r.get("agent"), "model": r.get("model"),
                       "seconds": r.get("seconds"), "cost_usd": cost, "result": r.get("result"),
                       "started_at": r.get("started_at"), "ended_at": r.get("ended_at") or r.get("logged_at"),
-                      "summary": _one_line(r.get("note") or r.get("summary") or r.get("stop") or r.get("error"))})
+                      "summary": _split_note(r)[0], "warn": _split_note(r)[1]})
     st = None
     if isinstance(state, dict):
         st = {k: state.get(k) for k in ("mode", "status", "current", "done", "steps", "stopped", "spent_usd", "max_usd",
                                         "started_at", "updated_at", "pending_events",
                                         "auto_resumes", "auto_resumes_total")}
+        st.update(state_review(state))   # shinko・halt・halted・pending_events・stopped・decisions（F19）
+        rd = state.get("redo") if isinstance(state.get("redo"), dict) else None
+        st["redo"] = {k: rd.get(k) for k in ("from", "steps", "at", "file")} if rd else None
     with _runs_lock:
-        run = _run_public(RUNS.get(b))
-        rs = resume_check(root, b, RUNS.get(b))
+        run_raw = RUNS.get(b)
+        run = _run_public(run_raw)
+        rs = resume_check(root, b, run_raw)
+    tl = state_timeline(state) if isinstance(state, dict) else None   # 周ごとの結果と再開・戻した印（F20）
+    live = live_phase(state, run_raw, rs)
     rec = None
     if isinstance(doc, dict) and p is not None:
         rec = {"file": p.relative_to(root).as_posix(), "made_at": doc.get("made_at"), "dry_run": doc.get("dry_run"),
@@ -841,7 +1191,8 @@ def api_pipeline(root: Path, b: str) -> dict:
                "seconds_total": doc.get("seconds_total"), "wall_seconds": doc.get("wall_seconds"),
                "cost_usd": doc.get("spent_usd", doc.get("cost_usd_estimate")), "max_usd": doc.get("max_usd"),
                "stopped": doc.get("stopped"), "stopped_early": doc.get("stopped_early"), "steps": steps}
-    return {"building": b, "record": rec, "state": st, "run": run, "resume": rs, "records": len(recs), "at": _now()}
+    return {"building": b, "record": rec, "state": st, "run": run, "resume": rs, "records": len(recs), "at": _now(),
+            "live": live, "timeline": tl, "incident": incident(root, b, state)}
 
 
 def _url(root: Path, p: Path | str | None) -> str | None:
@@ -1259,6 +1610,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(200, api_steps(self.root))
         if u.path == "/api/pipeline":
             return self._json(200, api_pipeline(self.root, (q.get("building") or [""])[0].strip()))
+        if u.path == "/api/decision":
+            return self._json(200, api_decision(self.root, (q.get("file") or [""])[0]))
         if u.path == "/api/artifacts":
             return self._json(200, api_artifacts(self.root, (q.get("building") or [""])[0].strip()))
         return self._json(404, {"error": "知らない API", "path": u.path})
@@ -1288,6 +1641,8 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(200, api_start(self.root, body))
         if u.path == "/api/resume":
             return self._json(200, api_resume(self.root, body))
+        if u.path == "/api/review":
+            return self._json(200, api_review(self.root, body))
         if u.path == "/api/campus":
             res = api_campus(self.root, body)
             log(f"敷地 {res['campus']}: {res['message']}")

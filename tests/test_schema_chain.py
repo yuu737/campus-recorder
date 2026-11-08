@@ -193,7 +193,13 @@ def test_rulers_have_tile_pitch_per_building():
     for bid in ("honbu", "library", "tower75", "kyotsu-minami"):
         for ax in ("h", "v"):
             r = ids[f"tile_pitch_{ax}_{bid}"]
-            assert r["value"] is None and r["status"] == "unknown" and r["building"] == bid
+            assert r["building"] == bid
+            # 決まり 1：値があれば measured か estimated で根拠（evidence）が空でない、無ければ unknown で null
+            if r["value"] is None:
+                assert r["status"] == "unknown", r["id"]
+            else:
+                assert r["status"] in ("measured", "estimated") and r.get("evidence"), r["id"]
+                assert isinstance(r["value"], (int, float)) and r["value"] > 0, r["id"]
             assert bid in r["family"]["members"] and "根拠にしない" in r["family"]["use"]
     assert "K-101" in ids["tape_measure"]["note"]
     assert "伸縮目地" in ids["tile_pitch_h_honbu"]["note"] and "シーリング目地" in ids["tile_pitch_h_tower75"]["note"]

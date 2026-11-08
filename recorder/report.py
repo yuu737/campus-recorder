@@ -24,6 +24,7 @@ from datetime import datetime
 from pathlib import Path
 
 from . import registry as R_
+from . import schema
 from .drawing import COL as BASIS_COL
 from .evidence import OBS_NOTE
 from .photos import INDEX_PATH, load_index
@@ -120,9 +121,34 @@ def unknown_paths(b: dict) -> list[str]:
     return [p for p, v in status_values(b) if v["status"] == "unknown"]
 
 
+def _face_rows(faces) -> list[dict]:
+    """faces の 2 つの形（{面: {...}} と [{face, ...}]）を [{face, ...}] にそろえる。"""
+    if isinstance(faces, dict):
+        return [dict(v, face=k) for k, v in faces.items() if isinstance(v, dict)]
+    return [v for v in (faces or []) if isinstance(v, dict) and v.get("face")]
+
+
+def _face_verdict(r: dict):
+    """面の判定：pass があればそれ。無ければ面の線（lines の ok）から（全部 ok で合格、1 本でも NG で不合格）。どちらも無ければ None。"""
+    if "pass" in r:
+        return r.get("pass")
+    lines = [x for x in (r.get("lines") or []) if isinstance(x, dict) and isinstance(x.get("ok"), bool)]
+    if lines:
+        return all(x["ok"] for x in lines)
+    return None
+
+
+def _is_weak(r: dict) -> bool:
+    return r.get("weak") is True or str(r.get("note") or "").startswith("弱い合格")
+
+
 def kenshu_faces(root: Path, bid: str) -> dict | None:
     """検収係のまとめ（data/reports/<棟>/kenshu_summary.json）の面ごとの合否。無ければ None。
-    faces は {面: {pass, note}} と [{face, pass, …}] の 2 つの形がある。弱い合格は note の頭が「弱い合格」の物。"""
+    faces は {面: {pass, note}} と [{face, pass, …}] の 2 つの形がある。弱い合格は weak: true か note の頭が「弱い合格」の物。
+    11/8：検収係は再検収の回を round_<…>（made_at つき）に足し、上の faces を書き直さない事がある（本部棟の k401 で
+    f6・f8 が faces では合格のまま、最新の回では不合格）。faces は検収係が手で書く欄で、道具は書かない。
+    そこで面ごとに「その面が出てくる一番新しい回（made_at の順。上の faces は一番古い回として扱う）」の判定を使う。
+    どの回にも出ない面は数えない。最新の回と faces が食い違う面は warnings に書く（止めない）。"""
     p = root / "data" / "reports" / bid / "kenshu_summary.json"
     if not p.exists():
         return None
@@ -130,13 +156,25 @@ def kenshu_faces(root: Path, bid: str) -> dict | None:
         ks = json.loads(p.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return None
-    faces = ks.get("faces") or {}
-    rows = [dict(v, face=k) for k, v in faces.items() if isinstance(v, dict)] if isinstance(faces, dict) else [v for v in faces if isinstance(v, dict)]
-    ok = [r["face"] for r in rows if r.get("pass") is True and not str(r.get("note") or "").startswith("弱い合格")]
-    weak = [r["face"] for r in rows if r.get("pass") is True and str(r.get("note") or "").startswith("弱い合格")]
-    ng = [r["face"] for r in rows if r.get("pass") is False]
-    none = [r["face"] for r in rows if r.get("pass") is None]
-    return {"pass": ok, "weak": weak, "fail": ng, "not_judged": none, "made_at": ks.get("made_at"),
+    base = {r["face"]: r for r in _face_rows(ks.get("faces"))}
+    rounds = sorted(((str(v.get("made_at") or ""), k, v) for k, v in ks.items()
+                     if k.startswith("round_") and isinstance(v, dict) and v.get("faces") and v.get("made_at")))
+    use: dict[str, tuple[str, dict]] = {f: ("faces", r) for f, r in base.items()}
+    for _, k, v in rounds:
+        for r in _face_rows(v["faces"]):
+            use[r["face"]] = (k, r)
+    out = {"pass": [], "weak": [], "fail": [], "not_judged": []}
+    src = {}
+    for f, (k, r) in use.items():
+        src[f] = k
+        v = _face_verdict(r)
+        out["weak" if v is True and _is_weak(r) else "pass" if v is True else "fail" if v is False else "not_judged"].append(f)
+    warnings = []
+    for f, (k, r) in use.items():
+        if k != "faces" and f in base and _face_verdict(base[f]) != _face_verdict(r):
+            warnings.append(f"{f}：faces では {_face_verdict(base[f])}、最新の回 {k} では {_face_verdict(r)}（faces が古い。回の判定を使った）")
+    return {**out, "made_at": rounds[-1][0] if rounds else ks.get("made_at"), "latest_round": rounds[-1][1] if rounds else None,
+            "source": src, "warnings": warnings,
             "file": str(p.relative_to(root)) if p.is_relative_to(root) else str(p)}
 
 
@@ -193,7 +231,8 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
         p = out_dir / f"elev_{f['id']}.svg"
         st = es["faces"].get(f["id"]) or {}
         elevs.append({"face": f["id"], "name": f.get("name") or f["id"], "svg": p if p.exists() else None,
-                      "state": st.get("state", "unknown"), "values": st.get("values", 0), "measured": st.get("measured", 0)})
+                      "state": st.get("state", "unknown"), "values": st.get("values", 0), "measured": st.get("measured", 0),
+                      "measured_m": _measured_lengths(b, f)})
     sheet = out_dir / "sheet.png" if (out_dir / "sheet.png").exists() else None
     order = {"measured": 0, "estimated": 1, "hypothesis": 2, "unknown": 3}
     elevs.sort(key=lambda d: (d["svg"] is None, order.get(d["state"], 9), -d["measured"]))
@@ -304,6 +343,18 @@ def gather(b: dict, index: dict, reg: dict, out_dir: Path, site: dict | None, ro
             "summary": es, "history_n": len(b.get("history", []))}
 
 
+COUNT_UNITS = {"個", "枚", "段", "本", "階", "count"}
+
+
+def _measured_lengths(b: dict, f: dict) -> int:
+    """面の値のうち、長さ（m）が measured の数（個数の measured は数えない）。面に top_z が無ければ塊・棟の笠木を見る
+    （schema.face_state と同じ拾い方）。報告の「一部が実測の面」用。"""
+    vals = list(schema.iter_values(f))
+    if not schema.is_value(f.get("top_z")):
+        vals += schema._face_top_values(b, f)
+    return sum(m.get("status") == "measured" and m.get("unit") not in COUNT_UNITS for m in vals)
+
+
 def _resid_more(r: dict | None) -> str:
     """再投影の全体の m と、面ごとの最良（px・m）。選んだ数字だけを見せないため、全体と並べて書く。"""
     if not r:
@@ -323,8 +374,16 @@ def stage_status(d: dict) -> dict[str, tuple[str, str]]:
     e = d["elev"]
     n_svg = sum(x["svg"] is not None for x in e)
     n_m = sum(x["state"] == "measured" for x in e)
-    s["elev"] = ("done" if n_svg and n_m else "partial" if n_svg else "todo",
-                 f"{n_svg} 面の図面。実測で形が決まった面 {n_m}、推定 {sum(x['state'] in ('estimated', 'hypothesis') for x in e)}、不明 {sum(x['state'] == 'unknown' for x in e)}")
+    # 面の状態は schema.face_state：面の値が全部 measured の時だけ measured。一部だけ実測の面は別に数える（11/8）
+    part = [x for x in e if x["state"] != "measured" and x.get("measured_m")]
+    part_cnt = [x for x in e if x["state"] != "measured" and not x.get("measured_m") and x.get("measured")]
+    txt = f"{n_svg} 面の図面。全部の寸法が実測の面 {n_m}"
+    if part:
+        txt += f"、長さの一部が実測の面 {len(part)}（" + "・".join(f"{x['face']} {x['measured_m']} 値" for x in part) + "）"
+    if part_cnt:
+        txt += f"、個数だけ実測の面 {len(part_cnt)}"
+    txt += f"。面の状態は推定 {sum(x['state'] in ('estimated', 'hypothesis') for x in e)}、不明 {sum(x['state'] == 'unknown' for x in e)}"
+    s["elev"] = ("done" if n_svg and n_m else "partial" if n_svg else "todo", txt)
     v = d["evidence"]
     s["evidence"] = ("done" if v["registered"] >= 3 else "partial" if v["registered"] else "todo",
                      f"登録済みの写真 {v['registered']} 枚、目印の対応 {v['picks']} 点"
@@ -677,6 +736,10 @@ def run(building_json: Path, out: Path | None = None, root: Path = Path("."), sh
     # counts.unknown（値の状態）と counts.unknowns（未確定の値の一覧）は同じ物を数える。食い違えば報告に書く
     if summ["counts"]["unknown"] != summ["counts"]["unknowns"]:
         summ["warnings"] = [f"unknown {summ['counts']['unknown']} と未確定の値 {summ['counts']['unknowns']} が食い違う"]
+    # 検収のまとめの faces（検収係が手で書く欄）と最新の回の判定が食い違えば書く（止めない。数は回の判定から）
+    kw = (summ["counts"]["kenshu"] or {}).get("warnings") or []
+    if kw:
+        summ.setdefault("warnings", []).extend(f"検収のまとめ：{w}" for w in kw)
     if shot_res is not None:
         summ["shots"] = shot_res
     # report.json は HTML の隣に書く（--out で一時フォルダに出したテストが本物の out/<棟>/report.json を上書きしないように。11/8）
@@ -699,4 +762,6 @@ def run_cli(a: argparse.Namespace) -> int:
     for k, title, _ in STAGES:
         st = s["stages"][k]
         print(f"  {title}：{st['status']}　{st['result']}")
+    for w in s.get("warnings") or []:
+        print(f"  注意：{w}")
     return 0

@@ -47,6 +47,20 @@ body{overflow:hidden}
 .stopbar button{font:inherit;font-weight:600;padding:3px 14px;border-radius:6px;border:1px solid var(--amber);background:var(--amber);color:var(--card);cursor:pointer}
 .stopbar button:disabled{opacity:.45;cursor:default}
 .stopbar .sbmsg{font-weight:400}
+.stopbar .sbwhy{font-weight:400;margin-left:10px;opacity:.85}
+.stopbar.info{background:var(--card);color:var(--acc);border-color:var(--acc)}
+/* 上の帯の 2 行目：再開・戻した・進行役（F20） */
+.top .hist{flex-basis:100%;font-size:12.5px;color:var(--sub);min-height:0}
+.top .hist:empty{display:none}
+.top .hist b{color:var(--ink);font-weight:600}
+.backlive{margin-left:8px;font:inherit;font-size:12.5px;font-weight:700;border:1px solid var(--acc);color:var(--acc);background:var(--card);border-radius:7px;padding:1px 10px;cursor:pointer}
+.chip.run{background:var(--acc)}
+.cell{cursor:pointer}
+.cell .im.old{opacity:.4}
+.cell .oldtag{font-size:10px;color:var(--sub);overflow:hidden;text-overflow:ellipsis}
+.pager i{cursor:pointer}
+.log .rh{font-size:11.5px;color:var(--acc);font-weight:600;border-bottom:1px solid var(--line);padding-bottom:2px}
+.log .wn{cursor:help}
 /* 中央の場面 */
 .main{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:0;
   display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px;overflow:hidden}
@@ -180,6 +194,7 @@ body:hover .ctl{opacity:.9}
     <span class="step" id="step">読み込んでいます…</span>
     <span class="meta"><span id="elapsed"></span><span id="cost"></span>
       <span class="nav"><a href="staff.html">職員の画面へ戻る</a><a href="hub.html">入口へ</a></span></span>
+    <span class="hist" id="hist"></span>
   </div>
   <div class="stopbar" id="stopbar"></div>
   <section class="main">
@@ -197,6 +212,6 @@ body:hover .ctl{opacity:.9}
   <div class="film" id="film"></div>
 </div>
 <div class="ctl" id="ctl">← → 場面　スペース 一時停止</div>
-<script src="progress.js?v=4"></script>
+<script src="progress.js?v=5"></script>
 </body>
 </html>

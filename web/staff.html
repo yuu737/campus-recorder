@@ -84,6 +84,20 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
 .prog .resume .rmsg{font-size:13px}
 .prog .ok{display:inline-block;background:#e6f4ea;color:var(--done);font-size:12px;border-radius:999px;padding:0 8px;font-weight:700}
 .prog .gray{color:var(--ink3);font-size:13px}
+.prog .warn{color:var(--unknown)}.prog .done{color:var(--done)}
+/* 事件の中身・進行役の決定・あなたに聞いています（F19） */
+.prog details{margin-top:6px}.prog details summary{cursor:pointer;color:var(--ink2);font-size:13px}
+.prog .evt{margin:4px 0 0 1em;padding:0;font-size:12px;color:var(--ink2);white-space:pre-wrap}
+.prog .shinko{margin-top:6px;border-left:3px solid var(--partial);padding-left:8px}
+.prog .shinko h4,.prog .ask h4{margin:0 0 2px;font-size:13px}
+.prog .dec{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:12px;padding:3px 0;border-top:1px dashed var(--line)}
+.prog .dec:first-of-type{border-top:0}
+.prog .dec .sum{flex:1 1 200px;color:var(--ink)}
+.prog .dec .btn{padding:2px 10px;font-size:12px}
+.prog .dec pre{flex:1 1 100%;max-height:18em;overflow:auto;background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:6px;white-space:pre-wrap;font-size:12px;margin:2px 0}
+.prog .ask{margin-top:6px;border-left:3px solid var(--wait);padding-left:8px}
+.prog .ask li{font-size:12px;color:var(--ink)}
+.prog .halt{margin-top:6px;font-size:13px;color:var(--wait);font-weight:700}
 .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--ink3);margin-top:10px}
 .legend i{display:inline-block;width:14px;height:6px;border-radius:3px;background:var(--line);vertical-align:middle;margin-right:3px}
 .legend i.done{background:var(--done)}.legend i.partial{background:var(--partial)}.legend i.wait{background:var(--wait)}
@@ -202,8 +216,9 @@ input.unknown{border-color:var(--estimated);background:#fff8e8}
     <span class="cmd" id="cmd">recorder photos assign --from assignments.json</span>
     ボタン 1 つで写真を置いて係を起動するには、リポジトリ直下で <code>recorder serve</code> を起動し、表示された URL で開き直してください。</div>
     <ul class="cant" id="cantList">
-    <li>画面でまだできない事：作業中の係を止めるボタンはありません（止まった係の続きは、進捗の欄の「続きから」で）。</li>
-    <li>API キーありでこの画面から 1 棟を最後まで通した記録は、まだありません。</li>
+    <li>事件（行き詰まりなど）で止まると、進行役（Claude）が自動で決めて続けます。決定は進捗の欄の「進行役の決定」に出るので、読んで「承認」か「取り消す」を押してください（取り消すと次の工程の前で止まります）。止まったままの棟は「続きから」か「進行役に決めさせて続ける」で。</li>
+    <li>画面でまだできない事：作業中の係をその場で止めるボタンはありません（止めたい時は進行役の決定を「取り消す」と次の工程の前で止まります）。「あなたに聞いています」への返事の欄は無く、撮影依頼には写真を送る枠で答えます。</li>
+    <li>この画面から係（API）で棟を動かした記録は、本部棟の追記の 1 棟だけです：11/8 に止まった所から「進行役に決めさせて続ける」で再開し、歩く画面まで届きました。<b>最初から最後まで止まらずに通した記録はまだありません</b>。</li>
     <li>別の大学で敷地の取得から最後まで通した試しは、まだありません。</li>
     </ul>
   </section>
@@ -606,7 +621,7 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     clearTimeout(pollTimer);
     await loadProgress();
     await loadConfirm();
-    const running = Object.values(runs).some(r => r && r.state === "running");
+    const running = Object.values(runs).some(r => r && r.state === "running") || liveGoing;   // 別の窓で動く記録も追う（F20）
     if (running) pollTimer = setTimeout(poll, 10000);
     else if (Object.keys(runs).length) { $("#s3").textContent = "済"; $("#s3").className = "state done"; }
   }
@@ -645,6 +660,7 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
   });
 
   // --- 進捗（out/<棟>/report.json。無ければ「記録なし」）
+  let liveGoing = false;   // サーバの live が動いている棟がある（このサーバの外で動く記録も含む）
   async function loadProgress() {
     const rows = $("#rows");
     const ids = [], seen = new Set();
@@ -655,9 +671,11 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     let prog = null;   // サーバありなら 1 回で全部の棟（report.json の stages・counts と pipeline の状態）
     if (SERVER) { try { const r = await api(`/api/progress?buildings=${ids.map(encodeURIComponent).join(",")}`); if (r.ok) prog = r.j.buildings; } catch (e) {} }
     if (prog) ids.forEach(id => { if (prog[id] && prog[id].run) runs[id] = prog[id].run; });
+    liveGoing = !!prog && ids.some(id => prog[id] && prog[id].live && ["running", "shinko", "starting"].includes(prog[id].live.phase));
     if (prog) {   // 前に送って未使用の写真（F16）。候補が変わった時だけ③の文とボタンを描き直す（起動の結果の文を消さない）
       const before = JSON.stringify(unusedCands().map(id => [id, unused[id]]));
-      unused = {}; resumes = {};
+      unused = {}; resumes = {}; INCIDENTS = {};
+      ids.forEach(id => { if (prog[id] && prog[id].incident) INCIDENTS[id] = prog[id].incident; });
       ids.forEach(id => { if (prog[id] && prog[id].unused_staff_photos) unused[id] = prog[id].unused_staff_photos;
         if (prog[id] && prog[id].resume) resumes[id] = prog[id].resume; });
       if (JSON.stringify(unusedCands().map(id => [id, unused[id]])) !== before) refresh();
@@ -665,6 +683,7 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     const RUN_JA = {running: "係が作業中", done: "係の工程が終わりました", stopped: "止まりました", error: "エラー"};
     // 描き直しで、打ちかけの上限の欄を消さない（棟 id → 値）
     const typed = {}; rows.querySelectorAll("input[data-resume-max]").forEach(i => { typed[i.dataset.resumeMax] = i.value; });
+    const opened = new Set([...rows.querySelectorAll("details[data-key][open]")].map(d => d.dataset.key));   // 開いた折り畳みを保つ
     const html = [];
     for (const id of ids) {
       const name = (site && site.designed && site.designed[id] && site.designed[id].name) || [...names].find(([n, i]) => i === id)?.[0] || id;
@@ -681,21 +700,37 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
       }
       const run = runs[id];
       const rs = prog && prog[id] ? prog[id].resume : null;   // pipeline_state.json がある棟だけ（F15）
+      const lv = prog && prog[id] ? prog[id].live : null;   // サーバの「今どうなっているか」（待機画面と同じ言葉。F20）
+      if (lv && lv.phase !== "idle") {
+        const where = lv.phase === "stopped" || lv.phase === "stale" ? (lv.step || rs && rs.step) : lv.current;
+        last += ` <span class="${["running", "shinko", "starting", "done"].includes(lv.phase) ? "ok" : "wait"}">${esc(lv.label)}` +
+          `${where ? `（${esc(where)}）` : ""}${lv.where === "other" ? "・このサーバの外" : ""}${run && run.continuing ? "・追記" : ""}${run && run.dry_run ? "・試し" : ""}</span>`;
+        const h = prog[id].history;
+        if (h && h.resumes) last += ` <span class="gray">再開 ${h.resumes} 回${(h.rewinds || []).length ? `・記録を戻した ${h.rewinds.length} 回` : ""}</span>`;
+      } else {
       if (!run && rs && rs.stopped) last += ` <span class="wait">止まりました${rs.step ? `（${esc(rs.step)}）` : ""}</span>`;
       if (run) last += ` <span class="${run.state === "running" || run.state === "done" ? "ok" : "wait"}">${RUN_JA[run.state] || esc(run.state)}` +
         `${run.stopped_at ? `（${esc(run.stopped_at)}）` : ""}${run.continuing ? "・追記" : ""}${run.dry_run ? "・試し" : ""}</span>`;
+      }
       const link = ROOT && rep ? `<a href="${ROOT}out/${id}/report.html">${name}</a>` : name;
       const pv = SERVER ? ` <span class="pv"><a href="progress.html?building=${encodeURIComponent(id)}&live=1">待機画面を開く</a>${rep ? ` ・ <a href="progress.html?building=${encodeURIComponent(id)}&replay=1">再生を見る</a>` : ""}</span>` : "";
       // 止まった棟だけ「続きから」（POST /api/resume）。費用の上限で止まった時だけ上限の欄
       let rz = "";
       if (rs && rs.stopped && !(run && run.state === "running") && (rs.ok || rs.code === "no_key")) {
-        const sug = typed[id] != null ? typed[id] : Math.ceil(Math.max((Number(rs.spent_usd) || 0) + 5, (Number(rs.max_usd) || 0) * 1.5));
+        // 費用の上限の欄は常に出す（事件の再開でも上限を上げられるように。F19）。既定は今の上限（無ければ 20）、
+        // 費用の上限で止まった時だけ使った額より大きい数を勧める。空のまま押せば上限は送らない（今の上限のまま）
+        const sug = typed[id] != null ? typed[id] : suggestUsd(rs);
         rz = `<div class="resume" data-resume="${esc(id)}"><span>止まった理由：${esc(rs.label || rs.reason || "不明")}</span>` +
-          (rs.need_max_usd ? `<label>費用の上限 <input type="number" min="0" step="1" data-resume-max="${esc(id)}" value="${esc(sug)}"> USD` +
-            `<span class="gray">（使った額 ${Number(rs.spent_usd).toFixed(2)} USD より大きく）</span></label>` : "") +
+          (rs.shinko_pending ? `<span class="warn">進行役が決めるには費用の上限が足りません。上限を入れて続けてください</span>` : "") +
+          `<label>費用の上限 <input type="number" min="0" step="1" data-resume-max="${esc(id)}" data-need="${rs.need_max_usd ? 1 : ""}" value="${esc(sug)}"> USD` +
+            (rs.need_max_usd ? `<span class="gray">（使った額 ${Number(rs.spent_usd).toFixed(2)} USD ${rs.shinko_pending ? shinkoCostTxt(rs) : "より大きく"}）</span>` : `<span class="gray">（空なら今の上限のまま）</span>`) + `</label>` +
           `<button class="btn primary" type="button" data-resume-go="${esc(id)}"${rs.ok ? "" : " disabled"}>続きから</button>` +
+          // 事件で止まった時・落ちたと見た時（stale）だけ：進行役（shinko）に決めさせてから続ける（F19）
+          ((rs.reason === "event" || rs.code === "stale" || rs.shinko_pending) ? `<button class="btn" type="button" data-resume-go="${esc(id)}" data-shinko="1"${rs.ok ? "" : " disabled"}>進行役に決めさせて続ける</button>` : "") +
           `<span class="rmsg">${rs.ok ? "" : esc(rs.why)}</span></div>`;
+        if (rs.code === "stale") rz += `<div class="gray">${esc(rs.why)}</div>`;
       }
+      rz += reviewHtml(id, rs, prog && prog[id] ? prog[id].state : null, opened);
       html.push(`<div class="row"><div class="name">${link}<span class="id">${id}</span></div><div class="dots">${dots}</div>
         <div class="last">${last}${waits ? ` <span class="wait">あなた待ち ${waits}</span>` : (st ? ` <span class="ok">依頼なし</span>` : "")}${pv}${rz}</div></div>`);
     }
@@ -703,17 +738,103 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     rows.innerHTML = html.join("");
   }
 
+  // 上限の欄の既定（安全優先で広めに。F19）：進行役を待つ時は max(使った額＋進行役の費用＋1, 上限×1.5)、
+  // 費用の上限で止まった時は max(使った額＋20, 上限×1.5)、それ以外は max(今の上限, 使った額＋20)、上限が無ければ 40
+  function suggestUsd(rs) {
+    const spent = Number(rs.spent_usd) || 0, cap = rs.max_usd != null && rs.max_usd !== "" ? Number(rs.max_usd) : null;
+    const sc = Number(rs.shinko_cost_usd) || 10;
+    if (rs.need_max_usd && rs.shinko_pending) return Math.ceil(Math.max(spent + sc + 1, (cap || 0) * 1.5));
+    if (rs.need_max_usd) return Math.ceil(Math.max(spent + 20, (cap || 0) * 1.5));
+    return cap == null ? 40 : Math.ceil(Math.max(cap, spent + 20));
+  }
+  function shinkoCostTxt(rs) { return `＋進行役の費用 ${Number(rs.shinko_cost_usd) || 10} USD 分より大きく`; }
+  // --- 事件の中身・進行役の決定（承認／取り消す）・職員宛ての事件（11/8、F19）
+  const decText = {};
+  let INCIDENTS = {};   // 棟 id → /api/progress の incident（事件の源。待機画面と同じ）   // 決定のファイル → 中身（/api/decision。描き直しで読み直さない）
+  function fmtAt(at) { return at ? String(at).replace("T", " ").slice(5, 16) : ""; }
+  function reviewHtml(id, rs, sv, opened) {
+    let h = "";
+    const det = (key, sum, body) => `<details data-key="${esc(key)}"${opened.has(key) ? " open" : ""}><summary>${sum}</summary>${body}</details>`;
+    // 止まった事件の中身（stopped.why と事件の印）
+    const stop = (sv && sv.stopped) || null;
+    // 事件の源は待機画面と同じ /api/progress の incident（進行役が考えている間は今回出した事件、止まった時は止まった時の事件、
+    // 決まった後は進行役が受け取った事件。F20）
+    const inc = INCIDENTS[id], ievs = (inc && inc.events) || [];
+    const SRC = {pending: "今回進行役に出した事件", events_json: "今回進行役に出した事件", stopped: "止まった時の事件（続ける時に取り直します）",
+      shinko: `進行役の決定 #${inc && inc.n} が受け取った事件`};
+    if ((rs && rs.stopped && rs.why_stop) || ievs.length) {
+      const evs = ievs.map(e => `<li>${esc(e.why || "")}</li>`).join("");
+      h += det(`why:${id}`, "事件の中身を見る", `${rs && rs.stopped && rs.why_stop ? `<div class="evt">${esc(rs.why_stop)}</div>` : ""}` +
+        (evs ? `<div class="gray">${esc(SRC[inc.source] || "事件")}</div><ul class="evt">${evs}</ul>` : ""));
+    }
+    if (!sv) return h;
+    const done = !!(rs && rs.code === "done");   // 最後まで済んだ記録：取り消しは記録に残すだけ（止める工程が無い）
+    if (sv.halt) h += `<div class="halt">${done ? "進行役の決定の取り消しを記録に残しました（工程は済んでいます）" : "職員が止めました（進行役の決定の取り消し）"}` +
+      `${sv.halt.why ? "：" + esc(sv.halt.why) : ""}${sv.halt.at ? `（${esc(fmtAt(sv.halt.at))}）` : ""}${done ? "" : "。次の工程の前で止まります"}</div>`;
+    // 職員宛ての事件（kind == "human"）。返事の欄は無い（撮影依頼は写真を送る枠で答える）
+    const asks = (sv.pending_events || []).filter(e => e && e.kind === "human");
+    if (asks.length) h += `<div class="ask"><h4>あなたに聞いています（${asks.length} 件）</h4><ul>${asks.map(e => `<li>${esc(e.why || "")}</li>`).join("")}</ul>` +
+      `<div class="gray">撮影の依頼には、上の枠から写真を送って答えてください。</div></div>`;
+    // 進行役の自動の決定（n・時刻・工程・要約・決定ファイル・費用）。review が無い物に「承認」「取り消す」
+    const sh = sv.shinko || [];
+    if (sh.length) {
+      const waiting = sh.filter(x => !x.review).length;
+      h += `<div class="shinko"><h4>進行役の決定（${sh.length} 件${waiting ? `、あなたの確認待ち ${waiting}` : ""}）</h4>` + sh.map(x => {
+        const rv = x.review;
+        const mark = rv ? (rv.verdict === "approve" ? `<span class="ok">承認済み${rv.at ? " " + esc(fmtAt(rv.at)) : ""}</span>` : `<span class="wait">取り消し済み${rv.at ? " " + esc(fmtAt(rv.at)) : ""}</span>`)
+          : `<button class="btn primary" type="button" data-review="${esc(id)}" data-n="${esc(x.n)}" data-verdict="approve">承認</button>` +
+            `<button class="btn" type="button" data-review="${esc(id)}" data-n="${esc(x.n)}" data-verdict="revoke"${done ? ' data-done="1"' : ""}>${done ? "取り消し（記録だけ）" : "取り消す"}</button>`;
+        const key = `dec:${id}:${x.n}`, f = x.decision_file;
+        const body = f ? det(key, `決定を読む <code>${esc(f)}</code>`, `<pre data-dec="${esc(f)}">${decText[f] != null ? esc(decText[f]) : "読んでいます…"}</pre>`) : "";
+        return `<div class="dec"><b>#${esc(x.n)}</b><span class="gray">${esc(fmtAt(x.at))}</span><span>工程 ${esc(x.step || "—")}</span>` +
+          `<span class="sum">${esc(x.summary || "（要約なし）")}${x.redo_from ? `（${esc(x.redo_from)} からやり直し）` : ""}</span>` +
+          `<span class="gray">${x.cost_usd != null ? Number(x.cost_usd).toFixed(2) + " USD" : ""}</span>${mark}<span class="rmsg"></span>${body}</div>`;
+      }).join("") + `</div>`;
+    }
+    return h;
+  }
+  async function loadDecision(pre) {
+    const f = pre.dataset.dec;
+    if (decText[f] != null) { pre.textContent = decText[f]; return; }
+    let r; try { r = await api(`/api/decision?file=${encodeURIComponent(f)}`); } catch (e) { r = {ok: false, j: {error: "サーバに届きません"}}; }
+    if (r.ok) decText[f] = r.j.text;
+    pre.textContent = r.ok ? r.j.text : `読めません：${r.j.error || r.status}`;
+  }
+  // 折り畳みを開いた時に決定の中身を読む（toggle は泡立たないので捕まえる側で）
+  $("#rows").addEventListener("toggle", ev => {
+    const d = ev.target; if (!d.open) return;
+    const pre = d.querySelector("pre[data-dec]"); if (pre && decText[pre.dataset.dec] == null) loadDecision(pre);
+  }, true);
+  // 「承認」「取り消す」：POST /api/review
+  $("#rows").addEventListener("click", async ev => {
+    const btn = ev.target.closest("button[data-review]"); if (!btn) return;
+    const id = btn.dataset.review, n = Number(btn.dataset.n), verdict = btn.dataset.verdict;
+    const msg = btn.closest(".dec").querySelector(".rmsg");
+    const recOnly = !!btn.dataset.done;   // 最後まで済んだ記録では止める工程が無いので、記録に残すだけ
+    if (verdict === "revoke" && !confirm(recOnly ? "取り消しを記録に残します（工程は済んでいるので止まる物はありません）。よいですか" : "取り消すと次の工程の前で止まります。よいですか")) return;
+    btn.closest(".dec").querySelectorAll("button[data-review]").forEach(b => b.disabled = true);
+    msg.textContent = verdict === "approve" ? "承認しています…" : "取り消しています…";
+    let r; try { r = await api("/api/review", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({building: id, n, verdict})}); } catch (e) { r = {ok: false, j: {error: "サーバに届きません"}}; }
+    if (!r.ok) { msg.innerHTML = `<span class="warn">${esc(r.j.error || r.status)}</span>`; btn.closest(".dec").querySelectorAll("button[data-review]").forEach(b => b.disabled = false); return; }
+    msg.innerHTML = `<span class="done">${verdict === "approve" ? "承認しました" : (recOnly ? "記録に残しました（工程は済んでいます）" : "取り消しました。次の工程の前で止まります")}</span>`;
+    poll();
+  });
+
   // 進捗の欄の「続きから」（11/8、F15）：止まった棟を POST /api/resume で続ける
   $("#rows").addEventListener("click", async ev => {
     const btn = ev.target.closest("button[data-resume-go]"); if (!btn) return;
     const id = btn.dataset.resumeGo, box = btn.closest(".resume"), msg = box.querySelector(".rmsg");
     const body = {building: id}, inp = box.querySelector("input[data-resume-max]");
-    if (inp) { if (inp.value.trim() === "" || !(Number(inp.value) > 0)) { msg.innerHTML = `<span class="warn">上限（USD）を数で入れてください</span>`; return; }
-      body.max_usd = Number(inp.value); }
+    if (btn.dataset.shinko) body.shinko = true;   // 進行役に決めさせて続ける（F19）
+    if (inp) {   // 空なら送らない（今の上限のまま）。費用の上限で止まった時だけ空を断る
+      const v = inp.value.trim();
+      if (v === "" && inp.dataset.need) { msg.innerHTML = `<span class="warn">上限（USD）を数で入れてください</span>`; return; }
+      if (v !== "") { if (!(Number(v) > 0)) { msg.innerHTML = `<span class="warn">上限（USD）を数で入れてください</span>`; return; }
+        body.max_usd = Number(v); } }
     btn.disabled = true; msg.textContent = "続きを起動しています…";
     let r; try { r = await api("/api/resume", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}); } catch (e) { r = {ok: false, j: {error: "サーバに届きません"}}; }
     if (!r.ok) { msg.innerHTML = `<span class="warn">${esc(r.j.error || r.status)}</span>`; btn.disabled = false; return; }
-    msg.innerHTML = `<span class="done">続きを起動しました（${esc((r.j.resumed_from || {}).step || "")} から）</span>`;
+    msg.innerHTML = `<span class="done">続きを起動しました（${esc((r.j.resumed_from || {}).step || "")} から${r.j.shinko ? "、進行役が事件を決めてから" : ""}）</span>`;
     $("#s3").textContent = "進行中"; $("#s3").className = "state partial";
     poll();
   });
@@ -770,12 +891,14 @@ msg += `。係を起動しました（${esc(s.j.started.join("、"))}${cont.leng
     }
     $("#export").textContent = "記録を始める";
     $("#maxUsdWrap").style.display = "";
-    const mu = $("#maxUsd"); if (mu.value === "") mu.value = SERVER.max_usd_default != null ? SERVER.max_usd_default : 20;
+    const mu = $("#maxUsd"); if (mu.value === "") mu.value = startUsd();
     $("#nextNote").innerHTML = `押すと、写真をこの PC の <code>data/photos/&lt;今日の日付&gt;/&lt;棟&gt;/</code> に置いて振り分け、棟ごとに係を起動します。右の進捗は係が動いている間 10 秒ごとに更新します。` +
     `<br>もう記録がある棟（棟 JSON がある棟）は<b>追記</b>です：前回の記録を消さず、新しい写真が当たる面だけ係が見直します。記録が無い棟は最初から作ります。` +
-    `<br>費用の上限は棟ごとです（既定 ${esc(SERVER.max_usd_default)} USD、0 で上限なし）。上限に当たると係はそこで止まり、進捗に「止まりました」と出ます。` +
+    `<br>費用の上限は棟ごとです（既定 ${esc(startUsd())} USD、0 で上限なし）。上限に当たると係はそこで止まり、進捗に「止まりました」と出ます。` +
     (SERVER.api_key ? "" : `<br><span class="warn">この PC に API キー（ANTHROPIC_API_KEY）が設定されていません。このまま押すと、写真の置き場と振り分けまでは本当に行い、係（Claude）は呼ばずに「手順だけ確かめる試し」で動きます（棟の記録は増えません）。</span>`);
   }
+  // 「記録を始める」の上限の既定：安全優先で 40 USD 以上（サーバの既定が大きければそれ。0＝上限なしはそのまま）
+  function startUsd() { const d = SERVER && SERVER.max_usd_default; return d === 0 ? 0 : Math.max(Number(d) || 0, 40); }
   function maxUsd() { const v = $("#maxUsd").value.trim(); return v === "" ? null : Number(v); }
   async function detectServer() {
   try { const r = await fetch("/api/site", {cache: "no-store"}); if (r.ok) SERVER = await r.json(); } catch (e) { SERVER = null; }

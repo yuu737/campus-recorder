@@ -78,7 +78,7 @@ def floor_tol(obj, n=None):
     if isinstance(obj, dict):
         if "value" in obj and "status" in obj:
             v, t, m = obj.get("value"), obj.get("tol"), str(obj.get("method") or "")
-            if (obj.get("status") != "unknown" and obj.get("unit", "m") == "m" and isinstance(v, (int, float))
+            if (obj.get("status") != "unknown" and not obj.get("chain") and obj.get("unit", "m") == "m" and isinstance(v, (int, float))
                     and isinstance(t, (int, float)) and ("coverage_" in m or "stitched" in m or "正面化" in m)):
                 lo = round(0.03 * abs(v) + 0.05, 2)
                 if t < lo:
@@ -181,6 +181,72 @@ TOWER_TOP = est(31.0, 2.0, PH_TOP,
                 "北の翼の屋上からも 355 px ≒ 13 m（17.75＋13 ≒ 30.8）。観察票 roof の目安（南の翼より 0.7〜1 階分上、063431446）"
                 "とは合わない（観察票は斜め下からの見上げ）。PLATEAU の measuredHeight 32.1 m とは 1.1 m 差で ± の内")
 
+# --- 11/8 追記：f6 のメジャーの鎖（測量係 sokuryo_f6.json）。鎖・値・± は測量係の物をそのまま写す ---------------
+AT2 = "2026-11-08"
+BY2 = "設計係（sekkei・claude-opus-5-5）"
+SK6 = json.loads((ROOT / REP / "sokuryo_f6.json").read_text(encoding="utf-8"))
+# K-201（11/8 本番 2 回目、進行役の決定）：測量係が柱型の芯から芯のタイルを 2 枚の正面化で 1 枚ずつ印を付けて数え直した
+# （両方 46、印は sokuryo_count_f6.json）。鎖は sokuryo_chain_f6.json の values（count の輪に counted: true・marks・confirmed_marks）。
+# 値は前と同じ（柱間 5.30973）なので縮尺は変わらず、K-203 の部品の置き直しは要らない（± だけ変わる）。
+SKC6 = json.loads((ROOT / REP / "sokuryo_chain_f6.json").read_text(encoding="utf-8"))["values"]
+
+
+def from_chain(key):
+    """測量係の measured（鎖つき）をそのまま写す。f6 の面の中だけで使う。K-201 の数え直しの鎖があればそれを使う。"""
+    if key in SKC6:
+        s = SKC6[key]
+        d = {k: s[k] for k in ("value", "unit", "tol", "status", "measured_kind", "evidence", "method", "chain")}
+        d["evidence"] = list(dict.fromkeys(d["evidence"] + [c["photo"] for c in s["chain"]]))
+        d["note"] = ""
+        d["ref"] = REP + "sokuryo_chain_f6.json#values." + key
+        lo = math.ceil(0.01 * abs(s["value"]) * 1000) / 1000      # 物差し tape の下限 1 %（recorder validate）
+        if s["tol"] < lo:
+            d["tol"] = lo
+            d["method"] += f"（± は測量係の鎖の {s['tol']} m を、メジャーの物差しの下限 1 %＝{lo} m に上へ丸めた）"
+        old = SK6.get(key)
+        if old:
+            d["method"] += (f"（K-201 の数え直し：前 {old['value']} m ±{old['tol']}（count の輪は px ÷ 周期の割り算）→ "
+                            f"{s['value']} m ±{s['tol']}（2 枚で 1 枚ずつ印を付けて数えて 46・46）、値の差 "
+                            f"{100 * (s['value'] - old['value']) / old['value']:+.1f} %）")
+        return d
+    s = SK6[key]
+    d = {k: s[k] for k in ("value", "unit", "tol", "status", "measured_kind", "evidence", "method", "chain")}
+    d["evidence"] = list(dict.fromkeys(d["evidence"] + [c["photo"] for c in s["chain"]]))
+    d["note"] = ""
+    lo = math.ceil(0.01 * abs(s["value"]) * 1000) / 1000      # 物差し tape の下限 1 %（recorder validate）
+    if s["tol"] < lo:
+        d["tol"] = lo
+        d["method"] += f"（± は測量係の鎖の {s['tol']} m を、メジャーの物差しの下限 1 %＝{lo} m に上へ丸めた）"
+    d["ref"] = REP + "sokuryo_f6.json#" + key
+    return d
+
+
+def assumed(src, key, where, prev):
+    """f6 で測った値を別の面・塊に配る：『別の面と同じ』の仮定の輪が入るので estimated（ref で元を指す）。"""
+    d = {k: src[k] for k in ("value", "unit", "evidence")}
+    d.update(status="estimated", note="",
+             tol=math.ceil((src["tol"] + 0.03 * src["value"]) * 100) / 100,
+             method=f"f6 の測量係の値（measured、鎖）を{where}に配った。別の面・塊と同じと置く仮定の輪が入るので estimated"
+                    f"（± は鎖の ± ＋ 仮定 3%）。前 {prev['value']} m ±{prev['tol']}（estimated、PLATEAU の辺の縮尺）→ {src['value']:.3f} m、"
+                    f"差 {100 * (src['value'] - prev['value']) / prev['value']:+.1f} %",
+             chain=list(src["chain"]) + [{"link": "assume", "photo": src["chain"][0]["photo"],
+                                          "what": f"{where}は f6 と同じ塊（南の翼）なので同じ値と置く"}],
+             ref=REP + "sokuryo_f6.json#" + key)
+    return d
+
+
+S_FP6 = from_chain("floor_pitch")          # 4.047 ±0.044（前 4.13、−2.0 %）
+S_PITCH6 = from_chain("bay_pitch")         # 5.310 ±0.041（前 5.418、−2.0 %）
+S_TOP6 = from_chain("parapet_top_above_ground")   # 22.66 ±0.21（前 23.15、−2.1 %）
+S_FP = assumed(S_FP6, "floor_pitch", "南の翼の塊（blocks[south_wing]）・棟の階高", S_FP)
+S_TOP = assumed(S_TOP6, "parapet_top_above_ground", "南の翼の塊の笠木・他の面（f8・f5・f7）", S_TOP)
+S_TOP["method"] += ("。f5 の面の写真では 22.5 m（coverage_f5_photo.png の笠木 383 px、f5 の前の地面を 0）で、前の 23.15 m との差 0.65 m は"
+                    "今 0.16 m に縮んだ（未解決のまま）")
+PIER6 = est(0.916, 0.08, ["PXL_20261103_042900775", "本部棟正面柱92cm", "PXL_20261107_061250800"],
+            "測量係の参考値：柱型の幅 127 px ÷ 138.64 px/m（鎖の縮尺）＝0.916 m。メジャーの玄関の柱 91.7 cm と −0.1 %"
+            "（壁の柱型と同じ型かは未確認なので measured にしない）。前 0.93 m（estimated、135.96 px/m）→ 0.916 m、差 −1.5 %",
+            ref=REP + "sokuryo_f6.json#bay_pitch")
+
 tile = {"name": "小口タイル（南の翼）", "color": "#c4a27a",
         "unit_w": est(0.108, 0.005, ["PXL_20261103_080542963", "PXL_20261103_042909968"],
                       "測量係が目地の周期の比（1.71〜1.72）で小口（108×60 mm）と確かめた（data/reports/honbu/sokuryo_f6.json#floor_pitch）"),
@@ -210,7 +276,7 @@ f6["note"] = "観察票 kansatsu_f6・数え kazoe_f6・測量 sokuryo_f6。1 �
 f6["ground_offset"] = ground0("f6", ["PXL_20261103_042900775"],
                               "測量係の高さは全部 f6 西端の地面から（sokuryo_f6.json#parapet_top_above_ground）。"
                               "5 m 標高の帯の中央値は −1.35 m（土台の ground_z から）で ± を超える。未解決（requests）")
-f6["top_z"] = dict(S_TOP, method="南の翼の笠木", note="", ref="blocks[south_wing].top_z")
+f6["top_z"] = dict(S_TOP6)
 f6["bays"] = {
     "count": meas(9, None, ["PXL_20261104_074357308", "PXL_20261103_042900775", "PXL_20261103_042721424",
                             "PXL_20261103_042822099", "PXL_20261105_064609316", "PXL_20261105_064721039"],
@@ -218,11 +284,16 @@ f6["bays"] = {
                   ref=REP + "kazoe_f6.json#bays"),
     "pitch": dict(S_PITCH6),
     "pier_width": dict(PIER6),
-    "margin_from": est(0.465, 0.08, ["PXL_20261103_042900775"],
-                       "角の柱型の半分（測量係：辺＝9 柱間＋柱型 1 本分、角の柱型の幅は中の柱型と同じ）",
+    "margin_from": est(0.458, 0.08, ["PXL_20261103_042900775"],
+                       "角の柱型の半分（0.916 ÷ 2。測量係：辺＝9 柱間＋柱型 1 本分、角の柱型の幅は中の柱型と同じ）。前 0.465 m",
                        ref=REP + "sokuryo_f6.json#bay_pitch"),
-    "margin_to": est(0.493, 0.2, ["PXL_20261103_042900775"], "辺 49.72 − 0.465 − 9 × 5.418（余り。南東の角の柱型の半分）"),
 }
+_mt = round(faces["f6"]["length"]["value"] - 0.458 - 9 * S_PITCH6["value"], 3)
+f6["bays"]["margin_to"] = est(_mt, 0.5, ["PXL_20261103_042900775", "本部棟正面柱92cm"],
+                              f"辺 {faces['f6']['length']['value']}（PLATEAU、足元は動かさない）− 0.458 − 9 × {S_PITCH6['value']}（鎖）の余り。"
+                              "前 0.493 m（柱間 5.418）。写真では南東の角の柱型の半分のはずで、余りが約 1 m 大きい＝鎖の辺 48.73 ±0.45 m と"
+                              "PLATEAU 49.72 m の差 −2.0 %（PLATEAU の許容 ±3 % の中）。合わせに行かず未解決（requests kind check）",
+                              ref=REP + "sokuryo_f6.json#length_check")
 EV_F6W = ["PXL_20261103_042900775", "PXL_20261103_042734715"]
 M_STITCH = "out/rectified/honbu/f6_042900775+042734715_stitched.jpg（測量係の正面化、135.96 px/m、地面 3480 px）で"
 REC = est(0.5, 0.15, ["PXL_20261103_042900775", "PXL_20261104_074357308"],
@@ -466,6 +537,21 @@ for k, (nm, wd, bays) in enumerate((("左（やや横長）", 1.83, [1]), ("右�
             "z_top": est(round(zb + 1.76, 2), 0.45, EV_F7, "窓の高さ 1.76 m（043612124 の正面化で 85 px ÷ 49 px/m の縮小）"),
             "width": est(wd, 0.25, EV_F7, M_F7), "bays": bays,
             "recess": est(0.4, 0.12, EV_F7, "見えていない。観察票 f7：深い彫り込み（比率から）"), "rail": False})
+# 11/8 検収係：2 階の小窓 左だけ、登録写真 5 枚の recheck（20261108_050219）の横の線が揃って低い。
+# 下端のずれ 042721424 −0.11・043642327 −0.27・070104248 −0.24・070120982 −0.29（中央値 −0.25）、
+# 上端 042721424 −0.17・043642327 −0.36・070104248 −0.29・070120982 −0.38・064600203 −0.01（中央値 −0.29）。
+# 3〜5 階は ±0.15 前後で揃うので階高は触らない。右の窓（細い縦長）は線が出ていないので触らない。
+EV_F7_K = ["PXL_20261103_042721424", "PXL_20261103_043642327", "PXL_20261107_070104248", "PXL_20261107_070120982", "PXL_20261105_064600203"]
+for w in f7["windows"]:
+    if w["name"] == "2 階の小窓 左（やや横長）":
+        w["z_bottom"] = est(6.69, 0.15, EV_F7_K, "前 6.94 m（estimated、043612124 の正面化の比）→ 6.69 m（estimated、登録写真 4 枚の recheck の横の線の中央値 −0.25 m）、差 −0.25 m",
+                            ref="data/reports/honbu/kenshu_PXL_20261107_070120982.json")
+        # 上端は 2 回目（recheck 20261108_050843）で 8.41 にすると正面の 043612124 が +0.30・043608113 が +0.29 で NG。
+        # 斜めの見上げ 4 枚は彫り込み（0.4 m）の上の見込みの奥（ガラスの上端）を拾うと読み、正面 2 枚の開口の上端 8.70 m を採る。
+        w["z_top"] = est(8.70, 0.3, ["PXL_20261103_043612124", "PXL_20261103_043608113"],
+                         "前 8.70 m のまま（正面に近い 043612124・043608113 の recheck で 8.70 m の位置に縁）。斜めの見上げ 042721424・043642327・070104248・070120982 は "
+                         "8.41 m 付近に縁（彫り込みの奥の縁と読む。± に入れた）",
+                         ref="data/reports/honbu/kenshu_PXL_20261107_070120982.json")
 
 # ---- f1 / f2 / f3（北端）
 f1, f2, f3 = faces["f1"], faces["f2"], faces["f3"]
@@ -1085,14 +1171,76 @@ REQ += [
      "where": "f6 の 8 柱間のピロティの中",
      "why": "検収係：天井の梁を 2 回直しても recheck で梁の下端が面の線で +0.31 m（7 枚）残る。天井の高さと梁の成が写真で決まらない"},
 ]
+# 11/8：新しい写真（撮影係 data/reports/honbu/satsuei_answers.json）で決まった依頼
+REQ[1].update(status="answered", answered_by=["本部棟正面柱92cm", "PXL_20261107_061250800"],
+              why=REQ[1]["why"] + "。11/8：メジャーの鎖で柱間 5.310・階高 4.047・笠木 22.66 m を measured にした（sokuryo_f6.json）")
+REQ[0]["why"] += ("。11/8：本部棟正面（新しい写真）は西の端から約 5 柱間（車道の通り抜けの東の柱まで）で、東の端（ピロティ・南東の角）が"
+                  "入っていない（設計係が send の画像で見た）。両端の入る 1 枚はまだ無いので open")
+REQ += [
+    {"kind": "check", "face": "f6", "what": "縮尺が −2.0 % 変わった（PLATEAU の辺 135.96 px/m → メジャーの鎖 138.64 px/m）。柱間を 5.310 m（鎖）にしたので、"
+                                         "f6 の部品（玄関・車道・ピロティ・大階段・梁）の along と窓の z（前の縮尺で読んだ estimated）が東へ行くほど柱割りと最大約 1 m ずれる",
+     "why": "部品の位置を 0.980 倍に読み直すか、柱割りを PLATEAU の辺に合わせたままにするかは規則で決まらない（測量係の check と同じ争点）。"
+            "辺の余り（margin_to 約 1.47 m）も同じ原因。足元（PLATEAU 49.72 m、鎖の辺 48.73 ±0.45 m）は動かしていない。"
+            "11/8 進行役の決定 K-203（data/reports/指示_11-08/決定_本番.md）：部品も同じ縮尺で置き直す。設計係が f6 の部品の面に沿う長さと"
+            "高さ・窓の z と幅を比例（× 5.30973/5.418）で直した（rescale_f6）。足元と辺の余りは動かしていない",
+     "status": "answered", "answered_by": "K-203"},
+]
+REQ.append({"kind": "check", "face": "f6", "where": "f6 の柱間（柱型の芯から芯）",
+            "what": "測量係（K-201 の数え直し、11/8）：柱型の縁の伸縮目地は普通の目地より広く、芯から芯は普通の目地 46.3 枚分（5.344 m）で、"
+                    "鎖（周期 × 46 枚＝5.310 m、目地を等幅と置く）より +0.6 %（柱間 1 つにつき +0.034 m、全部の柱間で同じ向き）。"
+                    "鎖の ± 0.041 の内側。値は道具のまま（設計係も手で直していない）",
+            "why": "鎖の 4 種の輪で伸縮目地の太り分を入れる書き方が無く、規則で決まらない。data/reports/honbu/sokuryo_count_f6.json#finding_seal_joints。"
+                   "測量係が棟 JSON に直接出した物を、設計の再実行で消えないよう design_honbu.py に写した"})
+REQ.append({"kind": "check", "face": "f6", "where": "f6 の 4 柱間（17.25〜22.55 m）",
+            "what": "車道の通り抜けの西の 4 柱間の奥のガラスの壁（lobby_glass、奥 2 m）が、本部棟正面（11/8）では柱型の右からすぐ奥に通り抜けの先が見えるように読める。"
+                    "photoproj 20261108_051219 で face:f6:奥の壁 が 6 位（score 3.56）。1 枚の斜めの見え方で量れない（検収係 11/8）",
+            "why": "data/reports/honbu/kenshu_本部棟正面.json"})
+REQ.append({"kind": "tool", "face": "f6", "where": "f6 の写真の登録 15 枚（042909968 以外）",
+            "what": "検収係（11/8 09:45、K-201・K-203 の後）：f6 の登録は 11/7 に柱間 5.418 の縮尺で解いた視点のまま。recheck 20261108_091323 で"
+                    "写真ごとの線のずれを一次式で当てると、階の線の傾きは 15 枚中 14 枚が +1.0〜+3.0 %（中央値 +2.3 %）、柱型も同じ向き（5.418÷5.30973＝+2.04 %）。"
+                    "縮尺の差なので値は直さない。錨の PXL_20261103_042900775・PXL_20261103_042734715 を新しい縮尺で compare → register し、"
+                    "register-chain で残りを解き直さないと f6 の再検収は合否を出せない",
+            "why": "登録は測量係の工程で、検収係の手順（未登録の写真だけ登録）の外。data/reports/honbu/kenshu_summary.json#round_20261108_k201"})
+REQ.append({"kind": "data", "face": "f6", "where": "f6 の足元の辺",
+            "what": "PLATEAU の辺 49.72 m と、メジャーの柱割り 9 柱間 × 5.30973 ＋ 柱型 0.92 ＝ 48.71 m の差 1.01 m（−2.0 %）。"
+                    "どちらで足元を切るか（今は足元を動かさず余り）。南東の角の柱型と面の角を同じ写真に正面から撮れば、余りが壁としてあるか分かる",
+            "why": "検収係 11/8。物差しの優先順ではメジャーが先だが、足元を動かすと f5・f7 と塊がつながりを失うので規則で決まらない"})
+# --- K-401〜K-403（11/8 11:37 自動の進行役 1/3、data/reports/指示_11-08/決定_自動_honbu_1.md）------------------
+# 測量係が f6 の登録を新しい縮尺の錨 3 枚から解き直し、f8 の錨も compare → register し直した（data/reports/honbu/sokuryo_k401.json）。
+# 決定のとおり棟 JSON の値は動かさない。設計係が直すのは登録の付け替えで変わる依頼の状態と記録だけ。
+K401 = "data/reports/honbu/sokuryo_k401.json"
+for r in REQ:
+    if r["kind"] == "tool" and r.get("face") == "f6" and r.get("where", "").startswith("f6 の写真の登録 15 枚"):
+        r.update(status="answered", answered_by="K-401",
+                 why=r["why"] + f"。11/8 11:51 K-401：測量係が錨 042900775・042734715・042909968（138.639 px/m）から register-chain で解き直し、"
+                               f"f6 の登録 17 枚（未登録はメジャーの寄り 2 枚、pnp_fail）。合否は再検収で（{K401}）")
+    if r["kind"] == "check" and r.get("face") == "f6" and "柱割り 4 つ分" in r["what"]:
+        r.update(status="answered", answered_by="K-401",
+                 why=r["why"] + f"。11/8 K-401 の解き直しの後、測量係の recheck（out/honbu/recheck/20261108_114052）で 4 柱間のずれは無い"
+                               f"（面の最大の差 042822099 +0.26・042830256 −0.19・042844361 +0.06 m）。登録は残した（{K401}#f6.j027_check）")
+REQ.append({"kind": "check", "face": "f8", "where": "f8 の柱間（sokuryo_f8.json）",
+            "what": "測量係（K-403、11/8）：f8 の柱間 5.408 m・階高は f6 の 11/7 の縮尺（階高 4.13 m、141.53 px/m）から移した estimated。"
+                    "f6 の今の値（柱間 5.30973、差 −1.8 %）との食い違いが f8 の再検収の差に残るか。K-401 が値を動かさないと決めたので設計係も直していない",
+            "why": f"値を f6 の今の縮尺で出し直すかは規則で決まらない（進行役）。{K401}#requests"})
+REQ.append({"kind": "tool", "face": "f8", "where": "PXL_20261105_062916256 の登録",
+            "what": "register-chain が PXL_20261105_062916256 を毎周『登録』と表示して 10 周回り続けるのに、台帳では not_registered のまま（測量係 2 回とも同じ）",
+            "why": f"道具の不具合の疑い。{K401}#requests"})
 for r in REQ:
     r.setdefault("where", "")
-    r["status"] = "open"
+    r.setdefault("status", "open")
     r.setdefault("to", "staff" if r["kind"] == "photo" else "tool")
 b["requests"] = REQ
 
 # --- 記録 -------------------------------------------------------------------------------------
 b["history"] = b.get("history", []) + [
+    {"at": "2026-11-08T05:30:00", "by": "検収係（kenshu・claude-opus-5-5）",
+     "what": "11/8 検収（out/honbu/recheck/20261108_050219）：f7 の 2 階の小窓 左の下端 6.94→6.69 m（登録写真 4 枚の横の線の中央値。上端は正面 2 枚で 8.70 m のまま）、"
+             "新しい 070104248・070120982 を含む。f6 は柱型が東へ柱間ごとに約 +0.08 m ずつ、笠木が +0.42 m ずれる＝柱間・笠木だけ鎖の縮尺（−2 %）で他は前の縮尺の混在。"
+             "部品ごとには直さず out/honbu/soten.json に争点（縮尺をそろえるか）。報告 data/reports/honbu/kenshu_summary.json"},
+    {"at": AT2, "by": BY2, "what": "新しい写真（メジャー、本部棟正面柱92cm・PXL_20261107_061250800）で f6 の柱間 5.418→5.310 m・階高 4.13→4.047 m・笠木 23.15→22.66 m を "
+                                   "measured（測量係の鎖をそのまま）。塊・他の面に配る階高・笠木は assume の輪を足して estimated。柱型の幅 0.93→0.916 m、"
+                                   "margin_from 0.465→0.458、margin_to 0.493→約 1.47 m（未解決、requests check）。f6 の部品と窓の z は前の縮尺のまま（requests check）。"
+                                   "f0・f8・f5・f7 に入った新しい写真は仕分けが low で、値は触っていない"},
     {"at": AT, "by": BY_K, "what": "検収：recheck（out/honbu/recheck/20261107_150933）と photoproj（out/honbu/photoproj/20261107_151415）、航空写真で検収 C。"
                                     "報告 data/reports/honbu/kenshu_summary.json。直した値：f8 の柱型 0.93→0.80 m と開口 4.45→4.6 m、石の銘板の高さ 1.2→1.0 m、"
                                     "デッキの腰壁の床の下 0.85→0.65 m、f0 の植え込みの位置 8.3→8.6 m、f5 の通路の口の右の縁 7.4→7.8 m"},
@@ -1113,10 +1261,65 @@ b["history"] = b.get("history", []) + [
     {"at": AT, "by": BY, "what": "f5 の 5 階の窓は数え係の 3 つ（スリット 1＋南西の角寄りの小窓 2）を採ったが、小窓 2 つは 1 m 未満なので置かず、スリットだけ置いた"},
     {"at": AT, "by": BY, "what": "coverage_f6_photo.png の 1 階の西半分は東のピロティの写真が貼られていて使わなかった（requests kind check）。1 階は 042900775・074357308・080542963 と測量係の正面化から"},
 ]
-b["photos"] = sorted({e for pt in parts for e in (pt.get("evidence") or [])} | set(PH_F6 + PH_F6_E + PH_F8 + PH_F0 + PH_F4 + PH_F5 + PH_F7 + PH_N + PH_TOP))
+b["photos"] = sorted({e for pt in parts for e in (pt.get("evidence") or [])} | set(PH_F6 + PH_F6_E + PH_F8 + PH_F0 + PH_F4 + PH_F5 + PH_F7 + PH_N + PH_TOP + ["本部棟正面柱92cm", "PXL_20261107_061250800", "本部棟正面"]))
 b["made_by"] = BY
 b["made_at"] = AT
 b["design_script"] = "scripts/design_honbu.py"
+
+
+# --- K-203（11/8 進行役の決定）：f6 の部品を柱間・笠木と同じ縮尺に置き直す ------------------------------
+# 前の部品と窓は、柱割り 5.418 m（PLATEAU の辺）と正面化 135.96 px/m で m に読んだ物。柱間・階高・笠木だけ鎖の縮尺
+# （5.30973 m、138.64 px/m）にしたので、面の中で縮尺が混ざっていた（検収 11/8：柱型が柱間ごとに約 +0.08 m、笠木 +0.42 m）。
+# 部品は m で持っているので比例で直す：K6 = 5.30973 / 5.418（柱割りの比。px の比 135.96/138.64＝0.98067 との差は 49 m で 0.03 m、± の中）。
+# 直すのは面に沿う長さ（along・width・s）と、正面化から読んだ高さ（窓の z・幅・間、部品の height・z）。
+# 面に直角の奥行き（depth・offset・d）は f6 の正面化で読んでいない（斜めの写真の比・f7 の正面化）ので直さない。
+# 段の数・蹴上げ・床の高さ z0（段の数 × 0.15 m）も直さない。屋上の天窓は航空写真と笠木（鎖）から置いたので直さない。
+K6 = S_PITCH6["value"] / 5.418
+NOTE_K6 = (f"（K-203：前の縮尺（柱間 5.418 m・135.96 px/m）で読んだ値を × {K6:.5f}（鎖の柱間 5.30973 ÷ 5.418）で鎖の縮尺に"
+           "直した。前の値は × の前の数）")
+
+
+def _k6(d, nd=3):
+    if isinstance(d, dict) and d.get("value") is not None and d.get("status") == "estimated":
+        old = d["value"]
+        d["value"] = round(old * K6, nd)
+        d["method"] = d.get("method", "") + f"（K-203：前 {old} m → {d['value']} m、× {K6:.5f}、鎖の縮尺に比例で直した）"
+
+
+for w in faces["f6"]["windows"]:
+    for key in ("z_bottom", "z_top", "width", "gap"):
+        _k6(w.get(key))
+    if "spandrel" in w:
+        _k6(w["spandrel"].get("height"))
+for p in parts:
+    if p.get("face") != "f6":
+        continue
+    if p["type"] == "composite":
+        if p["name"].startswith("南の翼の屋上の天窓"):
+            continue
+        for q in p["primitives"]:
+            q["s"] = [round(v * K6, 3) for v in q["s"]]
+            q["z"] = [round(v * K6, 3) for v in q["z"]]
+        p["method"] += NOTE_K6 + "（s と z を直した。奥行き d は直していない）"
+        continue
+    for key in ("along", "width", "height"):
+        _k6(p.get(key))
+    if "glass" in p:
+        for key in ("along0", "along1"):
+            _k6(p["glass"].get(key))
+b["history"].insert(0, {"at": "2026-11-08T11:55:00", "by": BY2,
+                        "what": "K-401〜K-403（決定_自動_honbu_1.md）：測量係が f6 の登録を新しい縮尺の錨 3 枚から解き直し（登録 17 枚）、f8 の錨 3 枚を"
+                                "正面化＋compare → register し直した（登録 9 枚、未登録 044049610.MP・044051601・075614196・062916256）。"
+                                "決定のとおり値（f6 柱間 5.30973・笠木 22.66・階高 4.047、f8 の値）と部品は動かしていない（K-203 の係数も掛け直していない）。"
+                                "直したのは依頼の状態だけ：f6 の登録の解き直し（tool）と 4 柱間ずれ（check、ずれ無しと測量係）を answered、"
+                                "f8 の柱間の出し直し（check）と 062916256（tool）を足した。f6 の面の写真は作り直された（被覆 100 %）が、"
+                                "K-401 で値を変えないので部品を読み直していない。合否は再検収（f4・f5・f7 は K-404 で不合格のまま記録）"})
+b["history"].insert(1, {"at": "2026-11-08T09:20:00", "by": BY2,
+                        "what": "K-201：測量係の数え直し（sokuryo_chain_f6.json、2 枚で 1 枚ずつ印を付けて 46・46、counted・confirmed_by）の鎖を f6 の"
+                                "柱間・笠木・階高に写した。値は変わらず（5.30973・22.66414・4.04727）、柱間の ± は鎖 0.0412（tape 下限 1 % で 0.054）。"
+                                f"K-203：f6 の部品と窓を × {K6:.5f} で鎖の縮尺に置き直した（玄関の中の柱 11.30→{11.30 * K6:.2f} m、"
+                                f"南東の角の柱 48.79〜49.72→{48.79 * K6:.2f}〜{49.72 * K6:.2f} m、窓の上端 2 階 8.92→{8.92 * K6:.2f} m など）。"
+                                "f7・f8 など他の面の値は触っていない"})
 
 n_raised = floor_tol(b)
 b = apply_hypotheses_off(b, HYPOTHESES_OFF)

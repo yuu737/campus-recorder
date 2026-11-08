@@ -103,6 +103,48 @@
   "out/honbu/recheck/20261107_153306（1 回目の後）",
   "out/honbu/recheck/20261107_153810（2 回目の後。lines の diff_m はこれ、prev_diff_m は前）"
  ],
- "made_by": "検収係（kenshu・claude-opus-5-5）",
- "made_at": "2026-11-07T16:30:00+09:00"
+ "made_by": "検収係 kenshu claude-opus-5-5",
+ "made_at": "2026-11-08T12:25:00+09:00",
+ "round_20261108_k401": {
+  "f8": {
+   "face": "f8",
+   "made_by": "検収係 kenshu claude-opus-5-5",
+   "made_at": "2026-11-08T12:25:00+09:00",
+   "decision": "data/reports/指示_11-08/決定_自動_honbu_1.md（K-401・K-403・K-405）",
+   "recheck": "out/honbu/recheck/20261108_115608",
+   "pass": false,
+   "n_lines": 14,
+   "n_ok": 10,
+   "height_fit": {
+    "z_slope_pct": 1.68,
+    "z_offset_m": -0.36,
+    "resid_m": 0.117,
+    "n": 7
+   },
+   "lines": [
+    {
+     "what": "2 階（デッキに面するガラス） 下端",
+     "diff_m": -0.321,
+     "action": "登録の視点の残り（写真ごとの一定のずれ・傾き）。値は直さない（K-401：f6・f8 の値は動かさない）"
+    },
+    {
+     "what": "4 階（横長、柱型の間） 下端",
+     "diff_m": -0.227,
+     "action": "登録の視点の残り（写真ごとの一定のずれ・傾き）。値は直さない（K-401：f6・f8 の値は動かさない）"
+    },
+    {
+     "what": "5 階（小窓 2 つずつ） 上端",
+     "diff_m": -0.198,
+     "action": "登録の視点の残り（写真ごとの一定のずれ・傾き）。値は直さない（K-401：f6・f8 の値は動かさない）"
+    },
+    {
+     "what": "パラペット上端",
+     "diff_m": 0.177,
+     "action": "登録の視点の残り（写真ごとの一定のずれ・傾き）。値は直さない（K-401：f6・f8 の値は動かさない）"
+    }
+   ],
+   "changed": [],
+   "requests": []
+  }
+ }
 }

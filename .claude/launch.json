@@ -39,6 +39,21 @@
         "8767"
       ],
       "port": 8767
+    },
+    {
+      "name": "serve-check",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
+      "runtimeArgs": [
+        "-I",
+        "-X",
+        "utf8",
+        "-m",
+        "recorder",
+        "serve",
+        "--port",
+        "8768"
+      ],
+      "port": 8768
     }
   ]
 }

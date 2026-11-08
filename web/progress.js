@@ -44,6 +44,9 @@
     {key: "e", step: "seizu", title: "立面図", film: "elev", dur: 7, ok: A => A.elev.length > 0, build: buildElev},
     {key: "f", step: "sokuryo", kw: "製図板", title: "製図板", film: "evidence", dur: 8, ok: A => A.coverage.some(c => c.masks_ok), build: buildBoard},
     {key: "g", step: "kenshu", title: "検収", film: "model", dur: 8, ok: A => A.kenshu.some(k => k.photo_src && k.view), build: buildKenshu},
+    // 進行役（事件の時だけ）：生きている記録で、進行役が考えている時か決定がある時（F20）
+    {key: "s", step: "shinko", title: "進行役", film: null, dur: 8,
+     ok: () => LIVE && !!(PIPE && PIPE.state) && (PIPE.state.current === "shinko" || (PIPE.state.shinko || []).length > 0), build: buildShinko},
     {key: "h", step: "mejirushi", title: "証拠", film: "evidence", dur: 6, ok: A => !!(A.evidence.photo || A.evidence.three), build: buildEvidence},
     {key: "i", step: "web", title: "歩く画面", film: "walk", dur: 8, ok: A => !!A.walk, build: buildWalk},
   ];
@@ -340,6 +343,50 @@
     return {el: w, foot: st ? esc(st.result) : "", tl: [[0.3, () => small.classList.add("on")]]};
   }
 
+  // 進行役の場面：考えている間は「決めています（n 分）」と事件、決まったら最新の決定の要約（F20）
+  function buildShinko() {
+    const st = (PIPE && PIPE.state) || {}, L = (PIPE && PIPE.live) || {};
+    const sh = (st.shinko || []).filter(x => x && typeof x === "object"), last = sh[sh.length - 1];
+    const thinking = st.current === "shinko" || L.phase === "shinko";
+    const w = el("div", "nums");
+    const left = el("div", "card");
+    if (thinking) {
+      const n = sinceSec(L.updated_at || st.updated_at);
+      const TL = PIPE && PIPE.timeline, r = TL && TL.rounds && TL.rounds[TL.rounds.length - 1];
+      // 事件は「今回進行役に出した物」（/api/pipeline の incident。止まった時の stopped.events ではない）
+      const inc = PIPE && PIPE.incident, evl = (inc && inc.events) || [];
+      const evs = evl.map(e => `<li>${esc(e.why || "")}</li>`).join("");
+      left.innerHTML = `<h4>${esc(who("shinko"))}が決めています</h4><div class="big">${n != null ? Math.floor(n / 60) + " 分" : "—"}</div>` +
+        (evs ? `<p class="note">進行役に出した事件（${evl.length} 件）：</p><ul class="note">${evs}</ul>`
+          : `<p class="note">事件：${esc((r && r.why) || "（記録に事件の文がありません）")}</p>`);
+    } else left.innerHTML = `<h4>進行役は今は動いていません</h4><p class="note">事件が出た時だけ呼ばれます。</p>`;
+    const right = el("div", "card");
+    const levs = last && !thinking ? (last.events || []).map(x => String(typeof x === "string" ? x : (x && x.why) || "").replace(/^[a-z]+[|]/, "")) : [];
+    right.innerHTML = last ? `<h4>最新の決定 #${esc(last.n)}（${esc(hhmm(last.at))}、${esc(stepInfo(last.step).name)}の後）</h4>` +
+      (levs.length ? `<p class="note">受け取った事件：${levs.map(esc).join("／")}</p>` : "") +
+      `<p style="margin:0 0 6px;font-size:16px">${esc(last.summary || (last.failed ? "形にならず：" + last.failed : "要約なし"))}</p>` +
+      `<p class="note">${last.redo_from ? `${esc(stepInfo(last.redo_from).name)}からやり直す` : "次の工程へ進める"}・` +
+      `${last.review ? (last.review.verdict === "approve" ? "職員が承認済み" : "職員が取り消し") : "職員の確認待ち（職員の画面で承認／取り消し）"}` +
+      `${last.cost_usd != null ? `・${Number(last.cost_usd).toFixed(2)} USD` : ""}</p>` +
+      (last.decision_file ? `<p class="note"><code>${esc(last.decision_file)}</code></p>` : "")
+      : `<h4>決定</h4><p class="note">まだありません（決まると、ここに要約が出ます）</p>`;
+    w.append(left, right);
+    return {el: w, foot: `進行役の決定は ${sh.length} 件${sh.filter(x => !x.review).length ? `（確認待ち ${sh.filter(x => !x.review).length}）` : ""}`, tl: []};
+  }
+  // 生成物がまだ無い工程の札：係・状態・この周の最新の 1 行（偽の絵は出さない）
+  function buildStepCard(step) {
+    const L = (PIPE && PIPE.live) || {}, TL = PIPE && PIPE.timeline;
+    const rn = TL && TL.rounds && TL.rounds.length ? TL.rounds[TL.rounds.length - 1].n : null;
+    const lastRes = TL ? TL.items.filter(i => i.type === "result" && i.step === step && i.round === rn).pop() : null;
+    const going = ["running", "shinko"].includes(L.phase) && L.current === step;
+    const w = el("div", "nums"), c = el("div", "card");
+    c.innerHTML = `<h4>${esc(who(step))}</h4><div class="big" style="font-size:30px">${going ? "動いています" : (L.phase === "stopped" || L.phase === "stale" ? "止まっています" : "この工程")}</div>` +
+      `<p class="note">${esc(stepInfo(step).line || "")}</p>` +
+      (lastRes && lastRes.summary ? `<p class="note">この周の最新の 1 行：${esc(lastRes.summary)}</p>` : `<p class="note">生成物が出ると、ここに本物の絵が出ます。</p>`);
+    w.append(c);
+    return {el: w, foot: "", tl: []};
+  }
+
   function countsNow() {
     const c = (PROG && PROG.report && PROG.report.counts) || (ART && ART.report && ART.report.counts) || {};
     return c;
@@ -367,8 +414,12 @@
 
   // ---------------------------------------------------------------- 画面の枠
   function setFoot(h) { $("#sFoot").innerHTML = h; }
-  function stepInfo(s) { return STEPS[s] || {name: s, model_ja: "", line: ""}; }
+  // 工程の一覧（/api/steps）に無い係：進行役は事件の時だけ呼ばれる（results の step "shinko"。F19）
+  const EXTRA_STEPS = {shinko: {step: "shinko", agent: "shinko", name: "進行役", model_ja: "Claude Fable", line: "事件の時だけ呼ばれて決める"}};
+  function stepInfo(s) { return STEPS[s] || EXTRA_STEPS[s] || {name: s, model_ja: "", line: ""}; }
   function who(s) { const i = stepInfo(s); return `${i.name}（${i.model_ja || "—"}）`; }
+  const hhmm = at => at ? String(at).slice(11, 16) : "";
+  const sinceSec = at => at ? Math.max(0, (Date.now() - new Date(at).getTime()) / 1000) : null;
 
   function renderNums(focus) {
     const c = countsNow(), mk = c.measured_kinds || {};
@@ -385,18 +436,70 @@
     setTimeout(() => document.querySelectorAll("#nums .flash").forEach(e => e.classList.remove("flash")), 1600);
   }
 
+  // --- 係の一言（右の欄）。周（起動・再開 1 回分）を混ぜない（F20）
+  function roundHeader(r) {
+    if (!r) return "";
+    return `<div class="rh">${r.kind === "start" ? "起動" : "再開"}（${r.n} 周目、${esc(hhmm(r.at))}〜${r.ended_at ? esc(hhmm(r.ended_at)) : ""}` +
+      `${r.from_step ? `、${esc(stepInfo(r.from_step).name)}の後の事件から` : ""}${r.redo_from ? `、${esc(stepInfo(r.redo_from).name)}からやり直し` : ""}` +
+      `${r.rewound ? "、記録を戻して取り下げ" : ""}）</div>`;
+  }
+  function logLine(i) {
+    if (i.type === "run") {
+      if (i.kind === "shinko") return `<div><b>進行役</b> <span class="m">決定 #${esc(i.n)}・${esc(hhmm(i.at))}</span><br>${i.failed ? "形にならず：" + esc(i.failed) : (i.redo_from ? `${esc(stepInfo(i.redo_from).name)}からやり直す` : "次の工程へ進める")}</div>`;
+      if (i.kind === "rewind") return `<div><b>記録を戻した</b> <span class="m">${esc(hhmm(i.at))}</span><br>${esc(i.to || "")}へ</div>`;
+      return `<div><b>${esc(i.kind)}</b> <span class="m">${esc(hhmm(i.at))}</span></div>`;
+    }
+    const inf = stepInfo(i.step);
+    const warn = i.warn ? ` <span class="m wn" title="${esc(i.warn)}">（警告あり）</span>` : "";
+    return `<div><b>${esc(inf.name)}</b> <span class="m">${esc(inf.model_ja || i.model || "")}${i.seconds ? "・" + fmtMS(i.seconds) : ""}</span>${warn}<br>${esc(i.summary || "")}</div>`;
+  }
   function renderLog(uptoStep) {
+    const TL = PIPE && PIPE.timeline;
+    if (TL && TL.rounds && TL.rounds.length) {
+      const H = TL.history || {}, L = PIPE.live || {};
+      let rn, items;
+      if (LIVE) {
+        rn = (["running", "shinko"].includes(L.phase) ? TL.rounds[TL.rounds.length - 1].n : H.this_round_n) || TL.rounds[TL.rounds.length - 1].n;
+        items = TL.items.filter(i => i.round === rn && ((i.type === "result" && i.summary) || (i.type === "run" && !["start", "resume"].includes(i.kind))));
+      } else {
+        // 再生：その工程を最後に回した周（取り下げた周は除く）だけ。1 周目と 2 周目の同じ工程を混ぜない
+        const live = TL.rounds.filter(r => !r.rewound);
+        const has = r => TL.items.some(i => i.round === r.n && i.type === "result" && i.step === uptoStep);
+        const r = uptoStep ? live.filter(has).pop() : live[live.length - 1];
+        rn = (r || live[live.length - 1] || {}).n;
+        items = TL.items.filter(i => i.round === rn && ((i.type === "result" && i.summary) || (i.type === "run" && !["start", "resume"].includes(i.kind))));
+        if (uptoStep) { const k = items.map(i => i.step).lastIndexOf(uptoStep); if (k >= 0) items = items.slice(0, k + 1); }
+      }
+      const hdr = roundHeader(TL.rounds.find(r => r.n === rn));
+      $("#log").innerHTML = hdr + (items.slice(-5).map(logLine).join("") ||
+        `<div class="m">この周の係の一言はまだありません（係が終わると、ここに 1 行ずつ出ます）</div>`);
+      return;
+    }
     const steps = (PIPE && PIPE.record && PIPE.record.steps) || [];
     let list = steps.filter(s => s.summary);
     if (uptoStep) {
       const order = ORDER, lim = order.indexOf(uptoStep);
       if (lim >= 0) list = list.filter(s => { const j = order.indexOf(s.step); return j < 0 || j <= lim; });
     }
-    list = list.slice(-5);
-    $("#log").innerHTML = list.map(s => `<div><b>${esc(stepInfo(s.step).name)}</b> <span class="m">${esc(stepInfo(s.step).model_ja || s.model || "")}${s.seconds ? "・" + fmtMS(s.seconds) : ""}</span><br>${esc(s.summary)}</div>`).join("") ||
+    $("#log").innerHTML = list.slice(-5).map(s => logLine({type: "result", ...s})).join("") ||
       `<div class="m">係の一言はまだありません（pipeline の記録が出ると、ここに係ごとの 1 行が出ます）</div>`;
   }
 
+  // --- 下の列：生きている時も再生の時も、記録（pipeline_state）があれば「この記録」の done・current から済／進行中／まだ（F20）。
+  // ファイルがあるだけ（前の記録の生成物）は済にせず、別の印にする
+  const FILM_STEPS = {photos: ["satsuei", "shiwake"], elev: ["sokuryo", "sekkei", "seizu"], evidence: ["sokuryo", "kenshu"],
+    model: ["seizu", "kenshu"], walk: ["seizu_final", "web"]};
+  const FILM_JA = {done: "済", partial: "途中", run: "進行中", todo: "まだ"};
+  function filmStatus(k, rep) {
+    const st = PIPE && PIPE.state;
+    if (!st || !st.steps || !FILM_STEPS[k]) return rep;   // 再生でも記録がある時は工程の済で（中身の途中・済は title の report の文）
+    const want = FILM_STEPS[k].filter(s => st.steps.includes(s));
+    if (!want.length) return rep;
+    const done = new Set(st.done || []), cur = PIPE.live && ["running", "shinko"].includes(PIPE.live.phase) ? PIPE.live.current : null;
+    if (cur && want.includes(cur)) return "run";
+    const n = want.filter(s => done.has(s)).length;
+    return n === want.length ? "done" : (n ? "partial" : "todo");
+  }
   function renderFilm(curKey) {
     const st = (PROG && PROG.report && PROG.report.stages) || (ART && ART.report && ART.report.stages) || {};
     const A = ART || {photos: [], elev: [], evidence: {}};
@@ -405,11 +508,12 @@
       evidence: A.evidence && (A.evidence.photo || A.evidence.three), model: A.sheet || (A.kenshu && A.kenshu[0] && A.kenshu[0].lines_png),
       walk: A.walk, rest: null};
     $("#film").innerHTML = STAGES.map(([k, t]) => {
-      const s = st[k] || {}, cls = s.status || "todo";
+      const s = st[k] || {}, cls = filmStatus(k, s.status || "todo");
+      const old = LIVE && img[k] && cls !== "done";   // 生成物はあるが、この記録ではまだ済んでいない
       const bg = img[k] ? `style="background-image:url('${esc(u(img[k]))}')"` : "";
       const inner = !img[k] && k === "rest" ? `<span title="撮影依頼">${c.requests ?? "—"}</span>` : "";
-      return `<div class="cell${k === curKey ? " cur" : ""}" title="${esc(s.result || "")}"><div class="im${k === "elev" ? " contain" : ""}" ${bg}>${inner}</div>` +
-        `<div class="lab"><span class="chip ${cls}">${ST_JA[cls] || "まだ"}</span>${t}</div></div>`;
+      return `<div class="cell${k === curKey ? " cur" : ""}" data-film="${k}" title="${esc((s.status && s.status !== cls ? `中身は${ST_JA[s.status] || s.status}：` : "") + (s.result || ""))}"><div class="im${k === "elev" ? " contain" : ""}${old ? " old" : ""}" ${bg}>${inner}</div>` +
+        `<div class="lab"><span class="chip ${cls}">${FILM_JA[cls] || "まだ"}</span>${t}${old ? `<small class="oldtag" title="ファイルは前の記録の物">前の記録の生成物あり</small>` : ""}</div></div>`;
     }).join("");
   }
 
@@ -417,61 +521,102 @@
     const st = PIPE && PIPE.state, run = (PIPE && PIPE.run) || (PROG && PROG.run);
     return {st, run};
   }
+  // サーバの「今どうなっているか」（/api/pipeline の live。職員の画面と同じ言葉）。古いサーバ向けに状態だけから推す
+  function livePhase() {
+    if (PIPE && PIPE.live) return PIPE.live;
+    const {st, run} = liveState();
+    if (run && run.state === "running") return {phase: st && st.status === "running" && st.current ? (st.current === "shinko" ? "shinko" : "running") : "starting", current: st && st.current};
+    if (st && st.status === "running") return {phase: st.current === "shinko" ? "shinko" : "running", current: st.current, where: "other"};
+    if (st && st.status === "stopped") return {phase: "stopped", step: st.stopped && st.stopped.step, reason: st.stopped && st.stopped.reason};
+    if (st && st.status === "done") return {phase: "done"};
+    return {phase: "idle"};
+  }
   function renderTop(scene) {
     const name = (ART && ART.name) || B;
     $("#bname").textContent = name;
     document.title = `${name}：記録の待機画面`;
     $("#mode").textContent = LIVE ? "生きている記録" : "再生（今ある生成物）";
     const {st, run} = liveState();
-    let stepTxt = "", el_ = "", cost = "";
+    const TL = PIPE && PIPE.timeline, H = (TL && TL.history) || {};
+    let stepTxt = "", el_ = "", cost = "", hist = [];
     const stopbar = $("#stopbar");
-    stopbar.classList.remove("on");
     if (LIVE) {
-      const steps = (st && st.steps) || ORDER;
-      const cur = st && st.current;
-      // 続きを起動した直後（このサーバの係が running）は、状態ファイルがまだ stopped でも生きている表示に戻す
-      const stopped = !(run && run.state === "running") && ((st && st.status === "stopped") || (run && (run.state === "stopped" || run.state === "error")));
-      if (cur) stepTxt = `${steps.indexOf(cur) + 1}/${steps.length} ${who(cur)}が動いています`;
-      else if (stopped) stepTxt = "止まっています";
-      else if (st && st.status === "done" || run && run.state === "done") stepTxt = "全部の工程が終わりました";
-      else if (run && run.state === "running") stepTxt = "係を起動しています";
+      const L = livePhase(), steps = (st && st.steps) || ORDER, cur = L.current;
+      const redo = st && st.redo && (st.redo.steps || []).includes(cur) ? "（やり直し）" : "";
+      if (L.phase === "running") stepTxt = `${steps.indexOf(cur) + 1}/${steps.length} ${who(cur)}が動いています${redo}`;
+      else if (L.phase === "shinko") stepTxt = `${who("shinko")}が決めています`;
+      else if (L.phase === "starting") stepTxt = "係を起動しています";
+      else if (L.phase === "stopped" || L.phase === "stale") stepTxt = "止まっています";
+      else if (L.phase === "done") stepTxt = "全部の工程が終わりました";
       else stepTxt = "記録はまだ動いていません";
-      if (stopped) {
+      if (L.where === "other") stepTxt += "（このサーバの外で動いています）";
+      // 帯：止まった時だけ「止まっています」、進行役が考えている時は「決めています」。動いている時は出さない
+      if (L.phase === "stopped" || L.phase === "stale") {
         const s = (st && st.stopped) || (run && run.stopped) || {};
-        const why = s.label || s.reason || (run && run.error) || "";
-        const rs = PIPE && PIPE.resume;   // /api/pipeline の「画面から続けられるか」（無ければ CLI の案内だけ）
-        const key = JSON.stringify([s.step, why, s.reason, rs && rs.code, rs && rs.need_max_usd, rs && rs.spent_usd]);
+        const why = s.label || s.reason || (run && run.error) || (L.phase === "stale" ? "10 分以上更新が無いので落ちたと見ます" : "");
+        const rs = PIPE && PIPE.resume;
+        const key = JSON.stringify([L.phase, s.step, why, s.reason, rs && rs.code, rs && rs.need_max_usd, rs && rs.spent_usd]);
         if (stopbar.dataset.key !== key) {   // 1 秒ごとの描き直しで、打っている上限の欄を消さない
           stopbar.dataset.key = key;
-          const head = `止まっています。${s.step ? `工程 ${esc(stepInfo(s.step).name)}` : ""}${why ? `（${esc(why)}）` : ""}`;
-          const cli = `続きは <code>recorder agent resume ${esc(B)}</code>${s.reason === "max_usd" ? `（上限を上げるなら <code>--max-usd</code>）` : ""}`;
+          const step = s.step || L.step;
+          const head = `止まっています。${step ? `工程 ${esc(stepInfo(step).name)}` : ""}${why ? `（${esc(why)}）` : ""}`;
           let ctl;
-          if (rs && (rs.ok || rs.code === "no_key")) {
-            const sug = Math.ceil(Math.max((Number(rs.spent_usd) || 0) + 5, (Number(rs.max_usd) || 0) * 1.5));
+          if (rs && rs.ok) {
+            // 安全優先で広めに（F19）：進行役を待つ時は使った額＋進行役の費用＋1、それ以外は使った額＋20 と上限×1.5 の大きい方
+            const sc = Number(rs.shinko_cost_usd) || 10, spent = Number(rs.spent_usd) || 0;
+            const sug = Math.ceil(Math.max(spent + (rs.shinko_pending ? sc + 1 : 20), (Number(rs.max_usd) || 0) * 1.5));
             ctl = `<span class="sbctl">` +
               (rs.need_max_usd ? `<label>費用の上限 <input id="sbMax" type="number" min="0" step="1" value="${sug}" aria-label="費用の上限（USD）"> USD` +
-                `<small>（使った額 ${Number(rs.spent_usd).toFixed(2)} USD より大きく）</small></label>` : "") +
-              `<button id="sbGo" type="button"${rs.ok ? "" : " disabled"}>続きから</button><span id="sbMsg" class="sbmsg">${rs.ok ? "" : esc(rs.why)}</span></span>`;
-          } else ctl = rs ? `　${esc(rs.why)}` : `　${cli}`;
+                `<small>（使った額 ${Number(rs.spent_usd).toFixed(2)} USD ${rs.shinko_pending ? `＋進行役の費用 ${sc} USD 分より大きく` : "より大きく"}）</small></label>` : "") +
+              `<button id="sbGo" type="button">続きから</button><span id="sbMsg" class="sbmsg"></span></span>`;
+          } else if (rs) ctl = `<small class="sbwhy">${esc(rs.why)}</small>`;   // 続けられない理由は小さく 1 行（ボタンは出さない）
+          else ctl = `<small class="sbwhy">続きは <code>recorder agent resume ${esc(B)}</code></small>`;
           stopbar.innerHTML = head + ctl;
+          stopbar.className = "stopbar on";
         }
-        stopbar.classList.add("on");
-      } else delete stopbar.dataset.key;
-      const t0 = (st && st.started_at) || (run && run.started_at);
-      const t1 = !cur && (st && st.updated_at) && (st.status !== "running") ? new Date(st.updated_at) : (run && run.finished_at ? new Date(run.finished_at) : new Date());
-      if (t0) el_ = `経過 <b>${fmtHMS((t1 - new Date(t0)) / 1000)}</b>`;
+      } else if (L.phase === "shinko") {
+        const n = sinceSec(L.updated_at);
+        stopbar.className = "stopbar on info";
+        const inc = PIPE && PIPE.incident, evl = (inc && inc.events) || [];
+        stopbar.innerHTML = `${esc(who("shinko"))}が決めています${n != null ? `（${Math.floor(n / 60)} 分）` : ""}。決まると工程が続きます` +
+          (evl.length ? `<small class="sbwhy">事件：${esc(evl.map(e => e.why).join("／"))}</small>` : "");
+        delete stopbar.dataset.key;
+      } else { stopbar.className = "stopbar"; stopbar.innerHTML = ""; delete stopbar.dataset.key; }
+      // 経過：この起動・再開から と 全体（係が動いていた時間の合計。止まっていた間は入れない）
+      const going = ["running", "shinko", "starting"].includes(L.phase);
+      const r0 = L.phase === "starting" && run && run.started_at ? run.started_at : H.this_round_at || (st && st.started_at) || (run && run.started_at);
+      const r1 = going ? Date.now() : new Date(H.this_round_ended_at || (st && st.updated_at) || (run && run.finished_at) || Date.now()).getTime();
+      if (r0) {
+        const thisSec = (r1 - new Date(r0).getTime()) / 1000;
+        const total = H.work_seconds_ended != null ? H.work_seconds_ended + (going && (H.running || L.phase === "starting") ? thisSec : 0) : null;
+        const kind = L.phase === "starting" || H.this_round_kind === "resume" ? "この再開" : "この起動";
+        el_ = `${kind}から <b>${fmtHMS(thisSec)}</b>` + (total != null && H.rounds > 1 ? `・全体（動いていた時間） <b>${fmtHMS(total)}</b>` : "");
+      }
       const spent = st && st.spent_usd != null ? st.spent_usd : run && run.spent_usd;
       const cap = (st && st.max_usd) ?? (run && run.max_usd);
-      cost = `費用 <b>${spent != null ? Number(spent).toFixed(2) : "—"}</b> / ${cap ? cap + " USD" : "上限なし"}`;
+      cost = `費用 <b>${spent != null ? Number(spent).toFixed(2) : "—"}</b> / ${cap ? cap + " USD" : "上限なし"}` +
+        (H.rounds > 1 && H.this_round_cost_usd != null ? `（この${H.this_round_kind === "resume" ? "再開" : "起動"} ${Number(H.this_round_cost_usd).toFixed(2)}）` : "");
       if (run && run.dry_run) cost += "（係を呼ばない試し）";
+      // 上の帯の 2 行目：再開・戻した・自動の再開・進行役・確認待ち を 1 行に
+      if (H.resumes) hist.push(`再開 <b>${H.resumes}</b> 回（今は ${H.this_round_n || H.rounds} 周目）`);
+      (H.rewinds || []).slice(-1).forEach(w => hist.push(`記録を戻した <b>${(H.rewinds || []).length}</b> 回（最後は ${esc(hhmm(w.at))}、${esc(w.to || "")}へ）`));
       const ar = (st && st.auto_resumes) || {};
       const arAll = Object.values(ar).flat().filter(e => e && typeof e === "object");
       if (arAll.length) {
         const KJA = {max_turns: "手数の上限", max_budget: "1 回の費用の上限", rate_limit: "混雑", crash: "落ちた", partial: "係が区切った"};
         const last = arAll[arAll.length - 1], k = last.kind || last.reason;
-        cost += `　<span title="同じ会話から自動で続けた回数">自動で再開 <b>${arAll.length}</b> 回（最後は${esc(KJA[k] || k || "理由不明")}）</span>`;
+        hist.push(`<span title="同じ会話から自動で続けた回数">自動で再開 <b>${arAll.length}</b> 回（最後は${esc(KJA[k] || k || "理由不明")}）</span>`);
       }
+      // 進行役（shinko）が事件を自動で決めた回数と最新の要約（11/8、F19。承認／取り消しは職員の画面で）
+      const sh = ((st && st.shinko) || []).filter(e => e && typeof e === "object");
+      if (sh.length) {
+        const last = sh[sh.length - 1], wait = sh.filter(e => !e.review).length;
+        hist.push(`<span title="事件が出た時に進行役が自動で決めた回数。職員の画面で承認／取り消し">進行役が決めました <b>${sh.length}</b> 回（${esc(last.summary || "要約なし")}）` +
+          `${wait ? `・確認待ち ${wait}` : ""}</span>`);
+      }
+      if (st && st.halt) hist.push(`職員が止めました（進行役の決定の取り消し）`);
     } else if (scene) {
+      stopbar.className = "stopbar";
       const steps = ORDER, i = steps.indexOf(scene.step);
       stepTxt = `${i >= 0 ? `${i + 1}/${steps.length} ` : ""}${who(scene.step)}の工程の生成物`;
       const r = PIPE && PIPE.record;
@@ -479,18 +624,25 @@
         el_ = `記録の経過 <b>${fmtHMS(r.wall_seconds)}</b>（係の秒の合計 ${fmtHMS(r.seconds_total)}）`;
         cost = r.cost_usd != null ? `費用 <b>${Number(r.cost_usd).toFixed(2)}</b>${r.max_usd ? ` / ${r.max_usd} USD` : " USD"}` : "費用の記録なし";
       } else el_ = "pipeline の記録なし";
+      if (H.rounds > 1) hist.push(`この記録は ${H.rounds} 周（再開 ${H.resumes} 回${(H.rewinds || []).length ? `・記録を戻した ${(H.rewinds || []).length} 回` : ""}）。係の一言はその工程を最後に回した周の物`);
     }
     $("#step").textContent = stepTxt;
     $("#elapsed").innerHTML = el_;
     $("#cost").innerHTML = cost;
+    $("#hist").innerHTML = hist.join("　・　");
     $("#costNote").textContent = LIVE ? "費用の上限は棟ごと。止まっても続きから再開できます" : "再生：今ある生成物を最初から見せています";
   }
 
   // ---------------------------------------------------------------- 進め方
+  // 再生（replay）は場面を動画のように順に流す。生きている記録（live）は「今の工程の場面」に留め、中身だけ数秒ごとに更新する。
+  // 工程が進んだ時だけ 1 回切り替える。人が下の列・点・矢印で別の場面を見た時は「今の工程に戻る」で戻る（F20）
   let avail = [], idx = -1, timers = [], nextTimer = null, paused = false, cur = null;
+  let liveStep = undefined, manual = false, artKey = "";
+  const STEP_SCENE = {satsuei: "a", shiwake: "b", sokuryo: "c", sekkei: "d", seizu: "e", seizu_final: "e", kenshu: "g", mejirushi: "h", web: "i", shinko: "s"};
+  function okScene(s) { try { return !!ART && s.ok(ART); } catch (e) { return false; } }
   function allowedScenes() {
     if (!ART) return [];
-    let ok = SCENES.filter(s => { try { return s.ok(ART); } catch (e) { return false; } });
+    let ok = SCENES.filter(okScene);
     if (LIVE) {
       const {st} = liveState();
       if (st && st.steps) {
@@ -501,66 +653,131 @@
     if (ONLY) ok = ok.filter(s => s.key === ONLY);
     return ok;
   }
-  function clearTimers() { timers.forEach(clearTimeout); timers = []; if (nextTimer) clearTimeout(nextTimer); nextTimer = null; }
-  function show(i) {
-    clearTimers();
-    avail = allowedScenes();
-    if (!avail.length) {
-      $("#stage").innerHTML = `<div class="empty">${ART ? "見せられる生成物がまだありません。係が生成物を出すと、ここに本物の絵が順に出ます。" : "棟 id（?building=）が無いか、生成物の一覧を読めません。recorder serve から開いてください。"}</div>`;
-      $("#sTitle").textContent = ""; $("#sDesc").textContent = ""; $("#sWho").textContent = ""; setFoot("");
-      renderTop(null); renderNums(); renderLog(); renderFilm(null);
-      window.__replay = {scene: null, index: -1, count: 0, ended: true, empty: true};
-      if (LIVE) nextTimer = setTimeout(() => show(0), 5000);
-      return;
+  // 生きている記録の「今の工程」：動いている → current、止まった → 止まった工程、起動直後 → やり直す最初の工程、済んだ → 最後
+  function targetStep() {
+    const L = livePhase(), st = PIPE && PIPE.state;
+    if (L.phase === "running" || L.phase === "shinko") return L.current;
+    if (L.phase === "stopped" || L.phase === "stale") return L.step || (st && st.stopped && st.stopped.step) || (st && st.current) || ((st && st.done) || []).slice(-1)[0] || null;
+    if (L.phase === "starting") {
+      const steps = (st && st.steps) || ORDER, done = new Set((st && st.done) || []);
+      return steps.find(s => !done.has(s)) || null;
     }
-    idx = ((i % avail.length) + avail.length) % avail.length;
-    const sc = cur = avail[idx];
-    window.__replay = {scene: sc.key, index: idx, count: avail.length, ended: false};   // 録画の道具が読む印（scripts/record_replay.py）
+    if (L.phase === "done") return ((st && st.steps) || ORDER).slice(-1)[0] || null;
+    return null;
+  }
+  // 工程の場面。生成物が無くて描けない時は、その工程の札（係・状態・最新の 1 行）
+  function sceneForStep(step) {
+    if (!step) return null;
+    const sc = SCENES.find(s => s.key === STEP_SCENE[step]) || SCENES.find(s => s.step === step);
+    if (sc && okScene(sc)) return sc;
+    return {key: "w:" + step, step, title: stepInfo(step).name, film: null, dur: 8, build: () => buildStepCard(step)};
+  }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; if (nextTimer) clearTimeout(nextTimer); nextTimer = null; }
+  function paintBack() {
+    let b = $("#backLive");
+    if (!LIVE || !manual) { if (b) b.remove(); return; }
+    if (!b) { b = el("button", "backlive", "今の工程に戻る"); b.id = "backLive"; b.type = "button"; $(".cap").appendChild(b);
+      b.addEventListener("click", () => { manual = false; showLive(true); }); }
+  }
+  // 場面を 1 つ描く。still＝動きの段取りを全部すぐ当てる（生きている時の中身の更新。流し直さない）
+  function renderScene(sc, still) {
+    clearTimers();
+    cur = sc;
+    avail = allowedScenes();
+    const j = avail.findIndex(s => s.key === sc.key); idx = j;
+    window.__replay = {scene: sc.key, index: j, count: avail.length, ended: false, live: LIVE, manual};   // 録画の道具が読む印（scripts/record_replay.py）
     const info = stepInfo(sc.step);
     $("#sTitle").textContent = sc.title;
     $("#sDesc").textContent = sc.desc || firstSentence(info.line, sc.kw);
     $("#sWho").textContent = `${who(sc.step)}`;
-    $("#pager").innerHTML = avail.map((s, j) => `<i class="${j === idx ? "on" : ""}" title="${esc(s.title)}"></i>`).join("");
+    $("#pager").innerHTML = avail.map((s, k) => `<i class="${s.key === sc.key ? "on" : ""}" data-scene="${esc(s.key)}" title="${esc(s.title)}"></i>`).join("");
     let built;
     try { built = sc.build(ART); } catch (e) { console.error(e); built = {el: el("div", "empty", "この場面を描けませんでした（生成物の形が想定と違う）"), foot: esc(String(e)), tl: []}; }
     const stage = $("#stage"); stage.innerHTML = ""; stage.appendChild(built.el);
     setFoot(built.foot || "");
     renderTop(sc); renderNums(built.focus); renderLog(LIVE ? null : sc.step); renderFilm(sc.film);
+    paintBack();
     const dur = (built.dur || sc.dur) * 1000 / SPEED;
     const tl = (built.tl || []).slice().sort((a, b) => a[0] - b[0]);
-    if (AT != null) { tl.filter(([f]) => f <= AT).forEach(([, fn]) => fn()); window.__sceneReady = sc.key; return; }
+    if (AT != null || still) { tl.filter(([f]) => AT == null || f <= AT).forEach(([, fn]) => fn()); if (AT != null) window.__sceneReady = sc.key; return; }
     tl.forEach(([f, fn]) => timers.push(setTimeout(fn, f * dur)));
-    if (!paused) nextTimer = setTimeout(next, dur);
+    if (!LIVE && !paused) nextTimer = setTimeout(next, dur);   // 生きている時は次の場面へ流さない
+  }
+  function emptyStage() {
+    clearTimers();
+    $("#stage").innerHTML = `<div class="empty">${ART ? "見せられる生成物がまだありません。係が生成物を出すと、ここに本物の絵が順に出ます。" : "棟 id（?building=）が無いか、生成物の一覧を読めません。recorder serve から開いてください。"}</div>`;
+    $("#sTitle").textContent = ""; $("#sDesc").textContent = ""; $("#sWho").textContent = ""; setFoot("");
+    renderTop(null); renderNums(); renderLog(); renderFilm(null);
+    window.__replay = {scene: null, index: -1, count: 0, ended: true, empty: true};
+  }
+  function show(i) {
+    avail = allowedScenes();
+    if (!avail.length) { emptyStage(); return; }
+    idx = ((i % avail.length) + avail.length) % avail.length;
+    renderScene(avail[idx], false);
+  }
+  // 生きている記録：今の工程の場面へ（変わった時は 1 回だけ動きを付け、同じ工程なら中身の更新だけ）
+  function showLive(changed) {
+    const t = targetStep();
+    const sc = sceneForStep(t) || allowedScenes()[0];
+    if (!sc) { emptyStage(); return; }
+    renderScene(sc, !changed);
   }
   function next() {
     if (!LIVE && !LOOP && idx === avail.length - 1) { paused = true; window.__replay = Object.assign({}, window.__replay, {ended: true}); return; }
     show(idx + 1);
   }
+  function goManual(sc) { if (!sc) return; if (LIVE) manual = true; renderScene(sc, false); }
   document.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight") { e.preventDefault(); show(idx + 1); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); show(idx - 1); }
-    else if (e.key === " ") {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault(); const av = allowedScenes(); if (!av.length) return;
+      const k = av.findIndex(s => cur && s.key === cur.key), d = e.key === "ArrowRight" ? 1 : -1;
+      goManual(av[((k + d) % av.length + av.length) % av.length]);
+    } else if (e.key === " " && !LIVE) {
       e.preventDefault(); paused = !paused;
       if (paused) { if (nextTimer) clearTimeout(nextTimer); nextTimer = null; $("#ctl").textContent = "一時停止中（スペースで続ける）"; }
       else { $("#ctl").textContent = "← → 場面　スペース 一時停止"; nextTimer = setTimeout(next, 2500 / SPEED); }
     }
   });
+  // 人が下の列・点を押した時だけ別の場面（生きている時は「今の工程に戻る」が出る）
+  $("#film").addEventListener("click", ev => {
+    const c = ev.target.closest("[data-film]"); if (!c) return;
+    goManual(allowedScenes().find(s => s.film === c.dataset.film));
+  });
+  $("#pager").addEventListener("click", ev => {
+    const d = ev.target.closest("[data-scene]"); if (!d) return;
+    goManual(allowedScenes().find(s => s.key === d.dataset.scene));
+  });
 
   // ---------------------------------------------------------------- 読み込み
   async function loadArtifacts() { const a = await getJSON(`/api/artifacts?building=${encodeURIComponent(B)}`); if (a) ART = a; }
   async function loadPipeline() {
-    const p = await getJSON(`/api/pipeline?building=${encodeURIComponent(B)}`);
+    const p = await getJSON(`/api/pipeline?building=${encodeURIComponent(B)}&t=${Date.now()}`);
     if (p) { PIPE = p; return; }
-    const st = await getJSON(`/out/${encodeURIComponent(B)}/pipeline_state.json`);   // API の無いサーバ：状態だけ
+    const st = await getJSON(`/out/${encodeURIComponent(B)}/pipeline_state.json?t=${Date.now()}`);   // API の無いサーバ：状態だけ
     PIPE = st ? {state: st, record: null, run: null} : null;
   }
   async function loadProgress() {
-    const r = await getJSON(`/api/progress?buildings=${encodeURIComponent(B)}`);
+    const r = await getJSON(`/api/progress?buildings=${encodeURIComponent(B)}&t=${Date.now()}`);
     if (r && r.buildings && r.buildings[B]) { PROG = r.buildings[B]; return; }
-    const rep = await getJSON(`/out/${encodeURIComponent(B)}/report.json`);
+    const rep = await getJSON(`/out/${encodeURIComponent(B)}/report.json?t=${Date.now()}`);
     PROG = rep ? {report: {stages: rep.stages, counts: rep.counts}, run: null} : PROG;
   }
-  // 「止まっています」の帯の「続きから」（11/8、F15）：POST /api/resume。成功したら読み直して生きている表示に戻す
+  // 生きている記録の 1 回の更新：工程が変わった時だけ場面を切り替え、同じなら中身（数・一言・費用・経過）だけ
+  async function tick(n) {
+    await Promise.all([loadPipeline(), loadProgress(), n % 3 === 0 ? loadArtifacts() : null]);
+    const t = targetStep();
+    if (t !== liveStep) {   // 工程が進んだ（再開・進行役も）：人が別の場面を見ていても今の工程へ 1 回切り替える
+      liveStep = t; manual = false; await loadArtifacts(); artKey = JSON.stringify(ART);
+      showLive(true); return;
+    }
+    const k = JSON.stringify(ART);
+    if (!manual && (k !== artKey || (cur && (cur.key.startsWith("w:") || cur.key === "s")))) {   // 生成物が増えた・札の場面：描き直す（流し直さない）
+      artKey = k; showLive(false); return;
+    }
+    renderNums(cur && cur.key === "d" ? ["measured", "estimated", "unknown"] : null); renderLog(); renderTop(cur); renderFilm(cur && cur.film);
+  }
+  // 「止まっています」の帯の「続きから」（11/8、F15）：POST /api/resume。成功したらすぐ読み直して生きている表示に戻す
   $("#stopbar").addEventListener("click", async ev => {
     const btn = ev.target.closest("#sbGo"); if (!btn || !LIVE) return;
     const msg = $("#sbMsg"), inp = $("#sbMax"), rs = (PIPE && PIPE.resume) || {};
@@ -575,8 +792,7 @@
     try { r = await fetch(u("/api/resume"), {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)}); j = await r.json(); } catch (e) {}
     if (!r || !r.ok) { msg.textContent = (j && j.error) || "サーバに届きません"; btn.disabled = false; return; }
     delete $("#stopbar").dataset.key;
-    await Promise.all([loadPipeline(), loadProgress()]);
-    renderTop(cur);
+    await tick(0);
   });
 
   async function init() {
@@ -587,22 +803,14 @@
     if (LIVE && PIPE && PIPE.state && PIPE.state.mode === "continue" && steps) ORDER = steps.continue || ORDER;
     START_COUNTS = JSON.parse(JSON.stringify(countsNow()));
     renderNums();
-    show(0);
-    if (LIVE) {
-      let n = 0, lastCur = PIPE && PIPE.state && PIPE.state.current;
-      setInterval(async () => {
-        n++;
-        await Promise.all([loadPipeline(), loadProgress(), n % 3 === 0 ? loadArtifacts() : null]);
-        renderNums(cur && cur.key === "d" ? ["measured", "estimated", "unknown"] : null); renderLog(); renderTop(cur); renderFilm(cur && cur.film);
-        const c = PIPE && PIPE.state && PIPE.state.current;
-        if (c && c !== lastCur) {   // 工程が進んだ：その工程の場面へ
-          lastCur = c; await loadArtifacts();
-          const av = allowedScenes(), j = av.findIndex(s => s.step === c);
-          if (j >= 0) show(j);
-        }
-      }, 5000);
-      setInterval(() => renderTop(cur), 1000);
-    }
+    if (!LIVE) { show(0); return; }
+    $("#ctl").textContent = "下の列・点・← → で別の場面（「今の工程に戻る」で戻る）";
+    // 再開の直後も、済んだ工程の場面を流し直さず、今の工程の場面から始める
+    liveStep = targetStep(); artKey = JSON.stringify(ART);
+    if (ONLY) show(0); else showLive(true);
+    let n = 0;
+    setInterval(() => { n++; tick(n); }, 4000);
+    setInterval(() => renderTop(cur), 1000);
   }
   init();
 })();

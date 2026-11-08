@@ -208,7 +208,7 @@ def test_bad_requests_do_not_kill_server(srv):
     st, j = _post(base + "/api/campus", json.dumps({"university": "u", "campus_name": "c"}).encode())
     assert st == 400 and "範囲" in j["error"]   # 範囲（bbox）か住所が無いと作らない（原点が別の大学になるため）
     st, j = _get(base + "/api/site")
-    assert st == 200 and j["campus_json"] == "test" and j["max_usd_default"] == 20.0
+    assert st == 200 and j["campus_json"] == "test" and j["max_usd_default"] == agents.DEFAULT_MAX_USD
 
 
 def test_campus_init_when_missing(srv):
@@ -297,12 +297,12 @@ def test_start_default_max_usd(srv, monkeypatch):
     calls = []
     monkeypatch.setattr(agents, "run_pipeline", lambda bid, pf=None, **kw: calls.append(kw.get("max_usd")) or {"steps": []})
     st, j = _post(base + "/api/start", json.dumps({"buildings": ["honbu"]}).encode())
-    assert st == 200 and j["max_usd"] == agents.DEFAULT_MAX_USD == 20.0
+    assert st == 200 and j["max_usd"] == agents.DEFAULT_MAX_USD == 40.0
     for _ in range(100):
         if calls:
             break
         time.sleep(0.05)
-    assert calls == [20.0]
+    assert calls == [agents.DEFAULT_MAX_USD]
 
 
 # --- 待機画面（web/progress.html）の API（11/8、F8） ---------------------------------------------

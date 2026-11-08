@@ -23,15 +23,16 @@ COMMON_NAME = "_共通"
 # 1 回の係の呼び出しの上限（超えたら止めて記録する）
 LIMITS = {
     "haiku": {"max_turns": 12, "max_budget_usd": 0.5},
-    "sonnet": {"max_turns": 20, "max_budget_usd": 1.5},
-    "opus": {"max_turns": 30, "max_budget_usd": 4.0},
-    "fable": {"max_turns": 20, "max_budget_usd": 6.0},      # 進行役。事件が起きた時だけ呼ぶ
+    "sonnet": {"max_turns": 30, "max_budget_usd": 2.5},
+    "opus": {"max_turns": 40, "max_budget_usd": 6.0},
+    "fable": {"max_turns": 40, "max_budget_usd": 10.0},     # 進行役。事件が起きた時だけ呼ぶ（11/8 昼に広げた：途中で止まらない事を優先）
 }
-# 係（工程）ごとの上書き（11/8、F13）。測量・設計・検収は写真を何枚も読むので手数 30 では足りず止まっていた → 60
+# 係（工程）ごとの上書き（11/8、F13）。測量・設計・検収は写真を何枚も読むので手数 30 では足りず止まっていた → 60 → 90（11/8 昼、途中で止まらない事を優先）
 AGENT_LIMITS = {
-    "sokuryo": {"max_turns": 60},
-    "sekkei": {"max_turns": 60},
-    "kenshu": {"max_turns": 60},
+    "sokuryo": {"max_turns": 90},
+    "sekkei": {"max_turns": 90},
+    "kenshu": {"max_turns": 90},
+    # 進行役の手数は LIMITS["fable"]（40）に寄せた（11/8 昼）
 }
 
 
@@ -44,7 +45,7 @@ def agent_limits(name: str, model: str) -> dict:
 PIPELINE_STEPS = ["satsuei", "shiwake", "kansatsu", "kazoe", "sokuryo", "sekkei", "seizu", "mejirushi", "kenshu",
                   "seizu_final", "web"]
 CODE_STEPS = {"seizu", "seizu_final", "web"}
-DEFAULT_MAX_USD = 20.0   # 棟ごとの費用の上限の既定（USD。CLI の --max-usd と職員の画面の既定。0 か None で上限なし）
+DEFAULT_MAX_USD = 40.0   # 棟ごとの費用の上限の既定（USD。CLI の --max-usd と職員の画面の既定。0 か None で上限なし）
 # SDK が CLI から受け取る 1 通の JSON の上限（既定 1 MB）。写真を Read した道具の結果は 1 MB を超えるので 32 MB に広げる
 SDK_MAX_BUFFER_SIZE = 32 * 1024 * 1024
 STEP_AGENT = {"seizu_final": "seizu", "web": "seizu"}     # 工程名 → 係の定義（記録の agent 名）
@@ -314,6 +315,11 @@ LIMITS_HEADER = ("予算（手数 {turns}・1 回の費用 {usd:.2f} USD・{left
                  "{used}\n\n")
 
 
+SHINKO_LIMITS_HEADER = ("予算（手数 {turns}・費用 {usd:.2f} USD）はこれだけ。区切らずに、読む → 決定ファイルを書く → "
+                        "手順書に 1 行 → 最後の行に決定の JSON、の順で終える。読むのは必要な所だけ。\n\n")
+SHINKO_AGENT_NAME = "shinko"
+
+
 def limits_header(max_turns: int, max_budget_usd: float, building_left_usd: float | None = None,
                   used_turns: int | None = None, used_usd: float | None = None) -> str:
     """係の依頼文の先頭に付ける共通の前置き：予算（手数・1 回の費用・棟の残り）、試行錯誤の回数、省いてよい物・いけない物、
@@ -409,6 +415,8 @@ def run_agent(name: str, task: str, *, cwd: str | Path = ".", dry_run: bool = Fa
         hdr = "" if name in CODE_STEPS else limits_header(
             lim["max_turns"], lim["max_budget_usd"], None if left is None else left - spent_here,
             used_turns + turns_here if sid else None, used_usd + spent_here if sid else None)
+        if name == SHINKO_AGENT_NAME:    # 進行役は区切らない（最後の行の JSON が要る）：8 割で【続きあり】の決まりを外す（審査 4）
+            hdr = SHINKO_LIMITS_HEADER.format(turns=lim["max_turns"], usd=lim["max_budget_usd"])
         prompt = hdr + body
         at = _now()
         try:
@@ -764,22 +772,25 @@ def _site_events(cwd: Path) -> list[dict]:
 
 
 def kenshu_passed_faces(cwd: Path, bid: str, after: str | None = None) -> set[str]:
-    """検収係の data/reports/<棟>/kenshu_summary.json で pass が true の面。after（再検収のフォルダ名 YYYYMMDD_HHMMSS）
-    より後に書かれた（made_at）時だけ使う。検収係が線を見て合格にした面は、道具の線の数で進行役を呼び直さない。"""
-    j = _jload(cwd / REPORTS_DIR / bid / "kenshu_summary.json") or {}
-    made = str(j.get("made_at") or "")[:19]
+    """検収係のまとめ data/reports/<棟>/kenshu_summary.json で合格（弱い合格を含む）の面。判定は report.kenshu_faces と
+    同じ（面ごとに一番新しい round_* の判定、上の faces は一番古い回。11/8 昼に寄せた：faces は手で書く欄で古いままの事がある）。
+    after（再検収のフォルダ名 YYYYMMDD_HHMMSS）より後に書かれた（最新の回の made_at）時だけ使う。
+    検収係が線を見て合格にした面は、道具の線の数で進行役を呼び直さない。"""
+    from .report import kenshu_faces
+    kf = kenshu_faces(Path(cwd), bid)
+    if not kf:
+        return set()
+    made = str(kf.get("made_at") or "")[:19]
     if after:
         try:
             if not made or made < datetime.strptime(after[:15], "%Y%m%d_%H%M%S").isoformat():
                 return set()
         except ValueError:
             return set()
-    f = j.get("faces")
-    items = f.items() if isinstance(f, dict) else ((x.get("face"), x) for x in (f or []) if isinstance(x, dict))
-    return {str(k) for k, v in items if isinstance(v, dict) and v.get("pass") is True}
+    return {str(f) for f in (kf.get("pass") or []) + (kf.get("weak") or [])}
 
 
-def _building_events(bid: str, cwd: Path, after_step: str | None) -> list[dict]:
+def _building_events(bid: str, cwd: Path, after_step: str | None, accepted_faces=None) -> list[dict]:
     ev: list[dict] = []
     bpath = cwd / "data" / "buildings" / f"{bid}.json"
     b = _jload(bpath) or {}
@@ -863,20 +874,26 @@ def _building_events(bid: str, cwd: Path, after_step: str | None) -> list[dict]:
             if isinstance(j, dict):
                 sums.append((d.name, j))
 
-    if len(sums) == 2:
+    # 再検収の stuck は検収の後（と工程の外＝after_step None）だけ見る（11/8 昼、審査 1）。測量・設計の後に見ると、
+    # 登録台帳の根が変わっただけで同じ古い recheck から面数・本数の違う stuck が出直し、検収の前に進行役が呼ばれる
+    if len(sums) == 2 and after_step in (None, "kenshu"):
         roots = _reg_roots(cwd, bid)
         new_, old_ = face_ng_lines(sums[0][1], roots), face_ng_lines(sums[1][1], roots)
         passed = kenshu_passed_faces(cwd, bid, after=sums[0][0])
-        faces, by_kenshu = {}, {}
+        accepted = {str(x) for x in (accepted_faces or [])}
+        faces, by_kenshu, by_shinko = {}, {}, []
         for f, lines in new_.items():
             same = sorted(set(lines) & set(old_.get(f, {})))
-            if same:
+            if same and f in accepted:      # 進行役が「不合格のまま記録して進める」とした面（state の accepted_faces）
+                by_shinko.append(f)
+            elif same:
                 (by_kenshu if f in passed else faces)[f] = [{"what": w, **lines[w]} for w in same][:20]
         if faces:
             n = sum(len(v) for v in faces.values())
             ev.append({"kind": "stuck", "why": f"再検収を 2 回回しても合格していない面が {len(faces)} 面（{', '.join(sorted(faces))}。"
                                                f"2 組以上の登録で外れる線 {n} 本）",
                        "evidence": {"recheck": [sums[1][0], sums[0][0]], "faces": faces, "passed_by_kenshu": sorted(by_kenshu),
+                                    "accepted_failing_by_shinko": sorted(by_shinko),
                                     "rule": "面ごと・登録の組ごとの |ずれ| の中央値が許容を超える組が 2 組以上かつ過半の線。1 組だけの外れと弱い縁は数えない（J-025）"}})
 
     # 登録 0 枚（登録は測量係の最後なので、測量より前の工程では見ない）
@@ -906,12 +923,12 @@ def _building_events(bid: str, cwd: Path, after_step: str | None) -> list[dict]:
 
 
 def detect_events(building_id: str | None, cwd: str | Path = ".", now: str | None = None, *,
-                  after_step: str | None = None, write: bool = True) -> dict:
+                  after_step: str | None = None, write: bool = True, accepted_faces=None) -> dict:
     """進行役（Fable）や人を呼ぶ「事件」を、棟 JSON・再検収・争点・登録などから検出する（読むだけ。結果を out/<id>/events.json に書く）。
     building_id が None なら敷地の事件（setup・human）だけ。after_step は run_pipeline が渡す（登録 0 枚を見る時期）。"""
     cwd = Path(cwd)
     now = now or datetime.now().isoformat(timespec="seconds")
-    events = _building_events(building_id, cwd, after_step) if building_id else _site_events(cwd)
+    events = _building_events(building_id, cwd, after_step, accepted_faces) if building_id else _site_events(cwd)
     for e in events:
         e["call"] = EVENT_CALL[e["kind"]]
     events.sort(key=lambda e: EVENT_KINDS.index(e["kind"]))
@@ -948,20 +965,23 @@ def _run_code_step(step: str, building_id: str, cwd: Path) -> dict:
            "started_at": _now(), **{k: None for k in TOKEN_KEYS}, "cost_usd": 0.0, "cost_usd_estimate": 0.0,
            "note": "コードの工程（API を使わない）。トークンは無いので null"}
     t = time.time()
-    if step == "web":
-        from . import site
+    try:
+        if step == "web":
+            from . import site
 
-        r = site.export_web(campus_slug(cwd) or site.default_campus(), with_coverage=True)
-        rec.update(ok=True, outputs=[str(r["path"])])
-    else:
-        from . import run as runner
+            r = site.export_web(campus_slug(cwd) or site.default_campus(), with_coverage=True)
+            rec.update(ok=True, outputs=[str(r["path"])])
+        else:
+            from . import run as runner
 
-        j = cwd / "data/buildings" / f"{building_id}.json"
-        r = runner.run(j, cwd / "out" / building_id, fast=True) if step == "seizu" else runner.run(j, cwd / "out" / building_id)
-        rec.update(ok=bool(r.get("ok")), outputs=[str(Path(r["out"]) / "run_report.json")])
+            j = cwd / "data/buildings" / f"{building_id}.json"
+            r = runner.run(j, cwd / "out" / building_id, fast=True) if step == "seizu" else runner.run(j, cwd / "out" / building_id)
+            rec.update(ok=bool(r.get("ok")), outputs=[str(Path(r["out"]) / "run_report.json")])
+    except SystemExit as e:     # 道具が SystemExit で止まる（BLENDER が無い等）：except Exception で拾えずスレッドごと消えるので、失敗として返す
+        rec.update(ok=False, outputs=[], error=f"SystemExit: {e}")
     rec["seconds"] = round(time.time() - t, 1)
     rec["ended_at"] = _now()
-    rec["summary"] = f"{rec['task']} → {'ok' if rec.get('ok') else '失敗'}"
+    rec["summary"] = f"{rec['task']} → {'ok' if rec.get('ok') else '失敗'}" + (f"（{rec['error']}）" if rec.get("error") else "")
     return rec
 
 
@@ -1001,12 +1021,20 @@ CONTINUE_STEPS = ["satsuei", "shiwake", "sokuryo", "sekkei", "seizu", "kenshu", 
 STOP_REASONS = {"rate_limit": "429・使用量の上限（3 回待っても解けない）", "limit": "1 回の呼び出しの上限（turns・費用）",
                 "error": "係がエラーで終わった", "crash": "落ちた（例外・プロセスの終了）", "code": "コードの工程が失敗",
                 "max_usd": "棟の費用の上限", "event": "進行役か人を呼ぶ事件",
-                "partial": "係が上限の 8 割で区切った（残りあり）"}
+                "partial": "係が上限の 8 割で区切った（残りあり）",
+                "halt": "職員が止めた（進行役の決定の取り消し）"}
+# 自動の進行役（11/8、本番 2 回目の事件の後）：止める事件（STOP_EVENTS）が出たら、止めずに進行役（shinko、Fable）を呼んで
+# 決定ファイルを書かせ、その決定で同じ記録のまま続ける。1 本の記録で自動で決めるのは SHINKO_AUTO_MAX 回まで（その次は人）。
+# 人は職員の画面で事後に承認か取り消し（review_decision）。取り消しは state の halt になり、次の工程の前で止まる。
+SHINKO_AGENT = "shinko"
+SHINKO_AUTO_MAX = 3
+SHINKO_CONTINUE_MAX = 2          # 進行役が区切った・上限で止まった時に同じ会話から続ける回数（2 回。費用は同じ枠の残り）
+SHINKO_CONTINUE_MIN_USD = 0.5    # 続ける時の棟の残りの下限（これより少なければ続けない）
 RESUME_SAME_SESSION = ("rate_limit", "limit", "crash", "partial")    # この理由で止まった工程は、同じ会話（session）の続きから
-# 自動の続き（11/8、F13）：この理由で止まった工程は、人の手を待たずに同じ会話の続きから自動で再開する（工程ごと・1 回の実行で 2 回まで）。
+# 自動の続き（11/8、F13）：この理由で止まった工程は、人の手を待たずに同じ会話の続きから自動で再開する（工程ごと・1 回の実行で AUTO_RESUME_MAX 回まで）。
 # 3 回目に止まったら今まで通り止めて state に記録し、人を呼ぶ事件（pending_events の human）に出す。棟の費用の上限は再開の前に判定する
 AUTO_RESUME_REASONS = ("rate_limit", "limit", "crash", "partial")
-AUTO_RESUME_MAX = 2
+AUTO_RESUME_MAX = 3
 AUTO_RESUME_WAIT_S = RETRY_BASE_S * (2 ** RETRY_MAX)      # 429・混雑で止まった時は、自動で続ける前に 480 秒待つ
 AUTO_KIND_LABEL = {"max_turns": "手数の上限", "max_budget": "1 回の費用の上限", "rate_limit": "429・使用量の上限・混雑",
                    "crash": "落ちた（例外）", "partial": "係が上限の 8 割で区切った"}
@@ -1109,7 +1137,10 @@ def continue_task(step: str, building_id: str, photos_folder: str | None = None,
     return base + note + extra
 
 
-DECISION_HEAD = "進行役の決定（{file}）：\n{text}\n\n"     # やり直す工程の依頼文の先頭（limits_header の後）に入る
+DECISION_HEAD = ("進行役の決定（{file}）：\n{text}\n\n"
+                 "この決定は、下の依頼文の決まり（追記の「新しい写真だけ」「対象は新しい写真が当たる面だけ」を含む）より優先する。"
+                 "決定が古い写真の登録のし直しや別の面を指していれば、それに従う。"
+                 "前の決定で置き直した値に、design スクリプトの補正の係数をもう一度掛けない（面の中で縮尺を混ぜない）。\n\n")     # やり直す工程の依頼文の先頭（limits_header の後）に入る
 DECISION_SUFFIXES = (".md", ".txt")
 
 
@@ -1153,13 +1184,104 @@ def load_state(building_id: str, cwd: str | Path = ".") -> dict | None:
     return j if isinstance(j, dict) else None
 
 
-def _save_state(state: dict, cwd: Path) -> None:
-    state["updated_at"] = _now()
-    p = state_path(state["building"], cwd)
+def _merge_staff_fields(state: dict, disk: dict | None) -> None:
+    """職員の画面（別プロセスのサーバ）がファイルに書いた欄を、メモリの state に取り込む（上書きで消さないため）。
+    同じ記録（record_name が同じ）の時だけ：進行役の決定への事後確認（shinko[i].review）と、止める合図（halt）。
+    halt は、もう halted に移した物（at が同じ）は戻さない。"""
+    if not isinstance(disk, dict) or disk.get("record_name") != state.get("record_name"):
+        return
+    for mine, theirs in zip(state.get("shinko") or [], disk.get("shinko") or []):
+        if isinstance(mine, dict) and isinstance(theirs, dict) and mine.get("review") is None and theirs.get("review"):
+            mine["review"] = theirs["review"]
+    h = disk.get("halt")
+    if isinstance(h, dict) and not state.get("halt") \
+            and h.get("at") not in {x.get("at") for x in state.get("halted") or [] if isinstance(x, dict)}:
+        state["halt"] = h
+
+
+_STATE_LOCKS: dict[str, dict] = {}
+_STATE_GUARD = __import__("threading").Lock()
+STATE_LOCK_TIMEOUT_S = 30.0
+
+
+@__import__("contextlib").contextmanager
+def _state_lock(building_id: str, cwd: str | Path = "."):
+    """記録（pipeline_state.json）の「読む → 直す → 書く」を、プロセスとスレッドをまたいで 1 つずつにする鍵（11/8 昼）。
+    係を回す側（CLI か serve のスレッド）と職員の画面（serve の review・halt）が同時に書くと、後から書いた方が
+    先の欄を消すため。鍵は out/<棟>/pipeline_state.lock（ledger と同じファイルの鍵。プロセスが落ちれば OS が外す）。
+    同じスレッドなら入れ子にできる。STATE_LOCK_TIMEOUT_S で取れなければ、止まらないように鍵なしで進める（warning）。"""
+    import threading
+
+    from .ledger import _try_lock, _unlock
+    p = state_path(building_id, cwd).with_suffix(".lock")
+    key = str(p.resolve()) if p.parent.exists() else str(p)
+    with _STATE_GUARD:
+        st = _STATE_LOCKS.setdefault(key, {"rlock": threading.RLock(), "depth": 0, "fh": None})
+    st["rlock"].acquire()
+    try:
+        st["depth"] += 1
+        if st["depth"] == 1:
+            fh = None
+            try:
+                p.parent.mkdir(parents=True, exist_ok=True)
+                fh = open(p, "a+b")
+                fh.seek(0, 2)
+                if fh.tell() == 0:
+                    fh.write(b"0")
+                    fh.flush()
+                t0 = time.time()
+                while True:
+                    try:
+                        _try_lock(fh)
+                        break
+                    except OSError:
+                        if time.time() - t0 > STATE_LOCK_TIMEOUT_S:
+                            raise TimeoutError
+                        time.sleep(0.05)
+                st["fh"] = fh
+            except (OSError, TimeoutError):
+                if fh is not None:
+                    fh.close()
+                warnings.warn(f"記録の鍵 {p} が取れないので鍵なしで書きます")
+        yield
+    finally:
+        st["depth"] -= 1
+        if st["depth"] == 0 and st["fh"] is not None:
+            try:
+                _unlock(st["fh"])
+            except OSError:
+                pass
+            finally:
+                st["fh"].close()
+                st["fh"] = None
+        st["rlock"].release()
+
+
+def _write_state_file(p: Path, text: str, retries: int = 50, wait: float = 0.1) -> None:
+    """一時ファイル（プロセスとスレッドごとに別の名前）に書いて置き換える。Windows で読み手（serve の /api/progress）が
+    開いている間は置き換えが PermissionError になるので、少し待ってやり直す。"""
+    import threading
     p.parent.mkdir(parents=True, exist_ok=True)
-    tmp = p.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(state, ensure_ascii=False, indent=1), encoding="utf-8")
-    os.replace(tmp, p)
+    tmp = p.with_name(f".{p.name}.{os.getpid()}.{threading.get_ident()}.tmp")
+    tmp.write_text(text, encoding="utf-8")
+    for i in range(retries):
+        try:
+            os.replace(tmp, p)
+            return
+        except PermissionError:
+            if i == retries - 1:
+                tmp.unlink(missing_ok=True)
+                raise
+            time.sleep(wait)
+
+
+def _save_state(state: dict, cwd: Path) -> None:
+    """記録を保存する。鍵の中でファイルを読み直し、職員の画面が書いた欄（review・halt）を取り込んでから書く。
+    ファイルが壊れている・途中・無い時は取り込む物が無いだけ（load_state が None）で、落ちない。"""
+    with _state_lock(state["building"], cwd):
+        _merge_staff_fields(state, load_state(state["building"], cwd))
+        state["updated_at"] = _now()
+        _write_state_file(state_path(state["building"], cwd), json.dumps(state, ensure_ascii=False, indent=1))
 
 
 def _archive_state(building_id: str, cwd: Path) -> str | None:
@@ -1297,25 +1419,433 @@ def _no_new_photos_stop(state: dict) -> dict | None:
     return {"reason": "event", "why": why, "events": [_event_sig(ev)]}
 
 
-def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict:
+def _apply_decision(state: dict, dec: tuple[str, str] | None, redo_from: str | None, ack: list[str], now: str,
+                    by: str = "resume") -> None:
+    """進行役の決定を state に当てる（resume_pipeline と自動の進行役で共通。同じ state・同じ記録のまま）。
+    - redo_from：その工程以降（steps の順）を done から外し、前の会話 id を redo.previous_sessions に移す（新しい会話で）。
+      無ければ残りの工程。どちらも state["redo"] に決定の全文を入れ、やり直す工程の依頼文の先頭に入る（_task_for）。
+    - dec（(相対パス, 全文)）がある時：pending_events のうち進行役が決める物（STOP_EVENTS か call が fable）を acknowledged に移し、
+      decisions に {at, file, text の先頭, redo_from, steps, acknowledged, by} を足す。ack はこの決定が答えた事件の印。"""
+    steps = list(state.get("steps") or [])
+    if redo_from is not None or dec is not None:
+        done = list(state.get("done") or [])
+        if redo_from is not None:
+            redo_steps = steps[steps.index(redo_from):]
+            state["done"] = [s for s in done if s not in redo_steps]
+            sessions = state.setdefault("sessions", {})
+            prev_sessions = {s: sessions.pop(s) for s in redo_steps if s in sessions}   # やり直す工程は新しい会話で
+        else:
+            redo_steps, prev_sessions = [s for s in steps if s not in done], {}
+        state["redo"] = {"from": redo_from, "steps": redo_steps, "at": now, "file": dec[0] if dec else None,
+                         "text": dec[1] if dec else None, "previous_sessions": prev_sessions}
+    if dec is not None:
+        moved = [e for e in state.get("pending_events") or []
+                 if isinstance(e, dict) and (e.get("kind") in STOP_EVENTS or e.get("call") == "fable")]
+        state["pending_events"] = [e for e in state.get("pending_events") or [] if e not in moved]
+        state["acknowledged_events"] = sorted(set(state.get("acknowledged_events") or []) | {_event_sig(e) for e in moved})
+        state.setdefault("decisions", []).append({
+            "at": now, "file": dec[0], "text": dec[1][:300], "chars": len(dec[1]), "redo_from": redo_from,
+            "steps": state["redo"]["steps"], "acknowledged": [_event_sig(e) for e in moved] + list(ack or []), "by": by})
+
+
+def shinko_decision_path(building_id: str, n: int, cwd: str | Path = ".") -> str:
+    """自動の進行役の決定ファイルの置き場（リポジトリからの相対）：data/reports/指示_<MM-DD>/決定_自動_<棟>_<n>.md。
+    指示の置き場の日付は既存の data/reports/指示_11-08 と同じ形。同じ名前が前の記録で使われていれば n を進める。"""
+    d = f"{REPORTS_DIR}/指示_{datetime.now():%m-%d}"
+    k = n
+    while (Path(cwd) / d / f"決定_自動_{building_id}_{k}.md").exists():
+        k += 1
+    return f"{d}/決定_自動_{building_id}_{k}.md"
+
+
+def shinko_task(state: dict, step: str | None, events: list[dict], n: int, decision_file: str) -> str:
+    """自動の進行役への依頼文：事件の一覧（kind・why・evidence）、読む所、決め方、出す物（決定ファイル・手順書の 1 行・最後の行の JSON）。"""
+    b = state["building"]
+    lines = [f"【自動の進行役 {n}/{SHINKO_AUTO_MAX}】棟 {b} の工程 {step or '（始める前）'} の後で、工程を止める事件が {len(events)} 件出た。"
+             "人の代わりにあなたが決め、その決定で工程を自動で続ける（人は後から職員の画面で承認か取り消しをする）。", "",
+             "## 事件"]
+    for i, e in enumerate(events, 1):
+        evd = json.dumps(e.get("evidence"), ensure_ascii=False, default=str)
+        lines.append(f"{i}. [{e['kind']}] {e['why']}\n   evidence: {evd[:1500]}{'…（続きは events.json）' if len(evd) > 1500 else ''}")
+    lines += ["", "## 読む所",
+              f"- out/{b}/events.json（事件の全部と evidence）",
+              f"- out/{b}/soten.json（設計係と検収係の争点）",
+              f"- {REPORTS_DIR}/{b}/kenshu_summary.json と {REPORTS_DIR}/{b}/sokuryo*.json（検収と測量の報告）",
+              f"- 前の決定 {REPORTS_DIR}/指示_*/決定*.md（同じ事件に前の決定があれば、その規則に従うか、変える理由を書く）",
+              f"- 記録 out/{b}/{STATE_NAME} の decisions と shinko（この記録で前に決めた事）",
+              "- 手順書 docs/手順_エージェント.md の「進行役と事件」",
+              f"- 工程の順：{' → '.join(state.get('steps') or [])}（済み：{', '.join(state.get('done') or []) or 'なし'}）",
+              "", "## 決め方",
+              "事件ごとに次のどれか 1 つを選ぶ：(1) 測り直し（測量からやり直す）、(2) 登録の解き直し（登録をする工程からやり直す）、"
+              "（(2) の道具：測量係が `python -m recorder photos unregister <写真id> --why <理由> --building <棟> --face <面> --by sokuryo` "
+              "で外してから compare → register → register-chain で登録し直す。register-chain は登録済みの写真を解き直さない）、"
+              "(3) 撮影依頼に回す（値は unknown か estimated のまま、棟 JSON の requests に kind photo で出すのは設計係）、"
+              "(4) 不合格のまま記録して進める（残る誤差と理由を書く）。",
+              "決めつけない：根拠の無い値を足さない、なめらかな勾配・仮の幅・平面の当てはめで埋めない。部品ごとの審判はしない。",
+              "既に見て続けると決めた asset・vocab の事件（記録の acknowledged_events にある物）は記録だけにし、新しく素材を探したり "
+              "agent decide を書いたりしない。",
+              "", "## 出す物",
+              f"1. 決定を新しいファイル {decision_file} に書く（名前を変えない）。事件ごとに「〜の時は〜」の規則の形で、理由（読んだ数字とファイル）を付ける。"
+              "ファイルの最後に「やり直す工程：<工程名 か なし>」の行を 1 行書く（返事の JSON と同じ値）。",
+              "2. 手順書 docs/手順_エージェント.md の「進行役と事件」の節に、その規則を 1 行足す。",
+              "3. 棟 JSON・写真・生成物・design スクリプトは直さない（直すのは redo_from から先の係）。",
+              "4. 返事の最後の行に JSON を 1 行だけ書く（コードの囲みを付けない）。例："
+              '{"decision_file": "' + decision_file + '", "redo_from": "sokuryo", "accept_faces": [], "summary": "<1 行>", "stop_for_human": false}',
+              "   redo_from は上の工程の順にある名前を文字列で、今の工程の次から普通に続けるなら引用符の無い null。"
+              "stop_for_human は引用符の無い true か false。",
+              "   accept_faces は (4)「不合格のまま記録して進める」とした面 id の並び（その面の再検収の不合格は、この記録の中で"
+              "もう事件にしない。決定ファイルに残る誤差と理由を書く）。無ければ []。決定ファイルにも「不合格のまま進める面：f4, f5」の行を書く。",
+              "   人でないと決められない（大学の許可・公開の可否・職員にしか分からない事実）時だけ stop_for_human を true にする。"
+              "その時も決定ファイルに、人に聞く事を書く。"]
+    return "\n".join(lines)
+
+
+def parse_shinko_reply(text: str | None) -> dict | None:
+    """進行役の返事から決定の JSON（decision_file を持つ JSON オブジェクト）を、後ろから探して読む（11/8 昼に堅牢化）。
+    1 行でも複数行に整形されていても、コードの囲み（```json）の中でも、JSON の後ろに文が続いていてもよい。無ければ None。"""
+    t = text or ""
+    dec = json.JSONDecoder()
+    for i in range(len(t) - 1, -1, -1):
+        if t[i] != "{":
+            continue
+        try:
+            j, _end = dec.raw_decode(t, i)
+        except ValueError:
+            continue
+        if isinstance(j, dict) and "decision_file" in j:
+            return j
+    return None
+
+
+SHINKO_DECISION_GLOB = "指示_*"            # 決定ファイルの置き場 data/reports/指示_*/（名前違いで書かれた時に拾う）
+_REDO_LINE_RE = re.compile(r"(?:やり直す工程|redo_from)\s*[:：]\s*[`*「]*\s*([A-Za-z_]+|なし|null|None)", re.I)
+_ACCEPT_LINE_RE = re.compile(r"不合格のまま進める面\s*[:：]\s*([A-Za-z0-9_,，、 \t]+)")
+_HUMAN_LINE_RE = re.compile(r"(?:人を呼ぶ|stop_for_human)\s*[:：]\s*[`*「]*\s*(はい|true|yes)", re.I)
+
+
+def _fresh_decision_files(cwd: Path, since: float) -> list[str]:
+    """data/reports/指示_*/ の下に since（time.time()）以降に書かれた md・txt（新しい順、リポジトリからの相対）。"""
+    base = Path(cwd) / REPORTS_DIR
+    out = []
+    for p in base.glob(f"{SHINKO_DECISION_GLOB}/*"):
+        try:
+            if p.is_file() and p.suffix.lower() in DECISION_SUFFIXES and p.stat().st_mtime >= since:
+                out.append((p.stat().st_mtime, p.name.startswith("決定"), p))
+        except OSError:
+            continue
+    out.sort(key=lambda x: (x[1], x[0]), reverse=True)     # 「決定」で始まる名前を先に、その中で新しい順
+    return [x[2].relative_to(Path(cwd)).as_posix() for x in out]
+
+
+def decision_redo_from(text: str) -> tuple[bool, str | None]:
+    """決定ファイルの「やり直す工程：<名前>」の行（最後の物）。(行があったか, 工程名 or None)。「なし」「null」は None。"""
+    ms = list(_REDO_LINE_RE.finditer(text or ""))
+    if not ms:
+        return False, None
+    v = ms[-1].group(1)
+    return True, (None if v.lower() in ("なし", "null", "none") else v)
+
+
+def _norm_redo(v, steps: list[str]) -> tuple[str | None, str | None]:
+    """返事の redo_from を記録の工程名に直す。(工程名 or None, 直した時の注記)。
+    "null"・"なし"・空は None。工程の順（PIPELINE_STEPS）にあるがこの記録の steps に無い名前（追記で回さない kansatsu など）は、
+    その後ろで steps にある最初の工程に寄せる（例 mejirushi → kenshu）。寄せる先が無ければそのまま返す（呼ぶ側が不正として止める）。"""
+    if v is None:
+        return None, None
+    v = str(v).strip().strip("`'\"「」")
+    if not v or v.lower() in ("null", "none", "なし"):
+        return None, None
+    if v in steps or v not in PIPELINE_STEPS:
+        return v, None
+    i = PIPELINE_STEPS.index(v)
+    later = [x for x in steps if x in PIPELINE_STEPS and PIPELINE_STEPS.index(x) > i]
+    if not later:
+        return v, None
+    return later[0], f"redo_from {v} はこの記録の工程に無いので、後ろで最初の {later[0]} に寄せた"
+
+
+def _shinko_preflight(state: dict) -> tuple[bool, str | None]:
+    """自動の進行役を呼べるか（回数と費用）。(呼べる, 呼べない理由の種類 max / no_cap / max_usd)。"""
+    if len(state.get("shinko") or []) >= SHINKO_AUTO_MAX:
+        return False, "max"
+    cap = state.get("max_usd")
+    if cap is None:
+        return False, "no_cap"
+    left = float(cap) - float(state.get("spent_usd") or 0.0)
+    if left < LIMITS["fable"]["max_budget_usd"]:
+        return False, "max_usd"
+    return True, None
+
+
+def shinko_plan(state: dict, step: str | None, events: list[dict], cwd: str | Path = ".") -> dict:
+    """dry_run の計画：どの事件を進行役に出すか、呼べるか、決定ファイルの名前（呼ばない）。"""
+    ok, why_not = _shinko_preflight(state)
+    n = len(state.get("shinko") or []) + 1
+    return {"after_step": step, "events": [{"kind": e["kind"], "why": e["why"], "sig": _event_sig(e)} for e in events],
+            "would_call": ok and bool(events), "why_not": why_not, "n": n,
+            "decision_file": shinko_decision_path(state["building"], n, cwd)}
+
+
+def _shinko_auto(state: dict, s: str | None, hit: list[dict], cwd: Path, *, agents_dir, prices) -> dict:
+    """止める事件 hit で、進行役を自動で呼んで決定を当てる。{"redo_from": ...}（続ける）か {"stop": 止める理由}。
+    呼べない（回数・費用）・返事が形にならない・人でないと決められない時は止め、人を呼ぶ事件を pending_events に足す。"""
+    b = state["building"]
+    sigs = [_event_sig(e) for e in hit]
+    base = {"reason": "event", "why": "；".join(e["why"] for e in hit)[:500], "events": sigs}
+
+    def human(why: str) -> None:
+        state["pending_events"] = list(state.get("pending_events") or []) + [
+            {"kind": "human", "call": EVENT_CALL["human"], "why": why}]
+
+    ok, why_not = _shinko_preflight(state)
+    if not ok:
+        if why_not == "max":
+            human(f"進行役の自動の決定が {SHINKO_AUTO_MAX} 回を超えた。人が決める（{base['why'][:200]}）")
+            return {"stop": {**base, "shinko": "max"}}
+        if why_not == "no_cap":
+            human("棟の費用の上限（max_usd）が無い記録なので、進行役を自動で呼ばない。人が決めるか、上限を付けて "
+                  f"recorder agent resume {b} --shinko --max-usd N で続ける")
+            return {"stop": {**base, "shinko": "no_cap"}}
+        left = float(state["max_usd"]) - float(state.get("spent_usd") or 0.0)
+        # 人を呼ぶ事件は足さない（職員の画面が上限を聞く）。上限を上げて resume すると、--shinko 無しでも進行役が決める
+        return {"stop": {"reason": "max_usd", "events": sigs, "shinko": "max_usd", "shinko_pending": True,
+                         "why": f"進行役を呼ぶ費用（{LIMITS['fable']['max_budget_usd']:g} USD）が棟の上限の残り（{left:.2f} USD）"
+                                f"に足りない。上限を上げて続けると進行役が決める（事件：{base['why'][:300]}）"}}
+    log = state.setdefault("shinko", [])
+    n = len(log) + 1
+    path = shinko_decision_path(b, n, cwd)
+    try:
+        (Path(cwd) / path).parent.mkdir(parents=True, exist_ok=True)     # 決定の置き場（指示_<MM-DD>）が無ければ作る
+    except OSError:
+        pass
+    state.update(status="running", current=SHINKO_AGENT)     # 進行役が考えている間もファイルは「動いている」（審査 8）
+    state["shinko_pending_events"] = list(sigs)     # 今進行役に渡している事件の印（serve が読む。決まるか止まったら空に）
+    _save_state(state, cwd)
+    t0 = time.time()
+    task = shinko_task(state, s, hit, n, path)
+    recs: list[dict] = []
+    rec: dict = {}
+    reply = None
+    sid = None
+    for k in range(SHINKO_CONTINUE_MAX + 1):
+        left = round(float(state["max_usd"]) - float(state.get("spent_usd") or 0.0), 4)
+        if k > 0 and left < SHINKO_CONTINUE_MIN_USD:
+            break
+        why = None
+        if k > 0:
+            why = (f"進行役の続き {k}/{SHINKO_CONTINUE_MAX}。前は"
+                   + ("途中で区切った" if rec.get("partial") else
+                      ("手数か費用の上限" if rec.get("stopped_by_limit") else f"落ちた（{rec.get('error')}）"))
+                   + f"。決定ファイル {path} を書き終え、返事は決定の JSON の 1 行だけ返して")
+        try:
+            rec = run_agent(SHINKO_AGENT, task, cwd=cwd, agents_dir=agents_dir, building_id=b, prices=prices,
+                            max_budget_usd=left, building_left_usd=left, resume=sid, resume_why=why,
+                            session_costs=state.setdefault("session_costs", {}))
+        except Exception as e:  # noqa: BLE001  落ちても記録を残して止める
+            rec = {"agent": SHINKO_AGENT, "text": "", "calls": [], "error": f"{type(e).__name__}: {e}", "ended_at": _now()}
+        rec.update(step=SHINKO_AGENT, shinko_n=n, after_step=s, **({"shinko_continue": k} if k else {}))
+        state["spent_usd"] = round(float(state.get("spent_usd") or 0.0) + _rec_cost(rec), 6)
+        state["usage_calls"] = list(state.get("usage_calls") or []) + [
+            {"step": SHINKO_AGENT, "shinko_n": n, **c} for c in rec.get("calls") or []]
+        state.setdefault("results", []).append(rec)
+        recs.append(rec)
+        sid = rec.get("session_id") or sid
+        try:
+            _save_state(state, cwd)       # 費用を残す（この後で落ちても）
+        except OSError:
+            pass
+        reply = parse_shinko_reply(rec.get("text"))
+        # 区切った（【続きあり】）・手数や費用の上限・落ちた（429 以外）で、決定の JSON がまだ無い時は、同じ会話から続ける
+        again = rec.get("partial") or (reply is None and (rec.get("stopped_by_limit") or
+                                                          (rec.get("error") and not rec.get("rate_limited"))))
+        if not again or not sid:
+            break
+        if not rec.get("partial") and _fresh_decision_files(Path(cwd), t0 - 2):
+            break       # 決定ファイルはもう書かれている：拾う（下）。続けない
+    cost = round(sum(_rec_cost(r) for r in recs), 6)
+    entry = {"n": n, "at": _now(), "step": s, "events": sigs, "decision_file": None, "redo_from": None,
+             "summary": None, "cost_usd": cost, "session_id": sid, "review": None}
+    if len(recs) > 1:
+        entry["calls"] = len(recs)
+    steps = list(state.get("steps") or [])
+    problem, dec, notes = None, None, []
+    redo_raw = None
+    if reply is not None:
+        entry.update(summary=summary_line(str(reply.get("summary") or ""), 200) or None,
+                     decision_file=reply.get("decision_file"))
+        redo_raw = reply.get("redo_from")
+        try:
+            dec = read_decision(str(reply.get("decision_file") or ""), cwd)
+            entry["decision_file"] = dec[0]
+            if (Path(cwd) / dec[0]).stat().st_mtime < t0 - 2:
+                problem, dec = f"決定のファイル {dec[0]} がこの呼び出しで書かれていない（前の決定の使い回し）", None
+        except AgentError as e:
+            problem = str(e)
+        if reply.get("stop_for_human") is True or str(reply.get("stop_for_human")).strip().lower() == "true":
+            entry["stop_for_human"] = True
+        af = reply.get("accept_faces")
+        if isinstance(af, str):
+            af = [x for x in re.split(r"[,\s、，]+", af) if x]
+        if isinstance(af, list):
+            entry["accept_faces"] = sorted({str(x).strip() for x in af if str(x).strip()})
+    if dec is None:
+        # 返事に JSON が無い・指したファイルが無い：この呼び出しの間に指示_*/ に新しく書かれた決定ファイルを拾う（名前違いも）
+        for cand in _fresh_decision_files(Path(cwd), t0 - 2):
+            try:
+                dec = read_decision(cand, cwd)
+            except AgentError:
+                continue
+            if b not in Path(cand).name and b not in dec[1]:     # 同時に回る別の棟の進行役の決定は拾わない
+                dec = None
+                continue
+            notes.append(f"決定ファイルを {cand} から拾った（" + ("返事に決定の JSON が無い" if reply is None else
+                                                              f"返事の指す {entry['decision_file']} が無いか古い") + "）")
+            if problem:
+                notes.append(f"返事の問題：{problem}")
+            problem = None
+            entry["decision_file"] = dec[0]
+            if reply is None:
+                found, redo_raw = decision_redo_from(dec[1])
+                notes.append(f"redo_from は決定ファイルの「やり直す工程」の行から：{redo_raw}" if found else
+                             "決定ファイルに「やり直す工程」の行が無いので redo_from は null（次の工程から）")
+                entry["summary"] = summary_line(dec[1], 200) or None
+                if _HUMAN_LINE_RE.search(dec[1]):
+                    entry["stop_for_human"] = True
+                ms = list(_ACCEPT_LINE_RE.finditer(dec[1]))
+                if ms:
+                    entry["accept_faces"] = sorted({x for x in re.split(r"[,\s、，]+", ms[-1].group(1)) if x})
+            break
+        else:
+            if problem is None:
+                problem = "返事に決定の JSON（decision_file を持つ物）が無く、指示_*/ にこの呼び出しで書かれた決定ファイルも無い"
+            if rec.get("error"):
+                problem += f"（{rec.get('error')}）"
+    if problem is None:
+        rf, note = _norm_redo(redo_raw, steps)
+        if note:
+            notes.append(note)
+        entry["redo_from"] = rf
+        if rf is not None and rf not in steps:
+            problem = f"redo_from の工程 {rf} がこの記録の工程にない"
+    else:
+        entry["redo_from"] = redo_raw if isinstance(redo_raw, str) else None
+    if notes:
+        entry["notes"] = notes
+    if problem:
+        entry["failed"] = problem
+        entry.pop("stop_for_human", None)
+    log.append(entry)
+    state["shinko_pending_events"] = []
+    state.setdefault("runs", []).append({"kind": "shinko", "n": n, "at": entry["at"], "decision_file": entry["decision_file"],
+                                         "redo_from": entry["redo_from"], "after_step": s,
+                                         **({"failed": problem} if problem else {})})
+    if problem:
+        human(f"進行役の自動の決定が形にならなかった（{problem}）。人が決めて recorder agent resume {b} --decision で続ける")
+        return {"stop": {**base, "shinko": "failed", "shinko_n": n}}
+    if entry.get("stop_for_human"):
+        human(f"進行役が人でないと決められないとした（{entry['summary'] or ''}。{entry['decision_file']}）")
+        return {"stop": {**base, "shinko": "stop_for_human", "shinko_n": n}}
+    state["acknowledged_events"] = sorted(set(state.get("acknowledged_events") or []) | set(sigs))
+    if entry.get("accept_faces"):    # 不合格のまま記録して進める面：この記録の中で再検収の不合格を事件にしない（審査 2）
+        state["accepted_faces"] = sorted(set(state.get("accepted_faces") or []) | set(entry["accept_faces"]))
+    _apply_decision(state, dec, entry["redo_from"], sigs, entry["at"], by=f"shinko_auto_{n}")
+    return {"redo_from": entry["redo_from"], "n": n}
+
+
+def _take_halt(state: dict, cwd: Path, before: str) -> dict | None:
+    """職員の止める合図（state の halt。別プロセスのサーバが書くのでファイルから読み直す）を見る。
+    あれば halted に移して空にし（次の resume で再び止まらないように）、合図を返す。"""
+    with _state_lock(state["building"], cwd):
+        _merge_staff_fields(state, load_state(state["building"], cwd))
+    h = state.get("halt")
+    if not isinstance(h, dict):
+        return None
+    state["halted"] = list(state.get("halted") or []) + [{**h, "stopped_before": before, "taken_at": _now()}]
+    state["halt"] = None
+    return h
+
+
+def review_decision(building_id: str, n: int, verdict: str, note: str | None = None, *, cwd=".") -> dict:
+    """職員が進行役の自動の決定 n（1 始まり）を事後に承認（approve）か取り消し（revoke）する。state の shinko[n-1].review に
+    {verdict, at, note} を書いて保存し、その項目を返す。revoke は同時に halt を書く（走っている工程の輪は次の工程の前で止まる）。"""
+    if verdict not in ("approve", "revoke"):
+        raise AgentError(f"verdict は approve か revoke だけ：{verdict}")
+    cwd = Path(cwd)
+    with _state_lock(building_id, cwd):     # 読む所から書く所まで鍵の中（係を回す側の保存と入れ違って欄を消さない）
+        state = load_state(building_id, cwd)
+        if not state:
+            raise AgentError(f"記録がありません（{state_path(building_id, cwd)}）")
+        log = state.get("shinko") or []
+        if not isinstance(n, int) or n < 1 or n > len(log):
+            raise AgentError(f"進行役の決定 {n} はこの記録にありません（{len(log)} 件）")
+        now = _now()
+        log[n - 1]["review"] = {"verdict": verdict, "at": now, "note": note}
+        if verdict == "revoke":
+            state["halt"] = {"why": f"職員が進行役の決定 {n} を取り消した", "at": now, "by": "staff", "shinko_n": n,
+                             **({"note": note} if note else {})}
+        _save_state(state, cwd)
+    return log[n - 1]
+
+
+def request_halt(building_id: str, why: str, *, cwd=".") -> dict:
+    """職員が止める合図を state の halt に書く（走っている工程の輪は次の工程の前で止まる）。書いた halt を返す。"""
+    cwd = Path(cwd)
+    with _state_lock(building_id, cwd):
+        state = load_state(building_id, cwd)
+        if not state:
+            raise AgentError(f"記録がありません（{state_path(building_id, cwd)}）")
+        state["halt"] = {"why": why, "at": _now(), "by": "staff"}
+        _save_state(state, cwd)
+    return state["halt"]
+
+
+def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices, shinko_first: dict | None = None) -> dict:
     """state の steps のうち done に無い物を順に回す。工程の前後で state を out/<棟>/pipeline_state.json に保存する（dry_run は保存しない）。
-    止まった時（事件・429・上限・落ち・費用の上限）は stopped に {step, reason, why, at, session_id} を書いて返す。"""
+    止まった時（事件・429・上限・落ち・費用の上限）は stopped に {step, reason, why, at, session_id} を書いて返す。
+    止める事件（STOP_EVENTS）が出たら、止めずに進行役を自動で呼び（_shinko_auto、SHINKO_AUTO_MAX 回まで）、決定の redo_from から続ける。
+    各工程の前にファイルの halt（職員の止める合図）を見て、あれば止める（reason halt）。
+    shinko_first（resume --shinko）は {"after_step", "events"}：工程の輪の前に、その事件で進行役を呼ぶ。"""
     b = state["building"]
     n_before = len(state["results"])
     prev_stop = state.get("stopped") or {}
     state["stopped"] = None
     extra: dict = {}
     pre_stop = _no_new_photos_stop(state)
-    for s in [x for x in state["steps"] if x not in state["done"]]:
+    first_stop: dict | None = None
+    if shinko_first and shinko_first.get("events") and not dry_run:
+        try:
+            got = _shinko_auto(state, shinko_first.get("after_step"), shinko_first["events"], cwd,
+                               agents_dir=agents_dir, prices=prices)
+        except Exception as e:  # noqa: BLE001  進行役の周りの道具が落ちても、記録を running のまま残さず止める
+            state["shinko_pending_events"] = []
+            got = {"stop": {"reason": "crash", "why": f"進行役を呼ぶ所で落ちた：{type(e).__name__}: {e}"}}
+        if "stop" in got:
+            first_stop = got["stop"]
+        else:
+            prev_stop = {}      # 決定でやり直す工程は新しい会話で
+        _save_state(state, cwd)
+    while True:
+        todo = [x for x in state["steps"] if x not in state["done"]]
+        if not todo:
+            break
+        s = todo[0]
         same = prev_stop.get("step") == s and prev_stop.get("reason") in RESUME_SAME_SESSION
         resume_sid = state["sessions"].get(s) if same else None
+        halt = None if dry_run or first_stop else _take_halt(state, cwd, s)
         state.update(status="running", current=s)
         if not dry_run:
             _save_state(state, cwd)       # ここで落ちれば、resume は current の工程を「落ちた」として同じ会話から続ける
         stop: dict | None = None
         recs: list[dict] = []
         try:
-            if pre_stop is not None:      # 追記なのに新しい写真が 0 枚：最初の工程の前で止めて人を呼ぶ
+            if first_stop is not None:    # resume --shinko の進行役が決められなかった：工程を始めずに止める
+                stop, first_stop = first_stop, None
+                extra = {"stopped_at": shinko_first.get("after_step")}
+                if shinko_first.get("after_step"):
+                    stop["step"] = shinko_first["after_step"]     # 止まった印は事件の出た工程（次の工程ではなく。審査 13）
+            elif halt is not None:        # 職員が止めた（進行役の決定の取り消し）：工程を始めずに止める
+                stop = {"reason": "halt", "why": halt.get("why"), "by": halt.get("by"), "halt_at": halt.get("at")}
+            elif pre_stop is not None:    # 追記なのに新しい写真が 0 枚：最初の工程の前で止めて人を呼ぶ
                 stop, pre_stop = pre_stop, None
             elif s in CODE_STEPS:
                 if dry_run:
@@ -1330,9 +1860,9 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
                                             resume_sid=resume_sid, resume_why=prev_stop.get("why") if resume_sid else None)
                 if rec is not None:
                     recs.append(rec)
-                if not dry_run:     # 落ちた・手数や 1 回の費用の上限・429・係が区切った → 同じ会話の続きから自動で（2 回まで）
+                if not dry_run:     # 落ちた・手数や 1 回の費用の上限・429・係が区切った → 同じ会話の続きから自動で（AUTO_RESUME_MAX 回まで）
                     rec, stop = _auto_resume_loop(state, s, cwd, rec, stop, recs, agents_dir=agents_dir, prices=prices)
-        except Exception as e:  # noqa: BLE001  落ちても状態と記録を残して止める
+        except (Exception, SystemExit) as e:  # noqa: BLE001  落ちても状態と記録を残して止める（SystemExit も。スレッドが消えないように）
             rec = {"agent": step_agent(s), "step": s, "error": f"{type(e).__name__}: {e}", "ended_at": _now()}
             recs.append(rec)
             stop = {"reason": "crash", "why": rec["error"]}
@@ -1357,15 +1887,33 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
                 stop = {"reason": "max_usd",
                         "why": f"棟の費用の上限 {cap} USD に達した（使った {state['spent_usd']:.4f} USD）。工程 {s} の後で止めた"}
         if stop is None:
-            ev = detect_events(b, cwd, after_step=s, write=not dry_run)
+            ev = detect_events(b, cwd, after_step=s, write=not dry_run, accepted_faces=state.get("accepted_faces"))
             state["pending_events"] = [{"kind": e["kind"], "call": e["call"], "why": e["why"]} for e in ev["events"]
                                        if e["kind"] not in STOP_EVENTS or e.get("decided")]
             hit = _stop_events(ev, state.get("acknowledged_events") or [])
-            if hit:
-                stop = {"reason": "event", "why": "；".join(e["why"] for e in hit)[:500], "events": [_event_sig(e) for e in hit]}
+            if hit and not [x for x in state["steps"] if x not in state["done"]]:
+                # 最後の工程（web）の後：事件は記録だけにして進行役を呼ばない（審査 11）。次の追記か人が見る
+                state["pending_events"] += [{"kind": e["kind"], "call": e["call"], "why": e["why"], "after_last_step": True}
+                                            for e in hit]
+                hit = []
+            if hit and dry_run:
+                stop = {"reason": "event", "why": "；".join(e["why"] for e in hit)[:500], "events": [_event_sig(e) for e in hit],
+                        "shinko_plan": shinko_plan(state, s, hit, cwd)}
                 extra = {"stopped_at": s, "events": ev}
+            elif hit:       # 止めずに進行役を自動で呼ぶ。決められなければ止める（人を呼ぶ事件は _shinko_auto が足す）
+                try:
+                    got = _shinko_auto(state, s, hit, cwd, agents_dir=agents_dir, prices=prices)
+                except Exception as e:  # noqa: BLE001
+                    state["shinko_pending_events"] = []
+                    got = {"stop": {"reason": "crash", "why": f"進行役を呼ぶ所で落ちた：{type(e).__name__}: {e}"}}
+                if "stop" in got:
+                    stop = got["stop"]
+                    extra = {"stopped_at": s, "events": ev}
+                else:
+                    prev_stop = {}
         if stop is not None:
-            stop.update(step=s, at=_now(), session_id=state["sessions"].get(s), label=STOP_REASONS.get(stop["reason"]))
+            st_step = stop.get("step") or s
+            stop.update(step=st_step, at=_now(), session_id=state["sessions"].get(st_step), label=STOP_REASONS.get(stop["reason"]))
             state.update(status="stopped", stopped=stop, current=None)
             break
         state["current"] = None
@@ -1381,6 +1929,7 @@ def _drive(state: dict, cwd: Path, *, dry_run: bool, agents_dir, prices) -> dict
                "runs": state["runs"], "started_at": state["started_at"], "ended_at": _now(), **_pipeline_totals(state["results"]),
                "auto_resumes": state.get("auto_resumes") or {},
                "auto_resumes_total": sum(len(v) for v in (state.get("auto_resumes") or {}).values()),
+               "shinko": state.get("shinko") or [], "shinko_total": len(state.get("shinko") or []),
                "usage_calls": len(state["usage_calls"]),
                "usage_calls_total": {k: _sum_or_none(c.get(k) for c in state["usage_calls"]) for k in TOKEN_KEYS},
                "made_at": _now()}
@@ -1447,7 +1996,7 @@ def continue_pipeline(building_id: str, photos_folder: str | None = None, *, fac
 
 def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path = ".", agents_dir: str | Path | None = None,
                     prices: dict | None = None, max_usd: float | None = None, redo_from: str | None = None,
-                    decision_file: str | None = None) -> dict:
+                    decision_file: str | None = None, shinko: bool = False) -> dict:
     """止まった所から続ける（out/<棟>/pipeline_state.json を読む）。
     - 429・上限・落ちで止まった工程は、同じ会話（session_id）の続きから（RESUME_PROMPT）。工程の中では _drive が先に
       自動の続きを AUTO_RESUME_MAX 回まで試すので、ここに来るのはそれでも止まった時（人を呼ぶ事件が pending_events に出る）。
@@ -1459,7 +2008,12 @@ def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path 
     - decision_file：進行役の決定（md か txt、リポジトリからの相対）。state の decisions に {at, file, text の先頭, redo_from} を
       足し、やり直す工程（redo_from が無ければ残りの工程）の依頼文の先頭（前置きの後）に全文を入れる（state の redo）。
       pending_events のうち進行役が決める物（STOP_EVENTS か call が fable）は決定済みとして acknowledged_events に移す。
-    - 同じ state・同じ記録（record_name）に足し、runs に {kind: "resume", redo_from, decision_file} を残す。費用は積み上がる。"""
+    - shinko（11/8）：止まった理由に関わらず（running のまま＝落ちた物も）、最後に済んだ工程（done の末尾）の後の事件を
+      detect_events で取り直し、acknowledged に入っていても止める事件（STOP_EVENTS、決定済みでない物）があれば、
+      工程の輪の前に進行役を自動で呼び（_shinko_auto）、その決定で続ける。事件が無ければ普通の resume。
+      dry_run は進行役を呼ばず、どの事件を出すかの計画（shinko_plan）だけ返す。
+    - 職員の止める合図（halt）が残っていれば、人が resume したので消して halted に移す（runs に残す）。
+    - 同じ state・同じ記録（record_name）に足し、runs に {kind: "resume", redo_from, decision_file, shinko} を残す。費用は積み上がる。"""
     cwd = Path(cwd)
     state = load_state(building_id, cwd)
     if not state:
@@ -1468,7 +2022,31 @@ def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path 
     if redo_from is not None and redo_from not in steps:
         raise AgentError(f"やり直す工程 {redo_from} はこの記録の工程にありません。ある工程: {steps}")
     dec = read_decision(decision_file, cwd) if decision_file else None
-    if state.get("status") == "done" and redo_from is None:
+    shinko_first = None
+    pend = bool((state.get("stopped") or {}).get("shinko_pending"))
+    if pend and not dry_run:       # 進行役の費用が足りずに止まった：上限を上げてからでないと続けない
+        cap = max_usd if max_usd is not None else state.get("max_usd")
+        left = None if cap is None else float(cap) - float(state.get("spent_usd") or 0.0)
+        if left is not None and left < LIMITS["fable"]["max_budget_usd"]:
+            raise AgentError(f"進行役を呼ぶ費用（{LIMITS['fable']['max_budget_usd']:g} USD）が棟の上限の残り（{left:.2f} USD）に"
+                             "足りません。--max-usd で上限を上げてから resume する")
+    shinko = shinko or pend
+    if shinko:
+        after = (state.get("done") or [None])[-1]
+        ev = detect_events(building_id, cwd, after_step=after, write=not dry_run, accepted_faces=state.get("accepted_faces"))
+        # 進行役に渡すのは、止めた事件（stopped.events）と、まだ acknowledged に無い事件と、行き詰まり（stuck）。
+        # 既に見て続けると決めた asset・vocab（例 内装が止まっている棟の机）は渡さない（11/8 昼、審査 7。CC0 探しに手数を使わせない）
+        known = set(state.get("acknowledged_events") or []) - set((state.get("stopped") or {}).get("events") or [])
+        hit = [e for e in ev["events"] if e["kind"] in STOP_EVENTS and not e.get("decided")
+               and (e["kind"] == "stuck" or _event_sig(e) not in known)]
+        if hit:
+            shinko_first = {"after_step": after, "events": hit}
+            if dry_run:
+                return {"building": building_id, "dry_run": True, "shinko_plan": shinko_plan(state, after, hit, cwd),
+                        "status": state.get("status"), "current": state.get("current"), "done": state.get("done"),
+                        "steps_left": [s for s in steps if s not in (state.get("done") or [])],
+                        "spent_usd": state.get("spent_usd"), "max_usd": state.get("max_usd") if max_usd is None else max_usd}
+    if state.get("status") == "done" and redo_from is None and shinko_first is None:
         return {"building": building_id, "nothing": "前の実行は最後まで済んでいます", "state": str(state_path(building_id, cwd)),
                 "done": state.get("done")}
     if state.get("status") == "running" and state.get("current"):
@@ -1477,36 +2055,23 @@ def resume_pipeline(building_id: str, *, dry_run: bool = False, cwd: str | Path 
     st = state.get("stopped") or {}
     if max_usd is not None:
         state["max_usd"] = max_usd
-    if st.get("reason") == "max_usd" and state.get("max_usd") is not None \
-            and float(state.get("spent_usd") or 0) >= float(state["max_usd"]):
+    if st.get("reason") == "max_usd" and state.get("max_usd") is not None             and float(state.get("spent_usd") or 0) >= float(state["max_usd"]):
         raise AgentError(f"棟の費用の上限 {state['max_usd']} USD に達しています（使った {state['spent_usd']} USD）。"
                          "--max-usd で上げてから resume する")
     if st.get("reason") == "event":
         state["acknowledged_events"] = sorted(set(state.get("acknowledged_events") or []) | set(st.get("events") or []))
     now = _now()
-    if redo_from is not None or dec is not None:
-        done = list(state.get("done") or [])
-        if redo_from is not None:
-            redo_steps = steps[steps.index(redo_from):]
-            state["done"] = [s for s in done if s not in redo_steps]
-            sessions = state.setdefault("sessions", {})
-            prev_sessions = {s: sessions.pop(s) for s in redo_steps if s in sessions}   # やり直す工程は新しい会話で
-        else:
-            redo_steps, prev_sessions = [s for s in steps if s not in done], {}
-        state["redo"] = {"from": redo_from, "steps": redo_steps, "at": now, "file": dec[0] if dec else None,
-                         "text": dec[1] if dec else None, "previous_sessions": prev_sessions}
-    if dec is not None:
-        moved = [e for e in state.get("pending_events") or []
-                 if isinstance(e, dict) and (e.get("kind") in STOP_EVENTS or e.get("call") == "fable")]
-        state["pending_events"] = [e for e in state.get("pending_events") or [] if e not in moved]
-        state["acknowledged_events"] = sorted(set(state.get("acknowledged_events") or []) | {_event_sig(e) for e in moved})
-        state.setdefault("decisions", []).append({
-            "at": now, "file": dec[0], "text": dec[1][:300], "chars": len(dec[1]), "redo_from": redo_from,
-            "steps": state["redo"]["steps"], "acknowledged": [_event_sig(e) for e in moved] + list(st.get("events") or [])})
+    _apply_decision(state, dec, redo_from, list(st.get("events") or []), now)
+    cleared = None
+    if isinstance(state.get("halt"), dict) and not dry_run:     # 職員が止めた後に人が resume した：合図を消す
+        cleared = state["halt"]
+        state["halted"] = list(state.get("halted") or []) + [{**cleared, "cleared_by": "resume", "taken_at": now}]
+        state["halt"] = None
     state["runs"].append({"kind": "resume", "at": now, "from_step": st.get("step"), "reason": st.get("reason"),
                           "why": st.get("why"), "session_id": st.get("session_id"), "redo_from": redo_from,
-                          "decision_file": dec[0] if dec else None})
-    return _drive(state, cwd, dry_run=dry_run, agents_dir=agents_dir, prices=prices)
+                          "decision_file": dec[0] if dec else None, "shinko": bool(shinko),
+                          **({"halt_cleared": cleared.get("why")} if cleared else {})})
+    return _drive(state, cwd, dry_run=dry_run, agents_dir=agents_dir, prices=prices, shinko_first=shinko_first)
 
 
 def lock_waits(building_id: str, start: str | None, end: str | None, path: Path | None = None) -> dict:

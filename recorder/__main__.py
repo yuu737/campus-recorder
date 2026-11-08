@@ -29,6 +29,7 @@
   python -m recorder photoproj <json> [--photos id,...] [--fast] [--keep-renders]
                                                  登録済みの写真を模型に投影し、写真どうしの食い違い（縁の強さ）から形の悪い所を悪い順に（out/<棟>/photoproj/<日時>/）
   python -m recorder agent tasks <id> [--photos F]  各工程の依頼文を out/<id>/agent_tasks.json・.md に（API とサブエージェントで同じ文）
+  python -m recorder agent preflight <id> [--call-models]  再開の前の点検（落ちる要素があれば終了コード 1）
   python -m recorder agent log <id> --step S [--model opus --seconds N --tokens N --note ...]
                                                  サブエージェントの試走の 1 工程を out/<id>/pipeline_<日時>.json に追記
   python -m recorder hypotheses <json> [--list]  仮説（basis: hypothesis）の一覧：面・場所・値・規則・出所
@@ -329,20 +330,28 @@ def main(argv: list[str] | None = None) -> int:
     q.add_argument("--photos", default=None, help="取り込む写真フォルダ（省略で索引の既存の写真）")
     q.add_argument("--steps", default=None, help="カンマ区切り（既定: 全工程）")
     q.add_argument("--dry-run", action="store_true")
-    q.add_argument("--max-usd", type=float, default=20.0, help="棟ごとの費用の上限（USD、既定 20 = agents.DEFAULT_MAX_USD）。当たったら止めて記録。0 で上限なし")
+    q.add_argument("--max-usd", type=float, default=40.0, help="棟ごとの費用の上限（USD、既定 40 = agents.DEFAULT_MAX_USD）。当たったら止めて記録。0 で上限なし")
     q = asub.add_parser("resume", help="止まった pipeline・continue を out/<棟>/pipeline_state.json から続ける（429・上限・落ち・事件）")
     q.add_argument("building")
     q.add_argument("--dry-run", action="store_true")
     q.add_argument("--max-usd", type=float, default=None, help="費用の上限を上げて続ける時（USD）")
     q.add_argument("--redo-from", default=None, help="この工程から（state の steps の順で以降を）新しい会話でやり直す")
     q.add_argument("--decision", default=None, help="進行役の決定（md か txt、リポジトリからの相対）。やり直す工程の依頼文の先頭に入る")
+    q.add_argument("--shinko", action="store_true",
+                   help="最後に済んだ工程の後の事件を取り直し、止める事件があれば進行役（Fable）を自動で呼んで、その決定で続ける（--dry-run は計画だけ）")
+    q = asub.add_parser("preflight", help="再開の前の点検：環境・記録・事件・係の定義・データ・鍵・serve を見て、落ちる要素を並べる（1 つでもあれば終了コード 1）")
+    q.add_argument("building")
+    q.add_argument("--call-models", action="store_true", help="係の定義に出るモデルを 1 つずつ最小の呼び出しで確かめる（API を呼ぶ。キーのあるタブで）")
+    q.add_argument("--port", type=int, default=8767, help="serve のポート（既定 8767 = .claude/launch.json）")
+    q.add_argument("--no-serve", action="store_true", help="serve に問い合わせない")
+    q.add_argument("--json", action="store_true", help="人向けの行の代わりに JSON を出す")
     q = asub.add_parser("continue", help="追記：前回の棟 JSON を保ち、新しい写真で 撮影→仕分け→関係する面の測量・設計・検収→製図・web")
     q.add_argument("building")
     q.add_argument("--photos", default=None, help="新しい写真のフォルダ（省略で索引に取り込み済みの物）")
     q.add_argument("--faces", default=None, help="カンマ区切りの面 id（省略で撮影係の答えと仕分けで決まる面）")
     q.add_argument("--steps", default=None, help="カンマ区切り（既定: 追記の工程）")
     q.add_argument("--dry-run", action="store_true")
-    q.add_argument("--max-usd", type=float, default=20.0, help="棟ごとの費用の上限（USD、既定 20 = agents.DEFAULT_MAX_USD）。0 で上限なし")
+    q.add_argument("--max-usd", type=float, default=40.0, help="棟ごとの費用の上限（USD、既定 40 = agents.DEFAULT_MAX_USD）。0 で上限なし")
     q = asub.add_parser("tasks", help="各工程の依頼文（係の定義のパス＋task）を out/<棟>/agent_tasks.json・.md に出す")
     q.add_argument("building")
     q.add_argument("--photos", default=None, help="取り込む写真フォルダ（pipeline と同じ値を渡す）")
@@ -740,6 +749,12 @@ def _agent(a) -> int:
         else:
             print(json.dumps(doc, ensure_ascii=False, indent=1))
         return 0
+    if a.agent_cmd == "preflight":
+        from . import preflight
+
+        doc = preflight.run(a.building, cwd=".", call_models=a.call_models, port=a.port, check_serve=not a.no_serve)
+        print(json.dumps(doc, ensure_ascii=False, indent=1) if a.json else chr(10).join(preflight.lines(doc)))
+        return 0 if doc["ok"] else 1
     try:
         if a.agent_cmd == "list":
             for d in agents.load_agent_defs().values():
@@ -755,7 +770,7 @@ def _agent(a) -> int:
                                   attempt=a.attempt, result=a.result, tool_uses=a.tool_uses)
         elif a.agent_cmd == "resume":
             res = agents.resume_pipeline(a.building, dry_run=a.dry_run, max_usd=a.max_usd, redo_from=a.redo_from,
-                                         decision_file=a.decision)
+                                         decision_file=a.decision, shinko=a.shinko)
         elif a.agent_cmd == "continue":
             res = agents.continue_pipeline(a.building, a.photos, faces=a.faces.split(",") if a.faces else None,
                                            steps=a.steps.split(",") if a.steps else None, dry_run=a.dry_run, max_usd=(a.max_usd or None))
