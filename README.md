@@ -1,288 +1,285 @@
 # campus-recorder
 
-From photos that campus staff take with a phone, Claude agents write an evidence-marked design (JSON) for each building, check the model against the photos, and add the building to a Web 3D that prospective students can walk on their phones: a way to record a campus and hand it over.
+大学の職員がスマホで撮った写真から、Claude のエージェントが値ごとに根拠の付いた棟の設計図（JSON）を起こし、模型を写真に重ねて確かめ、受験生がスマホで歩ける Web 3D に建物を足していく、キャンパスを記録して引き継ぐ仕組みです。
 
-| | What it means |
+| | 中身 |
 |---|---|
-| Outsourcing price | About 40,000 to 1,000,000 yen for a 3D model of one building (assuming drawings already exist; surveying is extra) |
-| This project | The main building rebuilt from a zero state holding only the photos (171) and the staff's declarations, up to the walk view, in the 11/8 16:20–18:21 run; API cost 19.80 USD (all 11 steps passed, but not fully automatic: the user entered one decision by hand at the drawing step) |
-| Scope | 4 buildings (main building, library, Tower 75, Kyotsu Lecture Building South) / 408 photos taken during the event |
-| Evidence marks | Every dimension is `measured` (with the ids of the photos it came from), `estimated` (the method and basis are written down), or `unknown` (value is null, and a photo request is returned). A `measured` value with no evidence fails validation |
-| After the hackathon | Staff keep adding photos and hand the building JSON and its photo requests on to the next person in charge |
+| 外注の相場 | 建物 1 棟の 3D で約 4 万〜100 万円（図面がある前提。測る作業は別） |
+| 今回 | 本部棟を、写真（171 枚）と職員の申告だけの 0 から歩く画面まで、11/8 16:20〜18:21 の実走で立て直し。API の費用 19.80 USD（11 工程すべて通過。ただし完全自動ではなく、製図で 1 回、利用者が決定を手で入れました） |
+| 範囲 | 4 棟（本部棟・図書館・タワー75・共通講義棟南）／期間中に撮った写真 408 枚 |
+| 値の印 | 寸法はすべて `measured`（根拠の写真番号つき）／`estimated`（推定。方法と根拠を書く）／`unknown`（値は空。撮影依頼を返す）のどれか。根拠の無い `measured` は検証で落ちます |
+| ハッカソンの後 | 職員が撮って足し、棟 JSON と撮影依頼ごと次の担当へ引き継ぎます |
 
-![Main building, south-west face: model lines overlaid on a phone photo (left) and the elevation generated from the same building JSON (right)](docs/images/hero.png)
+![本部棟 南西面：写真に模型の線を重ねた検収（左）と、同じ棟 JSON から生成した立面図（右）](docs/images/hero.png)
 
-**Video** (3 min, YouTube): https://youtu.be/8fYBU0GE6vk
+**動画**（3 分、YouTube）：https://youtu.be/RILAzs4MiHY
 
-**Walk the 4 buildings (GitHub Pages, phone OK)**: https://yuu737.github.io/campus-recorder/web/index.html — the walk view only; photos stay on the staff PC (`web/data/` is the exported site, 23 MB).
+**審査員の方へ：5 分で見る順**
+1. **動画**（3 分）：上の YouTube。
+2. **歩く画面**：起動の仕方は「[セットアップと使い方](#セットアップと使い方)」。
+3. **根拠の印**：値ごとの `measured`／`estimated`／`unknown` は「[根拠の無い寸法は書かない](#根拠の無い寸法は書かない)」。
+4. **Claude の使い方**：係 13 本の表、モデルの使い分け（Opus／Sonnet／Haiku／Fable）、事件の時に進行役を自動で呼ぶ仕組み、再開の前の点検（preflight）は「[Claude の使い方](#claude-の使い方)」。
+5. **試行錯誤**：0 から立てた実走、疑似本番の詰まり（直し 30 件）、試した事の数字は「[到達点と、試した事の結果](#到達点と試した事の結果)」、本番の事件の経緯は [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md)。
+6. **正直な限界**：できない事と未解決の事は「[正直な限界](#正直な限界)」。
 
-**For judges: what to look at in 5 minutes**
-1. **Video** (3 min): the YouTube link above.
-2. **Walk view**: how to start it is in "[Setup and usage](#setup-and-usage)".
-3. **Evidence marks**: `measured` / `estimated` / `unknown` on every value, in "[No dimension without evidence](#no-dimension-without-evidence)".
-4. **How Claude is used**: the table of 13 agents, the model split (Opus / Sonnet / Haiku / Fable), the coordinator called automatically on incidents, and the check before resuming (preflight), in "[How Claude is used](#how-claude-is-used)".
-5. **Trial and error**: the run from zero, the dress rehearsal's blockers (30 fixes), and the numbered experiments in "[Results, and what we tried](#results-and-what-we-tried)"; the real-run incidents in [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md) (Japanese).
-6. **Honest limits**: what it cannot do and what is unresolved, in "[Honest limits](#honest-limits)".
+**4 棟**（本部棟・図書館・タワー75・共通講義棟南）／期間中に撮った写真 **408 枚**（研究室が分かる物を除いた縮小の公開版 407 枚をリポジトリに）／他大学 **2 校**で敷地の土台まで通過（写真から起こした棟はまだ 0）
 
-**4 buildings** (main building, library, Tower 75, Kyotsu Lecture Building South) / **408 photos** taken during the event (407 reduced public copies in the repository, excluding anything that would identify a lab) / site base built for **2 other universities** (no building built from photos there yet)
+English: [README.en.md](README.en.md) ・ 日本語：このページ
 
-Japanese: [README.ja.md](README.ja.md) · English: this page
+## なぜ作るか
 
-## Why
+「写真解析ツール」ではなく、大学が**キャンパスを記録して引き継ぐ仕組み**です。
 
-This is a way for a university to *record its campus and hand it over*, not a photo-analysis tool.
+- **大学の広報担当**は、歩ける3Dを作りたくても、業者に頼む予算も、学内に3Dの専門家もいません。建物 1 棟の 3D を外注すると約 4 万〜100 万円です（図面がある前提で、個人の出品〜制作会社の公開価格。測る作業は別。[出典の一覧](docs/動画_数字の出典_3D相場_11-08.md)）。今回は本部棟を 0 から歩く画面まで、API の費用 19.80 USD で立て直しました（上の表。製図で 1 回、人が決定を手で入れています）。
+- **遠くの受験生**は、交通費や日数でオープンキャンパスに来られません。360度写真の案内では、建物どうしの距離や坂、駅からの道のりが分かりません。オープンキャンパスに行った大学進学者でも、進学した大学のオープンキャンパスには行っていない人が 28.3% います（リクルート進学総研「進学センサス 2022」）。新潟から名城大学まで 1 泊 2 日で見に来ると約 5.4 万円かかります（学割なし。運賃は JR の公表値、宿泊は 1 軒の例。[出典の一覧](docs/動画_数字の出典_受験生_11-08.md)）。
+- **ハッカソンの後**は、職員が撮って足し、棟 JSON と撮影依頼ごと次の担当へ引き継ぎます。他の大学は範囲（bbox）を渡すだけで敷地の土台が立ちます（棟を起こすには、その大学の職員の写真が要ります）。
 
-- **University PR staff** want a walkable 3D campus but have no budget for a vendor and no 3D expert on staff. Outsourcing a 3D model of one building costs about 40,000 to 1,000,000 yen (assuming drawings already exist; from individual freelance listings to production companies' published prices; surveying is extra; [sources, Japanese](docs/動画_数字の出典_3D相場_11-08.md)). This time the main building was rebuilt from zero up to the walk view for an API cost of 19.80 USD (table above; a person entered one decision by hand at the drawing step).
-- **Prospective students** far from campus cannot afford the trip to open campus. 360-degree photo tours do not show distances between buildings, slopes, or the walk from the station. Even among university entrants who attended open campuses, 28.3 % did not attend the open campus of the university they entered (Recruit Shingaku Soken, "Shingaku Census 2022"). Coming from Niigata to Meijo University for a one-night, two-day visit costs about 54,000 yen (no student discount; fares from JR's published figures, lodging from one example; [sources, Japanese](docs/動画_数字の出典_受験生_11-08.md)).
-- **After the hackathon**, staff keep adding photos and hand the building JSON and its photo requests on to the next person in charge. Another university only gives an area (bbox) to get a site base (building the buildings needs photos from that university's own staff).
+前作との対比：作者は前作で同じキャンパスの 3D を **1 人で約 2 か月**（2026-08-20〜10-31）かけて作りました。今回は期間の約 6 日で、期間中に撮った写真 408 枚から 4 棟（本部棟・図書館・タワー75・共通講義棟南）を、値ごとに根拠の印が付いた棟 JSON にします。
 
-Compared with the previous attempt: the author's earlier 3D model of the same campus took **one person about two months** (2026-08-20 to 10-31). This time, in the roughly six days of the event, 408 photos taken during the period become building JSON with an evidence mark on every value, for 4 buildings (main building, library, Tower 75, Kyotsu Lecture Building South).
+## 期間中に作った物です
 
-## Built during the hackathon
+Built with Claude: Japan 2026（2026-11-02 12:00 〜 11-08 20:00 JST）の提出物です。
+リポジトリの開始日は **2026-11-02**（最初のコミットの日）。このリポジトリのコード・エージェント定義・文書は、すべて期間中に書きました。
+写真も**期間中に撮った物だけ**を使います（経緯は下の「データと出典」）。
+前作のコード・寸法・座標・模型・画像・写真は使っていません。
 
-This is a submission for Built with Claude: Japan 2026 (2026-11-02 12:00 to 11-08 20:00 JST).
-The repository was started on **2026-11-02** (first commit: 2026-11-02). All code, agent definitions, and docs in this repository were written during the event period.
-Only **photos taken during the period** are used (the history is in "Data and sources").
-No code, dimensions, coordinates, models, images, or photos from the earlier work are used.
+## 根拠の無い寸法は書かない
 
-## No dimension without evidence
+設計図の値には、どこまで信じてよいかの印が付きます。**今の時点では、数（階数・柱間の数）は写真で数えた実測、長さはほとんどが公開データ（PLATEAU）を物差しにした推定、測れない所は空欄のまま撮影依頼**です。長さの実測は、11/8 の本番（係を API で動かした本部棟の追記）で、本部棟の 1 面（f6）の柱間と笠木の高さの 2 つが初めて入りました（メジャー → タイルの周期 → 1 枚ずつ数えたタイルの枚数、の鎖）。図書館・タワー75 はメジャーの目盛りの読み取りまで、共通講義棟南はタイルの周期が読めていません（すぐ下）。
 
-Every value in the design is marked with how far it can be trusted. **Today, counts (floors, bays) are `measured` by counting in photos, most lengths are `estimated` using public data (PLATEAU) as the reference length, and what cannot be measured stays empty with a photo request.** The first `measured` lengths came in the 11/8 real run (the main-building update, with the agents running through the API): the bay width and the parapet height of one face (f6) of the main building, through a chain tape measure → tile period → tiles counted one by one. For the library and Tower 75 the tape has been read but not applied; for Kyotsu South the tile period could not be read (see just below).
+スキャンや AI 生成との違いは、**生成ではなく記録**であることです。
+- 寸法はすべて `measured`（根拠の写真番号つき）、`estimated`（推定。方法と根拠を書く）、`unknown`（値は空）のどれかです。根拠の無い `measured` は検証で落ちます。作り話は入れません。
+- **今の measured はほとんどが数です。** 階数・柱間の数・台数は写真で数えて measured にしています。長さ（柱間・階高・幅）の多くは、PLATEAU の足元の辺か高さを物差しにして写真の px から換算した `estimated` です。長さの measured は本部棟の 2 件だけです（すぐ下の段落と、棟ごとの数は「到達点」の表）。
+- **長さを実測にする道：** 11/7 にメジャーを壁のタイルに当てた写真を 68 枚撮って索引に取り込み、測量係が目盛りを読みました。横のタイルの周期は本部棟 11.54 ± 0.14 cm（別の写真での検算 +0.1 %）、図書館 11.54 ± 0.14 cm、タワー75 19.78 ± 0.25 cm。共通講義棟南は横の周期が読めていません（[読みの記録](data/reports/指示_11-08/sokuryo_tape_select.md)）。本部棟と図書館が同じ 11.54 cm なのは写し間違いではありません。別々の写真（本部棟は「本部棟正面柱92cm」の 7 周期、図書館は PXL_20261107_063109753 の 7 周期）で独立に読んだ結果が一致したもので、利用者の申告「同じタイル」の確かめになりました。縦も、同じ正面化画像の中の px の比でタイルの周期から階高へつなげれば、全部の輪が写真で測った物になる（measured の鎖）道ができました。**11/8 の本番で、本部棟の南南西面（f6、正面玄関の面）にこの鎖が入りました**（値は `data/buildings/honbu.json`）。
+  - 入った値は f6 の柱間 5.310 m と笠木の高さ 22.66 m（measured）です。階高 4.047 m は、ほかの面・塊も同じと置く仮定の輪が入るので estimated にしました。鎖の中身と ± の積み方は [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md) に移しました。
+  - 図書館・タワー75 は目盛りまで読みましたが、棟 JSON にはまだ入れていません。長さは estimated のままです。
+- **測れない所は `unknown` のまま灰色で残し、撮影依頼を返します**（数は「到達点」の表）。例：「図書館の北東面は両端が写っていないので、坂の下から面全体が入る1枚をください」。Claude に審査員役をさせた模擬採点（4 通り × 2 回）で、採点者全員が評価したのがこの点でした。
+- 実際の地図の座標（JGD2011 / EPSG:6675）に乗ります。
+- 元データは**棟ごとの JSON 1つ**だけ。図面・Blender の模型・写真への重ね合わせは、全部そこから生成します。JSON を直せば作り直せます。
+- **写真の扱い**（職員の画面・[`LICENSE-DATA.md`](LICENSE-DATA.md) と同じ決まり）：
+  - **本番（大学で使う時）**：公開されるのは歩く画面だけです。写真は職員の PC に留まり、係の Claude（API）が読むためにだけ送られます。職員には、掲示物・顔・ナンバーは写さないようにお願いします。写ってしまった物は、公開版で灰色の箱にします。
+  - **この提出物**：研究室が分かる物以外は全部、縮小した公開版（`data/photos/public/`）を入れました。索引 408 枚のうち 407 枚を公開し、1 枚（PXL_20261105_065508197、室内で研究室でないと言い切れない）を安全側で除外しました。灰色の箱を描いた写真は 208 枚で、箱の内訳は掲示物 576・顔 91・ナンバー 22・電話番号 6・人名 4 です（11/8 02:49 の値。`recorder photos publish --dry-run` の集計）。掲示物・人名・顔・ナンバーは、灰色の箱に理由を書いて塗りつぶし、範囲と理由を索引に残します。箱は 3 段で決めました：保護係（Haiku）が 10×10 の升で指す → 見直し（Sonnet）が見落としと自動の顔の箱を確かめる → 寄せ（Sonnet）が細かい升で箱を締める。顔の自動の箱（YuNet）は、見直しで確かめた物だけ描きます。元の写真は git に入れません。
 
-How this differs from scanning or AI generation: **it records, it does not generate.**
-- Every dimension is `measured` (with the ids of the photos it came from), `estimated` (the method and basis are written down), or `unknown` (value is null). A `measured` value with no evidence fails validation. Nothing is invented.
-- **Almost every `measured` value today is a count.** Floors, bays and units are counted in photos and are `measured`. Most lengths (bay width, floor height, widths) are `estimated`: converted from photo pixels using a PLATEAU footprint edge or height as the reference length. There are only 2 `measured` lengths, both on the main building (next paragraph; per-building numbers are in the "Results" table).
-- **The way to measured lengths:** on 11/7, 68 photos with a tape measure held against the wall tiles were taken and imported, and the surveying agent read the scale. Horizontal tile period: main building 11.54 ± 0.14 cm (check on another photo +0.1 %), library 11.54 ± 0.14 cm, Tower 75 19.78 ± 0.25 cm; for Kyotsu South the horizontal period could not be read ([reading notes, Japanese](data/reports/指示_11-08/sokuryo_tape_select.md)). The main building and the library both read 11.54 cm, and this is not a copying error: the two values were read independently from different photos (7 periods on "本部棟正面柱92cm" for the main building, 7 periods on PXL_20261107_063109753 for the library) and agree, which confirms the user's report that the two buildings use the same tile. Vertically, chaining the tile period to the floor height by pixel ratios inside the same rectified image now gives a chain in which every link is measured from photos. **In the 11/8 real run this chain went into the main building's south-south-west face (f6, the main-entrance face)** (values in `data/buildings/honbu.json`).
-  - The values that went in are the f6 bay width 5.310 m and parapet height 22.66 m (`measured`). The floor height 4.047 m is `estimated` because spreading it to the other faces and blocks adds an assumption. The chain itself and how the ± is stacked were moved to [`docs/run_2026-11-08.md`](docs/run_2026-11-08.md).
-  - For the library and Tower 75 the tape has been read but not applied to the building JSON; their lengths stay `estimated`.
-- **What cannot be measured stays `unknown`, shown in gray, and the system returns a photo request** (numbers in the "Results" table), e.g. "the library's north-east face needs one photo that shows both ends of the wall, from the bottom of the slope". In a mock judging run (Claude as the judge, 4 rule variants × 2 rounds), this was the one point every judge praised.
-- The result sits on real map coordinates (JGD2011 / EPSG:6675), not in a free-floating scene.
-- One JSON file per building is the only source of truth. Drawings, the Blender model, and the photo overlays are all generated from it. Fix the JSON and everything is rebuilt.
-- **How photos are handled** (the same rules as the staff screen and [`LICENSE-DATA.md`](LICENSE-DATA.md)):
-  - **In production (at a university):** only the walk-through is public. Photos stay on the staff PC and are sent out only for the agents (Claude, via the API) to read. Staff are asked not to photograph posters, faces or license plates; anything caught anyway is covered with a gray box in the public copy.
-  - **In this submission:** reduced public copies (`data/photos/public/`) of all photos except any that would identify a research lab are included. Of the 408 photos in the index, 407 are published and 1 (PXL_20261105_065508197, indoors, cannot be ruled out as a lab) is excluded to be safe. 208 photos carry gray boxes: posters 576, faces 91, license plates 22, phone numbers 6, names 4 (values at 02:49 on 11/8, `recorder photos publish --dry-run`). Posters, names, faces and license plates are covered with a gray box labelled with the reason, and the box and reason are recorded in the index. Boxes are decided in three steps: the privacy agent (Haiku) points at cells on a 10×10 grid → a review (Sonnet) checks for misses and confirms the automatic face boxes → a tightening pass (Sonnet) narrows each box on a finer grid. Automatic face boxes (YuNet) are drawn only when the review confirmed them. Original photos are not in git.
+## 仕組み
 
-## How it works
-
-Campus staff take photos with a phone. Claude agents look at the photos and make the judgements (which face of which building, how many columns, which reference length to trust); code does the calculation. The agents then write a design for each building (a JSON file), assemble it in Blender, overlay the model on the photos to check it, and add it to a Web 3D that prospective students can walk on their phones.
+大学の職員がスマホで建物を撮ると、Claude のエージェントが写真を見て判断し（どの棟のどの面か・柱が何本か・どの物差しを信じるか）、計算はコードが行い、棟ごとの設計図（JSON）を起こし、Blender で組み立て、写真と重ねて確かめ、受験生がスマホで歩ける Web 3D に建物を増やしていきます。
 
 ```mermaid
 flowchart LR
-  P[Staff phone photos] --> S[Shooting agent<br/>Haiku<br/>fast reply: usable? what is missing?]
-  S --> O[Sorting / Observing / Counting / Surveying / Landmark agents<br/>Opus<br/>look at photos, decide]
-  O --> D[Design agent<br/>Opus]
-  D --> J[(Building JSON<br/>measured / estimated / unknown)]
-  J --> C[Drawing + modeling<br/>code: recorder draw / model build / run]
-  C --> K[Inspection agent<br/>Opus<br/>overlay model on photo]
-  K -->|fix the JSON only| J
-  K -->|missing views| R[Photo requests to staff]
-  J --> W[Web 3D<br/>walk on a phone]
-  X[Coordinator<br/>Fable<br/>called automatically on incidents<br/>staff approve or undo afterwards] -.-> O
+  P[職員のスマホの写真] --> S[撮影係 Haiku<br/>速い返事：使える？足りない物は？]
+  S --> O[仕分け・観察・数え・測量・目印の係 Opus<br/>写真を見て決める]
+  O --> D[設計係 Opus]
+  D --> J[(棟 JSON<br/>measured / estimated / unknown)]
+  J --> C[製図・模型 コード<br/>recorder draw / model build / run]
+  C --> K[検収係 Opus<br/>模型を写真に重ねる]
+  K -->|直すのは JSON だけ| J
+  K -->|足りない写真| R[職員への撮影依頼]
+  J --> W[Web 3D スマホで歩く]
+  X[進行役 Fable<br/>事件の時だけ道具が自動で呼ぶ<br/>人は職員の画面で事後に承認／取り消し] -.-> O
   X -.-> K
 ```
 
-![The main building's record replay screen at the end of the 11/8 real run; the strip at the bottom shows the steps in order](docs/images/replay_honbu_1108/03_aruku_4shume_owari.png)
-The main building's record replay screen (end of the 11/8 real run). The strip at the bottom shows the steps in order: photos → elevation → evidence → model → walkable 3D → still missing.
+![本部棟の記録の再生画面（11/8 の本番の終わり）。下の帯が工程の順：写真・立面図・証拠・模型・歩ける 3D・まだ無い物](docs/images/replay_honbu_1108/03_aruku_4shume_owari.png)
+本部棟の記録の再生画面（11/8 の本番の終わり）。下の帯が工程の順で、写真 → 立面図 → 証拠 → 模型 → 歩ける 3D → まだ無い物。
 
-Principle: **Claude judges, code measures.** Deterministic tools (`recorder`) rectify photos, find periodic patterns, solve camera poses, and render. Judgement (which face is this, how many bays, which reference length to trust, what to fix) is made by Claude agents and written to JSON with its basis.
+考え方：**判断は Claude、測るのはコード。** 決まった計算（正面化・周期の検出・視点の計算・描画）はコード（`recorder`）がします。判断（どの面か・何スパンか・どの物差しを信じるか・どこを直すか）は Claude のエージェントがして、根拠つきで JSON に書きます。
 
-**Why this works with today's Claude:** the looking-and-deciding part (counting columns in order across a photo, pointing at model landmarks on a 10×10 grid) is given to Claude and kept separate from the measuring, which stays in code, so when a judgement is wrong the code's checks (a second ruler, reprojection gates) stop it.
+**なぜ今の Claude でできるのか：** 画像を見て柱の順番を数える・10×10 の升目で模型の目印を指すといった「見て決める」判断を Claude に任せ、測る計算はコードに分けたので、判断が外れても 2 本目の物差しや再投影の門といったコードの検算で止まる形にできました。
 
-## How Claude is used
+## Claude の使い方
 
-- **Claude Code is the center of development.** Almost all code, tests, and docs were written with Claude Code.
-- **The agents are defined as files** in [`.claude/agents/`](.claude/agents/): thirteen agents plus a shared contract (`_共通.md`, "shared promises"). The same definitions run as Claude Code subagents during development and through the API in the real run (`recorder agent`, `recorder/agents.py`, Claude Agent SDK). The 11/7 dress rehearsal used subagents; **the 11/8 main-building update used the API** (the story is in [`docs/run_2026-11-08.md`](docs/run_2026-11-08.md)).
-- **Agents and models** (as set in each file's `model:`; usage policy in [`docs/逆算.md`](docs/逆算.md)):
+- **開発の中心は Claude Code。** コード・テスト・文書のほとんどを Claude Code で書きました。
+- **係はファイルで定義**（[`.claude/agents/`](.claude/agents/)）：係 13 本と共通の約束（`_共通.md`）。同じ定義を、開発中は Claude Code のサブエージェントとして、本番は `recorder agent`（`recorder/agents.py`、Claude Agent SDK）で API から動かします。11/7 の疑似本番はサブエージェント版、**11/8 の本部棟の追記は API 版**です（経緯は [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md)）。
+- **係の一覧とモデル**（各ファイルの `model:` のとおり。運転規則は [`docs/逆算.md`](docs/逆算.md)）：
 
-| Agent | Role | Model |
+| 係 | 役割 | モデル |
 |---|---|---|
-| Shooting (`satsuei`) | Tells staff within seconds whether a photo is usable and which face or angle is missing | Haiku |
-| Privacy (`hogo`) | Points to grid cells with posters, names, faces or plates on the public copies; marks photos that identify a lab as not public (review and box tightening on Sonnet; run on the 407 public copies) | Haiku |
-| Map finder (`chizu`) | Records the official campus map's URL, date and building names (never traces shapes) | Haiku |
-| Sorting (`shiwake`) | Decides by eye which building and which face a photo shows | Opus |
-| Observing (`kansatsu`) | Writes what a face has (columns, rows, window shapes, bands) as ratios and counts only, no dimensions | Opus |
-| Counting (`kazoe`) | Fixes the number of bays and floors by cross-checking several photos | Opus |
-| Surveying (`sokuryo`) | Picks the reference length, runs rectify → period → metres, and checks with a second ruler | Opus |
-| Landmarks (`mejirushi`) | Points to the grid cell where each model landmark appears in a photo; the tool solves the camera | Opus |
-| Design (`sekkei`) | Writes the results into the building JSON; unseen faces become hypotheses or `unknown` with a photo request | Opus |
-| Drawing and model (`seizu`) | Runs the code that turns the JSON into drawings, the Blender model and glb; makes no judgement | Sonnet |
-| Inspection (`kenshu`) | Compares model and photos, fixes the JSON, regenerates | Opus |
-| Site inspection (`shikichi`) | Finds mismatches between buildings and with the terrain in numbers and names which JSON to fix (does not fix) | Opus |
-| Coordinator (`shinko`) | Called automatically by the tool only when an incident appears (faces that keep failing re-inspection, issues no rule can settle, …). Reads, writes a decision file, and has the same record redone from a named step (up to 3 times per record; the 4th time a person is called) | Fable |
+| 撮影係（`satsuei`） | 届いた写真が使えるかを数秒で返し、足りない面・角度を伝える | Haiku |
+| 保護係（`hogo`） | 公開用の縮小版で掲示物・人名・顔・ナンバーの升を指す。研究室が分かる写真に公開しない印を付ける（見直しと箱の寄せは Sonnet。公開版 407 枚で回した） | Haiku |
+| 地図探し係（`chizu`） | 公式キャンパスマップの URL・日付・棟名を記録する（形はなぞらない） | Haiku |
+| 仕分け係（`shiwake`） | 写真がどの棟のどの面かを目視で確定する | Opus |
+| 観察係（`kansatsu`） | 面ごとの列数・段数・窓の形などを比率と個数だけで書く（寸法は書かない） | Opus |
+| 数え係（`kazoe`） | スパン数と階数を複数の写真で突き合わせて確定する | Opus |
+| 測量係（`sokuryo`） | 物差しを選び、正面化→周期→m の換算を道具に走らせ、2 本目の物差しで検算する | Opus |
+| 目印係（`mejirushi`） | 写真の中で模型の目印がどの升にあるかを指す（視点は道具が解く） | Opus |
+| 設計係（`sekkei`） | 結果を棟 JSON に落とす。写っていない面は仮説か unknown と撮影依頼 | Opus |
+| 製図・模型係（`seizu`） | 棟 JSON から図面・模型・glb を出すコードを回す（判断はしない） | Sonnet |
+| 検収係（`kenshu`） | 模型と写真のずれを見て、JSON を直して作り直す | Opus |
+| 敷地の検収係（`shikichi`） | 棟どうし・棟と地形の食い違いを数字で見て、直す先を言う（自分では直さない） | Opus |
+| 進行役（`shinko`） | 事件（再検収で合格しない面・規則で決まらない争点など）が出た時だけ道具が自動で呼ぶ。読んで決定ファイルを書き、同じ記録のまま指定の工程からやり直させる（1 本の記録で 3 回まで、4 回目は人を呼ぶ） | Fable |
 
-- **On an incident, the coordinator decides and the run goes on; people review afterwards** (built at midday on 11/8):
-  - When an agent step raises an incident, the tool calls the coordinator. It reads the record and reports and writes a decision file (example: [`決定_自動_honbu_1.md`](data/reports/指示_11-08/決定_自動_honbu_1.md), Japanese); the tool then redoes the same record from the named step, following the decision.
-  - The staff screen shows the incident, the coordinator's decision, and approve / undo. Undo stops the run before the next step.
-  - **The cost limit is set by a person** (default 40 USD per building, a field on the staff screen). If there is not enough left to call the coordinator, the run stops with "please enter a limit", and continues once one is entered.
-  - Limits per call: Opus 40 turns and 6 USD (surveying, design and inspection 90 turns), Sonnet 30 turns and 2.5 USD, coordinator (Fable) 40 turns and 10 USD. A step stopped by a limit, a crash or congestion resumes automatically from the same conversation (up to 3 times per step).
-- **Pre-flight check before resuming:** `recorder agent preflight <bldg> --call-models` lists the environment (API key, Blender, write access), the record's consistency, incidents and whether the coordinator can be called, the agent definitions, data validation, locks, and whether `serve` is reachable; with `--call-models` it tries each model the agents use with a minimal call. In the 4th round on 11/8 it caught "Invalid API key" on all 4 models before the button was pressed.
-- Tools were implemented with Opus when the code has to look at photos or JSON, and Sonnet for clear specs.
-- **Hand-made procedures became agent procedures.** On 11/3 the surveying of the first two buildings was done by hand with Claude; each step was then written down as the agents' procedure ([`docs/手順_エージェント.md`](docs/手順_エージェント.md), including the failures: picking photo corners by eye gave hundreds of px of error, so camera poses are now solved by the tool from the rectification or from landmark correspondences).
-- Every agent writes a JSON report with `made_by` (agent and model) and `made_at`.
-- Usage is monitored with an explicit budget policy (`docs/逆算.md`).
-- **Skills, hooks, subagents, and model choice:** subagents (the 13 agents in `.claude/agents/*.md`) are the core; the dress rehearsal called them 38 times. Models are split as: agents that judge photos use Opus, agents that only reply fast or point at grid cells use Haiku, the agent that only runs code uses Sonnet, and the coordinator that decides only on incidents uses Fable. In the dress rehearsal Fable had no usage left and Opus 5.5 stood in as coordinator. In the 11/8 real run, incident 1 was decided by Fable in conversation, and in the 4th round the in-product coordinator (Fable) decided automatically. **Claude Code Skills and hooks are not used** (`.claude/` holds only the agent definitions and `launch.json`). `measured` values without evidence are stopped by `recorder validate` and the tests, not by a hook. The full record of how Claude was used (mock judging by a Claude that knew nothing about the project, the coordinator's decisions and the blocker ledger) is in [`docs/Claude活用の記録.md`](docs/Claude活用の記録.md) (Japanese).
+- **事件の時は進行役が自動で決めて続け、人は事後に見ます**（11/8 昼に作りました）：
+  - 係の工程で事件が出ると、道具が進行役を呼びます。進行役は記録と報告を読んで決定ファイル（例：[`決定_自動_honbu_1.md`](data/reports/指示_11-08/決定_自動_honbu_1.md)）を書き、道具はその決定どおり、同じ記録のまま指定の工程からやり直します。
+  - 職員の画面に、事件の中身・進行役の決定・承認／取り消しの欄が出ます。取り消すと次の工程の前で止まります。
+  - **費用の上限は人が決めます**（棟ごとの既定 40 USD、職員の画面の欄）。進行役を呼ぶ分が残っていない時は「上限を入れてください」で止まり、入れると進行役が決めて続けます。
+  - 係の 1 回の枠：Opus 手数 40・6 USD（測量・設計・検収は手数 90）、Sonnet 手数 30・2.5 USD、進行役（Fable）手数 40・10 USD。枠・落ち・混雑で止まった工程は、同じ会話の続きから自動で再開します（工程ごとに 3 回まで）。
+- **再開の前の点検（preflight）**：`recorder agent preflight <棟> --call-models` が、環境（API キー・Blender・書き込み）、記録の整合、事件と進行役を呼べるか、係の定義、データの検証、鍵、serve に届くかを並べ、`--call-models` では係が使うモデルを 1 つずつ最小の呼び出しで試します。11/8 の 4 周目では、押す前に「Invalid API key」を 4 モデルとも捕まえました。
+- 道具の実装は、写真と JSON を見る物は Opus、仕様が明確な物は Sonnet で書きました。
+- **手作業で詰めた手順を、そのまま係の手順書にしました。** 11/3 に最初の2棟を Claude と手で測り、各工程を手順に落としています（[`docs/手順_エージェント.md`](docs/手順_エージェント.md)。失敗も記録：写真の角を目で指す方法は誤差が数百 px で失敗したので、視点は正面化や目印の対応から道具が解く方法に変えました）。
+- 各係は JSON の報告に `made_by`（係とモデル）と `made_at` を残します。
+- 使用量は運転規則（`docs/逆算.md`）を決めて見ています。
+- **Skills・フック・サブエージェント・モデルの使い分け**：サブエージェント（`.claude/agents/*.md` の係 13 本）が中心で、疑似本番では係を 38 回呼びました。モデルは「写真を見て判断する係は Opus、速い返事と升を指すだけの係は Haiku、コードを回すだけの係は Sonnet、事件の時だけ決める進行役は Fable」と分けています。疑似本番では Fable の使用量が無く、Opus 5.5 が進行役の代役でした。11/8 の本番では、事件 1 は Fable が会話の中で決め、4 周目は製品の中の進行役（Fable）が自動で決めました。**Claude Code の Skills とフックは使っていません**（`.claude/` にあるのは係の定義と `launch.json` だけ）。根拠の無い measured を止めるのはフックではなく、`recorder validate`（検証）とテストです。何も知らない Claude を審査員役にした模擬採点で規則を選んだ事、進行役の決定と詰まりの台帳など、使い方の全体は [`docs/Claude活用の記録.md`](docs/Claude活用の記録.md) にまとめました。
 
-## Results, and what we tried
+## 到達点と、試した事の結果
 
-Per-building numbers appear only in the table between the markers below (`python -I -X utf8 scripts/readme_numbers.py` writes it from `out/<bldg>/report.json` and `recorder counts --json`, and checks that the README and the reports differ by 0).
+棟ごとの数字は、下の印の間の表だけに書きます（`python -I -X utf8 scripts/readme_numbers.py` が `out/<棟>/report.json` と `recorder counts --json` から書き、README と報告の差が 0 かを照合します）。
 
 <!-- numbers:start -->
-**Current values** (as of 2026-11-08 12:34; generated by `scripts/readme_numbers.py` from `out/<bldg>/report.json` and `recorder counts --json`; do not edit by hand)
+**今の値**（2026-11-08 12:34 時点。`out/<棟>/report.json` と `recorder counts --json` から `scripts/readme_numbers.py` が書いた表。手で直さない）
 
-| Building | Photos assigned | Photos with a solved camera | `measured` (of which lengths) | `estimated` (of which hypothesis) | `unknown` | Independent observations m / e / u | Open requests to staff / to tools | Faces passing inspection | Reprojection median, all (px / m) | Same, best face (px / m) |
+| 棟 | 棟に振り分けた写真 | 視点を解いた写真 | measured（うち長さ） | estimated（うち仮説） | unknown | 独立した観察 measured / estimated / unknown | 撮影依頼 open 職員宛て / 道具宛て | 検収で合格した面 | 再投影の中央値 全体（px / m） | 同 面ごとの最良（px / m） |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Main building | 121 | 42 | 7 (2) | 456 (0) | 2 | 7 / 339 / 1 | 10 / 14 | 1 | 23.1 px / 0.2 m | 18.2 px / 0.27 m |
-| Library | 96 | 45 | 4 (0) | 470 (4) | 2 | 4 / 285 / 2 | 9 / 7 | 2 | 10.7 px / 0.14 m | 8.2 px / 0.08 m |
-| Tower 75 | 142 | 89 | 6 (0) | 1,294 (306) | 2 | 6 / 387 / 1 | 17 / 9 | 6 | 10.5 px / 0.44 m | 9.8 px / 0.41 m |
-| Kyotsu Lecture Bldg. South | 34 | 18 | 3 (0) | 513 (78) | 17 | 3 / 222 / 1 | 12 / 11 | 5 | 9.7 px / 0.07 m | 18.4 px / 0.29 m |
-| Total | 393 | 194 | 20 (2) | 2,733 (388) | 23 | 20 / 1,233 / 5 | 48 / 41 | 14 | | |
+| 本部棟 | 121 | 42 | 7（2） | 456（0） | 2 | 7 / 339 / 1 | 10 / 14 | 1 | 23.1 px / 0.2 m | 18.2 px / 0.27 m |
+| 名城大学付属図書館 | 96 | 45 | 4（0） | 470（4） | 2 | 4 / 285 / 2 | 9 / 7 | 2 | 10.7 px / 0.14 m | 8.2 px / 0.08 m |
+| タワー75 | 142 | 89 | 6（0） | 1,294（306） | 2 | 6 / 387 / 1 | 17 / 9 | 6 | 10.5 px / 0.44 m | 9.8 px / 0.41 m |
+| 共通講義棟南 | 34 | 18 | 3（0） | 513（78） | 17 | 3 / 222 / 1 | 12 / 11 | 5 | 9.7 px / 0.07 m | 18.4 px / 0.29 m |
+| 計 | 393 | 194 | 20（2） | 2,733（388） | 23 | 20 / 1,233 / 5 | 48 / 41 | 14 | | |
 
-- "Photos assigned" counts photos assigned to the building in the index (including the tape-measure photos imported on the night of 11/7). "Photos with a solved camera" counts photos whose pose was solved in the registry.
-- The difference between the 408 photos in the index and the 393 in the table (15) is 6 photos assigned to the site (between buildings, ground, paths) and 9 photos with no building decided (views from roofs, tape-measure photos whose building is not decided, etc.).
-- "Of which lengths" counts `measured` values read directly from a photo or through a chain that ends at a tape measure (`recorder counts`: direct + chain). The rest are counts (floors, bays, units).
-- "Independent observations" groups copies with the same status, method, evidence and value kind.
-- "To tools" are work tickets for the tool (`recorder`) or the agents, not photo requests to staff.
-- "Faces passing inspection" are faces marked as passing in the inspection agent's summary (`data/reports/<bldg>/kenshu_summary.json`). The verdict is **per face**: on the photos registered to that face, the tool searches ±0.5 m around each model line (pier edges, window tops and bottoms, bands) for a photo edge, and the face passes if every found line is within 0.15 m (if one photo alone fails, an edge mix-up is suspected first and the face passes when the other photos agree, with the reason written down). "Weak" passes rest on one photo or few lines.
-- Reprojection median: the distance between where a landmark agent pointed on the grid and where the solved camera projects the model landmark. m = px × distance to the landmark ÷ focal length in px. The best face (faces with 3+ points) is shown next to the overall median, never alone.
-- **The 0.15 m inspection threshold and the reprojection median are different things.** Reprojection reflects how coarse the grid pointing is when the camera is solved, including landmark mix-ups; it is a guide to photo alignment. Inspection compares, line by line on that camera, the model's lines with the photo's edges. A face can pass (all lines within 0.15 m) even where the reprojection median is above 0.15 m (main building, Tower 75).
+- 「棟に振り分けた写真」は索引でその棟に振り分けた写真の数（11/7 夜に取り込んだメジャーの写真を含む）。「視点を解いた写真」は登録台帳で視点が解けた数。
+- 索引の写真 408 枚と表の計 393 枚の差 15 枚は、敷地（棟と棟の間・地面・通路）に振り分けた 6 枚と、棟を決めていない 9 枚（屋上からの眺め・棟の決まらないメジャーの写真など）です。
+- 「measured（うち長さ）」の長さは、写真で直接測った値と、メジャーから測った輪がつながる鎖の値の数（`recorder counts` の direct＋chain）。残りは数（階数・柱間の数・台数）。
+- 「独立した観察」は、同じ状態・方法・根拠・値の種類の写しを 1 つに束ねた数。
+- 「道具宛て」は職員に撮ってもらう物ではなく、道具（recorder）や係が直す・調べる作業の票。
+- 「検収で合格した面」は検収係のまとめ（`data/reports/<棟>/kenshu_summary.json`）で合格の面。合否は**面ごと**に、その面に登録した写真の上で模型の線（柱型の縁・窓の上下・帯）の近く ±0.5 m に写真の縁を探し、見つかった線のずれが全部 0.15 m 以内なら合格（1 枚だけ外れた時は縁の取り違えを先に疑い、他の写真で合っていれば合格、理由を書く）。弱い合格は写真 1 枚・線が少ない合格。
+- 再投影の中央値は、目印係が升目で指した点と、解いた視点で模型の目印を写した点のずれ。m は ずれ px × 目印までの距離 ÷ 焦点距離 で直した物。面ごとの最良は点が 3 つ以上の面のうち一番小さい物で、全体と並べて書く。
+- **検収の 0.15 m と再投影の中央値は別の物です。** 再投影は視点を解く時に升目で指した点の粗さと、目印の取り違えを含む、写真の位置合わせの目安です。検収は、その視点の上で模型の線と写真の縁を線ごとに比べた差です。再投影の中央値が 0.15 m を超えていても（本部棟・タワー75）、線ごとの差が 0.15 m 以内の面は合格になります。
 <!-- numbers:end -->
 
-- **Almost every `measured` value is a count (floors, bays, units); the `measured` lengths are 2: the bay width and parapet height of the main building's f6** (the "of which lengths" column; a chain from a tape measure). Other lengths went the `estimated` way, using a PLATEAU footprint edge or height as the reference length. Against a second ruler (tile courses, PLATEAU height, OSM edge) the difference is 0.1–5.5 %; Tower 75 differs from the OSM edges by −9 to −14 % and is left unresolved.
-- **The height of Tower 75 is unresolved.** The name "75", PLATEAU's 74.2 m and the top of the model's tower (now 71.6 m; 67.88 m in the 11/6 version) disagree. Which part of the tower PLATEAU's 74.2 m refers to (parapet, rooftop structure, glass crown) cannot be decided from the photos, so the model height stays `estimated` and an open photo request has been issued.
-- Value counts grow with how finely the model is split. "Independent observations" in the table group the copies (`recorder counts`). No value has "by eye" as its only method.
-- Building assignments include, besides staff assignments, buildings set by the judging agent at intake and buildings a sorting agent picked from staff candidates (breakdown in 結果.md). The sorting agents decided the face of every photo.
+- **measured のほとんどは数（階数・柱間の数・台数）で、長さの measured は本部棟 f6 の柱間と笠木の高さの 2 件です**（表の「うち長さ」。メジャーからの鎖）。それ以外の長さの縮尺は、PLATEAU の足元の辺か高さを物差しにした estimated の道を通りました。2 本目の物差し（タイルの段数・PLATEAU の高さ・OSM の辺）との差は 0.1〜5.5 %。タワー75 は OSM の辺と −9〜−14 % 食い違い、未解決のまま残しています。
+- **タワー75 の高さは未解決です。** 名前の「75」、PLATEAU の 74.2 m、模型の塔の上端（今は 71.6 m。11/6 の版は 67.88 m）が食い違っています。PLATEAU の 74.2 m が塔のどの部分（パラペット・塔屋・ガラスの冠）を指すのかが写真から決まらないので、模型の高さは estimated のまま、撮影依頼（open）を出してあります。
+- 値の数は「部品ごとに書いた数」なので、同じ観察の写しで膨らみます。表の「独立した観察」は写しを束ねた数です（`recorder counts`）。方法が「目視」だけの値は 0 件です。
+- 棟の振り分けには、職員が振り分けた物のほかに、取り込みの時に判断役が付けた物と、職員が候補だけ示した写真から仕分け係が選んだ物が混ざっています（内訳は結果.md）。面は全部の写真で仕分け係が決めました。
 
-### A run from zero (11/8 16:20–18:21)
+### 0 から立てた実走（11/8 16:20〜18:21）
 
-In a separate worktree, the main building was rebuilt through the API agents from a zero state holding only the photos (171) and the staff's declarations (tape-measure marks). **All 11 steps passed** (cost 19.80 USD, cap 80), validation OK with 0 warnings, measured 3 (all counts) / estimated 382 / unknown 0, with the model, 11 elevations and the walk view produced, and the disputes recorded (the photo height 21.69 m taken over PLATEAU's 32.1 m; the sign of the rooftop-unit offset). **It was not fully automatic, though.** The zero-reset tool had also wiped the existing part-type approval D-0001, so validation rejected 56 parts and the drawing step stopped 4 times between 17:30 and 17:32; at 17:34 the user entered D-0001 by hand and the 5th attempt passed. Because the stop reason was "code failure", the coordinator was never called. The result is weaker than the main building after the 12:16 update (photos overlaid 10 vs 42, faces passing inspection 0 vs 1), and it left 7 photo requests, 1 question for staff and 2 disputes for the coordinator. The numbers come from `out/run0_from_zero/` (records copied from the worktree, not committed); the summary is [`docs/実走_0から_結果_11-08.md`](docs/実走_0から_結果_11-08.md) (Japanese).
+本部棟を、写真（171 枚）と職員の申告（メジャーの印）だけの 0 の状態から、別の作業ツリーで係を API で動かして立て直しました。**11 工程すべてが通り**（費用 19.80 USD、上限 80）、検証 OK・警告 0、measured 3（全部個数）／estimated 382／unknown 0、模型・立面図 11 面・歩く画面まで出て、争点（PLATEAU の 32.1 m でなく写真の 21.69 m を採った、屋上の設備のずれの符号）も記録に残りました。**ただし完全自動ではありません。** 0 に戻す道具が元からある部品の型の許可 D-0001 まで消していたため、検証が部品 56 件を落として製図が 17:30〜17:32 に 4 回止まり、17:34 に利用者が手で D-0001 を入れて 5 回目の試みで通りました。止まった理由が「コードの失敗」だったので進行役は呼ばれていません。出来は 12:16 の追記の後の本部棟より低く（写真に重ねた枚数 10／42、検収で合格した面 0／1）、撮影依頼 7 件・職員への確認 1 件・進行役が決める争点 2 件が残りました。数字は `out/run0_from_zero/`（作業ツリーから写した記録、git 管理外）から取り、結果は [`docs/実走_0から_結果_11-08.md`](docs/実走_0から_結果_11-08.md) にまとめました。
 
-### The 11/7 dress rehearsal (08:35–16:28)
+### 11/7 の疑似本番（08:35〜16:28）
 
-For the main building, the library and Tower 75, the previous results were set aside (`scripts/trial_reset.py --zero`) and each building was rebuilt from the photos and the building assignments only. Kyotsu Lecture Building South is the first building the tools and procedures built on the other three were applied to. The rehearsal ran the agents as Claude Code subagents; Opus 5.5 stood in as the coordinator (Fable is the coordinator in the real run).
-**The values of the 11/7 16:28 dress rehearsal** (per building) are in [`data/reports/疑似本番_11-07/結果.md`](data/reports/疑似本番_11-07/結果.md) (Japanese). Photo intake and inspection fixes continued afterwards, so they differ from the current table above.
-- The rehearsal found 30 fixes for the real run, 23 still open. The largest: incident detection would stop the real pipeline on every building ("put this on the site" requests become vocabulary incidents; "stuck" after inspection is counted in individual lines). The full list is in the summary.
+本部棟・図書館・タワー75 は前の結果を退避し（`scripts/trial_reset.py --zero`）、写真と棟の振り分けだけから作り直しました。共通講義棟南は、3 棟で作り込んだ道具と手順を初めて当てた棟です。疑似本番は Claude Code のサブエージェントで回し、進行役は Opus 5.5 が代役を務めました（本番の進行役は Fable）。
+**11/7 16:28 の疑似本番の値**（棟ごとの数）は [`data/reports/疑似本番_11-07/結果.md`](data/reports/疑似本番_11-07/結果.md) にあります。その後に写真の取り込みと検収の直しが進んだので、上の表（今の値）とは違います。
+- 本番用の直しが 30 件見つかり、23 件が開いています。一番大きいのは、事件の検出が本番の流れを毎棟止めることです（「敷地に置く物」の依頼が語彙の事件になる、検収の後の行き詰まりを線の本数で数える）。一覧は結果.md にあります。
 
-### Trial on other campuses, up to the site base (early 11/8)
+### 別のキャンパスで敷地の土台まで通した試し（11/8 未明）
 
-This was run in a temporary folder; the real `data/` was not touched. No university or building names are written in the code: `campus init` was given only an area (bbox).
+一時フォルダで試しました。本物の `data/` は触っていません。大学や棟の名前はコードに書いておらず、`campus init` に範囲（bbox）を渡しただけです。
 
-- **Nagoya University, Higashiyama campus:** given only the area, `campus init` → `site build` → `site export-web` all ran (about 3 min).
-- **University of Tokyo, Hongo campus:** the coordinate system switched to zone IX automatically.
-- **Only the site base (terrain, ground cover, boundary, building list) was produced.** There are no photos and no building built from photos; that needs photos from the university's own staff. Where there is no PLATEAU, the only reference length is OSM edges.
-- The dress rehearsal's time, tokens and report screenshots, and the detailed record of the other campuses (boundary ids, origins, building counts), were moved to [`docs/results_details_2026-11-08.md`](docs/results_details_2026-11-08.md).
+- **名古屋大学 東山キャンパス**：範囲だけを渡して `campus init` → `site build` → `site export-web` が通りました（約 3 分）。
+- **東京大学 本郷キャンパス**：座標系が IX 系に自動で切り替わりました。
+- **できたのは敷地の土台（地形・地表・境界・建物の一覧）までです。** 写真は 1 枚も無く、写真から起こした棟もありません。棟を起こすには、その大学の職員の写真が要ります。PLATEAU の無い町では、長さの物差しが OSM の辺だけになります。
+- 疑似本番の時間・トークン・報告の絵の件と、別のキャンパスの細かい記録（境界の id・原点・建物の件数など）は [`docs/到達点_詳細_11-08.md`](docs/到達点_詳細_11-08.md) に移しました。
 
-| Nagoya University Higashiyama: the walk view (terrain and ground cover only, no buildings) | University of Tokyo Hongo: the entry page (0 buildings) |
+| 名古屋大学 東山：歩く画面（地形と地表だけで、棟は無い） | 東京大学 本郷：入口のページ（棟 0 件） |
 |---|---|
-| ![Nagoya University Higashiyama: the walk view](docs/images/other_campus_higashiyama_walk.png) | ![University of Tokyo Hongo: the entry page](docs/images/other_campus_hongo_hub.png) |
+| ![名古屋大学 東山：歩く画面](docs/images/other_campus_higashiyama_walk.png) | ![東京大学 本郷：入口のページ](docs/images/other_campus_hongo_hub.png) |
 
-### What we tried, with numbers
+### 試した事と結果（数字つき）
 
-Every experiment below is reproducible from the command shown, and the full numbers are in `out/experiments/*.json` (regenerated, not committed) and the linked note. Negative results are kept on purpose: the system's claim is "we do not guess", so the record of what did *not* work is part of the evidence.
+どれも書いてあるコマンドで再現でき、数字の全部は `out/experiments/*.json`（生成物、git 管理外）と各ノートにあります。うまく行かなかった物も残しています。「決めつけない」が売りなので、何が効かなかったかの記録も根拠の一部です。
 
-| Question | Result | Note |
+| 問い | 結果 | ノート |
 |---|---|---|
-| Can photos be placed by GPS + compass alone, fitting the model edges? | **No.** 0 of 17 reference photos of the main building converged; the true pose is buried in a grid of near-identical column spacings. | [`docs/手順_エージェント.md`](docs/手順_エージェント.md) "写真 1 枚ごとの模型合わせ", `recorder/locate.py` |
-| Can bulk SfM (pycolmap, RootSIFT) place photos that have little overlap? | **No.** Main building 103 photos → 6 small clusters, 2 new photos placed. Tower 75 98 photos → 6–7 clusters, 0 anchored. | `recorder photos register-sfm`, `out/<bldg>/sfm/register_sfm.json` |
-| Does a Claude agent pointing 4–6 model landmarks on a 10×10 grid, solved by PnP, place a photo with no overlap at all? | **Yes.** Median position error 0.7 m on 17 ground-truth photos. Of the 32 Tower 75 photos the landmark agents tried, 14 passed the gates on the first real run, each checked by eye against an overlay (registered photos, both buildings: 18 → 32). | `recorder photos landmarks / pnp`, agent `mejirushi` |
-| Do PoseLib (points+lines) or a GeoCalib gravity prior beat OpenCV PnP? | **Not with 6+ good points** (all three: median 0.41 m). **GeoCalib helps with only 3 points** (0.43 m vs 33.5 m worst case without it), and 3 points + 2 lines pass the gates. On the real tower set no new photo passed; one extra "pass" was a false positive caught by eye. Default stays OpenCV. | [`docs/実験_登録の3条件_11-06.md`](docs/実験_登録の3条件_11-06.md) |
-| Can zero-shot window detection (Grounding DINO) replace the agent's landmark search? | **Partly.** Main building F1 0.58 (0.67 after removing 3 photos whose stored pose is itself suspect); 1.6 s per photo. Tower 75: recall ≈ 0 (window columns are read as one strip). Detection also exposed 2 model errors. | [`docs/実験_窓の自動検出_11-06.md`](docs/実験_窓の自動検出_11-06.md) |
-| Do learned features (ALIKED + LightGlue) fix the bulk-SfM fragmentation? | **Clusters shrink (7 → 2 on the tower) but 0 new photos are placed correctly.** Identical-looking opposite faces are merged, so the alignment is mirrored by 170–178°. A rotation gate (≤ 30°) was added after it let 12 wrong poses through. | [`docs/実験_一括復元の特徴点_11-06.md`](docs/実験_一括復元の特徴点_11-06.md) |
-| Do line landmarks (bands, window rows, face edges) rescue the photos that failed for lack of vertical spread? | **Partly.** On the 11 failed Tower 75 photos, 2 Claude agents pointed points + lines; the solver passed 8. Checking by eye and by consistency kept **3** (registered photos, both buildings: 32 → 35; main building 18, Tower 75 17), 2 are held because the camera height is undetermined from top-edge landmarks alone (three photos taken 16 s apart solved to 1.8 / 7.2 / 9.0 m), 1 is held until the E face model is fixed. | [`docs/実験_登録の3条件_11-06.md`](docs/実験_登録の3条件_11-06.md), `data/photos/registry.json` `not_registered` |
-| Can monocular metric depth (Depth Pro, Depth Anything V2) serve as a second ruler? | **No.** Depth Pro reads 0.43× the true distance (spread 27 % between photos, worse with distance); DA2-Small 1.03× but spread 54 %. The stored poses were confirmed correct by column width and tower height. Relative depth within one photo is consistent to ~10 %, so it may help find occluded landmarks later. | [`docs/実験_単眼の深さ_11-06.md`](docs/実験_単眼の深さ_11-06.md) |
-| Can the evidence be shown, not just stored? | **Yes.** `recorder evidence` writes a Rerun (`.rrd`) scene: the model, every registered photo at its solved camera, landmark correspondences with per-point reprojection error, and the measured / estimated / unknown counts per face. Opens in the desktop or web viewer. | [`docs/実験_証拠ビューア_11-06.md`](docs/実験_証拠ビューア_11-06.md) |
-| Can the walk view look better without textures from photos? | **Yes, within budget.** Physical sky from the site's latitude and time of day, cascaded shadows, contact shadows on PC, all three.js (MIT). Shadow casters merged: 43k → 5.8k draw calls. FPS before → after: PC 23.6 → 29.3, phone-width 34 → 62 (headless, not a real phone). Old look kept at `?look=0`. | [`docs/実験_歩く画面の見た目_11-06.md`](docs/実験_歩く画面の見た目_11-06.md) |
+| GPS と方位だけで写真を模型の縁に合わせられるか | **不可。** 本部棟の登録済み 17 枚で合格 0。真の視点が同じ柱割りの格子の中に埋もれる | [`docs/手順_エージェント.md`](docs/手順_エージェント.md)「写真 1 枚ごとの模型合わせ」、`recorder/locate.py` |
+| 一括復元（pycolmap、RootSIFT）で重なりの薄い写真を乗せられるか | **不可。** 本部棟 103 枚 → 6 塊・新規 2 枚。タワー75 98 枚 → 6〜7 塊・乗った物 0 | `recorder photos register-sfm`、`out/<棟>/sfm/register_sfm.json` |
+| Claude の係が 10×10 の升目で目印 4〜6 点を指し、PnP で解けば、重なりの無い写真でも乗るか | **可。** 真値あり 17 枚で位置の誤差の中央値 0.7 m。タワー75 で目印係が試した 32 枚のうち 14 枚が門を通り、全部重ね画像で目視（両棟の登録済みは 18 → 32 枚） | `recorder photos landmarks / pnp`、係 `mejirushi` |
+| PoseLib（点＋線）や GeoCalib の重力の事前値は OpenCV の PnP に勝つか | **6 点以上あれば差なし**（3 条件とも中央値 0.41 m）。**GeoCalib は 3 点の時だけ効く**（0.43 m。無しだと最悪 33.5 m）。3 点＋線 2 本なら門を通る。本番のタワー75 では新たに通った写真は無く、1 枚増えた「合格」は目視で偽と分かった。既定は OpenCV のまま | [`docs/実験_登録の3条件_11-06.md`](docs/実験_登録の3条件_11-06.md) |
+| 零ショットの窓検出（Grounding DINO）で係の目印探しを肩代わりできるか | **一部。** 本部棟 F1 0.58（視点が怪しい 3 枚を除くと 0.67）、1 枚 1.6 秒。タワー75 は再現率ほぼ 0（窓の列を 1 本の帯と取る）。検出が模型の誤り 2 件を見つけた | [`docs/実験_窓の自動検出_11-06.md`](docs/実験_窓の自動検出_11-06.md) |
+| 学習済みの特徴点（ALIKED＋LightGlue）で一括復元の割れは直るか | **塊は減る（タワー75 で 7 → 2）が正しく乗った写真は 0。** 柄の同じ反対側の面を同じ所とつなぎ、合わせが 170〜178° 裏返る。誤った 12 枚を通してしまったので向きの門（30° 以内）を足した | [`docs/実験_一括復元の特徴点_11-06.md`](docs/実験_一括復元の特徴点_11-06.md) |
+| 線の目印（帯・窓の列・面の端）で、高さの散らばり不足で落ちた写真は救えるか | **一部。** タワー75 で落ちた 11 枚に Claude の係 2 本が点＋線を指し、道具の合格 8。目視と整合で採ったのは **3 枚**（両棟の登録済みの合計 32 → 35 枚。本部棟 18・タワー75 17）。2 枚は上端の目印だけではカメラの高さが決まらず保留（16 秒差で同じ場所の 3 枚が 1.8／7.2／9.0 m に解けた）、1 枚は E 面の模型を直すまで保留 | [`docs/実験_登録の3条件_11-06.md`](docs/実験_登録の3条件_11-06.md)、`data/photos/registry.json` の `not_registered` |
+| 単眼の実寸の深さ（Depth Pro・Depth Anything V2）は第二の物差しになるか | **不可。** Depth Pro は真の距離の 0.43 倍（写真間の散らばり 27 %、遠いほど短い）。DA2-Small は 1.03 倍だが散らばり 54 %。台帳の視点の方が正しいことは柱の幅と塔の高さで確認。写真の中の相対の深さは 10 % 程度でそろうので、隠れた目印探しには使えるかもしれない | [`docs/実験_単眼の深さ_11-06.md`](docs/実験_単眼の深さ_11-06.md) |
+| 根拠を「しまう」だけでなく「見せる」ことはできるか | **可。** `recorder evidence` が Rerun の `.rrd` を出す：模型、登録済みの写真を解いた視点に、目印の対応と点ごとの再投影の残差、面ごとの measured／estimated／unknown の件数。デスクトップでも Web のビューアでも開ける | [`docs/実験_証拠ビューア_11-06.md`](docs/実験_証拠ビューア_11-06.md) |
+| 写真を貼らずに歩く画面の見た目を上げられるか | **予算内で可。** 敷地の緯度と時刻からの物理的な空、段階的な影、PC では接触影。全部 three.js 付属（MIT）。影の部品を束ねて描画命令 43k → 5.8k。FPS は前 → 後で PC 23.6 → 29.3、スマホ幅 34 → 62（headless の計測、本物のスマホではない）。旧の見た目は `?look=0` | [`docs/実験_歩く画面の見た目_11-06.md`](docs/実験_歩く画面の見た目_11-06.md) |
 
-## Setup and usage
+## セットアップと使い方
 
-Requirements: Python 3.13, Blender 5.2, network access for the first site build and for the viewer (three.js is loaded from jsdelivr).
+必要な物：Python 3.13、Blender 5.2、ネット接続（初回の敷地データ取得と、ビューアが three.js を jsdelivr から読むため）。
 
 ```bash
 python -m venv .venv
 .venv/Scripts/pip install -e ".[dev]"
-export BLENDER="<path to Blender 5.2 executable>"   # do not open .blend files by double click
+export BLENDER="<Blender 5.2 の実行ファイルのパス>"   # .blend のダブルクリックでは開かない
 ```
 
-Run everything as `python -I -X utf8 -m recorder <command>`. The command list, starting the walk view and the entry page, resuming after a stop, and running the tests are in [`docs/usage.md`](docs/usage.md).
+すべて `python -I -X utf8 -m recorder <コマンド>` で動かします。コマンドの一覧、歩く画面と入口のページの起動、止まった後の再開、テストの走らせ方は [`docs/使い方.md`](docs/使い方.md) にあります。
 
-## Data and sources
+## データと出典
 
-- **Photos taken by the author** (408 in the index `data/photos/index.json`, all taken during the period).
-  - During the period: 2026-11-03 to 11-07, 408 photos (11/3 124, 11/4 16, 11/5 200, 11/7 68 tape-measure photos; index field `period: "during"`).
-  - The original photos are **not in this repository**. Instead, reduced public copies (long edge 1600 px, `data/photos/public/<folder>/<id>.jpg`, index field `public_file`) are included for every photo except any that would identify a research lab (407 photos, 1 excluded). Posters, names, phone numbers, faces and license plates are covered in the public copies with a gray box labelled with the reason (posters at the edge may be cropped instead); the boxes and reasons are kept in the index field `masks`. No blurring, pixelation or generative fill. The judgement that this satisfies the university's conditions (no recognisable posters; faces and plates excluded from published material) is the author's, not an individual approval by the university (`data/reference/index.json`, `permission.interpretations`). Evidence in building JSON points to photo ids, so the `period` is always traceable.
-  - The image at the top (`docs/images/hero.png`) is cut from an overlay on one photo taken during the period, to a region with no people or hanging banners, with notices on a glass door blurred.
-- **Photos taken before the period are not used (removed on 11/7).** During development (11/4 to 11/6) we tried 723 photos the author took before the period (2026-09-07 to 10-12), and the author's own classification ledger made at that time (which photo shows which building), as input data under the official Q&A (Q2, Q3). On 11/7 we decided that evidence comes only from photos taken during the period:
-  - They were removed from the photo index, the registration ledger, and the building JSON (Building 11 was dropped from the scope because its only evidence was pre-period photos).
-  - Their records were also removed from the git history. Where a photo name appeared in history, it is replaced with "期間前の写真（削除）" ("pre-period photo (removed)"). Commit dates and messages were not changed.
-  - In the 11/7 dress rehearsal the 3 building JSON files were set aside and rebuilt from during-period photos only (`scripts/trial_reset.py --zero`). None of the current 4 building JSON files has a value based on a pre-period photo (`recorder validate --strict`: 0 warnings for all 4).
-  - Mentions of pre-period photos in `docs/日誌.md` and the experiment notes are records of the work at that time.
-- **PLATEAU** (MLIT Japan, Nagoya 2022): building footprints and heights, used only as a base and overwritten by photo evidence.
-- **OpenStreetMap** (roads, boundaries, building names): © OpenStreetMap contributors. The data is available under the Open Database License (ODbL 1.0); see https://www.openstreetmap.org/copyright.
-- **OpenStreetMap ground cover** (roads, footways, grass, parking): painted on the walk view and model ground as estimated (fetched once via Overpass, 2026-11-05; same ODbL attribution as above).
-- **Geospatial Information Authority of Japan**: aerial photos and 5 m elevation (attribution shown).
-- **CC0 assets (Poly Haven / Kenney; sky, lighting, materials, standard parts)**: the full list (source URL, license, SHA256) is in `data/assets/catalog.json`. Only CC0-1.0 is accepted (no CC-BY). They supply only the look; position, count and size come from the evidence-backed values in the building JSON. Files are fetched with `python -m recorder assets fetch` into `assets/` (not in the repository).
-- **Open-source libraries tried on 2026-11-06** (code dependencies, not data; see the experiments table): [PoseLib](https://github.com/PoseLib/PoseLib) (BSD-3), [GeoCalib](https://github.com/cvg/GeoCalib) (Apache-2.0), [Grounding DINO](https://github.com/IDEA-Research/GroundingDINO) via Hugging Face transformers (Apache-2.0, `grounding-dino-tiny`), [LightGlue](https://github.com/cvg/LightGlue) (Apache-2.0) with ALIKED (BSD-3). Model weights are downloaded to local caches and are not in the repository. SuperPoint, MASt3R/DUSt3R and the original VGGT weights were not used because of their non-commercial or custom licenses.
-- **Also tried on 2026-11-06**: [Rerun](https://github.com/rerun-io/rerun) (`rerun-sdk`, MIT/Apache-2.0) for the evidence viewer; [Depth Pro](https://github.com/apple/ml-depth-pro) (Apple sample-code license; weights kept out of the repository) and [Depth Anything V2 Metric Small](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf) (Apache-2.0) for the depth experiment; three.js `Sky`, `CSM`, `GTAOPass`, `SMAAPass` (MIT) in the walk view. [PyMuPDF](https://github.com/pymupdf/PyMuPDF) (AGPL-3.0) only to rasterize the elevation SVG for the image at the top.
-- The official campus map was used only to confirm building names and existence, within the university's permission. No shapes, positions, or dimensions were traced. It is not in the repository (`data/reference/` is git-ignored).
+- **自分で撮った写真**（索引 `data/photos/index.json` に 408 枚。すべて期間中）
+  - 期間中：2026-11-03〜11-07 の 408 枚（11/3 124・11/4 16・11/5 200・11/7 68（メジャーの写真）。索引の `period: "during"`）。
+  - 元の写真は**リポジトリに入れません**。代わりに縮小した公開版（長辺 1600 px、`data/photos/public/<元のフォルダ>/<id>.jpg`、索引の `public_file`）を、研究室が分かる物以外は全部入れました（407 枚、除外 1）。掲示物・人名・電話番号・顔・ナンバーは公開版で灰色の箱＋理由の文字で塗りつぶし（端の掲示物は切り落とし）、範囲と理由を索引の `masks` に残します。ぼかし・モザイク・生成で埋めることはしません。大学の許可の条件（掲示物が分かる画像は不可、顔・ナンバーは公開物から除く）をこの方法で満たすと判断したのは作者で、大学の個別承認ではありません（`data/reference/index.json` の `permission.interpretations`）。棟 JSON の根拠は写真の id で指すので、`period` でいつ撮った物かが必ず分かります。
+  - 冒頭の絵（`docs/images/hero.png`）は、期間中に撮った 1 枚への重ね合わせから、人・懸垂幕の写らない範囲を切り出し、扉の貼り紙をぼかした物です。
+- **期間前の写真は使っていません（11/7 に外しました）。** 開発の途中（11/4〜11/6）は、期間前（2026-09-07〜10-12）に自分で撮った写真 723 枚と、その時に作った自分の分類台帳（どの写真がどの棟か）を、公式 Q&A（Q2・Q3）に基づいて入力データとして試していました。11/7 に「根拠は期間中の写真だけ」と決め、次のようにしました。
+  - 索引・登録台帳・棟 JSON から外しました（11 号館は根拠が期間前の写真だけだったので範囲から外しました）。
+  - git の履歴からも記録を除きました。履歴の中で写真の名前があった所は「期間前の写真（削除）」に置き換えています。コミットの日時と文面は変えていません。
+  - 3 棟の棟 JSON は 11/7 の疑似本番で、前の版を退避して期間中の写真だけから作り直しました（`scripts/trial_reset.py --zero`）。今の 4 棟の棟 JSON に期間前の写真を根拠にした値はありません（4 棟とも `recorder validate --strict` 警告 0）。
+  - `docs/日誌.md` や実験の文書に残る期間前の写真の話は、その時点の作業の記録です。
+- **PLATEAU**（国土交通省、名古屋市 2022 版）：建物の足元と高さ。土台にだけ使い、写真の根拠で上書きします。
+- **OpenStreetMap**（道・境界・建物名）：© OpenStreetMap contributors。データは Open Database License（ODbL 1.0）で、https://www.openstreetmap.org/copyright に従って表示します。
+- **OpenStreetMap の地表の種類**（車道・歩道・芝・駐車場）：歩く画面と模型の地面の塗り分けに estimated として使用（Overpass で 2026-11-05 に 1 回取得。帰属は上と同じ ODbL）。
+- **国土地理院**：航空写真と5m標高（出典を表示）。
+- **CC0 アセット（Poly Haven / Kenney。空・光・質感・定型の部品）**：一覧（出典 URL・ライセンス・SHA256）は `data/assets/catalog.json`。CC0-1.0 だけを入れます（CC-BY も入れない）。借りるのは見た目だけで、位置・個数・大きさは棟 JSON の根拠付きの値です。ファイルは `python -m recorder assets fetch` で `assets/` に取ります（リポジトリには入れない）。
+- **2026-11-06 に試した公開ライブラリ**（データではなくコードの依存。上の「試した事と結果」参照）：[PoseLib](https://github.com/PoseLib/PoseLib)（BSD-3）、[GeoCalib](https://github.com/cvg/GeoCalib)（Apache-2.0）、[Grounding DINO](https://github.com/IDEA-Research/GroundingDINO)（Hugging Face transformers 経由、Apache-2.0、`grounding-dino-tiny`）、[LightGlue](https://github.com/cvg/LightGlue)（Apache-2.0）＋ALIKED（BSD-3）。学習済みの重みはローカルのキャッシュに落ち、リポジトリには入れていません。SuperPoint・MASt3R/DUSt3R・VGGT の元の重みは非商用や独自の許諾のため使っていません。
+- **同じ日にほかに試した物**：[Rerun](https://github.com/rerun-io/rerun)（`rerun-sdk`、MIT/Apache-2.0、証拠ビューア）、[Depth Pro](https://github.com/apple/ml-depth-pro)（Apple のサンプルコード許諾。重みはリポジトリに入れない）と [Depth Anything V2 Metric Small](https://huggingface.co/depth-anything/Depth-Anything-V2-Metric-Outdoor-Small-hf)（Apache-2.0、深さの実験）、three.js 付属の `Sky`・`CSM`・`GTAOPass`・`SMAAPass`（MIT、歩く画面）。立面図の PNG 化に [PyMuPDF](https://github.com/pymupdf/PyMuPDF)（AGPL-3.0。冒頭の絵を作る時だけ）。
+- **名城大学の許可（2026-11-04、広報部門）**：公式サイトのキャンパス図・フロアガイドは「トレースして活用」の範囲で使用可、自分で撮った写真の公開可。条件は、研究・研究室に関する物（誰の・どんな研究室・研究内容が分かる写真）を撮らないこと。記録は `data/reference/index.json`。
+  - 本作では自主ルールとして、図は建物の名称・有無・大まかな位置の確認にだけ使い、形・寸法は写真と PLATEAU・OSM から起こしています（根拠を写真に置くため）。図そのものはリポジトリに入れていません（`data/reference/` は git 管理外）。
 
-**Not used**: anything derived from Google (maps, aerial photos, 3D, Street View); tracing of any campus plan or web drawing; any previously finished model. Earlier project folders were read-only references; no code, model, or measurement was copied.
+**使わない物**：Google 由来のデータ（地図・航空写真・3D・ストリートビュー）、大学の配置図やネットの図面のなぞり、過去の完成モデル。過去のフォルダは読むだけで、コード・模型・寸法は写していません。
 
-## Honest limits
+## 正直な限界
 
-**Out of scope**
-- No collision detection in the viewer. No trees yet. Materials and lighting are a first pass.
-- Inspection works only for faces that could be rectified; oblique-only faces need rectification first.
-- Running the agents through the API (Agent SDK) from the staff screen (`recorder serve` and `web/staff.html`) has been done for one building only, the main building (the update, and the run from zero). **No record has yet gone from start to finish with no human action** ([story](docs/run_2026-11-08.md)). The other three buildings, and all agents up to 11/7, were run by the author as Claude Code subagents.
-- In the run from zero, a person entered a decision by hand once, at the drawing step. There is not yet a path that calls the coordinator when a run stops on a code failure ([results](docs/実走_0から_結果_11-08.md), Japanese).
+**範囲外**
+- 歩く画面に当たり判定はありません。木もまだ。素材と光は最初の版です。
+- 検収ができるのは正面化できた面だけです。斜めの写真しか無い面は、まず正面化が要ります。
+- 職員の画面（`recorder serve` と `web/staff.html`）から係を API（Agent SDK）で動かしたのは、本部棟の 1 棟だけです（追記と、0 からの実走）。**最初から最後まで人の手なしで通った記録はまだありません**（[経緯](docs/本番_11-08_経緯.md)）。ほかの 3 棟と 11/7 までの係は、作者が Claude Code のサブエージェントとして回しました。
+- 0 からの実走は製図で 1 回、人が決定を手で入れました。コードの失敗で止まった時に進行役を呼ぶ作りはまだありません（[結果](docs/実走_0から_結果_11-08.md)）。
 
-**Fallbacks**
-- Many values are `estimated` (converted from photo pixels and a reference length, from ratios, or by eye, with the method written down), not surveyed. Only dimensions with a measurable basis are `measured`. Almost every `measured` value today is a count (floors, bays, units); the only `measured` lengths are the 2 on the main building's f6 (numbers in the "Results" table). For the library and Tower 75 the tape was read but not applied to the building JSON, so their lengths are `estimated`.
-- `unknown` faces stay gray and hypothesis faces striped, with photo requests. Most of Tower 75's north and south faces and corners are hypotheses (same block, symmetry); the library's entrance canopy depth (f2) and the middle of f3, the wing junction on the main building's f5, and Kyotsu South's courtyard faces and four unphotographed faces wait for photos.
-- Tool bugs found during use are kept in `docs/日誌.md`; fixes needed for the real run (blockers) found in the dress rehearsal are listed in [`data/reports/疑似本番_11-07/結果.md`](data/reports/疑似本番_11-07/結果.md).
+**代わりの道**
+- 多くの値は `estimated`（写真の px と物差しからの換算、比率、目で見た判断。方法は書いてある）で、測量したわけではありません。測れる根拠がある寸法だけが `measured` です。今の measured はほとんどが数（階数・柱間の数・台数）で、長さの measured は本部棟 f6 の 2 件だけです（件数は「到達点」の表）。図書館・タワー75 はメジャーの目盛りまで読みましたが、棟 JSON には入れておらず、長さは estimated です。
+- unknown の面は灰色、仮説の面は縞のままで、撮影依頼が出ます。タワー75 の北・南の面と四隅の多くは仮説（同じ塊・対称から）、図書館 f2 の庇の出と f3 の中ほど、本部棟 f5 の翼の境、共通講義棟南の中庭の面と写真の無い 4 面は撮影待ちです。
+- 使っていて見つけた道具の不具合は `docs/日誌.md` に、疑似本番で見つかった本番用の直し（詰まり）は [`data/reports/疑似本番_11-07/結果.md`](data/reports/疑似本番_11-07/結果.md) の一覧に残しています。
 
-**What remains off**
-- The number of faces passing re-inspection (model lines within 0.15 m of photo edges) is in the "Results" table (counted from the inspection agent's summary `data/reports/<bldg>/kenshu_summary.json`). The other faces are estimates from one or two photos, or wait for re-registration or new photos.
-- On the main building, f6 and f8 are recorded as failing inspection (K-405), and f4, f5 and f7 went on with their photo requests open. The f8 bay width 5.408 m was carried over from the old 11/7 scale and has not been re-measured with the new chain.
-- The f6 face length from the chain, 48.73 ± 0.45 m, differs from the PLATEAU edge, 49.72 m, by −2.0 %; neither has been declared right.
+**残っている外れ**
+- 再検収（模型の線と写真の縁のずれ 0.15 m 以内）で合格した面の数は「到達点」の表にあります（検収係のまとめ `data/reports/<棟>/kenshu_summary.json` から数える）。ほかの面は写真 1〜2 枚からの推定か、登録の直し・撮影待ちです。
+- 本部棟の f6・f8 は検収で不合格のまま記録し（K-405）、f4・f5・f7 は撮影依頼が open のまま進めました。f8 の柱間 5.408 m は 11/7 の古い縮尺から移した値で、新しい鎖では測り直していません。
+- 本部棟 f6 の鎖から出した面の長さ 48.73 ± 0.45 m は PLATEAU の辺 49.72 m と −2.0 % 違い、どちらが正しいかは決めていません。
 
-The story of the 11/8 real run (main-building update, API) and the details of what remains off on the main building are in [`docs/run_2026-11-08.md`](docs/run_2026-11-08.md).
+11/8 の本番（本部棟の追記、API）の経緯と、本部棟に残っている外れの詳しい中身は [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md) にあります。
 
-## Acknowledgements
+## 謝辞
 
-Meijo University (its public relations office) granted permission (2026-11-04) to trace the official campus maps and to publish photos taken on campus, on the condition that nothing related to research or laboratories is photographed. We also thank the faculty member who relayed the request. In this work the maps are used only to confirm building names and rough positions; shapes and dimensions come from photos, PLATEAU and OSM. See `data/reference/index.json`.
+名城大学（広報部門）に、公式キャンパス図のトレース利用と学内写真の公開について許可をいただきました（2026-11-04）。取り次ぎをいただいた学内の先生にも感謝します。
 
-## License
+## ライセンス
 
-- **Code** (`recorder/`, `web/`, `scripts/`, `tests/`, and the code parts of `docs/`): MIT License ([`LICENSE`](LICENSE)).
-- **Photos, building JSON, site JSON and generated outputs** (drawings, models, images, reports): not MIT. See [`LICENSE-DATA.md`](LICENSE-DATA.md).
-  - They are published with Meijo University's permission (2026-11-04).
-  - Reuse must follow the university's conditions: no research or lab content, no posters, no faces, no license plates.
-  - Commercial use or republication needs prior consultation.
-  - Parts from public data follow each source's terms.
-- External libraries and CC0 assets keep their own licenses.
+- **コード**（`recorder/`・`web/`・`scripts/`・`tests/`、`docs/` のコード部分）：MIT License（[`LICENSE`](LICENSE)）。
+- **写真・棟 JSON・敷地 JSON・生成物**（図面・模型・絵・報告）：MIT ではありません。[`LICENSE-DATA.md`](LICENSE-DATA.md) の条件に従います。条件は次のとおりです。
+  - 名城大学の許可（2026-11-04）を得て公開しています。
+  - 再利用する時は、研究・研究室が分かる物、掲示物、顔、ナンバーを含めないでください。
+  - 商用利用・転載は別途ご相談ください。
+  - 公開データの部分は、それぞれの出典の条件に従います。
+- 外部のライブラリと CC0 アセットは、それぞれの元のライセンスに従います。
 
-## Documents
+## 文書の目次
 
-Most documents are in Japanese.
+**職員向け**
+- [`docs/撮影ガイド.md`](docs/撮影ガイド.md)：スマホで見ながら撮るための手順
+- [`docs/撮影リスト_11-04.md`](docs/撮影リスト_11-04.md)：撮影依頼を歩く順に並べた物（11/4 時点）
 
-**For staff**
-- [`docs/撮影ガイド.md`](docs/撮影ガイド.md): how to take the photos, step by step on a phone
-- [`docs/撮影リスト_11-04.md`](docs/撮影リスト_11-04.md): photo requests in walking order (as of 11/4)
+**審査員向け**
+- [`docs/Claude活用の記録.md`](docs/Claude活用の記録.md)：Claude の使い方の全体（係・進行役・審査員役・詰まりの台帳）
+- [`docs/日誌.md`](docs/日誌.md)：工程ごとの時間
+- [`docs/逆算.md`](docs/逆算.md)：使用量の運転規則と、配点からの逆算
+- [`docs/検算の記録_本部棟.md`](docs/検算の記録_本部棟.md)：本部棟の検算の記録
+- 実験 7 本：[登録の3条件](docs/実験_登録の3条件_11-06.md)・[窓の自動検出](docs/実験_窓の自動検出_11-06.md)・[一括復元の特徴点](docs/実験_一括復元の特徴点_11-06.md)・[単眼の深さ](docs/実験_単眼の深さ_11-06.md)・[証拠ビューア](docs/実験_証拠ビューア_11-06.md)・[歩く画面の見た目](docs/実験_歩く画面の見た目_11-06.md)・[仕分けの正解率](docs/実験_仕分けの正解率_11-07.md)
+- 疑似本番 2 本：[11/6 の手順](docs/疑似本番_11-06.md)・[11/7 の結果](data/reports/疑似本番_11-07/結果.md)（進行役への指示は [`docs/疑似本番_進行役_11-07.md`](docs/疑似本番_進行役_11-07.md)）
+- [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md)：11/8 の本番（本部棟の追記、API）の経緯（英語：[`docs/run_2026-11-08.md`](docs/run_2026-11-08.md)）
+- [`data/reports/指示_11-08/`](data/reports/指示_11-08/)：決定の台帳（進行役の決定ファイル・指示・監査）
+- [`docs/過程/`](docs/過程/)：Claude に審査員役をさせて直した記録
 
-**For judges**
-- [`docs/Claude活用の記録.md`](docs/Claude活用の記録.md): the full record of how Claude was used (agents, coordinator, judge roles, blocker ledger)
-- [`docs/日誌.md`](docs/日誌.md): time spent per step
-- [`docs/逆算.md`](docs/逆算.md): usage policy and planning back from the judging criteria
-- [`docs/検算の記録_本部棟.md`](docs/検算の記録_本部棟.md): cross-check record for the main building
-- 7 experiments: [registration, 3 conditions](docs/実験_登録の3条件_11-06.md) · [window detection](docs/実験_窓の自動検出_11-06.md) · [SfM features](docs/実験_一括復元の特徴点_11-06.md) · [monocular depth](docs/実験_単眼の深さ_11-06.md) · [evidence viewer](docs/実験_証拠ビューア_11-06.md) · [walk view look](docs/実験_歩く画面の見た目_11-06.md) · [sorting accuracy](docs/実験_仕分けの正解率_11-07.md)
-- 2 dress rehearsals: [11/6 procedure](docs/疑似本番_11-06.md) · [11/7 results](data/reports/疑似本番_11-07/結果.md) (instructions to the coordinator: [`docs/疑似本番_進行役_11-07.md`](docs/疑似本番_進行役_11-07.md))
-- [`docs/run_2026-11-08.md`](docs/run_2026-11-08.md): the story of the 11/8 real run (main-building update, API); Japanese: [`docs/本番_11-08_経緯.md`](docs/本番_11-08_経緯.md)
-- [`data/reports/指示_11-08/`](data/reports/指示_11-08/): the decision ledger (coordinator decision files, instructions, audits)
-- [`docs/過程/`](docs/過程/): the record of having Claude act as a judge and fixing the work accordingly
-
-**For developers**
-- [`docs/usage.md`](docs/usage.md): command list, walk view, entry page, resuming, tests
-- [`docs/手順_エージェント.md`](docs/手順_エージェント.md): the 11/3 hand-made procedure, turned into the agents' procedure
-- [`.claude/agents/`](.claude/agents/): the 13 agent definitions and the shared contract ([`_共通.md`](.claude/agents/_共通.md))
-- [`docs/案_新しい道具_11-06.md`](docs/案_新しい道具_11-06.md): design proposal for tool improvements (11/6)
-- [`web/README.md`](web/README.md): running the walk view
-- [`LICENSE-DATA.md`](LICENSE-DATA.md): terms for photos, building JSON and generated outputs
+**開発者向け**
+- [`docs/使い方.md`](docs/使い方.md)：コマンドの一覧・歩く画面と入口のページ・再開・テスト
+- [`docs/手順_エージェント.md`](docs/手順_エージェント.md)：11/3 の手作業をそのまま係の手順にした物
+- [`.claude/agents/`](.claude/agents/)：係 13 本の定義と共通の約束（[`_共通.md`](.claude/agents/_共通.md)）
+- [`docs/案_新しい道具_11-06.md`](docs/案_新しい道具_11-06.md)：道具の改善の設計案（11/6）
+- [`web/README.md`](web/README.md)：歩く画面の動かし方
+- [`LICENSE-DATA.md`](LICENSE-DATA.md)：写真・棟 JSON・生成物の条件

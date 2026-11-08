@@ -1,6 +1,6 @@
 # Results: detailed records
 
-These passages were moved out of README.md on 11/8 unchanged (only heading levels and link paths relative to `docs/` were adjusted).
+These passages were moved out of README.en.md on 11/8 unchanged (only heading levels and link paths relative to `docs/` were adjusted).
 
 ## The 11/7 dress rehearsal (08:35–16:28)
 

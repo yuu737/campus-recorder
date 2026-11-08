@@ -1,6 +1,6 @@
 # Setup and usage (details)
 
-These passages were moved out of README.md on 11/8 unchanged (only heading levels and link paths relative to `docs/` were adjusted). Installation is in the README.
+These passages were moved out of README.en.md on 11/8 unchanged (only heading levels and link paths relative to `docs/` were adjusted). Installation is in the README.
 
 Run everything as `python -I -X utf8 -m recorder <command>`:
 

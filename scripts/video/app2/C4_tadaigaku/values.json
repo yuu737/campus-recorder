@@ -7,13 +7,13 @@
    "src": "out/video/closing_assets/other_campus/other_campus_higashiyama_walk.png",
    "k": "名古屋大学 東山",
    "t": "歩く画面（地形と地面だけ、棟なし）",
-   "source": "docs/images/ の写し。README.md の他大学の節の表の画と説明"
+   "source": "docs/images/ の写し。README.en.md の他大学の節の表の画と説明"
   },
   {
    "src": "out/video/closing_assets/other_campus/other_campus_hongo_hub.png",
    "k": "東京大学 本郷",
    "t": "入口の頁（座標系は IX 系に自動で切替）",
-   "source": "docs/images/ の写し。README.md の他大学の節の表の画と説明"
+   "source": "docs/images/ の写し。README.en.md の他大学の節の表の画と説明"
   }
  ],
  "cols_note": "公開データ（PLATEAU・OpenStreetMap）からの土台。各大学の関与・導入ではない",
@@ -29,7 +29,7 @@
  },
  "cap": "out/video/closing_assets/other_campus/（README の他大学の節）／題の板 out/video/opening_v7",
  "sub": "範囲（bbox）を渡すだけで、土台まで約 3 分。棟を立てるのは、その大学の職員の写真",
- "sub_source": "README.md「Trial on other campuses, up to the site base (early 11/8)」（about 3 min・zone IX・Only the site base…needs photos from the university's own staff）",
+ "sub_source": "README.en.md「Trial on other campuses, up to the site base (early 11/8)」（about 3 min・zone IX・Only the site base…needs photos from the university's own staff）",
  "narration": {
   "note": "暫定の文（台本は利用者が書く）。Achernar・gemini-3.1-flash-tts-preview",
   "wav": "out/video/app2/narration/C4_tadaigaku/",

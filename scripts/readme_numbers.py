@@ -4,7 +4,7 @@
   python -I -X utf8 scripts/readme_numbers.py --refresh  4 棟とも recorder report で出し直してから書く
   python -I -X utf8 scripts/readme_numbers.py --check    書かずに照合だけ（README の表と report.json の差を数える。差があれば終了コード 1）
 
-表は README.ja.md・README.md の印 <!-- numbers:start --> 〜 <!-- numbers:end --> の間だけを書き換える。手で書いた数字は印の外に置かない。
+表は README.md（日）・README.en.md（英）の印 <!-- numbers:start --> 〜 <!-- numbers:end --> の間だけを書き換える。手で書いた数字は印の外に置かない。
 棟の並びは data/site/tempaku.json の scope.targets（無ければ data/buildings/*.json）。名前は棟 JSON の name。
 照合：README の表の各行の数字を読み戻し、report.json（と counts --json）から作った数字の列と 1 つずつ比べる。差の数を出す。
 """
@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 START, END = "<!-- numbers:start -->", "<!-- numbers:end -->"
-READMES = {"ja": ROOT / "README.ja.md", "en": ROOT / "README.md"}
+READMES = {"ja": ROOT / "README.md", "en": ROOT / "README.en.md"}
 NAME_EN = {"honbu": "Main building", "library": "Library", "tower75": "Tower 75", "kyotsu-minami": "Kyotsu Lecture Bldg. South"}
 
 

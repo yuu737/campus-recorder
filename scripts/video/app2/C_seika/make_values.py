@@ -56,7 +56,7 @@ v = {
     "yen_per_usd": YEN_PER_USD,
     "as_of": st.get("updated_at"),
     "status": st.get("status"),
-    "cap": f"D:/BuiltwithClaude_run0/out/honbu/pipeline_state.json・report.json（{st.get('updated_at')} の値、status {st.get('status')}）／README.ja.md／docs/動画_数字の出典_3D相場_11-08.md",
+    "cap": f"D:/BuiltwithClaude_run0/out/honbu/pipeline_state.json・report.json（{st.get('updated_at')} の値、status {st.get('status')}）／README.md／docs/動画_数字の出典_3D相場_11-08.md",
 }
 (HERE / "values.json").write_text(json.dumps(v, ensure_ascii=False, indent=1), encoding="utf-8")
 if False: (HERE / "timeline.json").write_text(json.dumps({"note": "係 U（無音）", "fps": 30, "size": [1920, 1080], "total": v["dur"]}, ensure_ascii=False, indent=1), encoding="utf-8")
