@@ -1,0 +1,152 @@
+{
+ "note": "make_timeline.py --narration が作る。手で直さない。",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "flip": 0.6,
+ "total": 43.1,
+ "scenes": [
+  {
+   "id": "T",
+   "pillar": "",
+   "text": "写真を撮るだけで、根拠付きの、歩ける大学の 3D 空間がつくれる",
+   "pre": "",
+   "lines": [
+    "写真を撮るだけで、",
+    "根拠付きの、",
+    "歩ける大学の 3D 空間がつくれる"
+   ],
+   "start": 0.0,
+   "text_in": 0.5,
+   "text_dur": 6.08,
+   "speech_end": 6.58,
+   "end": 7.18,
+   "sentences": [
+    {
+     "n": 1,
+     "text": "写真を撮るだけで、根拠付きの、歩ける大学の 3D 空間がつくれる。",
+     "file": "001.wav",
+     "start": 0.5,
+     "dur": 6.08
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v6/narration.json"
+  },
+  {
+   "id": "A",
+   "pillar": "受験生",
+   "text": "地方の受験生は、志望校を見ないまま決めている",
+   "pre": "地方の受験生は、",
+   "lines": [
+    "志望校を見ないまま",
+    "決めている"
+   ],
+   "start": 7.18,
+   "text_in": 7.78,
+   "text_dur": 4.6,
+   "speech_end": 17.49,
+   "end": 17.99,
+   "sentences": [
+    {
+     "n": 2,
+     "text": "地方の受験生は、志望校を見ないまま決めています。",
+     "file": "002.wav",
+     "start": 7.78,
+     "dur": 4.6
+    },
+    {
+     "n": 3,
+     "text": "新潟から名古屋なら、1 泊 2 日で約 5 万円かかります。",
+     "file": "003.wav",
+     "start": 12.73,
+     "dur": 4.76
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v6/narration.json"
+  },
+  {
+   "id": "B",
+   "pillar": "作者",
+   "text": "自分もそうだった",
+   "pre": "",
+   "lines": [
+    "自分も",
+    "そうだった"
+   ],
+   "start": 17.99,
+   "text_in": 18.49,
+   "text_dur": 2.2,
+   "speech_end": 26.32,
+   "end": 26.82,
+   "sentences": [
+    {
+     "n": 4,
+     "text": "作者自身もそうでした。",
+     "file": "004.wav",
+     "start": 18.49,
+     "dur": 2.2
+    },
+    {
+     "n": 5,
+     "text": "名古屋会場で受けられても、キャンパスまでは行けませんでした。",
+     "file": "005.wav",
+     "start": 21.04,
+     "dur": 5.28
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v6/narration.json"
+  },
+  {
+   "id": "C",
+   "pillar": "手間",
+   "text": "外注すると 1 棟 4万円から",
+   "pre": "",
+   "lines": [
+    "外注すると",
+    "1 棟 4万円から"
+   ],
+   "start": 26.82,
+   "text_in": 27.42,
+   "text_dur": 8.64,
+   "speech_end": 36.06,
+   "end": 36.56,
+   "sentences": [
+    {
+     "n": 6,
+     "text": "キャンパスの建物を 3D にするには、外注で 1 棟 4 万円から。測る作業は別です。",
+     "file": "006.wav",
+     "start": 27.42,
+     "dur": 8.64
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v6/narration.json"
+  },
+  {
+   "id": "D",
+   "pillar": "広報",
+   "text": "大学の広報には予算も専門家もいない",
+   "pre": "大学の広報には",
+   "lines": [
+    "予算も専門家も",
+    "いない"
+   ],
+   "start": 36.56,
+   "text_in": 37.06,
+   "text_dur": 4.44,
+   "speech_end": 41.5,
+   "end": 43.1,
+   "sentences": [
+    {
+     "n": 7,
+     "text": "大学の広報には、その予算も専門家もいません。",
+     "file": "007.wav",
+     "start": 37.06,
+     "dur": 4.44
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v6/narration.json"
+  }
+ ]
+}

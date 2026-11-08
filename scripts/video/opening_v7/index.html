@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>導入 v7</title>
+<!--
+  提出動画の導入 20 秒（v7）。板の数字と札は values.json（暫定は ？）。時刻 t を渡すと、その時刻の絵を描く：window.seek(t)（Promise）。
+  拍はすべて timeline.json（make_timeline.py が作る）の場面の始まり・文の始まり・文の長さから決まる。
+  撮るのは scripts/video/render_html.py（repo の根を配信して /scripts/video/opening_v7/index.html を開く）。
+  色はこの作品の画面から：地＝待機画面の明るい地 #f5f6f8、差し色＝職員・待機画面の青 #0031d8、
+  寸法の色＝立面図（measured #222 / estimated #b07a10 / unknown #c8322b）。字体は --font-ja の 1 か所で差し替える。
+-->
+<style>
+:root{
+  --font-ja:"BIZ UDPGothic","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;   /* 極太の字体に替える時はここだけ */
+  --font-mono:Consolas,"BIZ UDGothic",monospace;
+  --w-head:700;
+  --paper:#f5f6f8; --ink:#1a1a1c; --sub:#545861; --line:#d6d8dd;
+  --acc:#0031d8; --acc-soft:#e8edff;
+  --measured:#222; --estimated:#b07a10; --unknown:#c8322b;
+}
+html,body{margin:0;padding:0;background:#0e1015;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;perspective:2600px;perspective-origin:50% 50%;overflow:hidden;background:var(--paper)}
+.board{position:absolute;inset:0;transform-origin:0 50%;backface-visibility:hidden;will-change:transform;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(rgba(0,49,216,.13) 1.5px,transparent 1.5px),
+    linear-gradient(90deg,rgba(0,49,216,.13) 1.5px,transparent 1.5px),
+    linear-gradient(rgba(0,49,216,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,49,216,.055) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+  background-position:-1px -1px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.04);
+  overflow:hidden;font-family:var(--font-ja);color:var(--ink)}
+.board::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .1  0 0 0 0 .15  0 0 0 .9 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
+.shade{position:absolute;inset:0;background:#0e1015;opacity:0;pointer-events:none;z-index:50}
+/* 図面の枠と柱（左 1/4）。全場面で同じ位置 */
+.frame{position:absolute;left:28px;top:28px;right:28px;bottom:28px;border:3px solid var(--ink);pointer-events:none;z-index:20}
+.pillar{position:absolute;left:28px;top:28px;bottom:28px;width:452px;border-right:3px solid var(--ink);background:rgba(0,49,216,.045);z-index:10}
+.pillar .kubun{position:absolute;left:44px;top:46px;font-size:30px;color:var(--sub);letter-spacing:.2em}
+.pillar .word{position:absolute;left:40px;top:96px;font-size:112px;font-weight:var(--w-head);line-height:1.1;letter-spacing:.02em;white-space:nowrap}
+.pillar .bar{position:absolute;left:44px;top:240px;height:10px;width:150px;background:var(--acc);transform-origin:0 50%}
+.pillar .sheet{position:absolute;left:44px;bottom:150px;font-size:44px;font-family:var(--font-mono);color:var(--ink)}
+.pillar .sheet b{color:var(--acc)}
+.pillar .scale{position:absolute;left:44px;bottom:60px;width:300px;height:40px}
+.pillar .rows{position:absolute;left:0;right:0;top:300px;border-top:2px solid var(--ink)}
+.pillar .rows div{height:64px;border-bottom:1.5px solid rgba(26,26,28,.35)}
+/* 本文（右 3/4） */
+.el{position:absolute;will-change:transform,opacity}
+.pre{font-size:50px;color:var(--sub);white-space:nowrap;z-index:5}
+.head{z-index:5}
+.head{font-size:140px;font-weight:var(--w-head);line-height:1.12;white-space:nowrap;letter-spacing:.01em}
+.head .a{color:var(--acc)}
+.num{font-size:216px;font-weight:var(--w-head);font-family:var(--font-ja);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.unit{font-size:84px;font-weight:var(--w-head);margin-left:10px}
+.src{font-family:var(--font-mono);font-size:24px;color:var(--sub);white-space:nowrap}
+.card{position:absolute;background:#fff;padding:9px;box-shadow:0 6px 16px rgba(14,16,21,.28),0 1px 3px rgba(14,16,21,.3);will-change:transform}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+.pile{position:absolute;left:520px;top:452px;width:780px;height:610px;z-index:2}
+.tag{display:flex;align-items:center;gap:28px;width:520px;height:132px;background:#fff;border:3px solid var(--ink);box-sizing:border-box;padding:0 30px;box-shadow:6px 6px 0 rgba(0,49,216,.18)}
+.tag .t{font-size:76px;font-weight:var(--w-head)}
+.empty{border:5px dashed var(--unknown);box-sizing:border-box;background:rgba(200,50,43,.04)}
+.null{font-family:var(--font-mono);color:var(--unknown);font-weight:700}
+.cal{position:absolute;background:#fff;border:3px solid var(--ink);box-sizing:border-box}
+.cal .top{position:absolute;left:0;right:0;top:0;height:64px;background:var(--acc)}
+.cal .page{position:absolute;left:0;right:0;top:64px;bottom:0;background:#fff;display:flex;align-items:center;justify-content:center;transform-origin:50% 0;backface-visibility:hidden}
+.ex{display:inline-block;margin-left:18px;padding:2px 14px 4px;border:3px solid var(--estimated);color:var(--estimated);font-size:34px;font-weight:700;vertical-align:middle;background:#fff8ea;line-height:1.2}
+.board2{background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:8px 8px 0 rgba(0,49,216,.16)}
+.board2 .bt{font-size:42px;font-weight:700;padding:20px 28px 14px;border-bottom:2px solid var(--line);white-space:nowrap}
+.board2 .row{display:flex;justify-content:space-between;align-items:baseline;padding:22px 28px 16px;border-bottom:1.5px dashed var(--line)}
+.board2 .rl{font-size:46px;color:var(--sub)}
+.board2 .big{display:flex;align-items:center;justify-content:center;gap:12px;height:calc(100% - 90px)}
+.vn{font-size:96px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.board2 .big .vn{font-size:150px}
+.bb .big .vn{font-size:104px}
+.board2 .big>div{white-space:nowrap}
+.bd4 .big .vn{font-size:104px}
+.bd4 .big{height:120px}
+.vu{font-size:56px;font-weight:700;margin:0 6px}
+.lab{font-size:44px;font-weight:700;white-space:nowrap;background:var(--paper);padding:0 8px}
+.ex.ok{border-color:var(--ink);color:var(--ink);background:#fff;padding:0 10px 2px}
+.tname{right:72px;bottom:62px;font-family:var(--font-mono);font-size:44px;font-weight:700;color:var(--ink);border-bottom:6px solid var(--acc);padding-bottom:4px}
+.foot{right:64px;bottom:38px;font-size:21px;line-height:1.25;color:var(--sub);white-space:nowrap;text-align:right}
+.extag{font-size:38px;font-weight:700;color:var(--estimated);border:3px solid var(--estimated);background:#fff8ea;padding:2px 16px;white-space:nowrap}
+.conds{display:flex;gap:10px;padding:14px 28px 0}
+.conds span{font-size:28px;font-weight:700;border:2px solid var(--ink);padding:1px 12px;background:var(--acc-soft);white-space:nowrap}
+.bnote{font-size:24px;color:var(--sub);text-align:right}
+.pv{font-size:100px!important}
+.board2 .row.sm{padding:10px 28px 4px}
+.bc .row.sm{padding:8px 20px 4px}
+.bc .cv{padding:0 20px!important}
+.board2 .row.sm .rl{font-size:40px}
+.board2 .row.sm .vn{font-size:72px}
+.share{padding:12px 28px}
+.share .sl{font-size:29px;color:var(--sub);white-space:nowrap}
+.share .st{font-size:56px;font-weight:700;line-height:1.2}
+.say{font-size:46px;font-weight:700;background:#fff;border:3px solid var(--ink);padding:10px 22px;white-space:nowrap;box-shadow:6px 6px 0 rgba(0,49,216,.16)}
+.say3{display:flex;align-items:center;gap:18px;border-color:var(--unknown)}
+.bc .rl{font-size:34px!important}
+.board2 .row.tot{border-bottom:3px solid var(--ink)}
+.board2 .row.tot .rl{color:var(--ink);font-weight:700}
+.board2 .row.sm .vn{font-size:52px}
+.board2 .row.sm .rl{font-size:36px}
+.share .st{font-size:56px!important}
+.share .st{color:var(--acc)}
+.cost .bt{display:flex;align-items:center}
+.cost .cond{margin-left:auto;font-size:36px;font-weight:700;border:3px solid var(--ink);padding:2px 16px;background:var(--acc-soft)}
+.cost .cv{display:flex;align-items:baseline;gap:8px;padding:18px 26px 0;white-space:nowrap}
+.cost .cv b{font-size:120px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.cost .cv .per{font-size:56px;font-weight:700;margin-right:10px}
+.cost .cv .u{font-size:56px;font-weight:700}
+.tag.mini{width:600px;height:64px;gap:14px;padding:0 16px;box-shadow:4px 4px 0 rgba(0,49,216,.14);border-width:2px}
+.tag.mini .t{font-size:30px}
+.bc .cv{font-size:40px;font-weight:700;padding:0 28px;white-space:nowrap}
+.bc .cv b{font-size:64px}
+.bc .rv{font-size:36px;font-weight:700}
+.bc .pv{font-size:56px}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+window.ERR=[];window.addEventListener("error",e=>ERR.push(String(e.message)));window.addEventListener("unhandledrejection",e=>ERR.push(String(e.reason&&e.reason.stack||e.reason)));
+const $=(tag,cls,parent,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(parent)parent.appendChild(e);return e};
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const P=(t,a,d)=>clamp((t-a)/d);
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const back=x=>{const c=1.6;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+function rnd(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function css(e,o){for(const k in o)e.style[k]=o[k]}
+function place(e,x,y,w,h){css(e,{left:x+"px",top:y+"px"});if(w!=null)e.style.width=w+"px";if(h!=null)e.style.height=h+"px"}
+// 下から少し上がって出る
+function rise(e,t,a,d=.38,dy=30){const p=eo(P(t,a,d));e.style.opacity=p;e.style.transform=`translateY(${(1-p)*dy}px)`}
+// 少し大きく出て縮む
+function pop(e,t,a,d=.32){const x=P(t,a,d);e.style.opacity=clamp(x*3);e.style.transform=`scale(${x<=0?1.25:1+.25*(1-back(x))})`}
+// 線を左から引く（clip）
+function draw(e,t,a,d){const p=eio(P(t,a,d));e.style.clipPath=`inset(0 ${(1-p)*100}% 0 0)`}
+
+let TL,V,SC={};
+const scenes=[];
+
+function pillar(b,s,k,n){
+  const p=$("div","pillar",b);
+  $("div","kubun",p,"区分");
+  const w=$("div","word",p,s.pillar);
+  const bar=$("div","bar",p);
+  const rows=$("div","rows",p);for(let i=0;i<4;i++)$("div","",rows);
+  const sh=$("div","sheet",p,`図 <b>${k}</b> / ${n}`);
+  p.insertAdjacentHTML("beforeend",`<svg class="scale" viewBox="0 0 300 40"><g stroke="#1a1a1c" stroke-width="2" fill="none"><path d="M2 30H298"/><path d="M2 18V36M74 22V36M148 18V36M222 22V36M298 18V36"/></g><rect x="2" y="26" width="72" height="8" fill="#1a1a1c"/><rect x="148" y="26" width="74" height="8" fill="#1a1a1c"/></svg>`);
+  return {w,bar,rows:[...rows.children]};
+}
+function headlines(b,s,x,y,size){
+  const o={};
+  if(s.pre){o.pre=$("div","el pre",b,s.pre);place(o.pre,x,y)}
+  const y0=s.pre?y+70:y;
+  o.lines=s.lines.map((L,i)=>{const e=$("div","el head",b,L.replace(/2 か月/,'<span class="a">2 か月</span>'));if(size)e.style.fontSize=size+"px";place(e,x,y0+i*(size||140)*1.12);return e});
+  return o;
+}
+// 文の中の行の出る時刻：文字の割合で
+function lineTimes(s){
+  const n=x=>x.replace(/[\s、。]/g,"").length;
+  const tot=n(s.text);let acc=n(s.pre);const out=[];
+  for(const L of s.lines){out.push(s.text_in+s.text_dur*acc/tot);acc+=n(L)}
+  return out;
+}
+
+// ---- 自作のピクトグラム（顔は描かない）----
+const PERSON=(c="#1a1a1c",h=220)=>`<svg width="${h*.62}" height="${h}" viewBox="0 0 124 200" fill="${c}"><circle cx="58" cy="26" r="22"/><path d="M30 60Q30 52 38 52H78Q86 52 86 60V120H74V196H60V130H56V196H42V120H30Z"/><rect x="86" y="58" width="30" height="56" rx="8" fill="#0031d8"/><rect x="82" y="64" width="8" height="40" fill="${c}"/></svg>`;
+const BED=(h=80)=>`<svg width="${h*1.4}" height="${h}" viewBox="0 0 112 80" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><path d="M6 10V74M106 46V74M6 58H106"/><path d="M6 46H106V58H6Z" fill="#1a1a1c"/><rect x="14" y="30" width="26" height="14" rx="5" fill="#0031d8" stroke="none"/></svg>`;
+const EXAM=`<g fill="#fff" stroke="#1a1a1c" stroke-width="5"><rect x="-26" y="-34" width="52" height="64"/><path d="M-16 -18H16M-16 -4H16M-16 10H6" stroke-width="4"/></g><path d="M8 18L30 -8" stroke="#0031d8" stroke-width="7"/>`;
+const ICON={
+  "測量":`<svg width="64" height="64" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6"><path d="M8 30V74M88 30V74M8 52H88"/><path d="M0 62L16 42M80 62L96 42" stroke="#0031d8"/></svg>`,
+  "図面":`<svg width="64" height="64" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6"><rect x="10" y="10" width="76" height="76"/><path d="M10 40H86M10 64H86M36 10V86M60 10V86" stroke-width="4"/><path d="M10 86L86 10" stroke="#0031d8"/></svg>`,
+  "3D":`<svg width="64" height="64" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><path d="M48 8L86 28V70L48 90L10 70V28Z"/><path d="M10 28L48 48L86 28M48 48V90" stroke="#0031d8"/></svg>`,
+  "写真":`<svg width="64" height="64" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><rect x="6" y="26" width="58" height="44" rx="6"/><circle cx="35" cy="48" r="12"/><path d="M20 26L26 16H44L50 26"/><path d="M70 48H78M74 30L90 22V78L74 70Z" stroke="#0031d8"/></svg>`,
+  "検収":`<svg width="64" height="64" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><rect x="8" y="10" width="56" height="56"/><rect x="30" y="30" width="56" height="56" stroke-dasharray="8 6"/><path d="M40 58L54 72L80 40" stroke="#0031d8" stroke-width="8"/></svg>`
+};
+const iconFor=w=>/測量/.test(w)?ICON["測量"]:/図面|CAD|製図/.test(w)?ICON["図面"]:/3D|Blender/.test(w)?ICON["3D"]:/写真/.test(w)?ICON["写真"]:ICON["検収"];
+const MARK="①②③④⑤⑥⑦⑧⑨";
+// 出典の札：出典が空なら「例」、入っていれば番号（画面の下に「番号 出典」を出す）
+function srcTag(list,src){if(!src)return `<span class="ex">例</span>`;let i=list.indexOf(src);if(i<0){list.push(src);i=list.length-1}return `<span class="ex ok">${MARK[i]}</span>`}
+function srcFoot(b,list,left){if(!list.length)return null;const e=$("div","el foot",b,list.map((s,i)=>`<div>${MARK[i]} 出典：${s}</div>`).join(""));if(left){e.style.right="auto";e.style.left="560px";e.style.textAlign="left"}return e}
+const val=(o)=>`${o.pre?`<span class="vu">${o.pre}</span>`:""}<span class="vn">${o.value}</span>${o.post?`<span class="vu">${o.post}</span>`:""}`;
+
+// ---- 場面 1 受験生：地方の町 → 名古屋、遠征の費用、見ずに決めた割合 ----
+function buildA(b,s){
+  const o=headlines(b,s,560,78);const S=V.student,R=S.distance,T=S.trip,H=S.share;const L=[];
+  const fig=$("div","el",b,PERSON("#1a1a1c",240));place(fig,566,600);o.fig=fig;
+  const rt=$("div","el",b);place(rt,600,520,562,406);
+  rt.innerHTML=`<svg width="562" height="406" viewBox="0 0 720 520" fill="none">
+    <clipPath id="rcA"><rect class="cr" x="0" y="0" width="0" height="520"/></clipPath>
+    <path class="ln" clip-path="url(#rcA)" d="M90 460C240 460 300 150 640 150" stroke="#0031d8" stroke-width="8" stroke-dasharray="22 14"/>
+    <circle class="a" cx="90" cy="460" r="16" fill="#1a1a1c"/>
+    <g class="b"><path d="M640 150m-26 0a26 26 0 1 1 52 0c0 26-26 56-26 56s-26-30-26-56z" transform="translate(0,-40)" fill="#0031d8"/><circle cx="640" cy="110" r="10" fill="#fff"/></g>
+    <g class="x" stroke="#c8322b" stroke-width="12" stroke-linecap="round"><path d="M330 257L390 317M390 257L330 317"/></g>
+    <circle class="ring" cx="640" cy="130" r="0" stroke="#0031d8" stroke-width="6" fill="none"/>
+  </svg>`;o.rt=rt;o.ring=rt.querySelector(".ring");o.ln=rt.querySelector(".ln");o.cr=rt.querySelector(".cr");o.ra=rt.querySelector(".a");o.rb=rt.querySelector(".b");o.rx=rt.querySelector(".x");
+  o.from=$("div","el lab",b,S.from);place(o.from,640,900);
+  o.to=$("div","el lab",b,S.to);place(o.to,1000,640);
+  const km=$("div","el",b,`${R.pre?`<span class="vu">${R.pre}</span>`:""}<span class="vn" style="font-size:88px">${R.value}</span><span class="vu">${R.unit}</span>${srcTag(L,R.source)}`);place(km,782,498);o.km=km;
+  const bd=$("div","el board2",b);place(bd,1220,470,640,490);o.bd=bd;
+  o.ext=$("div","el extag",b,S.example_label||"");place(o.ext,566,540);
+  bd.innerHTML=`<div class="bt">${T.title}${srcTag(L,T.source)}</div>`+T.rows.map(r=>`<div class="row sm"><span class="rl">${r.label}</span><span class="rv">${val(r)}</span></div>`).join("")+`<div class="row sm tot"><span class="rl">${T.total.label}</span><span class="rv">${val(T.total)}</span></div>`+
+    `<div class="share"><div class="sl">${H.label}</div><div class="st">${H.text}${srcTag(L,H.source)}</div></div>`;
+  o.rows=[...bd.querySelectorAll(".row,.share")];
+  o.foot=srcFoot(b,L,true);
+  return o;
+}
+
+// ---- 場面 2 作者：利用者の実体験を 3 拍で（地元 → 名古屋会場 → 東京は × ）----
+function buildB(b,s){
+  const A=V.author,o={};
+  o.lines=[$("div","el head",b,s.lines.join(""))];place(o.lines[0],560,96);o.lines[0].style.fontSize="124px";
+  const fig=$("div","el",b,PERSON("#1a1a1c",170));place(fig,566,800);o.fig=fig;
+  // 地元 (110,620) → 名古屋 (560,420) → 東京 (1180,170)。図の原点は (560,300)
+  const g=$("div","el",b);place(g,560,300,1300,720);
+  g.innerHTML=`<svg width="1300" height="720" viewBox="0 0 1300 720" fill="none">
+    <clipPath id="c1"><rect class="c1" x="0" y="0" width="0" height="720"/></clipPath>
+    <clipPath id="c2"><rect class="c2" x="560" y="0" width="0" height="720"/></clipPath>
+    <path class="l1" clip-path="url(#c1)" d="M150 640C300 640 380 420 560 420" stroke="#0031d8" stroke-width="8" stroke-dasharray="22 14"/>
+    <path class="l2" clip-path="url(#c2)" d="M560 420C760 420 900 170 1180 170" stroke="#0031d8" stroke-width="8" stroke-dasharray="22 14"/>
+    <circle cx="150" cy="640" r="16" fill="#1a1a1c"/>
+    <g class="p1" transform="translate(560,420)"><circle r="20" fill="#0031d8"/><g transform="translate(0,-80)">${EXAM}</g></g>
+    <g class="p2"><path d="M1180 170m-26 0a26 26 0 1 1 52 0c0 26-26 56-26 56s-26-30-26-56z" transform="translate(0,-40)" fill="#0031d8"/><circle cx="1180" cy="130" r="10" fill="#fff"/></g>
+    <g class="x" stroke="#c8322b" stroke-width="12" stroke-linecap="round"><path d="M840 262L900 322M900 262L840 322"/></g>
+  </svg>`;
+  o.g=g;["l1","l2","c1","c2","p1","p2","x"].forEach(k=>o[k]=g.querySelector("."+k));
+  o.home=$("div","el lab",b,A.home);place(o.home,560+130,300+660);
+  o.nag=$("div","el lab",b,A.exam_city);place(o.nag,560+600,300+430);
+  o.tky=$("div","el lab",b,A.univ_city);place(o.tky,560+1080,300+210);
+  // 3 拍の札（利用者の言葉から切り出した語句）
+  o.t1=$("div","el say",b,A.beats[0]);place(o.t1,1190,300);
+  o.t2=$("div","el say",b,A.beats[1]);place(o.t2,1200,800);
+  o.t3=$("div","el say say3",b,`${BED(64)}<span>${A.beats[2]}</span>`);place(o.t3,700,944);o.t3.style.fontSize="40px";
+  return o;
+}
+
+// ---- 場面 3 手間：外注した場合の費用と期間（主役）＋要る物の札（小さく）----
+const fillCost=str=>String(str).replace(/\{low\}/g,V.effort.cost.low).replace(/\{high\}/g,V.effort.cost.high);
+// 数字なら 0 から数え上げる（「？」や文字はそのまま）
+function countUp(el,str,p){const n=Number(String(str).replace(/,/g,""));if(!isFinite(n)||String(str).trim()===""){el.textContent=str;return}
+  const dec=(String(str).split(".")[1]||"").length;el.textContent=(n*p).toLocaleString("ja-JP",{minimumFractionDigits:dec,maximumFractionDigits:dec})}
+function buildC(b,s){
+  const E=V.effort,C=E.cost,Pd=E.period,o={};const L=[];
+  o.sub=$("div","el pre",b,E.subhead);place(o.sub,560,78);
+  o.lines=s.lines.map((Ln,i)=>{const e=$("div","el head",b,fillCost(Ln));place(e,560,148+i*157);return e});
+  // 費用の板（見出しの大きさ）
+  const cb=$("div","el board2 cost",b);place(cb,560,480,840,296);o.cb=cb;
+  cb.innerHTML=`<div class="bt">${C.label}${srcTag(L,C.source)}</div>
+    <div class="cv"><span class="per">${C.per}</span><b class="lo">${C.low}</b><span class="u">万〜</span><b class="hi">${C.high}</b><span class="u">${C.unit}</span></div><div class="conds">${[].concat(E.condition).map(c=>`<span>${c}</span>`).join("")}</div>`;
+  o.lo=cb.querySelector(".lo");o.hi=cb.querySelector(".hi");o.conds=[...cb.querySelectorAll(".conds span")];
+  // 期間の板
+  const pb=$("div","el board2 cost",b);place(pb,1420,480,440,296);o.pb=pb;
+  pb.innerHTML=`<div class="bt">${Pd.label}${srcTag(L,Pd.source)}</div><div class="cv"><b class="pv">${Pd.value}</b><span class="u">${Pd.unit}</span></div>`;
+  o.pv=pb.querySelector(".pv");
+  // 要る物の札（小さく 3＋2）
+  o.tags=E.needs.map((w,i)=>{const e=$("div","el tag mini",b,`${iconFor(w).replace(/width="64" height="64"/,'width="44" height="44"')}<span class="t">${w}</span>`);
+    place(e,560+(i%2)*620,800+Math.floor(i/2)*76,600,64);return e});
+  o.ex=$("div","el",b,srcTag(L,E.needs_source));place(o.ex,1180,958);
+  o.foot=srcFoot(b,L);
+  return o;
+}
+
+// ---- 場面 4 広報：道具の札は積まれ、広報の札だけ null。予算の板 ----
+function buildD(b,s){
+  const o=headlines(b,s,560,78);const L=[];
+  o.tags=["測量","製図","3D"].map((w,i)=>{const e=$("div","el tag",b,`${iconFor(w).replace(/width="64" height="64"/,'width="90" height="90"')}<span class="t">${w}</span>`);place(e,560,520+i*160);return e});
+  const ex=1190,ey=500,ew=660,eh=240;
+  const em=$("div","el empty",b);place(em,ex,ey,ew,eh);o.em=em;
+  const lb=$("div","el",b,`<span style="font-size:64px;font-weight:700;color:var(--sub)">広報</span>`);place(lb,ex+30,ey+16);o.lb=lb;
+  const nl=$("div","el null",b,`null<span class="caret" style="display:inline-block;width:.5em;height:.9em;margin-left:.08em;background:var(--unknown);vertical-align:-.08em"></span>`);css(nl,{fontSize:"120px"});place(nl,ex+250,ey+85);o.nl=nl;o.caret=nl.querySelector(".caret");
+  const B=V.koho.budget;const bd=$("div","el board2 bd4",b);place(bd,ex,ey+262,ew,200);o.bd=bd;
+  const bsrc=B.source_ref==="effort.cost"?V.effort.cost.source:(B.source||"");
+  bd.innerHTML=`<div class="bt">${B.label}${srcTag(L,bsrc)}</div><div class="big" style="justify-content:flex-start;padding-left:40px">${val({...B,value:fillCost(B.value)})}</div>`;
+  if(B.note){o.bnote=$("div","el bnote",b,B.note);place(o.bnote,ex,ey+472);o.bnote.style.width=ew+"px"}
+  o.foot=srcFoot(b,L);
+  return o;
+}
+function seekD(o,s,t){
+  const lt=lineTimes(s);
+  rise(o.pre,t,s.text_in);o.lines.forEach((e,i)=>rise(e,t,lt[i]));
+  o.tags.forEach((e,i)=>{const at=s.text_in+.2+i*.45,p=P(t,at,.34);e.style.opacity=clamp(p*4);e.style.transform=`translateY(${(1-back(p))*-260}px) rotate(${(1-eo(p))*(i%2?4:-4)}deg)`});
+  const ea=s.text_in+1.6;o.em.style.opacity=1;draw(o.em,t,ea,.45);
+  rise(o.lb,t,ea+.3,.3,12);
+  rise(o.bd,t,lt[0]+.55,.35,30);if(o.bnote)rise(o.bnote,t,lt[0]+.9,.3,6);
+  if(o.foot)rise(o.foot,t,lt[0]+.7,.3,6);
+  pop(o.nl,t,lt[1]+.15);
+  const tc=t-(lt[1]+.55);o.caret.style.opacity=tc<0?1:(Math.floor(tc/.5)%2?0:1);
+}
+
+// v6：場面の拍は声の文の時刻（timeline の sentences）に合わせる
+const SN=(s,k)=>s.sentences&&s.sentences[k]?s.sentences[k]:{start:s.text_in,dur:s.text_dur};
+function seekA(o,s,t){
+  const lt=lineTimes(s),r0=s.start,s3=s.sentences&&s.sentences[1]?s.sentences[1].start:s.text_in+.4;
+  const rg=s.sentences&&s.sentences[1]?.6:.45;
+  rise(o.pre,t,s.text_in);o.lines.forEach((e,i)=>rise(e,t,lt[i]));
+  rise(o.fig,t,r0+.2,.4,40);o.rt.style.opacity=1;
+  o.ra.style.opacity=P(t,r0+.5,.15);
+  o.cr.setAttribute("width",720*eio(P(t,r0+.6,.9)));
+  o.rb.style.opacity=P(t,r0+1.45,.15);o.rb.style.transform=`translateY(${(1-back(P(t,r0+1.45,.35)))*-40}px)`;
+  rise(o.from,t,r0+.55,.3,10);rise(o.to,t,r0+1.6,.3,10);
+  const xp=P(t,lt[1]+.25,.3);o.rx.style.opacity=xp>0?1:0;o.rx.style.transformOrigin="360px 287px";o.rx.style.transform=`scale(${xp>0?1+.4*(1-back(xp)):1})`;
+  const g=t>=lt[1]+.25;o.ln.setAttribute("stroke",g?"#9aa0aa":"#0031d8");o.rb.firstElementChild.setAttribute("fill",g?"#9aa0aa":"#0031d8");
+  const gp=eo(P(t,lt[1]+.9,.5));o.fig.style.filter=gp>0?`grayscale(1) opacity(${1-.55*gp})`:"";
+  // 志望校のピンが波打つ（見に行けていない場所）
+  const rp=[lt[0]+.6,lt[0]+1.3].map(a=>P(t,a,.7)).find(x=>x>0&&x<1);
+  if(o.ring){o.ring.setAttribute("r",rp?20+70*eo(rp):0);o.ring.style.opacity=rp?1-rp:0}
+  // 2 文目「新潟から名古屋なら、1 泊 2 日で約 5 万円」
+  rise(o.ext,t,s3-.5,.3,12);
+  pop(o.km,t,s3+.3);
+  rise(o.bd,t,s3+.9,.35,30);
+  o.rows.forEach((e,i)=>rise(e,t,s3+1.3+i*rg,.3,16));
+  if(o.foot)rise(o.foot,t,s3+1.3+5*rg+.2,.3,6);
+}
+function seekB(o,s,t){
+  const s1=SN(s,0),one=!(s.sentences&&s.sentences[1]),s2=SN(s,1),r0=s.start;
+  // 1 文だけ（v7）：場面の長さの中で 3 拍を順に
+  const tA=one?r0+.5:s1.start+1.1,tB=one?r0+1.1:s2.start-.4,tC=one?r0+2.15:s2.start+s2.dur*.45;
+  rise(o.lines[0],t,s.text_in,.4,36);
+  o.g.style.opacity=1;rise(o.fig,t,one?r0+.3:s1.start+.5,.3,20);rise(o.home,t,one?r0+.35:s1.start+.55,.3,10);
+  // ① 東京の大学を受験
+  o.p2.style.opacity=P(t,tA,.15);o.p2.style.transform=`translateY(${(1-back(P(t,tA,.35)))*-40}px)`;
+  rise(o.tky,t,tA+.1,.3,10);rise(o.t1,t,tA+.3,.35,20);
+  // ② 名古屋会場で受けられた
+  o.c1.setAttribute("width",560*eio(P(t,tB,.6)));
+  o.p1.style.opacity=P(t,tB+.55,.15);
+  const ex=o.p1.lastElementChild;const pp=P(t,tB+1.6,.35);ex.setAttribute("transform",`translate(0,-80) scale(${pp>0&&pp<1?1+.25*Math.sin(pp*Math.PI):1})`);
+  rise(o.nag,t,tB+.6,.3,10);rise(o.t2,t,tB+.9,.35,20);
+  // ③ 宿泊費などを考えると、キャンパスは見に行けなかった（1 文字ずつ）
+  o.c2.setAttribute("width",640*eio(P(t,tC-.5,.55)));
+  const xp=P(t,tC,.3);o.x.style.opacity=xp>0?1:0;o.x.style.transformOrigin="870px 292px";o.x.style.transform=`scale(${xp>0?1+.4*(1-back(xp)):1})`;
+  const gr=t>=tC;o.l2.setAttribute("stroke",gr?"#9aa0aa":"#0031d8");o.p2.firstElementChild.setAttribute("fill",gr?"#9aa0aa":"#0031d8");
+  rise(o.t3,t,tC+.15,.35,20);
+  const sp=o.t3.querySelector("span");if(!o.t3full)o.t3full=sp.textContent;
+  sp.textContent=o.t3full.slice(0,Math.ceil(o.t3full.length*clamp((t-(tC+.15))/(one?.9:1.6))))||"\u00a0";
+  const gp=eo(P(t,tC+(one?1.2:2.0),.5));o.fig.style.filter=gp>0?`grayscale(1) opacity(${1-.55*gp})`:"";
+}
+function seekC(o,s,t){
+  const r0=s.start,ti=s.text_in,sd=s.text_dur,lt=lineTimes({...s,pre:""});
+  const l2=ti+sd*.45;
+  rise(o.sub,t,r0+.3,.35);
+  rise(o.lines[0],t,ti,.38);rise(o.lines[1],t,l2,.38);
+  o.tags.forEach((e,i)=>rise(e,t,ti+.6+i*.35,.3,16));
+  rise(o.ex,t,ti+2.5,.25,8);
+  rise(o.pb,t,ti+2.0,.35,30);countUp(o.pv,V.effort.period.value,eo(P(t,ti+2.2,.8)));
+  rise(o.cb,t,l2-.45,.35,30);
+  countUp(o.lo,V.effort.cost.low,1);
+  {const lo=Number(String(V.effort.cost.low).replace(/,/g,"")),hi=Number(String(V.effort.cost.high).replace(/,/g,""));
+   if(isFinite(lo)&&isFinite(hi)){const p=eo(P(t,l2+.2,1.0));o.hi.textContent=Math.round(lo+(hi-lo)*p).toLocaleString("ja-JP")}else o.hi.textContent=V.effort.cost.high}
+  // 条件の札：最後の「測る作業は別」は声に合わせる
+  const ct=[l2+1.3,l2+1.8,l2+2.3];
+  o.conds.forEach((e,i)=>pop(e,t,ct[i]||ct[ct.length-1]+.3*i));
+  if(o.foot)rise(o.foot,t,ti+sd*.9,.3,6);
+}
+
+// ---- 題の板：歩く画面の静止画を薄く敷き、方眼紙と差し色は場面と揃える ----
+function buildT(b,s){
+  const o={};
+  const bg=$("div","el",b);css(bg,{left:"0",top:"0",width:"1920px",height:"1080px",overflow:"hidden"});
+  bg.innerHTML=`<img src="../../../out/web_look_after_overview_pc.png" style="position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover;opacity:.30;filter:saturate(.7)">
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(245,246,248,.94) 0%,rgba(245,246,248,.78) 55%,rgba(245,246,248,.15) 100%)"></div>`;
+  o.bg=bg;o.img=bg.querySelector("img");
+  o.lines=s.lines.map((L,i)=>{const e=$("div","el head",b,i===2?L.replace("歩ける大学の 3D 空間",'<span class="a">歩ける大学の 3D 空間</span>'):L);
+    css(e,{fontSize:"108px"});place(e,120,250+i*160);return e});
+  const ul=$("div","el",b);place(ul,120,250+3*160-6);
+  ul.innerHTML=`<svg width="1560" height="44" fill="none" stroke="#0031d8" stroke-width="6"><path d="M4 4V40M1556 4V40M4 22H1556"/><path d="M-8 36L16 8M1544 36L1568 8" stroke-width="8"/></svg>`;o.ul=ul;
+  o.name=$("div","el tname",b,"campus-recorder");
+  return o;
+}
+function seekT(o,s,t){
+  const lt=lineTimes(s);
+  o.bg.style.opacity=eo(P(t,s.start,.8));
+  o.img.style.transform=`scale(${1.08-.08*clamp((t-s.start)/(s.end-s.start))})`;
+  o.lines.forEach((e,i)=>rise(e,t,lt[i],.4,30));
+  o.ul.style.opacity=1;draw(o.ul,t,lt[2]+.9,.9);
+  rise(o.name,t,s.start+1.3,.4,12);
+}
+
+const KIND={T:[buildT,seekT],A:[buildA,seekA],B:[buildB,seekB],C:[buildC,seekC],D:[buildD,seekD]};
+
+async function init(){
+  TL=await (await fetch("timeline.json",{cache:"no-store"})).json();
+  V=await (await fetch(new URLSearchParams(location.search).get("values")||"values.json",{cache:"no-store"})).json();
+  const st=document.getElementById("stage");
+  TL.scenes.forEach((s,i)=>{
+    const b=$("div","board",st);b.style.zIndex=100-i;
+    const nC=TL.scenes.filter(x=>x.id!=="T").length,kC=TL.scenes.slice(0,i+1).filter(x=>x.id!=="T").length;
+    const pl=s.id==="T"?null:pillar(b,s,kC,nC);
+    $("div","frame",b);
+    const shade=$("div","shade",b);
+    const [bf,sf]=KIND[s.id];const o=bf(b,s);
+    scenes.push({s,b,pl,o,sf,shade});
+  });
+  await Promise.all([...document.images].map(im=>im.decode().catch(()=>{})));
+  await document.fonts.ready;
+  window.READY=true;
+}
+function seekSync(t){
+  const half=TL.flip/2;
+  scenes.forEach(({s,b,pl,o,sf,shade},i)=>{
+    const last=i===scenes.length-1;
+    const vis=t>=s.start-half-.01&&(last||t<s.end+half);
+    b.style.display=vis?"block":"none";if(!vis)return;
+    // 出ていく板：左の端を軸にめくれて奥へ
+    if(!last){const p=eio(P(t,s.end-half,TL.flip));b.style.transform=p>0?`rotateY(${100*p}deg)`:"";shade.style.opacity=p*.35}
+    // 柱の語と線（場面に入ってから）
+    const a=i===0?s.start+.05:s.start+half-.05;
+    if(pl){rise(pl.w,t,a,.35,20);
+    pl.bar.style.transform=`scaleX(${eo(P(t,a+.15,.4))})`;}
+    sf(o,s,t);
+  });
+}
+window.seek=t=>{seekSync(t);return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(()=>r(true))))};
+init().then(()=>{const q=new URLSearchParams(location.search);seekSync(q.has("t")?+q.get("t"):0)});
+</script>
+</body>
+</html>

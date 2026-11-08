@@ -1,0 +1,28 @@
+{
+ "note": "導入 v4 の板の数字・札・出典。？ は調べ係の数字が来る前の暫定（勝手に実数を入れない）。source（出典の短い表記）が空の板には「例」の札が付き、source を入れると札が番号（①②…）に変わり、画面の下に字幕の大きさで「① 出典…」が出る。直したら render_html.py --page scripts/video/opening_v4/index.html で撮り直す。",
+ "student": {
+  "from": "地方の町", "to": "名古屋",
+  "distance": {"value": "？", "unit": "km", "source": ""},
+  "trip": {"title": "遠征の費用", "source": "", "rows": [
+    {"label": "交通費", "pre": "¥", "value": "？", "post": ""},
+    {"label": "宿泊", "pre": "¥", "value": "？", "post": ""},
+    {"label": "日数", "pre": "", "value": "？", "post": "日"}
+  ]},
+  "share": {"label": "見ずに決めた割合", "text": "？", "source": ""}
+ },
+ "author": {
+  "note": "利用者の実体験（利用者の言葉から短く切り出した語句）。数字ではないので出典欄なし",
+  "home": "地元", "exam_city": "名古屋", "univ_city": "東京",
+  "beats": ["東京の大学を受験", "名古屋会場で受けられた", "宿泊費などを考えると、キャンパスは見に行けなかった"],
+  "stay": "宿泊費"
+ },
+ "effort": {
+  "needs": ["測量", "図面（CAD）", "3D の組み立て（Blender）", "写真から形を起こす技術", "検収"],
+  "needs_source": "",
+  "cost": {"label": "外注の相場", "low": "？", "high": "？", "pre": "¥", "unit": "万円", "source": ""},
+  "period": {"label": "期間", "value": "？", "unit": "か月", "source": ""}
+ },
+ "koho": {
+  "budget": {"label": "予算", "pre": "¥", "value": "？", "post": "", "source": ""}
+ }
+}

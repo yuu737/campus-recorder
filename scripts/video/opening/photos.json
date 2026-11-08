@@ -1,0 +1,311 @@
+{
+ "note": "導入 v2 の写真の山。公開版だけ、塗りつぶし無し・保護係 ok・人や掲示物が写らない物を目で選んだ",
+ "photos": [
+  {
+   "id": "PXL_20261103_042946748",
+   "src": "/data/photos/public/20261103/PXL_20261103_042946748.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_043026097",
+   "src": "/data/photos/public/20261103/PXL_20261103_043026097.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_043041105",
+   "src": "/data/photos/public/20261103/PXL_20261103_043041105.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_043129358",
+   "src": "/data/photos/public/20261103/PXL_20261103_043129358.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_043150092",
+   "src": "/data/photos/public/20261103/PXL_20261103_043150092.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_043314396",
+   "src": "/data/photos/public/20261103/PXL_20261103_043314396.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_043608113",
+   "src": "/data/photos/public/20261103/PXL_20261103_043608113.jpg",
+   "building": "honbu",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261103_044907567",
+   "src": "/data/photos/public/20261103/PXL_20261103_044907567.jpg",
+   "building": "honbu",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_080431748",
+   "src": "/data/photos/public/20261103b/PXL_20261103_080431748.jpg",
+   "building": "honbu",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261104_071007945",
+   "src": "/data/photos/public/20261104/PXL_20261104_071007945.jpg",
+   "building": "honbu",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261104_073521620",
+   "src": "/data/photos/public/20261104/PXL_20261104_073521620.jpg",
+   "building": "honbu",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261104_073618326",
+   "src": "/data/photos/public/20261104/PXL_20261104_073618326.jpg",
+   "building": "honbu",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261103_075036075",
+   "src": "/data/photos/public/20261103b/PXL_20261103_075036075.jpg",
+   "building": "library",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_075448020",
+   "src": "/data/photos/public/20261103b/PXL_20261103_075448020.jpg",
+   "building": "library",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261103_080015280",
+   "src": "/data/photos/public/20261103b/PXL_20261103_080015280.jpg",
+   "building": "library",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261103_080725416",
+   "src": "/data/photos/public/20261103b/PXL_20261103_080725416.jpg",
+   "building": "library",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_062931955",
+   "src": "/data/photos/public/20261105/library-honbu/PXL_20261105_062931955.jpg",
+   "building": "library",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_063449740",
+   "src": "/data/photos/public/20261105/library-honbu/PXL_20261105_063449740.jpg",
+   "building": "library",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_063510309",
+   "src": "/data/photos/public/20261105/library-honbu/PXL_20261105_063510309.jpg",
+   "building": "library",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_064508808",
+   "src": "/data/photos/public/20261105/library-honbu/PXL_20261105_064508808.jpg",
+   "building": "library",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_064524057",
+   "src": "/data/photos/public/20261105/library-honbu/PXL_20261105_064524057.jpg",
+   "building": "library",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_064926962",
+   "src": "/data/photos/public/20261105/library-honbu/PXL_20261105_064926962.jpg",
+   "building": "library",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261103_070244955",
+   "src": "/data/photos/public/20261103b/PXL_20261103_070244955.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261103_074549768",
+   "src": "/data/photos/public/20261103b/PXL_20261103_074549768.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_060548823",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_060548823.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_060703663",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_060703663.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_060756828",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_060756828.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_060807986",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_060807986.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_061511227",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_061511227.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_061647959",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_061647959.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_061710650",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_061710650.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_061910368",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_061910368.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_062300065",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_062300065.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_062323658",
+   "src": "/data/photos/public/20261105/tower75/PXL_20261105_062323658.jpg",
+   "building": "tower75",
+   "w": 1201,
+   "h": 1600
+  },
+  {
+   "id": "PXL_20261105_071255844",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071255844.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071309389",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071309389.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071325894",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071325894.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071347810",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071347810.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071408553.MP",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071408553.MP.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071424391",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071424391.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071517479",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071517479.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  },
+  {
+   "id": "PXL_20261105_071529022",
+   "src": "/data/photos/public/20261105/kyotsu-minami/PXL_20261105_071529022.jpg",
+   "building": "kyotsu-minami",
+   "w": 1600,
+   "h": 1201
+  }
+ ],
+ "top": {
+  "id": "本部棟屋上",
+  "src": "/data/photos/public/20261104/本部棟屋上.jpg",
+  "w": 1600,
+  "h": 900
+ },
+ "tape": {
+  "id": "本部棟側面柱74.5cm",
+  "src": "/data/photos/public/メジャー/本部棟_honbu/本部棟側面柱74.5cm.jpg",
+  "w": 1600,
+  "h": 1201
+ }
+}

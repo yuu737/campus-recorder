@@ -1,0 +1,137 @@
+{
+ "note": "make_timeline.py --narration が作る。手で直さない。",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "flip": 0.6,
+ "total": 28.26,
+ "scenes": [
+  {
+   "id": "T",
+   "pillar": "",
+   "text": "写真を撮るだけで、根拠付きの、歩ける大学の 3D 空間がつくれる",
+   "pre": "",
+   "lines": [
+    "写真を撮るだけで、",
+    "根拠付きの、",
+    "歩ける大学の 3D 空間がつくれる"
+   ],
+   "start": 0.0,
+   "text_in": 0.4,
+   "text_dur": 5.59,
+   "speech_end": 5.99,
+   "end": 6.49,
+   "sentences": [
+    {
+     "n": 1,
+     "text": "写真を撮るだけで、根拠付きの、歩ける大学の 3D 空間がつくれる。",
+     "file": "001.wav",
+     "start": 0.4,
+     "dur": 5.59
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v7/narration.json"
+  },
+  {
+   "id": "A",
+   "pillar": "受験生",
+   "text": "地方の受験生は、志望校を見ないまま決めています",
+   "pre": "地方の受験生は、",
+   "lines": [
+    "志望校を見ないまま",
+    "決めています"
+   ],
+   "start": 6.49,
+   "text_in": 7.09,
+   "text_dur": 4.19,
+   "speech_end": 11.28,
+   "end": 12.09,
+   "sentences": [
+    {
+     "n": 2,
+     "text": "地方の受験生は、志望校を見ないまま決めています。",
+     "file": "002.wav",
+     "start": 7.09,
+     "dur": 4.19
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v7/narration.json"
+  },
+  {
+   "id": "B",
+   "pillar": "作者",
+   "text": "作者自身もそうでした",
+   "pre": "",
+   "lines": [
+    "作者自身もそうでした"
+   ],
+   "start": 12.09,
+   "text_in": 12.59,
+   "text_dur": 1.68,
+   "speech_end": 14.27,
+   "end": 16.29,
+   "sentences": [
+    {
+     "n": 3,
+     "text": "作者自身もそうでした。",
+     "file": "003.wav",
+     "start": 12.59,
+     "dur": 1.68
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v7/narration.json"
+  },
+  {
+   "id": "C",
+   "pillar": "手間",
+   "text": "外注すると 1 棟 4万円から",
+   "pre": "",
+   "lines": [
+    "外注すると",
+    "1 棟 4万円から"
+   ],
+   "start": 16.29,
+   "text_in": 16.69,
+   "text_dur": 5.47,
+   "speech_end": 22.16,
+   "end": 22.66,
+   "sentences": [
+    {
+     "n": 4,
+     "text": "キャンパスの建物を 3D にするには、外注で 1 棟 4 万円から。",
+     "file": "004.wav",
+     "start": 16.69,
+     "dur": 5.47
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v7/narration.json"
+  },
+  {
+   "id": "D",
+   "pillar": "広報",
+   "text": "大学の広報には予算も専門家もいない",
+   "pre": "大学の広報には",
+   "lines": [
+    "予算も専門家も",
+    "いない"
+   ],
+   "start": 22.66,
+   "text_in": 23.06,
+   "text_dur": 4.0,
+   "speech_end": 27.06,
+   "end": 28.26,
+   "sentences": [
+    {
+     "n": 5,
+     "text": "大学の広報には、その予算も専門家もいません。",
+     "file": "005.wav",
+     "start": 23.06,
+     "dur": 4.0
+    }
+   ],
+   "dur_source": "narration:out/video/narration_v7/narration.json"
+  }
+ ]
+}

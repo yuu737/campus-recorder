@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>導入 v3</title>
+<!--
+  提出動画の導入 20 秒（v3）。板の数字と札は values.json（暫定は ？）。時刻 t を渡すと、その時刻の絵を描く：window.seek(t)（Promise）。
+  拍はすべて timeline.json（make_timeline.py が作る）の場面の始まり・文の始まり・文の長さから決まる。
+  撮るのは scripts/video/render_html.py（repo の根を配信して /scripts/video/opening_v3/index.html を開く）。
+  色はこの作品の画面から：地＝待機画面の明るい地 #f5f6f8、差し色＝職員・待機画面の青 #0031d8、
+  寸法の色＝立面図（measured #222 / estimated #b07a10 / unknown #c8322b）。字体は --font-ja の 1 か所で差し替える。
+-->
+<style>
+:root{
+  --font-ja:"BIZ UDPGothic","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;   /* 極太の字体に替える時はここだけ */
+  --font-mono:Consolas,"BIZ UDGothic",monospace;
+  --w-head:700;
+  --paper:#f5f6f8; --ink:#1a1a1c; --sub:#545861; --line:#d6d8dd;
+  --acc:#0031d8; --acc-soft:#e8edff;
+  --measured:#222; --estimated:#b07a10; --unknown:#c8322b;
+}
+html,body{margin:0;padding:0;background:#0e1015;overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;perspective:2600px;perspective-origin:50% 50%;overflow:hidden;background:var(--paper)}
+.board{position:absolute;inset:0;transform-origin:0 50%;backface-visibility:hidden;will-change:transform;
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(rgba(0,49,216,.13) 1.5px,transparent 1.5px),
+    linear-gradient(90deg,rgba(0,49,216,.13) 1.5px,transparent 1.5px),
+    linear-gradient(rgba(0,49,216,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,49,216,.055) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px;
+  background-position:-1px -1px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.04);
+  overflow:hidden;font-family:var(--font-ja);color:var(--ink)}
+.board::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .1  0 0 0 0 .15  0 0 0 .9 0'/></filter><rect width='240' height='240' filter='url(%23n)'/></svg>")}
+.shade{position:absolute;inset:0;background:#0e1015;opacity:0;pointer-events:none;z-index:50}
+/* 図面の枠と柱（左 1/4）。全場面で同じ位置 */
+.frame{position:absolute;left:28px;top:28px;right:28px;bottom:28px;border:3px solid var(--ink);pointer-events:none;z-index:20}
+.pillar{position:absolute;left:28px;top:28px;bottom:28px;width:452px;border-right:3px solid var(--ink);background:rgba(0,49,216,.045);z-index:10}
+.pillar .kubun{position:absolute;left:44px;top:46px;font-size:30px;color:var(--sub);letter-spacing:.2em}
+.pillar .word{position:absolute;left:40px;top:96px;font-size:112px;font-weight:var(--w-head);line-height:1.1;letter-spacing:.02em;white-space:nowrap}
+.pillar .bar{position:absolute;left:44px;top:240px;height:10px;width:150px;background:var(--acc);transform-origin:0 50%}
+.pillar .sheet{position:absolute;left:44px;bottom:150px;font-size:44px;font-family:var(--font-mono);color:var(--ink)}
+.pillar .sheet b{color:var(--acc)}
+.pillar .scale{position:absolute;left:44px;bottom:60px;width:300px;height:40px}
+.pillar .rows{position:absolute;left:0;right:0;top:300px;border-top:2px solid var(--ink)}
+.pillar .rows div{height:64px;border-bottom:1.5px solid rgba(26,26,28,.35)}
+/* 本文（右 3/4） */
+.el{position:absolute;will-change:transform,opacity}
+.pre{font-size:50px;color:var(--sub);white-space:nowrap;z-index:5}
+.head{z-index:5}
+.head{font-size:140px;font-weight:var(--w-head);line-height:1.12;white-space:nowrap;letter-spacing:.01em}
+.head .a{color:var(--acc)}
+.num{font-size:216px;font-weight:var(--w-head);font-family:var(--font-ja);line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.unit{font-size:84px;font-weight:var(--w-head);margin-left:10px}
+.src{font-family:var(--font-mono);font-size:24px;color:var(--sub);white-space:nowrap}
+.card{position:absolute;background:#fff;padding:9px;box-shadow:0 6px 16px rgba(14,16,21,.28),0 1px 3px rgba(14,16,21,.3);will-change:transform}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+.pile{position:absolute;left:520px;top:452px;width:780px;height:610px;z-index:2}
+.tag{display:flex;align-items:center;gap:28px;width:520px;height:132px;background:#fff;border:3px solid var(--ink);box-sizing:border-box;padding:0 30px;box-shadow:6px 6px 0 rgba(0,49,216,.18)}
+.tag .t{font-size:76px;font-weight:var(--w-head)}
+.empty{border:5px dashed var(--unknown);box-sizing:border-box;background:rgba(200,50,43,.04)}
+.null{font-family:var(--font-mono);color:var(--unknown);font-weight:700}
+.cal{position:absolute;background:#fff;border:3px solid var(--ink);box-sizing:border-box}
+.cal .top{position:absolute;left:0;right:0;top:0;height:64px;background:var(--acc)}
+.cal .page{position:absolute;left:0;right:0;top:64px;bottom:0;background:#fff;display:flex;align-items:center;justify-content:center;transform-origin:50% 0;backface-visibility:hidden}
+.ex{display:inline-block;margin-left:18px;padding:2px 14px 4px;border:3px solid var(--estimated);color:var(--estimated);font-size:34px;font-weight:700;vertical-align:middle;background:#fff8ea;line-height:1.2}
+.board2{background:#fff;border:3px solid var(--ink);box-sizing:border-box;box-shadow:8px 8px 0 rgba(0,49,216,.16)}
+.board2 .bt{font-size:42px;font-weight:700;padding:20px 28px 14px;border-bottom:2px solid var(--line);white-space:nowrap}
+.board2 .row{display:flex;justify-content:space-between;align-items:baseline;padding:22px 28px 16px;border-bottom:1.5px dashed var(--line)}
+.board2 .rl{font-size:46px;color:var(--sub)}
+.board2 .big{display:flex;align-items:center;justify-content:center;gap:12px;height:calc(100% - 90px)}
+.vn{font-size:96px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.board2 .big .vn{font-size:150px}
+.bb .big .vn{font-size:104px}
+.board2 .big>div{white-space:nowrap}
+.bd4 .big .vn{font-size:104px}
+.bd4 .big{height:120px}
+.vu{font-size:56px;font-weight:700;margin:0 6px}
+.lab{font-size:44px;font-weight:700;white-space:nowrap;background:var(--paper);padding:0 8px}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+"use strict";
+const $=(tag,cls,parent,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;if(parent)parent.appendChild(e);return e};
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const P=(t,a,d)=>clamp((t-a)/d);
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const back=x=>{const c=1.6;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+function rnd(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function css(e,o){for(const k in o)e.style[k]=o[k]}
+function place(e,x,y,w,h){css(e,{left:x+"px",top:y+"px"});if(w!=null)e.style.width=w+"px";if(h!=null)e.style.height=h+"px"}
+// 下から少し上がって出る
+function rise(e,t,a,d=.38,dy=30){const p=eo(P(t,a,d));e.style.opacity=p;e.style.transform=`translateY(${(1-p)*dy}px)`}
+// 少し大きく出て縮む
+function pop(e,t,a,d=.32){const x=P(t,a,d);e.style.opacity=clamp(x*3);e.style.transform=`scale(${x<=0?1.25:1+.25*(1-back(x))})`}
+// 線を左から引く（clip）
+function draw(e,t,a,d){const p=eio(P(t,a,d));e.style.clipPath=`inset(0 ${(1-p)*100}% 0 0)`}
+
+let TL,V,SC={};
+const scenes=[];
+
+function pillar(b,s,k,n){
+  const p=$("div","pillar",b);
+  $("div","kubun",p,"区分");
+  const w=$("div","word",p,s.pillar);
+  const bar=$("div","bar",p);
+  const rows=$("div","rows",p);for(let i=0;i<4;i++)$("div","",rows);
+  const sh=$("div","sheet",p,`図 <b>${k}</b> / ${n}`);
+  p.insertAdjacentHTML("beforeend",`<svg class="scale" viewBox="0 0 300 40"><g stroke="#1a1a1c" stroke-width="2" fill="none"><path d="M2 30H298"/><path d="M2 18V36M74 22V36M148 18V36M222 22V36M298 18V36"/></g><rect x="2" y="26" width="72" height="8" fill="#1a1a1c"/><rect x="148" y="26" width="74" height="8" fill="#1a1a1c"/></svg>`);
+  return {w,bar,rows:[...rows.children]};
+}
+function headlines(b,s,x,y,size){
+  const o={};
+  if(s.pre){o.pre=$("div","el pre",b,s.pre);place(o.pre,x,y)}
+  const y0=s.pre?y+70:y;
+  o.lines=s.lines.map((L,i)=>{const e=$("div","el head",b,L.replace(/2 か月/,'<span class="a">2 か月</span>'));if(size)e.style.fontSize=size+"px";place(e,x,y0+i*(size||140)*1.12);return e});
+  return o;
+}
+// 文の中の行の出る時刻：文字の割合で
+function lineTimes(s){
+  const n=x=>x.replace(/[\s、。]/g,"").length;
+  const tot=n(s.text);let acc=n(s.pre);const out=[];
+  for(const L of s.lines){out.push(s.text_in+s.text_dur*acc/tot);acc+=n(L)}
+  return out;
+}
+
+// ---- 自作のピクトグラム（顔は描かない）----
+const PERSON=(c="#1a1a1c",h=220)=>`<svg width="${h*.62}" height="${h}" viewBox="0 0 124 200" fill="${c}"><circle cx="58" cy="26" r="22"/><path d="M30 60Q30 52 38 52H78Q86 52 86 60V120H74V196H60V130H56V196H42V120H30Z"/><rect x="86" y="58" width="30" height="56" rx="8" fill="#0031d8"/><rect x="82" y="64" width="8" height="40" fill="${c}"/></svg>`;
+const ICON={
+  "測量":`<svg width="72" height="72" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6"><path d="M8 30V74M88 30V74M8 52H88"/><path d="M0 62L16 42M80 62L96 42" stroke="#0031d8"/></svg>`,
+  "図面":`<svg width="72" height="72" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6"><rect x="10" y="10" width="76" height="76"/><path d="M10 40H86M10 64H86M36 10V86M60 10V86" stroke-width="4"/><path d="M10 86L86 10" stroke="#0031d8"/></svg>`,
+  "3D":`<svg width="72" height="72" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><path d="M48 8L86 28V70L48 90L10 70V28Z"/><path d="M10 28L48 48L86 28M48 48V90" stroke="#0031d8"/></svg>`,
+  "写真":`<svg width="72" height="72" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><rect x="6" y="26" width="58" height="44" rx="6"/><circle cx="35" cy="48" r="12"/><path d="M20 26L26 16H44L50 26"/><path d="M70 48H78M74 30L90 22V78L74 70Z" stroke="#0031d8"/></svg>`,
+  "検収":`<svg width="72" height="72" viewBox="0 0 96 96" fill="none" stroke="#1a1a1c" stroke-width="6" stroke-linejoin="round"><rect x="8" y="10" width="56" height="56"/><rect x="30" y="30" width="56" height="56" stroke-dasharray="8 6"/><path d="M40 58L54 72L80 40" stroke="#0031d8" stroke-width="8"/></svg>`
+};
+const exTag=()=>`<span class="ex">例</span>`;
+const val=(o)=>`${o.pre?`<span class="vu">${o.pre}</span>`:""}<span class="vn">${o.value}</span>${o.post?`<span class="vu">${o.post}</span>`:""}`;
+
+// ---- 場面 1 受験生：地方の町 → 名古屋、遠征の費用、受験生 ----
+function buildA(b,s){
+  const o=headlines(b,s,560,78);const R=V.route,T=V.trip;
+  // 受験生と道のり（抽象図。地図は使わない）
+  const fig=$("div","el",b,PERSON("#1a1a1c",250));place(fig,566,560);o.fig=fig;
+  const rt=$("div","el",b);place(rt,600,500,720,520);
+  rt.innerHTML=`<svg width="720" height="520" viewBox="0 0 720 520" fill="none">
+    <clipPath id="rc"><rect class="cr" x="0" y="0" width="0" height="520"/></clipPath>
+    <path class="ln" clip-path="url(#rc)" d="M90 470C240 470 300 150 640 150" stroke="#0031d8" stroke-width="8" stroke-dasharray="22 14"/>
+    <circle class="a" cx="90" cy="470" r="16" fill="#1a1a1c"/>
+    <g class="b"><path d="M640 150m-26 0a26 26 0 1 1 52 0c0 26-26 56-26 56s-26-30-26-56z" transform="translate(0,-40)" fill="#0031d8"/><circle cx="640" cy="110" r="10" fill="#fff"/></g>
+    <g class="x" stroke="#c8322b" stroke-width="12" stroke-linecap="round"><path d="M330 262L390 322M390 262L330 322"/></g>
+  </svg>`;o.rt=rt;o.ln=rt.querySelector(".ln");o.ra=rt.querySelector(".a");o.rb=rt.querySelector(".b");o.rx=rt.querySelector(".x");
+  o.from=$("div","el lab",b,R.from);place(o.from,700,985);
+  o.to=$("div","el lab",b,R.to);place(o.to,1180,680);
+  const km=$("div","el",b,`<span class="vn" style="font-size:150px">${R.distance}</span><span class="vu">${R.unit}</span>${R.example?exTag():""}`);place(km,820,470);o.km=km;
+  // 遠征の費用の板
+  const bd=$("div","el board2",b);place(bd,1352,480,500,540);o.bd=bd;
+  bd.innerHTML=`<div class="bt">${T.title}${T.example?exTag():""}</div>`+T.rows.map(r=>`<div class="row"><span class="rl">${r.label}</span><span class="rv">${val(r)}</span></div>`).join("");
+  o.rows=[...bd.querySelectorAll(".row")];
+  return o;
+}
+function seekA(o,s,t){
+  const lt=lineTimes(s),r0=s.start;
+  rise(o.pre,t,s.text_in);o.lines.forEach((e,i)=>rise(e,t,lt[i]));
+  rise(o.fig,t,r0+.2,.4,40);
+  o.rt.style.opacity=1;
+  o.ra.style.opacity=P(t,r0+.5,.15);
+  const lp=eio(P(t,r0+.6,.9));o.rt.querySelector(".cr").setAttribute("width",720*lp);
+  o.rb.style.opacity=clamp(P(t,r0+1.45,.15));o.rb.style.transform=`translateY(${(1-back(P(t,r0+1.45,.35)))*-40}px)`;
+  rise(o.from,t,r0+.55,.3,10);rise(o.to,t,r0+1.6,.3,10);
+  pop(o.km,t,r0+1.95);
+  rise(o.bd,t,r0+2.3,.35,30);
+  o.rows.forEach((e,i)=>rise(e,t,r0+2.65+i*.4,.3,16));
+  // 「見ないまま決めている」：道のりに × が付く
+  const xp=P(t,lt[1]+.25,.3);o.rx.style.opacity=xp>0?1:0;o.rx.style.transformOrigin="360px 292px";o.rx.style.transform=`scale(${xp>0?1+.4*(1-back(xp)):1})`;
+  o.ln.setAttribute("stroke",t>=lt[1]+.25?"#9aa0aa":"#0031d8");
+  o.rb.firstElementChild.setAttribute("fill",t>=lt[1]+.25?"#9aa0aa":"#0031d8");
+  // 受験生は町に留まる：人の絵が灰色に
+  const gp=eo(P(t,lt[1]+.9,.5));o.fig.style.filter=gp>0?`grayscale(1) opacity(${1-.55*gp})`:"";
+}
+
+// ---- 場面 2 作者：実体験の数字の板 ----
+function buildB(b,s){
+  const o={};o.lines=[$("div","el head",b,s.lines.join(""))];place(o.lines[0],560,110);o.lines[0].style.fontSize="150px";
+  const A=V.author;
+  o.bs=A.boards.map((bb,i)=>{const e=$("div","el board2 bb",b);place(e,560+i*444,380,424,460);
+    e.innerHTML=`<div class="bt">${bb.label}</div><div class="big" style="flex-direction:column">${bb.icon?PERSON("#1a1a1c",150):""}<div>${val(bb)}</div></div>`;return e});
+  o.cnt=o.bs[1].querySelector(".vn");o.cntTo=A.boards[1].count||0;
+  o.src=$("div","el src",b,`出典 ${A.source}`);place(o.src,560,870);
+  return o;
+}
+function seekB(o,s,t){
+  rise(o.lines[0],t,s.text_in,.4,36);
+  o.bs.forEach((e,i)=>rise(e,t,s.start+.45+i*.55,.35,40));
+  if(o.cntTo){const p=eo(P(t,s.start+1.1,1.1));o.cnt.textContent=Math.round(o.cntTo*p).toLocaleString("en-US")}
+  rise(o.src,t,s.start+2.3,.3,8);
+}
+
+// ---- 場面 3 手間：一般論の例として、要る物の札を積む＋日めくり ----
+const NEEDS=[["測量","測量"],["図面","図面（CAD）"],["3D","3D の組み立て（Blender）"],["写真","写真から形を起こす技術"],["検収","検収"]];
+function buildC(b,s){
+  const o={};o.hl=headlines(b,s,560,78);
+  o.tags=NEEDS.map(([k,w],i)=>{const e=$("div","el tag",b,`${ICON[k]}<span class="t">${w}</span>`);
+    css(e,{width:"860px",height:"96px",gap:"22px",padding:"0 24px"});e.querySelector(".t").style.fontSize="46px";place(e,560,488+i*110);return e});
+  o.ex=$("div","el",b,exTag());place(o.ex,1318,508);
+  const cx=1470,cy=488,cw=390,chh=536;
+  const cal=$("div","cal",b);place(cal,cx,cy,cw,chh);$("div","top",cal);
+  cal.insertAdjacentHTML("beforeend",`<svg style="position:absolute;left:0;top:-18px" width="${cw}" height="60"><g fill="#fff" stroke="#1a1a1c" stroke-width="4">${[70,155,235,320].map(x=>`<rect x="${x-10}" y="2" width="20" height="46" rx="10"/>`).join("")}</g></svg>`);
+  const mk=()=>{const pg=$("div","page",cal);pg.innerHTML=`<span class="num" style="font-size:200px">1</span><span class="unit" style="font-size:80px">日</span>`;return pg};
+  o.under=mk();o.over=mk();o.cal=cal;
+  // 積んだ札の高さに寸法線（文を言い終えたら上から引く）
+  const vl=$("div","el",b);place(vl,1424,488,40,540);
+  vl.innerHTML=`<svg width="40" height="540" fill="none" stroke="#0031d8" stroke-width="6"><path d="M2 3H38M2 537H38M20 3V537"/><path d="M8 18L32 -6M8 552L32 528" stroke-width="8"/></svg>`;o.vl=vl;
+  return o;
+}
+function seekC(o,s,t){
+  const lt=lineTimes(s),r0=s.start;
+  rise(o.hl.pre,t,s.text_in);o.hl.lines.forEach((e,i)=>rise(e,t,lt[i]));
+  o.tags.forEach((e,i)=>{const at=r0+.4+i*.45,p=P(t,at,.34);e.style.opacity=clamp(p*4);e.style.transform=`translateY(${(1-back(p))*-300}px) rotate(${(1-eo(p))*(i%2?3:-3)}deg)`});
+  rise(o.ex,t,r0+2.7,.25,8);
+  rise(o.cal,t,r0+.3,.35,24);
+  const c0=lt[0]-.1,N=12,D=1.7;let k=0;
+  for(let i=1;i<=N;i++){if(t>=c0+D*Math.pow(i/N,.85))k=i}
+  const v=i=>i<=0?1:Math.round(60*i/N);
+  o.under.querySelector(".num").textContent=v(k);
+  const prev=k>0?c0+D*Math.pow(k/N,.85):c0-1;
+  o.over.querySelector(".num").textContent=v(k-1>=0?k-1:0);
+  const tear=k>0?P(t,prev,.16):1;
+  o.over.style.transform=`rotateX(${-115*eo(tear)}deg)`;o.over.style.opacity=tear>=1?0:1;
+  o.under.querySelector(".num").style.color=k>=N?"var(--acc)":"";
+  const vp=eio(P(t,lt[1]+.95,.5));o.vl.style.opacity=1;o.vl.style.clipPath=`inset(0 0 ${(1-vp)*100}% 0)`;
+}
+
+// ---- 場面 4 広報：道具の札は積まれ、広報の札だけ null。予算の板（例）----
+function buildD(b,s){
+  const o=headlines(b,s,560,78);
+  o.tags=[["測量","測量"],["図面","製図"],["3D","3D"]].map(([k,w],i)=>{const e=$("div","el tag",b,`${ICON[k].replace(/width="72" height="72"/,'width="90" height="90"')}<span class="t">${w}</span>`);place(e,560,520+i*160);return e});
+  const ex=1190,ey=500,ew=660,eh=270;
+  const em=$("div","el empty",b);place(em,ex,ey,ew,eh);o.em=em;
+  const lb=$("div","el",b,`<span style="font-size:64px;font-weight:700;color:var(--sub)">広報</span>`);place(lb,ex+30,ey+16);o.lb=lb;
+  const nl=$("div","el null",b,`null<span class="caret" style="display:inline-block;width:.5em;height:.9em;margin-left:.08em;background:var(--unknown);vertical-align:-.08em"></span>`);css(nl,{fontSize:"120px"});place(nl,ex+250,ey+100);o.nl=nl;o.caret=nl.querySelector(".caret");
+  const B=V.budget;const bd=$("div","el board2 bd4",b);place(bd,ex,ey+300,ew,220);o.bd=bd;
+  bd.innerHTML=`<div class="bt">${B.label}${B.example?exTag():""}</div><div class="big" style="justify-content:flex-start;padding-left:40px">${val(B)}</div>`;
+  return o;
+}
+function seekD(o,s,t){
+  const lt=lineTimes(s);
+  rise(o.pre,t,s.text_in);o.lines.forEach((e,i)=>rise(e,t,lt[i]));
+  o.tags.forEach((e,i)=>{const at=s.text_in+.2+i*.45,p=P(t,at,.34);e.style.opacity=clamp(p*4);e.style.transform=`translateY(${(1-back(p))*-260}px) rotate(${(1-eo(p))*(i%2?4:-4)}deg)`});
+  const ea=s.text_in+1.6;o.em.style.opacity=1;draw(o.em,t,ea,.45);
+  rise(o.lb,t,ea+.3,.3,12);
+  rise(o.bd,t,lt[0]+.55,.35,30);
+  pop(o.nl,t,lt[1]+.15);
+  const tc=t-(lt[1]+.55);o.caret.style.opacity=tc<0?1:(Math.floor(tc/.5)%2?0:1);
+}
+
+const KIND={A:[buildA,seekA],B:[buildB,seekB],C:[buildC,seekC],D:[buildD,seekD]};
+
+async function init(){
+  TL=await (await fetch("timeline.json",{cache:"no-store"})).json();
+  V=await (await fetch("values.json",{cache:"no-store"})).json();
+  const st=document.getElementById("stage");
+  TL.scenes.forEach((s,i)=>{
+    const b=$("div","board",st);b.style.zIndex=100-i;
+    const pl=pillar(b,s,i+1,TL.scenes.length);
+    $("div","frame",b);
+    const shade=$("div","shade",b);
+    const [bf,sf]=KIND[s.id];const o=bf(b,s);
+    scenes.push({s,b,pl,o,sf,shade});
+  });
+  await Promise.all([...document.images].map(im=>im.decode().catch(()=>{})));
+  await document.fonts.ready;
+  window.READY=true;
+}
+function seekSync(t){
+  const half=TL.flip/2;
+  scenes.forEach(({s,b,pl,o,sf,shade},i)=>{
+    const last=i===scenes.length-1;
+    const vis=t>=s.start-half-.01&&(last||t<s.end+half);
+    b.style.display=vis?"block":"none";if(!vis)return;
+    // 出ていく板：左の端を軸にめくれて奥へ
+    if(!last){const p=eio(P(t,s.end-half,TL.flip));b.style.transform=p>0?`rotateY(${100*p}deg)`:"";shade.style.opacity=p*.35}
+    // 柱の語と線（場面に入ってから）
+    const a=i===0?s.start+.05:s.start+half-.05;
+    rise(pl.w,t,a,.35,20);
+    pl.bar.style.transform=`scaleX(${eo(P(t,a+.15,.4))})`;
+    sf(o,s,t);
+  });
+}
+window.seek=t=>{seekSync(t);return new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(()=>r(true))))};
+init().then(()=>{const q=new URLSearchParams(location.search);seekSync(q.has("t")?+q.get("t"):0)});
+</script>
+</body>
+</html>

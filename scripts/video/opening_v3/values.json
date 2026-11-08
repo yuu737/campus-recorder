@@ -1,0 +1,15 @@
+{
+ "note": "導入 v3 の板に出す数字と札。example: true の板には「例」の札が付く。？ は利用者から数字をもらう前の暫定（勝手に実数を入れない）。数字が決まったらこのファイルだけ直して render_html.py --page scripts/video/opening_v3/index.html で撮り直す。",
+ "route": {"from": "地方の町", "to": "名古屋", "distance": "？", "unit": "km", "example": true},
+ "trip": {"title": "遠征の費用", "example": true, "rows": [
+   {"label": "交通費", "pre": "¥", "value": "？", "post": ""},
+   {"label": "宿泊", "pre": "¥", "value": "？", "post": ""},
+   {"label": "日数", "pre": "", "value": "？", "post": "日"}
+ ]},
+ "author": {"source": "docs/過程/勝ち筋.md §2（1,500枚・2か月の実体験）", "boards": [
+   {"label": "期間", "value": "2", "post": "か月"},
+   {"label": "写真", "value": "1,500", "post": "枚", "count": 1500},
+   {"label": "人数", "value": "一人で", "post": "", "icon": "person"}
+ ]},
+ "budget": {"label": "予算", "pre": "¥", "value": "？", "example": true}
+}
