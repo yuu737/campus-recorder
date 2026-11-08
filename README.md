@@ -134,6 +134,10 @@ Per-building numbers appear only in the table between the markers below (`python
 - Value counts grow with how finely the model is split. "Independent observations" in the table group the copies (`recorder counts`). No value has "by eye" as its only method.
 - Building assignments include, besides staff assignments, buildings set by the judging agent at intake and buildings a sorting agent picked from staff candidates (breakdown in 結果.md). The sorting agents decided the face of every photo.
 
+### A run from zero (11/8 16:20–18:21)
+
+In a separate worktree, the main building was rebuilt through the API agents from a zero state holding only the photos (171) and the staff's declarations (tape-measure marks). **All 11 steps passed** (cost 19.80 USD, cap 80), validation OK with 0 warnings, measured 3 (all counts) / estimated 382 / unknown 0, with the model, 11 elevations and the walk view produced, and the disputes recorded (the photo height 21.69 m taken over PLATEAU's 32.1 m; the sign of the rooftop-unit offset). **It was not fully automatic, though.** The zero-reset tool had also wiped the existing part-type approval D-0001, so validation rejected 56 parts and the drawing step stopped 4 times between 17:30 and 17:32; at 17:34 the user entered D-0001 by hand and the 5th attempt passed. Because the stop reason was "code failure", the coordinator was never called. The result is weaker than the main building after the 12:16 update (photos overlaid 10 vs 42, faces passing inspection 0 vs 1), and it left 7 photo requests, 1 question for staff and 2 disputes for the coordinator. The numbers come from `out/run0_from_zero/` (records copied from the worktree, not committed); the summary is [`docs/実走_0から_結果_11-08.md`](docs/実走_0から_結果_11-08.md) (Japanese).
+
 ### The 11/7 dress rehearsal (08:35–16:28)
 
 For the main building, the library and Tower 75, the previous results were set aside (`scripts/trial_reset.py --zero`) and each building was rebuilt from the photos and the building assignments only. Kyotsu Lecture Building South is the first building the tools and procedures built on the other three were applied to. The rehearsal ran the agents as Claude Code subagents; Opus 5.5 stood in as the coordinator (Fable is the coordinator in the real run).
@@ -209,7 +213,8 @@ Run everything as `python -I -X utf8 -m recorder <command>`. The command list, s
 **Out of scope**
 - No collision detection in the viewer. No trees yet. Materials and lighting are a first pass.
 - Inspection works only for faces that could be rectified; oblique-only faces need rectification first.
-- Running the agents through the API (Agent SDK) from the staff screen (`recorder serve` and `web/staff.html`) has been done for one building only, the main-building update. **No record has yet gone from start to finish with no human action** ([story](docs/run_2026-11-08.md)). The other three buildings, and all agents up to 11/7, were run by the author as Claude Code subagents.
+- Running the agents through the API (Agent SDK) from the staff screen (`recorder serve` and `web/staff.html`) has been done for one building only, the main building (the update, and the run from zero). **No record has yet gone from start to finish with no human action** ([story](docs/run_2026-11-08.md)). The other three buildings, and all agents up to 11/7, were run by the author as Claude Code subagents.
+- In the run from zero, a person entered a decision by hand once, at the drawing step. There is not yet a path that calls the coordinator when a run stops on a code failure ([results](docs/実走_0から_結果_11-08.md), Japanese).
 
 **Fallbacks**
 - Many values are `estimated` (converted from photo pixels and a reference length, from ratios, or by eye, with the method written down), not surveyed. Only dimensions with a measurable basis are `measured`. Almost every `measured` value today is a count (floors, bays, units); the only `measured` lengths are the 2 on the main building's f6 (numbers in the "Results" table). For the library and Tower 75 the tape was read but not applied to the building JSON, so their lengths are `estimated`.
