@@ -1,0 +1,15 @@
+{
+ "note": "B7 検収。数字と文はすべて記録から（source に出典）。暫定の文は narration.txt。写真は使わず、仕組みの図と数字だけ（重ね合わせの画像は公開版でない写真から作られているため）",
+ "min_dur": 14,
+ "lines": {"total": 295, "ok": 259, "within_m": 0.15, "median_abs_d_m": "0.029",
+           "source": "data/reports/honbu/kenshu_k401.md（f6）"},
+ "slopes_before": {"unit": "%", "median": "+2.3",
+   "values": {"PXL_20261103_042721424": 2.43, "PXL_20261103_042734715": 3.0, "PXL_20261103_042822099": 1.38, "PXL_20261103_042900775": 2.91, "PXL_20261103_042909968": 2.0, "PXL_20261103_043642327": 2.32, "PXL_20261104_074357308": 1.83, "PXL_20261105_064600203": -4.12, "PXL_20261105_064601738": 2.87, "PXL_20261105_064609316": 2.15, "PXL_20261105_064614185": 2.69, "PXL_20261107_070052168": 1.82, "PXL_20261107_070104248": 1.01, "PXL_20261107_070120982": 2.88, "本部棟正面": 2.3},
+   "source": "out/honbu/recheck/20261108_091323/kenshu_slopes.json（level の slope）、data/reports/honbu/kenshu_1108.md（中央値 +2.3 %）"},
+ "slopes_after": {"median": "−0.13", "source": "data/reports/honbu/kenshu_k401.md（高さの線の傾きの中央値）"},
+ "verdicts": [
+   {"face": "f6", "text": "不合格", "sub": "記録して進める（K-405）。縮尺の差は消えた", "source": "data/reports/honbu/kenshu_k401.md"},
+   {"face": "f8", "text": "不合格", "sub": "70 本中 29 本が合格。解き直しの後も残る差として記録", "source": "data/reports/honbu/kenshu_k401.md"}
+ ],
+ "cap": "data/reports/honbu/kenshu_k401.md・kenshu_1108.md／out/honbu/recheck/20261108_091323/kenshu_slopes.json"
+}

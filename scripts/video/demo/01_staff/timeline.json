@@ -1,0 +1,27 @@
+{
+ "note": "make_demo.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 14.0,
+ "speech_end": 10.194,
+ "speech_fits": true,
+ "sentences": [
+  {
+   "n": 1,
+   "text": "職員は、撮った写真を画面に落として、",
+   "start": 0.5,
+   "dur": 5.0,
+   "src": "rate:3.6"
+  },
+  {
+   "n": 2,
+   "text": "「記録を始める」を押すだけです。",
+   "start": 5.75,
+   "dur": 4.444,
+   "src": "rate:3.6"
+  }
+ ]
+}

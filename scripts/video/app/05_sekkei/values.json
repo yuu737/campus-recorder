@@ -1,0 +1,47 @@
+{
+ "note": "B5 設計係（アプリ版）",
+ "dur": 12.5,
+ "app": {
+  "replay_t": 25.0,
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 の記録）",
+  "z0": 1.6,
+  "focus": [
+   400,
+   300
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 3.05,
+    "x": 22,
+    "y": 150,
+    "w": 560,
+    "h": 200,
+    "tag": "棟 JSON の値の数",
+    "ty": 96,
+    "main": true
+   }
+  ],
+  "source": "out/video/replay_honbu.mp4 の 25.0 秒（6/11 設計係の工程の生成物）",
+  "src": "out/video/app/_src/replay_025.0.png"
+ },
+ "head": "値は 3 種類だけ：[測った・推した・分からない]",
+ "counts": {
+  "measured": 7,
+  "estimated": 456,
+  "unknown": 2,
+  "source": "out/honbu/report.json（counts）"
+ },
+ "change": {
+  "label": "f6 の柱間（11/8 の追記で）",
+  "before": "5.418",
+  "btol": "0.19",
+  "after": "5.30973",
+  "atol": "0.054",
+  "chain": "鎖の輪 3：tape → uniform_period → count",
+  "source": "data/reports/honbu/henka_20261108.md（要点）"
+ },
+ "cap": "out/honbu/report.json（counts）・data/reports/honbu/henka_20261108.md／規則 CLAUDE.md（根拠の無い measured は検証で落とす）／画面 out/video/replay_honbu.mp4（25 秒）"
+}

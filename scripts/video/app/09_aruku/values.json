@@ -1,0 +1,70 @@
+{
+ "note": "B9 歩く画面（アプリ版）。画面はデモ版の撮影（scripts/video/demo/capture_walk.py、web/index.html の「根拠で見る」）",
+ "dur": 12.0,
+ "app": {
+  "src": "out/video/demo/walk_cap/f00100.jpg",
+  "w": 1920,
+  "h": 1080,
+  "url": "web/index.html　歩く画面（「根拠で見る」を押した所）",
+  "z0": 1.35,
+  "focus": [
+   1100,
+   520
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 2.15,
+    "x": 1060,
+    "y": 200,
+    "w": 800,
+    "h": 520,
+    "tag": "本部棟：橙＝推定",
+    "ty": 730
+   },
+   {
+    "t0": 2.15,
+    "t1": 3.05,
+    "x": 0,
+    "y": 0,
+    "w": 520,
+    "h": 330,
+    "tag": "根拠で見る：色＝根拠の種類",
+    "ty": 345,
+    "main": true
+   }
+  ],
+  "source": "out/video/demo/walk_cap/f00100.jpg"
+ },
+ "head": "色で、[どこまで測ったか]が分かる",
+ "legend": [
+  [
+   "#3fa34d",
+   "measured",
+   "写真で測った"
+  ],
+  [
+   "#e8912d",
+   "estimated",
+   "推定。方法あり"
+  ],
+  [
+   "#f2c94c",
+   "hypothesis",
+   "仮説"
+  ],
+  [
+   "#8f969c",
+   "unknown",
+   "まだ分からない"
+  ]
+ ],
+ "counts": {
+  "measured": 7,
+  "estimated": 456,
+  "unknown": 2,
+  "requests": 10,
+  "source": "out/honbu/report.json（counts）"
+ },
+ "cap": "web/index.html（EV_COLOR・凡例）・out/honbu/report.json（counts）／画面 out/video/demo/walk_cap/f00100.jpg"
+}

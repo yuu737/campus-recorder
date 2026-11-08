@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>流れ B7 検収</title>
+<link rel="stylesheet" href="../_shell/shell.css">
+<style>
+.el{white-space:nowrap}
+.vcard{position:absolute;width:440px;height:150px;border:5px dashed var(--unknown);background:#fff;box-sizing:border-box;padding:14px 22px}
+.vcard .f{font-size:56px;font-weight:700}.vcard .v{font-size:56px;font-weight:700;color:var(--unknown);margin-left:16px}
+.vcard .s{font-size:24px;color:var(--sub);white-space:normal;margin-top:6px;line-height:1.3}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/shell.js"></script>
+<script>
+FLOW.scene({agent:"kenshu",
+build(F){
+  const V=F.V,pg=F.page,o={};const $=(t,c,p,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;(p||pg).appendChild(e);return e};
+  o.pre=$("div","el pre",pg,"検収係が測ったずれ：本部棟 f6 の写真と模型の線");F.place(o.pre,80,48);
+  // 仕組みの図：写真の縁（灰）に模型の線（青の破線）を重ね、ずれ d を測る
+  o.dg=$("div","el board2",pg,`<div class="bt">仕組み：写真に模型の線を重ねる</div>
+   <svg width="474" height="330" viewBox="0 0 474 330">
+    <rect x="30" y="20" width="414" height="250" fill="#eef0f3" stroke="#9aa0aa" stroke-width="2"/>
+    <g class="ph" stroke="#8a8f98" stroke-width="7" fill="none"><path d="M70 250V60H400V250"/><path d="M70 125H400M70 190H400"/><path d="M180 60V250M290 60V250"/></g>
+    <g class="md" stroke="#0031d8" stroke-width="4" stroke-dasharray="14 8" fill="none"><path d="M76 252V66H406V252"/><path d="M76 131H406M76 197H406"/><path d="M186 66V252M296 66V252"/></g>
+    <g class="dd" stroke="#c8322b" stroke-width="4" fill="#c8322b"><path d="M330 112V128"/><path d="M330 112l-6 8h12zM330 128l-6-8h12z" stroke="none"/></g>
+    <g font-size="20" font-family="BIZ UDPGothic" class="lg"><rect x="34" y="286" width="26" height="7" fill="#8a8f98"/><text x="66" y="296">写真の縁</text>
+      <path d="M170 290H200" stroke="#0031d8" stroke-width="4" stroke-dasharray="8 4"/><text x="206" y="296">模型の線</text>
+      <path d="M318 280V302" stroke="#c8322b" stroke-width="4"/><text x="330" y="296">ずれ d</text></g>
+   </svg>`);F.place(o.dg,80,130,500,412);o.dg.querySelector(".bt").style.fontSize="30px";
+  o.ph=o.dg.querySelector(".ph");o.md=o.dg.querySelector(".md");o.dd=o.dg.querySelector(".dd");o.lg=o.dg.querySelector(".lg");
+  // 線の数
+  const L=V.lines;
+  o.st=$("div","el board2",pg,`<div class="bt">面の線（f6）</div>
+    <div style="padding:16px 28px 0;font-size:40px"><span class="num" style="font-size:40px">${L.total}</span> 本中</div>
+    <div style="padding:0 28px"><span class="num vk" style="font-size:150px">0</span><span style="font-size:60px;font-weight:700"> 本</span></div>
+    <div style="padding:0 28px;font-size:40px;font-weight:700">が ${L.within_m} m 以内</div>
+    <div class="bar" style="margin:22px 28px 0;height:26px;background:#eef0f3;border:2px solid #1a1a1c;position:relative"><div class="fill" style="position:absolute;left:0;top:0;bottom:0;width:0;background:#222"></div></div>
+    <div style="padding:14px 28px 0;font-size:30px;color:var(--sub)">ずれ |d| の中央値 <b style="color:var(--ink)">${L.median_abs_d_m} m</b></div>`);
+  F.place(o.st,620,130,710,412);o.vk=o.st.querySelector(".vk");o.fill=o.st.querySelector(".fill");
+  // 傾きの図：写真ごと（前）と中央値（前→後）
+  const vals=Object.values(V.slopes_before.values),W=760,H=270,x0=60,y0=20,ymin=-5,ymax=4;
+  const Y=v=>y0+(ymax-v)/(ymax-ymin)*(H-40);
+  o.ch=$("div","el board2",pg,`<div class="bt">高さの線の傾き（写真ごと、%）</div>
+   <svg width="${W}" height="${H}">
+    <g stroke="#d6d8dd" stroke-width="1.5">${[-4,-2,0,2,4].map(v=>`<path d="M${x0} ${Y(v)}H${W-20}"/>`).join("")}</g>
+    <g font-size="20" fill="#545861" font-family="Consolas">${[-4,-2,0,2,4].map(v=>`<text x="8" y="${Y(v)+7}">${v>0?"+":""}${v}</text>`).join("")}</g>
+    <path d="M${x0} ${Y(0)}H${W-20}" stroke="#1a1a1c" stroke-width="2"/>
+    <g class="dots">${vals.map((v,i)=>`<circle cx="${x0+30+i*26}" cy="${Y(v)}" r="9" fill="#b07a10"/>`).join("")}</g>
+    <g class="mb"><path d="M${x0} ${Y(2.3)}H${x0+430}" stroke="#b07a10" stroke-width="4" stroke-dasharray="12 6"/><text x="${x0+440}" y="${Y(2.3)+8}" font-size="26" font-weight="700" fill="#b07a10" font-family="BIZ UDPGothic">前 ${V.slopes_before.median} %</text></g>
+    <g class="ma"><path d="M${x0} ${Y(-0.13)}H${x0+430}" stroke="#222" stroke-width="5"/><text x="${x0+440}" y="${Y(-0.13)+30}" font-size="26" font-weight="700" fill="#222" font-family="BIZ UDPGothic">後 ${V.slopes_after.median} %</text></g>
+    <g class="ar"><path d="M${x0+560} ${Y(2.3)+14}V${Y(-0.13)-12}" stroke="#0031d8" stroke-width="5"/><path d="M${x0+548} ${Y(-0.13)-24}L${x0+560} ${Y(-0.13)-6}L${x0+572} ${Y(-0.13)-24}" stroke="#0031d8" stroke-width="5" fill="none"/></g>
+   </svg>`);F.place(o.ch,80,580,780,H+70);
+  o.dots=[...o.ch.querySelectorAll(".dots circle")];o.mb=o.ch.querySelector(".mb");o.ma=o.ch.querySelector(".ma");o.ar=o.ch.querySelector(".ar");
+  // 判定の札
+  o.vc=V.verdicts.map((v,i)=>{const e=$("div","el vcard",pg,`<span class="f">${v.face}</span><span class="v">${v.text}</span><div class="s">${v.sub}</div>`);F.place(e,890,580+i*172);return e});
+  o.sp=F.spot(pg);o.sp.style.zIndex=50;
+  o.cap=F.caption("出典 "+V.cap);
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;
+  F.rise(o.pre,t,.7);
+  F.rise(o.dg,t,1.0,.35,30);
+  o.ph.style.opacity=F.P(t,1.3,.3);
+  o.md.style.opacity=1;o.md.style.clipPath=`inset(0 ${(1-F.eio(F.P(t,1.8,.8)))*100}% 0 0)`;
+  F.pop(o.dd,t,2.8);o.dd.style.transformOrigin="330px 120px";
+  o.lg.style.opacity=F.P(t,3.2,.3);
+  F.rise(o.st,t,3.6,.35,30);
+  const p=F.eo(F.P(t,4.0,1.2));o.vk.textContent=Math.round(V.lines.ok*p);o.fill.style.width=(100*V.lines.ok/V.lines.total*p)+"%";
+  F.rise(o.ch,t,5.6,.35,30);
+  o.dots.forEach((d,i)=>{d.style.opacity=t>=6.0+i*.07?1:0});
+  o.mb.style.opacity=1;o.mb.style.clipPath=`inset(0 ${(1-F.eio(F.P(t,7.2,.5)))*100}% 0 0)`;
+  o.ar.style.opacity=F.P(t,7.9,.2);o.ar.style.clipPath=`inset(0 0 ${(1-F.eio(F.P(t,7.9,.5)))*100}% 0)`;
+  o.ma.style.opacity=1;o.ma.style.clipPath=`inset(0 ${(1-F.eio(F.P(t,8.4,.5)))*100}% 0 0)`;
+  o.dots.forEach(d=>{d.style.fillOpacity=1-.6*F.P(t,8.9,.4)});
+  o.vc.forEach((e,i)=>F.pop(e,t,9.8+i*.7,.35));
+  F.rise(o.cap,t,11.4,.3,6);
+  // 注目の枠：数（4.0〜5.4）→ 傾きの前後（8.4〜9.6）→ f6 の札（11.8）→ f8 の札（12.8）。周りを暗くする
+  const R=e=>({x:e.offsetLeft-12,y:e.offsetTop-12,w:e.offsetWidth+24,h:e.offsetHeight+24});
+  const seq=[[4.2,5.3,R(o.st)],[8.5,9.6,R(o.ch)],[11.8,12.8,R(o.vc[0])],[12.8,13.6,R(o.vc[1])]];
+  let cur=null;for(const k of seq)if(t>=k[0]&&t<k[1])cur=k;
+  if(cur){const prev=seq[seq.indexOf(cur)-1],chain=prev&&prev[1]===cur[0];
+    const m=chain?F.eio(F.P(t,cur[0],.3)):1,r=chain?{x:prev[2].x+(cur[2].x-prev[2].x)*m,y:prev[2].y+(cur[2].y-prev[2].y)*m,w:prev[2].w+(cur[2].w-prev[2].w)*m,h:prev[2].h+(cur[2].h-prev[2].h)*m}:cur[2];
+    const fade=1-F.P(t,cur[1]-.25,.25)*(seq[seq.indexOf(cur)+1]&&seq[seq.indexOf(cur)+1][0]===cur[1]?0:1);
+    F.spotAt(o.sp,chain?cur[0]+1:t,chain?cur[0]:cur[0],r,.3,.45*fade);o.sp.style.opacity=fade}else o.sp.style.opacity=0;
+}});
+</script></body></html>

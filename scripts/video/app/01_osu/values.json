@@ -1,0 +1,57 @@
+{
+ "note": "B1 押す（アプリ版）。仕組みの文は職員の画面に出ている説明の文（f00360 に写っている）から",
+ "dur": 12.5,
+ "app": {
+  "src": "out/video/flow/staff_cap/f00360.jpg",
+  "w": 1920,
+  "h": 1080,
+  "url": "web/staff.html　職員の画面（作業用の複製で試走・係は呼ばない）",
+  "z0": 1.6,
+  "focus": [
+   1000,
+   600
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 2.15,
+    "x": 385,
+    "y": 576,
+    "w": 175,
+    "h": 34,
+    "tag": "4 枚の写真に棟の名前が付いた",
+    "ty": 500
+   },
+   {
+    "t0": 2.15,
+    "t1": 3.05,
+    "x": 1012,
+    "y": 566,
+    "w": 140,
+    "h": 54,
+    "tag": "「記録を始める」を押す",
+    "ty": 492,
+    "main": true
+   }
+  ],
+  "source": "out/video/flow/staff_cap/f00360.jpg（scripts/video/capture_staff.py、押す直前）"
+ },
+ "head": "押すと、棟ごとに[係が動き出す]",
+ "drop": {
+  "files": [
+   "data/photos/public/20261103/PXL_20261103_043026097.jpg",
+   "data/photos/public/20261103/PXL_20261103_043041105.jpg",
+   "data/photos/public/20261103/PXL_20261103_043129358.jpg",
+   "data/photos/public/20261103/PXL_20261103_044907567.jpg"
+  ],
+  "source": "out/video/flow/staff_cap/log.json（steps の drop）"
+ },
+ "texts": {
+  "place": "data/photos/<今日の日付>/<棟>/",
+  "append": "前回の記録を消さず、新しい写真が当たる面だけ係が見直す",
+  "fresh": "最初から作る",
+  "cost": "費用の上限は棟ごと（既定 40 USD）。当たると係はそこで止まる",
+  "source": "web/staff.html の「記録を始める」の説明（out/video/flow/staff_cap/f00360.jpg に写っている文）"
+ },
+ "cap": "web/staff.html（「記録を始める」の説明の文）／画面 out/video/flow/staff_cap/f00360.jpg・log.json"
+}

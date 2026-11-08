@@ -1,0 +1,85 @@
+{
+ "note": "B4 測量（アプリ版）。数字と文はすべて記録から（source に出典）。アプリの画面は待機画面の再生の 1 コマ",
+ "dur": 14.0,
+ "app": {
+  "replay_t": 17.0,
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 の記録）",
+  "z0": 1.5,
+  "focus": [
+   912,
+   430
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 2.15,
+    "x": 600,
+    "y": 257,
+    "w": 625,
+    "h": 308,
+    "tag": "正面化：写真を真正面に直す"
+   },
+   {
+    "t0": 2.15,
+    "t1": 3.05,
+    "x": 22,
+    "y": 668,
+    "w": 1210,
+    "h": 46,
+    "tag": "測量係の読み：メジャー ÷ 7 周期",
+    "ty": 600,
+    "main": true
+   }
+  ],
+  "source": "out/video/replay_honbu.mp4 の 17.0 秒（5/11 測量係の工程の生成物：正面化）",
+  "src": "out/video/app/_src/replay_017.0.png"
+ },
+ "head": "タイル 1 枚の幅 × [数えた枚数] ＝ 柱間",
+ "face": {
+  "label": "本部棟 f6 の柱間",
+  "source": "data/reports/honbu/sokuryo_chain_f6.json（face f6・bay_pitch）"
+ },
+ "tape": {
+  "photo": "本部棟正面柱92cm",
+  "file": "data/photos/public/メジャー/本部棟_honbu/本部棟正面柱92cm.jpg",
+  "read": "5.4→86.2 cm",
+  "n": 7,
+  "spot": [
+   0.02,
+   0.5,
+   0.83,
+   0.6
+  ],
+  "source": "data/reports/honbu/sokuryo_chain_f6.json（chain[0] tape）"
+ },
+ "tile": {
+  "value": "0.115429",
+  "unit": "m",
+  "source": "data/reports/honbu/sokuryo_chain_f6.json（chain[0] value）"
+ },
+ "count": {
+  "n": 46,
+  "photos": [
+   "PXL_20261103_042900775",
+   "PXL_20261103_042909968"
+  ],
+  "agree": true,
+  "how": "割り算でなく、印の数（1 枚ずつ目地に印）",
+  "source": "data/reports/honbu/sokuryo_count_f6.json（result）"
+ },
+ "result": {
+  "value": "5.30973",
+  "unit": "m",
+  "tol": "0.054",
+  "status": "measured",
+  "evidence": [
+   "本部棟正面柱92cm",
+   "PXL_20261103_042900775",
+   "PXL_20261103_042909968"
+  ],
+  "source": "data/buildings/honbu.json（f6 の柱間：value 5.30973、tol 0.054、measured）"
+ },
+ "cap": "data/buildings/honbu.json（f6 の柱間）／data/reports/honbu/sokuryo_chain_f6.json・sokuryo_count_f6.json／画面 out/video/replay_honbu.mp4（17 秒）"
+}

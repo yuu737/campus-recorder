@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B8 進行役</title>
+<link rel="stylesheet" href="../_shell/app.css">
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"shinko",
+build(F,M){
+  const V=F.V,o={},$=(t,c,h)=>F.$(t,c,M,h);
+  o.fl=V.flow.map((s,i)=>{const e=$("div","el board2",`<div class="bt" style="font-size:26px;${i===1?"color:#fff;background:var(--acc)":""}">${s.k}</div><div class="t30" style="padding:18px 22px 0;font-weight:700">${s.t}</div>`);F.place(e,i*444,180,380,250);return e});
+  o.ar=[F.arw(M,386,286),F.arw(M,830,286)];
+  o.r=$("div","el board2",`<div class="bt">決定（規則の形、要約）</div>`);F.place(o.r,0,476,1268,270);
+  o.rows=V.rules.map(([k,s],i)=>{const e=F.$("div","el",o.r,`<b style="font-family:var(--font-mono);font-size:32px;color:var(--acc)">${k}</b><span class="t30" style="margin-left:22px">${s}</span>`);F.place(e,26,72+i*62);return e});
+  o.h=$("div","el",`<span class="tagm">人</span><span class="t30" style="margin-left:16px;font-weight:700">${V.human}</span>`);F.place(o.h,0,782);
+  return o;
+},
+seek(F,t,o){
+  o.fl.forEach((e,i)=>F.rise(e,t,4.3+i*.8,.35,30));o.ar.forEach((e,i)=>{F.rise(e,t,4.85+i*.8,.3,0);F.draw(e,t,4.85+i*.8,.35)});
+  F.rise(o.r,t,6.9,.35,30);o.rows.forEach((e,i)=>F.rise(e,t,7.2+i*.5,.3,12));
+  F.rise(o.h,t,9.3,.35,12);
+  F.pulse(o.fl[1],t,10.4,.5);
+}});
+</script></body></html>

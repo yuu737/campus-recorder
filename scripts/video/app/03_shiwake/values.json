@@ -1,0 +1,65 @@
+{
+ "note": "B3 仕分け係（アプリ版）。面ごとの枚数は data/photos/index.json を数えた（building=honbu・period=during、11/8 16 時）",
+ "dur": 12.0,
+ "app": {
+  "replay_t": 9.0,
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 の記録）",
+  "z0": 1.5,
+  "focus": [
+   620,
+   330
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 3.05,
+    "x": 22,
+    "y": 150,
+    "w": 1212,
+    "h": 540,
+    "tag": "写真ごとに面の札（f6・f1 …）",
+    "ty": 96,
+    "main": true
+   }
+  ],
+  "source": "out/video/replay_honbu.mp4 の 9.0 秒（2/11 仕分け係の工程の生成物）",
+  "src": "out/video/app/_src/replay_009.0.png"
+ },
+ "head": "写真を、[棟と面]に振り分ける",
+ "faces": [
+  [
+   "f6",
+   41
+  ],
+  [
+   "f8",
+   24
+  ],
+  [
+   "f0",
+   18
+  ],
+  [
+   "f1",
+   9
+  ],
+  [
+   "f5",
+   5
+  ],
+  [
+   "f4",
+   4
+  ],
+  [
+   "f7",
+   4
+  ]
+ ],
+ "blank": 16,
+ "total": 121,
+ "source": "data/photos/index.json（building=honbu・period=during の face を数えた）",
+ "cap": "data/photos/index.json（本部棟・期間中の写真の face）／画面 out/video/replay_honbu.mp4（9 秒）"
+}

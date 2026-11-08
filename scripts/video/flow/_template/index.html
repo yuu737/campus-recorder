@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>流れ Bn 係の名前</title>
+<link rel="stylesheet" href="../_shell/shell.css">
+<style>.el{white-space:nowrap}</style></head><body><div id="stage"></div>
+<script src="../_shell/shell.js"></script>
+<script>
+// 雛形：このフォルダを scripts/video/flow/<nn>_<name>/ に写し、agent と build・seek を書き換える
+const R="../../../../";   // リポジトリの根（写真は R+"data/photos/public/…"）
+FLOW.scene({agent:"satsuei",            // 柱で点く係（_shell/agents.json の id）
+build(F){
+  const V=F.V,pg=F.page,o={};
+  const $=(t,c,p,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;(p||pg).appendChild(e);return e};
+  o.pre=$("div","el pre",pg,V.pre);F.place(o.pre,80,48);           // 前置き（板の座標は 1412×1024、左上 (0,0)）
+  o.big=$("div","el",pg,`<span class="num" style="font-size:180px">0</span>`);F.place(o.big,80,300);o.n=o.big.firstChild;
+  o.cap=F.caption("出典 "+V.cap);                                     // 右下の出典（字幕の大きさ）
+  return o;
+},
+seek(F,t,o){                               // t＝場面の頭からの秒。0〜0.6 秒はめくれ
+  F.rise(o.pre,t,.7);
+  F.rise(o.big,t,1.2);F.countTo(o.n,F.V.value,F.eo(F.P(t,1.2,1.0)));
+  F.rise(o.cap,t,2.5,.3,6);
+}});
+</script></body></html>

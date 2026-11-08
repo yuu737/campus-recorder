@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B7 検収</title>
+<link rel="stylesheet" href="../_shell/app.css">
+<style>
+.vc{position:absolute;width:320px;height:230px;background:#fff;border:4px dashed var(--unknown);box-sizing:border-box;padding:16px 20px}
+.vc .f{font-size:44px;font-weight:700;font-family:var(--font-mono)}
+.vc .v{font-size:44px;font-weight:700;color:var(--unknown);margin-left:12px}
+.vc .s{font-size:24px;line-height:1.5;margin-top:12px;color:var(--ink)}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"kenshu",
+build(F,M){
+  const V=F.V,o={},$=(t,c,h)=>F.$(t,c,M,h),L=V.lines;
+  // 仕組みの図：写真の縁（灰）に模型の線（青の破線）を重ね、ずれ d を測る
+  o.dg=$("div","el board2",`<div class="bt">写真の縁と模型の線</div>
+   <svg width="554" height="318" viewBox="0 0 474 272">
+    <rect x="30" y="14" width="414" height="214" fill="#eef0f3" stroke="#9aa0aa" stroke-width="2"/>
+    <g class="ph" stroke="#8a8f98" stroke-width="7" fill="none"><path d="M70 214V44H400V214"/><path d="M70 101H400M70 158H400"/><path d="M180 44V214M290 44V214"/></g>
+    <g class="md" stroke="#0031d8" stroke-width="4" stroke-dasharray="14 8" fill="none"><path d="M76 216V50H406V216"/><path d="M76 107H406M76 164H406"/><path d="M186 50V216M296 50V216"/></g>
+    <g class="dd" stroke="#c8322b" stroke-width="4" fill="#c8322b"><path d="M330 92V112"/><path d="M330 92l-6 8h12zM330 112l-6-8h12z" stroke="none"/></g>
+    <g font-size="19" font-family="BIZ UDPGothic" class="lg"><rect x="34" y="244" width="26" height="7" fill="#8a8f98"/><text x="66" y="254">写真の縁</text>
+      <path d="M170 248H200" stroke="#0031d8" stroke-width="4" stroke-dasharray="8 4"/><text x="206" y="254">模型の線</text>
+      <path d="M318 238V260" stroke="#c8322b" stroke-width="4"/><text x="330" y="254">ずれ d</text></g>
+   </svg>`);F.place(o.dg,0,172,560,410);
+  o.ph=o.dg.querySelector(".ph");o.md=o.dg.querySelector(".md");o.dd=o.dg.querySelector(".dd");o.lg=o.dg.querySelector(".lg");
+  // 線の数
+  o.st=$("div","el board2",`<div class="bt">面 f6 の線</div>
+    <div style="padding:14px 26px 0;font-size:40px"><span class="num" style="font-size:40px">${L.total}</span> 本中</div>
+    <div style="padding:0 26px"><span class="num vk" style="font-size:150px">0</span><span style="font-size:64px;font-weight:700"> 本</span></div>
+    <div style="padding:2px 26px 0;font-size:40px;font-weight:700">が ${L.within_m} m 以内</div>
+    <div style="margin:18px 26px 0;height:26px;background:#eef0f3;border:2px solid #1a1a1c;position:relative"><div class="fill" style="position:absolute;left:0;top:0;bottom:0;width:0;background:#222"></div></div>
+    <div class="md2" style="padding:12px 26px 0;font-size:26px;color:var(--sub)">ずれ |d| の中央値 <b style="color:var(--ink)">${L.median_abs_d_m} m</b></div>`);
+  F.place(o.st,610,172,658,410);o.md2=o.st.querySelector(".md2");o.vk=o.st.querySelector(".vk");o.fill=o.st.querySelector(".fill");
+  // 傾き（中央値）の前→後
+  o.sl=$("div","el board2",`<div class="bt">高さの線の傾き（中央値）</div>
+    <div style="position:relative;height:170px">
+     <span style="position:absolute;left:26px;top:22px;font-size:30px;color:var(--sub)">前</span><span class="num sb" style="position:absolute;left:80px;top:10px;font-size:58px;color:var(--estimated)">${V.slopes_before.median} %</span>
+     <svg class="sa" style="position:absolute;left:356px;top:22px" width="40" height="120"><path d="M20 4V108M6 92L20 112L34 92" stroke="#0031d8" stroke-width="6" fill="none"/></svg>
+     <span style="position:absolute;left:26px;top:100px;font-size:30px;color:var(--sub)">後</span><span class="num sf" style="position:absolute;left:80px;top:88px;font-size:58px">${V.slopes_after.median} %</span>
+     <span style="position:absolute;left:410px;top:34px;font-size:22px;line-height:1.5;color:var(--sub)">視点を新しい<br>縮尺で<br>解き直した</span>
+    </div>`);F.place(o.sl,0,600,560,232);
+  o.sb=o.sl.querySelector(".sb");o.sa=o.sl.querySelector(".sa");o.sf=o.sl.querySelector(".sf");
+  // 判定の札
+  o.vc=V.verdicts.map((v,i)=>{const e=$("div","el vc",`<span class="f">${v.face}</span><span class="v">${v.text}</span><div class="s">${v.sub.replace(/（(K-\d+)）/g,'<span style="white-space:nowrap">（$1）</span>')}</div>`);F.place(e,610+i*338,600);return e});
+  return o;
+},
+seek(F,t,o){
+  const V=F.V,L=V.lines;
+  F.rise(o.dg,t,4.3,.35,30);o.ph.style.opacity=F.P(t,4.6,.3);
+  o.md.style.clipPath=`inset(0 ${(1-F.eio(F.P(t,5.0,.8)))*100}% 0 0)`;F.pop(o.dd,t,5.9);o.dd.style.transformOrigin="330px 102px";o.lg.style.opacity=F.P(t,6.2,.3);
+  F.rise(o.st,t,6.5,.35,30);const p=F.eo(F.P(t,6.8,1.2));o.vk.textContent=Math.round(L.ok*p);o.fill.style.width=(100*L.ok/L.total*p)+"%";
+  o.md2.style.opacity=F.P(t,8.1,.3);
+  F.rise(o.sl,t,8.5,.35,30);o.sb.style.opacity=F.P(t,8.8,.25);o.sa.style.opacity=1;o.sa.style.clipPath=`inset(0 0 ${(1-F.eio(F.P(t,9.2,.4)))*100}% 0)`;o.sf.style.opacity=F.P(t,9.6,.3);
+  o.vc.forEach((e,i)=>F.pop(e,t,10.3+i*.6,.35));
+  o.vc.forEach((e,i)=>F.pulse(e,t,11.9+i*.5,.5,"200,50,43"));
+}});
+</script></body></html>

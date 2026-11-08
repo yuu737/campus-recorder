@@ -1,0 +1,36 @@
+/* 塊 B デモ版の殻。アプリの画面（録画の連番）を全面に出し、寄り・注目の枠・札を重ねる。
+   色と字体は scripts/video/flow/_shell/shell.css と同じ（導入 v7 と揃える） */
+:root{
+  --font-ja:"BIZ UDPGothic","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif;
+  --font-mono:Consolas,"BIZ UDGothic",monospace;
+  --ink:#1a1a1c; --sub:#545861; --acc:#0031d8; --acc-soft:#e8edff; --night:#0e1015;
+}
+html,body{margin:0;padding:0;background:var(--night);overflow:hidden}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;font-family:var(--font-ja);color:var(--ink);background:var(--night)}
+#cam{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;will-change:transform}
+#cam img.feed{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#cam img.feed.b{opacity:0}
+.spot{position:absolute;border:6px solid var(--acc);border-radius:6px;box-sizing:border-box;pointer-events:none;opacity:0}
+.ripple{position:absolute;border-radius:50%;border:7px solid var(--acc);box-sizing:border-box;pointer-events:none;opacity:0}
+#cursor{position:absolute;left:0;top:0;width:44px;height:62px;pointer-events:none;opacity:0;z-index:50}
+/* 画面の上に乗る物（寄りの影響を受けない） */
+.hud{position:absolute;will-change:transform,opacity;white-space:nowrap}
+/* 左上：今動いている係 */
+.who{left:40px;top:36px;display:flex;align-items:center;gap:18px;background:rgba(14,16,21,.88);color:#fff;padding:14px 26px 14px 20px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.who .dot{width:22px;height:22px;border-radius:50%;background:#3fd17a;box-shadow:0 0 0 6px rgba(63,209,122,.25)}
+.who .nm{font-size:44px;font-weight:700;letter-spacing:.02em}
+.who .md{font-size:32px;font-family:var(--font-mono);color:#9fb4ff;font-weight:700}
+.who .st{font-size:26px;color:#c9ccd3;margin-left:6px}
+/* 下の札：今その道具が何をしているか */
+.fuda{left:50%;bottom:64px;transform:translateX(-50%);background:var(--acc);color:#fff;font-size:46px;font-weight:700;padding:16px 36px;border-radius:12px;box-shadow:0 10px 28px rgba(0,20,90,.35)}
+.fuda small{font-size:30px;font-weight:400;opacity:.9;margin-left:14px}
+/* 注目の枠の横に付く短い名札 */
+.tag{background:#fff;color:var(--acc);border:4px solid var(--acc);font-size:34px;font-weight:700;padding:6px 16px;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+/* 右下：何を映しているか（出典）。早回しはここに倍率を書く */
+.cap{right:36px;bottom:18px;font-size:22px;color:#e9ebef;background:rgba(14,16,21,.72);padding:6px 14px;border-radius:6px;font-family:var(--font-ja)}
+/* 端末風の板（道具の実際の出力の文字だけを流す） */
+.term{background:#11141a;color:#d7dbe2;font-family:var(--font-mono);font-size:30px;line-height:1.5;padding:22px 30px;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.45);white-space:pre;overflow:hidden}
+.term .bar{font-family:var(--font-ja);font-size:22px;color:#8a909c;margin-bottom:10px}
+.term .ok{color:#6fdc8c}.term .ng{color:#ff6b61;font-weight:700}.term .dim{color:#7d8492}
+/* 場面の頭の白い一瞬（切り替え） */
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:80}

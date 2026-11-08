@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B3 仕分け係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"shiwake",
+build(F,M){
+  const V=F.V,o={},$=(t,c,h)=>F.$(t,c,M,h),mx=V.faces[0][1];
+  o.a=$("div","el board2",`<div class="bt">面ごとの写真の枚数（本部棟）</div>`);F.place(o.a,0,180,860,636);
+  const rows=[...V.faces,["面が未定",V.blank]];
+  o.bars=rows.map(([f,n],i)=>{const y=74+i*68,blank=f==="面が未定";
+    const l=F.$("div","el",o.a,`<span style="font-family:var(--font-mono);font-size:${blank?24:34}px;font-weight:700;color:${blank?"var(--sub)":"var(--ink)"}">${f}</span>`);F.place(l,24,y+4);
+    const b=F.$("div","el",o.a);F.place(b,170,y,0,44);b.style.background=blank?"repeating-linear-gradient(45deg,#c9ccd2 0 8px,#eef0f3 8px 16px)":(f==="f6"?"var(--acc)":"var(--ink)");
+    const v=F.$("div","el num",o.a,`${n}`);v.style.fontSize="34px";
+    return {b,v,n,w:n/mx*560,y,l}});
+  o.c=$("div","el board2",`<div class="bt">本部棟の写真</div><div style="padding:14px 24px 0;white-space:nowrap"><span class="num" style="font-size:128px">${V.total}</span><span style="font-size:44px;font-weight:700"> 枚</span></div><div class="t26" style="padding:8px 24px 0;color:var(--sub)">期間中に撮った物</div>`);F.place(o.c,900,180,368,330);
+  o.d=$("div","el board2",`<div class="bt">札を書く所</div><div style="padding:20px 24px 0;font-family:var(--font-mono);font-size:26px;font-weight:700;line-height:1.6">data/photos/<br>index.json</div><div class="t26" style="padding:6px 24px 0">building・face</div>`);F.place(o.d,900,550,368,266);
+  return o;
+},
+seek(F,t,o){
+  F.rise(o.a,t,4.3,.35,30);
+  o.bars.forEach((r,i)=>{const p=F.eio(F.P(t,4.7+i*.38,.5));r.l.style.opacity=F.P(t,4.6+i*.38,.2);r.b.style.width=r.w*p+"px";F.place(r.v,170+r.w*p+16,r.y+4);r.v.style.opacity=p>0?1:0;r.v.textContent=Math.round(r.n*p)});
+  F.rise(o.c,t,8.0,.35,30);F.rise(o.d,t,8.8,.35,30);
+  F.pulse(o.bars[0].b,t,10.0,.5);
+}});
+</script></body></html>

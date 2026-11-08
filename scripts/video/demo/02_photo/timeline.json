@@ -1,0 +1,27 @@
+{
+ "note": "make_demo.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 11.5,
+ "speech_end": 9.084,
+ "speech_fits": true,
+ "sentences": [
+  {
+   "n": 1,
+   "text": "撮影係が写真を確かめ、",
+   "start": 0.5,
+   "dur": 3.056,
+   "src": "rate:3.6"
+  },
+  {
+   "n": 2,
+   "text": "仕分け係が、どの面の写真かを決めます。",
+   "start": 3.806,
+   "dur": 5.278,
+   "src": "rate:3.6"
+  }
+ ]
+}

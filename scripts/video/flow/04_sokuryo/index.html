@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>流れ B4 測量</title>
+<link rel="stylesheet" href="../_shell/shell.css">
+<style>
+.box{position:absolute;width:390px}
+.lab{font-size:30px;font-weight:700;white-space:nowrap}
+.big{font-size:140px;font-weight:700}
+.el{white-space:nowrap}
+.board2 div{white-space:nowrap}
+.tick{position:absolute;width:6px;height:44px;background:var(--ink)}
+</style></head><body><div id="stage"></div>
+<script src="../_shell/shell.js"></script>
+<script>
+const R="../../../../";
+FLOW.scene({agent:"sokuryo",
+build(F){
+  const V=F.V,pg=F.page,o={};const $=(t,c,p,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;(p||pg).appendChild(e);return e};
+  o.pre=$("div","el pre",pg,`測量係が出した値：${V.face.label}`);F.place(o.pre,80,48);
+  // ① メジャーの写真
+  o.ph=$("div","el photo");F.place(o.ph,80,140,390,293);o.img=$("img","",o.ph);o.img.src=R+V.tape.file;
+  o.sp=F.spot(o.ph);
+  o.l1=$("div","el lab",pg,`メジャー ${V.tape.read}<br><span style="font-weight:400;font-size:26px">タイル ${V.tape.n} 枚分</span>`);F.place(o.l1,80,460);
+  o.s1=$("div","el src",pg,`写真 ${V.tape.photo}`);F.place(o.s1,80,560);
+  // 矢印
+  const arr=x=>{const e=$("div","el",pg,`<svg width="40" height="40"><path class="arrow" d="M2 20H34M22 8L36 20L22 32"/></svg>`);F.place(e,x,270);return e};
+  o.a1=arr(489);o.a2=arr(935);
+  // ② タイル 1 枚の周期
+  o.b2=$("div","el board2 box",pg,`<div class="bt">タイル 1 枚の周期</div><svg width="384" height="150" viewBox="0 0 384 150"><g class="tiles">${[...Array(7)].map((_,i)=>`<rect x="${14+i*51}" y="20" width="47" height="58" fill="#f2d9a0" stroke="#1a1a1c" stroke-width="2"/>`).join("")}</g><g stroke="#222" stroke-width="3" fill="none"><path d="M14 92V128M371 92V128M14 110H371"/><path d="M4 120L24 100M361 120L381 100" stroke-width="4"/></g></svg><div style="padding:0 24px 18px"><span class="num v2" style="font-size:56px">0</span><span style="font-size:40px;font-weight:700"> m</span></div>`);
+  F.place(o.b2,530,140,390);o.v2=o.b2.querySelector(".v2");o.tiles=o.b2.querySelector(".tiles");
+  // ③ 1 枚ずつ数えた枚数
+  o.b3=$("div","el board2 box",pg,`<div class="bt">1 枚ずつ数えた枚数</div><div class="tk" style="position:relative;height:120px;margin:14px 20px"></div><div style="padding:0 24px 4px"><span class="num v3" style="font-size:62px">0</span><span style="font-size:40px;font-weight:700"> 枚</span></div>`);
+  F.place(o.b3,980,140,390);o.v3=o.b3.querySelector(".v3");
+  const tk=o.b3.querySelector(".tk");o.ticks=[];
+  for(let i=0;i<V.count.n;i++){const e=$("div","tick",tk);F.place(e,(i%23)*15+2,Math.floor(i/23)*60+4);o.ticks.push(e)}
+  o.ph1=$("div","el src",pg,`${V.count.photos[0]} → ${V.count.n}`);F.place(o.ph1,980,470);
+  o.ph2=$("div","el src",pg,`${V.count.photos[1]} → ${V.count.n}`);F.place(o.ph2,980,504);
+  o.ok=$("div","el tagm",pg,"2 枚で一致");F.place(o.ok,980,546);
+  // ＝ 柱間
+  o.eq=$("div","el",pg,`<svg width="1290" height="20"><path d="M0 10H1290" stroke="#1a1a1c" stroke-width="3"/></svg>`);F.place(o.eq,80,620);
+  o.rl=$("div","el pre",pg,"柱間");F.place(o.rl,80,700);
+  o.res=$("div","el",pg,`<span class="num big vr">0</span><span style="font-size:72px;font-weight:700"> ${V.result.unit}</span>`);F.place(o.res,210,670);o.vr=o.res.querySelector(".vr");
+  o.tol=$("div","el",pg,`<span style="font-size:60px;font-weight:700">± ${V.result.tol} m</span>`);F.place(o.tol,1010,690);
+  o.mt=$("div","el tagm",pg,V.result.status);F.place(o.mt,1014,776);
+  o.how=$("div","el",pg,`<span style="font-size:36px;font-weight:700;color:var(--acc)">${V.count.how}</span>`);F.place(o.how,80,880);
+  o.ev=$("div","el src",pg,"根拠の写真　"+V.result.evidence.join("　"));F.place(o.ev,80,936);
+  o.cap=F.caption("出典 "+V.cap);
+  o.ul=$("div","el",pg,`<svg width="740" height="14"><path d="M0 7H740" stroke="#0031d8" stroke-width="8"/></svg>`);F.place(o.ul,210,850);
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;
+  F.rise(o.pre,t,.7);
+  F.rise(o.ph,t,1.0,.4,30);F.kb(o.img,t,1.0,3.0,1,1.1,"45% 55%");
+  const sp=V.tape.spot,W=390-16,H=293-16;F.spotAt(o.sp,t,1.8,{x:sp[0]*W,y:sp[1]*H,w:(sp[2]-sp[0])*W,h:(sp[3]-sp[1])*H});
+  F.rise(o.l1,t,2.3);F.rise(o.s1,t,2.6,.3,8);
+  F.rise(o.a1,t,3.0,.3,0);F.draw(o.a1,t,3.0,.4);
+  F.rise(o.b2,t,3.3,.35,30);o.tiles.style.clipPath=`inset(0 ${(1-F.eio(F.P(t,3.5,.8)))*100}% 0 0)`;
+  F.countTo(o.v2,V.tile.value,F.eo(F.P(t,3.8,1.0)));
+  F.rise(o.a2,t,5.3,.3,0);F.draw(o.a2,t,5.3,.4);
+  F.rise(o.b3,t,5.6,.35,30);
+  let k=0;o.ticks.forEach((e,i)=>{const on=t>=5.9+i*.04;e.style.opacity=on?1:0;if(on)k=i+1});o.v3.textContent=k;
+  F.rise(o.ph1,t,7.9,.3,8);F.rise(o.ph2,t,8.4,.3,8);F.pop(o.ok,t,8.8);
+  F.rise(o.eq,t,9.4,.2,0);F.draw(o.eq,t,9.4,.5);
+  F.rise(o.rl,t,9.7);F.rise(o.res,t,9.8,.3,20);F.countTo(o.vr,V.result.value,F.eo(F.P(t,9.8,1.2)));
+  F.rise(o.tol,t,11.2);F.pop(o.mt,t,11.6);
+  F.rise(o.how,t,12.0);F.rise(o.ev,t,12.4,.3,8);F.rise(o.cap,t,12.8,.3,6);
+  // 鎖を順に光らせて、答えに下線（メジャー → 周期 → 枚数 → 柱間）
+  [[o.ph,13.2],[o.b2,13.55],[o.b3,13.9]].forEach(([e,a])=>{const q=F.P(t,a,.45);e.style.outline=q>0&&q<1?`6px solid rgba(0,49,216,${Math.sin(q*Math.PI)})`:"none"});
+  o.ul.style.opacity=1;F.draw(o.ul,t,14.25,.5);
+}});
+</script></body></html>

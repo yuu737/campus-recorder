@@ -1,0 +1,27 @@
+{
+ "note": "make_demo.py が作る。手で直さない",
+ "fps": 30,
+ "size": [
+  1920,
+  1080
+ ],
+ "total": 14.0,
+ "speech_end": 10.75,
+ "speech_fits": true,
+ "sentences": [
+  {
+   "n": 1,
+   "text": "写真を面に貼って製図板にし、",
+   "start": 0.5,
+   "dur": 3.889,
+   "src": "rate:3.6"
+  },
+  {
+   "n": 2,
+   "text": "検収係が、模型と写真を重ねてずれを測ります。",
+   "start": 4.639,
+   "dur": 6.111,
+   "src": "rate:3.6"
+  }
+ ]
+}

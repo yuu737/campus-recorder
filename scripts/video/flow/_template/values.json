@@ -1,0 +1,8 @@
+{
+ "note": "記録に無い数字・文は入れない。値ごとに出典（ファイル名）を書く",
+ "min_dur": 8,
+ "pre": "○○係が出した物：…",
+ "value": "123",
+ "source": "data/reports/honbu/….json（どの欄か）",
+ "cap": "data/reports/honbu/….json"
+}

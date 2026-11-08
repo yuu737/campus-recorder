@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B5 設計係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"sekkei",
+build(F,M){
+  const V=F.V,o={},$=(t,c,h)=>F.$(t,c,M,h),C=V.counts,G=V.change;
+  const card=(x,cls,key,n,a,b)=>{const e=$("div","el board2",`<div style="padding:20px 24px 0"><span class="${cls}">${key}</span></div><div style="padding:10px 24px 0"><span class="num n" style="font-size:130px">0</span></div><div style="padding:6px 24px 0;font-size:36px;font-weight:700">${a}</div><div class="t26" style="padding:4px 24px 0;color:var(--sub)">${b}</div>`);F.place(e,x,180,400,340);e._n=n;e._v=e.querySelector(".n");return e};
+  o.cards=[card(0,"tagm","measured",C.measured,"測った","根拠の写真の番号が要る"),card(434,"tage","estimated",C.estimated,"推した","根拠と方法を書く"),card(868,"tagu","unknown",C.unknown,"分からない","値は null・撮影依頼を出す")];
+  o.c=$("div","el board2",`<div class="bt">11/8 の追記で変わった値：f6 の柱間</div>
+    <div style="position:relative;height:170px">
+     <div class="b bf" style="left:26px;top:30px;white-space:nowrap"><span class="num" style="font-size:64px;color:var(--estimated)">${G.before}</span><span style="font-size:34px;color:var(--estimated)"> ± ${G.btol}</span><div style="margin-top:12px"><span class="tage">estimated</span></div></div>
+     <svg class="b ar" style="left:430px;top:50px" width="90" height="40"><path d="M2 20H78M62 6L80 20L62 34" stroke="#0031d8" stroke-width="6" fill="none"/></svg>
+     <div class="b af" style="left:560px;top:30px;white-space:nowrap"><span class="num" style="font-size:64px">${G.after}</span><span style="font-size:34px"> ± ${G.atol}</span><div style="margin-top:12px"><span class="tagm">measured</span><span class="cap" style="position:static;margin-left:16px;font-size:22px">${G.chain}</span></div></div>
+    </div>`);F.place(o.c,0,566,1268,250);o.bf=o.c.querySelector(".bf");o.ar=o.c.querySelector(".ar");o.af=o.c.querySelector(".af");
+  return o;
+},
+seek(F,t,o){
+  o.cards.forEach((e,i)=>{F.rise(e,t,4.3+i*.5,.35,30);e._v.textContent=Math.round(e._n*F.eo(F.P(t,4.5+i*.5,.9)))});
+  F.rise(o.c,t,6.9,.35,30);o.bf.style.opacity=F.P(t,7.2,.3);o.ar.style.clipPath=`inset(0 ${(1-F.eio(F.P(t,7.7,.4)))*100}% 0 0)`;o.af.style.opacity=F.P(t,8.2,.3);
+  F.pulse(o.cards[0],t,9.6,.5);F.pulse(o.af,t,10.2,.5);
+}});
+</script></body></html>

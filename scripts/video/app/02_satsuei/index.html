@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B2 撮影係</title>
+<link rel="stylesheet" href="../_shell/app.css">
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"satsuei",
+build(F,M){
+  const V=F.V,o={},$=(t,c,h)=>F.$(t,c,M,h);
+  o.a=$("div","el board2",`<div class="bt">使える写真</div><div style="padding:18px 26px 0;white-space:nowrap"><span class="num n" style="font-size:180px">0</span><span style="font-size:52px;font-weight:700"> / ${V.ok.of} 枚</span></div><div class="t26" style="padding:12px 26px 0;color:var(--sub)">${V.ok.how}</div>`);F.place(o.a,0,180,520,340);o.n=o.a.querySelector(".n");
+  o.b=$("div","el board2",`<div class="bt">そのままでは使わない写真</div>`);F.place(o.b,560,180,708,340);
+  o.rows=V.rows.map((r,i)=>{const e=F.$("div","el",o.b,`<span class="${r.tag}" style="display:inline-block;min-width:190px;text-align:center">${r.t}</span><span class="t30" style="margin-left:20px;font-weight:700">${r.s}</span>`);F.place(e,24,80+i*84);return e});
+  o.c=$("div","el board2",`<div class="bt">職員への返事：次に撮るもの</div>`);F.place(o.c,0,566,1268,250);
+  o.nx=V.next.map((s,i)=>{const [f,...r]=s.split("　");const e=F.$("div","el t30",o.c,`<b style="font-family:var(--font-mono);color:var(--acc);font-size:34px">${f}</b>　${r.join("　")}`);F.place(e,28,70+i*56);return e});
+  return o;
+},
+seek(F,t,o){
+  const V=F.V;F.rise(o.a,t,4.3,.35,30);o.n.textContent=Math.round(V.ok.n*F.eo(F.P(t,4.6,1.0)));
+  F.rise(o.b,t,5.8,.35,30);o.rows.forEach((e,i)=>F.rise(e,t,6.1+i*.45,.3,14));
+  F.rise(o.c,t,7.8,.35,30);o.nx.forEach((e,i)=>F.rise(e,t,8.1+i*.45,.3,14));
+  F.pulse(o.a,t,10.2,.5);F.pulse(o.c,t,10.8,.5);
+}});
+</script></body></html>

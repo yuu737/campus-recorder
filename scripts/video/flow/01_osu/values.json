@@ -1,0 +1,96 @@
+{
+ "note": "B1 押す。前半は公開版の実写 1 枚、後半は職員の画面を本当に操作して撮った連番（scripts/video/capture_staff.py、作業用の複製で試走＝API キーなし）。押した後の文言は log.json の画面のまま",
+ "min_dur": 12.0,
+ "photo": {
+  "id": "PXL_20261103_043026097",
+  "file": "data/photos/public/20261103/PXL_20261103_043026097.jpg",
+  "label": "本部棟（公開版）",
+  "source": "data/photos/index.json（public_file、保護係 ok・塗りつぶし無し）"
+ },
+ "capture": {
+  "dir": "out/video/flow/staff_cap",
+  "fps": 30,
+  "frames": 517,
+  "from": 0.8,
+  "to": 12.6,
+  "rate": 1.5,
+  "crop": [
+   340,
+   165,
+   1240,
+   750
+  ],
+  "source": "out/video/flow/staff_cap/log.json（クリックの時刻と位置）"
+ },
+ "steps": [
+  {
+   "t": 1.3,
+   "x": 517.5,
+   "y": 346.4,
+   "w": 300,
+   "h": 70,
+   "label": "大学名",
+   "click": [
+    517.5,
+    346.4
+   ]
+  },
+  {
+   "t": 3.65,
+   "x": 768.0,
+   "y": 710.6,
+   "w": 760,
+   "h": 210,
+   "label": "写真を落とす"
+  },
+  {
+   "t": 7.65,
+   "x": 763.1,
+   "y": 490.4,
+   "w": 560,
+   "h": 70,
+   "label": "棟の名前",
+   "click": [
+    763.1,
+    490.4
+   ]
+  },
+  {
+   "t": 9.4,
+   "x": 488.7,
+   "y": 540.8,
+   "w": 250,
+   "h": 64,
+   "label": "選んだ写真に付ける",
+   "click": [
+    488.7,
+    540.8
+   ]
+  },
+  {
+   "t": 12.2,
+   "x": 1081.9,
+   "y": 597.6,
+   "w": 190,
+   "h": 64,
+   "label": "記録を始める",
+   "click": [
+    1081.9,
+    597.6
+   ]
+  }
+ ],
+ "pre": "職員の画面：写真を落として、押す",
+ "cap": "web/staff.html を作業用の複製で操作して撮影（係は呼ばない試走。scripts/video/capture_staff.py）",
+ "drop": {
+  "label": "落とす 4 枚（公開版）",
+  "files": [
+   "data/photos/public/20261103/PXL_20261103_043026097.jpg",
+   "data/photos/public/20261103/PXL_20261103_043041105.jpg",
+   "data/photos/public/20261103/PXL_20261103_043129358.jpg",
+   "data/photos/public/20261103/PXL_20261103_044907567.jpg"
+  ],
+  "source": "out/video/flow/staff_cap/log.json（steps の drop）"
+ },
+ "zoom_origin": "60% 58%"
+}

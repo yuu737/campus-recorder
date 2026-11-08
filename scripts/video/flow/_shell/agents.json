@@ -1,0 +1,69 @@
+{
+ "note": "make_flow.py が .claude/agents から作る",
+ "agents": [
+  {
+   "id": "staff",
+   "name": "職員",
+   "full": "職員（人）",
+   "model": "人",
+   "model_raw": null,
+   "source": "人の操作（職員の画面）"
+  },
+  {
+   "id": "satsuei",
+   "name": "撮影係",
+   "full": "撮影係",
+   "model": "Haiku",
+   "model_raw": "haiku",
+   "source": ".claude/agents/satsuei.md"
+  },
+  {
+   "id": "shiwake",
+   "name": "仕分け係",
+   "full": "仕分け係",
+   "model": "Opus",
+   "model_raw": "opus",
+   "source": ".claude/agents/shiwake.md"
+  },
+  {
+   "id": "sokuryo",
+   "name": "測量係",
+   "full": "測量係",
+   "model": "Opus",
+   "model_raw": "opus",
+   "source": ".claude/agents/sokuryo.md"
+  },
+  {
+   "id": "sekkei",
+   "name": "設計係",
+   "full": "設計係",
+   "model": "Opus",
+   "model_raw": "opus",
+   "source": ".claude/agents/sekkei.md"
+  },
+  {
+   "id": "seizu",
+   "name": "製図係",
+   "full": "製図・模型係",
+   "model": "Sonnet",
+   "model_raw": "sonnet",
+   "source": ".claude/agents/seizu.md"
+  },
+  {
+   "id": "kenshu",
+   "name": "検収係",
+   "full": "検収係",
+   "model": "Opus",
+   "model_raw": "opus",
+   "source": ".claude/agents/kenshu.md"
+  },
+  {
+   "id": "shinko",
+   "name": "進行役",
+   "full": "進行役",
+   "model": "Fable",
+   "model_raw": "fable",
+   "source": ".claude/agents/shinko.md"
+  }
+ ]
+}

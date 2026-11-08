@@ -1,0 +1,64 @@
+{
+ "note": "B2 撮影係（アプリ版）",
+ "dur": 12.5,
+ "app": {
+  "replay_t": 4.0,
+  "w": 1600,
+  "h": 900,
+  "url": "web/progress.html?building=honbu&replay=1　待機画面の再生（11/8 12:24 の記録）",
+  "z0": 1.45,
+  "focus": [
+   620,
+   400
+  ],
+  "spots": [
+   {
+    "t0": 1.2,
+    "t1": 3.05,
+    "x": 22,
+    "y": 150,
+    "w": 1212,
+    "h": 540,
+    "tag": "届いた写真（新しい 33 枚）",
+    "ty": 96,
+    "main": true
+   }
+  ],
+  "source": "out/video/replay_honbu.mp4 の 4.0 秒（1/11 撮影係の工程の生成物）",
+  "src": "out/video/app/_src/replay_004.0.png"
+ },
+ "head": "届いた写真を、[数秒で]確かめる",
+ "ok": {
+  "n": 30,
+  "of": 33,
+  "how": "ぶれ無し・面が仕分け済み"
+ },
+ "rows": [
+  {
+   "tag": "tagu",
+   "t": "撮り直し",
+   "s": "ぶれ 1 枚（鮮明度 91.7）"
+  },
+  {
+   "tag": "tage",
+   "t": "仕分け係へ",
+   "s": "面が空 2 枚"
+  },
+  {
+   "tag": "tagm",
+   "t": "根拠にしない",
+   "s": "職員の確認が無い low 13 枚"
+  }
+ ],
+ "next": [
+  "f5　西の道路の西側から階段室",
+  "f7　東の道路の向こうから妻",
+  "f0　北東の角と外階段の東の側面"
+ ],
+ "model": "Claude Haiku 5.5",
+ "source": "data/reports/honbu/satsuei_checks.md（11/8 04:15、satsuei / Claude Haiku 5.5）",
+ "cap": "data/reports/honbu/satsuei_checks.md／画面 out/video/replay_honbu.mp4（4 秒）",
+ "agent": {
+  "model": "Claude Haiku 5.5"
+ }
+}

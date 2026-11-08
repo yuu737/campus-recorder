@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>アプリ版 B1 押す</title>
+<link rel="stylesheet" href="../_shell/app.css">
+</head><body><div id="stage"></div>
+<script src="../_shell/app.js"></script>
+<script>
+APP.scene({step:"staff",
+build(F,M){
+  const V=F.V,o={},$=(t,c,h)=>F.$(t,c,M,h);
+  o.a=$("div","el board2",`<div class="bt">写真 ${V.drop.files.length} 枚</div>`);F.place(o.a,0,180,300,300);
+  o.th=V.drop.files.map((f,i)=>{const e=F.$("div","el photo",o.a);F.place(e,18+(i%2)*136,70+Math.floor(i/2)*106,126,98);F.$("img","",e).src=F.R+f;return e});
+  o.r1=F.arw(M,306,312);
+  o.b=$("div","el board2",`<div class="bt">置いて振り分ける</div><div style="padding:30px 24px 0;font-family:var(--font-mono);font-size:30px;line-height:1.5;font-weight:700">data/photos/<br>&lt;今日の日付&gt;/&lt;棟&gt;/</div><div class="t26" style="padding:18px 24px 0;color:var(--sub)">この PC の中に置く</div>`);F.place(o.b,368,180,430,300);
+  o.r2=F.arw(M,804,312);
+  o.c=$("div","el board2",`<div class="bt">棟ごとに係を起動</div><div class="pl" style="padding:22px 20px 0"></div><div class="t26" style="padding:0 22px;color:var(--sub)">進捗は 10 秒ごとに更新</div>`);F.place(o.c,866,180,402,300);
+  o.pl=["撮影","仕分け","測量","設計","製図","検収"].map(n=>F.$("span","pill",o.c.querySelector(".pl"),n));
+  o.d=$("div","el board2",`<div class="bt">記録がある棟（棟 JSON あり）</div><div style="padding:16px 24px 0"><span class="big" style="color:var(--acc)">追記</span></div><div class="t26" style="padding:8px 24px 0">${V.texts.append}</div>`);F.place(o.d,0,526,610,236);
+  o.e=$("div","el board2",`<div class="bt">まだ無い棟</div><div style="padding:16px 24px 0"><span class="big">${V.texts.fresh}</span></div>`);F.place(o.e,658,526,610,236);
+  o.f=$("div","el",`<span class="tagm">40 USD／棟</span><span class="t30" style="margin-left:16px;font-weight:700">${V.texts.cost}</span>`);F.place(o.f,0,782);
+  return o;
+},
+seek(F,t,o){
+  F.rise(o.a,t,4.3,.35,30);o.th.forEach((e,i)=>F.pop(e,t,4.6+i*.15));
+  F.rise(o.r1,t,5.3,.3,0);F.draw(o.r1,t,5.3,.35);F.rise(o.b,t,5.5,.35,30);
+  F.rise(o.r2,t,6.4,.3,0);F.draw(o.r2,t,6.4,.35);F.rise(o.c,t,6.6,.35,30);o.pl.forEach((e,i)=>F.pop(e,t,6.9+i*.14));
+  F.rise(o.d,t,8.1,.35,30);F.rise(o.e,t,8.7,.35,30);F.rise(o.f,t,9.4,.35,12);
+  F.pulse(o.d,t,10.6,.5);F.pulse(o.e,t,11.0,.5);
+}});
+</script></body></html>
